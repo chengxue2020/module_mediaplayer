@@ -49,7 +49,7 @@ public class ChangeClarityDialog extends Dialog {
     private int mCurrentCheckedIndex;
 
     public ChangeClarityDialog(Context context) {
-        super(context, R.style.dialog_change_clarity);
+        super(context, R.style.MoudleMediaplayerChangeClarity);
         init(context);
     }
 

@@ -1,4 +1,6 @@
 include ':app'
+// All
+include ':lib_mediaplayer_aar'
 // 视频m3u8下载和合成
 include ':lib_mediaplayer_videom3u8'
 // 音频

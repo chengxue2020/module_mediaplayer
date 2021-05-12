@@ -54,6 +54,12 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -79,23 +85,26 @@ dependencies {
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
     implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
 
-    // 视频缓存
-    implementation project(path: ':lib_mediaplayer_videocache')
-    // 视频内核
-    implementation project(path: ':lib_mediaplayer_videokernel')
-    // 视频DB
-    implementation project(path: ':lib_mediaplayer_videodb')
-    // 视频UI
-    implementation project(path: ':lib_mediaplayer_videoui')
-    // 视频m3u8下载和合成
-    implementation project(path: ':lib_mediaplayer_videom3u8')
-    // 视频悬浮
-    implementation project(path: ':lib_mediaplayer_videofloat')
-    // 音乐
-    implementation project(path: ':lib_mediaplayer_musickernel')
-
     // 自己封装的库，都有对应的案例项目【欢迎star】：https://github.com/yangchong211
     implementation 'cn.yc:YCStatusBarLib:1.5.0'
     implementation 'com.yc:PagerLib:1.0.4'
     implementation 'cn.yc:YCStateLib:1.2.2'
+
+    // lib_mediaplayer_aar
+    implementation project(path: ':lib_mediaplayer_aar')
+
+//    // 视频缓存
+//    implementation project(path: ':lib_mediaplayer_videocache')
+//    // 视频内核
+//    implementation project(path: ':lib_mediaplayer_videokernel')
+//    // 视频DB
+//    implementation project(path: ':lib_mediaplayer_videodb')
+//    // 视频UI
+//    implementation project(path: ':lib_mediaplayer_videoui')
+//    // 视频m3u8下载和合成
+//    implementation project(path: ':lib_mediaplayer_videom3u8')
+//    // 视频悬浮
+//    implementation project(path: ':lib_mediaplayer_videofloat')
+//    // 音乐
+//    implementation project(path: ':lib_mediaplayer_musickernel')
 }

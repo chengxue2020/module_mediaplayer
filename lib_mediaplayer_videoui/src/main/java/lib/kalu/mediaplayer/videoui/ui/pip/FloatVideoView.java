@@ -57,7 +57,7 @@ public class FloatVideoView extends FrameLayout{
 
 
     private void init() {
-        setBackgroundResource(R.drawable.shape_float_window_bg);
+        setBackgroundResource(R.drawable.moudle_mediaplayer_shape_float_window_bg);
         int padding = PlayerUtils.dp2px(getContext(), 1);
         setPadding(padding, padding, padding, padding);
         initWindow();
@@ -74,7 +74,7 @@ public class FloatVideoView extends FrameLayout{
         // 设置图片格式，效果为背景透明
         mParams.format = PixelFormat.TRANSLUCENT;
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        mParams.windowAnimations = R.style.FloatWindowAnimation;
+        mParams.windowAnimations = R.style.MoudleMediaplayerFloatWindowAnimation;
         mParams.gravity = Gravity.START | Gravity.TOP; // 调整悬浮窗口至右下角
         // 设置悬浮窗口长宽数据
         int width = PlayerUtils.dp2px(getContext(), 250);
