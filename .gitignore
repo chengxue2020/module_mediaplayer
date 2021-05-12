@@ -1,0 +1,19 @@
+# Project exclude paths
+/.gradle/
+/.idea
+/app/build/
+/app/build/intermediates/javac/debug/classes/
+/lib_mediaplayer_musickernel/build/
+/lib_mediaplayer_musickernel/build/intermediates/javac/debug/classes/
+/lib_mediaplayer_videocache/build/
+/lib_mediaplayer_videocache/build/intermediates/javac/debug/classes/
+/lib_mediaplayer_videodb/build/
+/lib_mediaplayer_videodb/build/intermediates/javac/debug/classes/
+/lib_mediaplayer_videofloat/build/
+/lib_mediaplayer_videofloat/build/intermediates/javac/debug/classes/
+/lib_mediaplayer_videokernel/build/
+/lib_mediaplayer_videokernel/build/intermediates/javac/debug/classes/
+/lib_mediaplayer_videom3u8/build/
+/lib_mediaplayer_videom3u8/build/intermediates/javac/debug/classes/
+/lib_mediaplayer_videoui/build/
+/lib_mediaplayer_videoui/build/intermediates/javac/debug/classes/

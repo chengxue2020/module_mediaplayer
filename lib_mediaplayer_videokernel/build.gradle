@@ -1,0 +1,60 @@
+apply plugin: rootProject.ext.constant.com_android_library
+
+android {
+
+    compileSdkVersion rootProject.ext.constant.compileSdkVersion
+    buildToolsVersion rootProject.ext.constant.buildToolsVersion
+
+    compileOptions.encoding = rootProject.ext.constant.compileOptionsEncoding
+    ndkPath rootProject.ext.constant.ndkPath
+    ndkVersion rootProject.ext.constant.ndkVersion
+
+    defaultConfig {
+
+        minSdkVersion rootProject.ext.constant.minSdkVersion
+        targetSdkVersion rootProject.ext.constant.targetSdkVersion
+        vectorDrawables.useSupportLibrary = true
+
+        ndk {
+            abiFilters rootProject.ext.constant.abiFilters.split(",")
+        }
+
+        //添加此行
+        flavorDimensions "default"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            multiDexEnabled false
+            ext.alwaysUpdateBuildId = false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+            consumerProguardFiles '../../proguard/proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            multiDexEnabled false
+            ext.alwaysUpdateBuildId = false
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    // ijkplayer
+    api rootProject.ext.dependencies.support_ijkplayer_java
+    api rootProject.ext.dependencies.support_ijkplayer_armv7a
+
+    // exoplayer
+    api rootProject.ext.dependencies.support_exoplayer
+    api rootProject.ext.dependencies.support_exoplayer_core
+    api rootProject.ext.dependencies.support_exoplayer_dash
+    api rootProject.ext.dependencies.support_exoplayer_hls
+    api rootProject.ext.dependencies.support_exoplayer_rtmp
+    api rootProject.ext.dependencies.support_exoplayer_smoothstreaming
+}

@@ -1,0 +1,15 @@
+include ':app'
+// 视频m3u8下载和合成
+include ':lib_mediaplayer_videom3u8'
+// 音频
+include ':lib_mediaplayer_musickernel'
+// 视频悬浮
+include ':lib_mediaplayer_videofloat'
+// 视频内核
+include ':lib_mediaplayer_videokernel'
+// 视频缓存
+include ':lib_mediaplayer_videocache'
+// 视频缓存DB
+include ':lib_mediaplayer_videodb'
+// 视频UI
+include ':lib_mediaplayer_videoui'

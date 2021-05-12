@@ -1,0 +1,28 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="lib.kalu.mediaplayer.musickernel">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:allowBackup="false"
+        android:supportsRtl="true">
+        <service android:name="lib.kalu.mediaplayer.musickernel.service.PlayService" />
+
+        <receiver android:name="lib.kalu.mediaplayer.musickernel.receiver.NotificationStatusBarReceiver">
+            <intent-filter>
+                <action android:name="lib.kalu.status_bar" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="lib.kalu.mediaplayer.musickernel.receiver.EarphoneControlReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="lib.kalu.mediaplayer.musickernel.receiver.AudioBroadcastReceiver">
+            <intent-filter>
+                <action android:name="lib.kalu.lock" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
