@@ -18,6 +18,8 @@ package lib.kalu.mediaplayer.videoui.ui.pip;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
@@ -32,6 +34,7 @@ import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
  *     revise:
  * </pre>
  */
+@Keep
 public class FloatVideoManager {
 
     //画中画

@@ -1,11 +1,11 @@
 package lib.kalu.mediaplayer.videocache.file;
 
+import lib.kalu.mediaplayer.videocache.Cache;
+import lib.kalu.mediaplayer.videocache.ProxyCacheException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import lib.kalu.mediaplayer.videocache.Cache;
-import lib.kalu.mediaplayer.videocache.ProxyCacheException;
 
 /**
  * {@link Cache} that uses file for storing data.

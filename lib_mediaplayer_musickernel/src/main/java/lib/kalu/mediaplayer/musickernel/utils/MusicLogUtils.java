@@ -17,6 +17,8 @@ package lib.kalu.mediaplayer.musickernel.utils;
 
 import android.util.Log;
 
+import androidx.annotation.Keep;
+
 /**
  * <pre>
  *     @author yangchong
@@ -26,6 +28,7 @@ import android.util.Log;
  *     revise:
  * </pre>
  */
+@Keep
 public final class MusicLogUtils {
 
     private static final String TAG = "MusicPlayer";

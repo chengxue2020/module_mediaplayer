@@ -16,6 +16,8 @@ limitations under the License.
 package lib.kalu.mediaplayer.videoui.player;
 
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 
 /**
@@ -27,6 +29,7 @@ import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
  *     revise:
  * </pre>
  */
+@Keep
 public interface OnVideoStateListener {
 
     /**

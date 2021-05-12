@@ -1,11 +1,14 @@
 package lib.kalu.mediaplayer.musickernel.inter;
 
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.musickernel.model.AudioBean;
 
 /**
  * 播放进度监听器
  */
+@Keep
 public interface OnPlayerEventListener {
 
     /**

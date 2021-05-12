@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.videom3u8.bean;
 
+import androidx.annotation.Keep;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
  *     revise:
  * </pre>
  */
+@Keep
 public class M3u8 {
 
     private String basepath;

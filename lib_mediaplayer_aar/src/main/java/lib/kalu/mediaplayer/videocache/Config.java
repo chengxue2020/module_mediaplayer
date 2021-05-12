@@ -1,11 +1,11 @@
 package lib.kalu.mediaplayer.videocache;
 
-import java.io.File;
-
 import lib.kalu.mediaplayer.videocache.file.DiskUsage;
 import lib.kalu.mediaplayer.videocache.file.FileNameGenerator;
 import lib.kalu.mediaplayer.videocache.headers.HeaderInjector;
 import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorage;
+
+import java.io.File;
 
 /**
  * Configuration for proxy cache.

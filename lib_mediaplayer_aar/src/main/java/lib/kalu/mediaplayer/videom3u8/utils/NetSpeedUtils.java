@@ -1,10 +1,12 @@
 package lib.kalu.mediaplayer.videom3u8.utils;
 
+import androidx.annotation.Keep;
+
 /**
  * 网速工具
  * Created by HDL on 2017/8/14.
  */
-
+@Keep
 public class NetSpeedUtils {
     private static NetSpeedUtils mNetSpeedUtils;
 

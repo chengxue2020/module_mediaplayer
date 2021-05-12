@@ -2,13 +2,13 @@ package lib.kalu.mediaplayer.videocache;
 
 import android.text.TextUtils;
 
+import lib.kalu.mediaplayer.videocache.file.FileCache;
+
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Locale;
-
-import lib.kalu.mediaplayer.videocache.file.FileCache;
 
 import static lib.kalu.mediaplayer.videocache.ProxyCacheUtils.DEFAULT_BUFFER_SIZE;
 

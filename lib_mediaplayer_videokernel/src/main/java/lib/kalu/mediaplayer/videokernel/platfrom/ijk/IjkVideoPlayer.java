@@ -26,6 +26,8 @@ import android.text.TextUtils;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
@@ -45,6 +47,7 @@ import tv.danmaku.ijk.media.player.IjkTimedText;
  *     revise:
  * </pre>
  */
+@Keep
 public class IjkVideoPlayer extends VideoPlayerCore {
 
     protected IjkMediaPlayer mMediaPlayer;

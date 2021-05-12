@@ -2,10 +2,12 @@ package lib.kalu.mediaplayer.videofloat;
 
 
 import androidx.annotation.IntDef;
+import androidx.annotation.Keep;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+@Keep
 public class MoveType {
 
     public static final int fixed = 0;

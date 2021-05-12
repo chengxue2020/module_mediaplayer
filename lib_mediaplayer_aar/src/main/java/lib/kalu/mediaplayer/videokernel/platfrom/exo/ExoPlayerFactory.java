@@ -2,6 +2,8 @@ package lib.kalu.mediaplayer.videokernel.platfrom.exo;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
 
 /**
@@ -13,6 +15,7 @@ import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
  *     revise: 抽象工厂具体实现类
  * </pre>
  */
+@Keep
 public class ExoPlayerFactory extends PlayerFactory<ExoMediaPlayer> {
 
     public static ExoPlayerFactory create() {

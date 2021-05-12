@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
 
+import androidx.annotation.Keep;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
@@ -32,6 +33,7 @@ import tv.danmaku.ijk.media.player.IjkTimedText;
  * </pre>
  */
 @Deprecated
+@Keep
 public class VideoMediaPlayer {
 
     private OldVideoPlayer videoPlayer;

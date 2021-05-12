@@ -1,8 +1,11 @@
 package lib.kalu.mediaplayer.musickernel.config;
 
+import androidx.annotation.Keep;
+
 /**
  * 播放模式
  */
+@Keep
 public enum PlayModeEnum {
 
     /**

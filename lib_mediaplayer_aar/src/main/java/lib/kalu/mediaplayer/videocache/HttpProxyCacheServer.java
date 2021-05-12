@@ -3,6 +3,18 @@ package lib.kalu.mediaplayer.videocache;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.annotation.Keep;
+
+import lib.kalu.mediaplayer.videocache.file.DiskUsage;
+import lib.kalu.mediaplayer.videocache.file.FileNameGenerator;
+import lib.kalu.mediaplayer.videocache.file.Md5FileNameGenerator;
+import lib.kalu.mediaplayer.videocache.file.TotalCountLruDiskUsage;
+import lib.kalu.mediaplayer.videocache.file.TotalSizeLruDiskUsage;
+import lib.kalu.mediaplayer.videocache.headers.EmptyHeadersInjector;
+import lib.kalu.mediaplayer.videocache.headers.HeaderInjector;
+import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorage;
+import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorageFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -16,15 +28,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lib.kalu.mediaplayer.videocache.file.DiskUsage;
-import lib.kalu.mediaplayer.videocache.file.FileNameGenerator;
-import lib.kalu.mediaplayer.videocache.file.Md5FileNameGenerator;
-import lib.kalu.mediaplayer.videocache.file.TotalCountLruDiskUsage;
-import lib.kalu.mediaplayer.videocache.file.TotalSizeLruDiskUsage;
-import lib.kalu.mediaplayer.videocache.headers.EmptyHeadersInjector;
-import lib.kalu.mediaplayer.videocache.headers.HeaderInjector;
-import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorage;
-import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorageFactory;
+import static lib.kalu.mediaplayer.videocache.Preconditions.checkNotNull;
 
 /**
  * Simple lightweight proxy server with file caching support that handles HTTP requests.
@@ -44,6 +48,7 @@ import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorageFactory;
  * </code></pre>
  *
  */
+@Keep
 public class HttpProxyCacheServer {
 
     private static final String PROXY_HOST = "127.0.0.1";

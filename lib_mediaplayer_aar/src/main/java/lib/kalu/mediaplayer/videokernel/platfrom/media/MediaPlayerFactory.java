@@ -17,6 +17,8 @@ package lib.kalu.mediaplayer.videokernel.platfrom.media;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
 
 
@@ -29,6 +31,7 @@ import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
  *     revise: 抽象工厂具体实现类
  * </pre>
  */
+@Keep
 public class MediaPlayerFactory extends PlayerFactory<AndroidMediaPlayer> {
 
     public static MediaPlayerFactory create() {

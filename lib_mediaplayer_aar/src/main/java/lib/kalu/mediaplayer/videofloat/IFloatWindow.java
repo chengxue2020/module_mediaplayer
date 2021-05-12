@@ -2,7 +2,9 @@ package lib.kalu.mediaplayer.videofloat;
 
 import android.view.View;
 
+import androidx.annotation.Keep;
 
+@Keep
 public abstract class IFloatWindow {
 
     public abstract void show();

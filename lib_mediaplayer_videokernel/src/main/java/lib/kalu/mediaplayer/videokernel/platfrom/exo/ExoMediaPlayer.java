@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -47,6 +48,7 @@ import static com.google.android.exoplayer2.ExoPlaybackException.TYPE_SOURCE;
  *     revise:
  * </pre>
  */
+@Keep
 public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Player.EventListener {
 
     protected Context mAppContext;

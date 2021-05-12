@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Keep;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import java.util.Map;
  * 记得添加下面这个权限
  * uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"
  */
+@Keep
 public class FloatWindow {
 
     /**
@@ -62,6 +64,7 @@ public class FloatWindow {
         mFloatWindowMap.remove(tag);
     }
 
+    @Keep
     public static class Builder {
         Context mApplicationContext;
         View mView;

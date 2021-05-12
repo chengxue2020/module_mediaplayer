@@ -3,17 +3,20 @@ package lib.kalu.mediaplayer.videoui.player;
 import android.graphics.Color;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.Keep;
 
 /**
  * @description: 播放器设置属性builder类
  * @date:  2021-05-12 10:14
  */
+@Keep
 public class VideoBuilder {
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
+    @Keep
     public final static class Builder {
 
         private int mColor = 0;

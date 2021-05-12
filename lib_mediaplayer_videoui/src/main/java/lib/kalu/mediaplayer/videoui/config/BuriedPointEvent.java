@@ -15,6 +15,8 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.videoui.config;
 
+import androidx.annotation.Keep;
+
 /**
  * <pre>
  *     @author yangchong
@@ -24,6 +26,7 @@ package lib.kalu.mediaplayer.videoui.config;
  *     revise:
  * </pre>
  */
+@Keep
 public interface BuriedPointEvent {
 
     /**

@@ -2,6 +2,8 @@ package lib.kalu.mediaplayer.videom3u8.utils;
 
 import android.util.Log;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
 import lib.kalu.mediaplayer.videom3u8.bean.M3u8Ts;
 
@@ -29,6 +31,7 @@ import java.util.List;
  *     revise:
  * </pre>
  */
+@Keep
 public final class M3u8FileUtils {
 
     /**

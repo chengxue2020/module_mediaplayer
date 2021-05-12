@@ -2,19 +2,16 @@ package lib.kalu.mediaplayer.videokernel.factory;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videokernel.impl.VideoPlayerImpl;
 
-
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : 此接口使用方法
- *     revise: 1.继承{@link VideoPlayerImpl}扩展自己的播放器。
- *             2.继承此接口并实现{@link #createPlayer(Context)}，返回步骤1中的播放器。
- * </pre>
+ * @description: 1.继承{@link VideoPlayerImpl}扩展自己的播放器。
+ *  *             2.继承此接口并实现{@link #createPlayer(Context)}，返回步骤1中的播放器。
+ * @date:  2021-05-12 14:42
  */
+@Keep
 public abstract class PlayerFactory<T extends VideoPlayerImpl> {
 
     /**

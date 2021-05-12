@@ -17,16 +17,20 @@ package lib.kalu.mediaplayer.videoui.player;
 
 import android.app.Application;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
 
 import java.util.LinkedHashMap;
 
 /**
- * 视频播放器管理器，管理当前正在播放的VideoView，以及播放器配置
- * 你也可以用来保存常驻内存的VideoView，但是要注意通过Application Context创建，
- * 以免内存泄漏
+ * @description: 视频播放器管理器，管理当前正在播放的VideoView，以及播放器配置
+ * * 你也可以用来保存常驻内存的VideoView，但是要注意通过Application Context创建，
+ * * 以免内存泄漏
+ * @date: 2021-05-12 14:43
  */
+@Keep
 public class VideoViewManager {
 
     /**
@@ -101,6 +105,7 @@ public class VideoViewManager {
 
     /**
      * 添加VideoView
+     *
      * @param tag 相同tag的VideoView只会保存一个，如果tag相同则会release并移除前一个
      */
     public void add(VideoLayout videoView, String tag) {

@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.videom3u8.inter;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
 
 /**
@@ -11,6 +13,7 @@ import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
  *     revise:
  * </pre>
  */
+@Keep
 public interface OnM3u8InfoListener extends BaseListener {
 
     /**

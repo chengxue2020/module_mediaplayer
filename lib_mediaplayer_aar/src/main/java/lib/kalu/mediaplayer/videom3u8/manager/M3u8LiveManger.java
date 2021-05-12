@@ -4,6 +4,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import androidx.annotation.Keep;
+
+import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
+import lib.kalu.mediaplayer.videom3u8.bean.M3u8Ts;
+import lib.kalu.mediaplayer.videom3u8.inter.OnDownloadListener;
+import lib.kalu.mediaplayer.videom3u8.utils.M3u8FileUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,11 +25,6 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
-import lib.kalu.mediaplayer.videom3u8.bean.M3u8Ts;
-import lib.kalu.mediaplayer.videom3u8.inter.OnDownloadListener;
-import lib.kalu.mediaplayer.videom3u8.utils.M3u8FileUtils;
-
 /**
  * <pre>
  *     @author yangchong
@@ -32,6 +34,7 @@ import lib.kalu.mediaplayer.videom3u8.utils.M3u8FileUtils;
  *     revise:
  * </pre>
  */
+@Keep
 public class M3u8LiveManger {
 
     private static M3u8LiveManger mM3U8LiveManger;

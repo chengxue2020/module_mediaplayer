@@ -6,9 +6,10 @@ import android.os.Build;
 import android.provider.Settings;
 import android.view.WindowManager;
 
+import androidx.annotation.Keep;
 import androidx.annotation.RequiresApi;
 
-
+@Keep
 public final class WindowUtil {
 
 

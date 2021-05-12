@@ -2,15 +2,13 @@ package lib.kalu.mediaplayer.videodb.manager;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
 /**
- * <pre>
- *     @author yangchong
- *     email  : yangchong211@163.com
- *     time  : 2020/8/6
- *     desc  : 配置类
- *     revise:
- * </pre>
+ * @description: 配置类
+ * @date:  2021-05-12 14:40
  */
+@Keep
 public class CacheConfig {
 
     /**

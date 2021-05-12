@@ -15,6 +15,8 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.videoui.old.player;
 
+import androidx.annotation.Keep;
+
 import java.util.Map;
 
 /**
@@ -27,6 +29,7 @@ import java.util.Map;
  * </pre>
  */
 @Deprecated
+@Keep
 public interface IVideoPlayer {
 
     /**

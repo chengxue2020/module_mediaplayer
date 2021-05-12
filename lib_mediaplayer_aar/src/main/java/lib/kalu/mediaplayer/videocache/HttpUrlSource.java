@@ -2,6 +2,11 @@ package lib.kalu.mediaplayer.videocache;
 
 import android.text.TextUtils;
 
+import lib.kalu.mediaplayer.videocache.headers.EmptyHeadersInjector;
+import lib.kalu.mediaplayer.videocache.headers.HeaderInjector;
+import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorage;
+import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorageFactory;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,17 +15,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-import lib.kalu.mediaplayer.videocache.headers.EmptyHeadersInjector;
-import lib.kalu.mediaplayer.videocache.headers.HeaderInjector;
-import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorage;
-import lib.kalu.mediaplayer.videocache.sourcestorage.SourceInfoStorageFactory;
-
+import static lib.kalu.mediaplayer.videocache.Preconditions.checkNotNull;
+import static lib.kalu.mediaplayer.videocache.ProxyCacheUtils.DEFAULT_BUFFER_SIZE;
 import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
 import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_PARTIAL;
 import static java.net.HttpURLConnection.HTTP_SEE_OTHER;
-import static lib.kalu.mediaplayer.videocache.ProxyCacheUtils.DEFAULT_BUFFER_SIZE;
 
 /**
  * {@link Source} that uses http resource as source for {@link ProxyCache}.

@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.videodb.manager;
 import android.content.Context;
 import android.os.Debug;
 
-import java.io.IOException;
+import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.videodb.cache.VideoMapCache;
 import lib.kalu.mediaplayer.videodb.disk.DiskFileUtils;
@@ -11,16 +11,13 @@ import lib.kalu.mediaplayer.videodb.disk.SqlLiteCache;
 import lib.kalu.mediaplayer.videodb.model.VideoLocation;
 import lib.kalu.mediaplayer.videodb.utils.CacheLogUtils;
 
+import java.io.IOException;
+
 /**
- * <pre>
- *     @author yangchong
- *     email  : yangchong211@163.com
- *     time  : 2020/8/6
- *     desc  : 音视频播放记录本地缓存
- *     revise: 最开始使用greenDao，二级缓存耗时100毫秒左右
- *             磁盘+内存+key缓存+读写优化，耗时大概2到5毫秒左右
- * </pre>
+ * @description: 音视频播放记录本地缓存 最开始使用greenDao，二级缓存耗时100毫秒左右 磁盘+内存+key缓存+读写优化，耗时大概2到5毫秒左右
+ * @date:  2021-05-12 14:41
  */
+@Keep
 public class LocationManager {
 
     /**

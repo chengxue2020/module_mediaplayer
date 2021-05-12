@@ -3,6 +3,8 @@ package lib.kalu.mediaplayer.videocache;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videocache.file.DiskUsage;
 import lib.kalu.mediaplayer.videocache.file.FileNameGenerator;
 import lib.kalu.mediaplayer.videocache.file.Md5FileNameGenerator;
@@ -46,6 +48,7 @@ import static lib.kalu.mediaplayer.videocache.Preconditions.checkNotNull;
  * </code></pre>
  *
  */
+@Keep
 public class HttpProxyCacheServer {
 
     private static final String PROXY_HOST = "127.0.0.1";

@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
 import lib.kalu.mediaplayer.videom3u8.bean.M3u8Ts;
 import lib.kalu.mediaplayer.videom3u8.inter.OnDownloadListener;
@@ -32,6 +34,7 @@ import java.util.concurrent.Executors;
  *     revise:
  * </pre>
  */
+@Keep
 public class M3u8LiveManger {
 
     private static M3u8LiveManger mM3U8LiveManger;

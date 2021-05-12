@@ -5,6 +5,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.annotation.Keep;
+
 
 /**
  * <pre>
@@ -15,6 +17,7 @@ import android.widget.FrameLayout;
  *     revise:
  * </pre>
  */
+@Keep
 public class SmallWindowTouch implements View.OnTouchListener {
 
     private int mDownX, mDownY;

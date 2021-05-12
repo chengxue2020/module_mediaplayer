@@ -2,11 +2,13 @@ package lib.kalu.mediaplayer.musickernel.tool;
 
 import android.annotation.SuppressLint;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.musickernel.model.AudioBean;
 import lib.kalu.mediaplayer.musickernel.service.PlayService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <pre>
@@ -17,6 +19,7 @@ import lib.kalu.mediaplayer.musickernel.service.PlayService;
  *     revise:
  * </pre>
  */
+@Keep
 public class BaseAppHelper {
 
     /**

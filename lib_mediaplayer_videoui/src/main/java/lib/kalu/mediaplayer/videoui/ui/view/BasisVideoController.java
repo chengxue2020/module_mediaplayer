@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -49,6 +50,7 @@ import lib.kalu.mediaplayer.videoui.R;
  *     revise: 如果想定制ui，你可以直接继承GestureVideoController或者BaseVideoController实现
  * </pre>
  */
+@Keep
 public class BasisVideoController extends GestureVideoController implements View.OnClickListener {
 
     private Context mContext;

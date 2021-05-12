@@ -2,6 +2,11 @@ package lib.kalu.mediaplayer.videocache.cache;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
+import lib.kalu.mediaplayer.videocache.HttpProxyCacheServer;
+import lib.kalu.mediaplayer.videocache.Logger;
+
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -9,12 +14,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lib.kalu.mediaplayer.videocache.HttpProxyCacheServer;
-import lib.kalu.mediaplayer.videocache.Logger;
-
 /**
  * 预加载工具，使用AndroidVideoCache实现
  */
+@Keep
 public class PreloadManager {
 
     private static PreloadManager sPreloadManager;

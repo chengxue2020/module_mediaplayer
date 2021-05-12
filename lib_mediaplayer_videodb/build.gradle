@@ -25,20 +25,18 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             zipAlignEnabled false
             shrinkResources false
             multiDexEnabled false
-            ext.alwaysUpdateBuildId = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
-            consumerProguardFiles '../../proguard/proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
             zipAlignEnabled false
             shrinkResources false
             multiDexEnabled false
-            ext.alwaysUpdateBuildId = false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
     }
 }

@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.musickernel.model;
 
+import androidx.annotation.Keep;
+
 import java.io.Serializable;
 
 /**
@@ -11,6 +13,7 @@ import java.io.Serializable;
  *     revise:
  * </pre>
  */
+@Keep
 public class AudioBean implements Serializable {
 
     // 歌曲类型:本地/网络
@@ -36,6 +39,7 @@ public class AudioBean implements Serializable {
     // 文件大小
     private long fileSize;
 
+    @Keep
     public enum Type {
         LOCAL,
         ONLINE

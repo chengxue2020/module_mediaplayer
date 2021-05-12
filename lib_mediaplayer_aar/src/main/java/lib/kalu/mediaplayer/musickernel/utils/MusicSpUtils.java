@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.collection.SimpleArrayMap;
 
@@ -13,14 +14,14 @@ import java.util.Map;
 import java.util.Set;
 
 
-@SuppressLint("ApplySharedPref")
+@Keep
 public final class MusicSpUtils {
 
     private static SimpleArrayMap<String, MusicSpUtils> SP_UTILS_MAP = new SimpleArrayMap<>();
     private SharedPreferences sp;
     private static Context context;
 
-    public static void init(Application application){
+    public static void init(Application application) {
         context = application;
     }
 

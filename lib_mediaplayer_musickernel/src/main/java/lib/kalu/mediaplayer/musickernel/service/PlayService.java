@@ -12,10 +12,16 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import lib.kalu.mediaplayer.musickernel.config.MusicPlayAction;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+
 import lib.kalu.mediaplayer.musickernel.config.MusicConstant;
+import lib.kalu.mediaplayer.musickernel.config.MusicPlayAction;
 import lib.kalu.mediaplayer.musickernel.config.PlayModeEnum;
 import lib.kalu.mediaplayer.musickernel.inter.EventCallback;
 import lib.kalu.mediaplayer.musickernel.inter.OnPlayerEventListener;
@@ -25,19 +31,16 @@ import lib.kalu.mediaplayer.musickernel.model.AudioBean;
 import lib.kalu.mediaplayer.musickernel.receiver.AudioBroadcastReceiver;
 import lib.kalu.mediaplayer.musickernel.receiver.AudioEarPhoneReceiver;
 import lib.kalu.mediaplayer.musickernel.tool.BaseAppHelper;
-import lib.kalu.mediaplayer.musickernel.utils.MusicLogUtils;
-import lib.kalu.mediaplayer.musickernel.utils.NotificationHelper;
 import lib.kalu.mediaplayer.musickernel.tool.QuitTimerHelper;
+import lib.kalu.mediaplayer.musickernel.utils.MusicLogUtils;
 import lib.kalu.mediaplayer.musickernel.utils.MusicSpUtils;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
+import lib.kalu.mediaplayer.musickernel.utils.NotificationHelper;
 
 
 /**
  * Service就是用来在后台完成一些不需要和用户交互的动作
  */
+@Keep
 public class PlayService extends Service {
 
     /**
@@ -138,7 +141,7 @@ public class PlayService extends Service {
         context.startService(intent);
     }
 
-
+    @Keep
     public class PlayBinder extends Binder {
         public PlayService getService() {
             return PlayService.this;

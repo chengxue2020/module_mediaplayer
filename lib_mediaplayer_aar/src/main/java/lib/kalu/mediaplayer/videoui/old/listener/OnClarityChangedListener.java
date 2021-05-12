@@ -16,6 +16,8 @@ limitations under the License.
 package lib.kalu.mediaplayer.videoui.old.listener;
 
 
+import androidx.annotation.Keep;
+
 /**
  * <pre>
  *     @author yangchong
@@ -26,6 +28,7 @@ package lib.kalu.mediaplayer.videoui.old.listener;
  * </pre>
  */
 @Deprecated
+@Keep
 public interface OnClarityChangedListener {
 
     /**

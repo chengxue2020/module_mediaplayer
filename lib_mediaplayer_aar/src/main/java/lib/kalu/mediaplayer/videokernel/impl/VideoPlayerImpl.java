@@ -4,6 +4,7 @@ import android.content.res.AssetFileDescriptor;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -16,6 +17,7 @@ import lib.kalu.mediaplayer.videokernel.listener.OnVideoPlayerChangeListener;
  * @description: 播放器 - 抽象接口
  * @date: 2021-05-12 09:40
  */
+@Keep
 public interface VideoPlayerImpl {
 
     /*----------------------------第一部分：视频初始化实例对象方法----------------------------------*/

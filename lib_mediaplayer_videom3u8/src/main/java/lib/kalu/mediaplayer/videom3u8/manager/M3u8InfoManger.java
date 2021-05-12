@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
 import lib.kalu.mediaplayer.videom3u8.inter.OnM3u8InfoListener;
 import lib.kalu.mediaplayer.videom3u8.utils.M3u8FileUtils;
@@ -20,6 +22,7 @@ import java.io.IOException;
  *     revise:
  * </pre>
  */
+@Keep
 public class M3u8InfoManger {
 
     private static M3u8InfoManger mM3U8InfoManger;

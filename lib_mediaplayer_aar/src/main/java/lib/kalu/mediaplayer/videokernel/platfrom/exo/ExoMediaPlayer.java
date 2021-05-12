@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -30,11 +31,11 @@ import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoListener;
 
-import java.util.Map;
-
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
+
+import java.util.Map;
 
 import static com.google.android.exoplayer2.ExoPlaybackException.TYPE_SOURCE;
 
@@ -47,6 +48,7 @@ import static com.google.android.exoplayer2.ExoPlaybackException.TYPE_SOURCE;
  *     revise:
  * </pre>
  */
+@Keep
 public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Player.EventListener {
 
     protected Context mAppContext;

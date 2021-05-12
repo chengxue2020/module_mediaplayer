@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static lib.kalu.mediaplayer.videocache.Preconditions.checkNotNull;
+
 /**
  * Model for Http GET request.
  *

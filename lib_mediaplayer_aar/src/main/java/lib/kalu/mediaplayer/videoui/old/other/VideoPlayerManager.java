@@ -16,6 +16,8 @@ limitations under the License.
 package lib.kalu.mediaplayer.videoui.old.other;
 
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
 
 
@@ -29,6 +31,7 @@ import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
  * </pre>
  */
 @Deprecated
+@Keep
 public final class VideoPlayerManager {
 
     private OldVideoPlayer mVideoPlayer;

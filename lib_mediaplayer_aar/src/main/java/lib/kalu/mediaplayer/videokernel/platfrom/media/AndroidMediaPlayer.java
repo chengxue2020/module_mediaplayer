@@ -25,10 +25,12 @@ import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import java.util.Map;
+import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
+
+import java.util.Map;
 
 
 /**
@@ -40,6 +42,7 @@ import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
  *     revise:
  * </pre>
  */
+@Keep
 public class AndroidMediaPlayer extends VideoPlayerCore {
 
     protected MediaPlayer mMediaPlayer;

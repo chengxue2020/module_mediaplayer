@@ -34,6 +34,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -53,6 +54,7 @@ import lib.kalu.mediaplayer.R;
  *     revise: 用于普通播放器
  * </pre>
  */
+@Keep
 public class CustomBottomView extends FrameLayout implements InterControlView,
         View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 

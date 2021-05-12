@@ -17,6 +17,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
+import static lib.kalu.mediaplayer.videocache.Preconditions.checkArgument;
+import static lib.kalu.mediaplayer.videocache.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**

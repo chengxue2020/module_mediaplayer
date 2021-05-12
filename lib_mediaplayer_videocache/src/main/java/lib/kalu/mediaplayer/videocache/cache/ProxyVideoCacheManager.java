@@ -2,11 +2,14 @@ package lib.kalu.mediaplayer.videocache.cache;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videocache.HttpProxyCacheServer;
 import lib.kalu.mediaplayer.videocache.StorageUtils;
 
 import java.io.File;
 
+@Keep
 public class ProxyVideoCacheManager {
 
     private static HttpProxyCacheServer sharedProxy;

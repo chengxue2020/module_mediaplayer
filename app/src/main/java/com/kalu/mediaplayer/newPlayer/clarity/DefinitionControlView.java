@@ -77,7 +77,7 @@ public class DefinitionControlView extends CustomBottomView {
     }
 
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.layout_definition_control_view;
     }
 

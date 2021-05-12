@@ -1,5 +1,8 @@
 package lib.kalu.mediaplayer.musickernel.config;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class MusicConstant {
 
     public static final String SP_NAME = "yc";

@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntRange;
+import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
@@ -69,6 +70,7 @@ import java.util.Locale;
  */
 
 @Deprecated
+@Keep
 public class VideoPlayerController extends AbsVideoPlayerController implements View.OnClickListener{
 
     private Context mContext;

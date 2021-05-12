@@ -17,6 +17,7 @@ package lib.kalu.mediaplayer.videoui.config;
 
 
 import androidx.annotation.IntDef;
+import androidx.annotation.Keep;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,6 +31,7 @@ import java.lang.annotation.RetentionPolicy;
  *     revise:
  * </pre>
  */
+@Keep
 public final class ConstantKeys {
 
     /**
@@ -40,6 +42,7 @@ public final class ConstantKeys {
      * TYPE_RTC                 基于RTC视频播放器
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface VideoPlayerType {
         int TYPE_IJK = 1;
         int TYPE_NATIVE = 2;
@@ -47,8 +50,9 @@ public final class ConstantKeys {
         int TYPE_RTC = 4;
     }
 
-    @IntDef({VideoPlayerType.TYPE_IJK,VideoPlayerType.TYPE_NATIVE,VideoPlayerType.TYPE_EXO,VideoPlayerType.TYPE_RTC})
+    @IntDef({VideoPlayerType.TYPE_IJK, VideoPlayerType.TYPE_NATIVE, VideoPlayerType.TYPE_EXO, VideoPlayerType.TYPE_RTC})
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface PlayerType{}
 
     /**
@@ -64,6 +68,7 @@ public final class ConstantKeys {
      *                  6.HOR_AUDIO，音频
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface VideoControl {
         int DOWNLOAD = 2005;
         int AUDIO = 2006;
@@ -72,10 +77,11 @@ public final class ConstantKeys {
         int TV = 2009;
         int HOR_AUDIO = 2010;
     }
-    @IntDef({VideoControl.DOWNLOAD,VideoControl.AUDIO,
-            VideoControl.SHARE,VideoControl.MENU,VideoControl.TV,
+    @IntDef({VideoControl.DOWNLOAD, VideoControl.AUDIO,
+            VideoControl.SHARE, VideoControl.MENU, VideoControl.TV,
             VideoControl.HOR_AUDIO})
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface VideoControlType{}
 
     /**
@@ -96,6 +102,7 @@ public final class ConstantKeys {
      * 9                即将开播
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface CurrentState{
         int STATE_URL_NULL = -4;
         int STATE_PARSE_ERROR = -3;
@@ -113,12 +120,13 @@ public final class ConstantKeys {
         int STATE_ONCE_LIVE = 9;
     }
 
-    @IntDef({CurrentState.STATE_ERROR,CurrentState.STATE_IDLE,CurrentState.STATE_PREPARING,
-            CurrentState.STATE_PREPARED,CurrentState.STATE_PLAYING,CurrentState.STATE_PAUSED,
-            CurrentState.STATE_BUFFERING_PLAYING,CurrentState.STATE_BUFFERING_PAUSED,
-            CurrentState.STATE_COMPLETED,CurrentState.STATE_START_ABORT,CurrentState.STATE_NETWORK_ERROR,
-            CurrentState.STATE_PARSE_ERROR,CurrentState.STATE_URL_NULL,CurrentState.STATE_ONCE_LIVE})
+    @IntDef({CurrentState.STATE_ERROR, CurrentState.STATE_IDLE, CurrentState.STATE_PREPARING,
+            CurrentState.STATE_PREPARED, CurrentState.STATE_PLAYING, CurrentState.STATE_PAUSED,
+            CurrentState.STATE_BUFFERING_PLAYING, CurrentState.STATE_BUFFERING_PAUSED,
+            CurrentState.STATE_COMPLETED, CurrentState.STATE_START_ABORT, CurrentState.STATE_NETWORK_ERROR,
+            CurrentState.STATE_PARSE_ERROR, CurrentState.STATE_URL_NULL, CurrentState.STATE_ONCE_LIVE})
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface CurrentStateType{}
 
     /**
@@ -128,19 +136,22 @@ public final class ConstantKeys {
      * 2，是转圈加载loading，是补间动画
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface Loading {
         int LOADING_RING = 1;
         int LOADING_QQ = 2;
     }
 
-    @IntDef({Loading.LOADING_RING,Loading.LOADING_QQ})
+    @IntDef({Loading.LOADING_RING, Loading.LOADING_QQ})
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface LoadingType{}
 
     /**
      * 电量状态
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface BatterMode {
         int BATTERY_CHARGING = 80;
         int BATTERY_FULL = 81;
@@ -155,6 +166,7 @@ public final class ConstantKeys {
      * 播放状态
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface PlayerStatesType {
         //播放完成
         int COMPLETED = 101;
@@ -174,6 +186,7 @@ public final class ConstantKeys {
      * MODE_TINY_WINDOW         小屏模式
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface PlayMode {
         //普通模式
         int MODE_NORMAL = 1001;
@@ -183,14 +196,16 @@ public final class ConstantKeys {
         int MODE_TINY_WINDOW = 1003;
     }
 
-    @IntDef({PlayMode.MODE_NORMAL,PlayMode.MODE_FULL_SCREEN,PlayMode.MODE_TINY_WINDOW})
+    @IntDef({PlayMode.MODE_NORMAL, PlayMode.MODE_FULL_SCREEN, PlayMode.MODE_TINY_WINDOW})
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface PlayModeType{}
 
     /**
      * 播放视频缩放类型
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface PlayerScreenScaleType {
         //默认类型
         int SCREEN_SCALE_DEFAULT = 0;
@@ -206,9 +221,10 @@ public final class ConstantKeys {
         int SCREEN_SCALE_CENTER_CROP = 5;
     }
 
-    @IntDef({PlayerScreenScaleType.SCREEN_SCALE_DEFAULT,PlayerScreenScaleType.SCREEN_SCALE_16_9,
-            PlayerScreenScaleType.SCREEN_SCALE_4_3,PlayerScreenScaleType.SCREEN_SCALE_MATCH_PARENT,
-            PlayerScreenScaleType.SCREEN_SCALE_ORIGINAL,PlayerScreenScaleType.SCREEN_SCALE_CENTER_CROP})
+    @IntDef({PlayerScreenScaleType.SCREEN_SCALE_DEFAULT, PlayerScreenScaleType.SCREEN_SCALE_16_9,
+            PlayerScreenScaleType.SCREEN_SCALE_4_3, PlayerScreenScaleType.SCREEN_SCALE_MATCH_PARENT,
+            PlayerScreenScaleType.SCREEN_SCALE_ORIGINAL, PlayerScreenScaleType.SCREEN_SCALE_CENTER_CROP})
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface ScreenScaleType{}
 }

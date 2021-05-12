@@ -17,6 +17,8 @@ package lib.kalu.mediaplayer.videoui.surface;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
 /**
  * <pre>
  *     @author yangchong
@@ -26,6 +28,7 @@ import android.content.Context;
  *     revise: 可以使用TextureView，可参考{@link RenderTextureView}和{@link TextureViewFactory}的实现。
  * </pre>
  */
+@Keep
 public abstract class SurfaceFactory {
 
     public abstract InterSurfaceView createRenderView(Context context);

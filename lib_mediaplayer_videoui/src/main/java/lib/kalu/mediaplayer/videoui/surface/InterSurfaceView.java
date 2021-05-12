@@ -18,6 +18,7 @@ package lib.kalu.mediaplayer.videoui.surface;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.videokernel.impl.VideoPlayerImpl;
@@ -31,6 +32,7 @@ import lib.kalu.mediaplayer.videokernel.impl.VideoPlayerImpl;
  *     revise:
  * </pre>
  */
+@Keep
 public interface InterSurfaceView {
 
     /**

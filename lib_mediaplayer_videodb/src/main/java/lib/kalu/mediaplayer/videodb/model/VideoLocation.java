@@ -3,6 +3,8 @@ package lib.kalu.mediaplayer.videodb.model;
 
 import android.os.Build;
 
+import androidx.annotation.Keep;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,14 +12,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * <pre>
- *     @author yangchong
- *     email  : yangchong211@163.com
- *     time  : 2020/8/6
- *     desc  : 音视频bean
- *     revise: 必须
- * </pre>
+ * @description: 音视频bean
+ * @date:  2021-05-12 14:48
  */
+@Keep
 public class VideoLocation implements Serializable , Cloneable{
 
     /**

@@ -36,6 +36,7 @@ import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -64,6 +65,7 @@ import java.util.Locale;
  *     revise:
  * </pre>
  */
+@Keep
 public final class PlayerUtils {
 
     /**

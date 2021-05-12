@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
@@ -39,6 +41,7 @@ import java.util.TimerTask;
  * </pre>
  */
 @Deprecated
+@Keep
 public abstract class AbsVideoPlayerController extends FrameLayout implements
         View.OnTouchListener, IVideoController {
 

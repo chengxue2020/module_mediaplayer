@@ -2,21 +2,19 @@ package lib.kalu.mediaplayer.videokernel.utils;
 
 import android.content.Context;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
-import lib.kalu.mediaplayer.videokernel.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoPlayerFactory;
 import lib.kalu.mediaplayer.videokernel.platfrom.ijk.IjkPlayerFactory;
 import lib.kalu.mediaplayer.videokernel.platfrom.media.MediaPlayerFactory;
+import lib.kalu.mediaplayer.videokernel.impl.VideoPlayerImpl;
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2017/10/21
- *     desc  : 工具类
- *     revise:
- * </pre>
+ * @description: 工具类
+ * @date:  2021-05-12 14:41
  */
+@Keep
 public final class PlayerFactoryUtils {
 
     /**

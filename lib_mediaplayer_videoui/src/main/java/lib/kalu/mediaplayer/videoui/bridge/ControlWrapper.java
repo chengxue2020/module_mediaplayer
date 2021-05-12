@@ -18,6 +18,8 @@ package lib.kalu.mediaplayer.videoui.bridge;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.videoui.controller.InterVideoController;
 import lib.kalu.mediaplayer.videoui.player.InterVideoPlayer;
@@ -33,6 +35,7 @@ import lib.kalu.mediaplayer.videoui.player.InterVideoPlayer;
  *     revise:
  * </pre>
  */
+@Keep
 public class ControlWrapper implements InterVideoPlayer, InterVideoController {
     
     private InterVideoPlayer mVideoPlayer;

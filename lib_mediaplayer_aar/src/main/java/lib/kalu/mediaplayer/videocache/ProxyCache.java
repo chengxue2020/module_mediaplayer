@@ -2,6 +2,8 @@ package lib.kalu.mediaplayer.videocache;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static lib.kalu.mediaplayer.videocache.Preconditions.checkNotNull;
+
 /**
  * Proxy for {@link Source} with caching support ({@link Cache}).
  * <p/>

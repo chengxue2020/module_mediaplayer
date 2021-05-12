@@ -12,6 +12,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import static lib.kalu.mediaplayer.videocache.Preconditions.checkArgument;
+import static lib.kalu.mediaplayer.videocache.Preconditions.checkNotNull;
+
 /**
  * Just simple utils.
  */

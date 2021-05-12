@@ -18,6 +18,7 @@ package lib.kalu.mediaplayer.videoui.ui.view;
 import android.view.View;
 import android.view.animation.Animation;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.videoui.bridge.ControlWrapper;
@@ -34,6 +35,7 @@ import lib.kalu.mediaplayer.videoui.bridge.ControlWrapper;
  *             举一个例子：比如广告视图，
  * </pre>
  */
+@Keep
 public interface InterControlView {
 
     /**

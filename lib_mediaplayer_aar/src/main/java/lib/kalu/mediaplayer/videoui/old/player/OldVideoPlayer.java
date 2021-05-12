@@ -20,6 +20,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.AttributeSet;
@@ -54,6 +56,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  * </pre>
  */
 @Deprecated
+@Keep
 public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
 
     /**

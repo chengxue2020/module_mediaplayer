@@ -1,17 +1,15 @@
 package lib.kalu.mediaplayer.videokernel.utils;
 
+import androidx.annotation.Keep;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2017/10/21
- *     desc  : 常量类
- *     revise:
- * </pre>
+ * @description: 常量类
+ * @date:  2021-05-12 14:41
  */
+@Keep
 public final class PlayerConstant {
 
 
@@ -48,6 +46,7 @@ public final class PlayerConstant {
      * TYPE_RTC                 基于RTC视频播放器
      */
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface PlayerType {
         int TYPE_IJK = 1;
         int TYPE_NATIVE = 2;
@@ -56,6 +55,7 @@ public final class PlayerConstant {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    @Keep
     public @interface ErrorType {
         //错误的链接
         int TYPE_SOURCE = 1;

@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.videoui.old.listener;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 
 /**
@@ -12,6 +14,7 @@ import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
  * </pre>
  */
 @Deprecated
+@Keep
 public interface OnPlayerStatesListener {
 
     /**

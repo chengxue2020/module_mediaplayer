@@ -4,6 +4,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videom3u8.manager.M3u8InfoManger;
 import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
 import lib.kalu.mediaplayer.videom3u8.bean.M3u8Ts;
@@ -33,6 +35,7 @@ import java.util.concurrent.Executors;
  *     revise:
  * </pre>
  */
+@Keep
 public class M3u8DownloadTask {
     private OnDownloadListener onDownloadListener;
     private static final int WHAT_ON_ERROR = 1001;
