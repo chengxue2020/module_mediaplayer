@@ -710,7 +710,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
         mLoading.setVisibility(GONE);
         mPbPlayBar.setVisibility(VISIBLE);
         mRestartPause.setImageResource(R.drawable.moudle_mediaplayer_ic_player_pause);
-        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_icon_pause_center);
+        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_ic_pause_center);
         setTopBottomVisible(true);
         startDismissTopBottomTimer();
         cancelUpdateNetSpeedTimer();
@@ -722,7 +722,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
     private void statePaused() {
         mLoading.setVisibility(GONE);
         mRestartPause.setImageResource(R.drawable.moudle_mediaplayer_ic_player_start);
-        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_icon_play_center);
+        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_ic_play_center);
         setTopBottomVisible(true);
         cancelDismissTopBottomTimer();
         cancelUpdateNetSpeedTimer();
@@ -735,7 +735,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
         mLoading.setVisibility(VISIBLE);
         setTopBottomVisible(false);
         mRestartPause.setImageResource(R.drawable.moudle_mediaplayer_ic_player_pause);
-        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_icon_pause_center);
+        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_ic_pause_center);
         mLoadText.setText("正在准备...");
         startDismissTopBottomTimer();
         cancelUpdateNetSpeedTimer();
@@ -747,7 +747,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
     private void stateBufferingPaused() {
         mLoading.setVisibility(VISIBLE);
         mRestartPause.setImageResource(R.drawable.moudle_mediaplayer_ic_player_start);
-        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_icon_play_center);
+        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_ic_play_center);
         mLoadText.setText("正在准备...");
         setTopBottomVisible(false);
         cancelDismissTopBottomTimer();

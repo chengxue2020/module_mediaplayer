@@ -28,7 +28,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:padding="12dp"
-            android:src="@drawable/moudle_mediaplayer_icon_action_refresh" />
+            android:src="@drawable/moudle_mediaplayer_ic_action_refresh" />
 
         <Space
             android:layout_width="0dp"
