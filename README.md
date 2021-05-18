@@ -1,3 +1,9 @@
+#
+#### 资料
+```
+https://mvnrepository.com/search?q=exoplayer
+```
+
 # 视频播放器介绍文档
 #### 目录介绍
 - 01.该视频播放器介绍
