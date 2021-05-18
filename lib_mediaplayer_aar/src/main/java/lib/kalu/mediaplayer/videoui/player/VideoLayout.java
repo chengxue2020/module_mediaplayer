@@ -979,6 +979,10 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         return mIsTinyScreen;
     }
 
+    public BaseVideoController getVideoController() {
+        return mVideoController;
+    }
+
     @Override
     public void onVideoSizeChanged(int videoWidth, int videoHeight) {
         mVideoSize[0] = videoWidth;

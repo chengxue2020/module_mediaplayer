@@ -1,7 +1,7 @@
 buildscript {
 
     // 编译: 2020-01-03
-    ext.plugin_gradle_version = '4.2.0'
+    ext.plugin_gradle_version = '4.2.1'
     ext.plugin_kotlin_version = '1.4.21'
     ext.plugin_andresguard_version = '1.2.20'// 不要改动
     ext.plugin_asm_version = "1.0.0"// 不要改动

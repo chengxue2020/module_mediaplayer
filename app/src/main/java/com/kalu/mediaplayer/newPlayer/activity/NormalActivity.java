@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +39,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
     private Button mBtnScaleCrop;
     private Button mBtnCrop;
     private Button mBtnGif;
-    private BasisVideoController controller;
+//    private BasisVideoController controller;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,6 +82,11 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
     public void onBackPressed() {
         //处理返回键逻辑；如果是全屏，则退出全屏；如果是小窗口，则退出小窗口
         if (mVideoPlayer == null || !mVideoPlayer.onBackPressed()) {
+
+            long currentPosition = mVideoPlayer.getCurrentPosition();
+            long duration = mVideoPlayer.getDuration();
+            Toast.makeText(getApplicationContext(), currentPosition+"-"+duration, Toast.LENGTH_SHORT).show();
+
             super.onBackPressed();
         }
     }
@@ -107,9 +113,9 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         //创建基础视频播放器，一般播放器的功能
 
 
-        controller = new BasisVideoController(this);
+        BasisVideoController basisVideoController = new BasisVideoController(this);
         //设置控制器
-        mVideoPlayer.setController(controller);
+        mVideoPlayer.setController(basisVideoController);
         //设置视频播放链接地址
         mVideoPlayer.setUrl(url);
         //开始播放
@@ -121,7 +127,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
             }
         },300);
         //设置视频背景图
-        Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
+        Glide.with(this).load(R.drawable.image_default).into(basisVideoController.getThumb());
     }
 
     private void initListener() {
@@ -303,6 +309,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         //设置视频背景图
+        BasisVideoController controller = (BasisVideoController) mVideoPlayer.getVideoController();
         ImageView thumb = controller.getThumb();
         Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
         //设置视频标题
@@ -370,7 +377,5 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
                 //.setRenderViewFactory(null)
                 //创建
                 .build());
-
     }
-
 }

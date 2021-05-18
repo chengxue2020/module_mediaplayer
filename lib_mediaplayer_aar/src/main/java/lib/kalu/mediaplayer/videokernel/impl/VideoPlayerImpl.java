@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.videokernel.listener.OnVideoPlayerChangeListener;
+import lib.kalu.mediaplayer.videoui.controller.BaseVideoController;
 
 
 /**

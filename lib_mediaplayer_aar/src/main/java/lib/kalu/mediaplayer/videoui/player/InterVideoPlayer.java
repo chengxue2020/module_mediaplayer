@@ -35,6 +35,7 @@ import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
+import lib.kalu.mediaplayer.videoui.controller.BaseVideoController;
 
 /**
  * <pre>
@@ -141,5 +142,4 @@ public interface InterVideoPlayer {
     void stopTinyScreen();
 
     boolean isTinyScreen();
-
 }

@@ -103,8 +103,8 @@ dependencies {
     implementation rootProject.ext.dependencies.support_exoplayer_smoothstreaming
 
     // lib_mediaplayer_aar
-    // implementation project(path: ':lib_mediaplayer_aar')
-    implementation(name: 'lib_mediaplayer_release_20210512', ext: 'aar')
+//     implementation project(path: ':lib_mediaplayer_aar')
+    implementation(name: 'lib_mediaplayer_release_20210518', ext: 'aar')
 
 //    // 视频缓存
 //    implementation project(path: ':lib_mediaplayer_videocache')
