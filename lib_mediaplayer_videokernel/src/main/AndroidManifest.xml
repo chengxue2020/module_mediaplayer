@@ -4,6 +4,13 @@ package="lib.kalu.mediaplayer.videokernel">
     <application
         android:allowBackup="false"
         android:supportsRtl="true">
+
+        <!-- context -->
+        <provider
+            android:name="lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer"
+            android:authorities="${applicationId}.mediaplayer.contextprovider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

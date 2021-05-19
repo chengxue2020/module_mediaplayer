@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.videokernel.platfrom.exo;
 
-import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -40,17 +39,11 @@ public final class ExoMediaSourceHelper {
 
     private static ExoMediaSourceHelper sInstance;
     private final String mUserAgent;
-    private Context mAppContext;
     private HttpDataSource.Factory mHttpDataSourceFactory;
     private Cache mCache;
 
-    private ExoMediaSourceHelper(Context context) {
-        if (context instanceof Application) {
-            mAppContext = context;
-        } else {
-            mAppContext = context.getApplicationContext();
-        }
-        mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
+    private ExoMediaSourceHelper(@NonNull Context context) {
+        mUserAgent = Util.getUserAgent(context, context.getApplicationInfo().name);
     }
 
     public static ExoMediaSourceHelper getInstance(Context context) {
@@ -70,7 +63,7 @@ public final class ExoMediaSourceHelper {
      * @param isCache 视频cache
      * @return
      */
-    public MediaSource getMediaSource(@NonNull String uri, @Nullable Map<String, String> headers, @NonNull boolean isCache) {
+    public MediaSource getMediaSource(@NonNull Context context, @NonNull String uri, @Nullable Map<String, String> headers, @NonNull boolean isCache) {
         Uri contentUri = Uri.parse(uri);
         if ("rtmp".equals(contentUri.getScheme())) {
             RtmpDataSourceFactory rtmpDataSourceFactory = new RtmpDataSourceFactory(null);
@@ -79,9 +72,9 @@ public final class ExoMediaSourceHelper {
         int contentType = inferContentType(uri);
         DataSource.Factory factory;
         if (isCache) {
-            factory = getCacheDataSourceFactory();
+            factory = getCacheDataSourceFactory(context);
         } else {
-            factory = getDataSourceFactory();
+            factory = getDataSourceFactory(context);
         }
         if (mHttpDataSourceFactory != null) {
             setHeaders(headers);
@@ -112,23 +105,23 @@ public final class ExoMediaSourceHelper {
         }
     }
 
-    private DataSource.Factory getCacheDataSourceFactory() {
+    private DataSource.Factory getCacheDataSourceFactory(@NonNull Context context) {
         if (mCache == null) {
-            mCache = newCache();
+            mCache = newCache(context);
         }
         return new CacheDataSourceFactory(
                 mCache,
-                getDataSourceFactory(),
+                getDataSourceFactory(context),
                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
     }
 
-    private Cache newCache() {
+    private Cache newCache(@NonNull Context context) {
         return new SimpleCache(
                 //缓存目录
-                new File(mAppContext.getExternalCacheDir(), "exo-video-cache"),
-                //缓存大小，默认512M，使用LRU算法实现
-                new LeastRecentlyUsedCacheEvictor(512 * 1024 * 1024),
-                new ExoDatabaseProvider(mAppContext));
+                new File(context.getExternalCacheDir(), "exoplayer"),
+                //缓存大小，默认1024M，使用LRU算法实现
+                new LeastRecentlyUsedCacheEvictor(1024 * 1024 * 1024),
+                new ExoDatabaseProvider(context));
     }
 
     /**
@@ -136,8 +129,8 @@ public final class ExoMediaSourceHelper {
      *
      * @return A new DataSource factory.
      */
-    private DataSource.Factory getDataSourceFactory() {
-        return new DefaultDataSourceFactory(mAppContext, getHttpDataSourceFactory());
+    private DataSource.Factory getDataSourceFactory(@NonNull Context context) {
+        return new DefaultDataSourceFactory(context, getHttpDataSourceFactory());
     }
 
     /**

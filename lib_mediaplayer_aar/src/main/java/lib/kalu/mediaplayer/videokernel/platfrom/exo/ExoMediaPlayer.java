@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoListener;
 
+import lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer;
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
@@ -132,7 +133,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Pl
             }
             return;
         }
-        mMediaSource = mMediaSourceHelper.getMediaSource(path, headers, isCache);
+        mMediaSource = mMediaSourceHelper.getMediaSource(ContextProviderMediaplayer.mContext, path, headers, isCache);
     }
 
     @Override

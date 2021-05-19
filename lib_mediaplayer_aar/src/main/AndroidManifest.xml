@@ -22,6 +22,12 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
+        <!-- context -->
+        <provider
+            android:name="lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer"
+            android:authorities="${applicationId}.mediaplayer.contextprovider"
+            android:exported="false" />
+
         <receiver android:name="lib.kalu.mediaplayer.videoui.old.other.BatterReceiver" />
         <receiver android:name="lib.kalu.mediaplayer.videoui.old.other.NetChangedReceiver">
             <intent-filter>

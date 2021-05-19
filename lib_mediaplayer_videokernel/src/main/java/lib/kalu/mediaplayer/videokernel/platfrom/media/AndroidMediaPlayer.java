@@ -26,6 +26,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
