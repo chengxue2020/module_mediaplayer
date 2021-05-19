@@ -20,7 +20,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
         <activity
-            android:name="com.kalu.mediaplayer.newPlayer.activity.TypeActivity"
+            android:name="com.kalu.mediaplayer.TypeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -29,16 +29,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity android:name="com.kalu.mediaplayer.MainActivity"-->
-<!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
-<!--            android:screenOrientation="portrait">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+        <!--        <activity android:name="com.kalu.mediaplayer.MainActivity"-->
+        <!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
+        <!--            android:screenOrientation="portrait">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-<!--        <activity android:name="com.kalu.mediaplayer.newPlayer.activity.TypeActivity"/>-->
+        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+        <!--            </intent-filter>-->
+        <!--        </activity>-->
+        <!--        <activity android:name="com.kalu.mediaplayer.TypeActivity"/>-->
         <activity
             android:name="com.kalu.mediaplayer.oldPlayer.TestTinyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -157,6 +157,12 @@
             android:screenOrientation="portrait" />
         <activity android:name="com.kalu.mediaplayer.music.MusicPlayerActivity" />
         <activity android:name="com.kalu.mediaplayer.m3u8.M3u8Activity" />
+
+        <activity
+            android:name="com.kalu.mediaplayer.LandscapeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

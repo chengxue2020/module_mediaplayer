@@ -1,20 +1,19 @@
-package com.kalu.mediaplayer.newPlayer.activity;
+package com.kalu.mediaplayer;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.kalu.mediaplayer.BuriedPointEventImpl;
-import com.kalu.mediaplayer.ConstantVideo;
-import com.kalu.mediaplayer.R;
+
+import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
+import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
+import lib.kalu.mediaplayer.videokernel.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
 import lib.kalu.mediaplayer.videoui.player.OnVideoStateListener;
@@ -24,150 +23,151 @@ import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
 import lib.kalu.mediaplayer.videoui.ui.view.CustomErrorView;
 
-import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
-import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
-import lib.kalu.mediaplayer.videokernel.utils.PlayerFactoryUtils;
+/**
+ * @description: 横屏播放
+ * 视频测试地址： https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8
+ * @date: 2021-05-19 15:24
+ */
+public class LandscapeActivity extends AppCompatActivity {
 
-public class NormalActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private VideoLayout mVideoPlayer;
-    private Button mBtnScaleNormal;
-    private Button mBtnScale169;
-    private Button mBtnScale43;
-    private Button mBtnScaleFull;
-    private Button mBtnScaleOriginal;
-    private Button mBtnScaleCrop;
-    private Button mBtnCrop;
-    private Button mBtnGif;
-//    private BasisVideoController controller;
+    public static final String INTENT_URL = "intent_url";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video);
-        initFindViewById();
-        initVideoPlayer();
-        initListener();
+        setContentView(R.layout.activity_landscape);
+
+        String url = getIntent().getStringExtra(INTENT_URL);
+        if (null == url || url.length() == 0 || !url.startsWith("http")) {
+            onBackPressed();
+            return;
+        }
+
+        // 基础视频播放器
+        BasisVideoController basisVideoController = new BasisVideoController(this);
+        basisVideoController.setEnableOrientation(false);
+        // 设置视频背景图
+        ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
+        basisVideoController.getThumb().setImageDrawable(colorDrawable);
+        // 控制器
+        VideoLayout videoLayout = findViewById(R.id.video_player);
+        videoLayout.setController(basisVideoController);
+        // 设置视频播放链接地址
+        videoLayout.setUrl(url);
+        videoLayout.showNetWarning();
+        // 全屏
+        videoLayout.startFullScreen();
+        // 开始播放
+        videoLayout.start();
+
+        // 监听
+        videoLayout.setOnStateChangeListener(new OnVideoStateListener() {
+            /**
+             * 播放模式
+             * 普通模式，小窗口模式，正常模式三种其中一种
+             * MODE_NORMAL              普通模式
+             * MODE_FULL_SCREEN         全屏模式
+             * MODE_TINY_WINDOW         小屏模式
+             * @param playerState                       播放模式
+             */
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                switch (playerState) {
+                    case ConstantKeys.PlayMode.MODE_NORMAL:
+                        onBackPressed();
+                        //普通模式
+                        break;
+                    case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+                        //全屏模式
+                        break;
+                    case ConstantKeys.PlayMode.MODE_TINY_WINDOW:
+                        //小屏模式
+                        break;
+                }
+            }
+
+            /**
+             * 播放状态
+             * -1               播放错误
+             * 0                播放未开始
+             * 1                播放准备中
+             * 2                播放准备就绪
+             * 3                正在播放
+             * 4                暂停播放
+             * 5                正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+             * 6                暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+             * 7                播放完成
+             * 8                开始播放中止
+             * @param playState                         播放状态，主要是指播放器的各种状态
+             */
+            @Override
+            public void onPlayStateChanged(int playState) {
+                switch (playState) {
+                    case ConstantKeys.CurrentState.STATE_IDLE:
+                        //播放未开始，初始化
+                        break;
+                    case ConstantKeys.CurrentState.STATE_START_ABORT:
+                        //开始播放中止
+                        break;
+                    case ConstantKeys.CurrentState.STATE_PREPARING:
+                        //播放准备中
+                        break;
+                    case ConstantKeys.CurrentState.STATE_PREPARED:
+                        //播放准备就绪
+                        break;
+                    case ConstantKeys.CurrentState.STATE_ERROR:
+                        //播放错误
+                        break;
+                    case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+                        //正在缓冲
+                        break;
+                    case ConstantKeys.CurrentState.STATE_PLAYING:
+                        //正在播放
+                        break;
+                    case ConstantKeys.CurrentState.STATE_PAUSED:
+                        //暂停播放
+                        break;
+                    case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
+                        //暂停缓冲
+                        break;
+                    case ConstantKeys.CurrentState.STATE_COMPLETED:
+                        //播放完成
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        VideoLayout videoLayout = findViewById(R.id.video_player);
+        videoLayout.release();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mVideoPlayer != null) {
-            //从后台切换到前台，当视频暂停时或者缓冲暂停时，调用该方法重新开启视频播放
-            mVideoPlayer.resume();
-        }
+        VideoLayout videoLayout = findViewById(R.id.video_player);
+        videoLayout.resume();
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mVideoPlayer != null) {
-            //从前台切到后台，当视频正在播放或者正在缓冲时，调用该方法暂停视频
-            mVideoPlayer.pause();
-        }
+        VideoLayout videoLayout = findViewById(R.id.video_player);
+        videoLayout.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mVideoPlayer != null) {
-            //销毁页面，释放，内部的播放器被释放掉，同时如果在全屏、小窗口模式下都会退出
-            mVideoPlayer.release();
-        }
+        VideoLayout videoLayout = findViewById(R.id.video_player);
+        videoLayout.release();
     }
 
-    @Override
-    public void onBackPressed() {
-        //处理返回键逻辑；如果是全屏，则退出全屏；如果是小窗口，则退出小窗口
-        if (mVideoPlayer == null || !mVideoPlayer.onBackPressed()) {
-
-            long currentPosition = mVideoPlayer.getCurrentPosition();
-            long duration = mVideoPlayer.getDuration();
-            Toast.makeText(getApplicationContext(), currentPosition+"-"+duration, Toast.LENGTH_SHORT).show();
-
-            super.onBackPressed();
-        }
-    }
-
-    private void initFindViewById() {
-        mVideoPlayer = findViewById(R.id.video_player);
-        mBtnScaleNormal = findViewById(R.id.btn_scale_normal);
-        mBtnScale169 = findViewById(R.id.btn_scale_169);
-        mBtnScale43 = findViewById(R.id.btn_scale_43);
-        mBtnScaleFull = findViewById(R.id.btn_scale_full);
-        mBtnScaleOriginal = findViewById(R.id.btn_scale_original);
-        mBtnScaleCrop = findViewById(R.id.btn_scale_crop);
-        mBtnCrop = findViewById(R.id.btn_crop);
-        mBtnGif = findViewById(R.id.btn_gif);
-    }
-
-    private void initVideoPlayer() {
-//        String url = getIntent().getStringExtra(IntentKeys.URL);
-        String url = "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8";
-//        String url = "https://vod.iartschool.com/793497282635890688_low.m3u8?sign=52a09ee9f0f03b0270339dab57712f9a&t=60990a84";
-        if (url==null || url.length()==0){
-            url = ConstantVideo.VideoPlayerList[0];
-        }
-        //创建基础视频播放器，一般播放器的功能
-
-
-        BasisVideoController basisVideoController = new BasisVideoController(this);
-        basisVideoController.setEnableOrientation(false);
-        //设置控制器
-        mVideoPlayer.setController(basisVideoController);
-
-
-        //设置视频播放链接地址
-        mVideoPlayer.setUrl(url);
-        //开始播放
-        mVideoPlayer.startFullScreen();
-        mVideoPlayer.start();
-//        mVideoPlayer.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mVideoPlayer.start();
-//            }
-//        },300);
-        //设置视频背景图
-        Glide.with(this).load(R.drawable.image_default).into(basisVideoController.getThumb());
-    }
-
-    private void initListener() {
-        mBtnScaleNormal.setOnClickListener(this);
-        mBtnScale169.setOnClickListener(this);
-        mBtnScale43.setOnClickListener(this);
-        mBtnScaleFull.setOnClickListener(this);
-        mBtnScaleOriginal.setOnClickListener(this);
-        mBtnScaleCrop.setOnClickListener(this);
-        mBtnCrop.setOnClickListener(this);
-        mBtnGif.setOnClickListener(this);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        if (v == mBtnScale169){
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_16_9);
-        } else if (v == mBtnScaleNormal){
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_DEFAULT);
-        }else if (v == mBtnScale43){
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_4_3);
-        } else if (v == mBtnScaleFull){
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_MATCH_PARENT);
-        }else if (v == mBtnScaleOriginal){
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_ORIGINAL);
-        }else if (v == mBtnScaleCrop){
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_CENTER_CROP);
-        }else if (v == mBtnCrop){
-
-        } else if (v == mBtnGif){
-
-        }
-    }
-
-    private void test(){
+    private void test() {
         //VideoPlayer相关
         VideoBuilder.Builder builder = VideoBuilder.newBuilder();
         VideoBuilder videoPlayerBuilder = new VideoBuilder(builder);
@@ -178,6 +178,8 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         builder.setTinyScreenSize(mTinyScreenSize);
         //是否开启AudioFocus监听， 默认开启
         builder.setEnableAudioFocus(false);
+
+        VideoLayout mVideoPlayer = findViewById(R.id.video_player);
         mVideoPlayer.setVideoBuilder(videoPlayerBuilder);
         //截图
         Bitmap bitmap = mVideoPlayer.doScreenShot();
@@ -223,7 +225,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         //设置播放速度
         mVideoPlayer.setSpeed(1.1f);
         //设置音量 0.0f-1.0f 之间
-        mVideoPlayer.setVolume(1,1);
+        mVideoPlayer.setVolume(1, 1);
         //开始播放
         mVideoPlayer.start();
 
@@ -355,7 +357,6 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         controller.setDismissTimeout(8);
         //销毁
         controller.destroy();
-
 
 
         //播放器配置，注意：此为全局配置，按需开启
