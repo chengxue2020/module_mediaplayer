@@ -90,17 +90,8 @@ dependencies {
     implementation rootProject.ext.dependencies.support_ijkplayer_java
     implementation rootProject.ext.dependencies.support_ijkplayer_armv7a
 
-    // exoplayer
-    implementation(name: 'exoplayer-2.11.8', ext: 'aar')
-    implementation(name: 'exoplayer-core-2.11.8', ext: 'aar')
-    implementation(name: 'exoplayer-dash-2.11.8', ext: 'aar')
-    implementation(name: 'exoplayer-hls-2.11.8', ext: 'aar')
-    implementation(name: 'exoplayer-ui-2.11.8', ext: 'aar')
-    implementation(name: 'exoplayer-extension-rtmp-2.11.8', ext: 'aar')
-    implementation(name: 'exoplayer-smoothstreaming-2.11.8', ext: 'aar')
-
     // lib_mediaplayer_aar
-    implementation(name: 'lib_mediaplayer_release_20210518', ext: 'aar')
+    implementation(name: 'lib_mediaplayer_release_20210519', ext: 'aar')
 //    implementation project(path: ':lib_mediaplayer_aar')
 
 //    // 视频缓存

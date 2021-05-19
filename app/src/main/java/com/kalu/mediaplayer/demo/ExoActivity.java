@@ -59,5 +59,4 @@ public class ExoActivity extends AppCompatActivity {
         // 播放
         player.prepare(mediaSource);
     }
-
 }

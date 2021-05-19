@@ -60,25 +60,36 @@ dependencies {
     // api fileTree(dir: 'libs', include: ['*.aar'])
     api files('libs/commons-io-2.5.jar')
 
+    implementation 'net.butterflytv.utils:rtmp-client:3.1.0'
+    compileOnly 'org.checkerframework:checker-qual:2.5.0'
+    compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
+
     // videokernel-exoplayer
-    api(name: 'exoplayer-2.11.8', ext: 'aar')
-    api(name: 'exoplayer-core-2.11.8', ext: 'aar')
-    api(name: 'exoplayer-dash-2.11.8', ext: 'aar')
-    api(name: 'exoplayer-hls-2.11.8', ext: 'aar')
-    api(name: 'exoplayer-ui-2.11.8', ext: 'aar')
-    api(name: 'exoplayer-extension-rtmp-2.11.8', ext: 'aar')
-    api(name: 'exoplayer-smoothstreaming-2.11.8', ext: 'aar')
+//    api(name: 'exoplayer-2.11.8', ext: 'aar')
+//    api(name: 'exoplayer-core-2.11.8', ext: 'aar')
+//    api(name: 'exoplayer-dash-2.11.8', ext: 'aar')
+//    api(name: 'exoplayer-hls-2.11.8', ext: 'aar')
+//    api(name: 'exoplayer-ui-2.11.8', ext: 'aar')
+//    api(name: 'exoplayer-extension-rtmp-2.11.8', ext: 'aar')
+//    api(name: 'exoplayer-smoothstreaming-2.11.8', ext: 'aar')
 
     implementation rootProject.ext.dependencies.support_appcompat
     implementation rootProject.ext.dependencies.support_annotation
     implementation rootProject.ext.dependencies.support_cardview
     implementation rootProject.ext.dependencies.support_media
 
-    // videokernel-ijkplayer
+    // ijkplayer
     implementation rootProject.ext.dependencies.support_ijkplayer_java
     implementation rootProject.ext.dependencies.support_ijkplayer_armv7a
 
-    // videokernel-exoplayer
+    // exoplayer
+//    implementation(name: 'exoplayer-2.11.8', ext: 'aar')
+//    implementation(name: 'exoplayer-core-2.11.8', ext: 'aar')
+//    implementation(name: 'exoplayer-dash-2.11.8', ext: 'aar')
+//    implementation(name: 'exoplayer-hls-2.11.8', ext: 'aar')
+//    implementation(name: 'exoplayer-ui-2.11.8', ext: 'aar')
+//    implementation(name: 'exoplayer-extension-rtmp-2.11.8', ext: 'aar')
+//    implementation(name: 'exoplayer-smoothstreaming-2.11.8', ext: 'aar')
 //    implementation rootProject.ext.dependencies.support_exoplayer
 //    implementation rootProject.ext.dependencies.support_exoplayer_core
 //    implementation rootProject.ext.dependencies.support_exoplayer_dash
