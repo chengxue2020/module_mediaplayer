@@ -2,7 +2,7 @@ include ':app'
 // source
 // include ':lib_exoplayer_source_r2-11-8'
 // All
-include ':lib_mediaplayer_aar'
+//include ':lib_mediaplayer_aar'
 //// 视频m3u8下载和合成
 //include ':lib_mediaplayer_videom3u8'
 //// 音频
