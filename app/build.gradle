@@ -91,7 +91,7 @@ dependencies {
     implementation rootProject.ext.dependencies.support_ijkplayer_armv7a
 
     // lib_mediaplayer_aar
-    implementation(name: 'lib_mediaplayer_release_20210519', ext: 'aar')
+    implementation(name: 'lib_mediaplayer_r2.11.8_release_20210520', ext: 'aar')
 //    implementation project(path: ':lib_mediaplayer_aar')
 
 //    // 视频缓存
