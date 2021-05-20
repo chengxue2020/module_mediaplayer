@@ -24,9 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Represents a splice insert command defined in SCTE35, Section 9.3.3.
- */
+/** Represents a splice insert command defined in SCTE35, Section 9.3.3. */
 public final class SpliceInsertCommand extends SpliceCommand {
 
   /**
@@ -236,8 +234,8 @@ public final class SpliceInsertCommand extends SpliceCommand {
     dest.writeInt(availsExpected);
   }
 
-  public static final Creator<SpliceInsertCommand> CREATOR =
-      new Creator<SpliceInsertCommand>() {
+  public static final Parcelable.Creator<SpliceInsertCommand> CREATOR =
+      new Parcelable.Creator<SpliceInsertCommand>() {
 
     @Override
     public SpliceInsertCommand createFromParcel(Parcel in) {

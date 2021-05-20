@@ -24,7 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /** The projection mesh used with 360/VR videos. */
-public final class Projection {
+/* package */ final class Projection {
 
   /** Enforces allowed (sub) mesh draw modes. */
   @Documented
@@ -46,9 +46,9 @@ public final class Projection {
   /**
    * Generates a complete sphere equirectangular projection.
    *
-   * @param stereoMode A {@link StereoMode} value.
+   * @param stereoMode A {@link C.StereoMode} value.
    */
-  public static Projection createEquirectangular(@StereoMode int stereoMode) {
+  public static Projection createEquirectangular(@C.StereoMode int stereoMode) {
     return createEquirectangular(
         /* radius= */ 50, // Should be large enough that there are no stereo artifacts.
         /* latitudes= */ 36, // Should be large enough to prevent videos looking wavy.
@@ -68,7 +68,7 @@ public final class Projection {
    *     (0, 180].
    * @param horizontalFovDegrees Total longitudinal degrees that are covered by the sphere.Must be
    *     in (0, 360].
-   * @param stereoMode A {@link StereoMode} value.
+   * @param stereoMode A {@link C.StereoMode} value.
    * @return an equirectangular projection.
    */
   public static Projection createEquirectangular(
@@ -77,7 +77,7 @@ public final class Projection {
       int longitudes,
       float verticalFovDegrees,
       float horizontalFovDegrees,
-      @StereoMode int stereoMode) {
+      @C.StereoMode int stereoMode) {
     Assertions.checkArgument(radius > 0);
     Assertions.checkArgument(latitudes >= 1);
     Assertions.checkArgument(longitudes >= 1);
@@ -176,7 +176,7 @@ public final class Projection {
    *
    * @param leftMesh the Mesh corresponding to the left eye.
    * @param rightMesh the Mesh corresponding to the right eye.
-   * @param stereoMode A {@link StereoMode} value.
+   * @param stereoMode A {@link C.StereoMode} value.
    */
   public Projection(Mesh leftMesh, Mesh rightMesh, int stereoMode) {
     this.leftMesh = leftMesh;

@@ -15,30 +15,23 @@
  */
 package com.google.android.exoplayer2;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
-import android.view.Surface;
 import androidx.annotation.IntDef;
-import com.google.android.exoplayer2.PlayerMessage.Target;
-import com.google.android.exoplayer2.audio.AuxEffectInfo;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.SimpleDecoderVideoRenderer;
-import com.google.android.exoplayer2.video.VideoDecoderOutputBufferRenderer;
-import com.google.android.exoplayer2.video.VideoFrameMetadataListener;
-import com.google.android.exoplayer2.video.spherical.CameraMotionListener;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.UUID;
 
-/**
- * Defines constants used by the library.
- */
+/** Defines constants used by the library. */
 @SuppressWarnings("InlinedApi")
 public final class C {
 
@@ -66,9 +59,10 @@ public final class C {
    */
   public static final int POSITION_UNSET = -1;
 
-  /**
-   * Represents an unset or unknown length.
-   */
+  /** Represents an unset or unknown rate. */
+  public static final float RATE_UNSET = -Float.MAX_VALUE;
+
+  /** Represents an unset or unknown length. */
   public static final int LENGTH_UNSET = -1;
 
   /** Represents an unset or unknown percentage. */
@@ -92,23 +86,34 @@ public final class C {
   public static final int BYTES_PER_FLOAT = 4;
 
   /**
-   * The name of the ASCII charset.
+   * @deprecated Use {@link java.nio.charset.StandardCharsets} or {@link
+   *     com.google.common.base.Charsets} instead.
    */
-  public static final String ASCII_NAME = "US-ASCII";
+  @Deprecated public static final String ASCII_NAME = "US-ASCII";
 
   /**
-   * The name of the UTF-8 charset.
+   * @deprecated Use {@link java.nio.charset.StandardCharsets} or {@link
+   *     com.google.common.base.Charsets} instead.
    */
-  public static final String UTF8_NAME = "UTF-8";
+  @Deprecated public static final String UTF8_NAME = "UTF-8";
 
-  /** The name of the ISO-8859-1 charset. */
-  public static final String ISO88591_NAME = "ISO-8859-1";
+  /**
+   * @deprecated Use {@link java.nio.charset.StandardCharsets} or {@link
+   *     com.google.common.base.Charsets} instead.
+   */
+  @Deprecated public static final String ISO88591_NAME = "ISO-8859-1";
 
-  /** The name of the UTF-16 charset. */
-  public static final String UTF16_NAME = "UTF-16";
+  /**
+   * @deprecated Use {@link java.nio.charset.StandardCharsets} or {@link
+   *     com.google.common.base.Charsets} instead.
+   */
+  @Deprecated public static final String UTF16_NAME = "UTF-16";
 
-  /** The name of the UTF-16 little-endian charset. */
-  public static final String UTF16LE_NAME = "UTF-16LE";
+  /**
+   * @deprecated Use {@link java.nio.charset.StandardCharsets} or {@link
+   *     com.google.common.base.Charsets} instead.
+   */
+  @Deprecated public static final String UTF16LE_NAME = "UTF-16LE";
 
   /**
    * The name of the serif font family.
@@ -167,6 +172,12 @@ public final class C {
     ENCODING_PCM_32BIT,
     ENCODING_PCM_FLOAT,
     ENCODING_MP3,
+    ENCODING_AAC_LC,
+    ENCODING_AAC_HE_V1,
+    ENCODING_AAC_HE_V2,
+    ENCODING_AAC_XHE,
+    ENCODING_AAC_ELD,
+    ENCODING_AAC_ER_BSAC,
     ENCODING_AC3,
     ENCODING_E_AC3,
     ENCODING_E_AC3_JOC,
@@ -212,6 +223,18 @@ public final class C {
   public static final int ENCODING_PCM_FLOAT = AudioFormat.ENCODING_PCM_FLOAT;
   /** @see AudioFormat#ENCODING_MP3 */
   public static final int ENCODING_MP3 = AudioFormat.ENCODING_MP3;
+  /** @see AudioFormat#ENCODING_AAC_LC */
+  public static final int ENCODING_AAC_LC = AudioFormat.ENCODING_AAC_LC;
+  /** @see AudioFormat#ENCODING_AAC_HE_V1 */
+  public static final int ENCODING_AAC_HE_V1 = AudioFormat.ENCODING_AAC_HE_V1;
+  /** @see AudioFormat#ENCODING_AAC_HE_V2 */
+  public static final int ENCODING_AAC_HE_V2 = AudioFormat.ENCODING_AAC_HE_V2;
+  /** @see AudioFormat#ENCODING_AAC_XHE */
+  public static final int ENCODING_AAC_XHE = AudioFormat.ENCODING_AAC_XHE;
+  /** @see AudioFormat#ENCODING_AAC_ELD */
+  public static final int ENCODING_AAC_ELD = AudioFormat.ENCODING_AAC_ELD;
+  /** AAC Error Resilient Bit-Sliced Arithmetic Coding. */
+  public static final int ENCODING_AAC_ER_BSAC = 0x40000000;
   /** @see AudioFormat#ENCODING_AC3 */
   public static final int ENCODING_AC3 = AudioFormat.ENCODING_AC3;
   /** @see AudioFormat#ENCODING_E_AC3 */
@@ -230,8 +253,7 @@ public final class C {
   /**
    * Stream types for an {@link android.media.AudioTrack}. One of {@link #STREAM_TYPE_ALARM}, {@link
    * #STREAM_TYPE_DTMF}, {@link #STREAM_TYPE_MUSIC}, {@link #STREAM_TYPE_NOTIFICATION}, {@link
-   * #STREAM_TYPE_RING}, {@link #STREAM_TYPE_SYSTEM}, {@link #STREAM_TYPE_VOICE_CALL} or {@link
-   * #STREAM_TYPE_USE_DEFAULT}.
+   * #STREAM_TYPE_RING}, {@link #STREAM_TYPE_SYSTEM} or {@link #STREAM_TYPE_VOICE_CALL}.
    */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
@@ -242,8 +264,7 @@ public final class C {
     STREAM_TYPE_NOTIFICATION,
     STREAM_TYPE_RING,
     STREAM_TYPE_SYSTEM,
-    STREAM_TYPE_VOICE_CALL,
-    STREAM_TYPE_USE_DEFAULT
+    STREAM_TYPE_VOICE_CALL
   })
   public @interface StreamType {}
   /**
@@ -274,19 +295,13 @@ public final class C {
    * @see AudioManager#STREAM_VOICE_CALL
    */
   public static final int STREAM_TYPE_VOICE_CALL = AudioManager.STREAM_VOICE_CALL;
-  /**
-   * @see AudioManager#USE_DEFAULT_STREAM_TYPE
-   */
-  public static final int STREAM_TYPE_USE_DEFAULT = AudioManager.USE_DEFAULT_STREAM_TYPE;
-  /**
-   * The default stream type used by audio renderers.
-   */
+  /** The default stream type used by audio renderers. Equal to {@link #STREAM_TYPE_MUSIC}. */
   public static final int STREAM_TYPE_DEFAULT = STREAM_TYPE_MUSIC;
 
   /**
-   * Content types for {@link com.google.android.exoplayer2.audio.AudioAttributes}. One of {@link
-   * #CONTENT_TYPE_MOVIE}, {@link #CONTENT_TYPE_MUSIC}, {@link #CONTENT_TYPE_SONIFICATION}, {@link
-   * #CONTENT_TYPE_SPEECH} or {@link #CONTENT_TYPE_UNKNOWN}.
+   * Content types for audio attributes. One of {@link #CONTENT_TYPE_MOVIE}, {@link
+   * #CONTENT_TYPE_MUSIC}, {@link #CONTENT_TYPE_SONIFICATION}, {@link #CONTENT_TYPE_SPEECH} or
+   * {@link #CONTENT_TYPE_UNKNOWN}.
    */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
@@ -299,32 +314,31 @@ public final class C {
   })
   public @interface AudioContentType {}
   /**
-   * @see AudioAttributes#CONTENT_TYPE_MOVIE
+   * @see android.media.AudioAttributes#CONTENT_TYPE_MOVIE
    */
-  public static final int CONTENT_TYPE_MOVIE = AudioAttributes.CONTENT_TYPE_MOVIE;
+  public static final int CONTENT_TYPE_MOVIE = android.media.AudioAttributes.CONTENT_TYPE_MOVIE;
   /**
-   * @see AudioAttributes#CONTENT_TYPE_MUSIC
+   * @see android.media.AudioAttributes#CONTENT_TYPE_MUSIC
    */
-  public static final int CONTENT_TYPE_MUSIC = AudioAttributes.CONTENT_TYPE_MUSIC;
+  public static final int CONTENT_TYPE_MUSIC = android.media.AudioAttributes.CONTENT_TYPE_MUSIC;
   /**
-   * @see AudioAttributes#CONTENT_TYPE_SONIFICATION
+   * @see android.media.AudioAttributes#CONTENT_TYPE_SONIFICATION
    */
   public static final int CONTENT_TYPE_SONIFICATION =
-      AudioAttributes.CONTENT_TYPE_SONIFICATION;
+      android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION;
   /**
-   * @see AudioAttributes#CONTENT_TYPE_SPEECH
+   * @see android.media.AudioAttributes#CONTENT_TYPE_SPEECH
    */
   public static final int CONTENT_TYPE_SPEECH =
-      AudioAttributes.CONTENT_TYPE_SPEECH;
+      android.media.AudioAttributes.CONTENT_TYPE_SPEECH;
   /**
-   * @see AudioAttributes#CONTENT_TYPE_UNKNOWN
+   * @see android.media.AudioAttributes#CONTENT_TYPE_UNKNOWN
    */
   public static final int CONTENT_TYPE_UNKNOWN =
-      AudioAttributes.CONTENT_TYPE_UNKNOWN;
+      android.media.AudioAttributes.CONTENT_TYPE_UNKNOWN;
 
   /**
-   * Flags for {@link com.google.android.exoplayer2.audio.AudioAttributes}. Possible flag value is
-   * {@link #FLAG_AUDIBILITY_ENFORCED}.
+   * Flags for audio attributes. Possible flag value is {@link #FLAG_AUDIBILITY_ENFORCED}.
    *
    * <p>Note that {@code FLAG_HW_AV_SYNC} is not available because the player takes care of setting
    * the flag when tunneling is enabled via a track selector.
@@ -336,21 +350,20 @@ public final class C {
       value = {FLAG_AUDIBILITY_ENFORCED})
   public @interface AudioFlags {}
   /**
-   * @see AudioAttributes#FLAG_AUDIBILITY_ENFORCED
+   * @see android.media.AudioAttributes#FLAG_AUDIBILITY_ENFORCED
    */
   public static final int FLAG_AUDIBILITY_ENFORCED =
-      AudioAttributes.FLAG_AUDIBILITY_ENFORCED;
+      android.media.AudioAttributes.FLAG_AUDIBILITY_ENFORCED;
 
   /**
-   * Usage types for {@link com.google.android.exoplayer2.audio.AudioAttributes}. One of {@link
-   * #USAGE_ALARM}, {@link #USAGE_ASSISTANCE_ACCESSIBILITY}, {@link
-   * #USAGE_ASSISTANCE_NAVIGATION_GUIDANCE}, {@link #USAGE_ASSISTANCE_SONIFICATION}, {@link
-   * #USAGE_ASSISTANT}, {@link #USAGE_GAME}, {@link #USAGE_MEDIA}, {@link #USAGE_NOTIFICATION},
-   * {@link #USAGE_NOTIFICATION_COMMUNICATION_DELAYED}, {@link
-   * #USAGE_NOTIFICATION_COMMUNICATION_INSTANT}, {@link #USAGE_NOTIFICATION_COMMUNICATION_REQUEST},
-   * {@link #USAGE_NOTIFICATION_EVENT}, {@link #USAGE_NOTIFICATION_RINGTONE}, {@link
-   * #USAGE_UNKNOWN}, {@link #USAGE_VOICE_COMMUNICATION} or {@link
-   * #USAGE_VOICE_COMMUNICATION_SIGNALLING}.
+   * Usage types for audio attributes. One of {@link #USAGE_ALARM}, {@link
+   * #USAGE_ASSISTANCE_ACCESSIBILITY}, {@link #USAGE_ASSISTANCE_NAVIGATION_GUIDANCE}, {@link
+   * #USAGE_ASSISTANCE_SONIFICATION}, {@link #USAGE_ASSISTANT}, {@link #USAGE_GAME}, {@link
+   * #USAGE_MEDIA}, {@link #USAGE_NOTIFICATION}, {@link #USAGE_NOTIFICATION_COMMUNICATION_DELAYED},
+   * {@link #USAGE_NOTIFICATION_COMMUNICATION_INSTANT}, {@link
+   * #USAGE_NOTIFICATION_COMMUNICATION_REQUEST}, {@link #USAGE_NOTIFICATION_EVENT}, {@link
+   * #USAGE_NOTIFICATION_RINGTONE}, {@link #USAGE_UNKNOWN}, {@link #USAGE_VOICE_COMMUNICATION} or
+   * {@link #USAGE_VOICE_COMMUNICATION_SIGNALLING}.
    */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
@@ -374,89 +387,89 @@ public final class C {
   })
   public @interface AudioUsage {}
   /**
-   * @see AudioAttributes#USAGE_ALARM
+   * @see android.media.AudioAttributes#USAGE_ALARM
    */
-  public static final int USAGE_ALARM = AudioAttributes.USAGE_ALARM;
-  /** @see AudioAttributes#USAGE_ASSISTANCE_ACCESSIBILITY */
+  public static final int USAGE_ALARM = android.media.AudioAttributes.USAGE_ALARM;
+  /** @see android.media.AudioAttributes#USAGE_ASSISTANCE_ACCESSIBILITY */
   public static final int USAGE_ASSISTANCE_ACCESSIBILITY =
-      AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY;
+      android.media.AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY;
   /**
-   * @see AudioAttributes#USAGE_ASSISTANCE_NAVIGATION_GUIDANCE
+   * @see android.media.AudioAttributes#USAGE_ASSISTANCE_NAVIGATION_GUIDANCE
    */
   public static final int USAGE_ASSISTANCE_NAVIGATION_GUIDANCE =
-      AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE;
+      android.media.AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE;
   /**
-   * @see AudioAttributes#USAGE_ASSISTANCE_SONIFICATION
+   * @see android.media.AudioAttributes#USAGE_ASSISTANCE_SONIFICATION
    */
   public static final int USAGE_ASSISTANCE_SONIFICATION =
-      AudioAttributes.USAGE_ASSISTANCE_SONIFICATION;
-  /** @see AudioAttributes#USAGE_ASSISTANT */
-  public static final int USAGE_ASSISTANT = AudioAttributes.USAGE_ASSISTANT;
+      android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION;
+  /** @see android.media.AudioAttributes#USAGE_ASSISTANT */
+  public static final int USAGE_ASSISTANT = android.media.AudioAttributes.USAGE_ASSISTANT;
   /**
-   * @see AudioAttributes#USAGE_GAME
+   * @see android.media.AudioAttributes#USAGE_GAME
    */
-  public static final int USAGE_GAME = AudioAttributes.USAGE_GAME;
+  public static final int USAGE_GAME = android.media.AudioAttributes.USAGE_GAME;
   /**
-   * @see AudioAttributes#USAGE_MEDIA
+   * @see android.media.AudioAttributes#USAGE_MEDIA
    */
-  public static final int USAGE_MEDIA = AudioAttributes.USAGE_MEDIA;
+  public static final int USAGE_MEDIA = android.media.AudioAttributes.USAGE_MEDIA;
   /**
-   * @see AudioAttributes#USAGE_NOTIFICATION
+   * @see android.media.AudioAttributes#USAGE_NOTIFICATION
    */
-  public static final int USAGE_NOTIFICATION = AudioAttributes.USAGE_NOTIFICATION;
+  public static final int USAGE_NOTIFICATION = android.media.AudioAttributes.USAGE_NOTIFICATION;
   /**
-   * @see AudioAttributes#USAGE_NOTIFICATION_COMMUNICATION_DELAYED
+   * @see android.media.AudioAttributes#USAGE_NOTIFICATION_COMMUNICATION_DELAYED
    */
   public static final int USAGE_NOTIFICATION_COMMUNICATION_DELAYED =
-      AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_DELAYED;
+      android.media.AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_DELAYED;
   /**
-   * @see AudioAttributes#USAGE_NOTIFICATION_COMMUNICATION_INSTANT
+   * @see android.media.AudioAttributes#USAGE_NOTIFICATION_COMMUNICATION_INSTANT
    */
   public static final int USAGE_NOTIFICATION_COMMUNICATION_INSTANT =
-      AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT;
+      android.media.AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT;
   /**
-   * @see AudioAttributes#USAGE_NOTIFICATION_COMMUNICATION_REQUEST
+   * @see android.media.AudioAttributes#USAGE_NOTIFICATION_COMMUNICATION_REQUEST
    */
   public static final int USAGE_NOTIFICATION_COMMUNICATION_REQUEST =
-      AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_REQUEST;
+      android.media.AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_REQUEST;
   /**
-   * @see AudioAttributes#USAGE_NOTIFICATION_EVENT
+   * @see android.media.AudioAttributes#USAGE_NOTIFICATION_EVENT
    */
   public static final int USAGE_NOTIFICATION_EVENT =
-      AudioAttributes.USAGE_NOTIFICATION_EVENT;
+      android.media.AudioAttributes.USAGE_NOTIFICATION_EVENT;
   /**
-   * @see AudioAttributes#USAGE_NOTIFICATION_RINGTONE
+   * @see android.media.AudioAttributes#USAGE_NOTIFICATION_RINGTONE
    */
   public static final int USAGE_NOTIFICATION_RINGTONE =
-      AudioAttributes.USAGE_NOTIFICATION_RINGTONE;
+      android.media.AudioAttributes.USAGE_NOTIFICATION_RINGTONE;
   /**
-   * @see AudioAttributes#USAGE_UNKNOWN
+   * @see android.media.AudioAttributes#USAGE_UNKNOWN
    */
-  public static final int USAGE_UNKNOWN = AudioAttributes.USAGE_UNKNOWN;
+  public static final int USAGE_UNKNOWN = android.media.AudioAttributes.USAGE_UNKNOWN;
   /**
-   * @see AudioAttributes#USAGE_VOICE_COMMUNICATION
+   * @see android.media.AudioAttributes#USAGE_VOICE_COMMUNICATION
    */
   public static final int USAGE_VOICE_COMMUNICATION =
-      AudioAttributes.USAGE_VOICE_COMMUNICATION;
+      android.media.AudioAttributes.USAGE_VOICE_COMMUNICATION;
   /**
-   * @see AudioAttributes#USAGE_VOICE_COMMUNICATION_SIGNALLING
+   * @see android.media.AudioAttributes#USAGE_VOICE_COMMUNICATION_SIGNALLING
    */
   public static final int USAGE_VOICE_COMMUNICATION_SIGNALLING =
-      AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING;
+      android.media.AudioAttributes.USAGE_VOICE_COMMUNICATION_SIGNALLING;
 
   /**
-   * Capture policies for {@link com.google.android.exoplayer2.audio.AudioAttributes}. One of {@link
-   * #ALLOW_CAPTURE_BY_ALL}, {@link #ALLOW_CAPTURE_BY_NONE} or {@link #ALLOW_CAPTURE_BY_SYSTEM}.
+   * Capture policies for audio attributes. One of {@link #ALLOW_CAPTURE_BY_ALL}, {@link
+   * #ALLOW_CAPTURE_BY_NONE} or {@link #ALLOW_CAPTURE_BY_SYSTEM}.
    */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({ALLOW_CAPTURE_BY_ALL, ALLOW_CAPTURE_BY_NONE, ALLOW_CAPTURE_BY_SYSTEM})
   public @interface AudioAllowedCapturePolicy {}
-  /** See {@link AudioAttributes#ALLOW_CAPTURE_BY_ALL}. */
+  /** See {@link android.media.AudioAttributes#ALLOW_CAPTURE_BY_ALL}. */
   public static final int ALLOW_CAPTURE_BY_ALL = AudioAttributes.ALLOW_CAPTURE_BY_ALL;
-  /** See {@link AudioAttributes#ALLOW_CAPTURE_BY_NONE}. */
+  /** See {@link android.media.AudioAttributes#ALLOW_CAPTURE_BY_NONE}. */
   public static final int ALLOW_CAPTURE_BY_NONE = AudioAttributes.ALLOW_CAPTURE_BY_NONE;
-  /** See {@link AudioAttributes#ALLOW_CAPTURE_BY_SYSTEM}. */
+  /** See {@link android.media.AudioAttributes#ALLOW_CAPTURE_BY_SYSTEM}. */
   public static final int ALLOW_CAPTURE_BY_SYSTEM = AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM;
 
   /**
@@ -538,31 +551,25 @@ public final class C {
   /** Video decoder output mode that renders 4:2:0 YUV planes directly to a surface. */
   public static final int VIDEO_OUTPUT_MODE_SURFACE_YUV = 1;
   // LINT.ThenChange(
-  //     ../../../../../../../../../extensions/av1/src/main/jni/gav1_jni.cc,
-  //     ../../../../../../../../../extensions/vp9/src/main/jni/vpx_jni.cc
+  //     ../../../../../../../../../../../media/libraries/decoder_av1/src/main/jni/gav1_jni.cc,
+  //     ../../../../../../../../../../../media/libraries/decoder_vp9/src/main/jni/vpx_jni.cc
   // )
 
   /**
-   * Video scaling modes for {@link MediaCodec}-based {@link Renderer}s. One of {@link
+   * Video scaling modes for {@link MediaCodec}-based renderers. One of {@link
    * #VIDEO_SCALING_MODE_SCALE_TO_FIT} or {@link #VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING}.
    */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
   @IntDef(value = {VIDEO_SCALING_MODE_SCALE_TO_FIT, VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING})
   public @interface VideoScalingMode {}
-  /**
-   * @see MediaCodec#VIDEO_SCALING_MODE_SCALE_TO_FIT
-   */
+  /** See {@link MediaCodec#VIDEO_SCALING_MODE_SCALE_TO_FIT}. */
   public static final int VIDEO_SCALING_MODE_SCALE_TO_FIT =
       MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT;
-  /**
-   * @see MediaCodec#VIDEO_SCALING_MODE_SCALE_TO_FIT
-   */
+  /** See {@link MediaCodec#VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING}. */
   public static final int VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING =
       MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING;
-  /**
-   * A default video scaling mode for {@link MediaCodec}-based {@link Renderer}s.
-   */
+  /** A default video scaling mode for {@link MediaCodec}-based renderers. */
   public static final int VIDEO_SCALING_MODE_DEFAULT = VIDEO_SCALING_MODE_SCALE_TO_FIT;
 
   /**
@@ -579,7 +586,15 @@ public final class C {
    * Indicates that the track should be selected if user preferences do not state otherwise.
    */
   public static final int SELECTION_FLAG_DEFAULT = 1;
-  /** Indicates that the track must be displayed. Only applies to text tracks. */
+  /**
+   * Indicates that the track should be selected if its language matches the language of the
+   * selected audio track and user preferences do not state otherwise. Only applies to text tracks.
+   *
+   * <p>Tracks with this flag generally provide translation for elements that don't match the
+   * declared language of the selected audio track (e.g. speech in an alien language). See <a
+   * href="https://partnerhelp.netflixstudios.com/hc/en-us/articles/217558918">Netflix's summary</a>
+   * for more info.
+   */
   public static final int SELECTION_FLAG_FORCED = 1 << 1; // 2
   /**
    * Indicates that the player may choose to play the track in absence of an explicit user
@@ -592,11 +607,11 @@ public final class C {
 
   /**
    * Represents a streaming or other media type. One of {@link #TYPE_DASH}, {@link #TYPE_SS}, {@link
-   * #TYPE_HLS} or {@link #TYPE_OTHER}.
+   * #TYPE_HLS}, {@link #TYPE_RTSP} or {@link #TYPE_OTHER}.
    */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
-  @IntDef({TYPE_DASH, TYPE_SS, TYPE_HLS, TYPE_OTHER})
+  @IntDef({TYPE_DASH, TYPE_SS, TYPE_HLS, TYPE_RTSP, TYPE_OTHER})
   public @interface ContentType {}
   /**
    * Value returned by {@link Util#inferContentType(String)} for DASH manifests.
@@ -610,11 +625,13 @@ public final class C {
    * Value returned by {@link Util#inferContentType(String)} for HLS manifests.
    */
   public static final int TYPE_HLS = 2;
+  /** Value returned by {@link Util#inferContentType(String)} for RTSP. */
+  public static final int TYPE_RTSP = 3;
   /**
    * Value returned by {@link Util#inferContentType(String)} for files other than DASH, HLS or
-   * Smooth Streaming manifests.
+   * Smooth Streaming manifests, or RTSP URIs.
    */
-  public static final int TYPE_OTHER = 3;
+  public static final int TYPE_OTHER = 4;
 
   /**
    * A return value for methods where the end of an input was encountered.
@@ -671,12 +688,14 @@ public final class C {
   public static final int TRACK_TYPE_VIDEO = 2;
   /** A type constant for text tracks. */
   public static final int TRACK_TYPE_TEXT = 3;
+  /** A type constant for image tracks. */
+  public static final int TRACK_TYPE_IMAGE = 4;
   /** A type constant for metadata tracks. */
-  public static final int TRACK_TYPE_METADATA = 4;
+  public static final int TRACK_TYPE_METADATA = 5;
   /** A type constant for camera motion tracks. */
-  public static final int TRACK_TYPE_CAMERA_MOTION = 5;
-  /** A type constant for a dummy or empty track. */
-  public static final int TRACK_TYPE_NONE = 6;
+  public static final int TRACK_TYPE_CAMERA_MOTION = 6;
+  /** A type constant for a fake or empty track. */
+  public static final int TRACK_TYPE_NONE = 7;
   /**
    * Applications or extensions may define custom {@code TRACK_TYPE_*} constants greater than or
    * equal to this value.
@@ -763,90 +782,29 @@ public final class C {
    */
   public static final UUID PLAYREADY_UUID = new UUID(0x9A04F07998404286L, 0xAB92E65BE0885F95L);
 
-  /**
-   * The type of a message that can be passed to a video {@link Renderer} via {@link
-   * ExoPlayer#createMessage(Target)}. The message payload should be the target {@link Surface}, or
-   * null.
-   */
-  public static final int MSG_SET_SURFACE = 1;
+  /** @deprecated Use {@code Renderer.MSG_SET_VIDEO_OUTPUT}. */
+  @Deprecated public static final int MSG_SET_SURFACE = 1;
 
-  /**
-   * A type of a message that can be passed to an audio {@link Renderer} via {@link
-   * ExoPlayer#createMessage(Target)}. The message payload should be a {@link Float} with 0 being
-   * silence and 1 being unity gain.
-   */
-  public static final int MSG_SET_VOLUME = 2;
+  /** @deprecated Use {@code Renderer.MSG_SET_VOLUME}. */
+  @Deprecated public static final int MSG_SET_VOLUME = 2;
 
-  /**
-   * A type of a message that can be passed to an audio {@link Renderer} via {@link
-   * ExoPlayer#createMessage(Target)}. The message payload should be an {@link
-   * com.google.android.exoplayer2.audio.AudioAttributes} instance that will configure the
-   * underlying audio track. If not set, the default audio attributes will be used. They are
-   * suitable for general media playback.
-   *
-   * <p>Setting the audio attributes during playback may introduce a short gap in audio output as
-   * the audio track is recreated. A new audio session id will also be generated.
-   *
-   * <p>If tunneling is enabled by the track selector, the specified audio attributes will be
-   * ignored, but they will take effect if audio is later played without tunneling.
-   *
-   * <p>If the device is running a build before platform API version 21, audio attributes cannot be
-   * set directly on the underlying audio track. In this case, the usage will be mapped onto an
-   * equivalent stream type using {@link Util#getStreamTypeForAudioUsage(int)}.
-   *
-   * <p>To get audio attributes that are equivalent to a legacy stream type, pass the stream type to
-   * {@link Util#getAudioUsageForStreamType(int)} and use the returned {@link AudioUsage} to build
-   * an audio attributes instance.
-   */
-  public static final int MSG_SET_AUDIO_ATTRIBUTES = 3;
+  /** @deprecated Use {@code Renderer.MSG_SET_AUDIO_ATTRIBUTES}. */
+  @Deprecated public static final int MSG_SET_AUDIO_ATTRIBUTES = 3;
 
-  /**
-   * The type of a message that can be passed to a {@link MediaCodec}-based video {@link Renderer}
-   * via {@link ExoPlayer#createMessage(Target)}. The message payload should be one of the integer
-   * scaling modes in {@link VideoScalingMode}.
-   *
-   * <p>Note that the scaling mode only applies if the {@link Surface} targeted by the renderer is
-   * owned by a {@link android.view.SurfaceView}.
-   */
-  public static final int MSG_SET_SCALING_MODE = 4;
+  /** @deprecated Use {@code Renderer.MSG_SET_SCALING_MODE}. */
+  @Deprecated public static final int MSG_SET_SCALING_MODE = 4;
 
-  /**
-   * A type of a message that can be passed to an audio {@link Renderer} via {@link
-   * ExoPlayer#createMessage(Target)}. The message payload should be an {@link AuxEffectInfo}
-   * instance representing an auxiliary audio effect for the underlying audio track.
-   */
-  public static final int MSG_SET_AUX_EFFECT_INFO = 5;
+  /** @deprecated Use {@code Renderer.MSG_SET_AUX_EFFECT_INFO}. */
+  @Deprecated public static final int MSG_SET_AUX_EFFECT_INFO = 5;
 
-  /**
-   * The type of a message that can be passed to a video {@link Renderer} via {@link
-   * ExoPlayer#createMessage(Target)}. The message payload should be a {@link
-   * VideoFrameMetadataListener} instance, or null.
-   */
-  public static final int MSG_SET_VIDEO_FRAME_METADATA_LISTENER = 6;
+  /** @deprecated Use {@code Renderer.MSG_SET_VIDEO_FRAME_METADATA_LISTENER}. */
+  @Deprecated public static final int MSG_SET_VIDEO_FRAME_METADATA_LISTENER = 6;
 
-  /**
-   * The type of a message that can be passed to a camera motion {@link Renderer} via {@link
-   * ExoPlayer#createMessage(Target)}. The message payload should be a {@link CameraMotionListener}
-   * instance, or null.
-   */
-  public static final int MSG_SET_CAMERA_MOTION_LISTENER = 7;
+  /** @deprecated Use {@code Renderer.MSG_SET_CAMERA_MOTION_LISTENER}. */
+  @Deprecated public static final int MSG_SET_CAMERA_MOTION_LISTENER = 7;
 
-  /**
-   * The type of a message that can be passed to a {@link SimpleDecoderVideoRenderer} via {@link
-   * ExoPlayer#createMessage(Target)}. The message payload should be the target {@link
-   * VideoDecoderOutputBufferRenderer}, or null.
-   *
-   * <p>This message is intended only for use with extension renderers that expect a {@link
-   * VideoDecoderOutputBufferRenderer}. For other use cases, an output surface should be passed via
-   * {@link #MSG_SET_SURFACE} instead.
-   */
-  public static final int MSG_SET_VIDEO_DECODER_OUTPUT_BUFFER_RENDERER = 8;
-
-  /**
-   * Applications or extensions may define custom {@code MSG_*} constants that can be passed to
-   * {@link Renderer}s. These custom constants must be greater than or equal to this value.
-   */
-  public static final int MSG_CUSTOM_BASE = 10000;
+  /** @deprecated Use {@code Renderer.MSG_CUSTOM_BASE}. */
+  @Deprecated public static final int MSG_CUSTOM_BASE = 10000;
 
   /**
    * The stereo mode for 360/3D/VR videos. One of {@link Format#NO_VALUE}, {@link
@@ -977,8 +935,8 @@ public final class C {
   /**
    * Network connection type. One of {@link #NETWORK_TYPE_UNKNOWN}, {@link #NETWORK_TYPE_OFFLINE},
    * {@link #NETWORK_TYPE_WIFI}, {@link #NETWORK_TYPE_2G}, {@link #NETWORK_TYPE_3G}, {@link
-   * #NETWORK_TYPE_4G}, {@link #NETWORK_TYPE_5G}, {@link #NETWORK_TYPE_CELLULAR_UNKNOWN}, {@link
-   * #NETWORK_TYPE_ETHERNET} or {@link #NETWORK_TYPE_OTHER}.
+   * #NETWORK_TYPE_4G}, {@link #NETWORK_TYPE_5G_SA}, {@link #NETWORK_TYPE_5G_NSA}, {@link
+   * #NETWORK_TYPE_CELLULAR_UNKNOWN}, {@link #NETWORK_TYPE_ETHERNET} or {@link #NETWORK_TYPE_OTHER}.
    */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
@@ -989,7 +947,8 @@ public final class C {
     NETWORK_TYPE_2G,
     NETWORK_TYPE_3G,
     NETWORK_TYPE_4G,
-    NETWORK_TYPE_5G,
+    NETWORK_TYPE_5G_SA,
+    NETWORK_TYPE_5G_NSA,
     NETWORK_TYPE_CELLULAR_UNKNOWN,
     NETWORK_TYPE_ETHERNET,
     NETWORK_TYPE_OTHER
@@ -1007,8 +966,10 @@ public final class C {
   public static final int NETWORK_TYPE_3G = 4;
   /** Network type for a 4G cellular connection. */
   public static final int NETWORK_TYPE_4G = 5;
-  /** Network type for a 5G cellular connection. */
-  public static final int NETWORK_TYPE_5G = 9;
+  /** Network type for a 5G stand-alone (SA) cellular connection. */
+  public static final int NETWORK_TYPE_5G_SA = 9;
+  /** Network type for a 5G non-stand-alone (NSA) cellular connection. */
+  public static final int NETWORK_TYPE_5G_NSA = 10;
   /**
    * Network type for cellular connections which cannot be mapped to one of {@link
    * #NETWORK_TYPE_2G}, {@link #NETWORK_TYPE_3G}, or {@link #NETWORK_TYPE_4G}.
@@ -1021,7 +982,7 @@ public final class C {
 
   /**
    * Mode specifying whether the player should hold a WakeLock and a WifiLock. One of {@link
-   * #WAKE_MODE_NONE}, {@link #WAKE_MODE_LOCAL} and {@link #WAKE_MODE_NETWORK}.
+   * #WAKE_MODE_NONE}, {@link #WAKE_MODE_LOCAL} or {@link #WAKE_MODE_NETWORK}.
    */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
@@ -1128,8 +1089,63 @@ public final class C {
   public static final int ROLE_FLAG_TRICK_PLAY = 1 << 14;
 
   /**
-   * Converts a time in microseconds to the corresponding time in milliseconds, preserving
-   * {@link #TIME_UNSET} and {@link #TIME_END_OF_SOURCE} values.
+   * Level of renderer support for a format. One of {@link #FORMAT_HANDLED}, {@link
+   * #FORMAT_EXCEEDS_CAPABILITIES}, {@link #FORMAT_UNSUPPORTED_DRM}, {@link
+   * #FORMAT_UNSUPPORTED_SUBTYPE} or {@link #FORMAT_UNSUPPORTED_TYPE}.
+   */
+  @Documented
+  @Retention(RetentionPolicy.SOURCE)
+  @IntDef({
+    FORMAT_HANDLED,
+    FORMAT_EXCEEDS_CAPABILITIES,
+    FORMAT_UNSUPPORTED_DRM,
+    FORMAT_UNSUPPORTED_SUBTYPE,
+    FORMAT_UNSUPPORTED_TYPE
+  })
+  public static @interface FormatSupport {}
+  // TODO(b/172315872) Renderer was a link. Link to equivalent concept or remove @code.
+  /** The {@code Renderer} is capable of rendering the format. */
+  public static final int FORMAT_HANDLED = 0b100;
+  /**
+   * The {@code Renderer} is capable of rendering formats with the same MIME type, but the
+   * properties of the format exceed the renderer's capabilities. There is a chance the renderer
+   * will be able to play the format in practice because some renderers report their capabilities
+   * conservatively, but the expected outcome is that playback will fail.
+   *
+   * <p>Example: The {@code Renderer} is capable of rendering H264 and the format's MIME type is
+   * {@code MimeTypes#VIDEO_H264}, but the format's resolution exceeds the maximum limit supported
+   * by the underlying H264 decoder.
+   */
+  public static final int FORMAT_EXCEEDS_CAPABILITIES = 0b011;
+  /**
+   * The {@code Renderer} is capable of rendering formats with the same MIME type, but is not
+   * capable of rendering the format because the format's drm protection is not supported.
+   *
+   * <p>Example: The {@code Renderer} is capable of rendering H264 and the format's MIME type is
+   * {@link MimeTypes#VIDEO_H264}, but the format indicates PlayReady drm protection whereas the
+   * renderer only supports Widevine.
+   */
+  public static final int FORMAT_UNSUPPORTED_DRM = 0b010;
+  /**
+   * The {@code Renderer} is a general purpose renderer for formats of the same top-level type, but
+   * is not capable of rendering the format or any other format with the same MIME type because the
+   * sub-type is not supported.
+   *
+   * <p>Example: The {@code Renderer} is a general purpose audio renderer and the format's MIME type
+   * matches audio/[subtype], but there does not exist a suitable decoder for [subtype].
+   */
+  public static final int FORMAT_UNSUPPORTED_SUBTYPE = 0b001;
+  /**
+   * The {@code Renderer} is not capable of rendering the format, either because it does not support
+   * the format's top-level type, or because it's a specialized renderer for a different MIME type.
+   *
+   * <p>Example: The {@code Renderer} is a general purpose video renderer, but the format has an
+   * audio MIME type.
+   */
+  public static final int FORMAT_UNSUPPORTED_TYPE = 0b000;
+  /**
+   * Converts a time in microseconds to the corresponding time in milliseconds, preserving {@link
+   * #TIME_UNSET} and {@link #TIME_END_OF_SOURCE} values.
    *
    * @param timeUs The time in microseconds.
    * @return The corresponding time in milliseconds.
@@ -1155,10 +1171,33 @@ public final class C {
    *
    * @see AudioManager#generateAudioSessionId()
    */
-  @TargetApi(21)
+  @RequiresApi(21)
   public static int generateAudioSessionIdV21(Context context) {
-    return ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE))
-        .generateAudioSessionId();
+    @Nullable
+    AudioManager audioManager = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE));
+    return audioManager == null ? AudioManager.ERROR : audioManager.generateAudioSessionId();
   }
 
+  /**
+   * Returns string representation of a {@link FormatSupport} flag.
+   *
+   * @param formatSupport A {@link FormatSupport} flag.
+   * @return A string representation of the flag.
+   */
+  public static String getFormatSupportString(@FormatSupport int formatSupport) {
+    switch (formatSupport) {
+      case FORMAT_HANDLED:
+        return "YES";
+      case FORMAT_EXCEEDS_CAPABILITIES:
+        return "NO_EXCEEDS_CAPABILITIES";
+      case FORMAT_UNSUPPORTED_DRM:
+        return "NO_UNSUPPORTED_DRM";
+      case FORMAT_UNSUPPORTED_SUBTYPE:
+        return "NO_UNSUPPORTED_TYPE";
+      case FORMAT_UNSUPPORTED_TYPE:
+        return "NO";
+      default:
+        throw new IllegalStateException();
+    }
+  }
 }

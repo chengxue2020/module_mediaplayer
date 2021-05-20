@@ -15,9 +15,15 @@
  */
 package com.google.android.exoplayer2.extractor;
 
+import static com.google.android.exoplayer2.util.FileTypes.inferFileTypeFromResponseHeaders;
+import static com.google.android.exoplayer2.util.FileTypes.inferFileTypeFromUri;
+
+import android.net.Uri;
+import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.extractor.amr.AmrExtractor;
 import com.google.android.exoplayer2.extractor.flac.FlacExtractor;
 import com.google.android.exoplayer2.extractor.flv.FlvExtractor;
+import com.google.android.exoplayer2.extractor.jpeg.JpegExtractor;
 import com.google.android.exoplayer2.extractor.mkv.MatroskaExtractor;
 import com.google.android.exoplayer2.extractor.mp3.Mp3Extractor;
 import com.google.android.exoplayer2.extractor.mp4.FragmentedMp4Extractor;
@@ -31,8 +37,13 @@ import com.google.android.exoplayer2.extractor.ts.PsExtractor;
 import com.google.android.exoplayer2.extractor.ts.TsExtractor;
 import com.google.android.exoplayer2.extractor.ts.TsPayloadReader;
 import com.google.android.exoplayer2.extractor.wav.WavExtractor;
+import com.google.android.exoplayer2.util.FileTypes;
 import com.google.android.exoplayer2.util.TimestampAdjuster;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An {@link ExtractorsFactory} that provides an array of extractors for the following formats:
@@ -53,19 +64,44 @@ import java.lang.reflect.Constructor;
  *   <li>AMR ({@link AmrExtractor})
  *   <li>FLAC
  *       <ul>
- *         <li>If available, the FLAC extension extractor is used.
+ *         <li>If available, the FLAC extension's {@code
+ *             com.google.android.exoplayer2.ext.flac.FlacExtractor} is used.
  *         <li>Otherwise, the core {@link FlacExtractor} is used. Note that Android devices do not
  *             generally include a FLAC decoder before API 27. This can be worked around by using
  *             the FLAC extension or the FFmpeg extension.
  *       </ul>
+ *   <li>JPEG ({@link JpegExtractor})
  * </ul>
  */
 public final class DefaultExtractorsFactory implements ExtractorsFactory {
 
+  // Extractors order is optimized according to
+  // https://docs.google.com/document/d/1w2mKaWMxfz2Ei8-LdxqbPs1VLe_oudB-eryXXw9OvQQ.
+  // The JPEG extractor appears after audio/video extractors because we expect audio/video input to
+  // be more common.
+  private static final int[] DEFAULT_EXTRACTOR_ORDER =
+      new int[] {
+        FileTypes.FLV,
+        FileTypes.FLAC,
+        FileTypes.WAV,
+        FileTypes.MP4,
+        FileTypes.AMR,
+        FileTypes.PS,
+        FileTypes.OGG,
+        FileTypes.TS,
+        FileTypes.MATROSKA,
+        FileTypes.ADTS,
+        FileTypes.AC3,
+        FileTypes.AC4,
+        FileTypes.MP3,
+        FileTypes.JPEG,
+      };
+
+  @Nullable
   private static final Constructor<? extends Extractor> FLAC_EXTENSION_EXTRACTOR_CONSTRUCTOR;
 
   static {
-    Constructor<? extends Extractor> flacExtensionExtractorConstructor = null;
+    @Nullable Constructor<? extends Extractor> flacExtensionExtractorConstructor = null;
     try {
       // LINT.IfChange
       @SuppressWarnings("nullness:argument.type.incompatible")
@@ -78,7 +114,7 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
         flacExtensionExtractorConstructor =
             Class.forName("com.google.android.exoplayer2.ext.flac.FlacExtractor")
                 .asSubclass(Extractor.class)
-                .getConstructor();
+                .getConstructor(int.class);
       }
       // LINT.ThenChange(../../../../../../../../proguard-rules.txt)
     } catch (ClassNotFoundException e) {
@@ -91,17 +127,20 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
   }
 
   private boolean constantBitrateSeekingEnabled;
-  private @AdtsExtractor.Flags int adtsFlags;
-  private @AmrExtractor.Flags int amrFlags;
-  private @MatroskaExtractor.Flags int matroskaFlags;
-  private @Mp4Extractor.Flags int mp4Flags;
-  private @FragmentedMp4Extractor.Flags int fragmentedMp4Flags;
-  private @Mp3Extractor.Flags int mp3Flags;
-  private @TsExtractor.Mode int tsMode;
-  private @DefaultTsPayloadReaderFactory.Flags int tsFlags;
+  @AdtsExtractor.Flags private int adtsFlags;
+  @AmrExtractor.Flags private int amrFlags;
+  @FlacExtractor.Flags private int flacFlags;
+  @MatroskaExtractor.Flags private int matroskaFlags;
+  @Mp4Extractor.Flags private int mp4Flags;
+  @FragmentedMp4Extractor.Flags private int fragmentedMp4Flags;
+  @Mp3Extractor.Flags private int mp3Flags;
+  @TsExtractor.Mode private int tsMode;
+  @DefaultTsPayloadReaderFactory.Flags private int tsFlags;
+  private int tsTimestampSearchBytes;
 
   public DefaultExtractorsFactory() {
     tsMode = TsExtractor.MODE_SINGLE_PMT;
+    tsTimestampSearchBytes = TsExtractor.DEFAULT_TIMESTAMP_SEARCH_BYTES;
   }
 
   /**
@@ -143,6 +182,21 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
    */
   public synchronized DefaultExtractorsFactory setAmrExtractorFlags(@AmrExtractor.Flags int flags) {
     this.amrFlags = flags;
+    return this;
+  }
+
+  /**
+   * Sets flags for {@link FlacExtractor} instances created by the factory. The flags are also used
+   * by {@code com.google.android.exoplayer2.ext.flac.FlacExtractor} instances if the FLAC extension
+   * is being used.
+   *
+   * @see FlacExtractor#FlacExtractor(int)
+   * @param flags The flags to use.
+   * @return The factory, for convenience.
+   */
+  public synchronized DefaultExtractorsFactory setFlacExtractorFlags(
+      @FlacExtractor.Flags int flags) {
+    this.flacFlags = flags;
     return this;
   }
 
@@ -199,7 +253,7 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
   /**
    * Sets the mode for {@link TsExtractor} instances created by the factory.
    *
-   * @see TsExtractor#TsExtractor(int, TimestampAdjuster, TsPayloadReader.Factory)
+   * @see TsExtractor#TsExtractor(int, TimestampAdjuster, TsPayloadReader.Factory, int)
    * @param mode The mode to use.
    * @return The factory, for convenience.
    */
@@ -222,48 +276,124 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
     return this;
   }
 
-  @Override
-  public synchronized Extractor[] createExtractors() {
-    Extractor[] extractors = new Extractor[14];
-    extractors[0] = new MatroskaExtractor(matroskaFlags);
-    extractors[1] = new FragmentedMp4Extractor(fragmentedMp4Flags);
-    extractors[2] = new Mp4Extractor(mp4Flags);
-    extractors[3] =
-        new Mp3Extractor(
-            mp3Flags
-                | (constantBitrateSeekingEnabled
-                    ? Mp3Extractor.FLAG_ENABLE_CONSTANT_BITRATE_SEEKING
-                    : 0));
-    extractors[4] =
-        new AdtsExtractor(
-            adtsFlags
-                | (constantBitrateSeekingEnabled
-                    ? AdtsExtractor.FLAG_ENABLE_CONSTANT_BITRATE_SEEKING
-                    : 0));
-    extractors[5] = new Ac3Extractor();
-    extractors[6] = new TsExtractor(tsMode, tsFlags);
-    extractors[7] = new FlvExtractor();
-    extractors[8] = new OggExtractor();
-    extractors[9] = new PsExtractor();
-    extractors[10] = new WavExtractor();
-    extractors[11] =
-        new AmrExtractor(
-            amrFlags
-                | (constantBitrateSeekingEnabled
-                    ? AmrExtractor.FLAG_ENABLE_CONSTANT_BITRATE_SEEKING
-                    : 0));
-    extractors[12] = new Ac4Extractor();
-    if (FLAC_EXTENSION_EXTRACTOR_CONSTRUCTOR != null) {
-      try {
-        extractors[13] = FLAC_EXTENSION_EXTRACTOR_CONSTRUCTOR.newInstance();
-      } catch (Exception e) {
-        // Should never happen.
-        throw new IllegalStateException("Unexpected error creating FLAC extractor", e);
-      }
-    } else {
-      extractors[13] = new FlacExtractor();
-    }
-    return extractors;
+  /**
+   * Sets the number of bytes searched to find a timestamp for {@link TsExtractor} instances created
+   * by the factory.
+   *
+   * @see TsExtractor#TsExtractor(int, TimestampAdjuster, TsPayloadReader.Factory, int)
+   * @param timestampSearchBytes The number of search bytes to use.
+   * @return The factory, for convenience.
+   */
+  public synchronized DefaultExtractorsFactory setTsExtractorTimestampSearchBytes(
+      int timestampSearchBytes) {
+    tsTimestampSearchBytes = timestampSearchBytes;
+    return this;
   }
 
+  @Override
+  public synchronized Extractor[] createExtractors() {
+    return createExtractors(Uri.EMPTY, new HashMap<>());
+  }
+
+  @Override
+  public synchronized Extractor[] createExtractors(
+      Uri uri, Map<String, List<String>> responseHeaders) {
+    List<Extractor> extractors = new ArrayList<>(/* initialCapacity= */ 14);
+
+    @FileTypes.Type
+    int responseHeadersInferredFileType = inferFileTypeFromResponseHeaders(responseHeaders);
+    if (responseHeadersInferredFileType != FileTypes.UNKNOWN) {
+      addExtractorsForFileType(responseHeadersInferredFileType, extractors);
+    }
+
+    @FileTypes.Type int uriInferredFileType = inferFileTypeFromUri(uri);
+    if (uriInferredFileType != FileTypes.UNKNOWN
+        && uriInferredFileType != responseHeadersInferredFileType) {
+      addExtractorsForFileType(uriInferredFileType, extractors);
+    }
+
+    for (int fileType : DEFAULT_EXTRACTOR_ORDER) {
+      if (fileType != responseHeadersInferredFileType && fileType != uriInferredFileType) {
+        addExtractorsForFileType(fileType, extractors);
+      }
+    }
+
+    return extractors.toArray(new Extractor[extractors.size()]);
+  }
+
+  private void addExtractorsForFileType(@FileTypes.Type int fileType, List<Extractor> extractors) {
+    switch (fileType) {
+      case FileTypes.AC3:
+        extractors.add(new Ac3Extractor());
+        break;
+      case FileTypes.AC4:
+        extractors.add(new Ac4Extractor());
+        break;
+      case FileTypes.ADTS:
+        extractors.add(
+            new AdtsExtractor(
+                adtsFlags
+                    | (constantBitrateSeekingEnabled
+                        ? AdtsExtractor.FLAG_ENABLE_CONSTANT_BITRATE_SEEKING
+                        : 0)));
+        break;
+      case FileTypes.AMR:
+        extractors.add(
+            new AmrExtractor(
+                amrFlags
+                    | (constantBitrateSeekingEnabled
+                        ? AmrExtractor.FLAG_ENABLE_CONSTANT_BITRATE_SEEKING
+                        : 0)));
+        break;
+      case FileTypes.FLAC:
+        if (FLAC_EXTENSION_EXTRACTOR_CONSTRUCTOR != null) {
+          try {
+            extractors.add(FLAC_EXTENSION_EXTRACTOR_CONSTRUCTOR.newInstance(flacFlags));
+          } catch (Exception e) {
+            // Should never happen.
+            throw new IllegalStateException("Unexpected error creating FLAC extractor", e);
+          }
+        } else {
+          extractors.add(new FlacExtractor(flacFlags));
+        }
+        break;
+      case FileTypes.FLV:
+        extractors.add(new FlvExtractor());
+        break;
+      case FileTypes.MATROSKA:
+        extractors.add(new MatroskaExtractor(matroskaFlags));
+        break;
+      case FileTypes.MP3:
+        extractors.add(
+            new Mp3Extractor(
+                mp3Flags
+                    | (constantBitrateSeekingEnabled
+                        ? Mp3Extractor.FLAG_ENABLE_CONSTANT_BITRATE_SEEKING
+                        : 0)));
+        break;
+      case FileTypes.MP4:
+        extractors.add(new FragmentedMp4Extractor(fragmentedMp4Flags));
+        extractors.add(new Mp4Extractor(mp4Flags));
+        break;
+      case FileTypes.OGG:
+        extractors.add(new OggExtractor());
+        break;
+      case FileTypes.PS:
+        extractors.add(new PsExtractor());
+        break;
+      case FileTypes.TS:
+        extractors.add(new TsExtractor(tsMode, tsFlags, tsTimestampSearchBytes));
+        break;
+      case FileTypes.WAV:
+        extractors.add(new WavExtractor());
+        break;
+      case FileTypes.JPEG:
+        extractors.add(new JpegExtractor());
+        break;
+      case FileTypes.WEBVTT:
+      case FileTypes.UNKNOWN:
+      default:
+        break;
+    }
+  }
 }

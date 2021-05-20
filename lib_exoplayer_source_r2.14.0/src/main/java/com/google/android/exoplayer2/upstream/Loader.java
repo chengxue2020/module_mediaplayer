@@ -15,6 +15,8 @@
  */
 package com.google.android.exoplayer2.upstream;
 
+import static java.lang.Math.min;
+
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,9 +36,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Manages the background loading of {@link Loadable}s.
- */
+/** Manages the background loading of {@link Loadable}s. */
 public final class Loader implements LoaderErrorThrower {
 
   /**
@@ -79,10 +79,8 @@ public final class Loader implements LoaderErrorThrower {
      * Performs the load, returning on completion or cancellation.
      *
      * @throws IOException If the input could not be loaded.
-     * @throws InterruptedException If the thread was interrupted.
      */
-    void load() throws IOException, InterruptedException;
-
+    void load() throws IOException;
   }
 
   /**
@@ -152,6 +150,8 @@ public final class Loader implements LoaderErrorThrower {
 
   }
 
+  private static final String THREAD_NAME_PREFIX = "ExoPlayer:Loader:";
+
   /** Types of action that can be taken in response to a load error. */
   @Documented
   @Retention(RetentionPolicy.SOURCE)
@@ -210,10 +210,12 @@ public final class Loader implements LoaderErrorThrower {
   @Nullable private IOException fatalError;
 
   /**
-   * @param threadName A name for the loader's thread.
+   * @param threadNameSuffix A name suffix for the loader's thread. This should be the name of the
+   *     component using the loader.
    */
-  public Loader(String threadName) {
-    this.downloadExecutorService = Util.newSingleThreadExecutor(threadName);
+  public Loader(String threadNameSuffix) {
+    this.downloadExecutorService =
+        Util.newSingleThreadExecutor(THREAD_NAME_PREFIX + threadNameSuffix);
   }
 
   /**
@@ -429,32 +431,26 @@ public final class Loader implements LoaderErrorThrower {
         if (!released) {
           obtainMessage(MSG_IO_EXCEPTION, e).sendToTarget();
         }
-      } catch (InterruptedException e) {
-        // The load was canceled.
-        Assertions.checkState(canceled);
-        if (!released) {
-          sendEmptyMessage(MSG_FINISH);
-        }
       } catch (Exception e) {
         // This should never happen, but handle it anyway.
-        Log.e(TAG, "Unexpected exception loading stream", e);
         if (!released) {
+          Log.e(TAG, "Unexpected exception loading stream", e);
           obtainMessage(MSG_IO_EXCEPTION, new UnexpectedLoaderException(e)).sendToTarget();
         }
       } catch (OutOfMemoryError e) {
         // This can occur if a stream is malformed in a way that causes an extractor to think it
         // needs to allocate a large amount of memory. We don't want the process to die in this
         // case, but we do want the playback to fail.
-        Log.e(TAG, "OutOfMemory error loading stream", e);
         if (!released) {
+          Log.e(TAG, "OutOfMemory error loading stream", e);
           obtainMessage(MSG_IO_EXCEPTION, new UnexpectedLoaderException(e)).sendToTarget();
         }
       } catch (Error e) {
-        // We'd hope that the platform would kill the process if an Error is thrown here, but the
-        // executor may catch the error (b/20616433). Throw it here, but also pass and throw it from
-        // the handler thread so that the process dies even if the executor behaves in this way.
-        Log.e(TAG, "Unexpected error loading stream", e);
+        // We'd hope that the platform would shut down the process if an Error is thrown here, but
+        // the executor may catch the error (b/20616433). Throw it here, but also pass and throw it
+        // from the handler thread so the process dies even if the executor behaves in this way.
         if (!released) {
+          Log.e(TAG, "Unexpected error loading stream", e);
           obtainMessage(MSG_FATAL_ERROR, e).sendToTarget();
         }
         throw e;
@@ -524,7 +520,7 @@ public final class Loader implements LoaderErrorThrower {
     }
 
     private long getRetryDelayMillis() {
-      return Math.min((errorCount - 1) * 1000, 5000);
+      return min((errorCount - 1) * 1000, 5000);
     }
 
   }

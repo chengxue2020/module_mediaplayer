@@ -35,7 +35,7 @@ import java.util.Map;
         new LinkedHashMap<Uri, byte[]>(
             /* initialCapacity= */ maxSize + 1, /* loadFactor= */ 1, /* accessOrder= */ false) {
           @Override
-          protected boolean removeEldestEntry(Entry<Uri, byte[]> eldest) {
+          protected boolean removeEldestEntry(Map.Entry<Uri, byte[]> eldest) {
             return size() > maxSize;
           }
         };

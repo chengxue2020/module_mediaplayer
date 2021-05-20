@@ -40,7 +40,7 @@ import com.google.android.exoplayer2.extractor.SeekMap;
   long getDataEndPosition();
 
   /** A {@link Seeker} that does not support seeking through audio data. */
-  /* package */ class UnseekableSeeker extends Unseekable implements Seeker {
+  /* package */ class UnseekableSeeker extends SeekMap.Unseekable implements Seeker {
 
     public UnseekableSeeker() {
       super(/* durationUs= */ C.TIME_UNSET);

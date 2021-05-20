@@ -20,9 +20,7 @@ import android.os.Parcelable;
 import com.google.android.exoplayer2.util.ParsableByteArray;
 import com.google.android.exoplayer2.util.Util;
 
-/**
- * Represents a private command as defined in SCTE35, Section 9.3.6.
- */
+/** Represents a private command as defined in SCTE35, Section 9.3.6. */
 public final class PrivateCommand extends SpliceCommand {
 
   /**
@@ -67,8 +65,8 @@ public final class PrivateCommand extends SpliceCommand {
     dest.writeByteArray(commandBytes);
   }
 
-  public static final Creator<PrivateCommand> CREATOR =
-      new Creator<PrivateCommand>() {
+  public static final Parcelable.Creator<PrivateCommand> CREATOR =
+      new Parcelable.Creator<PrivateCommand>() {
 
     @Override
     public PrivateCommand createFromParcel(Parcel in) {

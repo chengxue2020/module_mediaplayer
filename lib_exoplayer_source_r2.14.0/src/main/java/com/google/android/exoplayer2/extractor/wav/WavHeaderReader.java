@@ -38,12 +38,11 @@ import java.io.IOException;
    * @param input Input stream to peek the WAV header from.
    * @throws ParserException If the input file is an incorrect RIFF WAV.
    * @throws IOException If peeking from the input fails.
-   * @throws InterruptedException If interrupted while peeking from input.
    * @return A new {@code WavHeader} peeked from {@code input}, or null if the input is not a
    *     supported WAV format.
    */
   @Nullable
-  public static WavHeader peek(ExtractorInput input) throws IOException, InterruptedException {
+  public static WavHeader peek(ExtractorInput input) throws IOException {
     Assertions.checkNotNull(input);
 
     // Allocate a scratch buffer large enough to store the format chunk.
@@ -55,7 +54,7 @@ import java.io.IOException;
       return null;
     }
 
-    input.peekFully(scratch.data, 0, 4);
+    input.peekFully(scratch.getData(), 0, 4);
     scratch.setPosition(0);
     int riffFormat = scratch.readInt();
     if (riffFormat != WavUtil.WAVE_FOURCC) {
@@ -71,7 +70,7 @@ import java.io.IOException;
     }
 
     Assertions.checkState(chunkHeader.size >= 16);
-    input.peekFully(scratch.data, 0, 16);
+    input.peekFully(scratch.getData(), 0, 16);
     scratch.setPosition(0);
     int audioFormatType = scratch.readLittleEndianUnsignedShort();
     int numChannels = scratch.readLittleEndianUnsignedShort();
@@ -108,17 +107,15 @@ import java.io.IOException;
    * @return The byte positions at which the data starts (inclusive) and ends (exclusive).
    * @throws ParserException If an error occurs parsing chunks.
    * @throws IOException If reading from the input fails.
-   * @throws InterruptedException If interrupted while reading from input.
    */
-  public static Pair<Long, Long> skipToData(ExtractorInput input)
-      throws IOException, InterruptedException {
+  public static Pair<Long, Long> skipToData(ExtractorInput input) throws IOException {
     Assertions.checkNotNull(input);
 
     // Make sure the peek position is set to the read position before we peek the first header.
     input.resetPeekPosition();
 
     ParsableByteArray scratch = new ParsableByteArray(ChunkHeader.SIZE_IN_BYTES);
-    // Skip all chunks until we hit the data header.
+    // Skip all chunks until we find the data header.
     ChunkHeader chunkHeader = ChunkHeader.peek(input, scratch);
     while (chunkHeader.id != WavUtil.DATA_FOURCC) {
       if (chunkHeader.id != WavUtil.RIFF_FOURCC && chunkHeader.id != WavUtil.FMT_FOURCC) {
@@ -174,12 +171,11 @@ import java.io.IOException;
      * @param input Input stream to peek the chunk header from.
      * @param scratch Buffer for temporary use.
      * @throws IOException If peeking from the input fails.
-     * @throws InterruptedException If interrupted while peeking from input.
      * @return A new {@code ChunkHeader} peeked from {@code input}.
      */
     public static ChunkHeader peek(ExtractorInput input, ParsableByteArray scratch)
-        throws IOException, InterruptedException {
-      input.peekFully(scratch.data, /* offset= */ 0, /* length= */ SIZE_IN_BYTES);
+        throws IOException {
+      input.peekFully(scratch.getData(), /* offset= */ 0, /* length= */ SIZE_IN_BYTES);
       scratch.setPosition(0);
 
       int id = scratch.readInt();

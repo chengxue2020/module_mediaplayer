@@ -21,16 +21,11 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
-
-import com.google.android.exoplayer2.R;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * A {@link FrameLayout} that resizes itself to match a specified aspect ratio.
- */
+/** A {@link FrameLayout} that resizes itself to match a specified aspect ratio. */
 public final class AspectRatioFrameLayout extends FrameLayout {
 
   /** Listener to be notified about changes of the aspect ratios of this view. */

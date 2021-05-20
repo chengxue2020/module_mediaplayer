@@ -227,8 +227,8 @@ public final class IcyHeaders implements Metadata.Entry {
     return 0;
   }
 
-  public static final Creator<IcyHeaders> CREATOR =
-      new Creator<IcyHeaders>() {
+  public static final Parcelable.Creator<IcyHeaders> CREATOR =
+      new Parcelable.Creator<IcyHeaders>() {
 
         @Override
         public IcyHeaders createFromParcel(Parcel in) {

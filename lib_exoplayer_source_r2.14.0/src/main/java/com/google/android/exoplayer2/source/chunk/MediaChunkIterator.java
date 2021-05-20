@@ -78,7 +78,7 @@ public interface MediaChunkIterator {
   /**
    * Returns the {@link DataSpec} used to load the media chunk.
    *
-   * @throws NoSuchElementException If the method is called before the first call to
+   * @throws java.util.NoSuchElementException If the method is called before the first call to
    *     {@link #next()} or when {@link #isEnded()} is true.
    */
   DataSpec getDataSpec();
@@ -86,7 +86,7 @@ public interface MediaChunkIterator {
   /**
    * Returns the media start time of the chunk, in microseconds.
    *
-   * @throws NoSuchElementException If the method is called before the first call to
+   * @throws java.util.NoSuchElementException If the method is called before the first call to
    *     {@link #next()} or when {@link #isEnded()} is true.
    */
   long getChunkStartTimeUs();
@@ -94,7 +94,7 @@ public interface MediaChunkIterator {
   /**
    * Returns the media end time of the chunk, in microseconds.
    *
-   * @throws NoSuchElementException If the method is called before the first call to
+   * @throws java.util.NoSuchElementException If the method is called before the first call to
    *     {@link #next()} or when {@link #isEnded()} is true.
    */
   long getChunkEndTimeUs();
