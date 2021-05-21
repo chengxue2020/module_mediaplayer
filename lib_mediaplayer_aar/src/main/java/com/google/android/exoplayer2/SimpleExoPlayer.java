@@ -85,6 +85,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeoutException;
 
+import lib.kalu.mediaplayer.videokernel.platfrom.PlatfromPlayer;
+
 /**
  * An {@link ExoPlayer} implementation that uses default {@link Renderer} components. Instances can
  * be obtained from {@link Builder}.
@@ -95,7 +97,8 @@ public class SimpleExoPlayer extends BasePlayer
         ExoPlayer.VideoComponent,
         ExoPlayer.TextComponent,
         ExoPlayer.MetadataComponent,
-        ExoPlayer.DeviceComponent {
+        ExoPlayer.DeviceComponent,
+        PlatfromPlayer {
 
   /** The default timeout for detaching a surface from the player, in milliseconds. */
   public static final long DEFAULT_DETACH_SURFACE_TIMEOUT_MS = 2_000;

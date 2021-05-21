@@ -11,6 +11,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.exoplayer2.BasePlayer;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -54,7 +55,7 @@ import static com.google.android.exoplayer2.ExoPlaybackException.TYPE_SOURCE;
  * </pre>
  */
 @Keep
-public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Player.EventListener {
+public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
 
     protected Context mAppContext;
     protected SimpleExoPlayer mInternalPlayer;
@@ -77,6 +78,12 @@ public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Pl
             mAppContext = context.getApplicationContext();
         }
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
+    }
+
+    @NonNull
+    @Override
+    public SimpleExoPlayer getPlayer() {
+        return mInternalPlayer;
     }
 
     @Override
@@ -199,7 +206,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Pl
     private MediaSourceEventListener mMediaSourceEventListener = new MediaSourceEventListener() {
 
         @Override
-        public void onLoadStarted(int windowIndex, @Nullable  MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+        public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
             if (getVideoPlayerChangeListener() != null && mIsPreparing) {
                 getVideoPlayerChangeListener().onPrepared();
             }
@@ -262,13 +269,16 @@ public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Pl
             mInternalPlayer.removeVideoListener(this);
             final SimpleExoPlayer player = mInternalPlayer;
             mInternalPlayer = null;
-            new Thread() {
-                @Override
-                public void run() {
-                    //异步释放，防止卡顿
-                    player.release();
-                }
-            }.start();
+
+            // TODO: 2021-05-21  同步释放，防止卡顿
+            player.release();
+//            new Thread() {
+//                @Override
+//                public void run() {
+//                    //异步释放，防止卡顿
+//                    player.release();
+//                }
+//            }.start();
         }
 
         mIsPreparing = false;

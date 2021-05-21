@@ -11,13 +11,12 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.Keep;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -252,15 +251,15 @@ public final class BaseToast {
             toast.setDuration(duration);
             toast.setMargin(0, 0);
             if(layout==0){
-                CardView rootView = (CardView) LayoutInflater.from(context).inflate(R.layout.moudle_mediaplayer_toast_view, null);
+                RelativeLayout rootView = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.moudle_mediaplayer_toast_view, null);
                 TextView textView = rootView.findViewById(R.id.toastTextView);
                 TextView descTv = rootView.findViewById(R.id.desc);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     //rootView.setElevation(elevation);
-                    rootView.setCardElevation(elevation);
+//                    rootView.setCardElevation(elevation);
                 }
-                rootView.setRadius(radius);
-                rootView.setCardBackgroundColor(backgroundColor);
+//                rootView.setRadius(radius);
+                rootView.setBackgroundColor(backgroundColor);
                 //rootView.setBackgroundColor(backgroundColor);
                 textView.setTextColor(textColor);
                 textView.setText(title);

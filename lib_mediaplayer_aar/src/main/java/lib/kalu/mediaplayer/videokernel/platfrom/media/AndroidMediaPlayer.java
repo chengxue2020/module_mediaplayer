@@ -29,6 +29,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
+import lib.kalu.mediaplayer.videokernel.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
 
 import java.util.Map;
@@ -44,7 +45,7 @@ import java.util.Map;
  * </pre>
  */
 @Keep
-public class AndroidMediaPlayer extends VideoPlayerCore {
+public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
 
     protected MediaPlayer mMediaPlayer;
     private int mBufferedPercent;
@@ -52,11 +53,17 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
     private boolean mIsPreparing;
 
     public AndroidMediaPlayer(Context context) {
-        if (context instanceof Application){
+        if (context instanceof Application) {
             mAppContext = context;
         } else {
             mAppContext = context.getApplicationContext();
         }
+    }
+
+    @NonNull
+    @Override
+    public AndroidMediaPlayer getPlayer() {
+        return this;
     }
 
     @Override
@@ -88,8 +95,8 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
     @Override
     public void setDataSource(String path, Map<String, String> headers, boolean isCahche) {
         // 设置dataSource
-        if(path==null || path.length()==0){
-            if (getVideoPlayerChangeListener()!=null){
+        if (path == null || path.length() == 0) {
+            if (getVideoPlayerChangeListener() != null) {
                 getVideoPlayerChangeListener().onInfo(PlayerConstant.MEDIA_INFO_URL_NULL, 0);
             }
             return;
@@ -98,7 +105,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
             Uri uri = Uri.parse(path);
             mMediaPlayer.setDataSource(mAppContext, uri, headers);
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_PARSE,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_PARSE, e.getMessage());
         }
     }
 
@@ -110,7 +117,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
         try {
             mMediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -122,7 +129,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
         try {
             mMediaPlayer.start();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -134,7 +141,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
         try {
             mMediaPlayer.pause();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -146,7 +153,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
         try {
             mMediaPlayer.stop();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -156,7 +163,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
             mIsPreparing = true;
             mMediaPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -187,7 +194,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
         try {
             mMediaPlayer.seekTo((int) time);
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -232,7 +239,8 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
 
     /**
      * 获取缓冲百分比
-     * @return                                  获取缓冲百分比
+     *
+     * @return 获取缓冲百分比
      */
     @Override
     public int getBufferedPercentage() {
@@ -241,56 +249,60 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
 
     /**
      * 设置渲染视频的View,主要用于TextureView
-     * @param surface                           surface
+     *
+     * @param surface surface
      */
     @Override
     public void setSurface(Surface surface) {
-        if (surface!=null){
+        if (surface != null) {
             try {
                 mMediaPlayer.setSurface(surface);
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
             }
         }
     }
 
     /**
      * 设置渲染视频的View,主要用于SurfaceView
-     * @param holder                            holder
+     *
+     * @param holder holder
      */
     @Override
     public void setDisplay(SurfaceHolder holder) {
         try {
             mMediaPlayer.setDisplay(holder);
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
     /**
      * 设置音量
-     * @param v1                                v1
-     * @param v2                                v2
+     *
+     * @param v1 v1
+     * @param v2 v2
      */
     @Override
     public void setVolume(float v1, float v2) {
         try {
             mMediaPlayer.setVolume(v1, v2);
-        } catch (Exception e){
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+        } catch (Exception e) {
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
     /**
      * 设置是否循环播放
-     * @param isLooping                         布尔值
+     *
+     * @param isLooping 布尔值
      */
     @Override
     public void setLooping(boolean isLooping) {
         try {
             mMediaPlayer.setLooping(isLooping);
-        } catch (Exception e){
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+        } catch (Exception e) {
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -300,7 +312,8 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
 
     /**
      * 设置播放速度
-     * @param speed                             速度
+     *
+     * @param speed 速度
      */
     @Override
     public void setSpeed(float speed) {
@@ -309,14 +322,15 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
             try {
                 mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(speed));
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
             }
         }
     }
 
     /**
      * 获取播放速度
-     * @return                                  播放速度
+     *
+     * @return 播放速度
      */
     @Override
     public float getSpeed() {
@@ -325,7 +339,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
             try {
                 return mMediaPlayer.getPlaybackParams().getSpeed();
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
             }
         }
         return 1f;
@@ -333,7 +347,8 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
 
     /**
      * 获取当前缓冲的网速
-     * @return                                  获取网络
+     *
+     * @return 获取网络
      */
     @Override
     public long getTcpSpeed() {
@@ -344,7 +359,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore {
     private MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,"监听异常"+ what + ", extra: " + extra);
+            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, "监听异常" + what + ", extra: " + extra);
             return true;
         }
     };

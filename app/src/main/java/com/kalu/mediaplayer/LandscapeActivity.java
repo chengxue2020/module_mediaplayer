@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -140,9 +141,10 @@ public class LandscapeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         VideoLayout videoLayout = findViewById(R.id.video_player);
-        videoLayout.release();
+        if (videoLayout == null || !videoLayout.onBackPressed()) {
+            super.onBackPressed();
+        }
     }
 
     @Override

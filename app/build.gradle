@@ -61,7 +61,7 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -73,10 +73,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'                 //谷歌图片加载库
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
 
-    // ijkplayer
-    api rootProject.ext.dependencies.support_ijkplayer_java
-    api rootProject.ext.dependencies.support_ijkplayer_armv7a
-
     // 弹幕
     implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
     implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
@@ -86,26 +82,7 @@ dependencies {
     implementation 'com.yc:PagerLib:1.0.4'
     implementation 'cn.yc:YCStateLib:1.2.2'
 
-    // ijkplayer
-    implementation rootProject.ext.dependencies.support_ijkplayer_java
-    implementation rootProject.ext.dependencies.support_ijkplayer_armv7a
-
-    // lib_mediaplayer_aar
+    // mediaplayer
     implementation(name: 'lib_mediaplayer_r2.14.0_release_20210521', ext: 'aar')
 //    implementation project(path: ':lib_mediaplayer_aar')
-
-//    // 视频缓存
-//    implementation project(path: ':lib_mediaplayer_videocache')
-//    // 视频内核
-//    implementation project(path: ':lib_mediaplayer_videokernel')
-//    // 视频DB
-//    implementation project(path: ':lib_mediaplayer_videodb')
-//    // 视频UI
-//    implementation project(path: ':lib_mediaplayer_videoui')
-//    // 视频m3u8下载和合成
-//    implementation project(path: ':lib_mediaplayer_videom3u8')
-//    // 视频悬浮
-//    implementation project(path: ':lib_mediaplayer_videofloat')
-//    // 音乐
-//    implementation project(path: ':lib_mediaplayer_musickernel')
 }

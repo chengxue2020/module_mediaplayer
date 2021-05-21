@@ -62,33 +62,23 @@ dependencies {
     api files('libs/guava-27.1-android.jar')
     api files('libs/failureaccess-1.0.1.jar')
 
-    implementation 'net.butterflytv.utils:rtmp-client:3.1.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'net.butterflytv.utils:rtmp-client:3.1.0'
+    compileOnly rootProject.ext.dependencies.support_appcompat
+    compileOnly rootProject.ext.dependencies.support_annotation
+    compileOnly rootProject.ext.dependencies.support_recyclerview
+    compileOnly rootProject.ext.dependencies.support_media2_common
+    compileOnly rootProject.ext.dependencies.support_media2_session
+    compileOnly rootProject.ext.dependencies.support_media2_widget
+    compileOnly rootProject.ext.dependencies.support_media2_player
+
+    compileOnly 'net.butterflytv.utils:rtmp-client:3.1.0'
+    compileOnly 'androidx.appcompat:appcompat:1.2.0'
+    compileOnly 'net.butterflytv.utils:rtmp-client:3.1.0'
     compileOnly 'org.checkerframework:checker-qual:2.5.0'
     compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
 
-    // videokernel-exoplayer
-//    api(name: 'exoplayer-2.11.8', ext: 'aar')
-//    api(name: 'exoplayer-core-2.11.8', ext: 'aar')
-//    api(name: 'exoplayer-dash-2.11.8', ext: 'aar')
-//    api(name: 'exoplayer-hls-2.11.8', ext: 'aar')
-//    api(name: 'exoplayer-ui-2.11.8', ext: 'aar')
-//    api(name: 'exoplayer-extension-rtmp-2.11.8', ext: 'aar')
-//    api(name: 'exoplayer-smoothstreaming-2.11.8', ext: 'aar')
-
-    implementation rootProject.ext.dependencies.support_appcompat
-    implementation rootProject.ext.dependencies.support_annotation
-    implementation rootProject.ext.dependencies.support_cardview
-    implementation rootProject.ext.dependencies.support_recyclerview
-    implementation rootProject.ext.dependencies.support_media2_common
-    implementation rootProject.ext.dependencies.support_media2_session
-    implementation rootProject.ext.dependencies.support_media2_widget
-    implementation rootProject.ext.dependencies.support_media2_player
-
     // ijkplayer
-    implementation rootProject.ext.dependencies.support_ijkplayer_java
-    implementation rootProject.ext.dependencies.support_ijkplayer_armv7a
+    compileOnly rootProject.ext.dependencies.support_ijkplayer_java
+    compileOnly rootProject.ext.dependencies.support_ijkplayer_armv7a
 
     // exoplayer
 //    implementation(name: 'exoplayer-2.11.8', ext: 'aar')

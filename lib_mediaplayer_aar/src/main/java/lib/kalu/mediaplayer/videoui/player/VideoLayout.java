@@ -353,7 +353,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 是否显示移动网络提示，可在Controller中配置
      */
-    protected boolean showNetWarning() {
+    public boolean showNetWarning() {
         //播放本地数据源时不检测网络
         if (VideoHelper.instance().isLocalDataSource(mUrl, mAssetFileDescriptor)) {
             return false;

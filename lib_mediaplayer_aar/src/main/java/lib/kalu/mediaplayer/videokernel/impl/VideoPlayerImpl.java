@@ -9,9 +9,13 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.exoplayer2.BasePlayer;
+import com.google.android.exoplayer2.Player;
+
 import java.util.Map;
 
 import lib.kalu.mediaplayer.videokernel.listener.OnVideoPlayerChangeListener;
+import lib.kalu.mediaplayer.videokernel.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.videoui.controller.BaseVideoController;
 
 
@@ -23,6 +27,9 @@ import lib.kalu.mediaplayer.videoui.controller.BaseVideoController;
 public interface VideoPlayerImpl {
 
     /*----------------------------第一部分：视频初始化实例对象方法----------------------------------*/
+
+    @NonNull
+    <T extends PlatfromPlayer> T getPlayer();
 
     /**
      * 初始化播放器实例

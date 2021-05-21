@@ -29,7 +29,10 @@ import android.view.SurfaceHolder;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import com.google.android.exoplayer2.Player;
+
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
+import lib.kalu.mediaplayer.videokernel.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
 
@@ -49,7 +52,7 @@ import tv.danmaku.ijk.media.player.IjkTimedText;
  * </pre>
  */
 @Keep
-public class IjkVideoPlayer extends VideoPlayerCore {
+public class IjkVideoPlayer extends VideoPlayerCore implements PlatfromPlayer {
 
     protected IjkMediaPlayer mMediaPlayer;
     private int mBufferedPercent;
@@ -61,6 +64,12 @@ public class IjkVideoPlayer extends VideoPlayerCore {
         } else {
             mAppContext = context.getApplicationContext();
         }
+    }
+
+    @NonNull
+    @Override
+    public IjkVideoPlayer getPlayer() {
+        return this;
     }
 
     @Override
