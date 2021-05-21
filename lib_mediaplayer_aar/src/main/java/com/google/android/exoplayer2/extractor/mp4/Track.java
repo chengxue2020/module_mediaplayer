@@ -23,9 +23,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Encapsulates information describing an MP4 track.
- */
+/** Encapsulates information describing an MP4 track. */
 public final class Track {
 
   /**
@@ -129,8 +127,6 @@ public final class Track {
         : sampleDescriptionEncryptionBoxes[sampleDescriptionIndex];
   }
 
-  // incompatible types in argument.
-  @SuppressWarnings("nullness:argument.type.incompatible")
   public Track copyWithFormat(Format format) {
     return new Track(
         id,

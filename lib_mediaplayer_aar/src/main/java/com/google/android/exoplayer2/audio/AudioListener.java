@@ -15,15 +15,22 @@
  */
 package com.google.android.exoplayer2.audio;
 
-/** A listener for changes in audio configuration. */
+import com.google.android.exoplayer2.Player;
+
+/**
+ * A listener for changes in audio configuration.
+ *
+ * @deprecated Use {@link Player.Listener}.
+ */
+@Deprecated
 public interface AudioListener {
 
   /**
-   * Called when the audio session is set.
+   * Called when the audio session ID changes.
    *
-   * @param audioSessionId The audio session id.
+   * @param audioSessionId The audio session ID.
    */
-  default void onAudioSessionId(int audioSessionId) {}
+  default void onAudioSessionIdChanged(int audioSessionId) {}
 
   /**
    * Called when the audio attributes change.
@@ -38,4 +45,11 @@ public interface AudioListener {
    * @param volume The new volume, with 0 being silence and 1 being unity gain.
    */
   default void onVolumeChanged(float volume) {}
+
+  /**
+   * Called when skipping silences is enabled or disabled in the audio stream.
+   *
+   * @param skipSilenceEnabled Whether skipping silences in the audio stream is enabled.
+   */
+  default void onSkipSilenceEnabledChanged(boolean skipSilenceEnabled) {}
 }

@@ -18,13 +18,13 @@ package com.google.android.exoplayer2.metadata.id3;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.metadata.Metadata;
-import com.google.android.exoplayer2.metadata.MetadataDecoder;
 import com.google.android.exoplayer2.metadata.MetadataInputBuffer;
-import com.google.android.exoplayer2.util.Assertions;
+import com.google.android.exoplayer2.metadata.SimpleMetadataDecoder;
 import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.ParsableBitArray;
 import com.google.android.exoplayer2.util.ParsableByteArray;
 import com.google.android.exoplayer2.util.Util;
+import com.google.common.base.Ascii;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -32,10 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Decodes ID3 tags.
- */
-public final class Id3Decoder implements MetadataDecoder {
+/** Decodes ID3 tags. */
+public final class Id3Decoder extends SimpleMetadataDecoder {
 
   /**
    * A predicate for determining whether individual frames should be decoded.
@@ -96,11 +94,10 @@ public final class Id3Decoder implements MetadataDecoder {
     this.framePredicate = framePredicate;
   }
 
-  @SuppressWarnings("ByteBufferBackingArray")
   @Override
   @Nullable
-  public Metadata decode(MetadataInputBuffer inputBuffer) {
-    ByteBuffer buffer = Assertions.checkNotNull(inputBuffer.data);
+  @SuppressWarnings("ByteBufferBackingArray") // Buffer validated by SimpleMetadataDecoder.decode
+  protected Metadata decode(MetadataInputBuffer inputBuffer, ByteBuffer buffer) {
     return decode(buffer.array(), buffer.limit());
   }
 
@@ -117,7 +114,7 @@ public final class Id3Decoder implements MetadataDecoder {
     List<Id3Frame> id3Frames = new ArrayList<>();
     ParsableByteArray id3Data = new ParsableByteArray(data, size);
 
-    Id3Header id3Header = decodeHeader(id3Data);
+    @Nullable Id3Header id3Header = decodeHeader(id3Data);
     if (id3Header == null) {
       return null;
     }
@@ -141,8 +138,14 @@ public final class Id3Decoder implements MetadataDecoder {
     }
 
     while (id3Data.bytesLeft() >= frameHeaderSize) {
-      Id3Frame frame = decodeFrame(id3Header.majorVersion, id3Data, unsignedIntFrameSizeHack,
-          frameHeaderSize, framePredicate);
+      @Nullable
+      Id3Frame frame =
+          decodeFrame(
+              id3Header.majorVersion,
+              id3Data,
+              unsignedIntFrameSizeHack,
+              frameHeaderSize,
+              framePredicate);
       if (frame != null) {
         id3Frames.add(frame);
       }
@@ -537,13 +540,13 @@ public final class Id3Decoder implements MetadataDecoder {
     int mimeTypeEndIndex;
     if (majorVersion == 2) {
       mimeTypeEndIndex = 2;
-      mimeType = "image/" + Util.toLowerInvariant(new String(data, 0, 3, "ISO-8859-1"));
+      mimeType = "image/" + Ascii.toLowerCase(new String(data, 0, 3, "ISO-8859-1"));
       if ("image/jpg".equals(mimeType)) {
         mimeType = "image/jpeg";
       }
     } else {
       mimeTypeEndIndex = indexOfZeroByte(data, 0);
-      mimeType = Util.toLowerInvariant(new String(data, 0, mimeTypeEndIndex, "ISO-8859-1"));
+      mimeType = Ascii.toLowerCase(new String(data, 0, mimeTypeEndIndex, "ISO-8859-1"));
       if (mimeType.indexOf('/') == -1) {
         mimeType = "image/" + mimeType;
       }
@@ -599,9 +602,10 @@ public final class Id3Decoder implements MetadataDecoder {
       @Nullable FramePredicate framePredicate)
       throws UnsupportedEncodingException {
     int framePosition = id3Data.getPosition();
-    int chapterIdEndIndex = indexOfZeroByte(id3Data.data, framePosition);
-    String chapterId = new String(id3Data.data, framePosition, chapterIdEndIndex - framePosition,
-        "ISO-8859-1");
+    int chapterIdEndIndex = indexOfZeroByte(id3Data.getData(), framePosition);
+    String chapterId =
+        new String(
+            id3Data.getData(), framePosition, chapterIdEndIndex - framePosition, "ISO-8859-1");
     id3Data.setPosition(chapterIdEndIndex + 1);
 
     int startTime = id3Data.readInt();
@@ -625,8 +629,7 @@ public final class Id3Decoder implements MetadataDecoder {
       }
     }
 
-    Id3Frame[] subFrameArray = new Id3Frame[subFrames.size()];
-    subFrames.toArray(subFrameArray);
+    Id3Frame[] subFrameArray = subFrames.toArray(new Id3Frame[0]);
     return new ChapterFrame(chapterId, startTime, endTime, startOffset, endOffset, subFrameArray);
   }
 
@@ -639,9 +642,10 @@ public final class Id3Decoder implements MetadataDecoder {
       @Nullable FramePredicate framePredicate)
       throws UnsupportedEncodingException {
     int framePosition = id3Data.getPosition();
-    int elementIdEndIndex = indexOfZeroByte(id3Data.data, framePosition);
-    String elementId = new String(id3Data.data, framePosition, elementIdEndIndex - framePosition,
-        "ISO-8859-1");
+    int elementIdEndIndex = indexOfZeroByte(id3Data.getData(), framePosition);
+    String elementId =
+        new String(
+            id3Data.getData(), framePosition, elementIdEndIndex - framePosition, "ISO-8859-1");
     id3Data.setPosition(elementIdEndIndex + 1);
 
     int ctocFlags = id3Data.readUnsignedByte();
@@ -652,23 +656,24 @@ public final class Id3Decoder implements MetadataDecoder {
     String[] children = new String[childCount];
     for (int i = 0; i < childCount; i++) {
       int startIndex = id3Data.getPosition();
-      int endIndex = indexOfZeroByte(id3Data.data, startIndex);
-      children[i] = new String(id3Data.data, startIndex, endIndex - startIndex, "ISO-8859-1");
+      int endIndex = indexOfZeroByte(id3Data.getData(), startIndex);
+      children[i] = new String(id3Data.getData(), startIndex, endIndex - startIndex, "ISO-8859-1");
       id3Data.setPosition(endIndex + 1);
     }
 
     ArrayList<Id3Frame> subFrames = new ArrayList<>();
     int limit = framePosition + frameSize;
     while (id3Data.getPosition() < limit) {
-      Id3Frame frame = decodeFrame(majorVersion, id3Data, unsignedIntFrameSizeHack,
-          frameHeaderSize, framePredicate);
+      @Nullable
+      Id3Frame frame =
+          decodeFrame(
+              majorVersion, id3Data, unsignedIntFrameSizeHack, frameHeaderSize, framePredicate);
       if (frame != null) {
         subFrames.add(frame);
       }
     }
 
-    Id3Frame[] subFrameArray = new Id3Frame[subFrames.size()];
-    subFrames.toArray(subFrameArray);
+    Id3Frame[] subFrameArray = subFrames.toArray(new Id3Frame[0]);
     return new ChapterTocFrame(elementId, isRoot, isOrdered, children, subFrameArray);
   }
 
@@ -719,7 +724,7 @@ public final class Id3Decoder implements MetadataDecoder {
    * @return The length of the data after processing.
    */
   private static int removeUnsynchronization(ParsableByteArray data, int length) {
-    byte[] bytes = data.data;
+    byte[] bytes = data.getData();
     int startPosition = data.getPosition();
     for (int i = startPosition; i + 1 < startPosition + length; i++) {
       if ((bytes[i] & 0xFF) == 0xFF && bytes[i + 1] == 0x00) {

@@ -15,9 +15,12 @@
  */
 package com.google.android.exoplayer2.util;
 
-/**
- * Wraps a byte array, providing methods that allow it to be read as a bitstream.
- */
+import static java.lang.Math.min;
+
+import com.google.common.base.Charsets;
+import java.nio.charset.Charset;
+
+/** Wraps a byte array, providing methods that allow it to be read as a bitstream. */
 public final class ParsableBitArray {
 
   public byte[] data;
@@ -69,7 +72,7 @@ public final class ParsableBitArray {
    * @param parsableByteArray The {@link ParsableByteArray}.
    */
   public void reset(ParsableByteArray parsableByteArray) {
-    reset(parsableByteArray.data, parsableByteArray.limit());
+    reset(parsableByteArray.getData(), parsableByteArray.limit());
     setPosition(parsableByteArray.getPosition() * 8);
   }
 
@@ -278,6 +281,31 @@ public final class ParsableBitArray {
   }
 
   /**
+   * Reads the next {@code length} bytes as a UTF-8 string. Must only be called when the position is
+   * byte aligned.
+   *
+   * @param length The number of bytes to read.
+   * @return The string encoded by the bytes in UTF-8.
+   */
+  public String readBytesAsString(int length) {
+    return readBytesAsString(length, Charsets.UTF_8);
+  }
+
+  /**
+   * Reads the next {@code length} bytes as a string encoded in {@link Charset}. Must only be called
+   * when the position is byte aligned.
+   *
+   * @param length The number of bytes to read.
+   * @param charset The character set of the encoded characters.
+   * @return The string encoded by the bytes in the specified character set.
+   */
+  public String readBytesAsString(int length, Charset charset) {
+    byte[] bytes = new byte[length];
+    readBytes(bytes, 0, length);
+    return new String(bytes, charset);
+  }
+
+  /**
    * Overwrites {@code numBits} from this array using the {@code numBits} least significant bits
    * from {@code value}. Bits are written in order from most significant to least significant. The
    * read position is advanced by {@code numBits}.
@@ -291,7 +319,7 @@ public final class ParsableBitArray {
     if (numBits < 32) {
       value &= (1 << numBits) - 1;
     }
-    int firstByteReadSize = Math.min(8 - bitOffset, numBits);
+    int firstByteReadSize = min(8 - bitOffset, numBits);
     int firstByteRightPaddingSize = 8 - bitOffset - firstByteReadSize;
     int firstByteBitmask = (0xFF00 >> bitOffset) | ((1 << firstByteRightPaddingSize) - 1);
     data[byteOffset] = (byte) (data[byteOffset] & firstByteBitmask);

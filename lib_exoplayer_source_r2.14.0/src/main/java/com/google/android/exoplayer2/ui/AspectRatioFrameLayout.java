@@ -21,6 +21,9 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
+
+import com.google.android.exoplayer2.R;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -81,7 +84,7 @@ public final class AspectRatioFrameLayout extends FrameLayout {
    * Either the width or height is increased to obtain the desired aspect ratio.
    */
   public static final int RESIZE_MODE_ZOOM = 4;
-  // LINT.ThenChange(../../../../../../res/values/attrs.xml)
+  // LINT.ThenChange(../../../../../../res/values/attrs_exoplayer.xml)
 
   /**
    * The {@link FrameLayout} will not resize itself if the fractional difference between its natural

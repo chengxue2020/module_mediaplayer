@@ -38,6 +38,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.R;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Util;
 import java.util.Collections;
@@ -157,7 +158,7 @@ public class DefaultTimeBar extends View implements TimeBar {
   public static final int BAR_GRAVITY_CENTER = 0;
   /** Vertical gravity for progress bar to be located at the bottom in the view. */
   public static final int BAR_GRAVITY_BOTTOM = 1;
-  // LINT.ThenChange(../../../../../../../../../ui/src/main/res/values/attrs.xml)
+  // LINT.ThenChange(../../../../../../../../../ui/src/main/res/values/attrs_exoplayer.xml)
 
   /** The threshold in dps above the bar at which touch events trigger fine scrub mode. */
   private static final int FINE_SCRUB_Y_THRESHOLD_DP = -50;

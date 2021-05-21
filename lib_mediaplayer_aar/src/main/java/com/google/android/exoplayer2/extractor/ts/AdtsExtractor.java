@@ -20,7 +20,6 @@ import static com.google.android.exoplayer2.metadata.id3.Id3Decoder.ID3_HEADER_L
 import static com.google.android.exoplayer2.metadata.id3.Id3Decoder.ID3_TAG;
 
 import androidx.annotation.IntDef;
-import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ParserException;
 import com.google.android.exoplayer2.extractor.ConstantBitrateSeekMap;
@@ -39,10 +38,10 @@ import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
-/**
- * Extracts data from AAC bit streams with ADTS framing.
- */
+/** Extracts data from AAC bit streams with ADTS framing. */
 public final class AdtsExtractor implements Extractor {
 
   /** Factory for {@link AdtsExtractor} instances. */
@@ -86,7 +85,7 @@ public final class AdtsExtractor implements Extractor {
   private final ParsableByteArray scratch;
   private final ParsableBitArray scratchBits;
 
-  @Nullable private ExtractorOutput extractorOutput;
+  private @MonotonicNonNull ExtractorOutput extractorOutput;
 
   private long firstSampleTimestampUs;
   private long firstFramePosition;
@@ -113,13 +112,13 @@ public final class AdtsExtractor implements Extractor {
     firstFramePosition = C.POSITION_UNSET;
     // Allocate scratch space for an ID3 header. The same buffer is also used to read 4 byte values.
     scratch = new ParsableByteArray(ID3_HEADER_LENGTH);
-    scratchBits = new ParsableBitArray(scratch.data);
+    scratchBits = new ParsableBitArray(scratch.getData());
   }
 
   // Extractor implementation.
 
   @Override
-  public boolean sniff(ExtractorInput input) throws IOException, InterruptedException {
+  public boolean sniff(ExtractorInput input) throws IOException {
     // Skip any ID3 headers.
     int startPosition = peekId3Header(input);
 
@@ -128,7 +127,7 @@ public final class AdtsExtractor implements Extractor {
     int totalValidFramesSize = 0;
     int validFramesCount = 0;
     while (true) {
-      input.peekFully(scratch.data, 0, 2);
+      input.peekFully(scratch.getData(), 0, 2);
       scratch.setPosition(0);
       int syncBytes = scratch.readUnsignedShort();
       if (!AdtsReader.isAdtsSyncWord(syncBytes)) {
@@ -145,7 +144,7 @@ public final class AdtsExtractor implements Extractor {
         }
 
         // Skip the frame.
-        input.peekFully(scratch.data, 0, 4);
+        input.peekFully(scratch.getData(), 0, 4);
         scratchBits.setPosition(14);
         int frameSize = scratchBits.readBits(13);
         // Either the stream is malformed OR we're not parsing an ADTS stream.
@@ -178,8 +177,9 @@ public final class AdtsExtractor implements Extractor {
   }
 
   @Override
-  public int read(ExtractorInput input, PositionHolder seekPosition)
-      throws IOException, InterruptedException {
+  public int read(ExtractorInput input, PositionHolder seekPosition) throws IOException {
+    Assertions.checkStateNotNull(extractorOutput); // Asserts that init has been called.
+
     long inputLength = input.getLength();
     boolean canUseConstantBitrateSeeking =
         (flags & FLAG_ENABLE_CONSTANT_BITRATE_SEEKING) != 0 && inputLength != C.LENGTH_UNSET;
@@ -187,7 +187,7 @@ public final class AdtsExtractor implements Extractor {
       calculateAverageFrameSize(input);
     }
 
-    int bytesRead = input.read(packetBuffer.data, 0, MAX_PACKET_SIZE);
+    int bytesRead = input.read(packetBuffer.getData(), 0, MAX_PACKET_SIZE);
     boolean readEndOfStream = bytesRead == RESULT_END_OF_INPUT;
     maybeOutputSeekMap(inputLength, canUseConstantBitrateSeeking, readEndOfStream);
     if (readEndOfStream) {
@@ -209,10 +209,10 @@ public final class AdtsExtractor implements Extractor {
     return RESULT_CONTINUE;
   }
 
-  private int peekId3Header(ExtractorInput input) throws IOException, InterruptedException {
+  private int peekId3Header(ExtractorInput input) throws IOException {
     int firstFramePosition = 0;
     while (true) {
-      input.peekFully(scratch.data, /* offset= */ 0, ID3_HEADER_LENGTH);
+      input.peekFully(scratch.getData(), /* offset= */ 0, ID3_HEADER_LENGTH);
       scratch.setPosition(0);
       if (scratch.readUnsignedInt24() != ID3_TAG) {
         break;
@@ -230,6 +230,7 @@ public final class AdtsExtractor implements Extractor {
     return firstFramePosition;
   }
 
+  @RequiresNonNull("extractorOutput")
   private void maybeOutputSeekMap(
       long inputLength, boolean canUseConstantBitrateSeeking, boolean readEndOfStream) {
     if (hasOutputSeekMap) {
@@ -244,7 +245,6 @@ public final class AdtsExtractor implements Extractor {
       return;
     }
 
-    ExtractorOutput extractorOutput = Assertions.checkNotNull(this.extractorOutput);
     if (useConstantBitrateSeeking && reader.getSampleDurationUs() != C.TIME_UNSET) {
       extractorOutput.seekMap(getConstantBitrateSeekMap(inputLength));
     } else {
@@ -253,8 +253,7 @@ public final class AdtsExtractor implements Extractor {
     hasOutputSeekMap = true;
   }
 
-  private void calculateAverageFrameSize(ExtractorInput input)
-      throws IOException, InterruptedException {
+  private void calculateAverageFrameSize(ExtractorInput input) throws IOException {
     if (hasCalculatedAverageFrameSize) {
       return;
     }
@@ -269,7 +268,7 @@ public final class AdtsExtractor implements Extractor {
     long totalValidFramesSize = 0;
     try {
       while (input.peekFully(
-          scratch.data, /* offset= */ 0, /* length= */ 2, /* allowEndOfInput= */ true)) {
+          scratch.getData(), /* offset= */ 0, /* length= */ 2, /* allowEndOfInput= */ true)) {
         scratch.setPosition(0);
         int syncBytes = scratch.readUnsignedShort();
         if (!AdtsReader.isAdtsSyncWord(syncBytes)) {
@@ -280,7 +279,7 @@ public final class AdtsExtractor implements Extractor {
         } else {
           // Read the frame size.
           if (!input.peekFully(
-              scratch.data, /* offset= */ 0, /* length= */ 4, /* allowEndOfInput= */ true)) {
+              scratch.getData(), /* offset= */ 0, /* length= */ 4, /* allowEndOfInput= */ true)) {
             break;
           }
           scratchBits.setPosition(14);

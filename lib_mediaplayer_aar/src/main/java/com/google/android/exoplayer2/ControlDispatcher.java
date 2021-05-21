@@ -19,12 +19,20 @@ import com.google.android.exoplayer2.Player.RepeatMode;
 
 /**
  * Dispatches operations to the {@link Player}.
- * <p>
- * Implementations may choose to suppress (e.g. prevent playback from resuming if audio focus is
+ *
+ * <p>Implementations may choose to suppress (e.g. prevent playback from resuming if audio focus is
  * denied) or modify (e.g. change the seek position to prevent a user from seeking past a
  * non-skippable advert) operations.
  */
 public interface ControlDispatcher {
+
+  /**
+   * Dispatches a {@link Player#prepare()} operation.
+   *
+   * @param player The {@link Player} to which the operation should be dispatched.
+   * @return True if the operation was dispatched. False if suppressed.
+   */
+  boolean dispatchPrepare(Player player);
 
   /**
    * Dispatches a {@link Player#setPlayWhenReady(boolean)} operation.
@@ -45,6 +53,38 @@ public interface ControlDispatcher {
    * @return True if the operation was dispatched. False if suppressed.
    */
   boolean dispatchSeekTo(Player player, int windowIndex, long positionMs);
+
+  /**
+   * Dispatches a {@link Player#previous()} operation.
+   *
+   * @param player The {@link Player} to which the operation should be dispatched.
+   * @return True if the operation was dispatched. False if suppressed.
+   */
+  boolean dispatchPrevious(Player player);
+
+  /**
+   * Dispatches a {@link Player#next()} operation.
+   *
+   * @param player The {@link Player} to which the operation should be dispatched.
+   * @return True if the operation was dispatched. False if suppressed.
+   */
+  boolean dispatchNext(Player player);
+
+  /**
+   * Dispatches a rewind operation.
+   *
+   * @param player The {@link Player} to which the operation should be dispatched.
+   * @return True if the operation was dispatched. False if suppressed.
+   */
+  boolean dispatchRewind(Player player);
+
+  /**
+   * Dispatches a fast forward operation.
+   *
+   * @param player The {@link Player} to which the operation should be dispatched.
+   * @return True if the operation was dispatched. False if suppressed.
+   */
+  boolean dispatchFastForward(Player player);
 
   /**
    * Dispatches a {@link Player#setRepeatMode(int)} operation.
@@ -72,4 +112,19 @@ public interface ControlDispatcher {
    * @return True if the operation was dispatched. False if suppressed.
    */
   boolean dispatchStop(Player player, boolean reset);
+
+  /**
+   * Dispatches a {@link Player#setPlaybackParameters(PlaybackParameters)} operation.
+   *
+   * @param player The {@link Player} to which the operation should be dispatched.
+   * @param playbackParameters The playback parameters.
+   * @return True if the operation was dispatched. False if suppressed.
+   */
+  boolean dispatchSetPlaybackParameters(Player player, PlaybackParameters playbackParameters);
+
+  /** Returns {@code true} if rewind is enabled, {@code false} otherwise. */
+  boolean isRewindEnabled();
+
+  /** Returns {@code true} if fast forward is enabled, {@code false} otherwise. */
+  boolean isFastForwardEnabled();
 }

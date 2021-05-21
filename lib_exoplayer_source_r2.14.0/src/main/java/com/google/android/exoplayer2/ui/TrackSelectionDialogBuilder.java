@@ -26,6 +26,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.R;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.SelectionOverride;

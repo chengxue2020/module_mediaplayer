@@ -24,13 +24,37 @@ import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 
-/**
- * Holds input for a decoder.
- */
+/** Holds input for a decoder. */
 public class DecoderInputBuffer extends Buffer {
 
   /**
-   * The buffer replacement mode, which may disable replacement. One of {@link
+   * Thrown when an attempt is made to write into a {@link DecoderInputBuffer} whose {@link
+   * #bufferReplacementMode} is {@link #BUFFER_REPLACEMENT_MODE_DISABLED} and who {@link #data}
+   * capacity is smaller than required.
+   */
+  public static final class InsufficientCapacityException extends IllegalStateException {
+
+    /** The current capacity of the buffer. */
+    public final int currentCapacity;
+    /** The required capacity of the buffer. */
+    public final int requiredCapacity;
+
+    /**
+     * Creates an instance.
+     *
+     * @param currentCapacity The current capacity of the buffer.
+     * @param requiredCapacity The required capacity of the buffer.
+     */
+    public InsufficientCapacityException(int currentCapacity, int requiredCapacity) {
+      super("Buffer too small (" + currentCapacity + " < " + requiredCapacity + ")");
+      this.currentCapacity = currentCapacity;
+      this.requiredCapacity = requiredCapacity;
+    }
+  }
+
+  /**
+   * The buffer replacement mode. This controls how {@link #ensureSpaceForWrite} generates
+   * replacement buffers when the capacity of the existing buffer is insufficient. One of {@link
    * #BUFFER_REPLACEMENT_MODE_DISABLED}, {@link #BUFFER_REPLACEMENT_MODE_NORMAL} or {@link
    * #BUFFER_REPLACEMENT_MODE_DIRECT}.
    */
@@ -83,24 +107,36 @@ public class DecoderInputBuffer extends Buffer {
   @Nullable public ByteBuffer supplementalData;
 
   @BufferReplacementMode private final int bufferReplacementMode;
+  private final int paddingSize;
 
-  /**
-   * Creates a new instance for which {@link #isFlagsOnly()} will return true.
-   *
-   * @return A new flags only input buffer.
-   */
-  public static DecoderInputBuffer newFlagsOnlyInstance() {
+  /** Returns a new instance that's not able to hold any data. */
+  public static DecoderInputBuffer newNoDataInstance() {
     return new DecoderInputBuffer(BUFFER_REPLACEMENT_MODE_DISABLED);
   }
 
   /**
-   * @param bufferReplacementMode Determines the behavior of {@link #ensureSpaceForWrite(int)}. One
-   *     of {@link #BUFFER_REPLACEMENT_MODE_DISABLED}, {@link #BUFFER_REPLACEMENT_MODE_NORMAL} and
-   *     {@link #BUFFER_REPLACEMENT_MODE_DIRECT}.
+   * Creates a new instance.
+   *
+   * @param bufferReplacementMode The {@link BufferReplacementMode} replacement mode.
    */
   public DecoderInputBuffer(@BufferReplacementMode int bufferReplacementMode) {
+    this(bufferReplacementMode, /* paddingSize= */ 0);
+  }
+
+  /**
+   * Creates a new instance.
+   *
+   * @param bufferReplacementMode The {@link BufferReplacementMode} replacement mode.
+   * @param paddingSize If non-zero, {@link #ensureSpaceForWrite(int)} will ensure that the buffer
+   *     is this number of bytes larger than the requested length. This can be useful for decoders
+   *     that consume data in fixed size blocks, for efficiency. Setting the padding size to the
+   *     decoder's fixed read size is necessary to prevent such a decoder from trying to read beyond
+   *     the end of the buffer.
+   */
+  public DecoderInputBuffer(@BufferReplacementMode int bufferReplacementMode, int paddingSize) {
     this.cryptoInfo = new CryptoInfo();
     this.bufferReplacementMode = bufferReplacementMode;
+    this.paddingSize = paddingSize;
   }
 
   /**
@@ -127,40 +163,35 @@ public class DecoderInputBuffer extends Buffer {
    * whose capacity is sufficient. Data up to the current position is copied to the new buffer.
    *
    * @param length The length of the write that must be accommodated, in bytes.
-   * @throws IllegalStateException If there is insufficient capacity to accommodate the write and
-   *     the buffer replacement mode of the holder is {@link #BUFFER_REPLACEMENT_MODE_DISABLED}.
+   * @throws InsufficientCapacityException If there is insufficient capacity to accommodate the
+   *     write and {@link #bufferReplacementMode} is {@link #BUFFER_REPLACEMENT_MODE_DISABLED}.
    */
   @EnsuresNonNull("data")
   public void ensureSpaceForWrite(int length) {
-    if (data == null) {
+    length += paddingSize;
+    @Nullable ByteBuffer currentData = data;
+    if (currentData == null) {
       data = createReplacementByteBuffer(length);
       return;
     }
     // Check whether the current buffer is sufficient.
-    int capacity = data.capacity();
-    int position = data.position();
+    int capacity = currentData.capacity();
+    int position = currentData.position();
     int requiredCapacity = position + length;
     if (capacity >= requiredCapacity) {
+      data = currentData;
       return;
     }
     // Instantiate a new buffer if possible.
     ByteBuffer newData = createReplacementByteBuffer(requiredCapacity);
-    newData.order(data.order());
+    newData.order(currentData.order());
     // Copy data up to the current position from the old buffer to the new one.
     if (position > 0) {
-      data.flip();
-      newData.put(data);
+      currentData.flip();
+      newData.put(currentData);
     }
     // Set the new buffer.
     data = newData;
-  }
-
-  /**
-   * Returns whether the buffer is only able to hold flags, meaning {@link #data} is null and
-   * its replacement mode is {@link #BUFFER_REPLACEMENT_MODE_DISABLED}.
-   */
-  public final boolean isFlagsOnly() {
-    return data == null && bufferReplacementMode == BUFFER_REPLACEMENT_MODE_DISABLED;
   }
 
   /**
@@ -176,7 +207,9 @@ public class DecoderInputBuffer extends Buffer {
    * @see java.nio.Buffer#flip()
    */
   public final void flip() {
-    data.flip();
+    if (data != null) {
+      data.flip();
+    }
     if (supplementalData != null) {
       supplementalData.flip();
     }
@@ -201,9 +234,7 @@ public class DecoderInputBuffer extends Buffer {
       return ByteBuffer.allocateDirect(requiredCapacity);
     } else {
       int currentCapacity = data == null ? 0 : data.capacity();
-      throw new IllegalStateException("Buffer too small (" + currentCapacity + " < "
-          + requiredCapacity + ")");
+      throw new InsufficientCapacityException(currentCapacity, requiredCapacity);
     }
   }
-
 }

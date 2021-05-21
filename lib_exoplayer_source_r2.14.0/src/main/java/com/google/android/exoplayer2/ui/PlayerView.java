@@ -52,6 +52,7 @@ import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.PlaybackPreparer;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Player.DiscontinuityReason;
+import com.google.android.exoplayer2.R;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.Timeline.Period;
 import com.google.android.exoplayer2.metadata.Metadata;
@@ -281,7 +282,7 @@ public class PlayerView extends FrameLayout implements AdViewProvider {
    * buffering} state.
    */
   public static final int SHOW_BUFFERING_ALWAYS = 2;
-  // LINT.ThenChange(../../../../../../res/values/attrs.xml)
+  // LINT.ThenChange(../../../../../../res/values/attrs_exoplayer.xml)
 
   // LINT.IfChange
   private static final int SURFACE_TYPE_NONE = 0;
@@ -289,7 +290,7 @@ public class PlayerView extends FrameLayout implements AdViewProvider {
   private static final int SURFACE_TYPE_TEXTURE_VIEW = 2;
   private static final int SURFACE_TYPE_SPHERICAL_GL_SURFACE_VIEW = 3;
   private static final int SURFACE_TYPE_VIDEO_DECODER_GL_SURFACE_VIEW = 4;
-  // LINT.ThenChange(../../../../../../res/values/attrs.xml)
+  // LINT.ThenChange(../../../../../../res/values/attrs_exoplayer.xml)
 
   private final ComponentListener componentListener;
   @Nullable private final AspectRatioFrameLayout contentFrame;

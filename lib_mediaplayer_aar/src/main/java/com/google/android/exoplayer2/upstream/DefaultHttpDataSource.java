@@ -15,17 +15,21 @@
  */
 package com.google.android.exoplayer2.upstream;
 
+import static com.google.android.exoplayer2.upstream.HttpUtil.buildRangeRequestHeader;
+import static com.google.android.exoplayer2.util.Assertions.checkNotNull;
+import static com.google.android.exoplayer2.util.Util.castNonNull;
+import static java.lang.Math.min;
+
 import android.net.Uri;
-import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.upstream.DataSpec.HttpMethod;
-import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Log;
-import com.google.android.exoplayer2.util.Predicate;
 import com.google.android.exoplayer2.util.Util;
-import java.io.EOFException;
+import com.google.common.base.Ascii;
+import com.google.common.base.Predicate;
+import com.google.common.net.HttpHeaders;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
@@ -39,24 +43,154 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 /**
  * An {@link HttpDataSource} that uses Android's {@link HttpURLConnection}.
  *
  * <p>By default this implementation will not follow cross-protocol redirects (i.e. redirects from
- * HTTP to HTTPS or vice versa). Cross-protocol redirects can be enabled by using the {@link
- * #DefaultHttpDataSource(String, int, int, boolean, RequestProperties)} constructor and passing
- * {@code true} for the {@code allowCrossProtocolRedirects} argument.
+ * HTTP to HTTPS or vice versa). Cross-protocol redirects can be enabled by passing {@code true} to
+ * {@link Factory#setAllowCrossProtocolRedirects(boolean)}.
  *
  * <p>Note: HTTP request headers will be set using all parameters passed via (in order of decreasing
- * priority) the {@code dataSpec}, {@link #setRequestProperty} and the default parameters used to
- * construct the instance.
+ * priority) the {@code dataSpec}, {@link #setRequestProperty} and the default properties that can
+ * be passed to {@link HttpDataSource.Factory#setDefaultRequestProperties(Map)}.
  */
 public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSource {
+
+  /** {@link DataSource.Factory} for {@link DefaultHttpDataSource} instances. */
+  public static final class Factory implements HttpDataSource.Factory {
+
+    private final RequestProperties defaultRequestProperties;
+
+    @Nullable private TransferListener transferListener;
+    @Nullable private Predicate<String> contentTypePredicate;
+    @Nullable private String userAgent;
+    private int connectTimeoutMs;
+    private int readTimeoutMs;
+    private boolean allowCrossProtocolRedirects;
+
+    /** Creates an instance. */
+    public Factory() {
+      defaultRequestProperties = new RequestProperties();
+      connectTimeoutMs = DEFAULT_CONNECT_TIMEOUT_MILLIS;
+      readTimeoutMs = DEFAULT_READ_TIMEOUT_MILLIS;
+    }
+
+    /** @deprecated Use {@link #setDefaultRequestProperties(Map)} instead. */
+    @Deprecated
+    @Override
+    public final RequestProperties getDefaultRequestProperties() {
+      return defaultRequestProperties;
+    }
+
+    @Override
+    public final Factory setDefaultRequestProperties(Map<String, String> defaultRequestProperties) {
+      this.defaultRequestProperties.clearAndSet(defaultRequestProperties);
+      return this;
+    }
+
+    /**
+     * Sets the user agent that will be used.
+     *
+     * <p>The default is {@code null}, which causes the default user agent of the underlying
+     * platform to be used.
+     *
+     * @param userAgent The user agent that will be used, or {@code null} to use the default user
+     *     agent of the underlying platform.
+     * @return This factory.
+     */
+    public Factory setUserAgent(@Nullable String userAgent) {
+      this.userAgent = userAgent;
+      return this;
+    }
+
+    /**
+     * Sets the connect timeout, in milliseconds.
+     *
+     * <p>The default is {@link DefaultHttpDataSource#DEFAULT_CONNECT_TIMEOUT_MILLIS}.
+     *
+     * @param connectTimeoutMs The connect timeout, in milliseconds, that will be used.
+     * @return This factory.
+     */
+    public Factory setConnectTimeoutMs(int connectTimeoutMs) {
+      this.connectTimeoutMs = connectTimeoutMs;
+      return this;
+    }
+
+    /**
+     * Sets the read timeout, in milliseconds.
+     *
+     * <p>The default is {@link DefaultHttpDataSource#DEFAULT_READ_TIMEOUT_MILLIS}.
+     *
+     * @param readTimeoutMs The connect timeout, in milliseconds, that will be used.
+     * @return This factory.
+     */
+    public Factory setReadTimeoutMs(int readTimeoutMs) {
+      this.readTimeoutMs = readTimeoutMs;
+      return this;
+    }
+
+    /**
+     * Sets whether to allow cross protocol redirects.
+     *
+     * <p>The default is {@code false}.
+     *
+     * @param allowCrossProtocolRedirects Whether to allow cross protocol redirects.
+     * @return This factory.
+     */
+    public Factory setAllowCrossProtocolRedirects(boolean allowCrossProtocolRedirects) {
+      this.allowCrossProtocolRedirects = allowCrossProtocolRedirects;
+      return this;
+    }
+
+    /**
+     * Sets a content type {@link Predicate}. If a content type is rejected by the predicate then a
+     * {@link InvalidContentTypeException} is thrown from {@link
+     * DefaultHttpDataSource#open(DataSpec)}.
+     *
+     * <p>The default is {@code null}.
+     *
+     * @param contentTypePredicate The content type {@link Predicate}, or {@code null} to clear a
+     *     predicate that was previously set.
+     * @return This factory.
+     */
+    public Factory setContentTypePredicate(@Nullable Predicate<String> contentTypePredicate) {
+      this.contentTypePredicate = contentTypePredicate;
+      return this;
+    }
+
+    /**
+     * Sets the {@link TransferListener} that will be used.
+     *
+     * <p>The default is {@code null}.
+     *
+     * <p>See {@link DataSource#addTransferListener(TransferListener)}.
+     *
+     * @param transferListener The listener that will be used.
+     * @return This factory.
+     */
+    public Factory setTransferListener(@Nullable TransferListener transferListener) {
+      this.transferListener = transferListener;
+      return this;
+    }
+
+    @Override
+    public DefaultHttpDataSource createDataSource() {
+      DefaultHttpDataSource dataSource =
+          new DefaultHttpDataSource(
+              userAgent,
+              connectTimeoutMs,
+              readTimeoutMs,
+              allowCrossProtocolRedirects,
+              defaultRequestProperties,
+              contentTypePredicate);
+      if (transferListener != null) {
+        dataSource.addTransferListener(transferListener);
+      }
+      return dataSource;
+    }
+  }
 
   /** The default connection timeout, in milliseconds. */
   public static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 8 * 1000;
@@ -70,14 +204,11 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
   private static final int HTTP_STATUS_TEMPORARY_REDIRECT = 307;
   private static final int HTTP_STATUS_PERMANENT_REDIRECT = 308;
   private static final long MAX_BYTES_TO_DRAIN = 2048;
-  private static final Pattern CONTENT_RANGE_HEADER =
-      Pattern.compile("^bytes (\\d+)-(\\d+)/(\\d+)$");
-  private static final AtomicReference<byte[]> skipBufferReference = new AtomicReference<>();
 
   private final boolean allowCrossProtocolRedirects;
   private final int connectTimeoutMillis;
   private final int readTimeoutMillis;
-  private final String userAgent;
+  @Nullable private final String userAgent;
   @Nullable private final RequestProperties defaultRequestProperties;
   private final RequestProperties requestProperties;
 
@@ -87,148 +218,75 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
   @Nullable private InputStream inputStream;
   private boolean opened;
   private int responseCode;
-
-  private long bytesToSkip;
   private long bytesToRead;
-
-  private long bytesSkipped;
   private long bytesRead;
 
-  /** @param userAgent The User-Agent string that should be used. */
-  public DefaultHttpDataSource(String userAgent) {
+  /** @deprecated Use {@link Factory} instead. */
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public DefaultHttpDataSource() {
+    this(/* userAgent= */ null, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
+  }
+
+  /** @deprecated Use {@link Factory} instead. */
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public DefaultHttpDataSource(@Nullable String userAgent) {
     this(userAgent, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
   }
 
-  /**
-   * @param userAgent The User-Agent string that should be used.
-   * @param connectTimeoutMillis The connection timeout, in milliseconds. A timeout of zero is
-   *     interpreted as an infinite timeout.
-   * @param readTimeoutMillis The read timeout, in milliseconds. A timeout of zero is interpreted as
-   *     an infinite timeout.
-   */
-  public DefaultHttpDataSource(String userAgent, int connectTimeoutMillis, int readTimeoutMillis) {
-    this(
-        userAgent,
-        connectTimeoutMillis,
-        readTimeoutMillis,
-        /* allowCrossProtocolRedirects= */ false,
-        /* defaultRequestProperties= */ null);
-  }
-
-  /**
-   * @param userAgent The User-Agent string that should be used.
-   * @param connectTimeoutMillis The connection timeout, in milliseconds. A timeout of zero is
-   *     interpreted as an infinite timeout. Pass {@link #DEFAULT_CONNECT_TIMEOUT_MILLIS} to use the
-   *     default value.
-   * @param readTimeoutMillis The read timeout, in milliseconds. A timeout of zero is interpreted as
-   *     an infinite timeout. Pass {@link #DEFAULT_READ_TIMEOUT_MILLIS} to use the default value.
-   * @param allowCrossProtocolRedirects Whether cross-protocol redirects (i.e. redirects from HTTP
-   *     to HTTPS and vice versa) are enabled.
-   * @param defaultRequestProperties The default request properties to be sent to the server as HTTP
-   *     headers or {@code null} if not required.
-   */
-  public DefaultHttpDataSource(
-      String userAgent,
-      int connectTimeoutMillis,
-      int readTimeoutMillis,
-      boolean allowCrossProtocolRedirects,
-      @Nullable RequestProperties defaultRequestProperties) {
-    super(/* isNetwork= */ true);
-    this.userAgent = Assertions.checkNotEmpty(userAgent);
-    this.requestProperties = new RequestProperties();
-    this.connectTimeoutMillis = connectTimeoutMillis;
-    this.readTimeoutMillis = readTimeoutMillis;
-    this.allowCrossProtocolRedirects = allowCrossProtocolRedirects;
-    this.defaultRequestProperties = defaultRequestProperties;
-  }
-
-  /**
-   * @param userAgent The User-Agent string that should be used.
-   * @param contentTypePredicate An optional {@link Predicate}. If a content type is rejected by the
-   *     predicate then a {@link InvalidContentTypeException} is thrown from {@link
-   *     #open(DataSpec)}.
-   * @deprecated Use {@link #DefaultHttpDataSource(String)} and {@link
-   *     #setContentTypePredicate(Predicate)}.
-   */
-  @Deprecated
-  public DefaultHttpDataSource(String userAgent, @Nullable Predicate<String> contentTypePredicate) {
-    this(
-        userAgent,
-        contentTypePredicate,
-        DEFAULT_CONNECT_TIMEOUT_MILLIS,
-        DEFAULT_READ_TIMEOUT_MILLIS);
-  }
-
-  /**
-   * @param userAgent The User-Agent string that should be used.
-   * @param contentTypePredicate An optional {@link Predicate}. If a content type is rejected by the
-   *     predicate then a {@link InvalidContentTypeException} is thrown from {@link
-   *     #open(DataSpec)}.
-   * @param connectTimeoutMillis The connection timeout, in milliseconds. A timeout of zero is
-   *     interpreted as an infinite timeout.
-   * @param readTimeoutMillis The read timeout, in milliseconds. A timeout of zero is interpreted as
-   *     an infinite timeout.
-   * @deprecated Use {@link #DefaultHttpDataSource(String, int, int)} and {@link
-   *     #setContentTypePredicate(Predicate)}.
-   */
+  /** @deprecated Use {@link Factory} instead. */
   @SuppressWarnings("deprecation")
   @Deprecated
   public DefaultHttpDataSource(
-      String userAgent,
-      @Nullable Predicate<String> contentTypePredicate,
-      int connectTimeoutMillis,
-      int readTimeoutMillis) {
+      @Nullable String userAgent, int connectTimeoutMillis, int readTimeoutMillis) {
     this(
         userAgent,
-        contentTypePredicate,
         connectTimeoutMillis,
         readTimeoutMillis,
         /* allowCrossProtocolRedirects= */ false,
         /* defaultRequestProperties= */ null);
   }
 
-  /**
-   * @param userAgent The User-Agent string that should be used.
-   * @param contentTypePredicate An optional {@link Predicate}. If a content type is rejected by the
-   *     predicate then a {@link InvalidContentTypeException} is thrown from {@link
-   *     #open(DataSpec)}.
-   * @param connectTimeoutMillis The connection timeout, in milliseconds. A timeout of zero is
-   *     interpreted as an infinite timeout. Pass {@link #DEFAULT_CONNECT_TIMEOUT_MILLIS} to use the
-   *     default value.
-   * @param readTimeoutMillis The read timeout, in milliseconds. A timeout of zero is interpreted as
-   *     an infinite timeout. Pass {@link #DEFAULT_READ_TIMEOUT_MILLIS} to use the default value.
-   * @param allowCrossProtocolRedirects Whether cross-protocol redirects (i.e. redirects from HTTP
-   *     to HTTPS and vice versa) are enabled.
-   * @param defaultRequestProperties The default request properties to be sent to the server as HTTP
-   *     headers or {@code null} if not required.
-   * @deprecated Use {@link #DefaultHttpDataSource(String, int, int, boolean, RequestProperties)}
-   *     and {@link #setContentTypePredicate(Predicate)}.
-   */
+  /** @deprecated Use {@link Factory} instead. */
   @Deprecated
   public DefaultHttpDataSource(
-      String userAgent,
-      @Nullable Predicate<String> contentTypePredicate,
+      @Nullable String userAgent,
       int connectTimeoutMillis,
       int readTimeoutMillis,
       boolean allowCrossProtocolRedirects,
       @Nullable RequestProperties defaultRequestProperties) {
+    this(
+        userAgent,
+        connectTimeoutMillis,
+        readTimeoutMillis,
+        allowCrossProtocolRedirects,
+        defaultRequestProperties,
+        /* contentTypePredicate= */ null);
+  }
+
+  private DefaultHttpDataSource(
+      @Nullable String userAgent,
+      int connectTimeoutMillis,
+      int readTimeoutMillis,
+      boolean allowCrossProtocolRedirects,
+      @Nullable RequestProperties defaultRequestProperties,
+      @Nullable Predicate<String> contentTypePredicate) {
     super(/* isNetwork= */ true);
-    this.userAgent = Assertions.checkNotEmpty(userAgent);
-    this.contentTypePredicate = contentTypePredicate;
-    this.requestProperties = new RequestProperties();
+    this.userAgent = userAgent;
     this.connectTimeoutMillis = connectTimeoutMillis;
     this.readTimeoutMillis = readTimeoutMillis;
     this.allowCrossProtocolRedirects = allowCrossProtocolRedirects;
     this.defaultRequestProperties = defaultRequestProperties;
+    this.contentTypePredicate = contentTypePredicate;
+    this.requestProperties = new RequestProperties();
   }
 
   /**
-   * Sets a content type {@link Predicate}. If a content type is rejected by the predicate then a
-   * {@link InvalidContentTypeException} is thrown from {@link #open(DataSpec)}.
-   *
-   * @param contentTypePredicate The content type {@link Predicate}, or {@code null} to clear a
-   *     predicate that was previously set.
+   * @deprecated Use {@link Factory#setContentTypePredicate(Predicate)}
+   *     instead.
    */
+  @Deprecated
   public void setContentTypePredicate(@Nullable Predicate<String> contentTypePredicate) {
     this.contentTypePredicate = contentTypePredicate;
   }
@@ -251,14 +309,14 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
 
   @Override
   public void setRequestProperty(String name, String value) {
-    Assertions.checkNotNull(name);
-    Assertions.checkNotNull(value);
+    checkNotNull(name);
+    checkNotNull(value);
     requestProperties.set(name, value);
   }
 
   @Override
   public void clearRequestProperty(String name) {
-    Assertions.checkNotNull(name);
+    checkNotNull(name);
     requestProperties.remove(name);
   }
 
@@ -273,16 +331,23 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
   @Override
   public long open(DataSpec dataSpec) throws HttpDataSourceException {
     this.dataSpec = dataSpec;
-    this.bytesRead = 0;
-    this.bytesSkipped = 0;
+    bytesRead = 0;
+    bytesToRead = 0;
     transferInitializing(dataSpec);
+
     try {
       connection = makeConnection(dataSpec);
     } catch (IOException e) {
+      @Nullable String message = e.getMessage();
+      if (message != null
+          && Ascii.toLowerCase(message).matches("cleartext http traffic.*not permitted.*")) {
+        throw new CleartextNotPermittedException(e, dataSpec);
+      }
       throw new HttpDataSourceException(
           "Unable to connect", e, dataSpec, HttpDataSourceException.TYPE_OPEN);
     }
 
+    HttpURLConnection connection = this.connection;
     String responseMessage;
     try {
       responseCode = connection.getResponseCode();
@@ -296,9 +361,28 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
     // Check for a valid response code.
     if (responseCode < 200 || responseCode > 299) {
       Map<String, List<String>> headers = connection.getHeaderFields();
+      if (responseCode == 416) {
+        long documentSize =
+            HttpUtil.getDocumentSize(connection.getHeaderField(HttpHeaders.CONTENT_RANGE));
+        if (dataSpec.position == documentSize) {
+          opened = true;
+          transferStarted(dataSpec);
+          return dataSpec.length != C.LENGTH_UNSET ? dataSpec.length : 0;
+        }
+      }
+
+      @Nullable InputStream errorStream = connection.getErrorStream();
+      byte[] errorResponseBody;
+      try {
+        errorResponseBody =
+            errorStream != null ? Util.toByteArray(errorStream) : Util.EMPTY_BYTE_ARRAY;
+      } catch (IOException e) {
+        errorResponseBody = Util.EMPTY_BYTE_ARRAY;
+      }
       closeConnectionQuietly();
       InvalidResponseCodeException exception =
-          new InvalidResponseCodeException(responseCode, responseMessage, headers, dataSpec);
+          new InvalidResponseCodeException(
+              responseCode, responseMessage, headers, dataSpec, errorResponseBody);
       if (responseCode == 416) {
         exception.initCause(new DataSourceException(DataSourceException.POSITION_OUT_OF_RANGE));
       }
@@ -307,7 +391,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
 
     // Check for a valid content type.
     String contentType = connection.getContentType();
-    if (contentTypePredicate != null && !contentTypePredicate.evaluate(contentType)) {
+    if (contentTypePredicate != null && !contentTypePredicate.apply(contentType)) {
       closeConnectionQuietly();
       throw new InvalidContentTypeException(contentType, dataSpec);
     }
@@ -315,7 +399,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
     // If we requested a range starting from a non-zero position and received a 200 rather than a
     // 206, then the server does not support partial requests. We'll need to manually skip to the
     // requested position.
-    bytesToSkip = responseCode == 200 && dataSpec.position != 0 ? dataSpec.position : 0;
+    long bytesToSkip = responseCode == 200 && dataSpec.position != 0 ? dataSpec.position : 0;
 
     // Determine the length of the data to be read, after skipping.
     boolean isCompressed = isCompressed(connection);
@@ -323,7 +407,10 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
       if (dataSpec.length != C.LENGTH_UNSET) {
         bytesToRead = dataSpec.length;
       } else {
-        long contentLength = getContentLength(connection);
+        long contentLength =
+            HttpUtil.getContentLength(
+                connection.getHeaderField(HttpHeaders.CONTENT_LENGTH),
+                connection.getHeaderField(HttpHeaders.CONTENT_RANGE));
         bytesToRead = contentLength != C.LENGTH_UNSET ? (contentLength - bytesToSkip)
             : C.LENGTH_UNSET;
       }
@@ -347,28 +434,41 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
     opened = true;
     transferStarted(dataSpec);
 
+    try {
+      if (!skipFully(bytesToSkip)) {
+        throw new DataSourceException(DataSourceException.POSITION_OUT_OF_RANGE);
+      }
+    } catch (IOException e) {
+      closeConnectionQuietly();
+      throw new HttpDataSourceException(e, dataSpec, HttpDataSourceException.TYPE_OPEN);
+    }
+
     return bytesToRead;
   }
 
   @Override
   public int read(byte[] buffer, int offset, int readLength) throws HttpDataSourceException {
     try {
-      skipInternal();
       return readInternal(buffer, offset, readLength);
     } catch (IOException e) {
-      throw new HttpDataSourceException(e, dataSpec, HttpDataSourceException.TYPE_READ);
+      throw new HttpDataSourceException(
+          e, castNonNull(dataSpec), HttpDataSourceException.TYPE_READ);
     }
   }
 
   @Override
   public void close() throws HttpDataSourceException {
     try {
+      @Nullable InputStream inputStream = this.inputStream;
       if (inputStream != null) {
-        maybeTerminateInputStream(connection, bytesRemaining());
+        long bytesRemaining =
+            bytesToRead == C.LENGTH_UNSET ? C.LENGTH_UNSET : bytesToRead - bytesRead;
+        maybeTerminateInputStream(connection, bytesRemaining);
         try {
           inputStream.close();
         } catch (IOException e) {
-          throw new HttpDataSourceException(e, dataSpec, HttpDataSourceException.TYPE_CLOSE);
+          throw new HttpDataSourceException(
+              e, castNonNull(dataSpec), HttpDataSourceException.TYPE_CLOSE);
         }
       }
     } finally {
@@ -382,53 +482,12 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
   }
 
   /**
-   * Returns the current connection, or null if the source is not currently opened.
-   *
-   * @return The current open connection, or null.
-   */
-  protected final @Nullable HttpURLConnection getConnection() {
-    return connection;
-  }
-
-  /**
-   * Returns the number of bytes that have been skipped since the most recent call to
-   * {@link #open(DataSpec)}.
-   *
-   * @return The number of bytes skipped.
-   */
-  protected final long bytesSkipped() {
-    return bytesSkipped;
-  }
-
-  /**
-   * Returns the number of bytes that have been read since the most recent call to
-   * {@link #open(DataSpec)}.
-   *
-   * @return The number of bytes read.
-   */
-  protected final long bytesRead() {
-    return bytesRead;
-  }
-
-  /**
-   * Returns the number of bytes that are still to be read for the current {@link DataSpec}.
-   * <p>
-   * If the total length of the data being read is known, then this length minus {@code bytesRead()}
-   * is returned. If the total length is unknown, {@link C#LENGTH_UNSET} is returned.
-   *
-   * @return The remaining length, or {@link C#LENGTH_UNSET}.
-   */
-  protected final long bytesRemaining() {
-    return bytesToRead == C.LENGTH_UNSET ? bytesToRead : bytesToRead - bytesRead;
-  }
-
-  /**
    * Establishes a connection, following redirects to do so where permitted.
    */
   private HttpURLConnection makeConnection(DataSpec dataSpec) throws IOException {
     URL url = new URL(dataSpec.uri.toString());
     @HttpMethod int httpMethod = dataSpec.httpMethod;
-    byte[] httpBody = dataSpec.httpBody;
+    @Nullable byte[] httpBody = dataSpec.httpBody;
     long position = dataSpec.position;
     long length = dataSpec.length;
     boolean allowGzip = dataSpec.isFlagSet(DataSpec.FLAG_ALLOW_GZIP);
@@ -495,7 +554,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
    *
    * @param url The url to connect to.
    * @param httpMethod The http method.
-   * @param httpBody The body data.
+   * @param httpBody The body data, or {@code null} if not required.
    * @param position The byte offset of the requested data.
    * @param length The length of the requested data, or {@link C#LENGTH_UNSET}.
    * @param allowGzip Whether to allow the use of gzip.
@@ -505,7 +564,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
   private HttpURLConnection makeConnection(
       URL url,
       @HttpMethod int httpMethod,
-      byte[] httpBody,
+      @Nullable byte[] httpBody,
       long position,
       long length,
       boolean allowGzip,
@@ -527,19 +586,18 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
       connection.setRequestProperty(property.getKey(), property.getValue());
     }
 
-    if (!(position == 0 && length == C.LENGTH_UNSET)) {
-      String rangeRequest = "bytes=" + position + "-";
-      if (length != C.LENGTH_UNSET) {
-        rangeRequest += (position + length - 1);
-      }
-      connection.setRequestProperty("Range", rangeRequest);
+    @Nullable String rangeHeader = buildRangeRequestHeader(position, length);
+    if (rangeHeader != null) {
+      connection.setRequestProperty(HttpHeaders.RANGE, rangeHeader);
     }
-    connection.setRequestProperty("User-Agent", userAgent);
-    connection.setRequestProperty("Accept-Encoding", allowGzip ? "gzip" : "identity");
+    if (userAgent != null) {
+      connection.setRequestProperty(HttpHeaders.USER_AGENT, userAgent);
+    }
+    connection.setRequestProperty(HttpHeaders.ACCEPT_ENCODING, allowGzip ? "gzip" : "identity");
     connection.setInstanceFollowRedirects(followRedirects);
     connection.setDoOutput(httpBody != null);
     connection.setRequestMethod(DataSpec.getStringForHttpMethod(httpMethod));
-    
+
     if (httpBody != null) {
       connection.setFixedLengthStreamingMode(httpBody.length);
       connection.connect();
@@ -562,11 +620,11 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
    * Handles a redirect.
    *
    * @param originalUrl The original URL.
-   * @param location The Location header in the response.
+   * @param location The Location header in the response. May be {@code null}.
    * @return The next URL.
    * @throws IOException If redirection isn't possible.
    */
-  private static URL handleRedirect(URL originalUrl, String location) throws IOException {
+  private static URL handleRedirect(URL originalUrl, @Nullable String location) throws IOException {
     if (location == null) {
       throw new ProtocolException("Null location redirect");
     }
@@ -588,83 +646,32 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
   }
 
   /**
-   * Attempts to extract the length of the content from the response headers of an open connection.
+   * Attempts to skip the specified number of bytes in full.
    *
-   * @param connection The open connection.
-   * @return The extracted length, or {@link C#LENGTH_UNSET}.
-   */
-  private static long getContentLength(HttpURLConnection connection) {
-    long contentLength = C.LENGTH_UNSET;
-    String contentLengthHeader = connection.getHeaderField("Content-Length");
-    if (!TextUtils.isEmpty(contentLengthHeader)) {
-      try {
-        contentLength = Long.parseLong(contentLengthHeader);
-      } catch (NumberFormatException e) {
-        Log.e(TAG, "Unexpected Content-Length [" + contentLengthHeader + "]");
-      }
-    }
-    String contentRangeHeader = connection.getHeaderField("Content-Range");
-    if (!TextUtils.isEmpty(contentRangeHeader)) {
-      Matcher matcher = CONTENT_RANGE_HEADER.matcher(contentRangeHeader);
-      if (matcher.find()) {
-        try {
-          long contentLengthFromRange =
-              Long.parseLong(matcher.group(2)) - Long.parseLong(matcher.group(1)) + 1;
-          if (contentLength < 0) {
-            // Some proxy servers strip the Content-Length header. Fall back to the length
-            // calculated here in this case.
-            contentLength = contentLengthFromRange;
-          } else if (contentLength != contentLengthFromRange) {
-            // If there is a discrepancy between the Content-Length and Content-Range headers,
-            // assume the one with the larger value is correct. We have seen cases where carrier
-            // change one of them to reduce the size of a request, but it is unlikely anybody would
-            // increase it.
-            Log.w(TAG, "Inconsistent headers [" + contentLengthHeader + "] [" + contentRangeHeader
-                + "]");
-            contentLength = Math.max(contentLength, contentLengthFromRange);
-          }
-        } catch (NumberFormatException e) {
-          Log.e(TAG, "Unexpected Content-Range [" + contentRangeHeader + "]");
-        }
-      }
-    }
-    return contentLength;
-  }
-
-  /**
-   * Skips any bytes that need skipping. Else does nothing.
-   * <p>
-   * This implementation is based roughly on {@code libcore.io.Streams.skipByReading()}.
-   *
+   * @param bytesToSkip The number of bytes to skip.
    * @throws InterruptedIOException If the thread is interrupted during the operation.
-   * @throws EOFException If the end of the input stream is reached before the bytes are skipped.
+   * @throws IOException If an error occurs reading from the source.
+   * @return Whether the bytes were skipped in full. If {@code false} then the data ended before the
+   *     specified number of bytes were skipped. Always {@code true} if {@code bytesToSkip == 0}.
    */
-  private void skipInternal() throws IOException {
-    if (bytesSkipped == bytesToSkip) {
-      return;
+  private boolean skipFully(long bytesToSkip) throws IOException {
+    if (bytesToSkip == 0) {
+      return true;
     }
-
-    // Acquire the shared skip buffer.
-    byte[] skipBuffer = skipBufferReference.getAndSet(null);
-    if (skipBuffer == null) {
-      skipBuffer = new byte[4096];
-    }
-
-    while (bytesSkipped != bytesToSkip) {
-      int readLength = (int) Math.min(bytesToSkip - bytesSkipped, skipBuffer.length);
-      int read = inputStream.read(skipBuffer, 0, readLength);
+    byte[] skipBuffer = new byte[4096];
+    while (bytesToSkip > 0) {
+      int readLength = (int) min(bytesToSkip, skipBuffer.length);
+      int read = castNonNull(inputStream).read(skipBuffer, 0, readLength);
       if (Thread.currentThread().isInterrupted()) {
         throw new InterruptedIOException();
       }
       if (read == -1) {
-        throw new EOFException();
+        return false;
       }
-      bytesSkipped += read;
+      bytesToSkip -= read;
       bytesTransferred(read);
     }
-
-    // Release the shared skip buffer.
-    skipBufferReference.set(skipBuffer);
+    return true;
   }
 
   /**
@@ -690,15 +697,11 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
       if (bytesRemaining == 0) {
         return C.RESULT_END_OF_INPUT;
       }
-      readLength = (int) Math.min(readLength, bytesRemaining);
+      readLength = (int) min(readLength, bytesRemaining);
     }
 
-    int read = inputStream.read(buffer, offset, readLength);
+    int read = castNonNull(inputStream).read(buffer, offset, readLength);
     if (read == -1) {
-      if (bytesToRead != C.LENGTH_UNSET) {
-        // End of stream reached having not read sufficient data.
-        throw new EOFException();
-      }
       return C.RESULT_END_OF_INPUT;
     }
 
@@ -718,8 +721,9 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
    * @param bytesRemaining The number of bytes remaining to be read from the input stream if its
    *     length is known. {@link C#LENGTH_UNSET} otherwise.
    */
-  private static void maybeTerminateInputStream(HttpURLConnection connection, long bytesRemaining) {
-    if (Util.SDK_INT != 19 && Util.SDK_INT != 20) {
+  private static void maybeTerminateInputStream(
+      @Nullable HttpURLConnection connection, long bytesRemaining) {
+    if (connection == null || Util.SDK_INT < 19 || Util.SDK_INT > 20) {
       return;
     }
 
@@ -740,7 +744,8 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
           || "com.android.okhttp.internal.http.HttpTransport$FixedLengthInputStream"
               .equals(className)) {
         Class<?> superclass = inputStream.getClass().getSuperclass();
-        Method unexpectedEndOfInput = superclass.getDeclaredMethod("unexpectedEndOfInput");
+        Method unexpectedEndOfInput =
+            checkNotNull(superclass).getDeclaredMethod("unexpectedEndOfInput");
         unexpectedEndOfInput.setAccessible(true);
         unexpectedEndOfInput.invoke(inputStream);
       }
@@ -750,7 +755,6 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
       // isn't using okhttp.
     }
   }
-
 
   /**
    * Closes the current connection quietly, if there is one.

@@ -59,7 +59,11 @@ dependencies {
     // api fileTree(dir: 'libs', include: ['*.jar'])
     // api fileTree(dir: 'libs', include: ['*.aar'])
     api files('libs/commons-io-2.5.jar')
+    api files('libs/guava-27.1-android.jar')
+    api files('libs/failureaccess-1.0.1.jar')
 
+    implementation 'net.butterflytv.utils:rtmp-client:3.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'net.butterflytv.utils:rtmp-client:3.1.0'
     compileOnly 'org.checkerframework:checker-qual:2.5.0'
     compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
@@ -76,7 +80,11 @@ dependencies {
     implementation rootProject.ext.dependencies.support_appcompat
     implementation rootProject.ext.dependencies.support_annotation
     implementation rootProject.ext.dependencies.support_cardview
-    implementation rootProject.ext.dependencies.support_media
+    implementation rootProject.ext.dependencies.support_recyclerview
+    implementation rootProject.ext.dependencies.support_media2_common
+    implementation rootProject.ext.dependencies.support_media2_session
+    implementation rootProject.ext.dependencies.support_media2_widget
+    implementation rootProject.ext.dependencies.support_media2_player
 
     // ijkplayer
     implementation rootProject.ext.dependencies.support_ijkplayer_java

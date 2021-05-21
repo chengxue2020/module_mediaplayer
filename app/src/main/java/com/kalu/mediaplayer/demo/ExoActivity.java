@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -16,6 +15,8 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
+
+import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoPlayerFactory;
 
 public class ExoActivity extends AppCompatActivity {
 
@@ -48,8 +49,7 @@ public class ExoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exo_player);
         mVideoView = findViewById(R.id.video_view);
 
-        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(this,
-                new DefaultTrackSelector(),new DefaultLoadControl());
+        SimpleExoPlayer player = ExoPlayerFactory.create().createPlayer(getApplicationContext()).mInternalPlayer;
         player.setPlayWhenReady(true);
         mVideoView.setPlayer(player);
         Uri uri = Uri.parse(ConstantVideo.VideoPlayerList[0]);

@@ -24,12 +24,13 @@ import com.google.android.exoplayer2.extractor.ExtractorOutput;
 import com.google.android.exoplayer2.extractor.PositionHolder;
 import com.google.android.exoplayer2.extractor.SeekMap;
 import com.google.android.exoplayer2.extractor.TrackOutput;
+import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.ParsableByteArray;
 import java.io.IOException;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
-/**
- * Extracts data from the RawCC container format.
- */
+/** Extracts data from the RawCC container format. */
 public final class RawCcExtractor implements Extractor {
 
   private static final int SCRATCH_SIZE = 9;
@@ -44,11 +45,9 @@ public final class RawCcExtractor implements Extractor {
   private static final int STATE_READING_SAMPLES = 2;
 
   private final Format format;
-
   private final ParsableByteArray dataScratch;
 
-  private TrackOutput trackOutput;
-
+  private @MonotonicNonNull TrackOutput trackOutput;
   private int parserState;
   private int version;
   private long timestampUs;
@@ -65,20 +64,20 @@ public final class RawCcExtractor implements Extractor {
   public void init(ExtractorOutput output) {
     output.seekMap(new SeekMap.Unseekable(C.TIME_UNSET));
     trackOutput = output.track(0, C.TRACK_TYPE_TEXT);
-    output.endTracks();
     trackOutput.format(format);
+    output.endTracks();
   }
 
   @Override
-  public boolean sniff(ExtractorInput input) throws IOException, InterruptedException {
-    dataScratch.reset();
-    input.peekFully(dataScratch.data, 0, HEADER_SIZE);
+  public boolean sniff(ExtractorInput input) throws IOException {
+    dataScratch.reset(/* limit= */ HEADER_SIZE);
+    input.peekFully(dataScratch.getData(), 0, HEADER_SIZE);
     return dataScratch.readInt() == HEADER_ID;
   }
 
   @Override
-  public int read(ExtractorInput input, PositionHolder seekPosition)
-      throws IOException, InterruptedException {
+  public int read(ExtractorInput input, PositionHolder seekPosition) throws IOException {
+    Assertions.checkStateNotNull(trackOutput); // Asserts that init has been called.
     while (true) {
       switch (parserState) {
         case STATE_READING_HEADER:
@@ -116,9 +115,9 @@ public final class RawCcExtractor implements Extractor {
     // Do nothing
   }
 
-  private boolean parseHeader(ExtractorInput input) throws IOException, InterruptedException {
-    dataScratch.reset();
-    if (input.readFully(dataScratch.data, 0, HEADER_SIZE, true)) {
+  private boolean parseHeader(ExtractorInput input) throws IOException {
+    dataScratch.reset(/* limit= */ HEADER_SIZE);
+    if (input.readFully(dataScratch.getData(), 0, HEADER_SIZE, true)) {
       if (dataScratch.readInt() != HEADER_ID) {
         throw new IOException("Input not RawCC");
       }
@@ -130,17 +129,17 @@ public final class RawCcExtractor implements Extractor {
     }
   }
 
-  private boolean parseTimestampAndSampleCount(ExtractorInput input) throws IOException,
-      InterruptedException {
-    dataScratch.reset();
+  private boolean parseTimestampAndSampleCount(ExtractorInput input) throws IOException {
     if (version == 0) {
-      if (!input.readFully(dataScratch.data, 0, TIMESTAMP_SIZE_V0 + 1, true)) {
+      dataScratch.reset(/* limit= */ TIMESTAMP_SIZE_V0 + 1);
+      if (!input.readFully(dataScratch.getData(), 0, TIMESTAMP_SIZE_V0 + 1, true)) {
         return false;
       }
       // version 0 timestamps are 45kHz, so we need to convert them into us
       timestampUs = dataScratch.readUnsignedInt() * 1000 / 45;
     } else if (version == 1) {
-      if (!input.readFully(dataScratch.data, 0, TIMESTAMP_SIZE_V1 + 1, true)) {
+      dataScratch.reset(/* limit= */ TIMESTAMP_SIZE_V1 + 1);
+      if (!input.readFully(dataScratch.getData(), 0, TIMESTAMP_SIZE_V1 + 1, true)) {
         return false;
       }
       timestampUs = dataScratch.readLong();
@@ -153,10 +152,11 @@ public final class RawCcExtractor implements Extractor {
     return true;
   }
 
-  private void parseSamples(ExtractorInput input) throws IOException, InterruptedException {
+  @RequiresNonNull("trackOutput")
+  private void parseSamples(ExtractorInput input) throws IOException {
     for (; remainingSampleCount > 0; remainingSampleCount--) {
-      dataScratch.reset();
-      input.readFully(dataScratch.data, 0, 3);
+      dataScratch.reset(/* limit= */ 3);
+      input.readFully(dataScratch.getData(), 0, 3);
 
       trackOutput.sampleData(dataScratch, 3);
       sampleBytesWritten += 3;
@@ -166,5 +166,4 @@ public final class RawCcExtractor implements Extractor {
       trackOutput.sampleMetadata(timestampUs, C.BUFFER_FLAG_KEY_FRAME, sampleBytesWritten, 0, null);
     }
   }
-
 }

@@ -18,192 +18,16 @@ package com.google.android.exoplayer2.util;
 import android.util.Pair;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ParserException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Provides static utility methods for manipulating various types of codec specific data.
- */
+/** Provides utilities for handling various types of codec-specific data. */
 public final class CodecSpecificDataUtil {
 
   private static final byte[] NAL_START_CODE = new byte[] {0, 0, 0, 1};
-
-  private static final int AUDIO_SPECIFIC_CONFIG_FREQUENCY_INDEX_ARBITRARY = 0xF;
-
-  private static final int[] AUDIO_SPECIFIC_CONFIG_SAMPLING_RATE_TABLE = new int[] {
-    96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000, 7350
-  };
-
-  private static final int AUDIO_SPECIFIC_CONFIG_CHANNEL_CONFIGURATION_INVALID = -1;
-  /**
-   * In the channel configurations below, <A> indicates a single channel element; (A, B) indicates a
-   * channel pair element; and [A] indicates a low-frequency effects element.
-   * The speaker mapping short forms used are:
-   * - FC: front center
-   * - BC: back center
-   * - FL/FR: front left/right
-   * - FCL/FCR: front center left/right
-   * - FTL/FTR: front top left/right
-   * - SL/SR: back surround left/right
-   * - BL/BR: back left/right
-   * - LFE: low frequency effects
-   */
-  private static final int[] AUDIO_SPECIFIC_CONFIG_CHANNEL_COUNT_TABLE =
-      new int[] {
-        0,
-        1, /* mono: <FC> */
-        2, /* stereo: (FL, FR) */
-        3, /* 3.0: <FC>, (FL, FR) */
-        4, /* 4.0: <FC>, (FL, FR), <BC> */
-        5, /* 5.0 back: <FC>, (FL, FR), (SL, SR) */
-        6, /* 5.1 back: <FC>, (FL, FR), (SL, SR), <BC>, [LFE] */
-        8, /* 7.1 wide back: <FC>, (FCL, FCR), (FL, FR), (SL, SR), [LFE] */
-        AUDIO_SPECIFIC_CONFIG_CHANNEL_CONFIGURATION_INVALID,
-        AUDIO_SPECIFIC_CONFIG_CHANNEL_CONFIGURATION_INVALID,
-        AUDIO_SPECIFIC_CONFIG_CHANNEL_CONFIGURATION_INVALID,
-        7, /* 6.1: <FC>, (FL, FR), (SL, SR), <RC>, [LFE] */
-        8, /* 7.1: <FC>, (FL, FR), (SL, SR), (BL, BR), [LFE] */
-        AUDIO_SPECIFIC_CONFIG_CHANNEL_CONFIGURATION_INVALID,
-        8, /* 7.1 top: <FC>, (FL, FR), (SL, SR), [LFE], (FTL, FTR) */
-        AUDIO_SPECIFIC_CONFIG_CHANNEL_CONFIGURATION_INVALID
-      };
-
-  // Advanced Audio Coding Low-Complexity profile.
-  private static final int AUDIO_OBJECT_TYPE_AAC_LC = 2;
-  // Spectral Band Replication.
-  private static final int AUDIO_OBJECT_TYPE_SBR = 5;
-  // Error Resilient Bit-Sliced Arithmetic Coding.
-  private static final int AUDIO_OBJECT_TYPE_ER_BSAC = 22;
-  // Parametric Stereo.
-  private static final int AUDIO_OBJECT_TYPE_PS = 29;
-  // Escape code for extended audio object types.
-  private static final int AUDIO_OBJECT_TYPE_ESCAPE = 31;
-
-  private CodecSpecificDataUtil() {}
-
-  /**
-   * Parses an AAC AudioSpecificConfig, as defined in ISO 14496-3 1.6.2.1
-   *
-   * @param audioSpecificConfig A byte array containing the AudioSpecificConfig to parse.
-   * @return A pair consisting of the sample rate in Hz and the channel count.
-   * @throws ParserException If the AudioSpecificConfig cannot be parsed as it's not supported.
-   */
-  public static Pair<Integer, Integer> parseAacAudioSpecificConfig(byte[] audioSpecificConfig)
-      throws ParserException {
-    return parseAacAudioSpecificConfig(new ParsableBitArray(audioSpecificConfig), false);
-  }
-
-  /**
-   * Parses an AAC AudioSpecificConfig, as defined in ISO 14496-3 1.6.2.1
-   *
-   * @param bitArray A {@link ParsableBitArray} containing the AudioSpecificConfig to parse. The
-   *     position is advanced to the end of the AudioSpecificConfig.
-   * @param forceReadToEnd Whether the entire AudioSpecificConfig should be read. Required for
-   *     knowing the length of the configuration payload.
-   * @return A pair consisting of the sample rate in Hz and the channel count.
-   * @throws ParserException If the AudioSpecificConfig cannot be parsed as it's not supported.
-   */
-  public static Pair<Integer, Integer> parseAacAudioSpecificConfig(
-      ParsableBitArray bitArray, boolean forceReadToEnd) throws ParserException {
-    int audioObjectType = getAacAudioObjectType(bitArray);
-    int sampleRate = getAacSamplingFrequency(bitArray);
-    int channelConfiguration = bitArray.readBits(4);
-    if (audioObjectType == AUDIO_OBJECT_TYPE_SBR || audioObjectType == AUDIO_OBJECT_TYPE_PS) {
-      // For an AAC bitstream using spectral band replication (SBR) or parametric stereo (PS) with
-      // explicit signaling, we return the extension sampling frequency as the sample rate of the
-      // content; this is identical to the sample rate of the decoded output but may differ from
-      // the sample rate set above.
-      // Use the extensionSamplingFrequencyIndex.
-      sampleRate = getAacSamplingFrequency(bitArray);
-      audioObjectType = getAacAudioObjectType(bitArray);
-      if (audioObjectType == AUDIO_OBJECT_TYPE_ER_BSAC) {
-        // Use the extensionChannelConfiguration.
-        channelConfiguration = bitArray.readBits(4);
-      }
-    }
-
-    if (forceReadToEnd) {
-      switch (audioObjectType) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 6:
-        case 7:
-        case 17:
-        case 19:
-        case 20:
-        case 21:
-        case 22:
-        case 23:
-          parseGaSpecificConfig(bitArray, audioObjectType, channelConfiguration);
-          break;
-        default:
-          throw new ParserException("Unsupported audio object type: " + audioObjectType);
-      }
-      switch (audioObjectType) {
-        case 17:
-        case 19:
-        case 20:
-        case 21:
-        case 22:
-        case 23:
-          int epConfig = bitArray.readBits(2);
-          if (epConfig == 2 || epConfig == 3) {
-            throw new ParserException("Unsupported epConfig: " + epConfig);
-          }
-          break;
-      }
-    }
-    // For supported containers, bits_to_decode() is always 0.
-    int channelCount = AUDIO_SPECIFIC_CONFIG_CHANNEL_COUNT_TABLE[channelConfiguration];
-    Assertions.checkArgument(channelCount != AUDIO_SPECIFIC_CONFIG_CHANNEL_CONFIGURATION_INVALID);
-    return Pair.create(sampleRate, channelCount);
-  }
-
-  /**
-   * Builds a simple HE-AAC LC AudioSpecificConfig, as defined in ISO 14496-3 1.6.2.1
-   *
-   * @param sampleRate The sample rate in Hz.
-   * @param channelCount The channel count.
-   * @return The AudioSpecificConfig.
-   */
-  public static byte[] buildAacLcAudioSpecificConfig(int sampleRate, int channelCount) {
-    int sampleRateIndex = C.INDEX_UNSET;
-    for (int i = 0; i < AUDIO_SPECIFIC_CONFIG_SAMPLING_RATE_TABLE.length; ++i) {
-      if (sampleRate == AUDIO_SPECIFIC_CONFIG_SAMPLING_RATE_TABLE[i]) {
-        sampleRateIndex = i;
-      }
-    }
-    int channelConfig = C.INDEX_UNSET;
-    for (int i = 0; i < AUDIO_SPECIFIC_CONFIG_CHANNEL_COUNT_TABLE.length; ++i) {
-      if (channelCount == AUDIO_SPECIFIC_CONFIG_CHANNEL_COUNT_TABLE[i]) {
-        channelConfig = i;
-      }
-    }
-    if (sampleRate == C.INDEX_UNSET || channelConfig == C.INDEX_UNSET) {
-      throw new IllegalArgumentException(
-          "Invalid sample rate or number of channels: " + sampleRate + ", " + channelCount);
-    }
-    return buildAacAudioSpecificConfig(AUDIO_OBJECT_TYPE_AAC_LC, sampleRateIndex, channelConfig);
-  }
-
-  /**
-   * Builds a simple AudioSpecificConfig, as defined in ISO 14496-3 1.6.2.1
-   *
-   * @param audioObjectType The audio object type.
-   * @param sampleRateIndex The sample rate index.
-   * @param channelConfig The channel configuration.
-   * @return The AudioSpecificConfig.
-   */
-  public static byte[] buildAacAudioSpecificConfig(int audioObjectType, int sampleRateIndex,
-      int channelConfig) {
-    byte[] specificConfig = new byte[2];
-    specificConfig[0] = (byte) (((audioObjectType << 3) & 0xF8) | ((sampleRateIndex >> 1) & 0x07));
-    specificConfig[1] = (byte) (((sampleRateIndex << 7) & 0x80) | ((channelConfig << 3) & 0x78));
-    return specificConfig;
-  }
+  private static final String[] HEVC_GENERAL_PROFILE_SPACE_STRINGS =
+      new String[] {"", "A", "B", "C"};
 
   /**
    * Parses an ALAC AudioSpecificConfig (i.e. an <a
@@ -222,6 +46,31 @@ public final class CodecSpecificDataUtil {
   }
 
   /**
+   * Returns initialization data for formats with MIME type {@link MimeTypes#APPLICATION_CEA708}.
+   *
+   * @param isWideAspectRatio Whether the CEA-708 closed caption service is formatted for displays
+   *     with 16:9 aspect ratio.
+   * @return Initialization data for formats with MIME type {@link MimeTypes#APPLICATION_CEA708}.
+   */
+  public static List<byte[]> buildCea708InitializationData(boolean isWideAspectRatio) {
+    return Collections.singletonList(isWideAspectRatio ? new byte[] {1} : new byte[] {0});
+  }
+
+  /**
+   * Returns whether the CEA-708 closed caption service with the given initialization data is
+   * formatted for displays with 16:9 aspect ratio.
+   *
+   * @param initializationData The initialization data to parse.
+   * @return Whether the CEA-708 closed caption service is formatted for displays with 16:9 aspect
+   *     ratio.
+   */
+  public static boolean parseCea708InitializationData(List<byte[]> initializationData) {
+    return initializationData.size() == 1
+        && initializationData.get(0).length == 1
+        && initializationData.get(0)[0] == 1;
+  }
+
+  /**
    * Builds an RFC 6381 AVC codec string using the provided parameters.
    *
    * @param profileIdc The encoding profile.
@@ -234,6 +83,49 @@ public final class CodecSpecificDataUtil {
       int profileIdc, int constraintsFlagsAndReservedZero2Bits, int levelIdc) {
     return String.format(
         "avc1.%02X%02X%02X", profileIdc, constraintsFlagsAndReservedZero2Bits, levelIdc);
+  }
+
+  /**
+   * Returns an RFC 6381 HEVC codec string based on the SPS NAL unit read from the provided bit
+   * array. The position of the bit array must be the start of an SPS NALU (nal_unit_header), and
+   * the position may be modified by this method.
+   */
+  public static String buildHevcCodecStringFromSps(ParsableNalUnitBitArray bitArray) {
+    // Skip nal_unit_header, sps_video_parameter_set_id, sps_max_sub_layers_minus1 and
+    // sps_temporal_id_nesting_flag.
+    bitArray.skipBits(16 + 4 + 3 + 1);
+    int generalProfileSpace = bitArray.readBits(2);
+    boolean generalTierFlag = bitArray.readBit();
+    int generalProfileIdc = bitArray.readBits(5);
+    int generalProfileCompatibilityFlags = 0;
+    for (int i = 0; i < 32; i++) {
+      if (bitArray.readBit()) {
+        generalProfileCompatibilityFlags |= (1 << i);
+      }
+    }
+    int[] constraintBytes = new int[6];
+    for (int i = 0; i < constraintBytes.length; ++i) {
+      constraintBytes[i] = bitArray.readBits(8);
+    }
+    int generalLevelIdc = bitArray.readBits(8);
+    StringBuilder builder =
+        new StringBuilder(
+            Util.formatInvariant(
+                "hvc1.%s%d.%X.%c%d",
+                HEVC_GENERAL_PROFILE_SPACE_STRINGS[generalProfileSpace],
+                generalProfileIdc,
+                generalProfileCompatibilityFlags,
+                generalTierFlag ? 'H' : 'L',
+                generalLevelIdc));
+    // Omit trailing zero bytes.
+    int trailingZeroIndex = constraintBytes.length;
+    while (trailingZeroIndex > 0 && constraintBytes[trailingZeroIndex - 1] == 0) {
+      trailingZeroIndex--;
+    }
+    for (int i = 0; i < trailingZeroIndex; i++) {
+      builder.append(String.format(".%02X", constraintBytes[i]));
+    }
+    return builder.toString();
   }
 
   /**
@@ -262,7 +154,8 @@ public final class CodecSpecificDataUtil {
    * @return The individual NAL units, or null if the input did not consist of NAL start code
    *     delimited units.
    */
-  public static @Nullable byte[][] splitNalUnits(byte[] data) {
+  @Nullable
+  public static byte[][] splitNalUnits(byte[] data) {
     if (!isNalStartCode(data, 0)) {
       // data does not consist of NAL start code delimited units.
       return null;
@@ -320,65 +213,5 @@ public final class CodecSpecificDataUtil {
     return true;
   }
 
-  /**
-   * Returns the AAC audio object type as specified in 14496-3 (2005) Table 1.14.
-   *
-   * @param bitArray The bit array containing the audio specific configuration.
-   * @return The audio object type.
-   */
-  private static int getAacAudioObjectType(ParsableBitArray bitArray) {
-    int audioObjectType = bitArray.readBits(5);
-    if (audioObjectType == AUDIO_OBJECT_TYPE_ESCAPE) {
-      audioObjectType = 32 + bitArray.readBits(6);
-    }
-    return audioObjectType;
-  }
-
-  /**
-   * Returns the AAC sampling frequency (or extension sampling frequency) as specified in 14496-3
-   * (2005) Table 1.13.
-   *
-   * @param bitArray The bit array containing the audio specific configuration.
-   * @return The sampling frequency.
-   */
-  private static int getAacSamplingFrequency(ParsableBitArray bitArray) {
-    int samplingFrequency;
-    int frequencyIndex = bitArray.readBits(4);
-    if (frequencyIndex == AUDIO_SPECIFIC_CONFIG_FREQUENCY_INDEX_ARBITRARY) {
-      samplingFrequency = bitArray.readBits(24);
-    } else {
-      Assertions.checkArgument(frequencyIndex < 13);
-      samplingFrequency = AUDIO_SPECIFIC_CONFIG_SAMPLING_RATE_TABLE[frequencyIndex];
-    }
-    return samplingFrequency;
-  }
-
-  private static void parseGaSpecificConfig(ParsableBitArray bitArray, int audioObjectType,
-      int channelConfiguration) {
-    bitArray.skipBits(1); // frameLengthFlag.
-    boolean dependsOnCoreDecoder = bitArray.readBit();
-    if (dependsOnCoreDecoder) {
-      bitArray.skipBits(14); // coreCoderDelay.
-    }
-    boolean extensionFlag = bitArray.readBit();
-    if (channelConfiguration == 0) {
-      throw new UnsupportedOperationException(); // TODO: Implement programConfigElement();
-    }
-    if (audioObjectType == 6 || audioObjectType == 20) {
-      bitArray.skipBits(3); // layerNr.
-    }
-    if (extensionFlag) {
-      if (audioObjectType == 22) {
-        bitArray.skipBits(16); // numOfSubFrame (5), layer_length(11).
-      }
-      if (audioObjectType == 17 || audioObjectType == 19 || audioObjectType == 20
-          || audioObjectType == 23) {
-        // aacSectionDataResilienceFlag, aacScalefactorDataResilienceFlag,
-        // aacSpectralDataResilienceFlag.
-        bitArray.skipBits(3);
-      }
-      bitArray.skipBits(1); // extensionFlag3.
-    }
-  }
-
+  private CodecSpecificDataUtil() {}
 }

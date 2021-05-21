@@ -23,10 +23,17 @@ import com.google.android.exoplayer2.util.ParsableBitArray;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-/**
- * Utility methods for parsing DTS frames.
- */
+/** Utility methods for parsing DTS frames. */
 public final class DtsUtil {
+
+  /**
+   * Maximum rate for a DTS audio stream, in bytes per second.
+   *
+   * <p>DTS allows an 'open' bitrate, but we assume the maximum listed value: 1536 kbit/s.
+   */
+  public static final int DTS_MAX_RATE_BYTES_PER_SECOND = 1536 * 1000 / 8;
+  /** Maximum rate for a DTS-HD audio stream, in bytes per second. */
+  public static final int DTS_HD_MAX_RATE_BYTES_PER_SECOND = 18000 * 1000 / 8;
 
   private static final int SYNC_VALUE_BE = 0x7FFE8001;
   private static final int SYNC_VALUE_14B_BE = 0x1FFFE800;
@@ -81,7 +88,10 @@ public final class DtsUtil {
    * @return The DTS format parsed from data in the header.
    */
   public static Format parseDtsFormat(
-      byte[] frame, String trackId, @Nullable String language, @Nullable DrmInitData drmInitData) {
+      byte[] frame,
+      @Nullable String trackId,
+      @Nullable String language,
+      @Nullable DrmInitData drmInitData) {
     ParsableBitArray frameBits = getNormalizedFrameHeader(frame);
     frameBits.skipBits(32 + 1 + 5 + 1 + 7 + 14); // SYNC, FTYPE, SHORT, CPF, NBLKS, FSIZE
     int amode = frameBits.readBits(6);
@@ -93,8 +103,15 @@ public final class DtsUtil {
         : TWICE_BITRATE_KBPS_BY_RATE[rate] * 1000 / 2;
     frameBits.skipBits(10); // MIX, DYNF, TIMEF, AUXF, HDCD, EXT_AUDIO_ID, EXT_AUDIO, ASPF
     channelCount += frameBits.readBits(2) > 0 ? 1 : 0; // LFF
-    return Format.createAudioSampleFormat(trackId, MimeTypes.AUDIO_DTS, null, bitrate,
-        Format.NO_VALUE, channelCount, sampleRate, null, drmInitData, 0, language);
+    return new Format.Builder()
+        .setId(trackId)
+        .setSampleMimeType(MimeTypes.AUDIO_DTS)
+        .setAverageBitrate(bitrate)
+        .setChannelCount(channelCount)
+        .setSampleRate(sampleRate)
+        .setDrmInitData(drmInitData)
+        .setLanguage(language)
+        .build();
   }
 
   /**

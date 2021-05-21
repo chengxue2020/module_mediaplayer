@@ -22,15 +22,13 @@ import android.widget.FrameLayout;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.R;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * A {@link FrameLayout} that resizes itself to match a specified aspect ratio.
- */
+import lib.kalu.mediaplayer.R;
+
+/** A {@link FrameLayout} that resizes itself to match a specified aspect ratio. */
 public final class AspectRatioFrameLayout extends FrameLayout {
 
   /** Listener to be notified about changes of the aspect ratios of this view. */
@@ -86,7 +84,7 @@ public final class AspectRatioFrameLayout extends FrameLayout {
    * Either the width or height is increased to obtain the desired aspect ratio.
    */
   public static final int RESIZE_MODE_ZOOM = 4;
-  // LINT.ThenChange(../../../../../../res/values/attrs.xml)
+  // LINT.ThenChange(../../../../../../res/values/attrs_exoplayer.xml)
 
   /**
    * The {@link FrameLayout} will not resize itself if the fractional difference between its natural

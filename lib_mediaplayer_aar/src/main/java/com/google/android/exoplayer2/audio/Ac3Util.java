@@ -24,6 +24,7 @@ import com.google.android.exoplayer2.drm.DrmInitData;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.ParsableBitArray;
 import com.google.android.exoplayer2.util.ParsableByteArray;
+import com.google.android.exoplayer2.util.Util;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -99,6 +100,13 @@ public final class Ac3Util {
 
   }
 
+  /** Maximum rate for an AC-3 audio stream, in bytes per second. */
+  public static final int AC3_MAX_RATE_BYTES_PER_SECOND = 640 * 1000 / 8;
+  /** Maximum rate for an E-AC-3 audio stream, in bytes per second. */
+  public static final int E_AC3_MAX_RATE_BYTES_PER_SECOND = 6144 * 1000 / 8;
+  /** Maximum rate for a TrueHD audio stream, in bytes per second. */
+  public static final int TRUEHD_MAX_RATE_BYTES_PER_SECOND = 24500 * 1000 / 8;
+
   /**
    * The number of samples to store in each output chunk when rechunking TrueHD streams. The number
    * of samples extracted from the container corresponding to one syncframe must be an integer
@@ -163,18 +171,14 @@ public final class Ac3Util {
     if ((nextByte & 0x04) != 0) { // lfeon
       channelCount++;
     }
-    return Format.createAudioSampleFormat(
-        trackId,
-        MimeTypes.AUDIO_AC3,
-        /* codecs= */ null,
-        Format.NO_VALUE,
-        Format.NO_VALUE,
-        channelCount,
-        sampleRate,
-        /* initializationData= */ null,
-        drmInitData,
-        /* selectionFlags= */ 0,
-        language);
+    return new Format.Builder()
+        .setId(trackId)
+        .setSampleMimeType(MimeTypes.AUDIO_AC3)
+        .setChannelCount(channelCount)
+        .setSampleRate(sampleRate)
+        .setDrmInitData(drmInitData)
+        .setLanguage(language)
+        .build();
   }
 
   /**
@@ -218,18 +222,14 @@ public final class Ac3Util {
         mimeType = MimeTypes.AUDIO_E_AC3_JOC;
       }
     }
-    return Format.createAudioSampleFormat(
-        trackId,
-        mimeType,
-        /* codecs= */ null,
-        Format.NO_VALUE,
-        Format.NO_VALUE,
-        channelCount,
-        sampleRate,
-        /* initializationData= */ null,
-        drmInitData,
-        /* selectionFlags= */ 0,
-        language);
+    return new Format.Builder()
+        .setId(trackId)
+        .setSampleMimeType(mimeType)
+        .setChannelCount(channelCount)
+        .setSampleRate(sampleRate)
+        .setDrmInitData(drmInitData)
+        .setLanguage(language)
+        .build();
   }
 
   /**
@@ -517,7 +517,7 @@ public final class Ac3Util {
     int endIndex = buffer.limit() - TRUEHD_SYNCFRAME_PREFIX_LENGTH;
     for (int i = startIndex; i <= endIndex; i++) {
       // The syncword ends 0xBA for TrueHD or 0xBB for MLP.
-      if ((buffer.getInt(i + 4) & 0xFEFFFFFF) == 0xBA6F72F8) {
+      if ((Util.getBigEndianInt(buffer, i + 4) & 0xFFFFFFFE) == 0xF8726FBA) {
         return i - startIndex;
       }
     }

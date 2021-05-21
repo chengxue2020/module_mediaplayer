@@ -28,9 +28,7 @@ import com.google.android.exoplayer2.util.ParsableByteArray;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Parses DVB subtitle data and extracts individual frames.
- */
+/** Parses DVB subtitle data and extracts individual frames. */
 public final class DvbSubtitleReader implements ElementaryStreamReader {
 
   private final List<DvbSubtitleInfo> subtitleInfos;
@@ -61,15 +59,12 @@ public final class DvbSubtitleReader implements ElementaryStreamReader {
       idGenerator.generateNewId();
       TrackOutput output = extractorOutput.track(idGenerator.getTrackId(), C.TRACK_TYPE_TEXT);
       output.format(
-          Format.createImageSampleFormat(
-              idGenerator.getFormatId(),
-              MimeTypes.APPLICATION_DVBSUBS,
-              null,
-              Format.NO_VALUE,
-              0,
-              Collections.singletonList(subtitleInfo.initializationData),
-              subtitleInfo.language,
-              null));
+          new Format.Builder()
+              .setId(idGenerator.getFormatId())
+              .setSampleMimeType(MimeTypes.APPLICATION_DVBSUBS)
+              .setInitializationData(Collections.singletonList(subtitleInfo.initializationData))
+              .setLanguage(subtitleInfo.language)
+              .build());
       outputs[i] = output;
     }
   }

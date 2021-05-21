@@ -20,8 +20,12 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.analytics.AnalyticsCollector;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.source.LoadEventInfo;
+import com.google.android.exoplayer2.source.MediaLoadData;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MediaSourceEventListener;
+import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
@@ -82,12 +86,10 @@ public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Pl
                 mAppContext,
                 mRenderersFactory == null ? mRenderersFactory = new DefaultRenderersFactory(mAppContext) : mRenderersFactory,
                 mTrackSelector == null ? mTrackSelector = new DefaultTrackSelector(mAppContext) : mTrackSelector,
+                new DefaultMediaSourceFactory(mAppContext),
                 mLoadControl == null ? mLoadControl = new DefaultLoadControl() : mLoadControl,
                 DefaultBandwidthMeter.getSingletonInstance(mAppContext),
-                Util.getLooper(),
-                new AnalyticsCollector(Clock.DEFAULT),
-                /* useLazyPreparation= */ true,
-                Clock.DEFAULT)
+                new AnalyticsCollector(Clock.DEFAULT))
                 .build();
         setOptions();
 
@@ -195,8 +197,9 @@ public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Pl
     }
 
     private MediaSourceEventListener mMediaSourceEventListener = new MediaSourceEventListener() {
+
         @Override
-        public void onReadingStarted(int windowIndex, MediaSource.MediaPeriodId mediaPeriodId) {
+        public void onLoadStarted(int windowIndex, @Nullable  MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
             if (getVideoPlayerChangeListener() != null && mIsPreparing) {
                 getVideoPlayerChangeListener().onPrepared();
             }
@@ -316,7 +319,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Pl
                     mInternalPlayer.setVideoSurface(surface);
                 }
             } catch (Exception e) {
-                if(null != getVideoPlayerChangeListener()){
+                if (null != getVideoPlayerChangeListener()) {
                     getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
                 }
             }
@@ -437,7 +440,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements VideoListener, Pl
             } else if (type == ExoPlaybackException.TYPE_RENDERER
                     || type == ExoPlaybackException.TYPE_UNEXPECTED
                     || type == ExoPlaybackException.TYPE_REMOTE
-                    || type == ExoPlaybackException.TYPE_OUT_OF_MEMORY) {
+                    || type == ExoPlaybackException.TYPE_SOURCE) {
                 getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, error.getMessage());
             }
         }

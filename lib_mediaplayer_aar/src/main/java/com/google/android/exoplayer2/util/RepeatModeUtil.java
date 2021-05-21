@@ -21,9 +21,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Util class for repeat mode handling.
- */
+/** Util class for repeat mode handling. */
 public final class RepeatModeUtil {
 
   // LINT.IfChange
@@ -48,7 +46,7 @@ public final class RepeatModeUtil {
   public static final int REPEAT_TOGGLE_MODE_ONE = 1;
   /** "Repeat All" button enabled. */
   public static final int REPEAT_TOGGLE_MODE_ALL = 1 << 1; // 2
-  // LINT.ThenChange(../../../../../../../../../ui/src/main/res/values/attrs.xml)
+  // LINT.ThenChange(../../../../../../../../../ui/src/main/res/values/attrs_exoplayer.xml)
 
   private RepeatModeUtil() {
     // Prevent instantiation.
@@ -91,5 +89,4 @@ public final class RepeatModeUtil {
         return false;
     }
   }
-
 }

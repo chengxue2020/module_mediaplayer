@@ -15,6 +15,8 @@
  */
 package com.google.android.exoplayer2.extractor.ts;
 
+import static java.lang.Math.min;
+
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.extractor.Extractor;
 import com.google.android.exoplayer2.extractor.ExtractorInput;
@@ -39,7 +41,7 @@ import java.io.IOException;
  */
 /* package */ final class PsDurationReader {
 
-  private static final int TIMESTAMP_SEARCH_BYTES = 20000;
+  private static final int TIMESTAMP_SEARCH_BYTES = 20_000;
 
   private final TimestampAdjuster scrTimestampAdjuster;
   private final ParsableByteArray packetBuffer;
@@ -81,11 +83,9 @@ import java.io.IOException;
    *     to hold the position of the required seek.
    * @return One of the {@code RESULT_} values defined in {@link Extractor}.
    * @throws IOException If an error occurred reading from the input.
-   * @throws InterruptedException If the thread was interrupted.
    */
   public @Extractor.ReadResult int readDuration(
-      ExtractorInput input, PositionHolder seekPositionHolder)
-      throws IOException, InterruptedException {
+      ExtractorInput input, PositionHolder seekPositionHolder) throws IOException {
     if (!isLastScrValueRead) {
       return readLastScrValue(input, seekPositionHolder);
     }
@@ -137,8 +137,8 @@ import java.io.IOException;
   }
 
   private int readFirstScrValue(ExtractorInput input, PositionHolder seekPositionHolder)
-      throws IOException, InterruptedException {
-    int bytesToSearch = (int) Math.min(TIMESTAMP_SEARCH_BYTES, input.getLength());
+      throws IOException {
+    int bytesToSearch = (int) min(TIMESTAMP_SEARCH_BYTES, input.getLength());
     int searchStartPosition = 0;
     if (input.getPosition() != searchStartPosition) {
       seekPositionHolder.position = searchStartPosition;
@@ -147,7 +147,7 @@ import java.io.IOException;
 
     packetBuffer.reset(bytesToSearch);
     input.resetPeekPosition();
-    input.peekFully(packetBuffer.data, /* offset= */ 0, bytesToSearch);
+    input.peekFully(packetBuffer.getData(), /* offset= */ 0, bytesToSearch);
 
     firstScrValue = readFirstScrValueFromBuffer(packetBuffer);
     isFirstScrValueRead = true;
@@ -160,7 +160,7 @@ import java.io.IOException;
     for (int searchPosition = searchStartPosition;
         searchPosition < searchEndPosition - 3;
         searchPosition++) {
-      int nextStartCode = peekIntAtPosition(packetBuffer.data, searchPosition);
+      int nextStartCode = peekIntAtPosition(packetBuffer.getData(), searchPosition);
       if (nextStartCode == PsExtractor.PACK_START_CODE) {
         packetBuffer.setPosition(searchPosition + 4);
         long scrValue = readScrValueFromPack(packetBuffer);
@@ -173,9 +173,9 @@ import java.io.IOException;
   }
 
   private int readLastScrValue(ExtractorInput input, PositionHolder seekPositionHolder)
-      throws IOException, InterruptedException {
+      throws IOException {
     long inputLength = input.getLength();
-    int bytesToSearch = (int) Math.min(TIMESTAMP_SEARCH_BYTES, inputLength);
+    int bytesToSearch = (int) min(TIMESTAMP_SEARCH_BYTES, inputLength);
     long searchStartPosition = inputLength - bytesToSearch;
     if (input.getPosition() != searchStartPosition) {
       seekPositionHolder.position = searchStartPosition;
@@ -184,7 +184,7 @@ import java.io.IOException;
 
     packetBuffer.reset(bytesToSearch);
     input.resetPeekPosition();
-    input.peekFully(packetBuffer.data, /* offset= */ 0, bytesToSearch);
+    input.peekFully(packetBuffer.getData(), /* offset= */ 0, bytesToSearch);
 
     lastScrValue = readLastScrValueFromBuffer(packetBuffer);
     isLastScrValueRead = true;
@@ -197,7 +197,7 @@ import java.io.IOException;
     for (int searchPosition = searchEndPosition - 4;
         searchPosition >= searchStartPosition;
         searchPosition--) {
-      int nextStartCode = peekIntAtPosition(packetBuffer.data, searchPosition);
+      int nextStartCode = peekIntAtPosition(packetBuffer.getData(), searchPosition);
       if (nextStartCode == PsExtractor.PACK_START_CODE) {
         packetBuffer.setPosition(searchPosition + 4);
         long scrValue = readScrValueFromPack(packetBuffer);

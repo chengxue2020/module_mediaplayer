@@ -29,9 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Initialization data for one or more DRM schemes.
- */
+/** Initialization data for one or more DRM schemes. */
 public final class DrmInitData implements Comparator<SchemeData>, Parcelable {
 
   /**
@@ -137,29 +135,10 @@ public final class DrmInitData implements Comparator<SchemeData>, Parcelable {
     Arrays.sort(this.schemeDatas, this);
   }
 
-  /* package */
-  DrmInitData(Parcel in) {
+  /* package */ DrmInitData(Parcel in) {
     schemeType = in.readString();
     schemeDatas = Util.castNonNull(in.createTypedArray(SchemeData.CREATOR));
     schemeDataCount = schemeDatas.length;
-  }
-
-  /**
-   * Retrieves data for a given DRM scheme, specified by its UUID.
-   *
-   * @deprecated Use {@link #get(int)} and {@link SchemeData#matches(UUID)} instead.
-   * @param uuid The DRM scheme's UUID.
-   * @return The initialization data for the scheme, or null if the scheme is not supported.
-   */
-  @Deprecated
-  @Nullable
-  public SchemeData get(UUID uuid) {
-    for (SchemeData schemeData : schemeDatas) {
-      if (schemeData.matches(uuid)) {
-        return schemeData;
-      }
-    }
-    return null;
   }
 
   /**
@@ -285,7 +264,7 @@ public final class DrmInitData implements Comparator<SchemeData>, Parcelable {
      * The {@link UUID} of the DRM scheme, or {@link C#UUID_NIL} if the data is universal (i.e.
      * applies to all schemes).
      */
-    private final UUID uuid;
+    public final UUID uuid;
     /** The URL of the server to which license requests should be made. May be null if unknown. */
     @Nullable public final String licenseServerUrl;
     /** The mimeType of {@link #data}. */

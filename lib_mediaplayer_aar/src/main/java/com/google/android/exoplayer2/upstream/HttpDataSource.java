@@ -18,8 +18,9 @@ package com.google.android.exoplayer2.upstream;
 import android.text.TextUtils;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
-import com.google.android.exoplayer2.util.Predicate;
 import com.google.android.exoplayer2.util.Util;
+import com.google.common.base.Ascii;
+import com.google.common.base.Predicate;
 import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -29,9 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * An HTTP {@link DataSource}.
- */
+/** An HTTP {@link DataSource}. */
 public interface HttpDataSource extends DataSource {
 
   /**
@@ -42,43 +41,23 @@ public interface HttpDataSource extends DataSource {
     @Override
     HttpDataSource createDataSource();
 
-    /**
-     * Gets the default request properties used by all {@link HttpDataSource}s created by the
-     * factory. Changes to the properties will be reflected in any future requests made by
-     * {@link HttpDataSource}s created by the factory.
-     *
-     * @return The default request properties of the factory.
-     */
+    /** @deprecated Use {@link #setDefaultRequestProperties(Map)} instead. */
+    @Deprecated
     RequestProperties getDefaultRequestProperties();
 
     /**
-     * Sets a default request header for {@link HttpDataSource} instances created by the factory.
+     * Sets the default request headers for {@link HttpDataSource} instances created by the factory.
      *
-     * @deprecated Use {@link #getDefaultRequestProperties} instead.
-     * @param name The name of the header field.
-     * @param value The value of the field.
-     */
-    @Deprecated
-    void setDefaultRequestProperty(String name, String value);
-
-    /**
-     * Clears a default request header for {@link HttpDataSource} instances created by the factory.
+     * <p>The new request properties will be used for future requests made by {@link HttpDataSource
+     * HttpDataSources} created by the factory, including instances that have already been created.
+     * Modifying the {@code defaultRequestProperties} map after a call to this method will have no
+     * effect, and so it's necessary to call this method again each time the request properties need
+     * to be updated.
      *
-     * @deprecated Use {@link #getDefaultRequestProperties} instead.
-     * @param name The name of the header field.
+     * @param defaultRequestProperties The default request properties.
+     * @return This factory.
      */
-    @Deprecated
-    void clearDefaultRequestProperty(String name);
-
-    /**
-     * Clears all default request headers for all {@link HttpDataSource} instances created by the
-     * factory.
-     *
-     * @deprecated Use {@link #getDefaultRequestProperties} instead.
-     */
-    @Deprecated
-    void clearAllDefaultRequestProperties();
-
+    Factory setDefaultRequestProperties(Map<String, String> defaultRequestProperties);
   }
 
   /**
@@ -89,7 +68,7 @@ public interface HttpDataSource extends DataSource {
   final class RequestProperties {
 
     private final Map<String, String> requestProperties;
-    private Map<String, String> requestPropertiesSnapshot;
+    @Nullable private Map<String, String> requestPropertiesSnapshot;
 
     public RequestProperties() {
       requestProperties = new HashMap<>();
@@ -159,12 +138,9 @@ public interface HttpDataSource extends DataSource {
       }
       return requestPropertiesSnapshot;
     }
-
   }
 
-  /**
-   * Base implementation of {@link Factory} that sets default request properties.
-   */
+  /** Base implementation of {@link Factory} that sets default request properties. */
   abstract class BaseFactory implements Factory {
 
     private final RequestProperties defaultRequestProperties;
@@ -178,30 +154,17 @@ public interface HttpDataSource extends DataSource {
       return createDataSourceInternal(defaultRequestProperties);
     }
 
+    /** @deprecated Use {@link #setDefaultRequestProperties(Map)} instead. */
+    @Deprecated
     @Override
     public final RequestProperties getDefaultRequestProperties() {
       return defaultRequestProperties;
     }
 
-    /** @deprecated Use {@link #getDefaultRequestProperties} instead. */
-    @Deprecated
     @Override
-    public final void setDefaultRequestProperty(String name, String value) {
-      defaultRequestProperties.set(name, value);
-    }
-
-    /** @deprecated Use {@link #getDefaultRequestProperties} instead. */
-    @Deprecated
-    @Override
-    public final void clearDefaultRequestProperty(String name) {
-      defaultRequestProperties.remove(name);
-    }
-
-    /** @deprecated Use {@link #getDefaultRequestProperties} instead. */
-    @Deprecated
-    @Override
-    public final void clearAllDefaultRequestProperties() {
-      defaultRequestProperties.clear();
+    public final Factory setDefaultRequestProperties(Map<String, String> defaultRequestProperties) {
+      this.defaultRequestProperties.clearAndSet(defaultRequestProperties);
+      return this;
     }
 
     /**
@@ -211,15 +174,17 @@ public interface HttpDataSource extends DataSource {
      *     {@link HttpDataSource} instance.
      * @return A {@link HttpDataSource} instance.
      */
-    protected abstract HttpDataSource createDataSourceInternal(RequestProperties
-        defaultRequestProperties);
-
+    protected abstract HttpDataSource createDataSourceInternal(
+        RequestProperties defaultRequestProperties);
   }
 
   /** A {@link Predicate} that rejects content types often used for pay-walls. */
   Predicate<String> REJECT_PAYWALL_TYPES =
       contentType -> {
-        contentType = Util.toLowerInvariant(contentType);
+        if (contentType == null) {
+          return false;
+        }
+        contentType = Ascii.toLowerCase(contentType);
         return !TextUtils.isEmpty(contentType)
             && (!contentType.contains("text") || contentType.contains("text/vtt"))
             && !contentType.contains("html")
@@ -271,7 +236,24 @@ public interface HttpDataSource extends DataSource {
       this.dataSpec = dataSpec;
       this.type = type;
     }
+  }
 
+  /**
+   * Thrown when cleartext HTTP traffic is not permitted. For more information including how to
+   * enable cleartext traffic, see the <a
+   * href="https://exoplayer.dev/issues/cleartext-not-permitted">corresponding troubleshooting
+   * topic</a>.
+   */
+  final class CleartextNotPermittedException extends HttpDataSourceException {
+
+    public CleartextNotPermittedException(IOException cause, DataSpec dataSpec) {
+      super(
+          "Cleartext HTTP traffic not permitted. See"
+              + " https://exoplayer.dev/issues/cleartext-not-permitted",
+          cause,
+          dataSpec,
+          TYPE_OPEN);
+    }
   }
 
   /**
@@ -285,7 +267,6 @@ public interface HttpDataSource extends DataSource {
       super("Invalid content type: " + contentType, dataSpec, TYPE_OPEN);
       this.contentType = contentType;
     }
-
   }
 
   /**
@@ -306,22 +287,51 @@ public interface HttpDataSource extends DataSource {
      */
     public final Map<String, List<String>> headerFields;
 
-    /** @deprecated Use {@link #InvalidResponseCodeException(int, String, Map, DataSpec)}. */
+    /** The response body. */
+    public final byte[] responseBody;
+
+    /**
+     * @deprecated Use {@link #InvalidResponseCodeException(int, String, Map, DataSpec, byte[])}.
+     */
     @Deprecated
     public InvalidResponseCodeException(
         int responseCode, Map<String, List<String>> headerFields, DataSpec dataSpec) {
-      this(responseCode, /* responseMessage= */ null, headerFields, dataSpec);
+      this(
+          responseCode,
+          /* responseMessage= */ null,
+          headerFields,
+          dataSpec,
+          /* responseBody= */ Util.EMPTY_BYTE_ARRAY);
+    }
+
+    /**
+     * @deprecated Use {@link #InvalidResponseCodeException(int, String, Map, DataSpec, byte[])}.
+     */
+    @Deprecated
+    public InvalidResponseCodeException(
+        int responseCode,
+        @Nullable String responseMessage,
+        Map<String, List<String>> headerFields,
+        DataSpec dataSpec) {
+      this(
+          responseCode,
+          responseMessage,
+          headerFields,
+          dataSpec,
+          /* responseBody= */ Util.EMPTY_BYTE_ARRAY);
     }
 
     public InvalidResponseCodeException(
         int responseCode,
         @Nullable String responseMessage,
         Map<String, List<String>> headerFields,
-        DataSpec dataSpec) {
+        DataSpec dataSpec,
+        byte[] responseBody) {
       super("Response code: " + responseCode, dataSpec, TYPE_OPEN);
       this.responseCode = responseCode;
       this.responseMessage = responseMessage;
       this.headerFields = headerFields;
+      this.responseBody = responseBody;
     }
 
   }

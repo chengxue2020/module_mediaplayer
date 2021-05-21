@@ -23,9 +23,7 @@ import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.util.Util;
 import java.util.Arrays;
 
-/**
- * Stores color info.
- */
+/** Stores color info. */
 public final class ColorInfo implements Parcelable {
 
   /**
@@ -43,12 +41,11 @@ public final class ColorInfo implements Parcelable {
   public final int colorRange;
 
   /**
-   * The color transfer characteristicks of the video. Valid values are {@link
-   * C#COLOR_TRANSFER_HLG}, {@link C#COLOR_TRANSFER_ST2084}, {@link C#COLOR_TRANSFER_SDR} or {@link
-   * Format#NO_VALUE} if unknown.
+   * The color transfer characteristics of the video. Valid values are {@link C#COLOR_TRANSFER_HLG},
+   * {@link C#COLOR_TRANSFER_ST2084}, {@link C#COLOR_TRANSFER_SDR} or {@link Format#NO_VALUE} if
+   * unknown.
    */
-  @C.ColorTransfer
-  public final int colorTransfer;
+  @C.ColorTransfer public final int colorTransfer;
 
   /** HdrStaticInfo as defined in CTA-861.3, or null if none specified. */
   @Nullable public final byte[] hdrStaticInfo;

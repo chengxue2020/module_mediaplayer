@@ -15,21 +15,15 @@
  */
 package com.google.android.exoplayer2.util;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-//import javax.annotation.Nonnull;
-//import javax.annotation.meta.TypeQualifierDefault;
-//import kotlin.annotations.jvm.MigrationStatus;
-//import kotlin.annotations.jvm.UnderMigration;
 
 /**
  * Annotation to declare all type usages in the annotated instance as {@link Nonnull}, unless
  * explicitly marked with a nullable annotation.
  */
-@NonNull
-//@TypeQualifierDefault(ElementType.TYPE_USE)
-//@UnderMigration(status = MigrationStatus.STRICT)
+@Nullable
 @Retention(RetentionPolicy.CLASS)
 public @interface NonNullApi {}
