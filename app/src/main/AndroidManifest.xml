@@ -157,12 +157,6 @@
             android:screenOrientation="portrait" />
         <activity android:name="com.kalu.mediaplayer.music.MusicPlayerActivity" />
         <activity android:name="com.kalu.mediaplayer.m3u8.M3u8Activity" />
-
-        <activity
-            android:name="com.kalu.mediaplayer.LandscapeActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

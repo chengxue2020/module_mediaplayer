@@ -83,6 +83,6 @@ dependencies {
     implementation 'cn.yc:YCStateLib:1.2.2'
 
     // mediaplayer
-    implementation(name: 'lib_mediaplayer_r2.14.0_release_20210521', ext: 'aar')
+    implementation(name: 'lib_mediaplayer_r2.14.0_release_20210525', ext: 'aar')
 //    implementation project(path: ':lib_mediaplayer_aar')
 }

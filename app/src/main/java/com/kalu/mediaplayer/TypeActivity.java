@@ -9,9 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.kalu.mediaplayer.R;
-
-import com.kalu.mediaplayer.LandscapeActivity;
 import com.kalu.mediaplayer.newPlayer.activity.MultipleActivity;
 import com.kalu.mediaplayer.newPlayer.activity.NormalActivity;
 import com.kalu.mediaplayer.newPlayer.surface.TestSurfaceActivity;
@@ -25,6 +22,7 @@ import com.kalu.mediaplayer.newPlayer.pip.PipListActivity;
 import com.kalu.mediaplayer.newPlayer.tiny.TestFullActivity;
 import com.kalu.mediaplayer.newPlayer.tiny.TinyScreenActivity;
 
+import lib.kalu.mediaplayer.ExoplayerActivity;
 import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
 import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoMediaPlayer;
 import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoPlayerFactory;
@@ -93,8 +91,8 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.tv_3_0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LandscapeActivity.class);
-                intent.putExtra(LandscapeActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
                 startActivity(intent);
             }
         });

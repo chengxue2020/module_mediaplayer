@@ -26,8 +26,8 @@ import lib.kalu.mediaplayer.videodb.manager.LocationManager;
  */
 public class BaseApplication extends Application {
 
-
     private static BaseApplication instance;
+
     public static synchronized BaseApplication getInstance() {
         if (null == instance) {
             instance = new BaseApplication();
@@ -35,7 +35,8 @@ public class BaseApplication extends Application {
         return instance;
     }
 
-    public BaseApplication(){}
+    public BaseApplication() {
+    }
 
     /**
      * 这个最先执行
@@ -44,7 +45,6 @@ public class BaseApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
     }
-
 
     /**
      * 程序启动的时候执行
@@ -55,8 +55,8 @@ public class BaseApplication extends Application {
         super.onCreate();
         instance = this;
         ScreenDensityUtils.setup(this);
-        ScreenDensityUtils.register(this,375.0f,
-                ScreenDensityUtils.MATCH_BASE_WIDTH,ScreenDensityUtils.MATCH_UNIT_DP);
+        ScreenDensityUtils.register(this, 375.0f,
+                ScreenDensityUtils.MATCH_BASE_WIDTH, ScreenDensityUtils.MATCH_UNIT_DP);
         //播放器配置，注意：此为全局配置，按需开启
         PlayerFactory player = PlayerFactoryUtils.getPlayer(PlayerConstant.PlayerType.TYPE_EXO);
         VideoViewManager.setConfig(VideoPlayerConfig.newBuilder()
@@ -95,7 +95,6 @@ public class BaseApplication extends Application {
         super.onTerminate();
     }
 
-
     /**
      * 低内存的时候执行
      */
@@ -104,7 +103,6 @@ public class BaseApplication extends Application {
         Log.d("Application", "onLowMemory");
         super.onLowMemory();
     }
-
 
     /**
      * HOME键退出应用程序
@@ -116,7 +114,6 @@ public class BaseApplication extends Application {
         super.onTrimMemory(level);
     }
 
-
     /**
      * onConfigurationChanged
      */
@@ -125,8 +122,4 @@ public class BaseApplication extends Application {
         Log.d("Application", "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
-
-
 }
-
-

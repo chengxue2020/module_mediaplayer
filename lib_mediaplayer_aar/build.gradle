@@ -61,6 +61,8 @@ dependencies {
     api files('libs/commons-io-2.5.jar')
     api files('libs/guava-27.1-android.jar')
     api files('libs/failureaccess-1.0.1.jar')
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
     compileOnly rootProject.ext.dependencies.support_appcompat
     compileOnly rootProject.ext.dependencies.support_annotation

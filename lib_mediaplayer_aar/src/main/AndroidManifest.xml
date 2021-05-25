@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="lib.kalu.mediaplayer">
@@ -6,9 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <!--监听网络状态变化需要的权限-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 监听网络状态变化需要的权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -22,36 +21,45 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
-        <!-- context -->
-        <provider
-            android:name="lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer"
-            android:authorities="${applicationId}.mediaplayer.contextprovider"
-            android:exported="false" />
-
-        <receiver android:name="lib.kalu.mediaplayer.videoui.old.other.BatterReceiver" />
-        <receiver android:name="lib.kalu.mediaplayer.videoui.old.other.NetChangedReceiver">
+        <receiver android:name=".videoui.old.other.BatterReceiver" />
+        <receiver android:name=".videoui.old.other.NetChangedReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
-        <service android:name="lib.kalu.mediaplayer.musickernel.service.PlayService" />
+        <service android:name=".musickernel.service.PlayService" />
 
-        <receiver android:name="lib.kalu.mediaplayer.musickernel.receiver.NotificationStatusBarReceiver">
+        <receiver android:name=".musickernel.receiver.NotificationStatusBarReceiver">
             <intent-filter>
                 <action android:name="lib.kalu.status_bar" />
             </intent-filter>
         </receiver>
-        <receiver android:name="lib.kalu.mediaplayer.musickernel.receiver.EarphoneControlReceiver">
+        <receiver android:name=".musickernel.receiver.EarphoneControlReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name="lib.kalu.mediaplayer.musickernel.receiver.AudioBroadcastReceiver">
+        <receiver android:name=".musickernel.receiver.AudioBroadcastReceiver">
             <intent-filter>
                 <action android:name="lib.kalu.lock" />
             </intent-filter>
         </receiver>
+
+        <!-- context -->
+        <provider
+            android:name="lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer"
+            android:authorities="${applicationId}.contextprovider"
+            android:exported="false"
+            android:process=":mediaplayer" />
+
+        <activity
+            android:name="lib.kalu.mediaplayer.ExoplayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
+            android:exported="false"
+            android:process=":mediaplayer"
+            android:screenOrientation="landscape"
+            android:theme="@style/MediaplayerThemeFull" />
 
     </application>
 
