@@ -21,32 +21,45 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
-        <receiver android:name=".videoui.old.other.BatterReceiver" />
-        <receiver android:name=".videoui.old.other.NetChangedReceiver">
+        <receiver
+            android:name="lib.kalu.mediaplayer.videoui.old.other.BatterReceiver"
+            android:process=":mediaplayer" />
+        <receiver
+            android:name="lib.kalu.mediaplayer.videoui.old.other.NetChangedReceiver"
+            android:process=":mediaplayer">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".musickernel.service.PlayService" />
+        <service
+            android:name="lib.kalu.mediaplayer.musickernel.service.PlayService"
+            android:process=":mediaplayer" />
 
-        <receiver android:name=".musickernel.receiver.NotificationStatusBarReceiver">
+        <receiver
+            android:name="lib.kalu.mediaplayer.musickernel.receiver.NotificationStatusBarReceiver"
+            android:process=":mediaplayer">
             <intent-filter>
                 <action android:name="lib.kalu.status_bar" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".musickernel.receiver.EarphoneControlReceiver">
+
+        <receiver
+            android:name="lib.kalu.mediaplayer.musickernel.receiver.EarphoneControlReceiver"
+            android:process=":mediaplayer">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".musickernel.receiver.AudioBroadcastReceiver">
+
+        <receiver
+            android:name="lib.kalu.mediaplayer.musickernel.receiver.AudioBroadcastReceiver"
+            android:process=":mediaplayer">
             <intent-filter>
                 <action android:name="lib.kalu.lock" />
             </intent-filter>
         </receiver>
 
-        <!-- context -->
         <provider
             android:name="lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer"
             android:authorities="${applicationId}.contextprovider"

@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.musickernel.config.MusicPlayAction;
 import lib.kalu.mediaplayer.musickernel.service.PlayService;
 import lib.kalu.mediaplayer.musickernel.tool.BaseAppHelper;
 import lib.kalu.mediaplayer.musickernel.utils.MusicLogUtils;
 
-
+@Keep
 public class NotificationStatusBarReceiver extends BroadcastReceiver {
 
     public static final String ACTION_STATUS_BAR = "YC_ACTION_STATUS_BAR";

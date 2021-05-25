@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.view.KeyEvent;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.musickernel.config.MusicPlayAction;
 import lib.kalu.mediaplayer.musickernel.service.PlayService;
 
@@ -13,6 +15,7 @@ import lib.kalu.mediaplayer.musickernel.service.PlayService;
 /**
  * 耳机线控，仅在5.0以下有效，5.0以上被{@link MediaSessionCompat}接管。
  */
+@Keep
 public class EarphoneControlReceiver extends BroadcastReceiver {
 
     @Override

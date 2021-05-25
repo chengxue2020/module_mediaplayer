@@ -20,6 +20,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.old.controller.AbsVideoPlayerController;
 import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
@@ -37,6 +39,7 @@ import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
  * </pre>
  */
 @Deprecated
+@Keep
 public class NetChangedReceiver extends BroadcastReceiver {
 
     @SuppressLint("UnsafeProtectedBroadcastReceiver")

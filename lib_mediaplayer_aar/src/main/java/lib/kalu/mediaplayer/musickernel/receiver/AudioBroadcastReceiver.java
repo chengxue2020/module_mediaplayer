@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.Keep;
+
 import lib.kalu.mediaplayer.musickernel.config.MusicConstant;
 import lib.kalu.mediaplayer.musickernel.service.PlayService;
 import lib.kalu.mediaplayer.musickernel.utils.MusicLogUtils;
@@ -13,6 +15,7 @@ import lib.kalu.mediaplayer.musickernel.utils.MusicLogUtils;
  * 屏幕亮了，灭了，弹出锁屏页面逻辑
  * 其实这个跟通知处理逻辑一样
  */
+@Keep
 public class AudioBroadcastReceiver extends BroadcastReceiver {
 
     @Override
