@@ -36,7 +36,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
 
         VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
         // 基础视频播放器
-        BasisVideoController basisVideoController = new BasisVideoController(getApplicationContext());
+        BasisVideoController basisVideoController = new BasisVideoController(this);
         basisVideoController.setEnableOrientation(false);
         // 设置视频背景图
         ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
