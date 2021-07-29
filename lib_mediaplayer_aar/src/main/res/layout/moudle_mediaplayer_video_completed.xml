@@ -59,32 +59,31 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:id="@+id/ll_share"
-            android:visibility="visible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/iv_share"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:background="@drawable/moudle_mediaplayer_bg_retry"
-                android:padding="10dp"
-                android:src="@drawable/moudle_mediaplayer_ic_palyer_share" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/moudle_mediaplayer_string_share"
-                android:layout_marginTop="12dp"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/ll_share"-->
+<!--            android:visibility="visible"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_marginRight="5dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:orientation="vertical">-->
+<!--            <ImageView-->
+<!--                android:id="@+id/iv_share"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:background="@drawable/moudle_mediaplayer_bg_retry"-->
+<!--                android:padding="10dp"-->
+<!--                android:src="@drawable/moudle_mediaplayer_ic_palyer_share" />-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/moudle_mediaplayer_string_share"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:textColor="@android:color/white" />-->
+<!--        </LinearLayout>-->
     </LinearLayout>
-
 
 </FrameLayout>

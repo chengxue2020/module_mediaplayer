@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer;
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -20,7 +21,15 @@ import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
 public final class ExoplayerActivity extends AppCompatActivity {
 
     @Keep
+    public static final int RESULT_CODE = 31001;
+    @Keep
+    public static final String INTENT_DADA = "intent_dada";
+    @Keep
     public static final String INTENT_URL = "intent_url";
+    @Keep
+    public static final String INTENT_TIME_BROWSING = "intent_time_browsing";
+    @Keep
+    public static final String INTENT_TIME_LENGTH = "intent_time_length";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,8 +142,36 @@ public final class ExoplayerActivity extends AppCompatActivity {
     public void onBackPressed() {
         VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
         if (videoLayout == null || !videoLayout.onBackPressed()) {
-            super.onBackPressed();
+            finish();
         }
+    }
+
+    @Override
+    public void finish() {
+
+        VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
+        if (videoLayout != null) {
+
+            // s
+            long currentPosition = videoLayout.getCurrentPosition() / 1000;
+            // s
+            long duration = videoLayout.getDuration() / 1000;
+
+            if (currentPosition < 0) {
+                currentPosition = 0;
+            }
+            if (duration < 0) {
+                duration = 0;
+            }
+
+            String extra = getIntent().getStringExtra(INTENT_DADA);
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_DADA, extra);
+            intent.putExtra(INTENT_TIME_LENGTH, duration);
+            intent.putExtra(INTENT_TIME_BROWSING, currentPosition);
+            setResult(RESULT_CODE, intent);
+        }
+        super.finish();
     }
 
     @Override

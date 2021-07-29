@@ -1,7 +1,7 @@
 package lib.kalu.mediaplayer.videodb.disk;
 
 import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
-import lib.kalu.mediaplayer.videodb.manager.LocationManager;
+import lib.kalu.mediaplayer.videodb.manager.CacheManager;
 import lib.kalu.mediaplayer.videodb.model.SafeKeyGenerator;
 import lib.kalu.mediaplayer.videodb.model.VideoLocation;
 import lib.kalu.mediaplayer.videodb.utils.CacheLogUtils;
@@ -23,7 +23,7 @@ public class SqlLiteCache {
     public final SafeKeyGenerator safeKeyGenerator;
 
     public SqlLiteCache() {
-        CacheConfig cacheConfig = LocationManager.getInstance().getCacheConfig();
+        CacheConfig cacheConfig = CacheManager.getInstance().getCacheConfig();
         File path = DiskFileUtils.getFilePath(cacheConfig.getContext());
         String pathString = path.getPath();
         CacheLogUtils.d("SqlLiteCache-----pathString路径输出地址-"+pathString);

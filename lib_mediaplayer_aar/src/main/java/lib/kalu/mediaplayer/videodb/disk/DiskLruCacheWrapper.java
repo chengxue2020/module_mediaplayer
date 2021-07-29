@@ -4,7 +4,7 @@ package lib.kalu.mediaplayer.videodb.disk;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
-import lib.kalu.mediaplayer.videodb.manager.LocationManager;
+import lib.kalu.mediaplayer.videodb.manager.CacheManager;
 import lib.kalu.mediaplayer.videodb.model.SafeKeyGenerator;
 import lib.kalu.mediaplayer.videodb.utils.CacheLogUtils;
 
@@ -47,7 +47,7 @@ public class DiskLruCacheWrapper implements InterDiskCache {
     @Deprecated
     @SuppressWarnings({"WeakerAccess", "DeprecatedIsStillUsed"})
     protected DiskLruCacheWrapper(File directory,SafeKeyGenerator safeKeyGenerator) {
-        CacheConfig cacheConfig = LocationManager.getInstance().getCacheConfig();
+        CacheConfig cacheConfig = CacheManager.getInstance().getCacheConfig();
         this.directory = directory;
         this.safeKeyGenerator = safeKeyGenerator;
         this.maxSize = cacheConfig.getCacheMax();

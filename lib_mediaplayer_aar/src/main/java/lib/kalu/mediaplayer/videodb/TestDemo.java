@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.videodb;
 import android.content.Context;
 
 import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
-import lib.kalu.mediaplayer.videodb.manager.LocationManager;
+import lib.kalu.mediaplayer.videodb.manager.CacheManager;
 
 /**
  * <pre>
@@ -16,25 +16,15 @@ import lib.kalu.mediaplayer.videodb.manager.LocationManager;
  */
 public class TestDemo {
 
-    private void init(Context context){
-        CacheConfig cacheConfig = new CacheConfig();
-        //设置配置是生效
-        cacheConfig.setIsEffective(true);
-        /*
-         * 0，表示内存缓存
-         * 1，表示磁盘缓存
-         * 2，表示内存缓存+磁盘缓存
-         */
-        cacheConfig.setType(2);
-        //设置上下文
-        cacheConfig.setContext(context);
-        //设置最大缓存
-        cacheConfig.setCacheMax(1000);
-        //设置是否打印log
-        cacheConfig.setLog(false);
-        //初始化
-        LocationManager.getInstance().init(cacheConfig);
+    private void init(Context context) {
 
+        CacheConfig build = new CacheConfig.Build()
+                .setIsEffective(true)
+                .setType(CacheConfig.Cache.ALL)
+                .setCacheMax(1000)
+                .setLog(false)
+                .build();
+        CacheManager.getInstance().init(build);
 
         //保存播放位置
 //        VideoLocation location = new VideoLocation(url, currentPosition, duration);

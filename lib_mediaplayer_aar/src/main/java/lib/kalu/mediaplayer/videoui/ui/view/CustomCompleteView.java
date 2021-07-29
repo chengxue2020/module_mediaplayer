@@ -54,8 +54,8 @@ public class CustomCompleteView extends FrameLayout implements InterControlView,
     private ImageView mIvStopFullscreen;
     private LinearLayout mLlReplay;
     private ImageView mIvReplay;
-    private LinearLayout mLlShare;
-    private ImageView mIvShare;
+//    private LinearLayout mLlShare;
+//    private ImageView mIvShare;
 
     public CustomCompleteView(@NonNull Context context) {
         super(context);
@@ -87,13 +87,13 @@ public class CustomCompleteView extends FrameLayout implements InterControlView,
         mIvStopFullscreen = view.findViewById(R.id.iv_stop_fullscreen);
         mLlReplay = view.findViewById(R.id.ll_replay);
         mIvReplay = view.findViewById(R.id.iv_replay);
-        mLlShare = view.findViewById(R.id.ll_share);
-        mIvShare = view.findViewById(R.id.iv_share);
+//        mLlShare = view.findViewById(R.id.ll_share);
+//        mIvShare = view.findViewById(R.id.iv_share);
     }
 
     private void initListener() {
         mLlReplay.setOnClickListener(this);
-        mLlShare.setOnClickListener(this);
+//        mLlShare.setOnClickListener(this);
         mIvStopFullscreen.setOnClickListener(this);
     }
 
@@ -102,10 +102,12 @@ public class CustomCompleteView extends FrameLayout implements InterControlView,
         if (v == mLlReplay){
             //点击重播
             mControlWrapper.replay(true);
-        } else if (v == mLlShare){
-            //点击分享
-            BaseToast.showRoundRectToast("点击分享，后期完善");
-        } else if (v == mIvStopFullscreen){
+        }
+//        else if (v == mLlShare){
+//            //点击分享
+//            BaseToast.showRoundRectToast("点击分享，后期完善");
+//        }
+        else if (v == mIvStopFullscreen){
             //点击返回键
             if (mControlWrapper.isFullScreen()) {
                 Activity activity = PlayerUtils.scanForActivity(mContext);

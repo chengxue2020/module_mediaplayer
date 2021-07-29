@@ -3,7 +3,7 @@ package com.kalu.mediaplayer;
 import lib.kalu.mediaplayer.videoui.config.BuriedPointEvent;
 
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.videodb.manager.LocationManager;
+import lib.kalu.mediaplayer.videodb.manager.CacheManager;
 import lib.kalu.mediaplayer.videodb.model.VideoLocation;
 
 public class BuriedPointEventImpl implements BuriedPointEvent {
@@ -83,7 +83,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
     public void playerOutProgress(String url, long duration, long currentPosition) {
         VideoLogUtils.i("BuriedPointEvent---退出视频播放时候的播放进度百度比--"+url+"-----"+duration+"----"+currentPosition);
         VideoLocation location = new VideoLocation(url,currentPosition,duration);
-        LocationManager.getInstance().put(url,location);
+        CacheManager.getInstance().put(url,location);
     }
 
     /**

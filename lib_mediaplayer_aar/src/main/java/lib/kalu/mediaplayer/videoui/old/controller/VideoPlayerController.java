@@ -88,7 +88,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
     private LinearLayout mLlTopOther;
     private ImageView mIvDownload;
     private ImageView mIvAudio;
-    private ImageView mIvShare;
+//    private ImageView mIvShare;
     private ImageView mIvMenu;
     /**
      * 横向屏幕视图，top顶部视图，包括音频，tv，电量，时间等控件
@@ -322,7 +322,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
         mLlTopOther = findViewById(R.id.ll_top_other);
         mIvDownload = findViewById(R.id.iv_download);
         mIvAudio =  findViewById(R.id.iv_audio);
-        mIvShare = findViewById(R.id.iv_share);
+//        mIvShare = findViewById(R.id.iv_share);
         mIvMenu = findViewById(R.id.iv_menu);
 
         mLlHorizontal = findViewById(R.id.ll_horizontal);
@@ -372,7 +372,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
         mCenterStart.setOnClickListener(this);
         mBack.setOnClickListener(this);
         mIvDownload.setOnClickListener(this);
-        mIvShare.setOnClickListener(this);
+//        mIvShare.setOnClickListener(this);
         mIvAudio.setOnClickListener(this);
         mIvMenu.setOnClickListener(this);
         mIvHorAudio.setOnClickListener(this);
@@ -987,14 +987,16 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
             }
             //点击切换音频
             mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.AUDIO);
-        }else if(v == mIvShare){
-            if(mVideoControlListener==null){
-                VideoLogUtils.d("请在初始化的时候设置分享监听事件");
-                return;
-            }
-            //点击分享
-            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.SHARE);
-        }else if(v == mIvMenu){
+        }
+//        else if(v == mIvShare){
+//            if(mVideoControlListener==null){
+//                VideoLogUtils.d("请在初始化的时候设置分享监听事件");
+//                return;
+//            }
+//            //点击分享
+//            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.SHARE);
+//        }
+        else if(v == mIvMenu){
             if(mVideoControlListener==null){
                 VideoLogUtils.d("请在初始化的时候设置分享监听事件");
                 return;

@@ -18,7 +18,7 @@ import java.io.IOException;
  * @date:  2021-05-12 14:41
  */
 @Keep
-public class LocationManager {
+public class CacheManager {
 
     /**
      * 终极目标
@@ -47,10 +47,10 @@ public class LocationManager {
     private CacheConfig cacheConfig;
 
     private static class ManagerHolder {
-        private static final LocationManager INSTANCE = new LocationManager();
+        private static final CacheManager INSTANCE = new CacheManager();
     }
 
-    public static LocationManager getInstance() {
+    public static CacheManager getInstance() {
         return ManagerHolder.INSTANCE;
     }
 

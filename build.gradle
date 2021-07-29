@@ -1,7 +1,7 @@
 buildscript {
 
     // 编译: 2020-01-03
-    ext.plugin_gradle_version = '4.2.1'
+    ext.plugin_gradle_version = '7.0.0'
     ext.plugin_kotlin_version = '1.4.21'
     ext.plugin_andresguard_version = '1.2.20'// 不要改动
     ext.plugin_asm_version = "1.0.0"// 不要改动
@@ -108,8 +108,8 @@ ext {
             targetSdkVersion       : 30, // 28之后强制使用https, 否则报错, 或者networkSecurityConfig
 
             abiFilters             : "armeabi", // armeabi-v7a,x86
-            ndkVersion             : "16.1.4479499", // 21.0.6113669
-            ndkPath                : "C:\\\\Users\\\\Administrator\\\\android-sdk\\\\ndk\\\\16.1.4479499",
+            ndkVersion             : "21.4.7075529", // 21.0.6113669
+            ndkPath                : "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529",
             compileOptionsEncoding : "UTF-8",
 
             com_android_application: 'com.android.application',

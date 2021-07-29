@@ -9,11 +9,10 @@ import lib.kalu.mediaplayer.musickernel.utils.MusicSpUtils;
 import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 
-import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
-import lib.kalu.mediaplayer.videodb.manager.LocationManager;
+import lib.kalu.mediaplayer.videodb.manager.CacheManager;
 
 /**
  * ================================================
@@ -58,7 +57,6 @@ public class BaseApplication extends Application {
         ScreenDensityUtils.register(this, 375.0f,
                 ScreenDensityUtils.MATCH_BASE_WIDTH, ScreenDensityUtils.MATCH_UNIT_DP);
         //播放器配置，注意：此为全局配置，按需开启
-        PlayerFactory player = PlayerFactoryUtils.getPlayer(PlayerConstant.PlayerType.TYPE_EXO);
         VideoViewManager.setConfig(VideoPlayerConfig.newBuilder()
                 //设置上下文
                 .setContext(this)
@@ -67,7 +65,7 @@ public class BaseApplication extends Application {
                 //调试的时候请打开日志，方便排错
                 .setLogEnabled(true)
                 //设置ijk
-                .setPlayerFactory(player)
+                .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerConstant.PlayerType.TYPE_EXO))
                 //创建SurfaceView
                 //.setRenderViewFactory(SurfaceViewFactory.create())
                 .build());
@@ -77,13 +75,13 @@ public class BaseApplication extends Application {
     }
 
     private void initVideoCache() {
-        CacheConfig cacheConfig = new CacheConfig();
-        cacheConfig.setIsEffective(true);
-        cacheConfig.setType(2);
-        cacheConfig.setContext(this);
-        cacheConfig.setCacheMax(1000);
-        cacheConfig.setLog(false);
-        LocationManager.getInstance().init(cacheConfig);
+        CacheConfig build = new CacheConfig.Build()
+                .setIsEffective(true)
+                .setType(CacheConfig.Cache.ONLY_DISK)
+                .setCacheMax(1000)
+                .setLog(false)
+                .build();
+        CacheManager.getInstance().init(build);
     }
 
     /**
