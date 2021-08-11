@@ -5,6 +5,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 import android.content.Context;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -36,17 +37,17 @@ public class CacheConfig {
      * 对视频链接加盐字符串
      * 处理md5加密的盐
      */
-    private String mSalt = "media_salt";
+    private String mSalt = "salt_cache";
     /**
      * 0，表示内存缓存
      * 1，表示磁盘缓存
      * 2，表示内存缓存+磁盘缓存
      */
-    private int type = Cache.ALL;
+    private int mType = Cache.ALL;
     /**
      * 是否开启日志
      */
-    private boolean isLog = false;
+    private boolean mIsLog = false;
 
     public boolean isEffective() {
         return mIsEffective;
@@ -61,11 +62,11 @@ public class CacheConfig {
     }
 
     public int getType() {
-        return type;
+        return mType;
     }
 
     public boolean isLog() {
-        return isLog;
+        return mIsLog;
     }
 
     public Context getContext() {
@@ -78,8 +79,8 @@ public class CacheConfig {
         this.mIsEffective = build.mIsEffective;
         this.mCacheMax = build.mCacheMax;
         this.mSalt = build.mSalt;
-        this.type = build.type;
-        this.isLog = build.isLog;
+        this.mType = build.mType;
+        this.mIsLog = build.mIsLog;
     }
 
     @Keep
@@ -113,24 +114,24 @@ public class CacheConfig {
          * 对视频链接加盐字符串
          * 处理md5加密的盐
          */
-        private String mSalt = "yc_video";
+        private String mSalt = "salt_cache";
         /**
          * 0，表示内存缓存
          * 1，表示磁盘缓存
          * 2，表示内存缓存+磁盘缓存
          */
-        private int type = Cache.ALL;
+        private int mType = Cache.ALL;
         /**
          * 是否开启日志
          */
-        private boolean isLog = false;
+        private boolean mIsLog = false;
 
         public Build setIsEffective(boolean mIsEffective) {
             this.mIsEffective = mIsEffective;
             return this;
         }
 
-        public Build setCacheMax(int value) {
+        public Build setCacheMax(@IntRange(from = 1, to = 2048) int value) {
             if (value <= 0) {
                 value = 1000;
             }
@@ -138,7 +139,7 @@ public class CacheConfig {
             return this;
         }
 
-        public Build setSalt(String salt) {
+        public Build setSalt(@NonNull String salt) {
             //设置盐处理
             if (salt != null && salt.length() > 0) {
                 this.mSalt = salt;
@@ -147,12 +148,12 @@ public class CacheConfig {
         }
 
         public Build setType(@CacheType int type) {
-            this.type = type;
+            this.mType = type;
             return this;
         }
 
         public Build setLog(boolean log) {
-            isLog = log;
+            this.mIsLog = log;
             return this;
         }
 

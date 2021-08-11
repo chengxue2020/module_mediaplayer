@@ -45,5 +45,4 @@ public class SafeKeyGenerator {
         }
         return safeKey;
     }
-
 }
