@@ -21,13 +21,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import lib.kalu.mediaplayer.common.util.SpUtil;
 import lib.kalu.mediaplayer.musickernel.config.MusicConstant;
 import lib.kalu.mediaplayer.musickernel.config.PlayModeEnum;
 import lib.kalu.mediaplayer.musickernel.inter.OnPlayerEventListener;
 import lib.kalu.mediaplayer.musickernel.model.AudioBean;
 import lib.kalu.mediaplayer.musickernel.tool.BaseAppHelper;
-import lib.kalu.mediaplayer.musickernel.utils.MusicLogUtils;
-import lib.kalu.mediaplayer.musickernel.utils.MusicSpUtils;
+import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
 
 import com.kalu.mediaplayer.R;
@@ -78,7 +78,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        MusicLogUtils.e(TAG+"setUserVisibleHint"+isVisibleToUser);
+        VideoLogUtils.e(TAG+"setUserVisibleHint"+isVisibleToUser);
     }
 
     /**
@@ -90,7 +90,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        MusicLogUtils.e(TAG+"onHiddenChanged"+hidden);
+        VideoLogUtils.e(TAG+"onHiddenChanged"+hidden);
         if (!hidden){
             initData();
         }
@@ -325,7 +325,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     }
 
     private void switchPlayMode() {
-        int playMode = MusicSpUtils.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
+        int playMode = SpUtil.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
         PlayModeEnum mode = PlayModeEnum.valueOf(playMode);
         switch (mode) {
             case LOOP:
@@ -340,13 +340,13 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
             default:
                 break;
         }
-        MusicSpUtils.getInstance(MusicConstant.SP_NAME).put(MusicConstant.PLAY_MODE, mode.value());
+        SpUtil.getInstance(MusicConstant.SP_NAME).put(MusicConstant.PLAY_MODE, mode.value());
         initPlayMode();
     }
 
 
     private void initPlayMode() {
-        int playMode = MusicSpUtils.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
+        int playMode = SpUtil.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
         ivMode.setImageLevel(playMode);
     }
 
@@ -390,7 +390,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
         sbProgress.setProgress((int) BaseAppHelper.get().getMusicService().getCurrentPosition());
         sbProgress.setSecondaryProgress(0);
         sbProgress.setMax((int) playingMusic.getDuration());
-        MusicLogUtils.e("-----------------------"+(int) playingMusic.getDuration());
+        VideoLogUtils.e("-----------------------"+(int) playingMusic.getDuration());
         mLastProgress = 0;
         tvCurrentTime.setText("00:00");
         tvTotalTime.setText(PlayerUtils.formatTime(playingMusic.getDuration()));
@@ -442,7 +442,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onBufferingUpdate(int percent) {
         if(sbProgress.getMax()>0 && percent>0){
-            MusicLogUtils.e("setOnPlayEventListener---percent---"+ sbProgress.getMax() + "-----" +percent);
+            VideoLogUtils.e("setOnPlayEventListener---percent---"+ sbProgress.getMax() + "-----" +percent);
             sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
         }
     }

@@ -6,9 +6,9 @@ import android.content.Intent;
 
 import androidx.annotation.Keep;
 
+import lib.kalu.mediaplayer.common.util.LogUtil;
 import lib.kalu.mediaplayer.musickernel.config.MusicConstant;
 import lib.kalu.mediaplayer.musickernel.service.PlayService;
-import lib.kalu.mediaplayer.musickernel.utils.MusicLogUtils;
 
 
 /**
@@ -26,17 +26,17 @@ public class AudioBroadcastReceiver extends BroadcastReceiver {
                 //锁屏时处理的逻辑
                 case MusicConstant.LOCK_SCREEN_ACTION:
                     PlayService.startCommand(context, MusicConstant.LOCK_SCREEN_ACTION);
-                    MusicLogUtils.e("AudioBroadcastReceiver"+"---LOCK_SCREEN");
+                    LogUtil.log("AudioBroadcastReceiver"+"---LOCK_SCREEN");
                     break;
                 //当屏幕灭了
                 case Intent.ACTION_SCREEN_OFF:
                     PlayService.startCommand(context,Intent.ACTION_SCREEN_OFF);
-                    MusicLogUtils.e("AudioBroadcastReceiver"+"---当屏幕灭了");
+                    LogUtil.log("AudioBroadcastReceiver"+"---当屏幕灭了");
                     break;
                 //当屏幕亮了
                 case Intent.ACTION_SCREEN_ON:
                     PlayService.startCommand(context,Intent.ACTION_SCREEN_ON);
-                    MusicLogUtils.e("AudioBroadcastReceiver"+"---当屏幕亮了");
+                    LogUtil.log("AudioBroadcastReceiver"+"---当屏幕亮了");
                     break;
                 default:
                     break;

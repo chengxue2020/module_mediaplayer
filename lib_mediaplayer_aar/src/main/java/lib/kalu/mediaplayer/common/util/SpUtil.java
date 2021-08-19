@@ -1,7 +1,5 @@
-package lib.kalu.mediaplayer.musickernel.utils;
+package lib.kalu.mediaplayer.common.util;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -13,24 +11,21 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
+
 
 @Keep
-public final class MusicSpUtils {
+public final class SpUtil {
 
-    private static SimpleArrayMap<String, MusicSpUtils> SP_UTILS_MAP = new SimpleArrayMap<>();
+    private static SimpleArrayMap<String, SpUtil> SP_UTILS_MAP = new SimpleArrayMap<>();
     private SharedPreferences sp;
-    private static Context context;
-
-    public static void init(Application application) {
-        context = application;
-    }
 
     /**
      * 获取 SP 实例
      *
-     * @return {@link MusicSpUtils}
+     * @return {@link SpUtil}
      */
-    public static MusicSpUtils getInstance() {
+    public static SpUtil getInstance() {
         return getInstance("");
     }
 
@@ -38,20 +33,20 @@ public final class MusicSpUtils {
      * 获取 SP 实例
      *
      * @param spName sp 名
-     * @return {@link MusicSpUtils}
+     * @return {@link SpUtil}
      */
-    public static MusicSpUtils getInstance(String spName) {
+    public static SpUtil getInstance(String spName) {
         if (isSpace(spName)) spName = "spUtils";
-        MusicSpUtils spUtils = SP_UTILS_MAP.get(spName);
+        SpUtil spUtils = SP_UTILS_MAP.get(spName);
         if (spUtils == null) {
-            spUtils = new MusicSpUtils(spName);
+            spUtils = new SpUtil(spName);
             SP_UTILS_MAP.put(spName, spUtils);
         }
         return spUtils;
     }
 
-    private MusicSpUtils(final String spName) {
-        sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
+    private SpUtil(final String spName) {
+        sp = ContentProviderMediaplayer.getContextWeakReference().getSharedPreferences(spName, Context.MODE_PRIVATE);
     }
 
     /**

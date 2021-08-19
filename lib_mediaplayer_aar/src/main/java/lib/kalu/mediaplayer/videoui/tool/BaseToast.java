@@ -11,6 +11,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.Keep;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
@@ -28,30 +30,26 @@ import java.lang.reflect.Field;
 
 /**
  * @description: Toast工具类，模仿易车，抖音自定义吐司
- *  *     revise: 具体看GitHub开源项目：https://github.com/yangchong211/YCDialog
- * @date:  2021-05-12 14:49
+ * *     revise: 具体看GitHub开源项目：https://github.com/yangchong211/YCDialog
+ * @date: 2021-05-12 14:49
  */
 @Keep
 public final class BaseToast {
 
-
     @SuppressLint("StaticFieldLeak")
-    private static Context mApp;
     private static int toastBackColor;
     private static SoftReference<Toast> mToast;
 
     /**
      * 初始化吐司工具类
+     *
      * @param app 应用
      */
     public static void init(@NonNull final Context app) {
-        if (mApp==null){
-            mApp = app;
-            toastBackColor = Color.BLACK;
-        }
+        toastBackColor = Color.BLACK;
     }
 
-    public static void setToastBackColor(@ColorInt int color){
+    public static void setToastBackColor(@ColorInt int color) {
         toastBackColor = color;
     }
 
@@ -66,8 +64,8 @@ public final class BaseToast {
     /**
      * 检查上下文不能为空，必须先进性初始化操作
      */
-    private static void checkContext(){
-        if(mApp==null){
+    private static void checkContext() {
+        if (null == ContentProviderMediaplayer.getContextWeakReference()) {
             throw new NullPointerException("ToastUtils context is not null，please first init");
         }
     }
@@ -76,9 +74,11 @@ public final class BaseToast {
     /**
      * 吐司工具类    避免点击多次导致吐司多次，最后导致Toast就长时间关闭不掉了
      * 注意：这里如果传入context会报内存泄漏；传递activity..getApplicationContext()
+     *
      * @param content       吐司内容
      */
     private static Toast toast;
+
     @SuppressLint("ShowToast")
     public static void showToast(String content) {
         checkMainThread();
@@ -86,7 +86,7 @@ public final class BaseToast {
         if (!checkNull(mToast)) {
             mToast.get().cancel();
         }
-        Toast toast = Toast.makeText(mApp, "", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(ContentProviderMediaplayer.getContextWeakReference(), "", Toast.LENGTH_SHORT);
         toast.setText(content);
         toast.show();
         mToast = new SoftReference<>(toast);
@@ -99,15 +99,16 @@ public final class BaseToast {
      * 2:替代方案 SnackBarUtils.showSnack(topActivity, noticeStr);
      * 圆角
      * 屏幕中间
-     * @param notice                        内容
+     *
+     * @param notice 内容
      */
     public static void showRoundRectToast(CharSequence notice) {
         checkMainThread();
         checkContext();
-        if (TextUtils.isEmpty(notice)){
+        if (TextUtils.isEmpty(notice)) {
             return;
         }
-        new Builder(mApp)
+        new Builder(ContentProviderMediaplayer.getContextWeakReference())
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)
@@ -115,20 +116,20 @@ public final class BaseToast {
                 .setTitle(notice)
                 .setTextColor(Color.WHITE)
                 .setBackgroundColor(toastBackColor)
-                .setRadius(dip2px(mApp, 10))
-                .setElevation(dip2px(mApp, 0))
+                .setRadius(dip2px(ContentProviderMediaplayer.getContextWeakReference(), 10))
+                .setElevation(dip2px(ContentProviderMediaplayer.getContextWeakReference(), 0))
                 .build()
                 .show();
     }
 
 
-    public static void showRoundRectToast(CharSequence notice,CharSequence desc) {
+    public static void showRoundRectToast(CharSequence notice, CharSequence desc) {
         checkMainThread();
         checkContext();
-        if (TextUtils.isEmpty(notice)){
+        if (TextUtils.isEmpty(notice)) {
             return;
         }
-        new Builder(mApp)
+        new Builder(ContentProviderMediaplayer.getContextWeakReference())
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)
@@ -137,21 +138,20 @@ public final class BaseToast {
                 .setTitle(notice)
                 .setTextColor(Color.WHITE)
                 .setBackgroundColor(toastBackColor)
-                .setRadius(dip2px(mApp, 10))
-                .setElevation(dip2px(mApp, 0))
+                .setRadius(dip2px(ContentProviderMediaplayer.getContextWeakReference(), 10))
+                .setElevation(dip2px(ContentProviderMediaplayer.getContextWeakReference(), 0))
                 .build()
                 .show();
     }
 
 
-
     public static void showRoundRectToast(@LayoutRes int layout) {
         checkMainThread();
         checkContext();
-        if (layout==0){
+        if (layout == 0) {
             return;
         }
-        new Builder(mApp)
+        new Builder(ContentProviderMediaplayer.getContextWeakReference())
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)
@@ -187,7 +187,7 @@ public final class BaseToast {
             return this;
         }
 
-        public Builder setDesc(CharSequence desc){
+        public Builder setDesc(CharSequence desc) {
             this.desc = desc;
             return this;
         }
@@ -250,7 +250,7 @@ public final class BaseToast {
             }
             toast.setDuration(duration);
             toast.setMargin(0, 0);
-            if(layout==0){
+            if (layout == 0) {
                 RelativeLayout rootView = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.moudle_mediaplayer_toast_view, null);
                 TextView textView = rootView.findViewById(R.id.toastTextView);
                 TextView descTv = rootView.findViewById(R.id.desc);
@@ -263,14 +263,14 @@ public final class BaseToast {
                 //rootView.setBackgroundColor(backgroundColor);
                 textView.setTextColor(textColor);
                 textView.setText(title);
-                if(TextUtils.isEmpty(desc)){
+                if (TextUtils.isEmpty(desc)) {
                     descTv.setVisibility(View.GONE);
-                }else{
+                } else {
                     descTv.setText(desc);
                     descTv.setVisibility(View.VISIBLE);
                 }
                 toast.setView(rootView);
-            }else {
+            } else {
                 View view = LayoutInflater.from(context).inflate(layout, null);
                 toast.setView(view);
             }
@@ -287,13 +287,13 @@ public final class BaseToast {
     }
 
 
-    public static void checkMainThread(){
-        if (!isMainThread()){
+    public static void checkMainThread() {
+        if (!isMainThread()) {
             throw new IllegalStateException("请不要在子线程中做弹窗操作");
         }
     }
 
-    private static boolean isMainThread(){
+    private static boolean isMainThread() {
         //判断是否是主线程
         return Looper.getMainLooper() == Looper.myLooper();
     }
@@ -320,7 +320,7 @@ public final class BaseToast {
 
         static {
             try {
-                Class<?> clazz =  Toast.class;
+                Class<?> clazz = Toast.class;
                 sField_TN = clazz.getDeclaredField("mTN");
                 sField_TN.setAccessible(true);
                 sField_TN_Handler = sField_TN.getType().getDeclaredField("mHandler");

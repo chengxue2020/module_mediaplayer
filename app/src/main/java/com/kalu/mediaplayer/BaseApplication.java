@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 
-import lib.kalu.mediaplayer.musickernel.utils.MusicSpUtils;
 import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 
@@ -54,12 +53,15 @@ public class BaseApplication extends Application {
         super.onCreate();
         instance = this;
         ScreenDensityUtils.setup(this);
-        ScreenDensityUtils.register(this, 375.0f,
-                ScreenDensityUtils.MATCH_BASE_WIDTH, ScreenDensityUtils.MATCH_UNIT_DP);
+        ScreenDensityUtils.register(this, 375.0f, ScreenDensityUtils.MATCH_BASE_WIDTH, ScreenDensityUtils.MATCH_UNIT_DP);
+
+        initVideoUI();
+        initVideoCache();
+    }
+
+    private void initVideoUI() {
         //播放器配置，注意：此为全局配置，按需开启
         VideoViewManager.setConfig(VideoPlayerConfig.newBuilder()
-                //设置上下文
-                .setContext(this)
                 //设置视频全局埋点事件
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
@@ -69,9 +71,6 @@ public class BaseApplication extends Application {
                 //创建SurfaceView
                 //.setRenderViewFactory(SurfaceViewFactory.create())
                 .build());
-        MusicSpUtils.init(this);
-
-        initVideoCache();
     }
 
     private void initVideoCache() {

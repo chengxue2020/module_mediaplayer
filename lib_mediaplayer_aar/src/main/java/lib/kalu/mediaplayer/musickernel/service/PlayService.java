@@ -15,6 +15,8 @@ import android.os.Message;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import lib.kalu.mediaplayer.common.util.LogUtil;
 import lib.kalu.mediaplayer.musickernel.config.MusicPlayAction;
 import lib.kalu.mediaplayer.musickernel.config.MusicConstant;
 import lib.kalu.mediaplayer.musickernel.config.PlayModeEnum;
@@ -26,10 +28,9 @@ import lib.kalu.mediaplayer.musickernel.model.AudioBean;
 import lib.kalu.mediaplayer.musickernel.receiver.AudioBroadcastReceiver;
 import lib.kalu.mediaplayer.musickernel.receiver.AudioEarPhoneReceiver;
 import lib.kalu.mediaplayer.musickernel.tool.BaseAppHelper;
-import lib.kalu.mediaplayer.musickernel.utils.MusicLogUtils;
 import lib.kalu.mediaplayer.musickernel.utils.NotificationHelper;
 import lib.kalu.mediaplayer.musickernel.tool.QuitTimerHelper;
-import lib.kalu.mediaplayer.musickernel.utils.MusicSpUtils;
+import lib.kalu.mediaplayer.common.util.SpUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -221,15 +222,15 @@ public class PlayService extends Service {
                     break;
                 //添加锁屏界面
                 case MusicConstant.LOCK_SCREEN_ACTION:
-                    MusicLogUtils.e("PlayService"+"---LOCK_SCREEN"+mIsLocked);
+                    LogUtil.log("PlayService"+"---LOCK_SCREEN"+mIsLocked);
                     break;
                 //当屏幕灭了，添加锁屏页面
                 case Intent.ACTION_SCREEN_OFF:
                     startLockAudioActivity();
-                    MusicLogUtils.e("PlayService"+"---当屏幕灭了");
+                    LogUtil.log("PlayService"+"---当屏幕灭了");
                     break;
                 case Intent.ACTION_SCREEN_ON:
-                    MusicLogUtils.e("PlayService"+"---当屏幕亮了");
+                    LogUtil.log("PlayService"+"---当屏幕亮了");
                     break;
                 default:
                     break;
@@ -342,7 +343,7 @@ public class PlayService extends Service {
         if (audioMusics.isEmpty()) {
             return;
         }
-        int playMode = MusicSpUtils.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
+        int playMode = SpUtil.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
         int size = audioMusics.size();
         PlayModeEnum mode = PlayModeEnum.valueOf(playMode);
         switch (mode) {
@@ -381,7 +382,7 @@ public class PlayService extends Service {
         if (audioMusics.isEmpty()) {
             return;
         }
-        int playMode = MusicSpUtils.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
+        int playMode = SpUtil.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
         int size = audioMusics.size();
         PlayModeEnum mode = PlayModeEnum.valueOf(playMode);
         switch (mode) {
@@ -404,7 +405,7 @@ public class PlayService extends Service {
                     // 如果是最后一首，则切换回第一首
                     mPlayingPosition = 0;
                 }
-                MusicLogUtils.e("PlayService"+"----mPlayingPosition----"+ mPlayingPosition);
+                LogUtil.log("PlayService"+"----mPlayingPosition----"+ mPlayingPosition);
                 play(mPlayingPosition);
                 break;
         }
@@ -510,10 +511,10 @@ public class PlayService extends Service {
         mPlayingPosition = position;
         AudioBean music = audioMusics.get(mPlayingPosition);
         String id = music.getId();
-        MusicLogUtils.e("PlayService"+"----id----"+ id);
+        LogUtil.log("PlayService"+"----id----"+ id);
         //保存当前播放的musicId，下次进来可以记录状态
         long musicId = Long.parseLong(id);
-        MusicSpUtils.getInstance(MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
+        SpUtil.getInstance(MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
         play(music);
     }
 
@@ -579,7 +580,7 @@ public class PlayService extends Service {
             int currentPosition =  mPlayer.getCurrentPosition();
             mListener.onUpdateProgress(currentPosition);
         }
-        MusicLogUtils.e("updatePlayProgressShow");
+        LogUtil.log("updatePlayProgressShow");
         // 每30毫秒更新一下显示的内容，注意这里时间不要太短，因为这个是一个循环
         // 经过测试，60毫秒更新一次有点卡，30毫秒最为顺畅
         handler.sendEmptyMessageDelayed(UPDATE_PLAY_PROGRESS_SHOW, 300);
@@ -806,13 +807,13 @@ public class PlayService extends Service {
      */
     public void updatePlayingPosition() {
         int position = 0;
-        long id = MusicSpUtils.getInstance(MusicConstant.SP_NAME).getLong(MusicConstant.MUSIC_ID,-1);
+        long id = SpUtil.getInstance(MusicConstant.SP_NAME).getLong(MusicConstant.MUSIC_ID,-1);
         if(audioMusics.isEmpty()){
             return;
         }
         for (int i = 0; i < audioMusics.size(); i++) {
             String musicId = audioMusics.get(i).getId();
-            MusicLogUtils.e("PlayService"+"----musicId----"+ musicId);
+            LogUtil.log("PlayService"+"----musicId----"+ musicId);
             if (Long.parseLong(musicId) == id) {
                 position = i;
                 break;
@@ -820,7 +821,7 @@ public class PlayService extends Service {
         }
         mPlayingPosition = position;
         long musicId = Long.parseLong(audioMusics.get(mPlayingPosition).getId());
-        MusicSpUtils.getInstance(MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
+        SpUtil.getInstance(MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
     }
 
 

@@ -3,8 +3,8 @@ package lib.kalu.mediaplayer.videodb.model;
 import lib.kalu.mediaplayer.videodb.cache.VideoLruCache;
 import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
 import lib.kalu.mediaplayer.videodb.manager.CacheManager;
-import lib.kalu.mediaplayer.videodb.utils.CacheLogUtils;
-import lib.kalu.mediaplayer.videodb.utils.VideoMd5Utils;
+import lib.kalu.mediaplayer.common.util.LogUtil;
+import lib.kalu.mediaplayer.common.util.Md5Util;
 
 /**
  * <pre>
@@ -32,16 +32,16 @@ public class SafeKeyGenerator {
         int hashCode = url.hashCode();
         synchronized (loadIdToSafeHash) {
             safeKey = loadIdToSafeHash.get(hashCode);
-            CacheLogUtils.d("SafeKeyGenerator-----获取缓存key-"+safeKey);
+            LogUtil.log("SafeKeyGenerator-----获取缓存key-"+safeKey);
         }
         if (safeKey == null || safeKey.length()==0) {
             CacheConfig cacheConfig = CacheManager.getInstance().getCacheConfig();
-            safeKey = VideoMd5Utils.encryptMD5ToString(url, cacheConfig.getSalt());
-            CacheLogUtils.d("SafeKeyGenerator-----md5转化key-"+safeKey);
+            safeKey = Md5Util.encryptMD5ToString(url, cacheConfig.getSalt());
+            LogUtil.log("SafeKeyGenerator-----md5转化key-"+safeKey);
         }
         synchronized (loadIdToSafeHash) {
             loadIdToSafeHash.put(hashCode, safeKey);
-            CacheLogUtils.d("SafeKeyGenerator-----存储key-"+safeKey);
+            LogUtil.log("SafeKeyGenerator-----存储key-"+safeKey);
         }
         return safeKey;
     }

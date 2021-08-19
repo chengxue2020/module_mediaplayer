@@ -1,10 +1,9 @@
 package lib.kalu.mediaplayer.videodb.disk;
 
-import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
-import lib.kalu.mediaplayer.videodb.manager.CacheManager;
+import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 import lib.kalu.mediaplayer.videodb.model.SafeKeyGenerator;
 import lib.kalu.mediaplayer.videodb.model.VideoLocation;
-import lib.kalu.mediaplayer.videodb.utils.CacheLogUtils;
+import lib.kalu.mediaplayer.common.util.LogUtil;
 
 import java.io.File;
 
@@ -23,10 +22,9 @@ public class SqlLiteCache {
     public final SafeKeyGenerator safeKeyGenerator;
 
     public SqlLiteCache() {
-        CacheConfig cacheConfig = CacheManager.getInstance().getCacheConfig();
-        File path = DiskFileUtils.getFilePath(cacheConfig.getContext());
+        File path = DiskFileUtils.getFilePath(ContentProviderMediaplayer.getContextWeakReference());
         String pathString = path.getPath();
-        CacheLogUtils.d("SqlLiteCache-----pathString路径输出地址-"+pathString);
+        LogUtil.log("SqlLiteCache-----pathString路径输出地址-"+pathString);
         this.safeKeyGenerator = new SafeKeyGenerator();
         interDiskCache = DiskLruCacheWrapper.get(path,safeKeyGenerator);
     }
@@ -43,7 +41,7 @@ public class SqlLiteCache {
         String safeKey = safeKeyGenerator.getSafeKey(url);
         location.setUrlMd5(safeKey);
         String json = location.toJson();
-        CacheLogUtils.d("SqlLiteCache-----put--json--"+json);
+        LogUtil.log("SqlLiteCache-----put--json--"+json);
         interDiskCache.put(url,json);
     }
 
@@ -57,7 +55,7 @@ public class SqlLiteCache {
         if (data==null || data.length()==0){
             return -1;
         }
-        CacheLogUtils.d("SqlLiteCache-----get---"+data);
+        LogUtil.log("SqlLiteCache-----get---"+data);
         VideoLocation location = VideoLocation.toObject(data);
         return location.getPosition();
     }

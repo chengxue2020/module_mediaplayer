@@ -21,6 +21,12 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
+        <provider
+            android:name=".common.contentprovider.ContentProviderMediaplayer"
+            android:authorities="${applicationId}.contextprovider"
+            android:exported="false"
+            android:process=":mediaplayer" />
+
         <receiver
             android:name="lib.kalu.mediaplayer.videoui.old.other.BatterReceiver"
             android:process=":mediaplayer" />
@@ -59,12 +65,6 @@
                 <action android:name="lib.kalu.lock" />
             </intent-filter>
         </receiver>
-
-        <provider
-            android:name="lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer"
-            android:authorities="${applicationId}.contextprovider"
-            android:exported="false"
-            android:process=":mediaplayer" />
 
         <activity
             android:name="lib.kalu.mediaplayer.ExoplayerActivity"

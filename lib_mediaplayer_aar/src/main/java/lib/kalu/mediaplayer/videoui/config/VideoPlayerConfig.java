@@ -21,6 +21,44 @@ import lib.kalu.mediaplayer.videoui.tool.BaseToast;
 @Keep
 public class VideoPlayerConfig {
 
+    public final boolean mPlayOnMobileNetwork;
+    public final boolean mEnableOrientation;
+    public final boolean mEnableAudioFocus;
+    public final boolean mIsEnableLog;
+    public final ProgressManager mProgressManager;
+    public final PlayerFactory mPlayerFactory;
+    public final BuriedPointEvent mBuriedPointEvent;
+    public final int mScreenScaleType;
+    public final SurfaceFactory mRenderViewFactory;
+    public final boolean mAdaptCutout;
+    public final boolean mIsShowToast ;
+    public final long mShowToastTime;
+
+    private VideoPlayerConfig(Builder builder) {
+        mIsEnableLog = builder.mIsEnableLog;
+        mEnableOrientation = builder.mEnableOrientation;
+        mPlayOnMobileNetwork = builder.mPlayOnMobileNetwork;
+        mEnableAudioFocus = builder.mEnableAudioFocus;
+        mProgressManager = builder.mProgressManager;
+        mScreenScaleType = builder.mScreenScaleType;
+        if (builder.mPlayerFactory == null) {
+            //默认为AndroidMediaPlayer
+            mPlayerFactory = MediaPlayerFactory.create();
+        } else {
+            mPlayerFactory = builder.mPlayerFactory;
+        }
+        mBuriedPointEvent = builder.mBuriedPointEvent;
+        if (builder.mRenderViewFactory == null) {
+            //默认使用TextureView渲染视频
+            mRenderViewFactory = TextureViewFactory.create();
+        } else {
+            mRenderViewFactory = builder.mRenderViewFactory;
+        }
+        mAdaptCutout = builder.mAdaptCutout;
+        mIsShowToast = builder.mIsShowToast;
+        mShowToastTime = builder.mShowToastTime;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -28,7 +66,6 @@ public class VideoPlayerConfig {
     @Keep
     public final static class Builder {
 
-        private Context mContext;
         /**
          * 默认是关闭日志的
          */
@@ -77,14 +114,6 @@ public class VideoPlayerConfig {
          * 倒计时n秒时间
          */
         private long mShowToastTime = 5;
-
-        /**
-         * 是否监听设备方向来切换全屏/半屏， 默认不开启
-         */
-        public Builder setContext(Context context) {
-            mContext = context;
-            return this;
-        }
 
         /**
          * 是否监听设备方向来切换全屏/半屏， 默认不开启
@@ -187,49 +216,4 @@ public class VideoPlayerConfig {
             return new VideoPlayerConfig(this);
         }
     }
-
-    public final Context mContext;
-    public final boolean mPlayOnMobileNetwork;
-    public final boolean mEnableOrientation;
-    public final boolean mEnableAudioFocus;
-    public final boolean mIsEnableLog;
-    public final ProgressManager mProgressManager;
-    public final PlayerFactory mPlayerFactory;
-    public final BuriedPointEvent mBuriedPointEvent;
-    public final int mScreenScaleType;
-    public final SurfaceFactory mRenderViewFactory;
-    public final boolean mAdaptCutout;
-    public final boolean mIsShowToast ;
-    public final long mShowToastTime;
-
-    private VideoPlayerConfig(Builder builder) {
-        mIsEnableLog = builder.mIsEnableLog;
-        mEnableOrientation = builder.mEnableOrientation;
-        mPlayOnMobileNetwork = builder.mPlayOnMobileNetwork;
-        mEnableAudioFocus = builder.mEnableAudioFocus;
-        mProgressManager = builder.mProgressManager;
-        mScreenScaleType = builder.mScreenScaleType;
-        if (builder.mPlayerFactory == null) {
-            //默认为AndroidMediaPlayer
-            mPlayerFactory = MediaPlayerFactory.create();
-        } else {
-            mPlayerFactory = builder.mPlayerFactory;
-        }
-        mBuriedPointEvent = builder.mBuriedPointEvent;
-        if (builder.mRenderViewFactory == null) {
-            //默认使用TextureView渲染视频
-            mRenderViewFactory = TextureViewFactory.create();
-        } else {
-            mRenderViewFactory = builder.mRenderViewFactory;
-        }
-        mAdaptCutout = builder.mAdaptCutout;
-        mContext = builder.mContext;
-        if (mContext!=null){
-            BaseToast.init(mContext);
-        }
-        mIsShowToast = builder.mIsShowToast;
-        mShowToastTime = builder.mShowToastTime;
-    }
-
-
 }

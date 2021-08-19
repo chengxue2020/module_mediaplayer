@@ -2,8 +2,6 @@ package lib.kalu.mediaplayer.videodb.manager;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-import android.content.Context;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
@@ -11,10 +9,7 @@ import androidx.annotation.NonNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer;
 
 /**
  * @description: 配置类
@@ -22,8 +17,6 @@ import lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplay
  */
 @Keep
 public class CacheConfig {
-
-    private final Context mContext = ContextProviderMediaplayer.mContext;
 
     /**
      * 是否生效
@@ -67,10 +60,6 @@ public class CacheConfig {
 
     public boolean isLog() {
         return mIsLog;
-    }
-
-    public Context getContext() {
-        return mContext;
     }
 
     private CacheConfig(@NonNull Build build) {

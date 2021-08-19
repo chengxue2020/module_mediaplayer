@@ -11,7 +11,6 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.exoplayer2.BasePlayer;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -26,17 +25,14 @@ import com.google.android.exoplayer2.source.LoadEventInfo;
 import com.google.android.exoplayer2.source.MediaLoadData;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MediaSourceEventListener;
-import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
-import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoListener;
 
-import lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer;
+import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
 import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
@@ -142,7 +138,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
             }
             return;
         }
-        mMediaSource = mMediaSourceHelper.getMediaSource(ContextProviderMediaplayer.mContext, path, headers, isCache);
+        mMediaSource = mMediaSourceHelper.getMediaSource(ContentProviderMediaplayer.getContextWeakReference(), path, headers, isCache);
     }
 
     @Override

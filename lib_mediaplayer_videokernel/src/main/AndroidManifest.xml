@@ -7,7 +7,7 @@ package="lib.kalu.mediaplayer.videokernel">
 
         <!-- context -->
         <provider
-            android:name="lib.kalu.mediaplayer.videokernel.contentprovider.ContextProviderMediaplayer"
+            android:name="lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer"
             android:authorities="${applicationId}.mediaplayer.contextprovider"
             android:exported="false" />
 

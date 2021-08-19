@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.videodb.utils;
+package lib.kalu.mediaplayer.common.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
  *     revise:
  * </pre>
  */
-public final class VideoMd5Utils {
+public final class Md5Util {
 
 
     private static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};

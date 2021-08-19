@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.videokernel.contentprovider;
+package lib.kalu.mediaplayer.common.contentprovider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -10,14 +10,28 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-@Keep
-public class ContextProviderMediaplayer extends ContentProvider {
+import java.lang.ref.WeakReference;
 
-    public static Context mContext;
+import lib.kalu.mediaplayer.common.util.LogUtil;
+
+@Keep
+public class ContentProviderMediaplayer extends ContentProvider {
+
+    public static WeakReference<Context> weakReference = null;
+
+    public static final Context getContextWeakReference() {
+        try {
+            return weakReference.get();
+        } catch (Exception e) {
+            LogUtil.log(e.getMessage(), e);
+            return null;
+        }
+    }
 
     @Override
     public boolean onCreate() {
-        mContext = getContext().getApplicationContext();
+        Context context = getContext().getApplicationContext();
+        weakReference = new WeakReference<>(context);
         return true;
     }
 
