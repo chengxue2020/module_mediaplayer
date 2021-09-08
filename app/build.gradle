@@ -14,7 +14,6 @@ android {
         minSdkVersion rootProject.ext.constant.minSdkVersion
         targetSdkVersion rootProject.ext.constant.targetSdkVersion
         vectorDrawables.useSupportLibrary = false
-        multiDexEnabled true
 
         ndk {
             abiFilters rootProject.ext.constant.abiFilters.split(",")
@@ -28,16 +27,16 @@ android {
         buildTypes {
             release {
                 minifyEnabled true
-                zipAlignEnabled false
-                shrinkResources false
-                multiDexEnabled false
+                zipAlignEnabled true
+                shrinkResources true
+                multiDexEnabled true
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
             }
             debug {
                 minifyEnabled true
-                zipAlignEnabled false
-                shrinkResources false
-                multiDexEnabled false
+                zipAlignEnabled true
+                shrinkResources true
+                multiDexEnabled true
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
             }
         }
@@ -62,6 +61,7 @@ repositories {
 
 dependencies {
     // implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -83,6 +83,7 @@ dependencies {
     implementation 'cn.yc:YCStateLib:1.2.2'
 
     // mediaplayer
-    implementation(name: 'lib_mediaplayer_r2.14.0_release_20210819', ext: 'aar')
-//    implementation project(path: ':lib_mediaplayer_aar')
+    api(name: 'lib_mediaplayer_r2.15.0_release_20210908', ext: 'aar')
+    api(name: 'rtmp-client-3.1.0', ext: 'aar')
+//    api project(path: ':lib_mediaplayer_aar_r2.15.0')
 }

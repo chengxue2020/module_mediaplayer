@@ -1,28 +1,19 @@
 package com.kalu.mediaplayer;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 
+import androidx.multidex.MultiDexApplication;
+
+import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
+import lib.kalu.mediaplayer.videodb.manager.CacheManager;
+import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
+import lib.kalu.mediaplayer.videokernel.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 
-import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
-import lib.kalu.mediaplayer.videokernel.utils.PlayerFactoryUtils;
-import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
-import lib.kalu.mediaplayer.videodb.manager.CacheManager;
-
-/**
- * ================================================
- * 作    者：杨充
- * 版    本：1.0
- * 创建日期：2017/8/18
- * 描    述：BaseApplication
- * 修订历史：
- * ================================================
- */
-public class BaseApplication extends Application {
+public class BaseApplication extends MultiDexApplication {
 
     private static BaseApplication instance;
 
