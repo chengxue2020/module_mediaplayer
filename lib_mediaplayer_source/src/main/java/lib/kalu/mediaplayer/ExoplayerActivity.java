@@ -35,7 +35,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.moudle_mediaplayer_activity_exoplayer);
+        setContentView(R.layout.module_mediaplayer_activity_exoplayer);
 
         String url = getIntent().getStringExtra(INTENT_URL);
         if (null == url || url.length() == 0 || !url.startsWith("http")) {
@@ -43,7 +43,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
             return;
         }
 
-        VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         // 基础视频播放器
         BasisVideoController basisVideoController = new BasisVideoController(this);
         basisVideoController.setEnableOrientation(false);
@@ -140,7 +140,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         if (videoLayout == null || !videoLayout.onBackPressed()) {
             finish();
         }
@@ -149,7 +149,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
     @Override
     public void finish() {
 
-        VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         if (videoLayout != null) {
 
             // s
@@ -177,21 +177,21 @@ public final class ExoplayerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         videoLayout.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         videoLayout.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        VideoLayout videoLayout = findViewById(R.id.moudle_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         videoLayout.release();
 
         try {

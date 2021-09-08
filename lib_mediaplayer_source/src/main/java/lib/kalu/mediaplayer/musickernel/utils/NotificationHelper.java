@@ -94,7 +94,7 @@ public class NotificationHelper {
                 .setTicker("叮咚音乐")
                 .setContent(getCustomViews(context, music, isPlaying))
                 .setOngoing(true);
-        Notification notification = notificationUtils.getNotification(music.getTitle(), music.getArtist(), R.drawable.moudle_mediaplayer_ic_music_default_cover);
+        Notification notification = notificationUtils.getNotification(music.getTitle(), music.getArtist(), R.drawable.module_mediaplayer_ic_music_default_cover);
         return notification;
     }
 
@@ -110,18 +110,18 @@ public class NotificationHelper {
         String subtitle = "";
         Bitmap cover = null;
 
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.moudle_mediaplayer_music_notification_player);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.module_mediaplayer_music_notification_player);
         if (cover != null) {
             remoteViews.setImageViewBitmap(R.id.iv_image, cover);
         } else {
-            remoteViews.setImageViewResource(R.id.iv_image, R.drawable.moudle_mediaplayer_ic_music_default_cover);
+            remoteViews.setImageViewResource(R.id.iv_image, R.drawable.module_mediaplayer_ic_music_default_cover);
         }
         remoteViews.setTextViewText(R.id.tv_title, title);
         remoteViews.setTextViewText(R.id.tv_artist, subtitle);
         if(isPlaying){
-            remoteViews.setImageViewResource(R.id.btn_start,R.drawable.moudle_mediaplayer_ic_music_notify_btn_dark_pause_normal);
+            remoteViews.setImageViewResource(R.id.btn_start,R.drawable.module_mediaplayer_ic_music_notify_btn_dark_pause_normal);
         }else {
-            remoteViews.setImageViewResource(R.id.btn_start,R.drawable.moudle_mediaplayer_ic_music_notify_btn_dark_play_normal);
+            remoteViews.setImageViewResource(R.id.btn_start,R.drawable.module_mediaplayer_ic_music_notify_btn_dark_play_normal);
         }
 
         // 设置 点击通知栏的上一首按钮时要执行的意图

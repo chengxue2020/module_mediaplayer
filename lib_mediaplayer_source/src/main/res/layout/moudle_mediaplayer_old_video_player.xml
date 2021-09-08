@@ -14,21 +14,21 @@
         android:scaleType="fitXY"
         android:visibility="visible"/>
     <!--加载动画view-->
-    <include layout="@layout/moudle_mediaplayer_video_loading"/>
+    <include layout="@layout/module_mediaplayer_video_loading"/>
     <!--改变播放位置-->
-    <include layout="@layout/moudle_mediaplayer_video_change_position"/>
+    <include layout="@layout/module_mediaplayer_video_change_position"/>
     <!--改变亮度-->
-    <include layout="@layout/moudle_mediaplayer_video_change_brightness"/>
+    <include layout="@layout/module_mediaplayer_video_change_brightness"/>
     <!--改变声音-->
-    <include layout="@layout/moudle_mediaplayer_video_change_volume"/>
+    <include layout="@layout/module_mediaplayer_video_change_volume"/>
     <!--播放完成，你也可以自定义-->
-    <include layout="@layout/moudle_mediaplayer_old_video_player_completed"/>
+    <include layout="@layout/module_mediaplayer_old_video_player_completed"/>
     <!--播放错误-->
-    <include layout="@layout/moudle_mediaplayer_old_video_player_error"/>
+    <include layout="@layout/module_mediaplayer_old_video_player_error"/>
     <!--顶部控制区-->
-    <include layout="@layout/moudle_mediaplayer_old_video_player_top"/>
+    <include layout="@layout/module_mediaplayer_old_video_player_top"/>
     <!--底部控制区-->
-    <include layout="@layout/moudle_mediaplayer_old_video_player_bottom"/>
+    <include layout="@layout/module_mediaplayer_old_video_player_bottom"/>
     <!--右下角初始显示的总时长-->
     <TextView
         android:id="@+id/length"
@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/moudle_mediaplayer_ic_player_center_start"
+        android:src="@drawable/module_mediaplayer_ic_player_center_start"
         android:visibility="visible"/>
     <!--锁屏布局，全屏时展示，其他隐藏-->
     <FrameLayout
@@ -61,17 +61,17 @@
         android:visibility="visible"
         android:layout_centerVertical="true"
         android:layout_marginStart="15dp"
-        android:background="@drawable/moudle_mediaplayer_shape_lock_bg"
+        android:background="@drawable/module_mediaplayer_shape_lock_bg"
         android:layout_marginLeft="15dp">
         <ImageView
             android:id="@+id/iv_lock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/moudle_mediaplayer_selector_lock_button"/>
+            android:src="@drawable/module_mediaplayer_selector_lock_button"/>
     </FrameLayout>
 
     <!--底部视频播放进度条-->
-    <include layout="@layout/moudle_mediaplayer_old_video_player_line"/>
+    <include layout="@layout/module_mediaplayer_old_video_player_line"/>
 
 </RelativeLayout>

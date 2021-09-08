@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/moudle_mediaplayer_ic_player_mask_top"
+        android:background="@drawable/module_mediaplayer_ic_player_mask_top"
         android:gravity="center_vertical"
         android:paddingTop="10dp"
         android:paddingStart="12dp"
@@ -20,7 +20,7 @@
             android:id="@+id/iv_stop_fullscreen"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@drawable/moudle_mediaplayer_ic_player_back"
+            android:background="@drawable/module_mediaplayer_ic_player_back"
             android:visibility="gone"
             tools:visibility="visible" />
     </LinearLayout>
@@ -47,13 +47,13 @@
                 android:layout_width="100dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:background="@drawable/moudle_mediaplayer_bg_retry"
+                android:background="@drawable/module_mediaplayer_bg_retry"
                 android:padding="10dp"
-                android:src="@drawable/moudle_mediaplayer_ic_player_replay" />
+                android:src="@drawable/module_mediaplayer_ic_player_replay" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/moudle_mediaplayer_string_replay"
+                android:text="@string/module_mediaplayer_string_replay"
                 android:layout_marginTop="12dp"
                 android:textColor="@android:color/white" />
         </LinearLayout>
@@ -74,13 +74,13 @@
 <!--                android:layout_width="100dp"-->
 <!--                android:layout_height="40dp"-->
 <!--                android:layout_gravity="center"-->
-<!--                android:background="@drawable/moudle_mediaplayer_bg_retry"-->
+<!--                android:background="@drawable/module_mediaplayer_bg_retry"-->
 <!--                android:padding="10dp"-->
-<!--                android:src="@drawable/moudle_mediaplayer_ic_palyer_share" />-->
+<!--                android:src="@drawable/module_mediaplayer_ic_palyer_share" />-->
 <!--            <TextView-->
 <!--                android:layout_width="wrap_content"-->
 <!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/moudle_mediaplayer_string_share"-->
+<!--                android:text="@string/module_mediaplayer_string_share"-->
 <!--                android:layout_marginTop="12dp"-->
 <!--                android:textColor="@android:color/white" />-->
 <!--        </LinearLayout>-->

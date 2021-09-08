@@ -11,14 +11,14 @@
         android:id="@+id/pb_loading_ring"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:indeterminateDrawable="@drawable/moudle_mediaplayer_pb_loading_ring"
+        android:indeterminateDrawable="@drawable/module_mediaplayer_pb_loading_ring"
         android:visibility="visible" />
     <ProgressBar
         android:id="@+id/pb_loading_qq"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:visibility="gone"
-        android:indeterminateDrawable="@drawable/moudle_mediaplayer_ic_pb_loading_bg"/>
+        android:indeterminateDrawable="@drawable/module_mediaplayer_ic_pb_loading_bg"/>
     <TextView
         android:id="@+id/load_text"
         android:layout_width="wrap_content"

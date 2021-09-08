@@ -74,7 +74,7 @@ public class CustomOncePlayView extends LinearLayout implements InterControlView
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.moudle_mediaplayer_video_once_live, this, true);
+                R.layout.module_mediaplayer_video_once_live, this, true);
         initFindViewById(view);
         initListener();
         setClickable(true);

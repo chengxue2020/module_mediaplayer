@@ -81,7 +81,7 @@ public class BasisVideoController extends GestureVideoController implements View
 
     @Override
     protected int getLayoutId() {
-        return R.layout.moudle_mediaplayer_video_standard;
+        return R.layout.module_mediaplayer_video_standard;
     }
 
     @Override
@@ -214,11 +214,11 @@ public class BasisVideoController extends GestureVideoController implements View
     protected void onLockStateChanged(boolean isLocked) {
         if (isLocked) {
             mLockButton.setSelected(true);
-            String string = mContext.getResources().getString(R.string.moudle_mediaplayer_string_locked);
+            String string = mContext.getResources().getString(R.string.module_mediaplayer_string_locked);
             BaseToast.showRoundRectToast(string);
         } else {
             mLockButton.setSelected(false);
-            String string = mContext.getResources().getString(R.string.moudle_mediaplayer_string_unlocked);
+            String string = mContext.getResources().getString(R.string.module_mediaplayer_string_unlocked);
             BaseToast.showRoundRectToast(string);
         }
     }
@@ -331,7 +331,7 @@ public class BasisVideoController extends GestureVideoController implements View
     public boolean onBackPressed() {
         if (isLocked()) {
             show();
-            String string = mContext.getResources().getString(R.string.moudle_mediaplayer_string_lock_tip);
+            String string = mContext.getResources().getString(R.string.module_mediaplayer_string_lock_tip);
             BaseToast.showRoundRectToast(string);
             return true;
         }

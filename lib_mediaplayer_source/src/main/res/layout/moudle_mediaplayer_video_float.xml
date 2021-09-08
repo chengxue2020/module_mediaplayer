@@ -10,14 +10,14 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:padding="10dp"
-        android:src="@drawable/moudle_mediaplayer_selector_play_button" />
+        android:src="@drawable/module_mediaplayer_selector_play_button" />
 
     <ProgressBar
         android:id="@+id/pb_loading"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/moudle_mediaplayer_pb_loading_ring"
+        android:indeterminateDrawable="@drawable/module_mediaplayer_pb_loading_ring"
         android:visibility="gone"
         tools:visibility="visible" />
     <ImageView
@@ -26,13 +26,13 @@
         android:layout_height="20dp"
         android:layout_gravity="end"
         android:layout_margin="4dp"
-        android:src="@drawable/moudle_mediaplayer_ic_back_close" />
+        android:src="@drawable/module_mediaplayer_ic_back_close" />
     <ImageView
         android:id="@+id/iv_skip"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_margin="4dp"
-        android:src="@drawable/moudle_mediaplayer_ic_player_open" />
+        android:src="@drawable/module_mediaplayer_ic_player_open" />
 
     <ProgressBar
         android:id="@+id/pb_bottom_progress"
@@ -41,7 +41,7 @@
         android:layout_height="2dp"
         android:layout_gravity="bottom"
         android:max="1000"
-        android:progressDrawable="@drawable/moudle_mediaplayer_progress_bar_style"
+        android:progressDrawable="@drawable/module_mediaplayer_progress_bar_style"
         android:visibility="visible" />
 
 </FrameLayout>

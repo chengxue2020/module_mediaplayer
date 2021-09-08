@@ -13,7 +13,7 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:gravity="center_vertical"
-        android:background="@drawable/moudle_mediaplayer_ic_player_mask_bottom"
+        android:background="@drawable/module_mediaplayer_ic_player_mask_bottom"
         android:orientation="horizontal">
 
         <ImageView
@@ -21,14 +21,14 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:padding="12dp"
-            android:src="@drawable/moudle_mediaplayer_selector_bot_play_button" />
+            android:src="@drawable/module_mediaplayer_selector_bot_play_button" />
 
         <ImageView
             android:id="@+id/iv_refresh"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:padding="12dp"
-            android:src="@drawable/moudle_mediaplayer_ic_action_refresh" />
+            android:src="@drawable/module_mediaplayer_ic_action_refresh" />
 
         <Space
             android:layout_width="0dp"
@@ -40,7 +40,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:padding="12dp"
-            android:src="@drawable/moudle_mediaplayer_selector_full_screen_button"/>
+            android:src="@drawable/module_mediaplayer_selector_full_screen_button"/>
     </LinearLayout>
 
 </FrameLayout>

@@ -1,5 +1,4 @@
 include ':app'
-
 include ':lib_exoplayer_source_r2.15.0'
 include ':lib_exoplayer_source_r2.15.0_mediiaplayer_aar'
 
@@ -11,16 +10,16 @@ include ':lib_exoplayer_source_r2.15.0_mediiaplayer_aar'
 //include ':lib_mediaplayer_source'
 
 //// 视频m3u8下载和合成
-//include ':lib_mediaplayer_videom3u8'
+//include ':module_mediaplayer_videom3u8'
 //// 音频
-//include ':lib_mediaplayer_musickernel'
+//include ':module_mediaplayer_musickernel'
 //// 视频悬浮
-//include ':lib_mediaplayer_videofloat'
+//include ':module_mediaplayer_videofloat'
 //// 视频内核
-//include ':lib_mediaplayer_videokernel'
+//include ':module_mediaplayer_videokernel'
 //// 视频缓存
-//include ':lib_mediaplayer_videocache'
+//include ':module_mediaplayer_videocache'
 //// 视频缓存DB
-//include ':lib_mediaplayer_videodb'
+//include ':module_mediaplayer_videodb'
 //// 视频UI
-//include ':lib_mediaplayer_videoui'
+//include ':module_mediaplayer_videoui'

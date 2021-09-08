@@ -74,7 +74,7 @@ public class CustomFloatView extends FrameLayout implements InterControlView, Vi
     private void init(Context context){
         this.mContext = context;
         View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.moudle_mediaplayer_video_float, this, true);
+                R.layout.module_mediaplayer_video_float, this, true);
         initFindViewById(view);
         initListener();
         //5.1以下系统SeekBar高度需要设置成WRAP_CONTENT

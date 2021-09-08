@@ -12,7 +12,7 @@
         android:id="@+id/iv_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/moudle_mediaplayer_ic_music_default_cover"
+        android:src="@drawable/module_mediaplayer_ic_music_default_cover"
         android:scaleType="fitXY"/>
 
     <LinearLayout
@@ -45,7 +45,7 @@
     <ImageView
         android:layout_width="45dp"
         android:layout_height="60dp"
-        android:src="@drawable/moudle_mediaplayer_ic_music_notify_btn_dark_prev_normal"
+        android:src="@drawable/module_mediaplayer_ic_music_notify_btn_dark_prev_normal"
         android:id="@+id/btn_pre" />
 
     <ImageView
@@ -53,14 +53,14 @@
         android:layout_height="60dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:src="@drawable/moudle_mediaplayer_ic_music_notify_btn_dark_pause_normal"
+        android:src="@drawable/module_mediaplayer_ic_music_notify_btn_dark_pause_normal"
         android:id="@+id/btn_start" />
 
     <ImageView
         android:layout_width="45dp"
         android:layout_height="60dp"
         android:layout_marginEnd="5dp"
-        android:src="@drawable/moudle_mediaplayer_ic_music_notify_btn_dark_next_normal"
+        android:src="@drawable/module_mediaplayer_ic_music_notify_btn_dark_next_normal"
         android:id="@+id/btn_next" />
 
 </LinearLayout>

@@ -251,7 +251,7 @@ public final class BaseToast {
             toast.setDuration(duration);
             toast.setMargin(0, 0);
             if (layout == 0) {
-                RelativeLayout rootView = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.moudle_mediaplayer_toast_view, null);
+                RelativeLayout rootView = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_toast_view, null);
                 TextView textView = rootView.findViewById(R.id.toastTextView);
                 TextView descTv = rootView.findViewById(R.id.desc);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

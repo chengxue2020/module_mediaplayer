@@ -10,7 +10,7 @@
         android:id="@+id/ll_title_container"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/moudle_mediaplayer_ic_player_mask_top"
+        android:background="@drawable/module_mediaplayer_ic_player_mask_top"
         android:gravity="center_vertical"
         android:paddingTop="10dp"
         android:paddingStart="12dp"
@@ -21,7 +21,7 @@
             android:id="@+id/iv_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@drawable/moudle_mediaplayer_ic_player_back"
+            android:background="@drawable/module_mediaplayer_ic_player_back"
             android:visibility="visible"/>
 
         <TextView
@@ -42,7 +42,7 @@
             android:id="@+id/iv_battery"
             android:layout_width="26dp"
             android:layout_height="20dp"
-            android:src="@drawable/moudle_mediaplayer_ic_battery_100" />
+            android:src="@drawable/module_mediaplayer_ic_battery_100" />
 
         <TextView
             android:id="@+id/tv_sys_time"

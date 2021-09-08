@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_selected="true"
-        android:drawable="@drawable/moudle_mediaplayer_ic_player_close"/>
-    <item android:drawable="@drawable/moudle_mediaplayer_ic_player_open"/>
+        android:drawable="@drawable/module_mediaplayer_ic_player_close"/>
+    <item android:drawable="@drawable/module_mediaplayer_ic_player_open"/>
 
 </selector>

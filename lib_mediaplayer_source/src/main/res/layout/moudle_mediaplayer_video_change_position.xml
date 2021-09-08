@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
-    android:background="@drawable/moudle_mediaplayer_bg_radius_4"
+    android:background="@drawable/module_mediaplayer_bg_radius_4"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="8dp"
@@ -25,5 +25,5 @@
         android:layout_marginBottom="4dp"
         android:layout_marginTop="8dp"
         android:max="100"
-        android:progressDrawable="@drawable/moudle_mediaplayer_pb_change"/>
+        android:progressDrawable="@drawable/module_mediaplayer_pb_change"/>
 </LinearLayout>

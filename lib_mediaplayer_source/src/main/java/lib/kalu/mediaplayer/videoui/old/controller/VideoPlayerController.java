@@ -306,7 +306,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
      * 初始化操作
      */
     private void init() {
-        LayoutInflater.from(mContext).inflate(R.layout.moudle_mediaplayer_old_video_player, this, true);
+        LayoutInflater.from(mContext).inflate(R.layout.module_mediaplayer_old_video_player, this, true);
         initFindViewById();
         initListener();
         registerNetChangedReceiver();
@@ -709,8 +709,8 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
     private void statePlaying() {
         mLoading.setVisibility(GONE);
         mPbPlayBar.setVisibility(VISIBLE);
-        mRestartPause.setImageResource(R.drawable.moudle_mediaplayer_ic_player_pause);
-        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_ic_pause_center);
+        mRestartPause.setImageResource(R.drawable.module_mediaplayer_ic_player_pause);
+        mCenterStart.setImageResource(R.drawable.module_mediaplayer_ic_pause_center);
         setTopBottomVisible(true);
         startDismissTopBottomTimer();
         cancelUpdateNetSpeedTimer();
@@ -721,8 +721,8 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
      */
     private void statePaused() {
         mLoading.setVisibility(GONE);
-        mRestartPause.setImageResource(R.drawable.moudle_mediaplayer_ic_player_start);
-        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_ic_play_center);
+        mRestartPause.setImageResource(R.drawable.module_mediaplayer_ic_player_start);
+        mCenterStart.setImageResource(R.drawable.module_mediaplayer_ic_play_center);
         setTopBottomVisible(true);
         cancelDismissTopBottomTimer();
         cancelUpdateNetSpeedTimer();
@@ -734,8 +734,8 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
     private void stateBufferingPlaying() {
         mLoading.setVisibility(VISIBLE);
         setTopBottomVisible(false);
-        mRestartPause.setImageResource(R.drawable.moudle_mediaplayer_ic_player_pause);
-        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_ic_pause_center);
+        mRestartPause.setImageResource(R.drawable.module_mediaplayer_ic_player_pause);
+        mCenterStart.setImageResource(R.drawable.module_mediaplayer_ic_pause_center);
         mLoadText.setText("正在准备...");
         startDismissTopBottomTimer();
         cancelUpdateNetSpeedTimer();
@@ -746,8 +746,8 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
      */
     private void stateBufferingPaused() {
         mLoading.setVisibility(VISIBLE);
-        mRestartPause.setImageResource(R.drawable.moudle_mediaplayer_ic_player_start);
-        mCenterStart.setImageResource(R.drawable.moudle_mediaplayer_ic_play_center);
+        mRestartPause.setImageResource(R.drawable.module_mediaplayer_ic_player_start);
+        mCenterStart.setImageResource(R.drawable.module_mediaplayer_ic_play_center);
         mLoadText.setText("正在准备...");
         setTopBottomVisible(false);
         cancelDismissTopBottomTimer();
@@ -801,7 +801,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
             case ConstantKeys.PlayMode.MODE_NORMAL:
                 //隐藏锁屏控件
                 mFlLock.setVisibility(GONE);
-                mFullScreen.setImageResource(R.drawable.moudle_mediaplayer_ic_player_open);
+                mFullScreen.setImageResource(R.drawable.module_mediaplayer_ic_player_open);
                 mFullScreen.setVisibility(VISIBLE);
                 //隐藏清晰度
                 mClarity.setVisibility(GONE);
@@ -822,7 +822,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
             case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
                 mFlLock.setVisibility(VISIBLE);
                 mFullScreen.setVisibility(VISIBLE);
-                mFullScreen.setImageResource(R.drawable.moudle_mediaplayer_ic_player_close);
+                mFullScreen.setImageResource(R.drawable.module_mediaplayer_ic_player_close);
                 if (clarities != null && clarities.size() > 1) {
                     mClarity.setVisibility(VISIBLE);
                 }
@@ -839,7 +839,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
             //小窗口模式
             case ConstantKeys.PlayMode.MODE_TINY_WINDOW:
                 mFlLock.setVisibility(GONE);
-                mFullScreen.setImageResource(R.drawable.moudle_mediaplayer_ic_player_open);
+                mFullScreen.setImageResource(R.drawable.module_mediaplayer_ic_player_open);
                 mFullScreen.setVisibility(VISIBLE);
                 mIsLock = false;
                 if (mOnPlayerTypeListener!=null){
@@ -934,7 +934,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
             if (mVideoPlayer.isNormal() || mVideoPlayer.isTinyWindow()) {
                 mFlLock.setVisibility(VISIBLE);
                 mIsLock = false;
-                mIvLock.setImageResource(R.drawable.moudle_mediaplayer_ic_player_lock_close);
+                mIvLock.setImageResource(R.drawable.module_mediaplayer_ic_player_lock_close);
                 mVideoPlayer.enterFullScreen();
             } else if (mVideoPlayer.isFullScreen()) {
                 mFlLock.setVisibility(GONE);
@@ -1050,25 +1050,25 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
     public void onBatterStateChanged(@ConstantKeys.BatterMode int batterState) {
         switch (batterState){
             case ConstantKeys.BatterMode.BATTERY_10:
-                mBattery.setImageResource(R.drawable.moudle_mediaplayer_ic_battery_10);
+                mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_10);
                 break;
             case ConstantKeys.BatterMode.BATTERY_20:
-                mBattery.setImageResource(R.drawable.moudle_mediaplayer_ic_battery_20);
+                mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_20);
                 break;
             case ConstantKeys.BatterMode.BATTERY_50:
-                mBattery.setImageResource(R.drawable.moudle_mediaplayer_ic_battery_50);
+                mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_50);
                 break;
             case ConstantKeys.BatterMode.BATTERY_80:
-                mBattery.setImageResource(R.drawable.moudle_mediaplayer_ic_battery_80);
+                mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_80);
                 break;
             case ConstantKeys.BatterMode.BATTERY_100:
-                mBattery.setImageResource(R.drawable.moudle_mediaplayer_ic_battery_100);
+                mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_100);
                 break;
             case ConstantKeys.BatterMode.BATTERY_FULL:
-                mBattery.setImageResource(R.drawable.moudle_mediaplayer_ic_battery_full);
+                mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_full);
                 break;
             case ConstantKeys.BatterMode.BATTERY_CHARGING:
-                mBattery.setImageResource(R.drawable.moudle_mediaplayer_ic_battery_charging);
+                mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_charging);
                 break;
             default:
                 break;
@@ -1148,10 +1148,10 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
     private void setLock(boolean isLock){
         if(isLock){
             mIsLock = false;
-            mIvLock.setImageResource(R.drawable.moudle_mediaplayer_ic_player_lock_open);
+            mIvLock.setImageResource(R.drawable.module_mediaplayer_ic_player_lock_open);
         }else {
             mIsLock = true;
-            mIvLock.setImageResource(R.drawable.moudle_mediaplayer_ic_player_lock_close);
+            mIvLock.setImageResource(R.drawable.module_mediaplayer_ic_player_lock_close);
         }
         /*
          * 设置锁屏时的布局
