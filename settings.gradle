@@ -1,8 +1,15 @@
 include ':app'
-// source
+
+include ':lib_exoplayer_source_r2.15.0'
+include ':lib_exoplayer_source_r2.15.0_mediiaplayer_aar'
+
+// r2.14.0
 //include ':lib_exoplayer_source_r2.14.0'
-// All
-include ':lib_mediaplayer_aar'
+//include ':lib_exoplayer_source_r2.14.0_mediiaplayer_aar'
+
+// mediaplayer_source
+//include ':lib_mediaplayer_source'
+
 //// 视频m3u8下载和合成
 //include ':lib_mediaplayer_videom3u8'
 //// 音频
