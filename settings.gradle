@@ -7,7 +7,7 @@ include ':lib_exoplayer_source_r2.15.0_mediiaplayer_aar'
 //include ':lib_exoplayer_source_r2.14.0_mediiaplayer_aar'
 
 // mediaplayer_source
-//include ':lib_mediaplayer_source'
+include ':lib_mediaplayer_source'
 
 //// 视频m3u8下载和合成
 //include ':module_mediaplayer_videom3u8'

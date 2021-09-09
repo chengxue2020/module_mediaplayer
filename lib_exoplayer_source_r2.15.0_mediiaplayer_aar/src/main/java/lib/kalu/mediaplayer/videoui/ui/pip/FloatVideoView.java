@@ -57,7 +57,7 @@ public class FloatVideoView extends FrameLayout{
 
 
     private void init() {
-        setBackgroundResource(R.drawable.moudle_mediaplayer_shape_float_window_bg);
+        setBackgroundResource(R.drawable.module_mediaplayer_shape_float_window_bg);
         int padding = PlayerUtils.dp2px(getContext(), 1);
         setPadding(padding, padding, padding, padding);
         initWindow();

@@ -22,7 +22,7 @@
             android:layout_height="45dp"
             android:contentDescription="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/moudle_mediaplayer_ic_music_default_cover" />
+            android:src="@drawable/module_mediaplayer_ic_music_default_cover" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -81,5 +81,5 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_gravity="top"
-        android:progressDrawable="@drawable/moudle_mediaplayer_progress_bar_style" />
+        android:progressDrawable="@drawable/module_mediaplayer_progress_bar_style" />
 </FrameLayout>

@@ -50,17 +50,17 @@ public final class PlayerFactoryUtils {
      * @param type                              类型
      * @return
      */
-    public static VideoPlayerImpl getVideoPlayer(Context context, @PlayerConstant.PlayerType int type){
+    public static VideoPlayerImpl getVideoPlayer(@PlayerConstant.PlayerType int type){
         if (type == PlayerConstant.PlayerType.TYPE_EXO){
-            return ExoPlayerFactory.create().createPlayer(context);
+            return ExoPlayerFactory.create().createPlayer();
         } else if (type == PlayerConstant.PlayerType.TYPE_IJK){
-            return IjkPlayerFactory.create().createPlayer(context);
+            return IjkPlayerFactory.create().createPlayer();
         } else if (type == PlayerConstant.PlayerType.TYPE_NATIVE){
-            return MediaPlayerFactory.create().createPlayer(context);
+            return MediaPlayerFactory.create().createPlayer();
         } else if (type == PlayerConstant.PlayerType.TYPE_RTC){
-            return IjkPlayerFactory.create().createPlayer(context);
+            return IjkPlayerFactory.create().createPlayer();
         } else {
-            return IjkPlayerFactory.create().createPlayer(context);
+            return IjkPlayerFactory.create().createPlayer();
         }
     }
 

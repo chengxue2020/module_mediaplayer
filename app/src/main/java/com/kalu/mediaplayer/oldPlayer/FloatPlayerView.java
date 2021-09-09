@@ -51,7 +51,7 @@ public class FloatPlayerView extends FrameLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view ;
         if (inflater != null) {
-            view = inflater.inflate(R.layout.moudle_mediaplayer_old_view_window_dialog, this);
+            view = inflater.inflate(R.layout.module_mediaplayer_old_view_window_dialog, this);
             mVideoPlayer = view.findViewById(R.id.video_player);
             mVideoPlayer.setUp(path,null);
             mVideoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);

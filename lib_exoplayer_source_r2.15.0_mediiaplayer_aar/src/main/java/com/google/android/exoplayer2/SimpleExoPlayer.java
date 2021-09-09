@@ -93,8 +93,7 @@ import lib.kalu.mediaplayer.videokernel.platfrom.PlatfromPlayer;
  * An {@link ExoPlayer} implementation that uses default {@link Renderer} components. Instances can
  * be obtained from {@link SimpleExoPlayer.Builder}.
  */
-public class SimpleExoPlayer extends BasePlayer
-    implements PlatfromPlayer, ExoPlayer,
+public class SimpleExoPlayer extends BasePlayer implements PlatfromPlayer, ExoPlayer,
         ExoPlayer.AudioComponent,
         ExoPlayer.VideoComponent,
         ExoPlayer.TextComponent,

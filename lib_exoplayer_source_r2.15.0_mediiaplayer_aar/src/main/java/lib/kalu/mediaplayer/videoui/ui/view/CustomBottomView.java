@@ -126,7 +126,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
     }
 
     protected int getLayoutId() {
-        return R.layout.moudle_mediaplayer_video_bottom;
+        return R.layout.module_mediaplayer_video_bottom;
     }
 
     /**

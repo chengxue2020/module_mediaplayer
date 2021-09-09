@@ -15,8 +15,6 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.videokernel.platfrom.media;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -28,8 +26,8 @@ import android.view.SurfaceHolder;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 import lib.kalu.mediaplayer.videokernel.core.VideoPlayerCore;
-import lib.kalu.mediaplayer.videokernel.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
 
 import java.util.Map;
@@ -45,19 +43,13 @@ import java.util.Map;
  * </pre>
  */
 @Keep
-public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
+public class AndroidMediaPlayer extends VideoPlayerCore {
 
     protected MediaPlayer mMediaPlayer;
     private int mBufferedPercent;
-    private Context mAppContext;
     private boolean mIsPreparing;
 
-    public AndroidMediaPlayer(Context context) {
-        if (context instanceof Application) {
-            mAppContext = context;
-        } else {
-            mAppContext = context.getApplicationContext();
-        }
+    public AndroidMediaPlayer() {
     }
 
     @NonNull
@@ -103,7 +95,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         }
         try {
             Uri uri = Uri.parse(path);
-            mMediaPlayer.setDataSource(mAppContext, uri, headers);
+            mMediaPlayer.setDataSource(ContentProviderMediaplayer.getContextWeakReference(), uri, headers);
         } catch (Exception e) {
             getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_PARSE, e.getMessage());
         }

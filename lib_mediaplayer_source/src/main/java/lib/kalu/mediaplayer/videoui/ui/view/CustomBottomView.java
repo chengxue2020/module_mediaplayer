@@ -55,8 +55,7 @@ import lib.kalu.mediaplayer.R;
  * </pre>
  */
 @Keep
-public class CustomBottomView extends FrameLayout implements InterControlView,
-        View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class CustomBottomView extends FrameLayout implements InterControlView, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private Context mContext;
     protected ControlWrapper mControlWrapper;
@@ -86,7 +85,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
         init(context);
     }
 
-    private void init(Context context){
+    private void init(Context context) {
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(getLayoutId(), this, true);
@@ -275,26 +274,26 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
             }
         }
 
-        if (mTvTotalTime != null){
+        if (mTvTotalTime != null) {
             mTvTotalTime.setText(PlayerUtils.formatTime(duration));
         }
-        if (mTvCurrTime != null){
+        if (mTvCurrTime != null) {
             mTvCurrTime.setText(PlayerUtils.formatTime(position));
         }
 
 
-        if (VideoPlayerConfig.newBuilder().build().mIsShowToast){
+        if (VideoPlayerConfig.newBuilder().build().mIsShowToast) {
             long time = VideoPlayerConfig.newBuilder().build().mShowToastTime;
-            if (time<=0){
+            if (time <= 0) {
                 time = 5;
             }
             long currentPosition = mControlWrapper.getCurrentPosition();
-            Log.d("progress---","duration---"+duration+"--currentPosition--"+currentPosition);
-            if (duration - currentPosition <  2 * time * 1000){
+            Log.d("progress---", "duration---" + duration + "--currentPosition--" + currentPosition);
+            if (duration - currentPosition < 2 * time * 1000) {
                 //当前视频播放到最后3s时，弹出toast提示：即将自动为您播放下一个视频。
-                if ((duration-currentPosition) / 1000 % 60 == time){
-                    Log.d("progress---","即将自动为您播放下一个视频");
-                    if (listener!= null){
+                if ((duration - currentPosition) / 1000 % 60 == time) {
+                    Log.d("progress---", "即将自动为您播放下一个视频");
+                    if (listener != null) {
                         listener.showToastOrDialog();
                     }
                 }
@@ -340,7 +339,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
         }
         long duration = mControlWrapper.getDuration();
         long newPosition = (duration * progress) / mPbBottomProgress.getMax();
-        if (mTvCurrTime != null){
+        if (mTvCurrTime != null) {
             mTvCurrTime.setText(PlayerUtils.formatTime(newPosition));
         }
     }
@@ -351,7 +350,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
         this.listener = listener;
     }
 
-    public interface OnToastListener{
+    public interface OnToastListener {
         void showToastOrDialog();
     }
 

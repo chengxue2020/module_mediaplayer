@@ -76,7 +76,7 @@ public class CustomCompleteView extends FrameLayout implements InterControlView,
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(mContext).inflate(
-                R.layout.moudle_mediaplayer_video_completed, this, true);
+                R.layout.module_mediaplayer_video_completed, this, true);
         initFindViewById(view);
         initListener();
         setClickable(true);

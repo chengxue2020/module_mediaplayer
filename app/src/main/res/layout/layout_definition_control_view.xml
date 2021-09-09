@@ -11,7 +11,7 @@
         android:layout_height="45dp"
         android:layout_gravity="bottom"
         android:gravity="center_vertical"
-        android:background="@drawable/moudle_mediaplayer_ic_player_mask_bottom"
+        android:background="@drawable/module_mediaplayer_ic_player_mask_bottom"
         android:orientation="horizontal">
 
         <ImageView
@@ -19,7 +19,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:padding="12dp"
-            android:src="@drawable/moudle_mediaplayer_selector_bot_play_button" />
+            android:src="@drawable/module_mediaplayer_selector_bot_play_button" />
 
         <TextView
             android:id="@+id/tv_curr_time"
@@ -43,8 +43,8 @@
             android:minHeight="2dp"
             android:paddingEnd="0dp"
             android:paddingStart="0dp"
-            android:progressDrawable="@drawable/moudle_mediaplayer_seek_progress"
-            android:thumb="@drawable/moudle_mediaplayer_seek_thumb"
+            android:progressDrawable="@drawable/module_mediaplayer_seek_progress"
+            android:thumb="@drawable/module_mediaplayer_seek_thumb"
             android:thumbOffset="0dp" />
 
         <TextView
@@ -74,7 +74,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:padding="12dp"
-            android:src="@drawable/moudle_mediaplayer_selector_full_screen_button" />
+            android:src="@drawable/module_mediaplayer_selector_full_screen_button" />
     </LinearLayout>
 
     <ProgressBar
@@ -84,7 +84,7 @@
         android:layout_height="2dp"
         android:layout_gravity="bottom"
         android:max="1000"
-        android:progressDrawable="@drawable/moudle_mediaplayer_progress_bar_style"
+        android:progressDrawable="@drawable/module_mediaplayer_progress_bar_style"
         android:visibility="gone" />
 
 </FrameLayout>

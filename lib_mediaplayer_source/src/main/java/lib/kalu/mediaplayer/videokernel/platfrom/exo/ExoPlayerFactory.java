@@ -23,7 +23,7 @@ public class ExoPlayerFactory extends PlayerFactory<ExoMediaPlayer> {
     }
 
     @Override
-    public ExoMediaPlayer createPlayer(Context context) {
-        return new ExoMediaPlayer(context);
+    public ExoMediaPlayer createPlayer() {
+        return new ExoMediaPlayer();
     }
 }

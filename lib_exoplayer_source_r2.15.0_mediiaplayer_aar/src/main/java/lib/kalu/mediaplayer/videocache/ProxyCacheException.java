@@ -5,7 +5,7 @@ package lib.kalu.mediaplayer.videocache;
  */
 public class ProxyCacheException extends Exception {
 
-    private static final String LIBRARY_VERSION = ". Version: moudle_mediaplayer_videocache";
+    private static final String LIBRARY_VERSION = ". Version: module_mediaplayer_videocache";
 
     public ProxyCacheException(String message) {
         super(message + LIBRARY_VERSION);

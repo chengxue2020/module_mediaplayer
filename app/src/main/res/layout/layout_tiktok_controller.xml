@@ -16,7 +16,7 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:padding="10dp"
-        android:src="@drawable/moudle_mediaplayer_selector_play_button"
+        android:src="@drawable/module_mediaplayer_selector_play_button"
         android:visibility="gone"
         tools:visibility="visible"/>
 

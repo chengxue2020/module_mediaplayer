@@ -343,7 +343,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     protected void initPlayer() {
         //通过工厂模式创建对象
-        mMediaPlayer = mPlayerFactory.createPlayer(getContext().getApplicationContext());
+        mMediaPlayer = mPlayerFactory.createPlayer();
         mMediaPlayer.setOnVideoPlayerChangeListener(this);
         setInitOptions();
         mMediaPlayer.initPlayer();

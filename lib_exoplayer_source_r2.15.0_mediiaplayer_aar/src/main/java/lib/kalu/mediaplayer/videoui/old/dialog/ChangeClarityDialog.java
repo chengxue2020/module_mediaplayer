@@ -100,7 +100,7 @@ public class ChangeClarityDialog extends Dialog {
         mCurrentCheckedIndex = defaultChecked;
         for (int i = 0; i < items.size(); i++) {
             TextView itemView = (TextView) LayoutInflater.from(getContext())
-                    .inflate(R.layout.moudle_mediaplayer_old_video_clarity, mLinearLayout, false);
+                    .inflate(R.layout.module_mediaplayer_old_video_clarity, mLinearLayout, false);
             itemView.setTag(i);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

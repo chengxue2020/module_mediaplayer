@@ -39,7 +39,7 @@ public class MediaPlayerFactory extends PlayerFactory<AndroidMediaPlayer> {
     }
 
     @Override
-    public AndroidMediaPlayer createPlayer(Context context) {
-        return new AndroidMediaPlayer(context);
+    public AndroidMediaPlayer createPlayer() {
+        return new AndroidMediaPlayer();
     }
 }

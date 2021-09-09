@@ -72,7 +72,7 @@ public class CustomLiveControlView extends FrameLayout implements InterControlVi
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.moudle_mediaplayer_video_live, this, true);
+                R.layout.module_mediaplayer_video_live, this, true);
         initFindViewById(view);
         initListener();
     }

@@ -27,7 +27,7 @@ android {
         variant.outputs.all {
             def type = new String(buildType.name).toLowerCase()
             def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
-            outputFileName = "lib_mediaplayer_r2.14.0_" + type + "_" + time + ".aar"
+            outputFileName = "lib_mediaplayer_source_" + type + "_" + time + ".aar"
         }
     }
 

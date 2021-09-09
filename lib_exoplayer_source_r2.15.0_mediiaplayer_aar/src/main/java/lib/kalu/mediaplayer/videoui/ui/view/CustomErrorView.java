@@ -78,7 +78,7 @@ public class CustomErrorView extends LinearLayout implements InterControlView, V
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.moudle_mediaplayer_video_error, this, true);
+                R.layout.module_mediaplayer_video_error, this, true);
         initFindViewById(view);
         initListener();
         setClickable(true);

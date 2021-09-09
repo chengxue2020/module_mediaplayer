@@ -26,8 +26,8 @@ import lib.kalu.mediaplayer.ExoplayerActivity;
 import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
 import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoMediaPlayer;
 import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoPlayerFactory;
+import lib.kalu.mediaplayer.videokernel.platfrom.ijk.IjkMediaPlayer;
 import lib.kalu.mediaplayer.videokernel.platfrom.ijk.IjkPlayerFactory;
-import lib.kalu.mediaplayer.videokernel.platfrom.ijk.IjkVideoPlayer;
 import lib.kalu.mediaplayer.videokernel.platfrom.media.AndroidMediaPlayer;
 import lib.kalu.mediaplayer.videokernel.platfrom.media.MediaPlayerFactory;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
@@ -229,17 +229,17 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
             switch (type) {
                 case ConstantKeys.VideoPlayerType.TYPE_IJK:
                     playerFactory = IjkPlayerFactory.create();
-                    IjkVideoPlayer ijkVideoPlayer = (IjkVideoPlayer) playerFactory.createPlayer(this);
+                    IjkMediaPlayer ijkVideoPlayer = (IjkMediaPlayer) playerFactory.createPlayer();
                     mTvTitle.setText("视频内核：" + " (IjkPlayer)");
                     break;
                 case ConstantKeys.VideoPlayerType.TYPE_EXO:
                     playerFactory = ExoPlayerFactory.create();
-                    ExoMediaPlayer exoMediaPlayer = (ExoMediaPlayer) playerFactory.createPlayer(this);
+                    ExoMediaPlayer exoMediaPlayer = (ExoMediaPlayer) playerFactory.createPlayer();
                     mTvTitle.setText("视频内核：" + " (ExoPlayer)");
                     break;
                 case ConstantKeys.VideoPlayerType.TYPE_NATIVE:
                     playerFactory = MediaPlayerFactory.create();
-                    AndroidMediaPlayer androidMediaPlayer = (AndroidMediaPlayer) playerFactory.createPlayer(this);
+                    AndroidMediaPlayer androidMediaPlayer = (AndroidMediaPlayer) playerFactory.createPlayer();
                     mTvTitle.setText("视频内核：" + " (MediaPlayer)");
                     break;
                 case ConstantKeys.VideoPlayerType.TYPE_RTC:

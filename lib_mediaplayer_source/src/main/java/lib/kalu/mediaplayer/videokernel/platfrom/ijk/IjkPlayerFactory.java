@@ -31,14 +31,14 @@ import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
  * </pre>
  */
 @Keep
-public class IjkPlayerFactory extends PlayerFactory<IjkVideoPlayer> {
+public class IjkPlayerFactory extends PlayerFactory<IjkMediaPlayer> {
 
     public static IjkPlayerFactory create() {
         return new IjkPlayerFactory();
     }
 
     @Override
-    public IjkVideoPlayer createPlayer(Context context) {
-        return new IjkVideoPlayer(context);
+    public IjkMediaPlayer createPlayer() {
+        return new IjkMediaPlayer();
     }
 }

@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.RenderersFactory;
@@ -53,7 +54,6 @@ import static com.google.android.exoplayer2.ExoPlaybackException.TYPE_SOURCE;
 @Keep
 public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
 
-    protected Context mAppContext;
     protected SimpleExoPlayer mInternalPlayer;
     protected MediaSource mMediaSource;
     protected ExoMediaSourceHelper mMediaSourceHelper;
@@ -67,12 +67,8 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     private RenderersFactory mRenderersFactory;
     private TrackSelector mTrackSelector;
 
-    public ExoMediaPlayer(Context context) {
-        if (context instanceof Application) {
-            mAppContext = context;
-        } else {
-            mAppContext = context.getApplicationContext();
-        }
+    public ExoMediaPlayer() {
+        Context context = ContentProviderMediaplayer.getContextWeakReference();
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
     }
 
@@ -85,13 +81,14 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     @Override
     public void initPlayer() {
         //创建exo播放器
+        Context context = ContentProviderMediaplayer.getContextWeakReference();
         mInternalPlayer = new SimpleExoPlayer.Builder(
-                mAppContext,
-                mRenderersFactory == null ? mRenderersFactory = new DefaultRenderersFactory(mAppContext) : mRenderersFactory,
-                mTrackSelector == null ? mTrackSelector = new DefaultTrackSelector(mAppContext) : mTrackSelector,
-                new DefaultMediaSourceFactory(mAppContext),
+                context,
+                mRenderersFactory == null ? mRenderersFactory = new DefaultRenderersFactory(context) : mRenderersFactory,
+                mTrackSelector == null ? mTrackSelector = new DefaultTrackSelector(context) : mTrackSelector,
+                new DefaultMediaSourceFactory(context),
                 mLoadControl == null ? mLoadControl = new DefaultLoadControl() : mLoadControl,
-                DefaultBandwidthMeter.getSingletonInstance(mAppContext),
+                DefaultBandwidthMeter.getSingletonInstance(context),
                 new AnalyticsCollector(Clock.DEFAULT))
                 .build();
         setOptions();
@@ -436,10 +433,9 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
         }
     }
 
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
+    public void onPlayerError(PlaybackException error) {
         if (getVideoPlayerChangeListener() != null) {
-            int type = error.type;
+            int type = ((ExoPlaybackException) error).type;
             if (type == TYPE_SOURCE) {
                 //错误的链接
                 getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_SOURCE, error.getMessage());

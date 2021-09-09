@@ -50,6 +50,6 @@ public final class LogUtil {
         if (null == message || message.length() == 0)
             return;
 
-        Log.e("moudle_mediaplayer", message, throwable);
+        Log.e("module_mediaplayer", message, throwable);
     }
 }

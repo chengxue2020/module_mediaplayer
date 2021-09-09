@@ -29,6 +29,6 @@ public abstract class PlayerFactory<T extends VideoPlayerImpl> {
      * @param context 上下文
      * @return 具体的player
      */
-    public abstract T createPlayer(Context context);
+    public abstract T createPlayer();
 
 }

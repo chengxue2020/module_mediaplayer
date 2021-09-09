@@ -33,7 +33,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@drawable/btn_action_bg_selector"
                 android:scaleType="centerInside"
-                android:src="@drawable/moudle_mediaplayer_ic_back_close" />
+                android:src="@drawable/module_mediaplayer_ic_back_close" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -68,7 +68,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@drawable/btn_action_bg_selector"
                 android:scaleType="centerInside"
-                android:src="@drawable/moudle_mediaplayer_ic_player_share" />
+                android:src="@drawable/module_mediaplayer_ic_player_share" />
         </LinearLayout>
 
         <View

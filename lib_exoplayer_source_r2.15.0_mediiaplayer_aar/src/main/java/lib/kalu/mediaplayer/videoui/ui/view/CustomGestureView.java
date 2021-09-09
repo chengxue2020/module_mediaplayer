@@ -78,7 +78,7 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(mContext).inflate(
-                R.layout.moudle_mediaplayer_video_gesture, this, true);
+                R.layout.module_mediaplayer_video_gesture, this, true);
         initFindViewById(view);
         initListener();
     }
@@ -155,9 +155,9 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
     public void onPositionChange(int slidePosition, int currentPosition, int duration) {
         mProPercent.setVisibility(GONE);
         if (slidePosition > currentPosition) {
-            mIvIcon.setImageResource(R.drawable.moudle_mediaplayer_ic_player_fast_forward);
+            mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_player_fast_forward);
         } else {
-            mIvIcon.setImageResource(R.drawable.moudle_mediaplayer_ic_player_fast_rewind);
+            mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_player_fast_rewind);
         }
         mTvPercent.setText(String.format("%s/%s", PlayerUtils.formatTime(slidePosition), PlayerUtils.formatTime(duration)));
     }
@@ -169,7 +169,7 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
     @Override
     public void onBrightnessChange(int percent) {
         mProPercent.setVisibility(VISIBLE);
-        mIvIcon.setImageResource(R.drawable.moudle_mediaplayer_ic_palyer_brightness);
+        mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_palyer_brightness);
         mTvPercent.setText(percent + "%");
         mProPercent.setProgress(percent);
     }
@@ -182,9 +182,9 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
     public void onVolumeChange(int percent) {
         mProPercent.setVisibility(VISIBLE);
         if (percent <= 0) {
-            mIvIcon.setImageResource(R.drawable.moudle_mediaplayer_ic_player_volume_off);
+            mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_player_volume_off);
         } else {
-            mIvIcon.setImageResource(R.drawable.moudle_mediaplayer_ic_player_volume_up);
+            mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_player_volume_up);
         }
         mTvPercent.setText(percent + "%");
         mProPercent.setProgress(percent);

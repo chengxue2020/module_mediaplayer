@@ -264,8 +264,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         mPlayerContainer = new FrameLayout(getContext());
         //设置背景颜色，目前设置为纯黑色
         mPlayerContainer.setBackgroundColor(mPlayerBackgroundColor);
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         //将布局添加到该视图中
         this.addView(mPlayerContainer, params);
     }
@@ -343,7 +342,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     protected void initPlayer() {
         //通过工厂模式创建对象
-        mMediaPlayer = mPlayerFactory.createPlayer(getContext().getApplicationContext());
+        mMediaPlayer = mPlayerFactory.createPlayer();
         mMediaPlayer.setOnVideoPlayerChangeListener(this);
         setInitOptions();
         mMediaPlayer.initPlayer();
