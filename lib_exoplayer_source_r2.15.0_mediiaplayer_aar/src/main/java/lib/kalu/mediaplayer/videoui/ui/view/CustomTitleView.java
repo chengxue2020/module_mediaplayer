@@ -78,10 +78,11 @@ public class CustomTitleView extends FrameLayout implements InterControlView, Vi
     }
 
     private void init(Context context){
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         this.mContext = context;
         setVisibility(GONE);
-        View view = LayoutInflater.from(mContext).inflate(
-                R.layout.module_mediaplayer_video_top, this, true);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.module_mediaplayer_video_top, this, true);
         initFindViewById(view);
         initListener();
         //电量

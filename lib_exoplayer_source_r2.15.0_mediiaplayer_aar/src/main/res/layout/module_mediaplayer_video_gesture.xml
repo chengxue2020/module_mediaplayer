@@ -35,6 +35,9 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="100dp"
             android:layout_height="3dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:max="100"
             android:progressDrawable="@drawable/module_mediaplayer_seek_progress" />
     </LinearLayout>

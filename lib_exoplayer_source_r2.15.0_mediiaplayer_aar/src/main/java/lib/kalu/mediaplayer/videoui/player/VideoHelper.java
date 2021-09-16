@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.controller.BaseVideoController;
+import lib.kalu.mediaplayer.videoui.controller.ControllerLayout;
 
 /**
  * @description: 播放器帮助类
@@ -51,7 +51,7 @@ public class VideoHelper {
      * @param context                               上下文
      * @param videoController                       controller
      */
-    protected ViewGroup getDecorView(Context context , BaseVideoController videoController) {
+    protected ViewGroup getDecorView(Context context , ControllerLayout videoController) {
         Activity activity = VideoHelper.instance().getActivity(context,videoController);
         if (activity == null) {
             return null;
@@ -64,7 +64,7 @@ public class VideoHelper {
      * @param context                               上下文
      * @param videoController                       controller
      */
-    protected ViewGroup getContentView(Context context , BaseVideoController videoController) {
+    protected ViewGroup getContentView(Context context , ControllerLayout videoController) {
         Activity activity = VideoHelper.instance().getActivity(context,videoController);
         if (activity == null) {
             return null;
@@ -79,7 +79,7 @@ public class VideoHelper {
      * @param videoController                       controller
      * @return
      */
-    protected Activity getActivity(Context context , BaseVideoController videoController) {
+    protected Activity getActivity(Context context , ControllerLayout videoController) {
         Activity activity;
         if (videoController != null) {
             activity = PlayerUtils.scanForActivity(videoController.getContext());
@@ -98,7 +98,7 @@ public class VideoHelper {
      * @param context                               上下文
      * @param videoController                       controller
      */
-    protected void showSysBar(ViewGroup decorView,Context context , BaseVideoController videoController) {
+    protected void showSysBar(ViewGroup decorView,Context context , ControllerLayout videoController) {
         int uiOptions = decorView.getSystemUiVisibility();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
@@ -117,7 +117,7 @@ public class VideoHelper {
      * @param context                               上下文
      * @param videoController                       controller
      */
-    protected void hideSysBar(ViewGroup decorView,Context context , BaseVideoController videoController) {
+    protected void hideSysBar(ViewGroup decorView,Context context , ControllerLayout videoController) {
         int uiOptions = decorView.getSystemUiVisibility();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;

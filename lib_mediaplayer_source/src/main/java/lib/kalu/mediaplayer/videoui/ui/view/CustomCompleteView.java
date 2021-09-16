@@ -73,6 +73,8 @@ public class CustomCompleteView extends FrameLayout implements InterControlView,
     }
 
     private void init(Context context){
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(mContext).inflate(

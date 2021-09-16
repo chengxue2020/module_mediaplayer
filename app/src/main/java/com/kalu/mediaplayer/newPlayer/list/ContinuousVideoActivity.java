@@ -15,7 +15,7 @@ import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
 
 import java.util.List;
 
@@ -84,7 +84,7 @@ public class ContinuousVideoActivity extends AppCompatActivity implements View.O
     }
 
     private void initVideoPlayer() {
-        BasisVideoController controller = new BasisVideoController(this);
+        DefaultControllerMobile controller = new DefaultControllerMobile(this);
         //设置视频背景图
         Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
         //设置控制器

@@ -71,6 +71,8 @@ public class CustomOncePlayView extends LinearLayout implements InterControlView
 
 
     private void init(Context context){
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(

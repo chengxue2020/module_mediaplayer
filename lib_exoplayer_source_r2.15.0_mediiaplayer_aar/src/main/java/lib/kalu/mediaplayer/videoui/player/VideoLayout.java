@@ -13,14 +13,16 @@ import androidx.annotation.Nullable;
 
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.videoui.controller.BaseVideoController;
+import lib.kalu.mediaplayer.videoui.controller.ControllerLayout;
 import lib.kalu.mediaplayer.videokernel.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
 import lib.kalu.mediaplayer.videoui.surface.InterSurfaceView;
@@ -56,7 +58,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 控制器
      */
     @Nullable
-    protected BaseVideoController mVideoController;
+    protected ControllerLayout mVideoController;
     /**
      * 真正承载播放器视图的容器
      */
@@ -135,11 +137,13 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     private int mPlayerBackgroundColor;
 
     public VideoLayout(@NonNull Context context) {
-        this(context, null);
+        super(context);
+        init(null);
     }
 
     public VideoLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init(attrs);
     }
 
     public VideoLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -147,7 +151,15 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         init(attrs);
     }
 
+    public VideoLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(attrs);
+    }
+
     private void init(AttributeSet attrs) {
+        setClickable(true);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         BaseToast.init(getContext().getApplicationContext());
         //读取全局配置
         initConfig();
@@ -275,7 +287,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      *
      * @param mediaController controller
      */
-    public void setController(@Nullable BaseVideoController mediaController) {
+    public void setController(@Nullable ControllerLayout mediaController) {
         mPlayerContainer.removeView(mVideoController);
         mVideoController = mediaController;
         if (mediaController != null) {
@@ -979,7 +991,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         return mIsTinyScreen;
     }
 
-    public BaseVideoController getVideoController() {
+    public ControllerLayout getVideoController() {
         return mVideoController;
     }
 
@@ -1165,5 +1177,14 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         }
         //是否开启AudioFocus监听， 默认开启
         this.mEnableAudioFocus = videoBuilder.mEnableAudioFocus;
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        Log.e("VideoLayout", "dispatchKeyEvent => " + event.getKeyCode());
+        if (null != mVideoController) {
+            mVideoController.dispatchKeyEvent(event);
+        }
+        return super.dispatchKeyEvent(event);
     }
 }

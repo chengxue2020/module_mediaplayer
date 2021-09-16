@@ -21,6 +21,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +56,8 @@ import lib.kalu.mediaplayer.R;
  * </pre>
  */
 @Keep
-public class CustomBottomView extends FrameLayout implements InterControlView,
-        View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class CustomBottomView extends FrameLayout implements InterControlView, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
-    private Context mContext;
     protected ControlWrapper mControlWrapper;
     private LinearLayout mLlBottomContainer;
     private ImageView mIvPlay;
@@ -73,21 +72,22 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
 
     public CustomBottomView(@NonNull Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public CustomBottomView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public CustomBottomView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init();
     }
 
-    private void init(Context context){
-        this.mContext = context;
+    private void init() {
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(getLayoutId(), this, true);
         initFindViewById(view);
@@ -226,7 +226,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
                 break;
         }
 
-        Activity activity = PlayerUtils.scanForActivity(mContext);
+        Activity activity = PlayerUtils.scanForActivity(getContext());
         if (activity != null && mControlWrapper.hasCutout()) {
             int orientation = activity.getRequestedOrientation();
             int cutoutHeight = mControlWrapper.getCutoutHeight();
@@ -275,26 +275,26 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
             }
         }
 
-        if (mTvTotalTime != null){
+        if (mTvTotalTime != null) {
             mTvTotalTime.setText(PlayerUtils.formatTime(duration));
         }
-        if (mTvCurrTime != null){
+        if (mTvCurrTime != null) {
             mTvCurrTime.setText(PlayerUtils.formatTime(position));
         }
 
 
-        if (VideoPlayerConfig.newBuilder().build().mIsShowToast){
+        if (VideoPlayerConfig.newBuilder().build().mIsShowToast) {
             long time = VideoPlayerConfig.newBuilder().build().mShowToastTime;
-            if (time<=0){
+            if (time <= 0) {
                 time = 5;
             }
             long currentPosition = mControlWrapper.getCurrentPosition();
-            Log.d("progress---","duration---"+duration+"--currentPosition--"+currentPosition);
-            if (duration - currentPosition <  2 * time * 1000){
+            Log.d("progress---", "duration---" + duration + "--currentPosition--" + currentPosition);
+            if (duration - currentPosition < 2 * time * 1000) {
                 //当前视频播放到最后3s时，弹出toast提示：即将自动为您播放下一个视频。
-                if ((duration-currentPosition) / 1000 % 60 == time){
-                    Log.d("progress---","即将自动为您播放下一个视频");
-                    if (listener!= null){
+                if ((duration - currentPosition) / 1000 % 60 == time) {
+                    Log.d("progress---", "即将自动为您播放下一个视频");
+                    if (listener != null) {
                         listener.showToastOrDialog();
                     }
                 }
@@ -340,7 +340,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
         }
         long duration = mControlWrapper.getDuration();
         long newPosition = (duration * progress) / mPbBottomProgress.getMax();
-        if (mTvCurrTime != null){
+        if (mTvCurrTime != null) {
             mTvCurrTime.setText(PlayerUtils.formatTime(newPosition));
         }
     }
@@ -351,8 +351,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView,
         this.listener = listener;
     }
 
-    public interface OnToastListener{
+    public interface OnToastListener {
         void showToastOrDialog();
     }
-
 }

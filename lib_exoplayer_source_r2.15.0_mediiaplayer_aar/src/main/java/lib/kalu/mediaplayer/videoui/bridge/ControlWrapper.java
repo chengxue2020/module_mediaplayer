@@ -21,7 +21,7 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import lib.kalu.mediaplayer.videoui.controller.InterVideoController;
+import lib.kalu.mediaplayer.videoui.controller.ImplController;
 import lib.kalu.mediaplayer.videoui.player.InterVideoPlayer;
 
 
@@ -36,12 +36,12 @@ import lib.kalu.mediaplayer.videoui.player.InterVideoPlayer;
  * </pre>
  */
 @Keep
-public class ControlWrapper implements InterVideoPlayer, InterVideoController {
+public class ControlWrapper implements InterVideoPlayer, ImplController {
     
     private InterVideoPlayer mVideoPlayer;
-    private InterVideoController mController;
+    private ImplController mController;
     
-    public ControlWrapper(@NonNull InterVideoPlayer videoPlayer, @NonNull InterVideoController controller) {
+    public ControlWrapper(@NonNull InterVideoPlayer videoPlayer, @NonNull ImplController controller) {
         mVideoPlayer = videoPlayer;
         mController = controller;
     }
@@ -293,6 +293,16 @@ public class ControlWrapper implements InterVideoPlayer, InterVideoController {
     @Override
     public void destroy() {
         mController.destroy();
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public int initLayout() {
+        return 0;
     }
 
     /**

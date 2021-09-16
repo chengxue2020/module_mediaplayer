@@ -40,14 +40,20 @@ public class CustomTrailersView extends FrameLayout implements InterControlView,
 
     public CustomTrailersView(@NonNull Context context) {
         super(context);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
     public CustomTrailersView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
     public CustomTrailersView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
     @Override

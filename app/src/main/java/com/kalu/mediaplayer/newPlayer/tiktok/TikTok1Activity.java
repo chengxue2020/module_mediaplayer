@@ -26,7 +26,7 @@ import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class TikTok1Activity extends AppCompatActivity {
     protected RecyclerView mRecyclerView;
     protected PagerLayoutManager mLinearLayoutManager;
     protected VideoLayout mVideoView;
-    protected BasisVideoController mController;
+    protected DefaultControllerMobile mController;
 
     /**
      * 当前播放的位置
@@ -131,7 +131,7 @@ public class TikTok1Activity extends AppCompatActivity {
                 }
             }
         });
-        mController = new BasisVideoController(this);
+        mController = new DefaultControllerMobile(this);
         mVideoView.setController(mController);
     }
 

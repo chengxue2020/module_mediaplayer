@@ -87,6 +87,8 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
 
     private void init(Context context) {
         this.mContext = context;
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(getLayoutId(), this, true);
         initFindViewById(view);

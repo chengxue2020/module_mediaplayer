@@ -24,7 +24,7 @@ import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class RecyclerViewFragment extends Fragment {
     protected LinearLayoutManager mLinearLayoutManager;
 
     protected VideoLayout mVideoView;
-    protected BasisVideoController mController;
+    protected DefaultControllerMobile mController;
 
     /**
      * 当前播放的位置
@@ -119,7 +119,7 @@ public class RecyclerViewFragment extends Fragment {
                 }
             }
         });
-        mController = new BasisVideoController(context);
+        mController = new DefaultControllerMobile(context);
         mVideoView.setController(mController);
     }
 

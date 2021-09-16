@@ -12,7 +12,7 @@ import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
 
@@ -71,7 +71,7 @@ public class TestFullActivity extends BaseActivity implements View.OnClickListen
         mBtnTiny1 = (Button) findViewById(R.id.btn_tiny_1);
         mBtnTiny2 = (Button) findViewById(R.id.btn_tiny_2);
 
-        BasisVideoController controller = new BasisVideoController(this);
+        DefaultControllerMobile controller = new DefaultControllerMobile(this);
         //设置视频背景图
         Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
         //设置控制器

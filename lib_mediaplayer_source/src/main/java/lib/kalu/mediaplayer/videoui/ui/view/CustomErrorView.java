@@ -75,6 +75,8 @@ public class CustomErrorView extends LinearLayout implements InterControlView, V
 
 
     private void init(Context context){
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(

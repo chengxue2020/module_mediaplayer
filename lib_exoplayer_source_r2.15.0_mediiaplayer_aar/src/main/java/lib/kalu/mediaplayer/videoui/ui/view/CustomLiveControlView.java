@@ -69,10 +69,11 @@ public class CustomLiveControlView extends FrameLayout implements InterControlVi
     }
 
     private void init(Context context){
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         this.mContext = context;
         setVisibility(GONE);
-        View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.module_mediaplayer_video_live, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_live, this, true);
         initFindViewById(view);
         initListener();
     }

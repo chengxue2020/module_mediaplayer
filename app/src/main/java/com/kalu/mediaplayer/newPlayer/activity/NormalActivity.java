@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.videoui.player.OnVideoStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoBuilder;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
 import lib.kalu.mediaplayer.videoui.ui.view.CustomErrorView;
 
 import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
@@ -113,7 +113,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         //创建基础视频播放器，一般播放器的功能
 
 
-        BasisVideoController basisVideoController = new BasisVideoController(this);
+        DefaultControllerMobile basisVideoController = new DefaultControllerMobile(this);
         basisVideoController.setEnableOrientation(false);
         //设置控制器
         mVideoPlayer.setController(basisVideoController);
@@ -313,7 +313,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         //设置视频背景图
-        BasisVideoController controller = (BasisVideoController) mVideoPlayer.getVideoController();
+        DefaultControllerMobile controller = (DefaultControllerMobile) mVideoPlayer.getVideoController();
         ImageView thumb = controller.getThumb();
         Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
         //设置视频标题

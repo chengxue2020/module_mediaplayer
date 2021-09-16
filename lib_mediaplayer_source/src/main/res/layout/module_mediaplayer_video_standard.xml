@@ -12,6 +12,9 @@
         android:layout_margin="10dp"
         android:background="@drawable/module_mediaplayer_shape_back_bg"
         android:padding="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:src="@drawable/module_mediaplayer_selector_lock_button"
         android:visibility="gone"
         tools:visibility="visible" />

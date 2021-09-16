@@ -12,7 +12,8 @@ import android.os.Bundle;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.player.OnVideoStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerTV;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -23,13 +24,15 @@ public final class ExoplayerActivity extends AppCompatActivity {
     @Keep
     public static final int RESULT_CODE = 31001;
     @Keep
-    public static final String INTENT_DADA = "intent_dada";
+    public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
     @Keep
-    public static final String INTENT_URL = "intent_url";
+    public static final String INTENT_URL = "intent_url"; // 视频Url
     @Keep
-    public static final String INTENT_TIME_BROWSING = "intent_time_browsing";
+    public static final String INTENT_TIME_BROWSING = "intent_time_browsing"; // 视频浏览时长
     @Keep
-    public static final String INTENT_TIME_LENGTH = "intent_time_length";
+    public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
+    @Keep
+    public static final String INTENT_TV = "intent_tv"; // 是否电视
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +48,30 @@ public final class ExoplayerActivity extends AppCompatActivity {
 
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         // 基础视频播放器
-        BasisVideoController basisVideoController = new BasisVideoController(this);
-        basisVideoController.setEnableOrientation(false);
-        // 设置视频背景图
-        ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
-        basisVideoController.getThumb().setImageDrawable(colorDrawable);
-        // 控制器
-        videoLayout.setController(basisVideoController);
+        boolean isTV = getIntent().getBooleanExtra(INTENT_TV, false);
+        if(isTV){
+            DefaultControllerTV controller = new DefaultControllerTV(this);
+            controller.setEnableOrientation(false);
+
+            // 设置视频背景图
+            ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
+            controller.getThumb().setImageDrawable(colorDrawable);
+
+            // 控制器
+            videoLayout.setController(controller);
+        }
+        else{
+            DefaultControllerMobile controller = new DefaultControllerMobile(this);
+            controller.setEnableOrientation(false);
+
+            // 设置视频背景图
+            ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
+            controller.getThumb().setImageDrawable(colorDrawable);
+
+            // 控制器
+            videoLayout.setController(controller);
+        }
+
         // 设置视频播放链接地址
         videoLayout.setUrl(url);
         videoLayout.showNetWarning();
@@ -150,27 +170,20 @@ public final class ExoplayerActivity extends AppCompatActivity {
     public void finish() {
 
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
-        if (videoLayout != null) {
-
-            // s
-            long currentPosition = videoLayout.getCurrentPosition() / 1000;
-            // s
-            long duration = videoLayout.getDuration() / 1000;
-
-            if (currentPosition < 0) {
-                currentPosition = 0;
-            }
-            if (duration < 0) {
-                duration = 0;
-            }
-
-            String extra = getIntent().getStringExtra(INTENT_DADA);
-            Intent intent = new Intent();
-            intent.putExtra(INTENT_DADA, extra);
-            intent.putExtra(INTENT_TIME_LENGTH, duration);
-            intent.putExtra(INTENT_TIME_BROWSING, currentPosition);
-            setResult(RESULT_CODE, intent);
+        long browsing = videoLayout.getCurrentPosition() / 1000;
+        if (browsing < 0) {
+            browsing = 0;
         }
+        long duration = videoLayout.getDuration() / 1000;
+        if (duration < 0) {
+            duration = 0;
+        }
+        String extra = getIntent().getStringExtra(INTENT_DATA);
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_DATA, extra);
+        intent.putExtra(INTENT_TIME_LENGTH, duration);
+        intent.putExtra(INTENT_TIME_BROWSING, browsing);
+        setResult(RESULT_CODE, intent);
         super.finish();
     }
 

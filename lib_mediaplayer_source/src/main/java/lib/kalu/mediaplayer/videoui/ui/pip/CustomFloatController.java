@@ -36,10 +36,14 @@ public class CustomFloatController extends GestureVideoController {
 
     public CustomFloatController(@NonNull Context context) {
         super(context);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
     public CustomFloatController(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
     @Override

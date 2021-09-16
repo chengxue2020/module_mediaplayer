@@ -72,6 +72,8 @@ public class CustomFloatView extends FrameLayout implements InterControlView, Vi
     }
 
     private void init(Context context){
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         this.mContext = context;
         View view = LayoutInflater.from(getContext()).inflate(
                 R.layout.module_mediaplayer_video_float, this, true);

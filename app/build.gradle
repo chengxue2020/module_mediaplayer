@@ -83,7 +83,7 @@ dependencies {
     implementation 'cn.yc:YCStateLib:1.2.2'
 
     // mediaplayer
-    api(name: 'lib_mediaplayer_r2.15.0_release_20210909', ext: 'aar')
     api(name: 'rtmp-client-3.1.0', ext: 'aar')
-//    api project(path: ':lib_mediaplayer_aar_r2.15.0')
+//    api(name: 'lib_mediaplayer_r2.15.0_release_20210916', ext: 'aar')
+    api project(path: ':lib_exoplayer_source_r2.15.0_mediiaplayer_aar')
 }

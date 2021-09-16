@@ -53,6 +53,9 @@
             android:paddingBottom="4dp"
             android:textSize="14sp"
             android:text="@string/module_mediaplayer_string_retry"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:textColor="@android:color/white" />
     </LinearLayout>
 </FrameLayout>

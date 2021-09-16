@@ -10,7 +10,7 @@ import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.player.VideoBuilder;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class MultipleActivity extends AppCompatActivity {
         builder.setEnableAudioFocus(false);
         VideoBuilder videoPlayerBuilder = new VideoBuilder(builder);
         player1.setVideoBuilder(videoPlayerBuilder);
-        BasisVideoController controller1 = new BasisVideoController(this);
+        DefaultControllerMobile controller1 = new DefaultControllerMobile(this);
         player1.setController(controller1);
         mVideoViews.add(player1);
 
@@ -55,7 +55,7 @@ public class MultipleActivity extends AppCompatActivity {
         builder.setEnableAudioFocus(false);
         VideoBuilder videoPlayerBuilder2 = new VideoBuilder(builder2);
         player2.setVideoBuilder(videoPlayerBuilder2);
-        BasisVideoController controller2 = new BasisVideoController(this);
+        DefaultControllerMobile controller2 = new DefaultControllerMobile(this);
         player2.setController(controller2);
         mVideoViews.add(player2);
     }

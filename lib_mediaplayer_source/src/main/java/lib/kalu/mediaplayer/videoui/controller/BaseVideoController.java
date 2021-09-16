@@ -110,6 +110,8 @@ public abstract class BaseVideoController extends FrameLayout implements InterVi
     public BaseVideoController(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
     @Override

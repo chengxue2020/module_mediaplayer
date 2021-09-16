@@ -13,7 +13,7 @@ import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
 
@@ -77,7 +77,7 @@ public class DanmuActivity extends BaseActivity implements View.OnClickListener 
         StateAppBar.translucentStatusBar(this, true);
         initFindViewById();
 
-        BasisVideoController controller = new BasisVideoController(this);
+        DefaultControllerMobile controller = new DefaultControllerMobile(this);
         mMyDanmakuView = new MyDanmakuView(this);
         controller.addControlComponent(mMyDanmakuView);
         //设置视频背景图

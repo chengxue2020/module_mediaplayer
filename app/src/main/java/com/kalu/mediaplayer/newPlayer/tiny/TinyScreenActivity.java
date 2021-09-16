@@ -20,7 +20,7 @@ import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.BasisVideoController;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class TinyScreenActivity extends AppCompatActivity implements OnItemChildClickListener {
 
-    private BasisVideoController mController;
+    private DefaultControllerMobile mController;
     private List<VideoInfoBean> mVideos;
     private LinearLayoutManager mLinearLayoutManager;
     private VideoLayout mVideoPlayerLayout;
@@ -89,7 +89,7 @@ public class TinyScreenActivity extends AppCompatActivity implements OnItemChild
                 }
             }
         });
-        mController = new BasisVideoController(this);
+        mController = new DefaultControllerMobile(this);
         initRecyclerView();
     }
 

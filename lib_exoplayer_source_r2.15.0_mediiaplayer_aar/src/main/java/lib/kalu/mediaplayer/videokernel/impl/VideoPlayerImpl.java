@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.videokernel.impl;
 
-import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -9,14 +8,10 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.exoplayer2.BasePlayer;
-import com.google.android.exoplayer2.Player;
-
 import java.util.Map;
 
 import lib.kalu.mediaplayer.videokernel.listener.OnVideoPlayerChangeListener;
 import lib.kalu.mediaplayer.videokernel.platfrom.PlatfromPlayer;
-import lib.kalu.mediaplayer.videoui.controller.BaseVideoController;
 
 
 /**

@@ -50,6 +50,8 @@ public class FloatVideoView extends FrameLayout{
 
     public FloatVideoView(@NonNull Context context, int x, int y) {
         super(context);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         mDownX = x;
         mDownY = y;
         init();

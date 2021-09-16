@@ -93,6 +93,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
 
     public GestureVideoController(@NonNull Context context) {
         super(context);
+
     }
 
     public GestureVideoController(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -458,5 +459,14 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         return false;
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        Log.e("GestureVideoController", "dispatchKeyEvent => keyCode = " + event.getKeyCode());
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            mVideoController.show();
+        }
+        return super.dispatchKeyEvent(event);
     }
 }

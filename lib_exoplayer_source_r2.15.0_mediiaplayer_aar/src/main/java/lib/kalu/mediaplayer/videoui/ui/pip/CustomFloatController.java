@@ -19,7 +19,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.videoui.controller.GestureVideoController;
+import lib.kalu.mediaplayer.videoui.controller.ControllerLayoutForGesture;
 import lib.kalu.mediaplayer.videoui.ui.view.CustomCompleteView;
 import lib.kalu.mediaplayer.videoui.ui.view.CustomErrorView;
 
@@ -32,31 +32,36 @@ import lib.kalu.mediaplayer.videoui.ui.view.CustomErrorView;
  *     revise:
  * </pre>
  */
-public class CustomFloatController extends GestureVideoController {
+public class CustomFloatController extends ControllerLayoutForGesture {
 
     public CustomFloatController(@NonNull Context context) {
         super(context);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
     public CustomFloatController(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
-    @Override
-    protected int getLayoutId() {
-        return 0;
-    }
-
-    @Override
-    protected void initView(Context context) {
-        super.initView(context);
-        addControlComponent(new CustomCompleteView(getContext()));
-        addControlComponent(new CustomErrorView(getContext()));
-        addControlComponent(new CustomFloatView(getContext()));
-    }
 
     @Override
     public void destroy() {
 
+    }
+
+    @Override
+    public int initLayout() {
+        return 0;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        addControlComponent(new CustomCompleteView(getContext()));
+        addControlComponent(new CustomErrorView(getContext()));
+        addControlComponent(new CustomFloatView(getContext()));
     }
 }

@@ -72,9 +72,10 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
 
 
     private void init(Context context){
+        setFocusable(true);
+        setFocusableInTouchMode(true);
         this.mContext = context;
-        View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.module_mediaplayer_video_prepare, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_prepare, this, true);
         initFindViewById(view);
         initListener();
     }
