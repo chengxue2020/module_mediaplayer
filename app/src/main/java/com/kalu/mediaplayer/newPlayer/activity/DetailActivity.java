@@ -15,7 +15,7 @@ import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -47,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
         //把播放器添加到页面的容器中
         mPlayerContainer.addView(mVideoView);
         //设置新的控制器
-        DefaultControllerMobile controller = new DefaultControllerMobile(DetailActivity.this);
+        DefaultController controller = new DefaultController(DetailActivity.this);
         mVideoView.setController(controller);
 
         Intent intent = getIntent();

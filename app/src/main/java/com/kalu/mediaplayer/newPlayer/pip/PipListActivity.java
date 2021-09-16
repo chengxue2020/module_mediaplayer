@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.videoui.ui.pip.FloatVideoManager;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
 
     private FloatVideoManager mPIPManager;
     private VideoLayout mVideoView;
-    private DefaultControllerMobile mController;
+    private DefaultController mController;
     private List<VideoInfoBean> mVideos;
     private LinearLayoutManager mLinearLayoutManager;
 
@@ -46,7 +46,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
     protected void initView() {
         mPIPManager = FloatVideoManager.getInstance(this);
         mVideoView = VideoViewManager.instance().get(FloatVideoManager.PIP);
-        mController = new DefaultControllerMobile(this);
+        mController = new DefaultController(this);
         initRecyclerView();
     }
 

@@ -11,21 +11,25 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 
-public abstract class ControllerLayoutForTV extends ControllerLayout {
+/**
+ * description:
+ * created by kalu on 2021/9/16
+ */
+abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
 
-    public ControllerLayoutForTV(@NonNull Context context) {
+    public ControllerLayoutDispatchKeyEvent(@NonNull Context context) {
         super(context);
     }
 
-    public ControllerLayoutForTV(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ControllerLayoutDispatchKeyEvent(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ControllerLayoutForTV(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ControllerLayoutDispatchKeyEvent(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public ControllerLayoutForTV(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ControllerLayoutDispatchKeyEvent(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

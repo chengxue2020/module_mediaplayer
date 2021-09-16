@@ -13,7 +13,7 @@ import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 import lib.kalu.mediaplayer.videoui.ui.view.CustomBottomView;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class ClarityActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initVideoPlayer() {
-        DefaultControllerMobile controller = new DefaultControllerMobile(this);
+        DefaultController controller = new DefaultController(this);
         CustomBottomView bottomView = controller.getBottomView();
         if (bottomView!=null){
             controller.removeControlComponent(bottomView);

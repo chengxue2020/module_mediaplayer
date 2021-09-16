@@ -22,30 +22,31 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.controller.ControllerLayoutForTV;
+import lib.kalu.mediaplayer.videoui.controller.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.videoui.tool.BaseToast;
 import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
 
+import lib.kalu.mediaplayer.R;
+
 
 /**
- * description: 控制器 - tv
+ * description: 控制器 - mobile
  * 如果想定制ui，你可以直接继承GestureVideoController或者BaseVideoController实现
  * created by kalu on 2021/9/16
  */
 @Keep
-public class DefaultControllerTV extends ControllerLayoutForTV implements View.OnClickListener {
+public class DefaultController extends ControllerLayoutDispatchTouchEvent implements View.OnClickListener {
 
     private ImageView mLockButton;
     private ProgressBar mLoadingProgress;
@@ -60,15 +61,15 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
      */
     public static boolean IS_LIVE = false;
 
-    public DefaultControllerTV(@NonNull Context context) {
+    public DefaultController(@NonNull Context context) {
         this(context, null);
     }
 
-    public DefaultControllerTV(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public DefaultController(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DefaultControllerTV(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public DefaultController(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -97,6 +98,12 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
     private void initConfig() {
         //根据屏幕方向自动进入/退出全屏
         setEnableOrientation(true);
+        //设置可以滑动调节进度
+        setCanChangePosition(true);
+        //竖屏也开启手势操作，默认关闭
+        setEnableInNormal(true);
+        //滑动调节亮度，音量，进度，默认开启
+        setGestureEnabled(true);
         //先移除多有的视图view
         removeAllControlComponent();
         //添加视图到界面
@@ -104,11 +111,11 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
     }
 
 
+
     /**
      * 快速添加各个组件
      * 需要注意各个层级
-     *
-     * @param title 标题
+     * @param title                             标题
      */
     public void addDefaultControlComponent(String title) {
         //添加自动完成播放界面view
@@ -145,17 +152,17 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
     /**
      * 切换直播/回放类型
      */
-    public void changePlayType() {
+    public void changePlayType(){
         if (IS_LIVE) {
             //添加底部播放控制条
-            if (liveControlView == null) {
+            if (liveControlView==null){
                 liveControlView = new CustomLiveControlView(getContext());
             }
             this.removeControlComponent(liveControlView);
             this.addControlComponent(liveControlView);
 
             //添加直播还未开始视图
-            if (customOncePlayView == null) {
+            if (customOncePlayView==null){
                 customOncePlayView = new CustomOncePlayView(getContext());
                 tvLiveWaitMessage = customOncePlayView.getTvMessage();
             }
@@ -163,12 +170,12 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
             this.addControlComponent(customOncePlayView);
 
             //直播视频，移除回放视图
-            if (vodControlView != null) {
+            if (vodControlView!=null){
                 this.removeControlComponent(vodControlView);
             }
         } else {
             //添加底部播放控制条
-            if (vodControlView == null) {
+            if (vodControlView==null){
                 vodControlView = new CustomBottomView(getContext());
                 //是否显示底部进度条。默认显示
                 vodControlView.showBottomProgress(true);
@@ -177,13 +184,14 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
             this.addControlComponent(vodControlView);
 
             //正常视频，移除直播视图
-            if (liveControlView != null) {
+            if (liveControlView!=null){
                 this.removeControlComponent(liveControlView);
             }
-            if (customOncePlayView != null) {
+            if (customOncePlayView!=null){
                 this.removeControlComponent(customOncePlayView);
             }
         }
+        setCanChangePosition(!IS_LIVE);
     }
 
 
@@ -233,15 +241,14 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
      * MODE_NORMAL              普通模式
      * MODE_FULL_SCREEN         全屏模式
      * MODE_TINY_WINDOW         小屏模式
-     *
-     * @param playerState 播放模式
+     * @param playerState                   播放模式
      */
     @Override
     protected void onPlayerStateChanged(int playerState) {
         super.onPlayerStateChanged(playerState);
         switch (playerState) {
             case ConstantKeys.PlayMode.MODE_NORMAL:
-                setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mLockButton.setVisibility(GONE);
                 break;
             case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
@@ -258,13 +265,13 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
             int dp24 = PlayerUtils.dp2px(getContext(), 24);
             int cutoutHeight = getCutoutHeight();
             if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                LayoutParams lblp = (LayoutParams) mLockButton.getLayoutParams();
+                FrameLayout.LayoutParams lblp = (FrameLayout.LayoutParams) mLockButton.getLayoutParams();
                 lblp.setMargins(dp24, 0, dp24, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                LayoutParams layoutParams = (LayoutParams) mLockButton.getLayoutParams();
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mLockButton.getLayoutParams();
                 layoutParams.setMargins(dp24 + cutoutHeight, 0, dp24 + cutoutHeight, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-                LayoutParams layoutParams = (LayoutParams) mLockButton.getLayoutParams();
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mLockButton.getLayoutParams();
                 layoutParams.setMargins(dp24, 0, dp24, 0);
             }
         }
@@ -283,8 +290,7 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
      * 6                暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
      * 7                播放完成
      * 8                开始播放中止
-     *
-     * @param playState 播放状态，主要是指播放器的各种状态
+     * @param playState                     播放状态，主要是指播放器的各种状态
      */
     @Override
     protected void onPlayStateChanged(int playState) {
@@ -327,7 +333,7 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
         }
         Activity activity = PlayerUtils.scanForActivity(getContext());
         //如果不是全屏模式，则直接关闭页面activity
-        if (PlayerUtils.isActivityLiving(activity)) {
+        if (PlayerUtils.isActivityLiving(activity)){
             activity.finish();
         }
         return super.onBackPressed();
@@ -354,7 +360,7 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
     }
 
     public void setTitle(String title) {
-        if (titleView != null) {
+        if (titleView!=null){
             titleView.setTitle(title);
         }
     }
@@ -366,13 +372,5 @@ public class DefaultControllerTV extends ControllerLayoutForTV implements View.O
 
     public TextView getTvLiveWaitMessage() {
         return tvLiveWaitMessage;
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        View viewById = findViewById(R.id.iv_play);
-        viewById.requestFocus();
-        Toast.makeText(getContext(), "show", Toast.LENGTH_SHORT).show();
     }
 }

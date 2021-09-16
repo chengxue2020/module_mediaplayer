@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
 import lib.kalu.mediaplayer.videoui.tool.BaseToast;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 public class AdActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,7 +29,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
     private Button mBtnCrop;
     private Button mBtnGif;
     private static final String URL_AD = "https://gslb.miaopai.com/stream/IR3oMYDhrON5huCmf7sHCfnU5YKEkgO2.mp4";
-    DefaultControllerMobile controller;
+    DefaultController controller;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
     }
 
     private void initVideoPlayer() {
-        controller = new DefaultControllerMobile(this);
+        controller = new DefaultController(this);
         AdControlView adControlView = new AdControlView(this);
         adControlView.setListener(new AdControlView.AdControlListener() {
             @Override

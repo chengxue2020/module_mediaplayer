@@ -19,7 +19,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.videoui.controller.ControllerLayoutForGesture;
+import lib.kalu.mediaplayer.videoui.controller.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.videoui.ui.view.CustomCompleteView;
 import lib.kalu.mediaplayer.videoui.ui.view.CustomErrorView;
 
@@ -32,7 +32,7 @@ import lib.kalu.mediaplayer.videoui.ui.view.CustomErrorView;
  *     revise:
  * </pre>
  */
-public class CustomFloatController extends ControllerLayoutForGesture {
+public class CustomFloatController extends ControllerLayoutDispatchTouchEvent {
 
     public CustomFloatController(@NonNull Context context) {
         super(context);

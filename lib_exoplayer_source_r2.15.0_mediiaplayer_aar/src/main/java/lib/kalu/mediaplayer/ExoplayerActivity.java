@@ -12,8 +12,7 @@ import android.os.Bundle;
 import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
 import lib.kalu.mediaplayer.videoui.player.OnVideoStateListener;
 import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerMobile;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultControllerTV;
+import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -31,8 +30,6 @@ public final class ExoplayerActivity extends AppCompatActivity {
     public static final String INTENT_TIME_BROWSING = "intent_time_browsing"; // 视频浏览时长
     @Keep
     public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
-    @Keep
-    public static final String INTENT_TV = "intent_tv"; // 是否电视
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,29 +45,15 @@ public final class ExoplayerActivity extends AppCompatActivity {
 
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         // 基础视频播放器
-        boolean isTV = getIntent().getBooleanExtra(INTENT_TV, false);
-        if(isTV){
-            DefaultControllerTV controller = new DefaultControllerTV(this);
-            controller.setEnableOrientation(false);
+        DefaultController controller = new DefaultController(this);
+        controller.setEnableOrientation(false);
 
-            // 设置视频背景图
-            ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
-            controller.getThumb().setImageDrawable(colorDrawable);
+        // 设置视频背景图
+        ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
+        controller.getThumb().setImageDrawable(colorDrawable);
 
-            // 控制器
-            videoLayout.setController(controller);
-        }
-        else{
-            DefaultControllerMobile controller = new DefaultControllerMobile(this);
-            controller.setEnableOrientation(false);
-
-            // 设置视频背景图
-            ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
-            controller.getThumb().setImageDrawable(colorDrawable);
-
-            // 控制器
-            videoLayout.setController(controller);
-        }
+        // 控制器
+        videoLayout.setController(controller);
 
         // 设置视频播放链接地址
         videoLayout.setUrl(url);

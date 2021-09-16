@@ -37,15 +37,10 @@ import java.util.Map;
 
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : 包含手势操作的VideoController
- *     revise:
- * </pre>
+ * description: 包含手势操作的VideoController
+ * created by kalu on 2021/9/16
  */
-public abstract class ControllerLayoutForGesture extends ControllerLayoutForTV implements
+public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayoutDispatchKeyEvent implements
         GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, View.OnTouchListener {
 
     private GestureDetector mGestureDetector;
@@ -91,15 +86,15 @@ public abstract class ControllerLayoutForGesture extends ControllerLayoutForTV i
      */
     private int mHalfScreen;
 
-    public ControllerLayoutForGesture(@NonNull Context context) {
+    public ControllerLayoutDispatchTouchEvent(@NonNull Context context) {
         super(context);
     }
 
-    public ControllerLayoutForGesture(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ControllerLayoutDispatchTouchEvent(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ControllerLayoutForGesture(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ControllerLayoutDispatchTouchEvent(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
