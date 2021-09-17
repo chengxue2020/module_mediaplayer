@@ -104,7 +104,7 @@ ext {
 
             compileSdkVersion      : 30,
             buildToolsVersion      : "30.0.3",
-            minSdkVersion          : 23,
+            minSdkVersion          : 17,
             targetSdkVersion       : 30, // 28之后强制使用https, 否则报错, 或者networkSecurityConfig
 
             abiFilters             : "armeabi", // armeabi-v7a,x86

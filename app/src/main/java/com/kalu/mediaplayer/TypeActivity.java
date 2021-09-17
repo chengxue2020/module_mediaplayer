@@ -74,6 +74,12 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
         initFindViewById();
         initListener();
 
+        // 测试
+        Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+        intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
+        startActivity(intent);
+
+
         //检测当前是用的哪个播放器
         Object factory = PlayerUtils.getCurrentPlayerFactory();
         if (factory instanceof ExoPlayerFactory) {
