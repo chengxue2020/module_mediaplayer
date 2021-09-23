@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_title_container"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/module_mediaplayer_ic_player_mask_top"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="12dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/module_mediaplayer_ic_player_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:text="视频标题"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/iv_battery"
+            android:layout_width="26dp"
+            android:layout_height="20dp"
+            android:src="@drawable/module_mediaplayer_ic_battery_100" />
+
+        <TextView
+            android:id="@+id/tv_sys_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:textColor="@android:color/white"
+            tools:text="12:00" />
+
+    </LinearLayout>
+
+</FrameLayout>

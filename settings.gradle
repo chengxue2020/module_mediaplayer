@@ -1,13 +1,13 @@
 include ':app'
-include ':lib_exoplayer_source_r2.15.0'
-include ':lib_exoplayer_source_r2.15.0_mediiaplayer_aar'
+include ':lib_mediaplayer_core_exoplayer_r2.15.0'
+//include ':lib_exoplayer_source_r2.15.0_mediiaplayer_aar'
 
 // r2.14.0
 //include ':lib_exoplayer_source_r2.14.0'
 //include ':lib_exoplayer_source_r2.14.0_mediiaplayer_aar'
 
 // mediaplayer_source
-include ':lib_mediaplayer_source'
+include ':lib_mediaplayer_ui'
 
 //// 视频m3u8下载和合成
 //include ':module_mediaplayer_videom3u8'
