@@ -1,8 +1,5 @@
 package lib.kalu.mediaplayer.videoui.config;
 
-
-import android.content.Context;
-
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
@@ -11,7 +8,6 @@ import lib.kalu.mediaplayer.videokernel.platfrom.media.MediaPlayerFactory;
 import lib.kalu.mediaplayer.videoui.player.ProgressManager;
 import lib.kalu.mediaplayer.videoui.surface.SurfaceFactory;
 import lib.kalu.mediaplayer.videoui.surface.TextureViewFactory;
-import lib.kalu.mediaplayer.videoui.tool.BaseToast;
 
 
 /**

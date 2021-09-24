@@ -52,7 +52,7 @@ public class BaseApplication extends MultiDexApplication {
 
     private void initVideoUI() {
         //播放器配置，注意：此为全局配置，按需开启
-        VideoViewManager.setConfig(VideoPlayerConfig.newBuilder()
+        VideoPlayerConfig build = VideoPlayerConfig.newBuilder()
                 //设置视频全局埋点事件
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
@@ -61,7 +61,8 @@ public class BaseApplication extends MultiDexApplication {
                 .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerConstant.PlayerType.TYPE_EXO))
                 //创建SurfaceView
                 //.setRenderViewFactory(SurfaceViewFactory.create())
-                .build());
+                .build();
+        VideoViewManager.setConfig(build);
     }
 
     private void initVideoCache() {
