@@ -9,11 +9,11 @@ import androidx.multidex.MultiDexApplication;
 import lib.kalu.mediaplayer.cache.config.CacheConfig;
 import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
 import lib.kalu.mediaplayer.cache.config.CacheType;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.keycode.KeycodeImplSimulator;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 public class BaseApplication extends MultiDexApplication {
 
@@ -59,8 +59,8 @@ public class BaseApplication extends MultiDexApplication {
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
                 .setLogEnabled(true)
-                //设置ijk
-                .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerConstant.PlayerType.TYPE_EXO))
+                //设置exo
+                .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerType.PlatformType.EXO))
                 //创建SurfaceView
                 //.setRenderViewFactory(SurfaceViewFactory.create())
                 .setKeycodeImpl(new KeycodeImplSimulator())

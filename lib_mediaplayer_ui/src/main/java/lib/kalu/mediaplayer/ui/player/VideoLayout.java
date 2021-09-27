@@ -29,7 +29,6 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
@@ -670,14 +669,14 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 视频播放出错回调
      */
     @Override
-    public void onError(@PlayerConstant.ErrorType int type, String error) {
+    public void onError(@PlayerType.ErrorType.Value int type, String error) {
         mPlayerContainer.setKeepScreenOn(false);
         if (PlayerUtils.isConnected(getContext().getApplicationContext())) {
-            if (type == PlayerConstant.ErrorType.TYPE_UNEXPECTED) {
+            if (type == PlayerType.ErrorType.TYPE_UNEXPECTED) {
                 setPlayState(PlayerType.StateType.STATE_ERROR);
-            } else if (type == PlayerConstant.ErrorType.TYPE_PARSE) {
+            } else if (type == PlayerType.ErrorType.TYPE_PARSE) {
                 setPlayState(PlayerType.StateType.STATE_PARSE_ERROR);
-            } else if (type == PlayerConstant.ErrorType.TYPE_SOURCE) {
+            } else if (type == PlayerType.ErrorType.TYPE_SOURCE) {
                 setPlayState(PlayerType.StateType.STATE_ERROR);
             } else {
                 setPlayState(PlayerType.StateType.STATE_ERROR);
@@ -719,19 +718,19 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     @Override
     public void onInfo(int what, int extra) {
         switch (what) {
-            case PlayerConstant.MEDIA_INFO_BUFFERING_START:
+            case PlayerType.MediaType.MEDIA_INFO_BUFFERING_START:
                 setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
                 break;
-            case PlayerConstant.MEDIA_INFO_BUFFERING_END:
+            case PlayerType.MediaType.MEDIA_INFO_BUFFERING_END:
                 setPlayState(PlayerType.StateType.STATE_COMPLETED);
                 break;
-            case PlayerConstant.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
+            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
                 setPlayState(PlayerType.StateType.STATE_PLAYING);
                 if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
                     pause();
                 }
                 break;
-            case PlayerConstant.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
+            case PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
                 if (mRenderView != null)
                     mRenderView.setVideoRotation(extra);
                 break;

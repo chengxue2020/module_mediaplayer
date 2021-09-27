@@ -32,8 +32,8 @@ import java.util.Map;
 import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 
@@ -158,7 +158,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         // 设置dataSource
         if(path==null || path.length()==0){
             if (getVideoPlayerChangeListener()!=null){
-                getVideoPlayerChangeListener().onInfo(PlayerConstant.MEDIA_INFO_URL_NULL, 0);
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
             }
             return;
         }
@@ -179,7 +179,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
                 mMediaPlayer.setDataSource(ContentProviderMediaplayer.getContextWeakReference(), uri, headers);
             }
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_PARSE,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_PARSE,e.getMessage());
         }
     }
 
@@ -191,7 +191,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED,e.getMessage());
         }
     }
 
@@ -205,7 +205,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
             try {
                 mMediaPlayer.setSurface(surface);
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED,e.getMessage());
             }
         }
     }
@@ -218,7 +218,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED,e.getMessage());
         }
     }
 
@@ -230,7 +230,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.pause();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED,e.getMessage());
         }
     }
 
@@ -242,7 +242,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.start();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED,e.getMessage());
         }
     }
 
@@ -254,7 +254,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.stop();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED,e.getMessage());
         }
     }
 
@@ -285,7 +285,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.seekTo((int) time);
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED,e.getMessage());
         }
     }
 
@@ -397,7 +397,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     private IMediaPlayer.OnErrorListener onErrorListener = new IMediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
-            getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED,"监听异常"+ framework_err + ", extra: " + impl_err);
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED,"监听异常"+ framework_err + ", extra: " + impl_err);
             VideoLogUtils.d("IjkVideoPlayer----listener---------onError ——> STATE_ERROR ———— what：" + framework_err + ", extra: " + impl_err);
             return true;
         }

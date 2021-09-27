@@ -233,4 +233,61 @@ public class PlayerType {
         @interface Value {
         }
     }
+
+    /********************/
+
+    @Retention(RetentionPolicy.SOURCE)
+    @Keep
+    public @interface ErrorType {
+        //错误的链接
+        int TYPE_SOURCE = 0x9001;
+        //解析异常
+        int TYPE_PARSE = 0x9002;
+        //其他异常
+        int TYPE_UNEXPECTED = 0x9003;
+
+        @IntDef({TYPE_SOURCE, TYPE_PARSE, TYPE_UNEXPECTED})
+        @Retention(RetentionPolicy.SOURCE)
+        @Keep
+        @interface Value {
+        }
+    }
+
+    /*****************/
+
+
+    @Retention(RetentionPolicy.SOURCE)
+    @Keep
+    public @interface MediaType {
+        /**
+         * 视频传入url为空
+         */
+        int MEDIA_INFO_URL_NULL = -1;
+
+        /**
+         * 开始渲染视频画面
+         */
+        int MEDIA_INFO_VIDEO_RENDERING_START = 3;
+
+        /**
+         * 缓冲开始
+         */
+        int MEDIA_INFO_BUFFERING_START = 701;
+
+        /**
+         * 缓冲结束
+         */
+        int MEDIA_INFO_BUFFERING_END = 702;
+
+        /**
+         * 视频旋转信息
+         */
+        int MEDIA_INFO_VIDEO_ROTATION_CHANGED = 10001;
+
+        @IntDef({MEDIA_INFO_URL_NULL, MEDIA_INFO_VIDEO_RENDERING_START, MEDIA_INFO_BUFFERING_START, MEDIA_INFO_BUFFERING_END, MEDIA_INFO_VIDEO_ROTATION_CHANGED})
+        @Retention(RetentionPolicy.SOURCE)
+        @Keep
+        @interface Value {
+        }
+    }
 }

@@ -38,8 +38,8 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -130,7 +130,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
         // 设置dataSource
         if (path == null || path.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerConstant.MEDIA_INFO_URL_NULL, 0);
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
             }
             return;
         }
@@ -322,7 +322,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
                 }
             } catch (Exception e) {
                 if (null != getVideoPlayerChangeListener()) {
-                    getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+                    getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
                 }
             }
         }
@@ -410,13 +410,13 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
                     break;
                 //开始缓充
                 case Player.STATE_BUFFERING:
-                    getVideoPlayerChangeListener().onInfo(PlayerConstant.MEDIA_INFO_BUFFERING_START, getBufferedPercentage());
+                    getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, getBufferedPercentage());
                     mIsBuffering = true;
                     break;
                 //开始播放
                 case Player.STATE_READY:
                     if (mIsBuffering) {
-                        getVideoPlayerChangeListener().onInfo(PlayerConstant.MEDIA_INFO_BUFFERING_END, getBufferedPercentage());
+                        getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_END, getBufferedPercentage());
                         mIsBuffering = false;
                     }
                     break;
@@ -437,12 +437,12 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
             int type = ((ExoPlaybackException) error).type;
             if (type == TYPE_SOURCE) {
                 //错误的链接
-                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_SOURCE, error.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_SOURCE, error.getMessage());
             } else if (type == ExoPlaybackException.TYPE_RENDERER
                     || type == ExoPlaybackException.TYPE_UNEXPECTED
                     || type == ExoPlaybackException.TYPE_REMOTE
                     || type == ExoPlaybackException.TYPE_SOURCE) {
-                getVideoPlayerChangeListener().onError(PlayerConstant.ErrorType.TYPE_UNEXPECTED, error.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, error.getMessage());
             }
         }
     }
@@ -452,7 +452,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
         if (getVideoPlayerChangeListener() != null) {
             getVideoPlayerChangeListener().onVideoSizeChanged(width, height);
             if (unappliedRotationDegrees > 0) {
-                getVideoPlayerChangeListener().onInfo(PlayerConstant.MEDIA_INFO_VIDEO_ROTATION_CHANGED, unappliedRotationDegrees);
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, unappliedRotationDegrees);
             }
         }
     }
@@ -460,7 +460,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     @Override
     public void onRenderedFirstFrame() {
         if (getVideoPlayerChangeListener() != null && mIsPreparing) {
-            getVideoPlayerChangeListener().onInfo(PlayerConstant.MEDIA_INFO_VIDEO_RENDERING_START, 0);
+            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, 0);
             mIsPreparing = false;
         }
     }

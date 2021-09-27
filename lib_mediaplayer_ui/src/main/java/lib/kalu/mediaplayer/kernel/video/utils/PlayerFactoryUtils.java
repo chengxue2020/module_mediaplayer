@@ -7,10 +7,11 @@ import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.kernel.video.platfrom.exo.ExoPlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkPlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * @description: 工具类
- * @date:  2021-05-12 14:41
+ * @date: 2021-05-12 14:41
  */
 @Keep
 public final class PlayerFactoryUtils {
@@ -21,20 +22,19 @@ public final class PlayerFactoryUtils {
      * TYPE_NATIVE              MediaPlayer，基于原生自带的播放器控件
      * TYPE_EXO                 基于谷歌视频播放器
      * TYPE_RTC                 基于RTC视频播放器
-     * @param type                              类型
+     *
+     * @param type 类型
      * @return
      */
-    public static PlayerFactory getPlayer(@PlayerConstant.PlayerType int type){
-        if (type == PlayerConstant.PlayerType.TYPE_EXO){
+    public static PlayerFactory getPlayer(@PlayerType.PlatformType int type) {
+        if (type == PlayerType.PlatformType.EXO) {
             return ExoPlayerFactory.create();
-        } else if (type == PlayerConstant.PlayerType.TYPE_IJK){
+        } else if (type == PlayerType.PlatformType.IJK) {
             return IjkPlayerFactory.create();
-        } else if (type == PlayerConstant.PlayerType.TYPE_NATIVE){
+        } else if (type == PlayerType.PlatformType.NATIVE) {
             return MediaPlayerFactory.create();
-        } else if (type == PlayerConstant.PlayerType.TYPE_RTC){
-            return IjkPlayerFactory.create();
         } else {
-            return IjkPlayerFactory.create();
+            return ExoPlayerFactory.create();
         }
     }
 
@@ -45,22 +45,19 @@ public final class PlayerFactoryUtils {
      * TYPE_NATIVE              MediaPlayer，基于原生自带的播放器控件
      * TYPE_EXO                 基于谷歌视频播放器
      * TYPE_RTC                 基于RTC视频播放器
-     * @param type                              类型
+     *
+     * @param type 类型
      * @return
      */
-    public static VideoPlayerImpl getVideoPlayer(@PlayerConstant.PlayerType int type){
-        if (type == PlayerConstant.PlayerType.TYPE_EXO){
+    public static VideoPlayerImpl getVideoPlayer(@PlayerType.PlatformType.Value int type) {
+        if (type == PlayerType.PlatformType.EXO) {
             return ExoPlayerFactory.create().createPlayer();
-        } else if (type == PlayerConstant.PlayerType.TYPE_IJK){
+        } else if (type == PlayerType.PlatformType.IJK) {
             return IjkPlayerFactory.create().createPlayer();
-        } else if (type == PlayerConstant.PlayerType.TYPE_NATIVE){
+        } else if (type == PlayerType.PlatformType.NATIVE) {
             return MediaPlayerFactory.create().createPlayer();
-        } else if (type == PlayerConstant.PlayerType.TYPE_RTC){
-            return IjkPlayerFactory.create().createPlayer();
         } else {
-            return IjkPlayerFactory.create().createPlayer();
+            return ExoPlayerFactory.create().createPlayer();
         }
     }
-
-
 }

@@ -17,7 +17,6 @@ import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
@@ -358,7 +357,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
 
 
         //播放器配置，注意：此为全局配置，按需开启
-        PlayerFactory player = PlayerFactoryUtils.getPlayer(PlayerConstant.PlayerType.TYPE_IJK);
+        PlayerFactory player = PlayerFactoryUtils.getPlayer(PlayerType.PlatformType.IJK);
         PlayerConfigManager.getInstance().setConfig(PlayerConfig.newBuilder()
                 //设置视频全局埋点事件
                 .setBuriedPointEvent(new BuriedPointEventImpl())
