@@ -11,6 +11,7 @@ import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
 import lib.kalu.mediaplayer.cache.config.CacheType;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
+import lib.kalu.mediaplayer.keycode.KeycodeImplSimulator;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 
@@ -62,6 +63,7 @@ public class BaseApplication extends MultiDexApplication {
                 .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerConstant.PlayerType.TYPE_EXO))
                 //创建SurfaceView
                 //.setRenderViewFactory(SurfaceViewFactory.create())
+                .setKeycodeImpl(new KeycodeImplSimulator())
                 .build();
         PlayerConfigManager.getInstance().setConfig(build);
     }

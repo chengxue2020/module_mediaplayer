@@ -126,8 +126,9 @@ public class PlayerConfig {
             return mKeycodeImpl;
         }
 
-        public void setKeycodeImpl(KeycodeImpl mKeycodeImpl) {
+        public Builder setKeycodeImpl(KeycodeImpl mKeycodeImpl) {
             this.mKeycodeImpl = mKeycodeImpl;
+            return this;
         }
 
         /**
