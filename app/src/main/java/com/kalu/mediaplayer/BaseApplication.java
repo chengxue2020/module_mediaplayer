@@ -6,12 +6,12 @@ import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
-import lib.kalu.mediaplayer.videodb.manager.CacheConfig;
-import lib.kalu.mediaplayer.videodb.manager.CacheManager;
-import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
-import lib.kalu.mediaplayer.videokernel.utils.PlayerFactoryUtils;
-import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
+import lib.kalu.mediaplayer.cache.rom.manager.CacheConfig;
+import lib.kalu.mediaplayer.cache.rom.manager.CacheManager;
+import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
+import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
+import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
+import lib.kalu.mediaplayer.ui.player.VideoViewManager;
 
 public class BaseApplication extends MultiDexApplication {
 

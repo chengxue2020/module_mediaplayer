@@ -10,11 +10,10 @@ import com.kalu.mediaplayer.BaseActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
-
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 
 /**

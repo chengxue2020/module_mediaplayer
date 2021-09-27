@@ -8,13 +8,12 @@ import com.kalu.mediaplayer.BaseActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.old.listener.OnVideoControlListener;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-import lib.kalu.mediaplayer.videoui.old.controller.VideoPlayerController;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
-
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
+import lib.kalu.mediaplayer.ui.old.listener.OnVideoControlListener;
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
 
 /**
@@ -81,7 +80,7 @@ public class TestFullActivity2 extends BaseActivity implements View.OnClickListe
         controller.setOnVideoControlListener(new OnVideoControlListener() {
             @Override
             public void onVideoControlClick(int type) {
-                switch (type){
+                switch (type) {
                     case ConstantKeys.VideoControl.DOWNLOAD:
                         //BaseToast.showRoundRectToast("下载");
                         break;
@@ -106,7 +105,7 @@ public class TestFullActivity2 extends BaseActivity implements View.OnClickListe
             public void run() {
                 videoPlayer.start();
             }
-        },500);
+        }, 500);
     }
 
     @Override

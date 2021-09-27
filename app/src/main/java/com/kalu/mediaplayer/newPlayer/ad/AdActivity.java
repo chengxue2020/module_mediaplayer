@@ -9,16 +9,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.ConstantVideo;
-import lib.kalu.mediaplayer.videocache.HttpProxyCacheServer;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videocache.cache.ProxyVideoCacheManager;
 
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.tool.BaseToast;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
+import lib.kalu.mediaplayer.cache.ram.HttpProxyCacheServer;
+import lib.kalu.mediaplayer.cache.ram.cache.ProxyVideoCacheManager;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.tool.BaseToast;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 public class AdActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -87,7 +87,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
         adControlView.setListener(new AdControlView.AdControlListener() {
             @Override
             public void onAdClick() {
-                BaseToast.showRoundRectToast( "广告点击跳转");
+                BaseToast.showRoundRectToast("广告点击跳转");
             }
 
             @Override
@@ -144,15 +144,15 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v == mBtnScale169){
+        if (v == mBtnScale169) {
             mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_16_9);
-        } else if (v == mBtnScaleNormal){
+        } else if (v == mBtnScaleNormal) {
             mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_DEFAULT);
-        }else if (v == mBtnScale43){
+        } else if (v == mBtnScale43) {
             mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_4_3);
-        } else if (v == mBtnCrop){
+        } else if (v == mBtnCrop) {
 
-        } else if (v == mBtnGif){
+        } else if (v == mBtnGif) {
 
         }
     }

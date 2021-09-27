@@ -10,15 +10,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.kalu.mediaplayer.newPlayer.activity.NormalActivity;
-import lib.kalu.mediaplayer.videom3u8.bean.M3u8;
-import lib.kalu.mediaplayer.videom3u8.inter.OnDownloadListener;
-import lib.kalu.mediaplayer.videom3u8.inter.OnM3u8InfoListener;
-import lib.kalu.mediaplayer.videom3u8.manager.M3u8InfoManger;
-import lib.kalu.mediaplayer.videom3u8.manager.M3u8LiveManger;
-import lib.kalu.mediaplayer.videom3u8.task.M3u8DownloadTask;
-import lib.kalu.mediaplayer.videom3u8.utils.M3u8FileUtils;
-import lib.kalu.mediaplayer.videom3u8.utils.NetSpeedUtils;
-
 import com.kalu.mediaplayer.R;
 
 import java.io.File;
@@ -26,7 +17,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.m3u8.inter.OnDownloadListener;
+import lib.kalu.mediaplayer.m3u8.inter.OnM3u8InfoListener;
+import lib.kalu.mediaplayer.m3u8.manager.M3u8InfoManger;
+import lib.kalu.mediaplayer.m3u8.manager.M3u8LiveManger;
+import lib.kalu.mediaplayer.m3u8.task.M3u8DownloadTask;
+import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
+import lib.kalu.mediaplayer.m3u8.utils.NetSpeedUtils;
 
 
 public class M3u8Activity extends AppCompatActivity {
@@ -46,7 +45,7 @@ public class M3u8Activity extends AppCompatActivity {
         etUrl = (EditText) findViewById(R.id.et_url);
         etUrl.setText(url);
         tvConsole = (TextView) findViewById(R.id.tv_console);
-        tvSaveFilePathTip= (TextView) findViewById(R.id.tv_savepath_tip);
+        tvSaveFilePathTip = (TextView) findViewById(R.id.tv_savepath_tip);
     }
 
 
@@ -148,8 +147,8 @@ public class M3u8Activity extends AppCompatActivity {
     public void onLiveDownload(View view) {
 //        String url = "http://tvbilive7-i.akamaihd.net/hls/live/494651/CJHK4/CJHK4-06.m3u8";
         String url = etUrl.getText().toString().trim();
-        String toFile="/sdcard/" + System.currentTimeMillis() + ".ts";
-        tvSaveFilePathTip.setText("缓存目录在：/sdcard/11m3u8/\n最终导出的缓存文件在："+toFile);
+        String toFile = "/sdcard/" + System.currentTimeMillis() + ".ts";
+        tvSaveFilePathTip.setText("缓存目录在：/sdcard/11m3u8/\n最终导出的缓存文件在：" + toFile);
         M3u8LiveManger.getInstance()
                 .setTempDir("/sdcard/11m3u8/")
                 .setSaveFile(toFile)//（设置导出缓存文件）必须以.ts结尾
@@ -201,22 +200,22 @@ public class M3u8Activity extends AppCompatActivity {
         Log.e("hdltag", "onGetLiveCache(Main2Activity.java:151): currentTs = " + currentTs);
     }
 
-    public void onPlay(View view){
+    public void onPlay(View view) {
         String url = etUrl.getText().toString().trim();
         Intent intent = new Intent(this, NormalActivity.class);
-        intent.putExtra("url",url);
+        intent.putExtra("url", url);
         startActivity(intent);
     }
 
     public void onMergin(View view) {
-        File dir=new File("/sdcard/11m3u8/11");
+        File dir = new File("/sdcard/11m3u8/11");
         File[] files = dir.listFiles();
-        List<File> fileList=new ArrayList<>();
+        List<File> fileList = new ArrayList<>();
         for (File file : files) {
             fileList.add(file);
         }
         try {
-            M3u8FileUtils.merge(fileList,"/sdcard/1123/"+ System.currentTimeMillis()+".ts");
+            M3u8FileUtils.merge(fileList, "/sdcard/1123/" + System.currentTimeMillis() + ".ts");
         } catch (IOException e) {
             e.printStackTrace();
         }

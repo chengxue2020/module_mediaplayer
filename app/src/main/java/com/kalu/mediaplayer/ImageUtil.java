@@ -26,23 +26,24 @@ public class ImageUtil {
 
     /**
      * 将gif图转换为静态图
+     *
      * @param context
      * @param url
      * @param resId
      * @param imageView
      */
-    public static void display(Context context , String url, int resId ,ImageView imageView) {
-        if(imageView==null){
+    public static void display(Context context, String url, int resId, ImageView imageView) {
+        if (imageView == null) {
             return;
         }
-        if(url!=null && url.length()>0){
+        if (url != null && url.length() > 0) {
             Glide.with(context)
                     .asBitmap()
                     .load(url)
                     .placeholder(resId)
                     .error(resId)
                     .into(imageView);
-        }else {
+        } else {
             Glide.with(context)
                     .asBitmap()
                     .load(resId)

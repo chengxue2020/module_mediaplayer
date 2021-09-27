@@ -3,8 +3,8 @@ package com.kalu.mediaplayer.oldPlayer;
 import com.kalu.mediaplayer.BaseActivity;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
 
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
 
 /**
  * @author yc

@@ -7,15 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.old.controller.VideoPlayerController;
-import lib.kalu.mediaplayer.videoui.old.listener.OnPlayerStatesListener;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
-
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videofloat.SmallWindowTouch;
+
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
+import lib.kalu.mediaplayer.ui.old.listener.OnPlayerStatesListener;
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
+import lib.kalu.mediaplayer.window.SmallWindowTouch;
 
 
 /**
@@ -49,11 +49,11 @@ public class FloatPlayerView extends FrameLayout {
     private void init() {
         LayoutInflater inflater = (LayoutInflater) this.getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view ;
+        View view;
         if (inflater != null) {
             view = inflater.inflate(R.layout.module_mediaplayer_old_view_window_dialog, this);
             mVideoPlayer = view.findViewById(R.id.video_player);
-            mVideoPlayer.setUp(path,null);
+            mVideoPlayer.setUp(path, null);
             mVideoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);
             //创建视频控制器
             VideoPlayerController controller = new VideoPlayerController(getContext());
@@ -63,9 +63,9 @@ public class FloatPlayerView extends FrameLayout {
             controller.setOnPlayerStatesListener(new OnPlayerStatesListener() {
                 @Override
                 public void onPlayerStates(int states) {
-                    if (states == ConstantKeys.PlayerStatesType.COMPLETED){
+                    if (states == ConstantKeys.PlayerStatesType.COMPLETED) {
                         VideoPlayerManager.instance().releaseVideoPlayer();
-                        if(mCompletedListener!=null){
+                        if (mCompletedListener != null) {
                             mCompletedListener.Completed();
                         }
                     }
@@ -79,29 +79,30 @@ public class FloatPlayerView extends FrameLayout {
                 public void run() {
                     mVideoPlayer.start();
                 }
-            },300);
+            }, 300);
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VideoLogUtils.d("点击事件"+mVideoPlayer.getCurrentState());
-                    if(mVideoPlayer.isPlaying()){
+                    VideoLogUtils.d("点击事件" + mVideoPlayer.getCurrentState());
+                    if (mVideoPlayer.isPlaying()) {
                         mVideoPlayer.pause();
-                    }else if(mVideoPlayer.isPaused()){
+                    } else if (mVideoPlayer.isPaused()) {
                         mVideoPlayer.restart();
                     }
-                    VideoLogUtils.d("点击事件"+mVideoPlayer.getCurrentState());
+                    VideoLogUtils.d("点击事件" + mVideoPlayer.getCurrentState());
                 }
             });
-            view.setOnTouchListener(new SmallWindowTouch(view,0,0));
+            view.setOnTouchListener(new SmallWindowTouch(view, 0, 0));
         }
     }
 
     private static String path;
+
     public static void setUrl(String url) {
         path = url;
     }
 
-    public interface CompletedListener{
+    public interface CompletedListener {
         /**
          * 播放完成
          */
@@ -112,7 +113,8 @@ public class FloatPlayerView extends FrameLayout {
      * 监听视频播放完成事件
      */
     private CompletedListener mCompletedListener;
-    public void setCompletedListener(CompletedListener listener){
+
+    public void setCompletedListener(CompletedListener listener) {
         this.mCompletedListener = listener;
     }
 

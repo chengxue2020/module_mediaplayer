@@ -11,13 +11,14 @@ import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 /**
  * 连续播放列表视频
@@ -95,6 +96,7 @@ public class ContinuousVideoActivity extends AppCompatActivity implements View.O
         //监听播放结束
         mVideoPlayerLayout.addOnStateChangeListener(new SimpleStateListener() {
             private int mCurrentVideoPosition;
+
             @Override
             public void onPlayStateChanged(int playState) {
                 if (playState == ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING) {
@@ -125,15 +127,15 @@ public class ContinuousVideoActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        if (v == mBtnScale169){
+        if (v == mBtnScale169) {
             mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_16_9);
-        } else if (v == mBtnScaleNormal){
+        } else if (v == mBtnScaleNormal) {
             mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_DEFAULT);
-        }else if (v == mBtnScale43){
+        } else if (v == mBtnScale43) {
             mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_4_3);
-        } else if (v == mBtnCrop){
+        } else if (v == mBtnCrop) {
 
-        } else if (v == mBtnGif){
+        } else if (v == mBtnGif) {
 
         }
     }

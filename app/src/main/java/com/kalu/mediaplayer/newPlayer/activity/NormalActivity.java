@@ -15,18 +15,18 @@ import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.BuriedPointEventImpl;
 import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.videoui.player.OnVideoStateListener;
-import lib.kalu.mediaplayer.videoui.player.VideoBuilder;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
-import lib.kalu.mediaplayer.videoui.ui.view.CustomErrorView;
 
-import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
-import lib.kalu.mediaplayer.videokernel.utils.PlayerConstant;
-import lib.kalu.mediaplayer.videokernel.utils.PlayerFactoryUtils;
+import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
+import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
+import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
+import lib.kalu.mediaplayer.ui.player.OnVideoStateListener;
+import lib.kalu.mediaplayer.ui.player.VideoBuilder;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.ui.view.CustomErrorView;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 public class NormalActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -85,7 +85,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
 
             long currentPosition = mVideoPlayer.getCurrentPosition();
             long duration = mVideoPlayer.getDuration();
-            Toast.makeText(getApplicationContext(), currentPosition+"-"+duration, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), currentPosition + "-" + duration, Toast.LENGTH_SHORT).show();
 
             super.onBackPressed();
         }
@@ -107,7 +107,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
 //        String url = getIntent().getStringExtra(IntentKeys.URL);
         String url = "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8";
 //        String url = "https://vod.iartschool.com/793497282635890688_low.m3u8?sign=52a09ee9f0f03b0270339dab57712f9a&t=60990a84";
-        if (url==null || url.length()==0){
+        if (url == null || url.length() == 0) {
             url = ConstantVideo.VideoPlayerList[0];
         }
         //创建基础视频播放器，一般播放器的功能
@@ -148,26 +148,26 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v == mBtnScale169){
+        if (v == mBtnScale169) {
             mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_16_9);
-        } else if (v == mBtnScaleNormal){
+        } else if (v == mBtnScaleNormal) {
             mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_DEFAULT);
-        }else if (v == mBtnScale43){
+        } else if (v == mBtnScale43) {
             mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_4_3);
-        } else if (v == mBtnScaleFull){
+        } else if (v == mBtnScaleFull) {
             mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_MATCH_PARENT);
-        }else if (v == mBtnScaleOriginal){
+        } else if (v == mBtnScaleOriginal) {
             mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_ORIGINAL);
-        }else if (v == mBtnScaleCrop){
+        } else if (v == mBtnScaleCrop) {
             mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_CENTER_CROP);
-        }else if (v == mBtnCrop){
+        } else if (v == mBtnCrop) {
 
-        } else if (v == mBtnGif){
+        } else if (v == mBtnGif) {
 
         }
     }
 
-    private void test(){
+    private void test() {
         //VideoPlayer相关
         VideoBuilder.Builder builder = VideoBuilder.newBuilder();
         VideoBuilder videoPlayerBuilder = new VideoBuilder(builder);
@@ -223,7 +223,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         //设置播放速度
         mVideoPlayer.setSpeed(1.1f);
         //设置音量 0.0f-1.0f 之间
-        mVideoPlayer.setVolume(1,1);
+        mVideoPlayer.setVolume(1, 1);
         //开始播放
         mVideoPlayer.start();
 
@@ -355,7 +355,6 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         controller.setDismissTimeout(8);
         //销毁
         controller.destroy();
-
 
 
         //播放器配置，注意：此为全局配置，按需开启

@@ -6,13 +6,12 @@ import com.kalu.mediaplayer.BaseActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.old.controller.VideoPlayerController;
-import lib.kalu.mediaplayer.videoui.old.listener.OnVideoControlListener;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
-
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
+import lib.kalu.mediaplayer.ui.old.listener.OnVideoControlListener;
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
 
 /**
@@ -20,10 +19,8 @@ import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
  */
 public class TestNormalActivity extends BaseActivity {
 
-
     OldVideoPlayer videoPlayer;
     private VideoPlayerController controller;
-
 
     @Override
     protected void onStop() {
@@ -39,9 +36,9 @@ public class TestNormalActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (VideoPlayerManager.instance().onBackPressed()){
+        if (VideoPlayerManager.instance().onBackPressed()) {
             return;
-        }else {
+        } else {
             VideoPlayerManager.instance().releaseVideoPlayer();
         }
         super.onBackPressed();
@@ -81,7 +78,7 @@ public class TestNormalActivity extends BaseActivity {
 
     }
 
-    private void test(){
+    private void test() {
         //关于视频播放相关api
         //获取缓冲区百分比
         int bufferPercentage = videoPlayer.getBufferPercentage();
@@ -147,7 +144,7 @@ public class TestNormalActivity extends BaseActivity {
         //设置播放速度，不必须
         videoPlayer.setSpeed(100);
         //设置视频链接
-        videoPlayer.setUp("",null);
+        videoPlayer.setUp("", null);
         //设置音量
         videoPlayer.setVolume(50);
 
@@ -184,7 +181,7 @@ public class TestNormalActivity extends BaseActivity {
         controller.setTitle("小杨逗比");
         boolean lock = controller.getLock();
         //设置横屏播放时，tv和audio图标是否显示
-        controller.setTvAndAudioVisibility(true,true);
+        controller.setTvAndAudioVisibility(true, true);
 
         //设置视频分享，下载，音视频转化点击事件
         controller.setOnVideoControlListener(new OnVideoControlListener() {

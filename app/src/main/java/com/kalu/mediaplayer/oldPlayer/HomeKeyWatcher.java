@@ -29,6 +29,7 @@ public class HomeKeyWatcher {
 
     /**
      * 设置监听
+     *
      * @param listener
      */
     public void setOnHomePressedListener(OnHomePressedListener listener) {
@@ -63,7 +64,7 @@ public class HomeKeyWatcher {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action!=null && action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+            if (action != null && action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
                 if (reason != null) {
                     if (mListener != null) {

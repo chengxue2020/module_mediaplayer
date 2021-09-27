@@ -15,10 +15,10 @@ import androidx.annotation.Nullable;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.videoui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.ui.view.InterControlView;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 
 
 public class AdControlView extends FrameLayout implements InterControlView, View.OnClickListener {
@@ -45,7 +45,7 @@ public class AdControlView extends FrameLayout implements InterControlView, View
         init(context);
     }
 
-    private void init(Context context){
+    private void init(Context context) {
         this.mContext = context;
         LayoutInflater.from(getContext()).inflate(R.layout.layout_ad_control_view, this, true);
         mAdTime = findViewById(R.id.ad_time);

@@ -11,15 +11,16 @@ import android.widget.Button;
 import androidx.annotation.RequiresApi;
 
 import com.kalu.mediaplayer.BaseActivity;
-import lib.kalu.mediaplayer.videofloat.FloatWindow;
-import lib.kalu.mediaplayer.videofloat.MoveType;
-import lib.kalu.mediaplayer.videofloat.WindowScreen;
-import lib.kalu.mediaplayer.videofloat.WindowUtil;
 import com.kalu.mediaplayer.newPlayer.tiny.TestFullActivity;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
+
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
+import lib.kalu.mediaplayer.window.FloatWindow;
+import lib.kalu.mediaplayer.window.MoveType;
+import lib.kalu.mediaplayer.window.WindowScreen;
+import lib.kalu.mediaplayer.window.WindowUtil;
 
 
 /**

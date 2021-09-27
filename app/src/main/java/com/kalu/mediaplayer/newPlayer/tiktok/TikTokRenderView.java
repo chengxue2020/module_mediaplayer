@@ -5,10 +5,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.videokernel.impl.VideoPlayerImpl;
-
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.surface.InterSurfaceView;
+import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.surface.InterSurfaceView;
 
 
 /**

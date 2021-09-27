@@ -6,19 +6,15 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.exoplayer2.BasePlayer;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoPlayerFactory;
+import lib.kalu.mediaplayer.kernel.video.platfrom.exo.ExoPlayerFactory;
 
 public class ExoActivity extends AppCompatActivity {
 
@@ -40,7 +36,7 @@ public class ExoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (player!=null){
+        if (player != null) {
             player.release();
         }
     }

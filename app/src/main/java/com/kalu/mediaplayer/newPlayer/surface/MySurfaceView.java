@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 
 public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
 

@@ -10,23 +10,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.kalu.mediaplayer.ConstantVideo;
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
-
 import com.kalu.mediaplayer.R;
 
 import com.yc.pagerlib.pager.VerticalViewPager;
-import lib.kalu.mediaplayer.videocache.cache.PreloadManager;
-import lib.kalu.mediaplayer.videocache.cache.ProxyVideoCacheManager;
-
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+import lib.kalu.mediaplayer.cache.ram.cache.PreloadManager;
+import lib.kalu.mediaplayer.cache.ram.cache.ProxyVideoCacheManager;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 
 /**
@@ -214,7 +212,7 @@ public class TikTok2Activity extends AppCompatActivity {
 
     private void startPlay(int position) {
         int count = mViewPager.getChildCount();
-        for (int i = 0; i < count; i ++) {
+        for (int i = 0; i < count; i++) {
             View itemView = mViewPager.getChildAt(i);
             Tiktok2Adapter.ViewHolder viewHolder = (Tiktok2Adapter.ViewHolder) itemView.getTag();
             if (viewHolder.mPosition == position) {

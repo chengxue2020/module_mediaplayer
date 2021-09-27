@@ -14,9 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import lib.kalu.mediaplayer.musickernel.model.AudioBean;
-import lib.kalu.mediaplayer.musickernel.service.PlayService;
-import lib.kalu.mediaplayer.musickernel.tool.BaseAppHelper;
 import com.kalu.mediaplayer.demo.DemoActivity;
 import com.kalu.mediaplayer.m3u8.M3u8Activity;
 import com.kalu.mediaplayer.music.MusicPlayerActivity;
@@ -25,7 +22,10 @@ import com.kalu.mediaplayer.oldPlayer.OldActivity;
 import java.util.List;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
+import lib.kalu.mediaplayer.kernel.music.service.PlayService;
+import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 
 /**
  * ================================================
@@ -98,10 +98,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void startActivity(Class c){
-        startActivity(new Intent(this,c));
+    private void startActivity(Class c) {
+        startActivity(new Intent(this, c));
     }
-
 
 
     /**
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void run() {
                     bindService();
                 }
-            },500);
+            }, 500);
         }
     }
 
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private class PlayServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            VideoLogUtils.e("onServiceConnected"+name);
+            VideoLogUtils.e("onServiceConnected" + name);
             final PlayService playService = ((PlayService.PlayBinder) service).getService();
             BaseAppHelper.get().setPlayService(playService);
             List<AudioBean> musicList = BaseAppHelper.get().getMusicList();
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            VideoLogUtils.e("onServiceDisconnected"+name);
+            VideoLogUtils.e("onServiceDisconnected" + name);
         }
     }
 }

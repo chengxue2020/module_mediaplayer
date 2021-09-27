@@ -12,10 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
-import lib.kalu.mediaplayer.musickernel.inter.OnPlayerEventListener;
-import lib.kalu.mediaplayer.musickernel.model.AudioBean;
-import lib.kalu.mediaplayer.musickernel.tool.BaseAppHelper;
 import com.kalu.mediaplayer.R;
+
+import lib.kalu.mediaplayer.kernel.music.inter.OnPlayerEventListener;
+import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
+import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
 
 public class MusicPlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -59,7 +60,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements View.OnCli
             public void run() {
                 initPlayServiceListener();
             }
-        },1000);
+        }, 1000);
     }
 
     private void initFindViewById() {
@@ -96,7 +97,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_1:
                 BaseAppHelper.get().getMusicService().play(0);
                 break;

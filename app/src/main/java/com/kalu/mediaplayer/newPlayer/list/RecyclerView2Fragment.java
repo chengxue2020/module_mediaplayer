@@ -19,17 +19,17 @@ import com.kalu.mediaplayer.ConstantVideo;
 import com.yc.pagerlib.recycler.ScrollPageHelper;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 public class RecyclerView2Fragment extends Fragment {
 
@@ -82,7 +82,7 @@ public class RecyclerView2Fragment extends Fragment {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-        ScrollPageHelper snapHelper = new ScrollPageHelper(Gravity.TOP,false);
+        ScrollPageHelper snapHelper = new ScrollPageHelper(Gravity.TOP, false);
         snapHelper.attachToRecyclerView(mRecyclerView);
         mRecyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
@@ -157,6 +157,7 @@ public class RecyclerView2Fragment extends Fragment {
 
     /**
      * 开始播放
+     *
      * @param position 列表位置
      */
     protected void startPlay(int position) {
@@ -184,7 +185,7 @@ public class RecyclerView2Fragment extends Fragment {
         if (mVideoView.isFullScreen()) {
             mVideoView.stopFullScreen();
         }
-        if(Objects.requireNonNull(getActivity()).getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+        if (Objects.requireNonNull(getActivity()).getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         mCurPos = -1;

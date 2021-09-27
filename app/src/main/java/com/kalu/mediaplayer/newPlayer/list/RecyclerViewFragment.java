@@ -17,17 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
-import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 /**
  * 普通的列表播放
@@ -86,7 +86,7 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(@NonNull View view) {
-                VideoLogUtils.i("addOnChildAttachStateChangeListener-----AttachedToWindow---"+view);
+                VideoLogUtils.i("addOnChildAttachStateChangeListener-----AttachedToWindow---" + view);
             }
 
             /**
@@ -96,7 +96,7 @@ public class RecyclerViewFragment extends Fragment {
              */
             @Override
             public void onChildViewDetachedFromWindow(@NonNull View view) {
-                VideoLogUtils.i("addOnChildAttachStateChangeListener-----DetachedFromWindow---"+view);
+                VideoLogUtils.i("addOnChildAttachStateChangeListener-----DetachedFromWindow---" + view);
                 FrameLayout playerContainer = view.findViewById(R.id.player_container);
                 View v = playerContainer.getChildAt(0);
                 if (v != null && v == mVideoView && !mVideoView.isFullScreen()) {
@@ -162,6 +162,7 @@ public class RecyclerViewFragment extends Fragment {
 
     /**
      * 开始播放
+     *
      * @param position 列表位置
      */
     protected void startPlay(int position) {
@@ -189,7 +190,7 @@ public class RecyclerViewFragment extends Fragment {
             mVideoView.stopFullScreen();
         }
         mVideoView.release();
-        if(getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+        if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         mCurPos = -1;

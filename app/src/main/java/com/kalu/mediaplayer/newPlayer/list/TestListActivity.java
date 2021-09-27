@@ -6,7 +6,7 @@ import com.kalu.mediaplayer.newPlayer.tiktok.TikTokListFragment;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
 
 
 /**
@@ -30,32 +30,32 @@ public class TestListActivity extends BaseActivity {
     @Override
     public void initView() {
         int type = getIntent().getIntExtra("type", 0);
-        if (type==0){
+        if (type == 0) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, new RecyclerViewFragment())
                     .commit();
-        } else if (type==1){
+        } else if (type == 1) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, new RecyclerViewAutoPlayFragment())
                     .commit();
-        } else if (type==2){
+        } else if (type == 2) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, new TikTokListFragment())
                     .commit();
-        } else if (type==3){
+        } else if (type == 3) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, new TikTok1ListFragment())
                     .commit();
-        }else if (type==4){
+        } else if (type == 4) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, new SeamlessPlayFragment())
                     .commit();
-        }else {
+        } else {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, new RecyclerView2Fragment())

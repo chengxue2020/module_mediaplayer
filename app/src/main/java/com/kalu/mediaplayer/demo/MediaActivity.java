@@ -14,7 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.tool.BaseToast;
+
+import lib.kalu.mediaplayer.ui.tool.BaseToast;
 
 public class MediaActivity extends AppCompatActivity {
 

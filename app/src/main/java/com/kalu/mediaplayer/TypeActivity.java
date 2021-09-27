@@ -23,19 +23,18 @@ import com.kalu.mediaplayer.newPlayer.tiny.TestFullActivity;
 import com.kalu.mediaplayer.newPlayer.tiny.TinyScreenActivity;
 
 import lib.kalu.mediaplayer.ExoplayerActivity;
-import lib.kalu.mediaplayer.videokernel.factory.PlayerFactory;
-import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoMediaPlayer;
-import lib.kalu.mediaplayer.videokernel.platfrom.exo.ExoPlayerFactory;
-import lib.kalu.mediaplayer.videokernel.platfrom.ijk.IjkMediaPlayer;
-import lib.kalu.mediaplayer.videokernel.platfrom.ijk.IjkPlayerFactory;
-import lib.kalu.mediaplayer.videokernel.platfrom.media.AndroidMediaPlayer;
-import lib.kalu.mediaplayer.videokernel.platfrom.media.MediaPlayerFactory;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-
-import lib.kalu.mediaplayer.videoui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
-import lib.kalu.mediaplayer.videoui.tool.BaseToast;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
+import lib.kalu.mediaplayer.kernel.video.platfrom.exo.ExoMediaPlayer;
+import lib.kalu.mediaplayer.kernel.video.platfrom.exo.ExoPlayerFactory;
+import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkMediaPlayer;
+import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkPlayerFactory;
+import lib.kalu.mediaplayer.kernel.video.platfrom.media.AndroidMediaPlayer;
+import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
+import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.tool.BaseToast;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 import java.lang.reflect.Field;
 

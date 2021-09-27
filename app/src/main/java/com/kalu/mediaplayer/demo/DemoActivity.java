@@ -52,8 +52,8 @@ public class DemoActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void startActivity(Class c){
-        startActivity(new Intent(this,c));
+    private void startActivity(Class c) {
+        startActivity(new Intent(this, c));
     }
 
 }

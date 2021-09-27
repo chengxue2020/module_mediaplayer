@@ -14,9 +14,8 @@ import com.kalu.mediaplayer.newPlayer.list.TestListActivity;
 import com.kalu.mediaplayer.newPlayer.surface.TestSurfaceActivity;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
 
 /**
  * ================================================
@@ -173,7 +172,7 @@ public class OldActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    private void startActivity(Class c){
-        startActivity(new Intent(this,c));
+    private void startActivity(Class c) {
+        startActivity(new Intent(this, c));
     }
 }

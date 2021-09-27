@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
 
 /**
@@ -31,7 +31,7 @@ public class TestListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(getContentView(),container,false);
+        View view = inflater.inflate(getContentView(), container, false);
         initView(view);
         return view;
     }
@@ -45,8 +45,8 @@ public class TestListFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         List<Video> list = new ArrayList<>();
-        for (int a = 0; a< ConstantVideo.VideoPlayerList.length ; a++){
-            Video video = new Video(ConstantVideo.VideoPlayerTitle[a],ConstantVideo.VideoPlayerList[a]);
+        for (int a = 0; a < ConstantVideo.VideoPlayerList.length; a++) {
+            Video video = new Video(ConstantVideo.VideoPlayerTitle[a], ConstantVideo.VideoPlayerList[a]);
             list.add(video);
         }
         VideoAdapter adapter = new VideoAdapter(getActivity(), list);
@@ -61,7 +61,6 @@ public class TestListFragment extends Fragment {
             }
         });
     }
-
 
 
 }

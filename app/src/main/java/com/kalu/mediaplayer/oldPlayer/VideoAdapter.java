@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kalu.mediaplayer.ImageUtil;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.old.controller.VideoPlayerController;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
-
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
 
@@ -44,7 +44,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public int getItemCount() {
-        return mVideoList==null ? 0 : mVideoList.size();
+        return mVideoList == null ? 0 : mVideoList.size();
     }
 
     public class VideoViewHolder extends RecyclerView.ViewHolder {
@@ -66,7 +66,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         /**
          * 设置视频控制器参数
-         * @param controller            控制器对象
+         *
+         * @param controller 控制器对象
          */
         void setController(VideoPlayerController controller) {
             mController = controller;
@@ -77,7 +78,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         void bindData(Video video) {
             mController.setTitle(video.getTitle());
             //mController.setLength(video.getLength());
-            ImageUtil.display(itemView.getContext(),video.getUrl(),R.drawable.image_default,mController.imageView());
+            ImageUtil.display(itemView.getContext(), video.getUrl(), R.drawable.image_default, mController.imageView());
             mVideoPlayer.setUp(video.getUrl(), null);
         }
     }

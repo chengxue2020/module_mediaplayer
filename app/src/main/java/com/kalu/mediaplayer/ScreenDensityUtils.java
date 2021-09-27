@@ -56,7 +56,8 @@ public class ScreenDensityUtils {
 
     /**
      * 初始化
-     * @param application                   需要在application中初始化
+     *
+     * @param application 需要在application中初始化
      */
     public static void setup(@NonNull final Application application) {
 
@@ -169,8 +170,8 @@ public class ScreenDensityUtils {
     /**
      * 适配屏幕（放在 Activity 的 setContentView() 之前执行）
      *
-     * @param context                               上下文
-     * @param designSize                            设计图的尺寸
+     * @param context    上下文
+     * @param designSize 设计图的尺寸
      */
     public static void match(@NonNull final Context context, final float designSize) {
         match(context, designSize, MATCH_BASE_WIDTH, MATCH_UNIT_DP);
@@ -180,9 +181,9 @@ public class ScreenDensityUtils {
     /**
      * 适配屏幕（放在 Activity 的 setContentView() 之前执行）
      *
-     * @param context                               上下文
-     * @param designSize                            设计图的尺寸
-     * @param matchBase                             适配基准
+     * @param context    上下文
+     * @param designSize 设计图的尺寸
+     * @param matchBase  适配基准
      */
     public static void match(@NonNull final Context context, final float designSize, int matchBase) {
         match(context, designSize, matchBase, MATCH_UNIT_DP);
@@ -191,10 +192,10 @@ public class ScreenDensityUtils {
     /**
      * 适配屏幕（放在 Activity 的 setContentView() 之前执行）
      *
-     * @param context                               上下文
-     * @param designSize                            设计图的尺寸
-     * @param matchBase                             适配基准
-     * @param matchUnit                             使用的适配单位
+     * @param context    上下文
+     * @param designSize 设计图的尺寸
+     * @param matchBase  适配基准
+     * @param matchUnit  使用的适配单位
      */
     private static void match(@NonNull final Context context, final float designSize, int matchBase, int matchUnit) {
         if (designSize == 0) {
@@ -218,8 +219,8 @@ public class ScreenDensityUtils {
     /**
      * 重置适配信息，取消适配
      *
-     * @param context                       上下文
-     * @param matchUnit                     需要取消适配的单位
+     * @param context   上下文
+     * @param matchUnit 需要取消适配的单位
      */
     private static void cancelMatch(@NonNull final Context context, int matchUnit) {
         if (sMatchInfo != null) {
@@ -258,9 +259,9 @@ public class ScreenDensityUtils {
      * <li> px = dp * (dpi / 160) </li>
      * </ul>
      *
-     * @param context                       上下文
-     * @param designSize                    设计图的宽/高（单位: dp）
-     * @param base                          适配基准
+     * @param context    上下文
+     * @param designSize 设计图的宽/高（单位: dp）
+     * @param base       适配基准
      */
     private static void matchByDP(@NonNull final Context context, final float designSize, int base) {
         final float targetDensity;
@@ -286,9 +287,9 @@ public class ScreenDensityUtils {
      * <br/>
      * <p> pt 转 px 算法: pt * metrics.xdpi * (1.0f/72) </p>
      *
-     * @param context                       上下文
-     * @param designSize                    设计图的宽/高（单位: pt）
-     * @param base                          适配基准
+     * @param context    上下文
+     * @param designSize 设计图的宽/高（单位: pt）
+     * @param base       适配基准
      */
     private static void matchByPT(@NonNull final Context context, final float designSize, int base) {
         final float targetXdpi;

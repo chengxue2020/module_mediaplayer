@@ -1,5 +1,6 @@
 package com.kalu.mediaplayer.newPlayer.tiktok;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
 
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 
 public class TikTokListAdapter extends RecyclerView.Adapter<TikTokListAdapter.TikTokListViewHolder> {
 
@@ -34,7 +36,7 @@ public class TikTokListAdapter extends RecyclerView.Adapter<TikTokListAdapter.Ti
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TikTokListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TikTokListViewHolder holder, @SuppressLint("RecyclerView") int position) {
         VideoInfoBean item = data.get(position);
         holder.mTitle.setText(item.getTitle());
         Glide.with(holder.mThumb.getContext())

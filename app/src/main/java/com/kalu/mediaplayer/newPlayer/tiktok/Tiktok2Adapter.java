@@ -15,9 +15,9 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.bumptech.glide.Glide;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videocache.cache.PreloadManager;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
 
+import lib.kalu.mediaplayer.cache.ram.cache.PreloadManager;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import java.util.ArrayList;
 import java.util.List;
 

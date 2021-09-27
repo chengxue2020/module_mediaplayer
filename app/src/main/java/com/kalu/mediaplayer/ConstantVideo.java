@@ -1,9 +1,9 @@
 package com.kalu.mediaplayer;
 
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 
 public class ConstantVideo {
 

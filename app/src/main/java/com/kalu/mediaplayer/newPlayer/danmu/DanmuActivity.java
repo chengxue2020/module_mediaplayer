@@ -10,12 +10,12 @@ import com.kalu.mediaplayer.BaseActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 
 /**
@@ -54,7 +54,7 @@ public class DanmuActivity extends BaseActivity implements View.OnClickListener 
         if (mVideoPlayerLayout != null) {
             mVideoPlayerLayout.release();
         }
-        if (mHandler!=null){
+        if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }

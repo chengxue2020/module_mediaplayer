@@ -5,11 +5,10 @@ import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.videoui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.videoui.ui.view.InterControlView;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 
 public class PlayerMonitor implements InterControlView {
 
@@ -28,27 +27,27 @@ public class PlayerMonitor implements InterControlView {
 
     @Override
     public void onVisibilityChanged(boolean isVisible, Animation anim) {
-        VideoLogUtils.d(TAG+ "---" +"onVisibilityChanged: " + isVisible);
+        VideoLogUtils.d(TAG + "---" + "onVisibilityChanged: " + isVisible);
     }
 
     @Override
     public void onPlayStateChanged(int playState) {
-        VideoLogUtils.d(TAG+ "---" +"onPlayStateChanged: " + PlayerUtils.playState2str(playState));
+        VideoLogUtils.d(TAG + "---" + "onPlayStateChanged: " + PlayerUtils.playState2str(playState));
     }
 
     @Override
     public void onPlayerStateChanged(int playerState) {
-        VideoLogUtils.d(TAG+ "---" +"onPlayerStateChanged: " + PlayerUtils.playerState2str(playerState));
+        VideoLogUtils.d(TAG + "---" + "onPlayerStateChanged: " + PlayerUtils.playerState2str(playerState));
     }
 
     @Override
     public void setProgress(int duration, int position) {
-        VideoLogUtils.d(TAG+ "---" +"setProgress: duration: " + duration + " position: " + position + " buffered percent: " + mControlWrapper.getBufferedPercentage());
-        VideoLogUtils.d(TAG+ "---" +"network speed: " + mControlWrapper.getTcpSpeed());
+        VideoLogUtils.d(TAG + "---" + "setProgress: duration: " + duration + " position: " + position + " buffered percent: " + mControlWrapper.getBufferedPercentage());
+        VideoLogUtils.d(TAG + "---" + "network speed: " + mControlWrapper.getTcpSpeed());
     }
 
     @Override
     public void onLockStateChanged(boolean isLocked) {
-        VideoLogUtils.d(TAG+ "---" +"onLockStateChanged: " + isLocked);
+        VideoLogUtils.d(TAG + "---" + "onLockStateChanged: " + isLocked);
     }
 }

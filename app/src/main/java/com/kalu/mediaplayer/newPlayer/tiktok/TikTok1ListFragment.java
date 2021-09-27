@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 
 public class TikTok1ListFragment extends Fragment {
 

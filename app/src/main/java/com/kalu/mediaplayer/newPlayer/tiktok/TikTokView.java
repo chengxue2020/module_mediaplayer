@@ -13,14 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
-
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.videoui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.ui.view.InterControlView;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 
 public class TikTokView extends FrameLayout implements InterControlView {
 

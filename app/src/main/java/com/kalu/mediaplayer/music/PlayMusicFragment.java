@@ -22,13 +22,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import lib.kalu.mediaplayer.common.util.SpUtil;
-import lib.kalu.mediaplayer.musickernel.config.MusicConstant;
-import lib.kalu.mediaplayer.musickernel.config.PlayModeEnum;
-import lib.kalu.mediaplayer.musickernel.inter.OnPlayerEventListener;
-import lib.kalu.mediaplayer.musickernel.model.AudioBean;
-import lib.kalu.mediaplayer.musickernel.tool.BaseAppHelper;
-import lib.kalu.mediaplayer.videokernel.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.kernel.music.config.MusicConstant;
+import lib.kalu.mediaplayer.kernel.music.config.PlayModeEnum;
+import lib.kalu.mediaplayer.kernel.music.inter.OnPlayerEventListener;
+import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
+import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 import com.kalu.mediaplayer.R;
 
@@ -73,25 +73,27 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
      * 不会回调任何生命周期方法以及onHiddenChanged()，
      * 只有setUserVisibleHint(boolean isVisibleToUser)会被回调，
      * 所以如果你想进行一些懒加载，需要在这里处理。
-     * @param isVisibleToUser               是否显示
+     *
+     * @param isVisibleToUser 是否显示
      */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        VideoLogUtils.e(TAG+"setUserVisibleHint"+isVisibleToUser);
+        VideoLogUtils.e(TAG + "setUserVisibleHint" + isVisibleToUser);
     }
 
     /**
      * 当使用add()+show()，hide()跳转新的Fragment时，旧的Fragment回调onHiddenChanged()，
      * 不会回调onStop()等生命周期方法，
      * 而新的Fragment在创建时是不会回调onHiddenChanged()，这点要切记
-     * @param hidden                        是否显示
+     *
+     * @param hidden 是否显示
      */
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        VideoLogUtils.e(TAG+"onHiddenChanged"+hidden);
-        if (!hidden){
+        VideoLogUtils.e(TAG + "onHiddenChanged" + hidden);
+        if (!hidden) {
             initData();
         }
     }
@@ -111,7 +113,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(getContentView(), container , false);
+        View view = inflater.inflate(getContentView(), container, false);
         return view;
     }
 
@@ -132,8 +134,9 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     /**
      * 对Fragment传递数据，建议使用setArguments(Bundle args)，而后在onCreate中使用getArguments()取出，
      * 在 “内存重启”前，系统会帮你保存数据，不会造成数据的丢失。和Activity的Intent恢复机制类似。
-     * @param type                          type
-     * @return                              PlayMusicFragment实例对象
+     *
+     * @param type type
+     * @return PlayMusicFragment实例对象
      */
     public static PlayMusicFragment newInstance(String type) {
         Bundle bundle = new Bundle();
@@ -157,7 +160,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
             public void run() {
                 ivBack.setEnabled(true);
             }
-        },300);
+        }, 300);
     }
 
     @Override
@@ -390,7 +393,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
         sbProgress.setProgress((int) BaseAppHelper.get().getMusicService().getCurrentPosition());
         sbProgress.setSecondaryProgress(0);
         sbProgress.setMax((int) playingMusic.getDuration());
-        VideoLogUtils.e("-----------------------"+(int) playingMusic.getDuration());
+        VideoLogUtils.e("-----------------------" + (int) playingMusic.getDuration());
         mLastProgress = 0;
         tvCurrentTime.setText("00:00");
         tvTotalTime.setText(PlayerUtils.formatTime(playingMusic.getDuration()));
@@ -408,7 +411,6 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
         //mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(music));
         //ivPlayPageBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music));
     }
-
 
 
     /**
@@ -431,7 +433,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onUpdateProgress(int progress) {
-        if(progress>0){
+        if (progress > 0) {
             //如果没有拖动进度，则开始更新进度条进度
             if (!isDraggingProgress) {
                 sbProgress.setProgress(progress);
@@ -441,8 +443,8 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onBufferingUpdate(int percent) {
-        if(sbProgress.getMax()>0 && percent>0){
-            VideoLogUtils.e("setOnPlayEventListener---percent---"+ sbProgress.getMax() + "-----" +percent);
+        if (sbProgress.getMax() > 0 && percent > 0) {
+            VideoLogUtils.e("setOnPlayEventListener---percent---" + sbProgress.getMax() + "-----" + percent);
             sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
         }
     }

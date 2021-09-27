@@ -19,11 +19,10 @@ import androidx.core.content.ContextCompat;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.videoui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.ui.view.InterControlView;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 import master.flame.danmaku.controller.DrawHandler;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;

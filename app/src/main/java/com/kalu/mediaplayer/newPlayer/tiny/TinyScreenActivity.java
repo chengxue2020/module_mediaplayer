@@ -15,14 +15,15 @@ import com.kalu.mediaplayer.newPlayer.list.OnItemChildClickListener;
 import com.kalu.mediaplayer.newPlayer.list.VideoRecyclerViewAdapter;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 /**
  * 小窗播放

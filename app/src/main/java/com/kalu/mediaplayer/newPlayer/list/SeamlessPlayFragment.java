@@ -14,10 +14,11 @@ import com.kalu.mediaplayer.R;
 
 import com.kalu.mediaplayer.newPlayer.activity.DetailActivity;
 import com.kalu.mediaplayer.newPlayer.activity.IntentKeys;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
+
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 /**
  * 无缝播放

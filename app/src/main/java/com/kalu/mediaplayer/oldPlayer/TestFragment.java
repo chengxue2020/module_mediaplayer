@@ -13,15 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
 
 /**
  * 如果你需要在播放的时候按下Home键能暂停，回调此Fragment又继续的话，需要继承自CompatHomeKeyFragment
+ *
  * @author yc
  */
 public class TestFragment extends Fragment {
@@ -44,8 +45,8 @@ public class TestFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         List<Video> list = new ArrayList<>();
-        for (int a = 0; a< ConstantVideo.VideoPlayerList.length ; a++){
-            Video video = new Video(ConstantVideo.VideoPlayerTitle[a],ConstantVideo.VideoPlayerList[a]);
+        for (int a = 0; a < ConstantVideo.VideoPlayerList.length; a++) {
+            Video video = new Video(ConstantVideo.VideoPlayerTitle[a], ConstantVideo.VideoPlayerList[a]);
             list.add(video);
         }
         VideoAdapter adapter = new VideoAdapter(getActivity(), list);

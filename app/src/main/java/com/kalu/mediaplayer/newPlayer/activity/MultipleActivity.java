@@ -8,12 +8,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.player.VideoBuilder;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.player.VideoBuilder;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 
 public class MultipleActivity extends AppCompatActivity {

@@ -8,16 +8,18 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
-import lib.kalu.mediaplayer.videoui.ui.pip.FloatVideoManager;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
-public class PipActivity extends AppCompatActivity{
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.ui.pip.FloatVideoManager;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
+
+public class PipActivity extends AppCompatActivity {
 
     private FloatVideoManager mPIPManager;
     private FrameLayout mPlayerContainer;

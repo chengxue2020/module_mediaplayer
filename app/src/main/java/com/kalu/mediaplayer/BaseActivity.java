@@ -44,16 +44,24 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    /** 返回一个用于显示界面的布局id */
+    /**
+     * 返回一个用于显示界面的布局id
+     */
     public abstract int getContentView();
 
-    /** 初始化View的代码写在这个方法中 */
+    /**
+     * 初始化View的代码写在这个方法中
+     */
     public abstract void initView();
 
-    /** 初始化监听器的代码写在这个方法中 */
+    /**
+     * 初始化监听器的代码写在这个方法中
+     */
     public abstract void initListener();
 
-    /** 初始数据的代码写在这个方法中，用于从服务器获取数据 */
+    /**
+     * 初始数据的代码写在这个方法中，用于从服务器获取数据
+     */
     public abstract void initData();
 
 

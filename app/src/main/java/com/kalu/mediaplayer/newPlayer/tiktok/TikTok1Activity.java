@@ -20,16 +20,17 @@ import com.kalu.mediaplayer.newPlayer.list.OnItemChildClickListener;
 import com.kalu.mediaplayer.newPlayer.list.VideoRecyclerViewAdapter;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.videoui.player.SimpleStateListener;
-import lib.kalu.mediaplayer.videoui.player.VideoLayout;
-import lib.kalu.mediaplayer.videoui.player.VideoViewManager;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.DefaultController;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
 
 /**
@@ -37,7 +38,6 @@ import java.util.List;
  */
 
 public class TikTok1Activity extends AppCompatActivity {
-
 
     protected List<VideoInfoBean> mVideos = new ArrayList<>();
     protected VideoRecyclerViewAdapter mAdapter;
@@ -74,7 +74,7 @@ public class TikTok1Activity extends AppCompatActivity {
     protected void initView() {
         initVideoView();
         mRecyclerView = findViewById(R.id.recyclerView);
-        mLinearLayoutManager= new PagerLayoutManager(this, OrientationHelper.VERTICAL);
+        mLinearLayoutManager = new PagerLayoutManager(this, OrientationHelper.VERTICAL);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mAdapter = new VideoRecyclerViewAdapter(mVideos);
         mAdapter.setOnItemChildClickListener(new OnItemChildClickListener() {
@@ -87,17 +87,17 @@ public class TikTok1Activity extends AppCompatActivity {
         mLinearLayoutManager.setOnViewPagerListener(new OnPagerListener() {
             @Override
             public void onInitComplete() {
-                System.out.println("OnPagerListener---onInitComplete--"+"初始化完成");
+                System.out.println("OnPagerListener---onInitComplete--" + "初始化完成");
             }
 
             @Override
             public void onPageRelease(boolean isNext, int position) {
-                System.out.println("OnPagerListener---onPageRelease--"+position+"-----"+isNext);
+                System.out.println("OnPagerListener---onPageRelease--" + position + "-----" + isNext);
             }
 
             @Override
             public void onPageSelected(int position, boolean isBottom) {
-                System.out.println("OnPagerListener---onPageSelected--"+position+"-----"+isBottom);
+                System.out.println("OnPagerListener---onPageSelected--" + position + "-----" + isBottom);
 
             }
         });
@@ -174,6 +174,7 @@ public class TikTok1Activity extends AppCompatActivity {
 
     /**
      * 开始播放
+     *
      * @param position 列表位置
      */
     protected void startPlay(int position) {
@@ -201,7 +202,7 @@ public class TikTok1Activity extends AppCompatActivity {
         if (mVideoView.isFullScreen()) {
             mVideoView.stopFullScreen();
         }
-        if(this.getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+        if (this.getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         mCurPos = -1;

@@ -9,13 +9,12 @@ import com.kalu.mediaplayer.BaseActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.old.controller.VideoPlayerController;
-import lib.kalu.mediaplayer.videoui.old.listener.OnVideoControlListener;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
-
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
+import lib.kalu.mediaplayer.ui.old.listener.OnVideoControlListener;
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
 
 /**
@@ -67,11 +66,11 @@ public class TestTinyActivity extends BaseActivity implements View.OnClickListen
         controller.setHideTime(2000);
         controller.setTopPadding(24);
         //设置横屏播放时，tv和audio图标是否显示
-        controller.setTvAndAudioVisibility(true,true);
+        controller.setTvAndAudioVisibility(true, true);
         controller.setOnVideoControlListener(new OnVideoControlListener() {
             @Override
             public void onVideoControlClick(int type) {
-                switch (type){
+                switch (type) {
                     case ConstantKeys.VideoControl.TV:
                         //BaseToast.showRoundRectToast("投影tv电视");
                         break;
@@ -100,7 +99,7 @@ public class TestTinyActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_tiny_1:
                 if (videoPlayer.isIdle()) {
                     Toast.makeText(this, "要点击播放后才能进入小窗口", Toast.LENGTH_SHORT).show();

@@ -18,15 +18,16 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.ConstantKeys;
-import lib.kalu.mediaplayer.videoui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.videoui.ui.view.CustomBottomView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
+import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.CustomBottomView;
 
 public class DefinitionControlView extends CustomBottomView {
 
@@ -142,7 +143,7 @@ public class DefinitionControlView extends CustomBottomView {
         mControlWrapper.hide();
         mControlWrapper.stopProgress();
         String url = mMultiRateData.get(s);
-        if (mOnRateSwitchListener != null){
+        if (mOnRateSwitchListener != null) {
             mOnRateSwitchListener.onRateChange(url);
         }
     }

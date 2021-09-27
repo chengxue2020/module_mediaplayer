@@ -1,5 +1,6 @@
 package com.kalu.mediaplayer.newPlayer.list;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.videoui.ui.view.CustomPrepareView;
 
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.ui.ui.view.CustomPrepareView;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecyclerViewAdapter.VideoHolder> {
 
@@ -38,8 +40,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VideoHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull VideoHolder holder, @SuppressLint("RecyclerView") int position) {
         VideoInfoBean videoBean = videos.get(position);
 
         Glide.with(holder.mThumb.getContext())

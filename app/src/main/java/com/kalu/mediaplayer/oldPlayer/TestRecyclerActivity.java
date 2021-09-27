@@ -8,11 +8,11 @@ import com.kalu.mediaplayer.BaseActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.videoui.old.other.VideoPlayerManager;
-import lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
 
 /**
@@ -31,7 +31,7 @@ public class TestRecyclerActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (VideoPlayerManager.instance().onBackPressed()){
+        if (VideoPlayerManager.instance().onBackPressed()) {
             return;
         }
         super.onBackPressed();
@@ -49,8 +49,8 @@ public class TestRecyclerActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         List<Video> list = new ArrayList<>();
-        for (int a = 0; a< ConstantVideo.VideoPlayerList.length ; a++){
-            Video video = new Video(ConstantVideo.VideoPlayerTitle[a],ConstantVideo.VideoPlayerList[a]);
+        for (int a = 0; a < ConstantVideo.VideoPlayerList.length; a++) {
+            Video video = new Video(ConstantVideo.VideoPlayerTitle[a], ConstantVideo.VideoPlayerList[a]);
             list.add(video);
         }
         VideoAdapter adapter = new VideoAdapter(this, list);
