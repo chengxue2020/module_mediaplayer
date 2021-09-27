@@ -28,10 +28,10 @@
             android:process=":mediaplayer" />
 
         <receiver
-            android:name="lib.kalu.mediaplayer.videoui.old.other.BatterReceiver"
+            android:name="lib.kalu.mediaplayer.ui.old.other.BatterReceiver"
             android:process=":mediaplayer" />
         <receiver
-            android:name="lib.kalu.mediaplayer.videoui.old.other.NetChangedReceiver"
+            android:name="lib.kalu.mediaplayer.ui.old.other.NetChangedReceiver"
             android:process=":mediaplayer">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -39,11 +39,11 @@
         </receiver>
 
         <service
-            android:name="lib.kalu.mediaplayer.musickernel.service.PlayService"
+            android:name="lib.kalu.mediaplayer.kernel.music.service.PlayService"
             android:process=":mediaplayer" />
 
         <receiver
-            android:name="lib.kalu.mediaplayer.musickernel.receiver.NotificationStatusBarReceiver"
+            android:name="lib.kalu.mediaplayer.kernel.music.receiver.NotificationStatusBarReceiver"
             android:process=":mediaplayer">
             <intent-filter>
                 <action android:name="lib.kalu.status_bar" />
@@ -51,7 +51,7 @@
         </receiver>
 
         <receiver
-            android:name="lib.kalu.mediaplayer.musickernel.receiver.EarphoneControlReceiver"
+            android:name="lib.kalu.mediaplayer.kernel.music.receiver.EarphoneControlReceiver"
             android:process=":mediaplayer">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -59,7 +59,7 @@
         </receiver>
 
         <receiver
-            android:name="lib.kalu.mediaplayer.musickernel.receiver.AudioBroadcastReceiver"
+            android:name="lib.kalu.mediaplayer.kernel.music.receiver.AudioBroadcastReceiver"
             android:process=":mediaplayer">
             <intent-filter>
                 <action android:name="lib.kalu.lock" />

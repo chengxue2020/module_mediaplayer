@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <lib.kalu.mediaplayer.videoui.old.player.OldVideoPlayer
+    <lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer
         android:id="@+id/video_player"
         android:layout_width="240dp"
         android:layout_height="150dp"/>
