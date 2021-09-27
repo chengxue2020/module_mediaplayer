@@ -24,12 +24,12 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-
 import java.util.Timer;
 import java.util.TimerTask;
+
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 /**
  * <pre>
@@ -177,7 +177,7 @@ public abstract class AbsVideoPlayerController extends FrameLayout implements
         //boolean tinyWindow = mVideoPlayer.isTinyWindow();
         int playType = mVideoPlayer.getPlayType();
         //如果是小窗口模式，则可以拖拽。其他情况则正常处理
-        if(playType == ConstantKeys.PlayMode.MODE_FULL_SCREEN){
+        if(playType == PlayerType.WindowType.FULL){
             //处理全屏播放时，滑动处理调节声音和亮度的逻辑
             return setOnTouch(v,event);
         }

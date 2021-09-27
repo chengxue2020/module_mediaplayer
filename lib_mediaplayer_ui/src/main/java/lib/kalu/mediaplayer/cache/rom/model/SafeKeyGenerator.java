@@ -1,8 +1,8 @@
 package lib.kalu.mediaplayer.cache.rom.model;
 
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
 import lib.kalu.mediaplayer.cache.rom.cache.VideoLruCache;
-import lib.kalu.mediaplayer.cache.rom.manager.CacheConfig;
-import lib.kalu.mediaplayer.cache.rom.manager.CacheManager;
 import lib.kalu.mediaplayer.common.util.LogUtil;
 import lib.kalu.mediaplayer.common.util.Md5Util;
 
@@ -35,7 +35,7 @@ public class SafeKeyGenerator {
             LogUtil.log("SafeKeyGenerator-----获取缓存key-"+safeKey);
         }
         if (safeKey == null || safeKey.length()==0) {
-            CacheConfig cacheConfig = CacheManager.getInstance().getCacheConfig();
+            CacheConfig cacheConfig = CacheConfigManager.getInstance().getCacheConfig();
             safeKey = Md5Util.encryptMD5ToString(url, cacheConfig.getSalt());
             LogUtil.log("SafeKeyGenerator-----md5转化key-"+safeKey);
         }

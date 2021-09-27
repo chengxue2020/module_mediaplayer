@@ -17,9 +17,6 @@ package lib.kalu.mediaplayer.ui.ui.view;
 
 import android.app.Activity;
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -31,10 +28,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 
@@ -132,25 +131,25 @@ public class CustomErrorView extends LinearLayout implements InterControlView, V
 
     @Override
     public void onPlayStateChanged(int playState) {
-        if (playState == ConstantKeys.CurrentState.STATE_ERROR) {
+        if (playState == PlayerType.StateType.STATE_ERROR) {
             bringToFront();
             setVisibility(VISIBLE);
             mIvStopFullscreen.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
             mTvMessage.setText("视频播放异常");
-        } if (playState == ConstantKeys.CurrentState.STATE_NETWORK_ERROR) {
+        } if (playState == PlayerType.StateType.STATE_NETWORK_ERROR) {
             bringToFront();
             setVisibility(VISIBLE);
             mIvStopFullscreen.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
             mTvMessage.setText("无网络，请检查网络设置");
-        } if (playState == ConstantKeys.CurrentState.STATE_PARSE_ERROR) {
+        } if (playState == PlayerType.StateType.STATE_PARSE_ERROR) {
             bringToFront();
             setVisibility(VISIBLE);
             mIvStopFullscreen.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
             //mTvMessage.setText("视频解析异常");
             mTvMessage.setText("视频加载错误");
-        } else if (playState == ConstantKeys.CurrentState.STATE_IDLE) {
+        } else if (playState == PlayerType.StateType.STATE_IDLE) {
             setVisibility(GONE);
-        } else if (playState == ConstantKeys.CurrentState.STATE_ONCE_LIVE) {
+        } else if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             setVisibility(GONE);
         }
     }

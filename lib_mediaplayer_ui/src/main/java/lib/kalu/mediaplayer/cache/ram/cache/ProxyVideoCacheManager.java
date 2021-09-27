@@ -4,10 +4,10 @@ import android.content.Context;
 
 import androidx.annotation.Keep;
 
+import java.io.File;
+
 import lib.kalu.mediaplayer.cache.ram.HttpProxyCacheServer;
 import lib.kalu.mediaplayer.cache.ram.StorageUtils;
-
-import java.io.File;
 
 @Keep
 public class ProxyVideoCacheManager {

@@ -114,10 +114,18 @@ dependencies {
     implementation rootProject.ext.dependencies.support_appcompat
     implementation rootProject.ext.dependencies.support_annotation
     implementation rootProject.ext.dependencies.support_recyclerview
-    implementation rootProject.ext.dependencies.support_media2_common
-    implementation rootProject.ext.dependencies.support_media2_session
-    implementation rootProject.ext.dependencies.support_media2_widget
-    implementation rootProject.ext.dependencies.support_media2_player
+    implementation(rootProject.ext.dependencies.support_media2_common) {
+        exclude group: "com.google.guava"
+    }
+    implementation(rootProject.ext.dependencies.support_media2_session) {
+        exclude group: "com.google.guava"
+    }
+    implementation(rootProject.ext.dependencies.support_media2_widget) {
+        exclude group: "com.google.guava"
+    }
+    implementation(rootProject.ext.dependencies.support_media2_player) {
+        exclude group: "com.google.guava"
+    }
 
 //    api(name: 'exoplayer-extractor-2.15.0', ext: 'aar')
 //    api(name: 'exoplayer-common-2.15.0', ext: 'aar')

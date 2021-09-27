@@ -24,11 +24,11 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 /**
  * <pre>

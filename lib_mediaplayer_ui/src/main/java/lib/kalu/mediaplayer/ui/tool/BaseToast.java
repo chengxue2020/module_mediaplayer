@@ -6,12 +6,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-
-import androidx.annotation.ColorInt;
-import androidx.annotation.Keep;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -21,11 +15,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
+import androidx.annotation.ColorInt;
+import androidx.annotation.Keep;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
+
+import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 
 
 /**

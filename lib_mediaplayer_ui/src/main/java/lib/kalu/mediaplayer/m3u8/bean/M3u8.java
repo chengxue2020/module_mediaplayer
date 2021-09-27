@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.m3u8.bean;
 
 import androidx.annotation.Keep;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  * </pre>
  */
 @Keep
-public class M3u8 {
+public class M3u8 implements Serializable {
 
     private String basepath;
     private List<M3u8Ts> tsList = new ArrayList<>();

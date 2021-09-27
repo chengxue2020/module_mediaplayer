@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
@@ -107,7 +107,7 @@ public class RecyclerView2Fragment extends Fragment {
             @Override
             public void onPlayStateChanged(int playState) {
                 //监听VideoViewManager释放，重置状态
-                if (playState == ConstantKeys.CurrentState.STATE_IDLE) {
+                if (playState == PlayerType.StateType.STATE_IDLE) {
                     PlayerUtils.removeViewFormParent(mVideoView);
                     mLastPos = mCurPos;
                     mCurPos = -1;
@@ -175,7 +175,7 @@ public class RecyclerView2Fragment extends Fragment {
         PlayerUtils.removeViewFormParent(mVideoView);
         viewHolder.mPlayerContainer.addView(mVideoView, 0);
         //播放之前将VideoView添加到VideoViewManager以便在别的页面也能操作它
-        VideoViewManager.instance().add(mVideoView, "list");
+        PlayerConfigManager.instance().add(mVideoView, "list");
         mVideoView.start();
         mCurPos = position;
     }

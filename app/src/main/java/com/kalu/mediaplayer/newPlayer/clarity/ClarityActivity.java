@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.ui.view.CustomBottomView;
@@ -133,11 +133,11 @@ public class ClarityActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == mBtnScale169) {
-            mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_16_9);
+            mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
         } else if (v == mBtnScaleNormal) {
-            mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_DEFAULT);
+            mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_DEFAULT);
         } else if (v == mBtnScale43) {
-            mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_4_3);
+            mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_4_3);
         } else if (v == mBtnCrop) {
 
         } else if (v == mBtnGif) {

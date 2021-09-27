@@ -18,6 +18,7 @@ package lib.kalu.mediaplayer.ui.controller;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
@@ -29,22 +30,22 @@ import android.widget.FrameLayout;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.player.InterVideoPlayer;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.tool.StatesCutoutUtils;
-import lib.kalu.mediaplayer.ui.tool.NetworkUtils;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
-
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import androidx.annotation.RequiresApi;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.player.InterVideoPlayer;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.ui.tool.NetworkUtils;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.tool.StatesCutoutUtils;
+import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 
 
 /**
@@ -54,7 +55,7 @@ import java.util.Map;
  *     time  : 2018/11/9
  *     desc  : 控制器基类
  *     revise: 此类集成各种事件的处理逻辑，包括
- *             1.播放器状态改变: {@link #handlePlayerStateChanged(int)}
+ *             1.播放器状态改变: {@link #handleWindowStateChanged(int)} (int)}
  *             2.播放状态改变: {@link #handlePlayStateChanged(int)}
  *             3.控制视图的显示和隐藏: {@link #handleVisibilityChanged(boolean, Animation)}
  *             4.播放进度改变: {@link #handleSetProgress(int, int)}
@@ -108,6 +109,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
         init();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public ControllerLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
@@ -120,8 +122,8 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
         } catch (Exception e) {
         }
         mOrientationHelper = new OrientationHelper(getContext().getApplicationContext());
-        mEnableOrientation = VideoViewManager.getConfig().mEnableOrientation;
-        mAdaptCutout = VideoViewManager.getConfig().mAdaptCutout;
+        mEnableOrientation = PlayerConfigManager.getInstance().getConfig().mEnableOrientation;
+        mAdaptCutout = PlayerConfigManager.getInstance().getConfig().mAdaptCutout;
         mActivity = PlayerUtils.scanForActivity(getContext());
     }
 
@@ -241,7 +243,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
      * 8                开始播放中止
      */
     @CallSuper
-    public void setPlayState(@ConstantKeys.CurrentStateType int playState) {
+    public void setPlayState(@PlayerType.StateType.Value int playState) {
         //设置播放器的状态
         handlePlayStateChanged(playState);
     }
@@ -255,9 +257,9 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
      * MODE_TINY_WINDOW         小屏模式
      */
     @CallSuper
-    public void setPlayerState(@ConstantKeys.PlayModeType final int playerState) {
+    public void setWindowState(@PlayerType.WindowType.Value int windowState) {
         //调用此方法向控制器设置播放器状态
-        handlePlayerStateChanged(playerState);
+        handleWindowStateChanged(windowState);
     }
 
     /**
@@ -460,7 +462,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
      */
     public boolean showNetWarning() {
         return NetworkUtils.getNetworkType(getContext()) == NetworkUtils.NETWORK_MOBILE
-                && !VideoViewManager.instance().playOnMobileNetwork();
+                && !PlayerConfigManager.instance().playOnMobileNetwork();
     }
 
     /**
@@ -585,7 +587,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
     protected void onOrientationLandscape(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         if (mControlWrapper.isFullScreen()) {
-            handlePlayerStateChanged(ConstantKeys.PlayMode.MODE_FULL_SCREEN);
+            handleWindowStateChanged(PlayerType.WindowType.FULL);
         } else {
             mControlWrapper.startFullScreen();
         }
@@ -597,7 +599,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
     protected void onOrientationReverseLandscape(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
         if (mControlWrapper.isFullScreen()) {
-            handlePlayerStateChanged(ConstantKeys.PlayMode.MODE_FULL_SCREEN);
+            handleWindowStateChanged(PlayerType.WindowType.FULL);
         } else {
             mControlWrapper.startFullScreen();
         }
@@ -640,18 +642,18 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
     @CallSuper
     protected void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_IDLE:
+            case PlayerType.StateType.STATE_IDLE:
                 mOrientationHelper.disable();
                 mOrientation = 0;
                 mIsLocked = false;
                 mIsShowing = false;
                 removeAllPrivateComponents();
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 mIsLocked = false;
                 mIsShowing = false;
                 break;
-            case ConstantKeys.CurrentState.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR:
                 mIsShowing = false;
                 break;
         }
@@ -662,7 +664,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
      *
      * @param playerState 播放器状态
      */
-    private void handlePlayerStateChanged(int playerState) {
+    private void handleWindowStateChanged(int playerState) {
         for (Map.Entry<InterControlView, Boolean> next : mControlComponents.entrySet()) {
             InterControlView component = next.getKey();
             component.onPlayerStateChanged(playerState);
@@ -678,9 +680,9 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
      * MODE_TINY_WINDOW         小屏模式
      */
     @CallSuper
-    protected void onPlayerStateChanged(@ConstantKeys.PlayMode int playerState) {
+    protected void onPlayerStateChanged(@PlayerType.WindowType.Value int playerState) {
         switch (playerState) {
-            case ConstantKeys.PlayMode.MODE_NORMAL:
+            case PlayerType.WindowType.NORMAL:
                 //视频正常播放是设置监听
                 if (mEnableOrientation) {
                     //检查系统是否开启自动旋转
@@ -693,14 +695,14 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
                     StatesCutoutUtils.adaptCutoutAboveAndroidP(getContext(), false);
                 }
                 break;
-            case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+            case PlayerType.WindowType.FULL:
                 //在全屏时强制监听设备方向
                 mOrientationHelper.enable();
                 if (hasCutout()) {
                     StatesCutoutUtils.adaptCutoutAboveAndroidP(getContext(), true);
                 }
                 break;
-            case ConstantKeys.PlayMode.MODE_TINY_WINDOW:
+            case PlayerType.WindowType.TINY:
                 //小窗口取消重力感应监听
                 mOrientationHelper.disable();
                 break;

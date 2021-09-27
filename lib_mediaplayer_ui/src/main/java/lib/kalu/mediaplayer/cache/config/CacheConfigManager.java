@@ -1,9 +1,11 @@
-package lib.kalu.mediaplayer.cache.rom.manager;
+package lib.kalu.mediaplayer.cache.config;
 
 import android.content.Context;
 import android.os.Debug;
 
 import androidx.annotation.Keep;
+
+import java.io.IOException;
 
 import lib.kalu.mediaplayer.cache.rom.cache.VideoMapCache;
 import lib.kalu.mediaplayer.cache.rom.disk.DiskFileUtils;
@@ -11,14 +13,12 @@ import lib.kalu.mediaplayer.cache.rom.disk.SqlLiteCache;
 import lib.kalu.mediaplayer.cache.rom.model.VideoLocation;
 import lib.kalu.mediaplayer.common.util.LogUtil;
 
-import java.io.IOException;
-
 /**
  * @description: 音视频播放记录本地缓存 最开始使用greenDao，二级缓存耗时100毫秒左右 磁盘+内存+key缓存+读写优化，耗时大概2到5毫秒左右
  * @date:  2021-05-12 14:41
  */
 @Keep
-public class CacheManager {
+public class CacheConfigManager {
 
     /**
      * 终极目标
@@ -46,15 +46,15 @@ public class CacheManager {
      */
     private CacheConfig cacheConfig;
 
-    private static class ManagerHolder {
-        private static final CacheManager INSTANCE = new CacheManager();
+    private static class Holder {
+        private static final CacheConfigManager INSTANCE = new CacheConfigManager();
     }
 
-    public static CacheManager getInstance() {
-        return ManagerHolder.INSTANCE;
+    public static CacheConfigManager getInstance() {
+        return Holder.INSTANCE;
     }
 
-    public void init(CacheConfig cacheConfig){
+    public void setConfig(CacheConfig cacheConfig){
         this.cacheConfig = cacheConfig;
         LogUtil.setIsLog(cacheConfig.isLog());
         videoMapCache = new VideoMapCache();

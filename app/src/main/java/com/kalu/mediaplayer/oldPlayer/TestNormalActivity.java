@@ -7,7 +7,7 @@ import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
 import lib.kalu.mediaplayer.ui.old.listener.OnVideoControlListener;
 import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
@@ -60,7 +60,7 @@ public class TestNormalActivity extends BaseActivity {
         StateAppBar.translucentStatusBar(this, true);
         videoPlayer = (OldVideoPlayer) findViewById(R.id.video_player);
         //必须关键的4步，播放视频最简单的方式
-        videoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);
+        videoPlayer.setPlatformType(PlayerType.PlatformType.IJK);
         videoPlayer.setUp(ConstantVideo.VideoPlayerList[0], null);
         controller = new VideoPlayerController(this);
         controller.setTopPadding(24.0f);
@@ -138,7 +138,7 @@ public class TestNormalActivity extends BaseActivity {
 
         //设置播放器类型，必须设置
         //输入值：ConstantKeys.IjkPlayerType.TYPE_IJK   或者  ConstantKeys.IjkPlayerType.TYPE_NATIVE
-        videoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);
+        videoPlayer.setPlatformType(PlayerType.PlatformType.IJK);
         //设置播放位置
         videoPlayer.seekTo(100);
         //设置播放速度，不必须
@@ -166,7 +166,7 @@ public class TestNormalActivity extends BaseActivity {
         //设置top到顶部的距离
         controller.setTopPadding(30);
         //设置加载loading类型
-        controller.setLoadingType(ConstantKeys.Loading.LOADING_RING);
+        controller.setLoadingType(PlayerType.LoadingType.LOADING_RING);
         //设置不操作后，多久自动隐藏头部和底部布局
         controller.setHideTime(8000);
         //获取ImageView的对象

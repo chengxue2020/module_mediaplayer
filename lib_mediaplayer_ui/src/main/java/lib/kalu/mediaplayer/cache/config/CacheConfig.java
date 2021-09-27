@@ -1,22 +1,17 @@
-package lib.kalu.mediaplayer.cache.rom.manager;
+package lib.kalu.mediaplayer.cache.config;
 
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
-import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import java.io.Serializable;
 
 /**
  * @description: 配置类
  * @date: 2021-05-12 14:40
  */
 @Keep
-public class CacheConfig {
+public class CacheConfig implements Serializable {
 
     /**
      * 是否生效
@@ -30,13 +25,13 @@ public class CacheConfig {
      * 对视频链接加盐字符串
      * 处理md5加密的盐
      */
-    private String mSalt = "salt_cache";
+    private String mSalt = "salt_cache_config";
     /**
      * 0，表示内存缓存
      * 1，表示磁盘缓存
      * 2，表示内存缓存+磁盘缓存
      */
-    private int mType = Cache.ALL;
+    private int mType = CacheType.ALL;
     /**
      * 是否开启日志
      */
@@ -73,19 +68,6 @@ public class CacheConfig {
     }
 
     @Keep
-    public interface Cache {
-        int ONLY_MEMERY = 0;
-        int ONLY_DISK = 1;
-        int ALL = 2;
-    }
-
-    @Retention(SOURCE)
-    @Target({ElementType.PARAMETER})
-    @IntDef(value = {Cache.ALL, Cache.ONLY_DISK, Cache.ONLY_MEMERY})
-    public @interface CacheType {
-    }
-
-    @Keep
     public static final class Build {
 
         public Build() {
@@ -109,7 +91,7 @@ public class CacheConfig {
          * 1，表示磁盘缓存
          * 2，表示内存缓存+磁盘缓存
          */
-        private int mType = Cache.ALL;
+        private int mType = CacheType.ALL;
         /**
          * 是否开启日志
          */
@@ -136,7 +118,7 @@ public class CacheConfig {
             return this;
         }
 
-        public Build setType(@CacheType int type) {
+        public Build setType(@CacheType.Value int type) {
             this.mType = type;
             return this;
         }

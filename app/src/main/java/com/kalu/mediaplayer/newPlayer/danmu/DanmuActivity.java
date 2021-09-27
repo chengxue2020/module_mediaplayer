@@ -12,7 +12,7 @@ import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
@@ -85,14 +85,14 @@ public class DanmuActivity extends BaseActivity implements View.OnClickListener 
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.setUrl(ConstantVideo.VideoPlayerList[0]);
-        mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_16_9);
+        mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
         mVideoPlayerLayout.start();
         mVideoPlayerLayout.addOnStateChangeListener(new SimpleStateListener() {
             @Override
             public void onPlayStateChanged(int playState) {
-                if (playState == ConstantKeys.CurrentState.STATE_PREPARED) {
+                if (playState == PlayerType.StateType.STATE_PREPARED) {
                     simulateDanmu();
-                } else if (playState == ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING) {
+                } else if (playState == PlayerType.StateType.STATE_BUFFERING_PLAYING) {
                     mHandler.removeCallbacksAndMessages(null);
                 }
             }

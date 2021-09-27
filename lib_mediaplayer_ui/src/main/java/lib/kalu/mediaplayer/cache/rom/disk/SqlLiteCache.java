@@ -1,11 +1,11 @@
 package lib.kalu.mediaplayer.cache.rom.disk;
 
+import java.io.File;
+
 import lib.kalu.mediaplayer.cache.rom.model.SafeKeyGenerator;
 import lib.kalu.mediaplayer.cache.rom.model.VideoLocation;
 import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 import lib.kalu.mediaplayer.common.util.LogUtil;
-
-import java.io.File;
 
 /**
  * <pre>

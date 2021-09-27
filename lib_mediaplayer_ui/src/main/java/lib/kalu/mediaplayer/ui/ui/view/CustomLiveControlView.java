@@ -25,14 +25,14 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 
 /**
@@ -136,23 +136,23 @@ public class CustomLiveControlView extends FrameLayout implements InterControlVi
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_IDLE:
-            case ConstantKeys.CurrentState.STATE_START_ABORT:
-            case ConstantKeys.CurrentState.STATE_PREPARING:
-            case ConstantKeys.CurrentState.STATE_PREPARED:
-            case ConstantKeys.CurrentState.STATE_ERROR:
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
-            case ConstantKeys.CurrentState.STATE_ONCE_LIVE:
+            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_START_ABORT:
+            case PlayerType.StateType.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARED:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PLAYING:
                 mIvPlay.setSelected(true);
                 break;
-            case ConstantKeys.CurrentState.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSED:
                 mIvPlay.setSelected(false);
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
-            case ConstantKeys.CurrentState.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_COMPLETED:
                 mIvPlay.setSelected(mControlWrapper.isPlaying());
                 break;
         }
@@ -161,10 +161,10 @@ public class CustomLiveControlView extends FrameLayout implements InterControlVi
     @Override
     public void onPlayerStateChanged(int playerState) {
         switch (playerState) {
-            case ConstantKeys.PlayMode.MODE_NORMAL:
+            case PlayerType.WindowType.NORMAL:
                 mIvFullScreen.setSelected(false);
                 break;
-            case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+            case PlayerType.WindowType.FULL:
                 mIvFullScreen.setSelected(true);
                 break;
         }

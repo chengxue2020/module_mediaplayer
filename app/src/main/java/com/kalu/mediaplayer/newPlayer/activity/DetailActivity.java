@@ -1,5 +1,6 @@
 package com.kalu.mediaplayer.newPlayer.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ import androidx.core.view.ViewCompat;
 import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
@@ -40,9 +41,10 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("WrongConstant")
     private void initVideoView() {
         //拿到VideoView实例
-        VideoLayout mVideoView = VideoViewManager.instance().get("seamless");
+        VideoLayout mVideoView = PlayerConfigManager.instance().get("seamless");
         //如果已经添加到某个父容器，就将其移除
         PlayerUtils.removeViewFormParent(mVideoView);
         //把播放器添加到页面的容器中
@@ -58,7 +60,7 @@ public class DetailActivity extends AppCompatActivity {
         if (seamlessPlay) {
             //无缝播放需还原Controller状态
             controller.setPlayState(mVideoView.getCurrentPlayState());
-            controller.setPlayerState(mVideoView.getCurrentPlayerState());
+            controller.setWindowState(mVideoView.getCurrentWindowState());
         } else {
             //不是无缝播放的情况
             String url = intent.getStringExtra(IntentKeys.URL);

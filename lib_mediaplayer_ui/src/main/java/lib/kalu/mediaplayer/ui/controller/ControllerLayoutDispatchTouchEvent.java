@@ -28,12 +28,12 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
 import java.util.Map;
+
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 
 
 /**
@@ -130,36 +130,38 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
 
     /**
      * 调用此方法向控制器设置播放器模式
-     * @param playerState                       播放模式
+     *
+     * @param windowState 播放模式
      */
     @Override
-    public void setPlayerState(int playerState) {
-        super.setPlayerState(playerState);
-        if (playerState == ConstantKeys.PlayMode.MODE_NORMAL) {
+    public void setWindowState(@PlayerType.WindowType.Value int windowState) {
+        super.setWindowState(windowState);
+        if (windowState == PlayerType.WindowType.NORMAL) {
             mCanSlide = mEnableInNormal;
-        } else if (playerState == ConstantKeys.PlayMode.MODE_FULL_SCREEN) {
+        } else if (windowState == PlayerType.WindowType.FULL) {
             mCanSlide = true;
         }
     }
 
     /**
      * 调用此方法向控制器设置播放状态
-     * @param playState                         播放状态
+     *
+     * @param playState 播放状态
      */
     @Override
-    public void setPlayState(int playState) {
+    public void setPlayState(@PlayerType.StateType.Value int playState) {
         super.setPlayState(playState);
         mCurPlayState = playState;
     }
 
     private boolean isInPlaybackState() {
         return mControlWrapper != null
-                && mCurPlayState != ConstantKeys.CurrentState.STATE_ERROR
-                && mCurPlayState != ConstantKeys.CurrentState.STATE_IDLE
-                && mCurPlayState != ConstantKeys.CurrentState.STATE_PREPARING
-                && mCurPlayState != ConstantKeys.CurrentState.STATE_PREPARED
-                && mCurPlayState != ConstantKeys.CurrentState.STATE_START_ABORT
-                && mCurPlayState != ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING;
+                && mCurPlayState != PlayerType.StateType.STATE_ERROR
+                && mCurPlayState != PlayerType.StateType.STATE_IDLE
+                && mCurPlayState != PlayerType.StateType.STATE_PREPARING
+                && mCurPlayState != PlayerType.StateType.STATE_PREPARED
+                && mCurPlayState != PlayerType.StateType.STATE_START_ABORT
+                && mCurPlayState != PlayerType.StateType.STATE_BUFFERING_PLAYING;
     }
 
     @Override
@@ -210,7 +212,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         //如果没有锁屏，
-        if (!isLocked() && isInPlaybackState()){
+        if (!isLocked() && isInPlaybackState()) {
             //播放和暂停
             togglePlay();
         }
@@ -229,7 +231,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
                 || !mCanSlide //关闭了滑动手势
                 || isLocked() //锁住了屏幕
                 //处于屏幕边沿
-                || PlayerUtils.isEdge(getContext(), e1)){
+                || PlayerUtils.isEdge(getContext(), e1)) {
             return true;
         }
         float deltaX = e1.getX() - e2.getX();
@@ -241,7 +243,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
             if (!mChangePosition) {
                 //上下滑动，滑动左边改变音量；滑动右边改变亮度
                 //半屏宽度
-                if (mHalfScreen==0){
+                if (mHalfScreen == 0) {
                     mHalfScreen = PlayerUtils.getScreenWidth(getContext(), true) / 2;
                 }
                 if (e2.getX() > mHalfScreen) {
@@ -357,10 +359,11 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
 
     /**
      * 拦截事件：只有ViewGroup才有这个
-     * @param ev                            event
-     * @return                              返回值
+     *
+     * @param ev event
+     * @return 返回值
      * true： 当前ViewGroup（因为View中没有该方法，而没有child的VIew也不需要有拦截机制）
-     *        希望该事件不再传递给其child，而是希望自己处理。
+     * 希望该事件不再传递给其child，而是希望自己处理。
      * false：当前ViewGroup不准备拦截该事件，事件正常向下分发给其child。
      */
     @Override
@@ -371,11 +374,12 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
 
     /**
      * 分发事件：使用对象	Activity、ViewGroup、View
-     * @param ev                            event
-     * @return                              返回值
+     *
+     * @param ev event
+     * @return 返回值
      * true： 消费事件；事件不会往下传递；后续事件（Move、Up）会继续分发到该View
      * false：不消费事件；事件不会往下传递；将事件回传给父控件的onTouchEvent()处理；Activity例外：返回false=消费事件
-     *        后续事件（Move、Up）会继续分发到该View(与onTouchEvent()区别）
+     * 后续事件（Move、Up）会继续分发到该View(与onTouchEvent()区别）
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -385,8 +389,9 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
 
     /**
      * 触摸事件
-     * @param event                         event事件，主要处理up，down，cancel
-     * @return                              返回值
+     *
+     * @param event event事件，主要处理up，down，cancel
+     * @return 返回值
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.ui.view.CustomBottomView;
 
@@ -93,7 +93,7 @@ public class DefinitionControlView extends CustomBottomView {
     @Override
     public void onPlayerStateChanged(int playerState) {
         super.onPlayerStateChanged(playerState);
-        if (playerState == ConstantKeys.PlayMode.MODE_FULL_SCREEN) {
+        if (playerState == PlayerType.WindowType.FULL) {
             mDefinition.setVisibility(VISIBLE);
         } else {
             mDefinition.setVisibility(GONE);

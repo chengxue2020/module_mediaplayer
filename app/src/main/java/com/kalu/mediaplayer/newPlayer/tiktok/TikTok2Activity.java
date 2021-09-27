@@ -20,7 +20,7 @@ import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
 import lib.kalu.mediaplayer.cache.ram.cache.PreloadManager;
 import lib.kalu.mediaplayer.cache.ram.cache.ProxyVideoCacheManager;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
@@ -223,7 +223,7 @@ public class TikTok2Activity extends AppCompatActivity {
                 String playUrl = mPreloadManager.getPlayUrl(tiktokBean.getVideoUrl());
                 VideoLogUtils.i("startPlay: " + "position: " + position + "  url: " + playUrl);
                 mVideoPlayerLayout.setUrl(playUrl);
-                mVideoPlayerLayout.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_16_9);
+                mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
                 mController.addControlComponent(viewHolder.mTikTokView, true);
                 viewHolder.mPlayerContainer.addView(mVideoPlayerLayout, 0);
                 mVideoPlayerLayout.start();

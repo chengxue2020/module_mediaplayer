@@ -23,11 +23,10 @@ import android.os.BatteryManager;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.old.controller.AbsVideoPlayerController;
-
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.old.controller.AbsVideoPlayerController;
+import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
 /**
  * <pre>
@@ -53,10 +52,10 @@ public class BatterReceiver extends BroadcastReceiver {
             if (controller!=null){
                 if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
                     // 充电中
-                    controller.onBatterStateChanged(ConstantKeys.BatterMode.BATTERY_CHARGING);
+                    controller.onBatterStateChanged(PlayerType.BatterType.BATTERY_CHARGING);
                 } else if (status == BatteryManager.BATTERY_STATUS_FULL) {
                     // 充电完成
-                    controller.onBatterStateChanged(ConstantKeys.BatterMode.BATTERY_FULL);
+                    controller.onBatterStateChanged(PlayerType.BatterType.BATTERY_FULL);
                 } else {
                     // 当前电量
                     int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
@@ -67,15 +66,15 @@ public class BatterReceiver extends BroadcastReceiver {
                     VideoLogUtils.i("广播NetworkReceiver------总电量"+scale);
                     VideoLogUtils.i("广播NetworkReceiver------百分比"+percentage);
                     if (percentage <= 10) {
-                        controller.onBatterStateChanged(ConstantKeys.BatterMode.BATTERY_10);
+                        controller.onBatterStateChanged(PlayerType.BatterType.BATTERY_10);
                     } else if (percentage <= 20) {
-                        controller.onBatterStateChanged(ConstantKeys.BatterMode.BATTERY_20);
+                        controller.onBatterStateChanged(PlayerType.BatterType.BATTERY_20);
                     } else if (percentage <= 50) {
-                        controller.onBatterStateChanged(ConstantKeys.BatterMode.BATTERY_50);
+                        controller.onBatterStateChanged(PlayerType.BatterType.BATTERY_50);
                     } else if (percentage <= 80) {
-                        controller.onBatterStateChanged(ConstantKeys.BatterMode.BATTERY_80);
+                        controller.onBatterStateChanged(PlayerType.BatterType.BATTERY_80);
                     } else if (percentage <= 100) {
-                        controller.onBatterStateChanged(ConstantKeys.BatterMode.BATTERY_100);
+                        controller.onBatterStateChanged(PlayerType.BatterType.BATTERY_100);
                     }
                 }
             }

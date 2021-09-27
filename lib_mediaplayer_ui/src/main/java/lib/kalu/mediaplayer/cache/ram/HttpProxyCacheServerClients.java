@@ -4,8 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import lib.kalu.mediaplayer.cache.ram.file.FileCache;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static lib.kalu.mediaplayer.cache.ram.Preconditions.checkNotNull;
+import lib.kalu.mediaplayer.cache.ram.file.FileCache;
 
 /**
  * Client for {@link HttpProxyCacheServer}

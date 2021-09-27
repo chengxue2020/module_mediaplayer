@@ -16,7 +16,12 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+
 import lib.kalu.mediaplayer.common.util.LogUtil;
+import lib.kalu.mediaplayer.common.util.SpUtil;
 import lib.kalu.mediaplayer.kernel.music.config.MusicConstant;
 import lib.kalu.mediaplayer.kernel.music.config.MusicPlayAction;
 import lib.kalu.mediaplayer.kernel.music.config.PlayModeEnum;
@@ -25,16 +30,11 @@ import lib.kalu.mediaplayer.kernel.music.inter.OnPlayerEventListener;
 import lib.kalu.mediaplayer.kernel.music.manager.AudioFocusManager;
 import lib.kalu.mediaplayer.kernel.music.manager.MediaSessionManager;
 import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
+import lib.kalu.mediaplayer.kernel.music.receiver.AudioBroadcastReceiver;
+import lib.kalu.mediaplayer.kernel.music.receiver.AudioEarPhoneReceiver;
 import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
 import lib.kalu.mediaplayer.kernel.music.tool.QuitTimerHelper;
 import lib.kalu.mediaplayer.kernel.music.utils.NotificationHelper;
-import lib.kalu.mediaplayer.kernel.music.receiver.AudioBroadcastReceiver;
-import lib.kalu.mediaplayer.kernel.music.receiver.AudioEarPhoneReceiver;
-import lib.kalu.mediaplayer.common.util.SpUtil;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
 
 
 /**

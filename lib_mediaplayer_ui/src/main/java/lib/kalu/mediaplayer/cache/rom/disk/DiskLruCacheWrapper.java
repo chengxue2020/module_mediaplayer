@@ -3,13 +3,13 @@ package lib.kalu.mediaplayer.cache.rom.disk;
 
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.cache.rom.manager.CacheConfig;
-import lib.kalu.mediaplayer.cache.rom.manager.CacheManager;
-import lib.kalu.mediaplayer.cache.rom.model.SafeKeyGenerator;
-import lib.kalu.mediaplayer.common.util.LogUtil;
-
 import java.io.File;
 import java.io.IOException;
+
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
+import lib.kalu.mediaplayer.cache.rom.model.SafeKeyGenerator;
+import lib.kalu.mediaplayer.common.util.LogUtil;
 
 /**
  * <pre>
@@ -47,7 +47,7 @@ public class DiskLruCacheWrapper implements InterDiskCache {
     @Deprecated
     @SuppressWarnings({"WeakerAccess", "DeprecatedIsStillUsed"})
     protected DiskLruCacheWrapper(File directory,SafeKeyGenerator safeKeyGenerator) {
-        CacheConfig cacheConfig = CacheManager.getInstance().getCacheConfig();
+        CacheConfig cacheConfig = CacheConfigManager.getInstance().getCacheConfig();
         this.directory = directory;
         this.safeKeyGenerator = safeKeyGenerator;
         this.maxSize = cacheConfig.getCacheMax();

@@ -87,6 +87,4 @@ public interface BuriedPointEvent {
      * @param url                       视频url
      */
     void videoToMedia(String url);
-
-
 }

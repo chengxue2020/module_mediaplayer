@@ -18,7 +18,7 @@ import com.kalu.mediaplayer.R;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
@@ -82,7 +82,7 @@ public class TinyScreenActivity extends AppCompatActivity implements OnItemChild
         mVideoPlayerLayout.setOnStateChangeListener(new SimpleStateListener() {
             @Override
             public void onPlayStateChanged(int playState) {
-                if (playState == ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING) {
+                if (playState == PlayerType.StateType.STATE_BUFFERING_PLAYING) {
                     if (mVideoPlayerLayout.isTinyScreen()) {
                         mVideoPlayerLayout.stopTinyScreen();
                         releaseVideoView();
@@ -120,7 +120,7 @@ public class TinyScreenActivity extends AppCompatActivity implements OnItemChild
                 if (position == mCurPos && !mVideoPlayerLayout.isFullScreen()) {
                     mVideoPlayerLayout.startTinyScreen();
                     mVideoPlayerLayout.setController(null);
-                    mController.setPlayState(ConstantKeys.CurrentState.STATE_IDLE);
+                    mController.setPlayState(PlayerType.StateType.STATE_IDLE);
                 }
             }
         });

@@ -30,14 +30,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 
 /**
@@ -191,12 +191,12 @@ public class CustomTitleView extends FrameLayout implements InterControlView, Vi
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_IDLE:
-            case ConstantKeys.CurrentState.STATE_START_ABORT:
-            case ConstantKeys.CurrentState.STATE_PREPARING:
-            case ConstantKeys.CurrentState.STATE_PREPARED:
-            case ConstantKeys.CurrentState.STATE_ERROR:
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_START_ABORT:
+            case PlayerType.StateType.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARED:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 setVisibility(GONE);
                 break;
         }
@@ -204,7 +204,7 @@ public class CustomTitleView extends FrameLayout implements InterControlView, Vi
 
     @Override
     public void onPlayerStateChanged(int playerState) {
-        if (playerState == ConstantKeys.PlayMode.MODE_FULL_SCREEN) {
+        if (playerState == PlayerType.WindowType.FULL) {
             if (mControlWrapper.isShowing() && !mControlWrapper.isLocked()) {
                 setVisibility(VISIBLE);
                 mTvSysTime.setText(PlayerUtils.getCurrentSystemTime());

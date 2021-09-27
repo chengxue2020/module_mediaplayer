@@ -6,11 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import lib.kalu.mediaplayer.cache.ram.SourceInfo;
-
 import lib.kalu.mediaplayer.cache.ram.Preconditions;
-
-import static lib.kalu.mediaplayer.cache.ram.Preconditions.checkNotNull;
+import lib.kalu.mediaplayer.cache.ram.SourceInfo;
 
 /**
  * Database based {@link SourceInfoStorage}.

@@ -15,7 +15,7 @@ import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.ui.pip.FloatVideoManager;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
@@ -68,12 +68,12 @@ public class PipActivity extends AppCompatActivity {
 
     private void initVideoPlayer() {
         mPIPManager = FloatVideoManager.getInstance(this);
-        VideoLayout videoView = VideoViewManager.instance().get(FloatVideoManager.PIP);
+        VideoLayout videoView = PlayerConfigManager.instance().get(FloatVideoManager.PIP);
         DefaultController controller = new DefaultController(this);
         videoView.setController(controller);
         if (mPIPManager.isStartFloatWindow()) {
             mPIPManager.stopFloatWindow();
-            controller.setPlayerState(videoView.getCurrentPlayerState());
+            controller.setWindowState(videoView.getCurrentWindowState());
             controller.setPlayState(videoView.getCurrentPlayState());
         } else {
             mPIPManager.setActClass(PipActivity.class);

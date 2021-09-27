@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
 import lib.kalu.mediaplayer.ui.old.listener.OnPlayerStatesListener;
 import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
@@ -54,16 +54,16 @@ public class FloatPlayerView extends FrameLayout {
             view = inflater.inflate(R.layout.module_mediaplayer_old_view_window_dialog, this);
             mVideoPlayer = view.findViewById(R.id.video_player);
             mVideoPlayer.setUp(path, null);
-            mVideoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);
+            mVideoPlayer.setPlatformType(PlayerType.PlatformType.IJK);
             //创建视频控制器
             VideoPlayerController controller = new VideoPlayerController(getContext());
             controller.setTopVisibility(false);
-            controller.setLoadingType(ConstantKeys.Loading.LOADING_QQ);
+            controller.setLoadingType(PlayerType.LoadingType.LOADING_QQ);
             controller.imageView().setBackgroundColor(Color.BLACK);
             controller.setOnPlayerStatesListener(new OnPlayerStatesListener() {
                 @Override
                 public void onPlayerStates(int states) {
-                    if (states == ConstantKeys.PlayerStatesType.COMPLETED) {
+                    if (states == PlayerType.StatusType.COMPLETED) {
                         VideoPlayerManager.instance().releaseVideoPlayer();
                         if (mCompletedListener != null) {
                             mCompletedListener.Completed();
@@ -71,7 +71,7 @@ public class FloatPlayerView extends FrameLayout {
                     }
                 }
             });
-            //controller.onPlayModeChanged(ConstantKeys.PlayMode.MODE_TINY_WINDOW);
+            //controller.onPlayModeChanged(PlayerType.WindowType.MODE_TINY_WINDOW);
             mVideoPlayer.setController(controller);
             //mVideoPlayer.enterTinyWindow();
             mVideoPlayer.postDelayed(new Runnable() {

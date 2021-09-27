@@ -30,7 +30,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
@@ -91,7 +91,7 @@ public class CustomOncePlayView extends LinearLayout implements InterControlView
         mTvRetry.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (playState == ConstantKeys.CurrentState.STATE_ONCE_LIVE){
+                if (playState == PlayerType.StateType.STATE_ONCE_LIVE){
                     //即将开播
                     if (PlayerUtils.isConnected(mContext)){
                         mControlWrapper.start();
@@ -123,7 +123,7 @@ public class CustomOncePlayView extends LinearLayout implements InterControlView
     @Override
     public void onPlayStateChanged(int playState) {
         this.playState = playState;
-        if (playState == ConstantKeys.CurrentState.STATE_ONCE_LIVE) {
+        if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             //即将开播
             setVisibility(VISIBLE);
         } else {

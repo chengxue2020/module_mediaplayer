@@ -4,11 +4,11 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
-import lib.kalu.mediaplayer.kernel.music.service.PlayService;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
+import lib.kalu.mediaplayer.kernel.music.service.PlayService;
 
 /**
  * <pre>

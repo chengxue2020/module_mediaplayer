@@ -12,7 +12,7 @@ import com.kalu.mediaplayer.ImageUtil;
 import com.kalu.mediaplayer.R;
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
 import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 
@@ -71,7 +71,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
          */
         void setController(VideoPlayerController controller) {
             mController = controller;
-            mVideoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);
+            mVideoPlayer.setPlatformType(PlayerType.PlatformType.IJK);
             mVideoPlayer.setController(mController);
         }
 
@@ -82,6 +82,4 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             mVideoPlayer.setUp(video.getUrl(), null);
         }
     }
-
-
 }

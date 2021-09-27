@@ -5,16 +5,6 @@ import android.net.Uri;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.cache.ram.file.DiskUsage;
-import lib.kalu.mediaplayer.cache.ram.file.FileNameGenerator;
-import lib.kalu.mediaplayer.cache.ram.file.Md5FileNameGenerator;
-import lib.kalu.mediaplayer.cache.ram.file.TotalCountLruDiskUsage;
-import lib.kalu.mediaplayer.cache.ram.file.TotalSizeLruDiskUsage;
-import lib.kalu.mediaplayer.cache.ram.headers.EmptyHeadersInjector;
-import lib.kalu.mediaplayer.cache.ram.headers.HeaderInjector;
-import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorage;
-import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorageFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -28,7 +18,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static lib.kalu.mediaplayer.cache.ram.Preconditions.checkNotNull;
+import lib.kalu.mediaplayer.cache.ram.file.DiskUsage;
+import lib.kalu.mediaplayer.cache.ram.file.FileNameGenerator;
+import lib.kalu.mediaplayer.cache.ram.file.Md5FileNameGenerator;
+import lib.kalu.mediaplayer.cache.ram.file.TotalCountLruDiskUsage;
+import lib.kalu.mediaplayer.cache.ram.file.TotalSizeLruDiskUsage;
+import lib.kalu.mediaplayer.cache.ram.headers.EmptyHeadersInjector;
+import lib.kalu.mediaplayer.cache.ram.headers.HeaderInjector;
+import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorage;
+import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorageFactory;
 
 /**
  * Simple lightweight proxy server with file caching support that handles HTTP requests.

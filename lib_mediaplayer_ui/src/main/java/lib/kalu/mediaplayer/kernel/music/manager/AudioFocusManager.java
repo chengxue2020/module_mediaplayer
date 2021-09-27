@@ -1,12 +1,12 @@
 package lib.kalu.mediaplayer.kernel.music.manager;
 
+import static android.content.Context.AUDIO_SERVICE;
+
 import android.media.AudioManager;
 
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.kernel.music.service.PlayService;
-
-import static android.content.Context.AUDIO_SERVICE;
 
 
 public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListener {

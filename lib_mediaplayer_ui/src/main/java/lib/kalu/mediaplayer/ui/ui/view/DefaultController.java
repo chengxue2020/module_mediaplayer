@@ -32,12 +32,11 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.controller.ControllerLayoutDispatchTouchEvent;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
-import lib.kalu.mediaplayer.R;
 
 
 /**
@@ -247,11 +246,11 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
     protected void onPlayerStateChanged(int playerState) {
         super.onPlayerStateChanged(playerState);
         switch (playerState) {
-            case ConstantKeys.PlayMode.MODE_NORMAL:
+            case PlayerType.WindowType.NORMAL:
                 setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mLockButton.setVisibility(GONE);
                 break;
-            case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+            case PlayerType.WindowType.FULL:
                 if (isShowing()) {
                     mLockButton.setVisibility(VISIBLE);
                 } else {
@@ -297,22 +296,22 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
         super.onPlayStateChanged(playState);
         switch (playState) {
             //调用release方法会回到此状态
-            case ConstantKeys.CurrentState.STATE_IDLE:
+            case PlayerType.StateType.STATE_IDLE:
                 mLockButton.setSelected(false);
                 mLoadingProgress.setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PLAYING:
-            case ConstantKeys.CurrentState.STATE_PAUSED:
-            case ConstantKeys.CurrentState.STATE_PREPARED:
-            case ConstantKeys.CurrentState.STATE_ERROR:
-            case ConstantKeys.CurrentState.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PREPARED:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_COMPLETED:
                 mLoadingProgress.setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PREPARING:
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_PREPARING:
+            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                 mLoadingProgress.setVisibility(VISIBLE);
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 mLoadingProgress.setVisibility(GONE);
                 mLockButton.setVisibility(GONE);
                 mLockButton.setSelected(false);

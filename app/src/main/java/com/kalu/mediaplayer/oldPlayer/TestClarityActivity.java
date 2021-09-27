@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
 import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
@@ -55,7 +55,7 @@ public class TestClarityActivity extends BaseActivity implements View.OnClickLis
         mBtnTiny2 = (Button) findViewById(R.id.btn_tiny_2);
 
 
-        videoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);
+        videoPlayer.setPlatformType(PlayerType.PlatformType.IJK);
         VideoPlayerController controller = new VideoPlayerController(this);
         controller.setTitle("Beautiful China...");
         controller.setLength(117000);

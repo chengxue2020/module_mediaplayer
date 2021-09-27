@@ -4,19 +4,21 @@ package lib.kalu.mediaplayer.ui.config;
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.ui.surface.SurfaceFactory;
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
+import lib.kalu.mediaplayer.keycode.KeycodeImpl;
+import lib.kalu.mediaplayer.keycode.KeycodeImplTV;
 import lib.kalu.mediaplayer.ui.player.ProgressManager;
+import lib.kalu.mediaplayer.ui.surface.SurfaceFactory;
 import lib.kalu.mediaplayer.ui.surface.TextureViewFactory;
 
 
 /**
  * @description: 播放器全局配置
- * @date:  2021-05-12 14:43
+ * @date: 2021-05-12 14:43
  */
 @Keep
-public class VideoPlayerConfig {
+public class PlayerConfig {
 
     public final boolean mPlayOnMobileNetwork;
     public final boolean mEnableOrientation;
@@ -28,16 +30,22 @@ public class VideoPlayerConfig {
     public final int mScreenScaleType;
     public final SurfaceFactory mRenderViewFactory;
     public final boolean mAdaptCutout;
-    public final boolean mIsShowToast ;
+    public final boolean mIsShowToast;
     public final long mShowToastTime;
+    public final KeycodeImpl mKeycodeImpl;
 
-    private VideoPlayerConfig(Builder builder) {
+    private PlayerConfig(Builder builder) {
         mIsEnableLog = builder.mIsEnableLog;
         mEnableOrientation = builder.mEnableOrientation;
         mPlayOnMobileNetwork = builder.mPlayOnMobileNetwork;
         mEnableAudioFocus = builder.mEnableAudioFocus;
         mProgressManager = builder.mProgressManager;
         mScreenScaleType = builder.mScreenScaleType;
+        if (null == builder.mKeycodeImpl) {
+            mKeycodeImpl = new KeycodeImplTV();
+        } else {
+            mKeycodeImpl = builder.mKeycodeImpl;
+        }
         if (builder.mPlayerFactory == null) {
             //默认为AndroidMediaPlayer
             mPlayerFactory = MediaPlayerFactory.create();
@@ -111,6 +119,16 @@ public class VideoPlayerConfig {
          * 倒计时n秒时间
          */
         private long mShowToastTime = 5;
+
+        private KeycodeImpl mKeycodeImpl;
+
+        public KeycodeImpl getKeycodeImpl() {
+            return mKeycodeImpl;
+        }
+
+        public void setKeycodeImpl(KeycodeImpl mKeycodeImpl) {
+            this.mKeycodeImpl = mKeycodeImpl;
+        }
 
         /**
          * 是否监听设备方向来切换全屏/半屏， 默认不开启
@@ -208,9 +226,9 @@ public class VideoPlayerConfig {
             return this;
         }
 
-        public VideoPlayerConfig build() {
+        public PlayerConfig build() {
             //创建builder对象
-            return new VideoPlayerConfig(this);
+            return new PlayerConfig(this);
         }
     }
 }

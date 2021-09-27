@@ -29,11 +29,10 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 
 /**
@@ -137,7 +136,7 @@ public class CustomCompleteView extends FrameLayout implements InterControlView,
 
     @Override
     public void onPlayStateChanged(int playState) {
-        if (playState == ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING) {
+        if (playState == PlayerType.StateType.STATE_BUFFERING_PLAYING) {
             setVisibility(VISIBLE);
             mIvStopFullscreen.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
             bringToFront();
@@ -148,9 +147,9 @@ public class CustomCompleteView extends FrameLayout implements InterControlView,
 
     @Override
     public void onPlayerStateChanged(int playerState) {
-        if (playerState == ConstantKeys.PlayMode.MODE_FULL_SCREEN) {
+        if (playerState == PlayerType.WindowType.FULL) {
             mIvStopFullscreen.setVisibility(VISIBLE);
-        } else if (playerState == ConstantKeys.PlayMode.MODE_NORMAL) {
+        } else if (playerState == PlayerType.WindowType.NORMAL) {
             mIvStopFullscreen.setVisibility(GONE);
         }
 

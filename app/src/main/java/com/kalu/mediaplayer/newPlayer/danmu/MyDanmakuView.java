@@ -20,7 +20,7 @@ import androidx.core.content.ContextCompat;
 import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 import master.flame.danmaku.controller.DrawHandler;
@@ -117,26 +117,26 @@ public class MyDanmakuView extends DanmakuView implements InterControlView {
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_IDLE:
+            case PlayerType.StateType.STATE_IDLE:
                 release();
                 break;
-            case ConstantKeys.CurrentState.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARING:
                 if (isPrepared()) {
                     restart();
                 }
                 prepare(mParser, mContext);
                 break;
-            case ConstantKeys.CurrentState.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PLAYING:
                 if (isPrepared() && isPaused()) {
                     resume();
                 }
                 break;
-            case ConstantKeys.CurrentState.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSED:
                 if (isPrepared()) {
                     pause();
                 }
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 clear();
                 clearDanmakusOnScreen();
                 break;

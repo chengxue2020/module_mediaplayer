@@ -2,8 +2,9 @@ package lib.kalu.mediaplayer.cache.rom;
 
 import android.content.Context;
 
-import lib.kalu.mediaplayer.cache.rom.manager.CacheConfig;
-import lib.kalu.mediaplayer.cache.rom.manager.CacheManager;
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
+import lib.kalu.mediaplayer.cache.config.CacheType;
 
 /**
  * <pre>
@@ -20,11 +21,11 @@ public class TestDemo {
 
         CacheConfig build = new CacheConfig.Build()
                 .setIsEffective(true)
-                .setType(CacheConfig.Cache.ALL)
+                .setType(CacheType.ALL)
                 .setCacheMax(1000)
                 .setLog(false)
                 .build();
-        CacheManager.getInstance().init(build);
+        CacheConfigManager.getInstance().setConfig(build);
 
         //保存播放位置
 //        VideoLocation location = new VideoLocation(url, currentPosition, duration);
@@ -36,5 +37,4 @@ public class TestDemo {
         //清除所有位置
 //        LocationManager.getInstance().clearAll();
     }
-
 }

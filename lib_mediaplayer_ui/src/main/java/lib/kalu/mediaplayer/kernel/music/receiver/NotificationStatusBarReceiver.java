@@ -9,8 +9,8 @@ import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.common.util.LogUtil;
 import lib.kalu.mediaplayer.kernel.music.config.MusicPlayAction;
-import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
 import lib.kalu.mediaplayer.kernel.music.service.PlayService;
+import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
 
 @Keep
 public class NotificationStatusBarReceiver extends BroadcastReceiver {

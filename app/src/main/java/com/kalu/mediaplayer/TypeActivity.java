@@ -30,9 +30,9 @@ import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkMediaPlayer;
 import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkPlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.platfrom.media.AndroidMediaPlayer;
 import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.config.PlayerConfig;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
@@ -161,13 +161,13 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v == mTv11) {
             //切换ijk
-            setChangeVideoType(ConstantKeys.VideoPlayerType.TYPE_IJK);
+            setChangeVideoType(PlayerType.PlatformType.IJK);
         } else if (v == mTv12) {
             //切换exo
-            setChangeVideoType(ConstantKeys.VideoPlayerType.TYPE_EXO);
+            setChangeVideoType(PlayerType.PlatformType.EXO);
         } else if (v == mTv13) {
             //切换原生
-            setChangeVideoType(ConstantKeys.VideoPlayerType.TYPE_NATIVE);
+            setChangeVideoType(PlayerType.PlatformType.NATIVE);
         } else if (v == mTv21) {
             BaseToast.showRoundRectToast("待完善");
         } else if (v == mTv22) {
@@ -224,30 +224,28 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @SuppressLint("SetTextI18n")
-    private void setChangeVideoType(@ConstantKeys.PlayerType int type) {
+    private void setChangeVideoType(@PlayerType.PlatformType int type) {
         //切换播放核心，不推荐这么做，我这么写只是为了方便测试
-        VideoPlayerConfig config = VideoViewManager.getConfig();
+        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         try {
             Field mPlayerFactoryField = config.getClass().getDeclaredField("mPlayerFactory");
             mPlayerFactoryField.setAccessible(true);
             PlayerFactory playerFactory = null;
             switch (type) {
-                case ConstantKeys.VideoPlayerType.TYPE_IJK:
+                case PlayerType.PlatformType.IJK:
                     playerFactory = IjkPlayerFactory.create();
                     IjkMediaPlayer ijkVideoPlayer = (IjkMediaPlayer) playerFactory.createPlayer();
                     mTvTitle.setText("视频内核：" + " (IjkPlayer)");
                     break;
-                case ConstantKeys.VideoPlayerType.TYPE_EXO:
+                case PlayerType.PlatformType.EXO:
                     playerFactory = ExoPlayerFactory.create();
                     ExoMediaPlayer exoMediaPlayer = (ExoMediaPlayer) playerFactory.createPlayer();
                     mTvTitle.setText("视频内核：" + " (ExoPlayer)");
                     break;
-                case ConstantKeys.VideoPlayerType.TYPE_NATIVE:
+                case PlayerType.PlatformType.NATIVE:
                     playerFactory = MediaPlayerFactory.create();
                     AndroidMediaPlayer androidMediaPlayer = (AndroidMediaPlayer) playerFactory.createPlayer();
                     mTvTitle.setText("视频内核：" + " (MediaPlayer)");
-                    break;
-                case ConstantKeys.VideoPlayerType.TYPE_RTC:
                     break;
             }
             mPlayerFactoryField.set(config, playerFactory);

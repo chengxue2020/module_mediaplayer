@@ -36,6 +36,16 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.old.dialog.ChangeClarityDialog;
 import lib.kalu.mediaplayer.ui.old.listener.OnClarityChangedListener;
 import lib.kalu.mediaplayer.ui.old.listener.OnPlayerStatesListener;
@@ -44,19 +54,8 @@ import lib.kalu.mediaplayer.ui.old.listener.OnVideoControlListener;
 import lib.kalu.mediaplayer.ui.old.other.BatterReceiver;
 import lib.kalu.mediaplayer.ui.old.other.NetChangedReceiver;
 import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
-import lib.kalu.mediaplayer.R;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -449,13 +448,13 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
      *             更多可以关注我的GitHub：https://github.com/yangchong211
      */
     @Override
-    public void setLoadingType(@ConstantKeys.LoadingType int type) {
+    public void setLoadingType(@PlayerType.LoadingType.Value int type) {
         switch (type){
-            case ConstantKeys.Loading.LOADING_RING:
+            case PlayerType.LoadingType.LOADING_RING:
                 pbLoadingRing.setVisibility(VISIBLE);
                 pbLoadingQq.setVisibility(GONE);
                 break;
-            case ConstantKeys.Loading.LOADING_QQ:
+            case PlayerType.LoadingType.LOADING_QQ:
                 pbLoadingRing.setVisibility(GONE);
                 pbLoadingQq.setVisibility(VISIBLE);
                 break;
@@ -642,42 +641,42 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
      */
     @SuppressLint("SetTextI18n")
     @Override
-    public void onPlayStateChanged(@ConstantKeys.CurrentState int playState) {
+    public void onPlayStateChanged(@PlayerType.StateType.Value int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_IDLE:
+            case PlayerType.StateType.STATE_IDLE:
                 break;
             //播放准备中
-            case ConstantKeys.CurrentState.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARING:
                 startPreparing();
                 break;
             //播放准备就绪
-            case ConstantKeys.CurrentState.STATE_PREPARED:
+            case PlayerType.StateType.STATE_PREPARED:
                 startUpdateProgressTimer();
                 //取消缓冲时更新网络加载速度
                 cancelUpdateNetSpeedTimer();
                 break;
             //正在播放
-            case ConstantKeys.CurrentState.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PLAYING:
                 statePlaying();
                 break;
             //暂停播放
-            case ConstantKeys.CurrentState.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSED:
                 statePaused();
                 break;
             //正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 stateBufferingPlaying();
                 break;
             //暂停缓冲
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                 stateBufferingPaused();
                 break;
             //播放错误
-            case ConstantKeys.CurrentState.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR:
                 stateError();
                 break;
             //播放完成
-            case ConstantKeys.CurrentState.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_COMPLETED:
                 stateCompleted();
                 break;
             default:
@@ -783,7 +782,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
         mCompleted.setVisibility(VISIBLE);
         //设置播放完成的监听事件
         if (mOnPlayerStatesListener!=null){
-            mOnPlayerStatesListener.onPlayerStates(ConstantKeys.PlayerStatesType.COMPLETED);
+            mOnPlayerStatesListener.onPlayerStates(PlayerType.StatusType.COMPLETED);
         }
         mPbPlayBar.setProgress(100);
         //当播放完成就解除广播
@@ -795,10 +794,10 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
      * @param playMode 播放器的模式：
      */
     @Override
-    public void onPlayModeChanged(@ConstantKeys.PlayMode int playMode) {
+    public void onPlayModeChanged(@PlayerType.WindowType.Value int playMode) {
         switch (playMode) {
             //普通模式
-            case ConstantKeys.PlayMode.MODE_NORMAL:
+            case PlayerType.WindowType.NORMAL:
                 //隐藏锁屏控件
                 mFlLock.setVisibility(GONE);
                 mFullScreen.setImageResource(R.drawable.module_mediaplayer_ic_player_open);
@@ -810,7 +809,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                 unRegisterBatterReceiver();
                 mIsLock = false;
                 if (mOnPlayerTypeListener!=null){
-                    mOnPlayerTypeListener.onPlayerPattern(ConstantKeys.PlayMode.MODE_NORMAL);
+                    mOnPlayerTypeListener.onPlayerPattern(PlayerType.WindowType.NORMAL);
                 }
 
                 setTopBottomVisible(true);
@@ -819,7 +818,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                 VideoLogUtils.d("播放模式--------普通模式");
                 break;
             //全屏模式
-            case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+            case PlayerType.WindowType.FULL:
                 mFlLock.setVisibility(VISIBLE);
                 mFullScreen.setVisibility(VISIBLE);
                 mFullScreen.setImageResource(R.drawable.module_mediaplayer_ic_player_close);
@@ -832,18 +831,18 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                 setTopBottomVisible(true);
                 registerBatterReceiver();
                 if (mOnPlayerTypeListener!=null){
-                    mOnPlayerTypeListener.onPlayerPattern(ConstantKeys.PlayMode.MODE_FULL_SCREEN);
+                    mOnPlayerTypeListener.onPlayerPattern(PlayerType.WindowType.FULL);
                 }
                 VideoLogUtils.d("播放模式--------全屏模式");
                 break;
             //小窗口模式
-            case ConstantKeys.PlayMode.MODE_TINY_WINDOW:
+            case PlayerType.WindowType.TINY:
                 mFlLock.setVisibility(GONE);
                 mFullScreen.setImageResource(R.drawable.module_mediaplayer_ic_player_open);
                 mFullScreen.setVisibility(VISIBLE);
                 mIsLock = false;
                 if (mOnPlayerTypeListener!=null){
-                    mOnPlayerTypeListener.onPlayerPattern(ConstantKeys.PlayMode.MODE_TINY_WINDOW);
+                    mOnPlayerTypeListener.onPlayerPattern(PlayerType.WindowType.TINY);
                 }
                 VideoLogUtils.d("播放模式--------小窗口模式");
                 break;
@@ -907,7 +906,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
             } else {
                 //如果两种情况都不是，执行逻辑交给使用者自己实现
                 if(mOnPlayerStatesListener!=null){
-                    mOnPlayerStatesListener.onPlayerStates(ConstantKeys.PlayerStatesType.BACK_CLICK);
+                    mOnPlayerStatesListener.onPlayerStates(PlayerType.StatusType.BACK_CLICK);
                 }else {
                     VideoLogUtils.d("返回键逻辑，如果是全屏，则先退出全屏；如果是小窗口，则退出小窗口；如果两种情况都不是，执行逻辑交给使用者自己实现");
                 }
@@ -918,12 +917,12 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                 if (mVideoPlayer.isPlaying() || mVideoPlayer.isBufferingPlaying()) {
                     mVideoPlayer.pause();
                     if (mOnPlayerStatesListener!=null){
-                        mOnPlayerStatesListener.onPlayerStates(ConstantKeys.PlayerStatesType.PLAYING);
+                        mOnPlayerStatesListener.onPlayerStates(PlayerType.StatusType.PLAYING);
                     }
                 } else if (mVideoPlayer.isPaused() || mVideoPlayer.isBufferingPaused()) {
                     mVideoPlayer.restart();
                     if (mOnPlayerStatesListener!=null){
-                        mOnPlayerStatesListener.onPlayerStates(ConstantKeys.PlayerStatesType.PAUSE);
+                        mOnPlayerStatesListener.onPlayerStates(PlayerType.StatusType.PAUSE);
                     }
                 }
             }else {
@@ -969,7 +968,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                 return;
             }
             //点击下载
-            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.SHARE);
+            mVideoControlListener.onVideoControlClick(PlayerType.ControllerType.SHARE);
         } else if(v == mFlLock){
             //点击锁屏按钮，则进入锁屏模式
             setLock(mIsLock);
@@ -979,14 +978,14 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                 return;
             }
             //点击下载
-            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.DOWNLOAD);
+            mVideoControlListener.onVideoControlClick(PlayerType.ControllerType.DOWNLOAD);
         } else if(v == mIvAudio){
             if(mVideoControlListener==null){
                 VideoLogUtils.d("请在初始化的时候设置切换监听事件");
                 return;
             }
             //点击切换音频
-            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.AUDIO);
+            mVideoControlListener.onVideoControlClick(PlayerType.ControllerType.AUDIO);
         }
 //        else if(v == mIvShare){
 //            if(mVideoControlListener==null){
@@ -994,7 +993,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
 //                return;
 //            }
 //            //点击分享
-//            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.SHARE);
+//            mVideoControlListener.onVideoControlClick(PlayerType.ControllerType.SHARE);
 //        }
         else if(v == mIvMenu){
             if(mVideoControlListener==null){
@@ -1002,21 +1001,21 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                 return;
             }
             //点击菜单
-            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.MENU);
+            mVideoControlListener.onVideoControlClick(PlayerType.ControllerType.MENU);
         }else if(v == mIvHorAudio){
             if(mVideoControlListener==null){
                 VideoLogUtils.d("请在初始化的时候设置横向音频监听事件");
                 return;
             }
             //点击横向音频
-            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.HOR_AUDIO);
+            mVideoControlListener.onVideoControlClick(PlayerType.ControllerType.HOR_AUDIO);
         }else if(v == mIvHorTv){
             if(mVideoControlListener==null){
                 VideoLogUtils.d("请在初始化的时候设置横向Tv监听事件");
                 return;
             }
             //点击横向TV
-            mVideoControlListener.onVideoControlClick(ConstantKeys.VideoControl.TV);
+            mVideoControlListener.onVideoControlClick(PlayerType.ControllerType.TV);
         }  else if (v == this) {
             if (mVideoPlayer.isFullScreen() || mVideoPlayer.isNormal()){
                 if (mVideoPlayer.isPlaying() || mVideoPlayer.isPaused()
@@ -1047,27 +1046,27 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
      * @param batterState 电量状态
      */
     @Override
-    public void onBatterStateChanged(@ConstantKeys.BatterMode int batterState) {
+    public void onBatterStateChanged(@PlayerType.BatterType.Value int batterState) {
         switch (batterState){
-            case ConstantKeys.BatterMode.BATTERY_10:
+            case PlayerType.BatterType.BATTERY_10:
                 mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_10);
                 break;
-            case ConstantKeys.BatterMode.BATTERY_20:
+            case PlayerType.BatterType.BATTERY_20:
                 mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_20);
                 break;
-            case ConstantKeys.BatterMode.BATTERY_50:
+            case PlayerType.BatterType.BATTERY_50:
                 mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_50);
                 break;
-            case ConstantKeys.BatterMode.BATTERY_80:
+            case PlayerType.BatterType.BATTERY_80:
                 mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_80);
                 break;
-            case ConstantKeys.BatterMode.BATTERY_100:
+            case PlayerType.BatterType.BATTERY_100:
                 mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_100);
                 break;
-            case ConstantKeys.BatterMode.BATTERY_FULL:
+            case PlayerType.BatterType.BATTERY_FULL:
                 mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_full);
                 break;
-            case ConstantKeys.BatterMode.BATTERY_CHARGING:
+            case PlayerType.BatterType.BATTERY_CHARGING:
                 mBattery.setImageResource(R.drawable.module_mediaplayer_ic_battery_charging);
                 break;
             default:

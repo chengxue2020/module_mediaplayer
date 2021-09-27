@@ -43,10 +43,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
-
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +51,10 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
+
+import lib.kalu.mediaplayer.ui.config.PlayerConfig;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -508,7 +508,7 @@ public final class PlayerUtils {
      * 获取当前的播放核心
      */
     public static Object getCurrentPlayerFactory() {
-        VideoPlayerConfig config = VideoViewManager.getConfig();
+        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         Object playerFactory = null;
         try {
             Field mPlayerFactoryField = config.getClass().getDeclaredField("mPlayerFactory");
@@ -537,31 +537,31 @@ public final class PlayerUtils {
         String playStateString;
         switch (state) {
             default:
-            case ConstantKeys.CurrentState.STATE_IDLE:
+            case PlayerType.StateType.STATE_IDLE:
                 playStateString = "idle";
                 break;
-            case ConstantKeys.CurrentState.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARING:
                 playStateString = "preparing";
                 break;
-            case ConstantKeys.CurrentState.STATE_PREPARED:
+            case PlayerType.StateType.STATE_PREPARED:
                 playStateString = "prepared";
                 break;
-            case ConstantKeys.CurrentState.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PLAYING:
                 playStateString = "playing";
                 break;
-            case ConstantKeys.CurrentState.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSED:
                 playStateString = "pause";
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                 playStateString = "buffering";
                 break;
-            case ConstantKeys.CurrentState.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_COMPLETED:
                 playStateString = "buffered";
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 playStateString = "playback completed";
                 break;
-            case ConstantKeys.CurrentState.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR:
                 playStateString = "error";
                 break;
         }
@@ -572,13 +572,13 @@ public final class PlayerUtils {
         String playerStateString;
         switch (state) {
             default:
-            case ConstantKeys.PlayMode.MODE_NORMAL:
+            case PlayerType.WindowType.NORMAL:
                 playerStateString = "normal";
                 break;
-            case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+            case PlayerType.WindowType.FULL:
                 playerStateString = "full screen";
                 break;
-            case ConstantKeys.PlayMode.MODE_TINY_WINDOW:
+            case PlayerType.WindowType.TINY:
                 playerStateString = "tiny screen";
                 break;
         }

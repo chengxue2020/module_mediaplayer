@@ -1,5 +1,8 @@
 package lib.kalu.mediaplayer.kernel.music.utils;
 
+import static androidx.core.app.NotificationCompat.PRIORITY_DEFAULT;
+import static androidx.core.app.NotificationCompat.VISIBILITY_SECRET;
+
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,9 +17,6 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-
-import static androidx.core.app.NotificationCompat.PRIORITY_DEFAULT;
-import static androidx.core.app.NotificationCompat.VISIBILITY_SECRET;
 
 /**
  * <pre>

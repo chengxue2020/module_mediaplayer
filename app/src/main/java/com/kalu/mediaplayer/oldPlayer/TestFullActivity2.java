@@ -9,7 +9,7 @@ import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
 import lib.kalu.mediaplayer.ui.old.listener.OnVideoControlListener;
 import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
@@ -65,7 +65,7 @@ public class TestFullActivity2 extends BaseActivity implements View.OnClickListe
         mBtnTiny1 = (Button) findViewById(R.id.btn_tiny_1);
         mBtnTiny2 = (Button) findViewById(R.id.btn_tiny_2);
 
-        videoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);
+        videoPlayer.setPlatformType(PlayerType.PlatformType.IJK);
         videoPlayer.setUp(ConstantVideo.VideoPlayerList[0], null);
         VideoPlayerController controller = new VideoPlayerController(this);
         controller.setTitle("办公室小野开番外了，居然在办公室开澡堂！老板还点赞？");
@@ -81,16 +81,16 @@ public class TestFullActivity2 extends BaseActivity implements View.OnClickListe
             @Override
             public void onVideoControlClick(int type) {
                 switch (type) {
-                    case ConstantKeys.VideoControl.DOWNLOAD:
+                    case PlayerType.ControllerType.DOWNLOAD:
                         //BaseToast.showRoundRectToast("下载");
                         break;
-                    case ConstantKeys.VideoControl.SHARE:
+                    case PlayerType.ControllerType.SHARE:
                         //BaseToast.showRoundRectToast("分享");
                         break;
-                    case ConstantKeys.VideoControl.MENU:
+                    case PlayerType.ControllerType.MENU:
                         //BaseToast.showRoundRectToast("更多");
                         break;
-                    case ConstantKeys.VideoControl.AUDIO:
+                    case PlayerType.ControllerType.AUDIO:
                         //BaseToast.showRoundRectToast("下载");
                         break;
                     default:

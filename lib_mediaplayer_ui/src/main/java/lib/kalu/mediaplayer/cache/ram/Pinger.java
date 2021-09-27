@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.cache.ram;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Proxy;
@@ -16,10 +18,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
-
-import static lib.kalu.mediaplayer.cache.ram.Preconditions.checkArgument;
-import static lib.kalu.mediaplayer.cache.ram.Preconditions.checkNotNull;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * Pings {@link HttpProxyCacheServer} to make sure it works.

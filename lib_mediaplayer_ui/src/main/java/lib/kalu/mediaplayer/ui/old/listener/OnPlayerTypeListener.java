@@ -18,7 +18,7 @@ package lib.kalu.mediaplayer.ui.old.listener;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -40,6 +40,6 @@ public interface OnPlayerTypeListener {
      * int NORMAL = 103; 切换到正常播放监听
      * @param type                              类型
      */
-    void onPlayerPattern(@ConstantKeys.PlayMode int type);
+    void onPlayerPattern(@PlayerType.WindowType int type);
 
 }

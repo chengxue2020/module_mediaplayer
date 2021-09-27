@@ -6,12 +6,13 @@ import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
-import lib.kalu.mediaplayer.cache.rom.manager.CacheConfig;
-import lib.kalu.mediaplayer.cache.rom.manager.CacheManager;
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
+import lib.kalu.mediaplayer.cache.config.CacheType;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
-import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.config.PlayerConfig;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 
 public class BaseApplication extends MultiDexApplication {
 
@@ -52,7 +53,7 @@ public class BaseApplication extends MultiDexApplication {
 
     private void initVideoUI() {
         //播放器配置，注意：此为全局配置，按需开启
-        VideoPlayerConfig build = VideoPlayerConfig.newBuilder()
+        PlayerConfig build = PlayerConfig.newBuilder()
                 //设置视频全局埋点事件
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
@@ -62,17 +63,17 @@ public class BaseApplication extends MultiDexApplication {
                 //创建SurfaceView
                 //.setRenderViewFactory(SurfaceViewFactory.create())
                 .build();
-        VideoViewManager.setConfig(build);
+        PlayerConfigManager.getInstance().setConfig(build);
     }
 
     private void initVideoCache() {
         CacheConfig build = new CacheConfig.Build()
                 .setIsEffective(true)
-                .setType(CacheConfig.Cache.ONLY_DISK)
+                .setType(CacheType.ROM)
                 .setCacheMax(1000)
                 .setLog(false)
                 .build();
-        CacheManager.getInstance().init(build);
+        CacheConfigManager.getInstance().setConfig(build);
     }
 
     /**

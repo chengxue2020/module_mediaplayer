@@ -27,15 +27,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.ui.controller.IGestureComponent;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.controller.IGestureComponent;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 /**
  * 手势控制
@@ -194,13 +194,13 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
 
     @Override
     public void onPlayStateChanged(int playState) {
-        if (playState == ConstantKeys.CurrentState.STATE_IDLE
-                || playState == ConstantKeys.CurrentState.STATE_START_ABORT
-                || playState == ConstantKeys.CurrentState.STATE_PREPARING
-                || playState == ConstantKeys.CurrentState.STATE_PREPARED
-                || playState == ConstantKeys.CurrentState.STATE_ERROR
-                || playState == ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING
-                || playState == ConstantKeys.CurrentState.STATE_ONCE_LIVE) {
+        if (playState == PlayerType.StateType.STATE_IDLE
+                || playState == PlayerType.StateType.STATE_START_ABORT
+                || playState == PlayerType.StateType.STATE_PREPARING
+                || playState == PlayerType.StateType.STATE_PREPARED
+                || playState == PlayerType.StateType.STATE_ERROR
+                || playState == PlayerType.StateType.STATE_BUFFERING_PLAYING
+                || playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             setVisibility(GONE);
         } else {
             setVisibility(VISIBLE);

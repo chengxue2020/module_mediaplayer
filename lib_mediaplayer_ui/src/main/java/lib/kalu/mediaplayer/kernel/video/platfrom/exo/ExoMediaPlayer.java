@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.kernel.video.platfrom.exo;
 
+import static com.google.android.exoplayer2.ExoPlaybackException.TYPE_SOURCE;
+
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.os.Handler;
@@ -32,14 +34,12 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
 
+import java.util.Map;
+
 import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-
-import java.util.Map;
-
-import static com.google.android.exoplayer2.ExoPlaybackException.TYPE_SOURCE;
 
 /**
  * <pre>

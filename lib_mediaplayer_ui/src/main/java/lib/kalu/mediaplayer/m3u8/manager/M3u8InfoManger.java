@@ -6,11 +6,11 @@ import android.os.Message;
 
 import androidx.annotation.Keep;
 
+import java.io.IOException;
+
 import lib.kalu.mediaplayer.m3u8.bean.M3u8;
 import lib.kalu.mediaplayer.m3u8.inter.OnM3u8InfoListener;
 import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
-
-import java.io.IOException;
 
 
 /**

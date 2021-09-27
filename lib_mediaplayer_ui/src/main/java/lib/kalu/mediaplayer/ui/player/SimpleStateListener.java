@@ -17,7 +17,7 @@ package lib.kalu.mediaplayer.ui.player;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -40,7 +40,7 @@ public class SimpleStateListener implements OnVideoStateListener {
      * @param playerState                       播放模式
      */
     @Override
-    public void onPlayerStateChanged(@ConstantKeys.PlayModeType int playerState) {
+    public void onPlayerStateChanged(@PlayerType.WindowType.Value int playerState) {
 
     }
 

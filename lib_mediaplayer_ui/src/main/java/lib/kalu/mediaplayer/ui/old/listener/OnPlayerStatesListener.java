@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.ui.old.listener;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -25,6 +25,6 @@ public interface OnPlayerStatesListener {
      * int BACK_CLICK = 104; 用户点击back。当视频退出全屏或者退出小窗口后，再次点击返回键，让用户自己处理返回键事件的逻辑
      * @param states                            状态
      */
-    void onPlayerStates(@ConstantKeys.PlayerStatesType int states);
+    void onPlayerStates(@PlayerType.StatusType.Value int states);
 
 }

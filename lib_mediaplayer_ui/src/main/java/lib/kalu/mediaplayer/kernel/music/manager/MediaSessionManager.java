@@ -6,8 +6,8 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
-import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
 import lib.kalu.mediaplayer.kernel.music.service.PlayService;
+import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
 
 
 public class MediaSessionManager {

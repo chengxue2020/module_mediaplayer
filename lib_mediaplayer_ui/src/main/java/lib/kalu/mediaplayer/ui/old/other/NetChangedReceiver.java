@@ -22,12 +22,11 @@ import android.content.Intent;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.old.controller.AbsVideoPlayerController;
 import lib.kalu.mediaplayer.ui.old.player.OldVideoPlayer;
 import lib.kalu.mediaplayer.ui.tool.NetworkUtils;
-
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 
 /**
  * <pre>
@@ -63,7 +62,7 @@ public class NetChangedReceiver extends BroadcastReceiver {
                         mVideoPlayer.pause();
                     }
                     if (controller!=null){
-                        controller.onPlayStateChanged(ConstantKeys.CurrentState.STATE_ERROR);
+                        controller.onPlayStateChanged(PlayerType.StateType.STATE_ERROR);
                     }
                     break;
                 default:

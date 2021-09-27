@@ -6,11 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.m3u8.bean.M3u8;
-import lib.kalu.mediaplayer.m3u8.bean.M3u8Ts;
-import lib.kalu.mediaplayer.m3u8.inter.OnDownloadListener;
-import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,6 +19,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import lib.kalu.mediaplayer.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.m3u8.bean.M3u8Ts;
+import lib.kalu.mediaplayer.m3u8.inter.OnDownloadListener;
+import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
 
 /**
  * <pre>

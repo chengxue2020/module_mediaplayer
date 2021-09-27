@@ -1,11 +1,13 @@
 package lib.kalu.mediaplayer.cache.ram;
 
-import android.text.TextUtils;
+import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
+import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_PARTIAL;
+import static java.net.HttpURLConnection.HTTP_SEE_OTHER;
+import static lib.kalu.mediaplayer.cache.ram.ProxyCacheUtils.DEFAULT_BUFFER_SIZE;
 
-import lib.kalu.mediaplayer.cache.ram.headers.EmptyHeadersInjector;
-import lib.kalu.mediaplayer.cache.ram.headers.HeaderInjector;
-import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorage;
-import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorageFactory;
+import android.text.TextUtils;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -15,13 +17,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-import static lib.kalu.mediaplayer.cache.ram.Preconditions.checkNotNull;
-import static lib.kalu.mediaplayer.cache.ram.ProxyCacheUtils.DEFAULT_BUFFER_SIZE;
-import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
-import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
-import static java.net.HttpURLConnection.HTTP_OK;
-import static java.net.HttpURLConnection.HTTP_PARTIAL;
-import static java.net.HttpURLConnection.HTTP_SEE_OTHER;
+import lib.kalu.mediaplayer.cache.ram.headers.EmptyHeadersInjector;
+import lib.kalu.mediaplayer.cache.ram.headers.HeaderInjector;
+import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorage;
+import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorageFactory;
 
 /**
  * {@link Source} that uses http resource as source for {@link ProxyCache}.

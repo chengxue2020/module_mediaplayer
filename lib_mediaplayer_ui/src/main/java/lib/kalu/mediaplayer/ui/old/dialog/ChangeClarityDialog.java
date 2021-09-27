@@ -25,12 +25,11 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.ui.old.listener.OnClarityChangedListener;
-
-import java.util.List;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 
 /**

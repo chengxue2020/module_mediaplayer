@@ -18,7 +18,7 @@ package lib.kalu.mediaplayer.ui.old.listener;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -46,6 +46,6 @@ public interface OnVideoControlListener {
      *                  5.TV，tv映射
      *                  6.HOR_AUDIO，音频
      */
-    void onVideoControlClick(@ConstantKeys.VideoControlType int type);
+    void onVideoControlClick(@PlayerType.ControllerType.Value int type);
     
 }

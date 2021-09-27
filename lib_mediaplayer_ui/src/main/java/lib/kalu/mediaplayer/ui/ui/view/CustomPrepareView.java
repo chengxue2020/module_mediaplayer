@@ -28,11 +28,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
-
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 
 /**
@@ -94,7 +93,7 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
             @Override
             public void onClick(View v) {
                 mFlNetWarning.setVisibility(GONE);
-                VideoViewManager.instance().setPlayOnMobileNetwork(true);
+                PlayerConfigManager.instance().setPlayOnMobileNetwork(true);
                 mControlWrapper.start();
             }
         });
@@ -130,23 +129,23 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARING:
                 bringToFront();
                 setVisibility(VISIBLE);
                 mIvStartPlay.setVisibility(View.GONE);
                 mFlNetWarning.setVisibility(GONE);
                 mPbLoading.setVisibility(View.VISIBLE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PLAYING:
-            case ConstantKeys.CurrentState.STATE_PAUSED:
-            case ConstantKeys.CurrentState.STATE_ERROR:
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
-            case ConstantKeys.CurrentState.STATE_COMPLETED:
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
-            case ConstantKeys.CurrentState.STATE_ONCE_LIVE:
+            case PlayerType.StateType.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PAUSED:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_IDLE:
+            case PlayerType.StateType.STATE_IDLE:
                 setVisibility(VISIBLE);
                 bringToFront();
                 mPbLoading.setVisibility(View.GONE);
@@ -154,7 +153,7 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
                 mIvStartPlay.setVisibility(View.VISIBLE);
                 mIvThumb.setVisibility(View.VISIBLE);
                 break;
-            case ConstantKeys.CurrentState.STATE_START_ABORT:
+            case PlayerType.StateType.STATE_START_ABORT:
                 setVisibility(VISIBLE);
                 mFlNetWarning.setVisibility(VISIBLE);
                 mFlNetWarning.bringToFront();

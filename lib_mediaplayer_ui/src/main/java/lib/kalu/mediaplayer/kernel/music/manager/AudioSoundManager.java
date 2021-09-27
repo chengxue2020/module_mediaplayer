@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.kernel.music.manager;
 
+import static android.content.Context.AUDIO_SERVICE;
+
 import android.annotation.SuppressLint;
 import android.media.AudioManager;
 import android.os.Build;
@@ -7,8 +9,6 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.kernel.music.service.PlayService;
-
-import static android.content.Context.AUDIO_SERVICE;
 
 public class AudioSoundManager  {
 

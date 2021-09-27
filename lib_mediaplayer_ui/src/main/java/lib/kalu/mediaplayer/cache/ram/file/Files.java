@@ -1,7 +1,5 @@
 package lib.kalu.mediaplayer.cache.ram.file;
 
-import lib.kalu.mediaplayer.cache.ram.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -11,6 +9,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.cache.ram.Logger;
 
 /**
  * Utils for work with files.

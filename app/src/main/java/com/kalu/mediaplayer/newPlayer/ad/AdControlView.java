@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 
@@ -88,11 +88,11 @@ public class AdControlView extends FrameLayout implements InterControlView, View
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PLAYING:
                 mControlWrapper.startProgress();
                 mPlayButton.setSelected(true);
                 break;
-            case ConstantKeys.CurrentState.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSED:
                 mPlayButton.setSelected(false);
                 break;
         }
@@ -101,11 +101,11 @@ public class AdControlView extends FrameLayout implements InterControlView, View
     @Override
     public void onPlayerStateChanged(int playerState) {
         switch (playerState) {
-            case ConstantKeys.PlayMode.MODE_NORMAL:
+            case PlayerType.WindowType.NORMAL:
                 mBack.setVisibility(GONE);
                 mFullScreen.setSelected(false);
                 break;
-            case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+            case PlayerType.WindowType.FULL:
                 mBack.setVisibility(VISIBLE);
                 mFullScreen.setSelected(true);
                 break;

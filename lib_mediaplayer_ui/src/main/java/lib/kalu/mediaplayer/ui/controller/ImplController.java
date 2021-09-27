@@ -15,8 +15,6 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.ui.controller;
 
-import androidx.annotation.IdRes;
-
 /**
  * <pre>
  *     @author yangchong

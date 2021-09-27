@@ -20,26 +20,24 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.old.controller.AbsVideoPlayerController;
-import lib.kalu.mediaplayer.ui.tool.BaseToast;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
-import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Map;
 
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.old.controller.AbsVideoPlayerController;
+import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
+import lib.kalu.mediaplayer.ui.tool.BaseToast;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import tv.danmaku.ijk.media.player.AndroidMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -64,16 +62,16 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      * TYPE_IJK             基于IjkPlayer封装播放器
      * TYPE_NATIVE          基于原生自带的播放器控件
      **/
-    public int mPlayerType = ConstantKeys.VideoPlayerType.TYPE_IJK;
+    public int mPlayerType = PlayerType.PlatformType.IJK;
     /**
      * 播放状态，错误，开始播放，暂停播放，缓存中等等状态
      **/
-    private int mCurrentState = ConstantKeys.CurrentState.STATE_IDLE;
+    private int mCurrentState = PlayerType.StateType.STATE_IDLE;
     /**
      * 播放模式，普通模式，小窗口模式，正常模式等等
      * 存在局限性：比如小窗口下的正在播放模式，那么mCurrentMode就是STATE_PLAYING，而不是MODE_TINY_WINDOW并存
      **/
-    private int mCurrentMode = ConstantKeys.PlayMode.MODE_NORMAL;
+    private int mCurrentMode = PlayerType.WindowType.NORMAL;
 
 
     private Context mContext;
@@ -208,7 +206,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      * 输入值：ConstantKeys.IjkPlayerType.TYPE_IJK   或者  ConstantKeys.IjkPlayerType.TYPE_NATIVE
      * @param playerType IjkPlayer or MediaPlayer.
      */
-    public void setPlayerType(@ConstantKeys.PlayerType int playerType) {
+    public void setPlatformType(@PlayerType.PlatformType.Value int playerType) {
         //默认是基于IjkPlayer封装播放器
         mPlayerType = playerType;
     }
@@ -265,7 +263,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
             //在调用start方法前，请先初始化视频控制器，调用setController方法
             throw new NullPointerException("Controller must not be null , please setController first");
         }
-        if (mCurrentState == ConstantKeys.CurrentState.STATE_IDLE) {
+        if (mCurrentState == PlayerType.StateType.STATE_IDLE) {
             VideoPlayerManager.instance().setCurrentVideoPlayer(this);
             videoMediaPlayer.initAudioManager();
             videoMediaPlayer.initMediaPlayer();
@@ -295,20 +293,20 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public void restart() {
-        if (mCurrentState == ConstantKeys.CurrentState.STATE_PAUSED) {
+        if (mCurrentState == PlayerType.StateType.STATE_PAUSED) {
             //如果是暂停状态，那么则继续播放
             videoMediaPlayer.getMediaPlayer().start();
-            mCurrentState = ConstantKeys.CurrentState.STATE_PLAYING;
+            mCurrentState = PlayerType.StateType.STATE_PLAYING;
             mController.onPlayStateChanged(mCurrentState);
             VideoLogUtils.d("播放状态--------STATE_PLAYING");
-        } else if (mCurrentState == ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED) {
+        } else if (mCurrentState == PlayerType.StateType.STATE_BUFFERING_PAUSED) {
             //如果是缓存暂停状态，那么则继续播放
             videoMediaPlayer.getMediaPlayer().start();
-            mCurrentState = ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING;
+            mCurrentState = PlayerType.StateType.STATE_BUFFERING_PLAYING;
             mController.onPlayStateChanged(mCurrentState);
             VideoLogUtils.d("播放状态--------STATE_BUFFERING_PLAYING");
-        } else if (mCurrentState == ConstantKeys.CurrentState.STATE_COMPLETED
-                || mCurrentState == ConstantKeys.CurrentState.STATE_ERROR) {
+        } else if (mCurrentState == PlayerType.StateType.STATE_COMPLETED
+                || mCurrentState == PlayerType.StateType.STATE_ERROR) {
             //如果是完成播放或者播放错误，则重新播放
             videoMediaPlayer.getMediaPlayer().reset();
             videoMediaPlayer.openMediaPlayer();
@@ -324,16 +322,16 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public void pause() {
-        if (mCurrentState == ConstantKeys.CurrentState.STATE_PLAYING) {
+        if (mCurrentState == PlayerType.StateType.STATE_PLAYING) {
             //如果是播放状态，那么则暂停播放
             videoMediaPlayer.getMediaPlayer().pause();
-            mCurrentState = ConstantKeys.CurrentState.STATE_PAUSED;
+            mCurrentState = PlayerType.StateType.STATE_PAUSED;
             mController.onPlayStateChanged(mCurrentState);
             VideoLogUtils.d("播放状态--------STATE_PAUSED");
-        } else if (mCurrentState == ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING) {
+        } else if (mCurrentState == PlayerType.StateType.STATE_BUFFERING_PLAYING) {
             //如果是正在缓冲状态，那么则暂停暂停缓冲
             videoMediaPlayer.getMediaPlayer().pause();
-            mCurrentState = ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED;
+            mCurrentState = PlayerType.StateType.STATE_BUFFERING_PAUSED;
             mController.onPlayStateChanged(mCurrentState);
             VideoLogUtils.d("播放状态--------STATE_BUFFERING_PAUSED");
         }
@@ -372,7 +370,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isIdle() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_IDLE;
+        return mCurrentState == PlayerType.StateType.STATE_IDLE;
     }
 
 
@@ -382,7 +380,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isPreparing() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_PREPARING;
+        return mCurrentState == PlayerType.StateType.STATE_PREPARING;
     }
 
 
@@ -392,7 +390,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isPrepared() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_PREPARED;
+        return mCurrentState == PlayerType.StateType.STATE_PREPARED;
     }
 
 
@@ -402,7 +400,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isBufferingPlaying() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING;
+        return mCurrentState == PlayerType.StateType.STATE_BUFFERING_PLAYING;
     }
 
 
@@ -412,7 +410,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isBufferingPaused() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED;
+        return mCurrentState == PlayerType.StateType.STATE_BUFFERING_PAUSED;
     }
 
 
@@ -422,7 +420,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isPlaying() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_PLAYING;
+        return mCurrentState == PlayerType.StateType.STATE_PLAYING;
     }
 
 
@@ -432,7 +430,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isPaused() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_PAUSED;
+        return mCurrentState == PlayerType.StateType.STATE_PAUSED;
     }
 
 
@@ -442,7 +440,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isError() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_ERROR;
+        return mCurrentState == PlayerType.StateType.STATE_ERROR;
     }
 
 
@@ -452,7 +450,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isCompleted() {
-        return mCurrentState == ConstantKeys.CurrentState.STATE_COMPLETED;
+        return mCurrentState == PlayerType.StateType.STATE_COMPLETED;
     }
 
 
@@ -462,7 +460,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isFullScreen() {
-        return mCurrentMode == ConstantKeys.PlayMode.MODE_FULL_SCREEN;
+        return mCurrentMode == PlayerType.WindowType.FULL;
     }
 
 
@@ -472,7 +470,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isTinyWindow() {
-        return mCurrentMode == ConstantKeys.PlayMode.MODE_TINY_WINDOW;
+        return mCurrentMode == PlayerType.WindowType.TINY;
     }
 
 
@@ -482,7 +480,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean isNormal() {
-        return mCurrentMode == ConstantKeys.PlayMode.MODE_NORMAL;
+        return mCurrentMode == PlayerType.WindowType.NORMAL;
     }
 
 
@@ -597,7 +595,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      * 设置当前播放模式
      * @param state             当前播放模式
      */
-    public void setCurrentState(@ConstantKeys.CurrentState int state){
+    public void setCurrentState(@PlayerType.StateType int state){
         mCurrentState = state;
     }
 
@@ -610,7 +608,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public void enterFullScreen() {
-        if (mCurrentMode == ConstantKeys.PlayMode.MODE_FULL_SCREEN){
+        if (mCurrentMode == PlayerType.WindowType.FULL){
             return;
         }
         // 隐藏ActionBar、状态栏，并横屏
@@ -622,7 +620,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
         //找到contentView
         ViewGroup contentView = PlayerUtils.scanForActivity(mContext)
                 .findViewById(android.R.id.content);
-        if (mCurrentMode == ConstantKeys.PlayMode.MODE_TINY_WINDOW) {
+        if (mCurrentMode == PlayerType.WindowType.TINY) {
             contentView.removeView(mContainer);
         } else {
             this.removeView(mContainer);
@@ -630,7 +628,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         contentView.addView(mContainer, params);
-        mCurrentMode = ConstantKeys.PlayMode.MODE_FULL_SCREEN;
+        mCurrentMode = PlayerType.WindowType.FULL;
         mController.onPlayModeChanged(mCurrentMode);
         VideoLogUtils.d("播放模式--------MODE_FULL_SCREEN");
     }
@@ -641,7 +639,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public void enterVerticalScreenScreen() {
-        if (mCurrentMode == ConstantKeys.PlayMode.MODE_FULL_SCREEN){
+        if (mCurrentMode == PlayerType.WindowType.FULL){
             return;
         }
         // 隐藏ActionBar、状态栏，并横屏
@@ -650,7 +648,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ViewGroup contentView = PlayerUtils.
                 scanForActivity(mContext).findViewById(android.R.id.content);
-        if (mCurrentMode == ConstantKeys.PlayMode.MODE_TINY_WINDOW) {
+        if (mCurrentMode == PlayerType.WindowType.TINY) {
             contentView.removeView(mContainer);
         } else {
             this.removeView(mContainer);
@@ -659,7 +657,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         contentView.addView(mContainer, params);
 
-        mCurrentMode = ConstantKeys.PlayMode.MODE_FULL_SCREEN;
+        mCurrentMode = PlayerType.WindowType.FULL;
         mController.onPlayModeChanged(mCurrentMode);
         VideoLogUtils.d("播放模式--------MODE_FULL_SCREEN");
     }
@@ -676,7 +674,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean exitFullScreen() {
-        if (mCurrentMode == ConstantKeys.PlayMode.MODE_FULL_SCREEN) {
+        if (mCurrentMode == PlayerType.WindowType.FULL) {
             PlayerUtils.showActionBar(mContext);
             PlayerUtils.scanForActivity(mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             ViewGroup contentView = PlayerUtils.scanForActivity(mContext).findViewById(android.R.id.content);
@@ -685,7 +683,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
             //重新添加到当前视图
             LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             this.addView(mContainer, params);
-            mCurrentMode = ConstantKeys.PlayMode.MODE_NORMAL;
+            mCurrentMode = PlayerType.WindowType.NORMAL;
             mController.onPlayModeChanged(mCurrentMode);
             VideoLogUtils.d("播放模式--------MODE_NORMAL");
             this.setOnKeyListener(null);
@@ -702,7 +700,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
     @Override
     public void enterTinyWindow() {
         //如果是小窗口模式，则不执行下面代码
-        if (mCurrentMode == ConstantKeys.PlayMode.MODE_TINY_WINDOW) {
+        if (mCurrentMode == PlayerType.WindowType.TINY) {
             return;
         }
         //先移除
@@ -717,7 +715,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
         params.bottomMargin = PlayerUtils.dp2px(mContext, 8f);
 
         contentView.addView(mContainer, params);
-        mCurrentMode = ConstantKeys.PlayMode.MODE_TINY_WINDOW;
+        mCurrentMode = PlayerType.WindowType.TINY;
         mController.onPlayModeChanged(mCurrentMode);
         VideoLogUtils.d("播放模式-------MODE_TINY_WINDOW");
     }
@@ -727,12 +725,12 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
      */
     @Override
     public boolean exitTinyWindow() {
-        if (mCurrentMode == ConstantKeys.PlayMode.MODE_TINY_WINDOW) {
+        if (mCurrentMode == PlayerType.WindowType.TINY) {
             ViewGroup contentView = PlayerUtils.scanForActivity(mContext).findViewById(android.R.id.content);
             contentView.removeView(mContainer);
             LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             this.addView(mContainer, params);
-            mCurrentMode = ConstantKeys.PlayMode.MODE_NORMAL;
+            mCurrentMode = PlayerType.WindowType.NORMAL;
             mController.onPlayModeChanged(mCurrentMode);
             VideoLogUtils.d("播放模式-------MODE_NORMAL");
             return true;
@@ -766,7 +764,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
         if (isTinyWindow()) {
             exitTinyWindow();
         }
-        mCurrentMode = ConstantKeys.PlayMode.MODE_NORMAL;
+        mCurrentMode = PlayerType.WindowType.NORMAL;
 
         // 释放播放器
         releasePlayer();
@@ -801,7 +799,7 @@ public class OldVideoPlayer extends FrameLayout implements IVideoPlayer {
         videoMediaPlayer.releaseSurface();
         //如果SurfaceTexture不为null，则释放
         videoMediaPlayer.releaseSurfaceTexture();
-        mCurrentState = ConstantKeys.CurrentState.STATE_IDLE;
+        mCurrentState = PlayerType.StateType.STATE_IDLE;
     }
 
 

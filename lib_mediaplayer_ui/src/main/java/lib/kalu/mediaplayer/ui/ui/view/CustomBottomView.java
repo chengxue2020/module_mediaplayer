@@ -33,17 +33,15 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerConfig;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 /**
  * <pre>
@@ -172,22 +170,22 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_IDLE:
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 setVisibility(GONE);
                 mPbBottomProgress.setProgress(0);
                 mPbBottomProgress.setSecondaryProgress(0);
                 mSeekBar.setProgress(0);
                 mSeekBar.setSecondaryProgress(0);
                 break;
-            case ConstantKeys.CurrentState.STATE_START_ABORT:
-            case ConstantKeys.CurrentState.STATE_PREPARING:
-            case ConstantKeys.CurrentState.STATE_PREPARED:
-            case ConstantKeys.CurrentState.STATE_ERROR:
-            case ConstantKeys.CurrentState.STATE_ONCE_LIVE:
+            case PlayerType.StateType.STATE_START_ABORT:
+            case PlayerType.StateType.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARED:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PLAYING:
                 mIvPlay.setSelected(true);
                 if (mIsShowBottomProgress) {
                     if (mControlWrapper.isShowing()) {
@@ -204,11 +202,11 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
                 //开始刷新进度
                 mControlWrapper.startProgress();
                 break;
-            case ConstantKeys.CurrentState.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSED:
                 mIvPlay.setSelected(false);
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
-            case ConstantKeys.CurrentState.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_COMPLETED:
                 mIvPlay.setSelected(mControlWrapper.isPlaying());
                 break;
         }
@@ -217,10 +215,10 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
     @Override
     public void onPlayerStateChanged(int playerState) {
         switch (playerState) {
-            case ConstantKeys.PlayMode.MODE_NORMAL:
+            case PlayerType.WindowType.NORMAL:
                 mIvFullscreen.setSelected(false);
                 break;
-            case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+            case PlayerType.WindowType.FULL:
                 mIvFullscreen.setSelected(true);
                 break;
         }
@@ -282,8 +280,8 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
         }
 
 
-        if (VideoPlayerConfig.newBuilder().build().mIsShowToast) {
-            long time = VideoPlayerConfig.newBuilder().build().mShowToastTime;
+        if (PlayerConfig.newBuilder().build().mIsShowToast) {
+            long time = PlayerConfig.newBuilder().build().mShowToastTime;
             if (time <= 0) {
                 time = 5;
             }

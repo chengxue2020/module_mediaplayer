@@ -6,7 +6,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.surface.InterSurfaceView;
 
 
@@ -33,10 +33,10 @@ public class TikTokRenderView implements InterSurfaceView {
             mProxyRenderView.setVideoSize(videoWidth, videoHeight);
             if (videoHeight > videoWidth) {
                 //竖屏视频，使用居中裁剪
-                mProxyRenderView.setScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_CENTER_CROP);
+                mProxyRenderView.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP);
             } else {
                 //横屏视频，使用默认模式
-                mProxyRenderView.setScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_DEFAULT);
+                mProxyRenderView.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_DEFAULT);
             }
         }
     }

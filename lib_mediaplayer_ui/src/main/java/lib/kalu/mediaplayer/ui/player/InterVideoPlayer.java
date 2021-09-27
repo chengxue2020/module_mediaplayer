@@ -34,7 +34,7 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -118,7 +118,7 @@ public interface InterVideoPlayer {
 
     boolean isMute();
 
-    void setScreenScaleType(@ConstantKeys.ScreenScaleType int screenScaleType);
+    void setScreenScaleType(@PlayerType.ScaleType.Value int screenScaleType);
 
     void setSpeed(float speed);
 

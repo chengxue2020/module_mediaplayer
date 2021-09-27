@@ -13,16 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.ui.player;
+package lib.kalu.mediaplayer.ui.config;
 
 import android.app.Application;
 
 import androidx.annotation.Keep;
-
-import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
+
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.player.VideoLayout;
 
 /**
  * @description: 视频播放器管理器，管理当前正在播放的VideoView，以及播放器配置
@@ -31,7 +32,7 @@ import java.util.LinkedHashMap;
  * @date: 2021-05-12 14:43
  */
 @Keep
-public class VideoViewManager {
+public class PlayerConfigManager {
 
     /**
      * 保存VideoView的容器
@@ -46,36 +47,57 @@ public class VideoViewManager {
     /**
      * VideoViewManager实例
      */
-    private static volatile VideoViewManager sInstance;
+    private static volatile PlayerConfigManager sInstance;
 
     /**
      * VideoViewConfig实例
      */
-    private static VideoPlayerConfig sConfig;
+    private PlayerConfig mPlayerConfig;
 
-    private VideoViewManager() {
-        mPlayOnMobileNetwork = getConfig().mPlayOnMobileNetwork;
+    private PlayerConfigManager() {
+        mPlayerConfig = PlayerConfig.newBuilder().build();
+        mPlayOnMobileNetwork = mPlayerConfig.mPlayOnMobileNetwork;
     }
 
-    /**
-     * 设置VideoViewConfig
-     */
-    public static void setConfig(VideoPlayerConfig config) {
-        if (sConfig == null) {
-            synchronized (VideoPlayerConfig.class) {
-                if (sConfig == null) {
-                    sConfig = config == null ? VideoPlayerConfig.newBuilder().build() : config;
-                }
-            }
-        }
+    private static class Holder {
+        private static final PlayerConfigManager INSTANCE = new PlayerConfigManager();
     }
+
+    public static PlayerConfigManager getInstance() {
+        return PlayerConfigManager.Holder.INSTANCE;
+    }
+
+    public final void setConfig(@NonNull PlayerConfig config) {
+        this.mPlayerConfig = config;
+    }
+
+//    /**
+//     * 设置VideoViewConfig
+//     */
+//    public static void setConfig(PlayerConfig config) {
+//        if (sConfig == null) {
+//            synchronized (PlayerConfig.class) {
+//                if (sConfig == null) {
+//                    sConfig = config == null ? PlayerConfig.newBuilder().build() : config;
+//                }
+//            }
+//        }
+//    }
+//
+//    /**
+//     * 获取VideoViewConfig
+//     */
+//    public static PlayerConfig getConfig() {
+//        setConfig(null);
+//        return sConfig;
+//    }
 
     /**
      * 获取VideoViewConfig
      */
-    public static VideoPlayerConfig getConfig() {
-        setConfig(null);
-        return sConfig;
+    public final PlayerConfig getConfig() {
+//        setConfig(null);
+        return mPlayerConfig;
     }
 
     /**
@@ -92,11 +114,11 @@ public class VideoViewManager {
         mPlayOnMobileNetwork = playOnMobileNetwork;
     }
 
-    public static VideoViewManager instance() {
+    public static PlayerConfigManager instance() {
         if (sInstance == null) {
-            synchronized (VideoViewManager.class) {
+            synchronized (PlayerConfigManager.class) {
                 if (sInstance == null) {
-                    sInstance = new VideoViewManager();
+                    sInstance = new PlayerConfigManager();
                 }
             }
         }

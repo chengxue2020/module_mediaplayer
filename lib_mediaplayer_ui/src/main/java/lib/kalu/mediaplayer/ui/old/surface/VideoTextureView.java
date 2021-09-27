@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 
 /**

@@ -17,7 +17,7 @@ import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 
 public class TikTokView extends FrameLayout implements InterControlView {
@@ -95,24 +95,24 @@ public class TikTokView extends FrameLayout implements InterControlView {
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_IDLE:
+            case PlayerType.StateType.STATE_IDLE:
                 VideoLogUtils.e("STATE_IDLE " + hashCode());
                 thumb.setVisibility(VISIBLE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PLAYING:
                 VideoLogUtils.e("STATE_PLAYING " + hashCode());
                 thumb.setVisibility(GONE);
                 mPlayBtn.setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSED:
                 VideoLogUtils.e("STATE_PAUSED " + hashCode());
                 thumb.setVisibility(GONE);
                 mPlayBtn.setVisibility(VISIBLE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PREPARED:
+            case PlayerType.StateType.STATE_PREPARED:
                 VideoLogUtils.e("STATE_PREPARED " + hashCode());
                 break;
-            case ConstantKeys.CurrentState.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR:
                 VideoLogUtils.e("STATE_ERROR " + hashCode());
                 Toast.makeText(getContext(), R.string.module_mediaplayer_string_error_message, Toast.LENGTH_SHORT).show();
                 break;

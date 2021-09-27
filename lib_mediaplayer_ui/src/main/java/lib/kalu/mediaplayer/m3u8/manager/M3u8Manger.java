@@ -5,12 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import lib.kalu.mediaplayer.m3u8.bean.M3u8;
-import lib.kalu.mediaplayer.m3u8.bean.M3u8Ts;
-import lib.kalu.mediaplayer.m3u8.task.M3u8DownloadTask;
-import lib.kalu.mediaplayer.m3u8.inter.M3U8Listener;
-import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
-
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -21,6 +15,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import lib.kalu.mediaplayer.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.m3u8.bean.M3u8Ts;
+import lib.kalu.mediaplayer.m3u8.inter.M3U8Listener;
+import lib.kalu.mediaplayer.m3u8.task.M3u8DownloadTask;
+import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
 
 
 /**

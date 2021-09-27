@@ -1,11 +1,11 @@
 package lib.kalu.mediaplayer.cache.ram;
 
+import static android.os.Environment.MEDIA_MOUNTED;
+
 import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
-
-import static android.os.Environment.MEDIA_MOUNTED;
 
 /**
  * Provides application storage paths

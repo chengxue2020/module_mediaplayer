@@ -4,9 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.m3u8.bean.M3u8;
-import lib.kalu.mediaplayer.m3u8.bean.M3u8Ts;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -20,6 +17,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.kalu.mediaplayer.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.m3u8.bean.M3u8Ts;
 
 
 /**

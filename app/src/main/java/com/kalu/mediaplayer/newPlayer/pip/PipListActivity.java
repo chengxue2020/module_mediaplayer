@@ -18,10 +18,10 @@ import com.kalu.mediaplayer.R;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.ui.pip.FloatVideoManager;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
@@ -46,7 +46,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
 
     protected void initView() {
         mPIPManager = FloatVideoManager.getInstance(this);
-        mVideoView = VideoViewManager.instance().get(FloatVideoManager.PIP);
+        mVideoView = PlayerConfigManager.instance().get(FloatVideoManager.PIP);
         mController = new DefaultController(this);
         initRecyclerView();
     }
@@ -76,7 +76,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
                 int position = holder.mPosition;
                 if (position == mPIPManager.getPlayingPosition()) {
                     startFloatWindow();
-                    mController.setPlayState(ConstantKeys.CurrentState.STATE_IDLE);
+                    mController.setPlayState(PlayerType.StateType.STATE_IDLE);
                 }
             }
         });

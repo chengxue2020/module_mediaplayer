@@ -18,7 +18,7 @@ package lib.kalu.mediaplayer.ui.player;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -40,7 +40,7 @@ public interface OnVideoStateListener {
      * MODE_TINY_WINDOW         小屏模式
      * @param playerState                       播放模式
      */
-    void onPlayerStateChanged(@ConstantKeys.PlayModeType int playerState);
+    void onPlayerStateChanged(@PlayerType.WindowType.Value int playerState);
 
     /**
      * 播放状态
@@ -56,6 +56,6 @@ public interface OnVideoStateListener {
      * 8                开始播放中止
      * @param playState                         播放状态，主要是指播放器的各种状态
      */
-    void onPlayStateChanged(@ConstantKeys.CurrentStateType int playState);
+    void onPlayStateChanged(@PlayerType.StateType.Value int playState);
     
 }

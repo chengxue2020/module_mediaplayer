@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
  * <pre>
@@ -97,7 +97,7 @@ public interface IVideoController {
      *             目前1，是仿腾讯加载loading
      *             2，是转圈加载loading
      */
-    void setLoadingType(@ConstantKeys.LoadingType int type);
+    void setLoadingType(@PlayerType.LoadingType.Value int type);
 
     /**
      * 设置播放的视频的标题
@@ -111,14 +111,14 @@ public interface IVideoController {
      *
      * @param playState 播放状态：
      */
-    void onPlayStateChanged(@ConstantKeys.CurrentState int playState);
+    void onPlayStateChanged(@PlayerType.StateType.Value int playState);
 
     /**
      * 当播放器的播放模式发生变化，在此方法中更新不同模式下的控制器界面。
      *
      * @param playMode 播放器的模式：
      */
-    void onPlayModeChanged(@ConstantKeys.PlayMode int playMode);
+    void onPlayModeChanged(@PlayerType.WindowType.Value int playMode);
 
     /**
      * 重置控制器，将控制器恢复到初始状态。

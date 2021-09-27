@@ -15,13 +15,14 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.ui.ui.pip;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.Keep;
 
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 
@@ -50,7 +51,7 @@ public class FloatVideoManager {
 
     private FloatVideoManager(Context context) {
         mVideoPlayerLayout = new VideoLayout(context);
-        VideoViewManager.instance().add(mVideoPlayerLayout, PIP);
+        PlayerConfigManager.instance().add(mVideoPlayerLayout, PIP);
         mFloatController = new CustomFloatController(context);
         mFloatView = new FloatVideoView(context, 0, 0);
     }
@@ -66,6 +67,7 @@ public class FloatVideoManager {
         return instance;
     }
 
+    @SuppressLint("WrongConstant")
     public void startFloatWindow() {
         if (mIsShowing) {
             return;
@@ -73,7 +75,7 @@ public class FloatVideoManager {
         PlayerUtils.removeViewFormParent(mVideoPlayerLayout);
         mVideoPlayerLayout.setController(mFloatController);
         mFloatController.setPlayState(mVideoPlayerLayout.getCurrentPlayState());
-        mFloatController.setPlayerState(mVideoPlayerLayout.getCurrentPlayerState());
+        mFloatController.setWindowState(mVideoPlayerLayout.getCurrentWindowState());
         mFloatView.addView(mVideoPlayerLayout);
         mFloatView.addToWindow();
         mIsShowing = true;

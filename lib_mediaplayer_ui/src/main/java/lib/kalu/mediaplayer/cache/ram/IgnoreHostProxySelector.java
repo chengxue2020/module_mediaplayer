@@ -8,8 +8,6 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import static lib.kalu.mediaplayer.cache.ram.Preconditions.checkNotNull;
-
 /**
  * {@link ProxySelector} that ignore system default proxies for concrete host.
  * <p>

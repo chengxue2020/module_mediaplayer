@@ -10,7 +10,7 @@ import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.old.controller.VideoPlayerController;
 import lib.kalu.mediaplayer.ui.old.listener.OnVideoControlListener;
 import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
@@ -53,10 +53,10 @@ public class TestTinyActivity extends BaseActivity implements View.OnClickListen
         mBtnTiny2 = (Button) findViewById(R.id.btn_tiny_2);
 
 
-        videoPlayer.setPlayerType(ConstantKeys.VideoPlayerType.TYPE_IJK);
+        videoPlayer.setPlatformType(PlayerType.PlatformType.IJK);
         videoPlayer.setUp(ConstantVideo.VideoPlayerList[0], null);
         VideoPlayerController controller = new VideoPlayerController(this);
-        controller.setLoadingType(ConstantKeys.Loading.LOADING_RING);
+        controller.setLoadingType(PlayerType.LoadingType.LOADING_RING);
         controller.setTitle("办公室小野开番外了，居然在办公室开澡堂！老板还点赞？");
         controller.setLength(98000);
         Glide.with(this)
@@ -71,10 +71,10 @@ public class TestTinyActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onVideoControlClick(int type) {
                 switch (type) {
-                    case ConstantKeys.VideoControl.TV:
+                    case PlayerType.ControllerType.TV:
                         //BaseToast.showRoundRectToast("投影tv电视");
                         break;
-                    case ConstantKeys.VideoControl.HOR_AUDIO:
+                    case PlayerType.ControllerType.HOR_AUDIO:
                         //BaseToast.showRoundRectToast("切换音频");
                         break;
                     default:

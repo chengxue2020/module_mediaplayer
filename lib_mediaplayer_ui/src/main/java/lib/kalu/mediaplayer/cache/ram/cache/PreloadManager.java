@@ -4,15 +4,15 @@ import android.content.Context;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.cache.ram.HttpProxyCacheServer;
-import lib.kalu.mediaplayer.cache.ram.Logger;
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import lib.kalu.mediaplayer.cache.ram.HttpProxyCacheServer;
+import lib.kalu.mediaplayer.cache.ram.Logger;
 
 /**
  * 预加载工具，使用AndroidVideoCache实现

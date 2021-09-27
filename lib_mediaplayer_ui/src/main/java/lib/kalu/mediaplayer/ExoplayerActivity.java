@@ -1,15 +1,15 @@
 package lib.kalu.mediaplayer;
 
-import androidx.annotation.Keep;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
+import androidx.annotation.Keep;
+import androidx.appcompat.app.AppCompatActivity;
+
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.player.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
@@ -76,14 +76,14 @@ public final class ExoplayerActivity extends AppCompatActivity {
             @Override
             public void onPlayerStateChanged(int playerState) {
                 switch (playerState) {
-                    case ConstantKeys.PlayMode.MODE_NORMAL:
+                    case PlayerType.WindowType.NORMAL:
                         onBackPressed();
                         //普通模式
                         break;
-                    case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+                    case PlayerType.WindowType.FULL:
                         //全屏模式
                         break;
-                    case ConstantKeys.PlayMode.MODE_TINY_WINDOW:
+                    case PlayerType.WindowType.TINY:
                         //小屏模式
                         break;
                 }
@@ -106,34 +106,34 @@ public final class ExoplayerActivity extends AppCompatActivity {
             @Override
             public void onPlayStateChanged(int playState) {
                 switch (playState) {
-                    case ConstantKeys.CurrentState.STATE_IDLE:
+                    case PlayerType.StateType.STATE_IDLE:
                         //播放未开始，初始化
                         break;
-                    case ConstantKeys.CurrentState.STATE_START_ABORT:
+                    case PlayerType.StateType.STATE_START_ABORT:
                         //开始播放中止
                         break;
-                    case ConstantKeys.CurrentState.STATE_PREPARING:
+                    case PlayerType.StateType.STATE_PREPARING:
                         //播放准备中
                         break;
-                    case ConstantKeys.CurrentState.STATE_PREPARED:
+                    case PlayerType.StateType.STATE_PREPARED:
                         //播放准备就绪
                         break;
-                    case ConstantKeys.CurrentState.STATE_ERROR:
+                    case PlayerType.StateType.STATE_ERROR:
                         //播放错误
                         break;
-                    case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+                    case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                         //正在缓冲
                         break;
-                    case ConstantKeys.CurrentState.STATE_PLAYING:
+                    case PlayerType.StateType.STATE_PLAYING:
                         //正在播放
                         break;
-                    case ConstantKeys.CurrentState.STATE_PAUSED:
+                    case PlayerType.StateType.STATE_PAUSED:
                         //暂停播放
                         break;
-                    case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
+                    case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                         //暂停缓冲
                         break;
-                    case ConstantKeys.CurrentState.STATE_COMPLETED:
+                    case PlayerType.StateType.STATE_COMPLETED:
                         //播放完成
                         break;
                 }

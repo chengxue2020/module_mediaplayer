@@ -19,12 +19,12 @@ import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
+import lib.kalu.mediaplayer.ui.config.PlayerConfig;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.player.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoBuilder;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.player.VideoViewManager;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.ui.view.CustomErrorView;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
@@ -149,17 +149,17 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v == mBtnScale169) {
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_16_9);
+            mVideoPlayer.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
         } else if (v == mBtnScaleNormal) {
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_DEFAULT);
+            mVideoPlayer.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_DEFAULT);
         } else if (v == mBtnScale43) {
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_4_3);
+            mVideoPlayer.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_4_3);
         } else if (v == mBtnScaleFull) {
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_MATCH_PARENT);
+            mVideoPlayer.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
         } else if (v == mBtnScaleOriginal) {
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_ORIGINAL);
+            mVideoPlayer.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL);
         } else if (v == mBtnScaleCrop) {
-            mVideoPlayer.setScreenScaleType(ConstantKeys.PlayerScreenScaleType.SCREEN_SCALE_CENTER_CROP);
+            mVideoPlayer.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP);
         } else if (v == mBtnCrop) {
 
         } else if (v == mBtnGif) {
@@ -186,7 +186,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
         //获取当前缓冲百分比
         int bufferedPercentage = mVideoPlayer.getBufferedPercentage();
         //获取当前播放器的状态
-        int currentPlayerState = mVideoPlayer.getCurrentPlayerState();
+        int currentPlayerState = mVideoPlayer.getCurrentWindowState();
         //获取当前的播放状态
         int currentPlayState = mVideoPlayer.getCurrentPlayState();
         //获取当前播放的位置
@@ -249,13 +249,13 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onPlayerStateChanged(int playerState) {
                 switch (playerState) {
-                    case ConstantKeys.PlayMode.MODE_NORMAL:
+                    case PlayerType.WindowType.NORMAL:
                         //普通模式
                         break;
-                    case ConstantKeys.PlayMode.MODE_FULL_SCREEN:
+                    case PlayerType.WindowType.FULL:
                         //全屏模式
                         break;
-                    case ConstantKeys.PlayMode.MODE_TINY_WINDOW:
+                    case PlayerType.WindowType.TINY:
                         //小屏模式
                         break;
                 }
@@ -278,34 +278,34 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onPlayStateChanged(int playState) {
                 switch (playState) {
-                    case ConstantKeys.CurrentState.STATE_IDLE:
+                    case PlayerType.StateType.STATE_IDLE:
                         //播放未开始，初始化
                         break;
-                    case ConstantKeys.CurrentState.STATE_START_ABORT:
+                    case PlayerType.StateType.STATE_START_ABORT:
                         //开始播放中止
                         break;
-                    case ConstantKeys.CurrentState.STATE_PREPARING:
+                    case PlayerType.StateType.STATE_PREPARING:
                         //播放准备中
                         break;
-                    case ConstantKeys.CurrentState.STATE_PREPARED:
+                    case PlayerType.StateType.STATE_PREPARED:
                         //播放准备就绪
                         break;
-                    case ConstantKeys.CurrentState.STATE_ERROR:
+                    case PlayerType.StateType.STATE_ERROR:
                         //播放错误
                         break;
-                    case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+                    case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                         //正在缓冲
                         break;
-                    case ConstantKeys.CurrentState.STATE_PLAYING:
+                    case PlayerType.StateType.STATE_PLAYING:
                         //正在播放
                         break;
-                    case ConstantKeys.CurrentState.STATE_PAUSED:
+                    case PlayerType.StateType.STATE_PAUSED:
                         //暂停播放
                         break;
-                    case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
+                    case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                         //暂停缓冲
                         break;
-                    case ConstantKeys.CurrentState.STATE_COMPLETED:
+                    case PlayerType.StateType.STATE_COMPLETED:
                         //播放完成
                         break;
                 }
@@ -359,7 +359,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
 
         //播放器配置，注意：此为全局配置，按需开启
         PlayerFactory player = PlayerFactoryUtils.getPlayer(PlayerConstant.PlayerType.TYPE_IJK);
-        VideoViewManager.setConfig(VideoPlayerConfig.newBuilder()
+        PlayerConfigManager.getInstance().setConfig(PlayerConfig.newBuilder()
                 //设置视频全局埋点事件
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错

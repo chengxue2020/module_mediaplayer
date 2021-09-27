@@ -27,14 +27,13 @@ import android.view.SurfaceHolder;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
-import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
-import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-
 import java.util.Map;
 
+import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
+import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
+import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
+import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 

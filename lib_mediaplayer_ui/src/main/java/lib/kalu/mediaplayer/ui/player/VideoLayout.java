@@ -5,12 +5,8 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Parcelable;
-
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,25 +15,31 @@ import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.config.VideoPlayerConfig;
+import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
+import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
+import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
+import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
+import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.ui.config.PlayerConfig;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.controller.ControllerLayout;
 import lib.kalu.mediaplayer.ui.surface.InterSurfaceView;
 import lib.kalu.mediaplayer.ui.surface.SurfaceFactory;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.tool.VideoException;
-import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
-import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
-import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @description: 播放器具体实现类
@@ -93,12 +95,12 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 当前播放器的状态
      * 比如：错误，开始播放，暂停播放，缓存中等等状态
      */
-    protected int mCurrentPlayState = ConstantKeys.CurrentState.STATE_IDLE;
+    protected int mCurrentPlayState = PlayerType.StateType.STATE_IDLE;
     /**
      * 播放模式，普通模式，小窗口模式，正常模式等等
      * 存在局限性：比如小窗口下的正在播放模式，那么mCurrentMode就是STATE_PLAYING，而不是MODE_TINY_WINDOW并存
      **/
-    protected int mCurrentPlayerState = ConstantKeys.PlayMode.MODE_NORMAL;
+    protected int mCurrentPlayerState = PlayerType.WindowType.NORMAL;
     /**
      * 是否处于全屏状态
      */
@@ -151,6 +153,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         init(attrs);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public VideoLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
@@ -169,7 +172,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     }
 
     private void initConfig() {
-        VideoPlayerConfig config = VideoViewManager.getConfig();
+        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         mEnableAudioFocus = config.mEnableAudioFocus;
         mProgressManager = config.mProgressManager;
         mPlayerFactory = config.mPlayerFactory;
@@ -332,7 +335,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         //如果要显示移动网络提示则不继续播放
         if (showNetWarning()) {
             //中止播放
-            setPlayState(ConstantKeys.CurrentState.STATE_START_ABORT);
+            setPlayState(PlayerType.StateType.STATE_START_ABORT);
             return false;
         }
         //监听音频焦点改变
@@ -423,10 +426,10 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             //准备开始播放
             mMediaPlayer.prepareAsync();
             //更改播放器的播放状态
-            setPlayState(ConstantKeys.CurrentState.STATE_PREPARING);
+            setPlayState(PlayerType.StateType.STATE_PREPARING);
             //更改播放器播放模式状态
-            setPlayerState(isFullScreen() ? ConstantKeys.PlayMode.MODE_FULL_SCREEN :
-                    isTinyScreen() ? ConstantKeys.PlayMode.MODE_TINY_WINDOW : ConstantKeys.PlayMode.MODE_NORMAL);
+            setWindowState(isFullScreen() ? PlayerType.WindowType.FULL :
+                    isTinyScreen() ? PlayerType.WindowType.TINY : PlayerType.WindowType.NORMAL);
         }
     }
 
@@ -451,7 +454,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     protected void startInPlaybackState() {
         mMediaPlayer.start();
-        setPlayState(ConstantKeys.CurrentState.STATE_PLAYING);
+        setPlayState(PlayerType.StateType.STATE_PLAYING);
     }
 
     /**
@@ -461,7 +464,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     public void pause() {
         if (isInPlaybackState() && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
-            setPlayState(ConstantKeys.CurrentState.STATE_PAUSED);
+            setPlayState(PlayerType.StateType.STATE_PAUSED);
             if (mAudioFocusHelper != null) {
                 mAudioFocusHelper.abandonFocus();
             }
@@ -475,7 +478,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     public void resume() {
         if (isInPlaybackState() && !mMediaPlayer.isPlaying()) {
             mMediaPlayer.start();
-            setPlayState(ConstantKeys.CurrentState.STATE_PLAYING);
+            setPlayState(PlayerType.StateType.STATE_PLAYING);
             if (mAudioFocusHelper != null) {
                 mAudioFocusHelper.requestFocus();
             }
@@ -488,7 +491,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     public void release() {
         if (!isInIdleState()) {
-            VideoPlayerConfig config = VideoViewManager.getConfig();
+            PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
             if (config != null && config.mBuriedPointEvent != null) {
                 //退出视频播放
                 config.mBuriedPointEvent.playerDestroy(mUrl);
@@ -532,7 +535,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             //重置播放进度
             mCurrentPosition = 0;
             //切换转态
-            setPlayState(ConstantKeys.CurrentState.STATE_IDLE);
+            setPlayState(PlayerType.StateType.STATE_IDLE);
         }
     }
 
@@ -551,25 +554,25 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     protected boolean isInPlaybackState() {
         return mMediaPlayer != null
-                && mCurrentPlayState != ConstantKeys.CurrentState.STATE_ERROR
-                && mCurrentPlayState != ConstantKeys.CurrentState.STATE_IDLE
-                && mCurrentPlayState != ConstantKeys.CurrentState.STATE_PREPARING
-                && mCurrentPlayState != ConstantKeys.CurrentState.STATE_START_ABORT
-                && mCurrentPlayState != ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING;
+                && mCurrentPlayState != PlayerType.StateType.STATE_ERROR
+                && mCurrentPlayState != PlayerType.StateType.STATE_IDLE
+                && mCurrentPlayState != PlayerType.StateType.STATE_PREPARING
+                && mCurrentPlayState != PlayerType.StateType.STATE_START_ABORT
+                && mCurrentPlayState != PlayerType.StateType.STATE_BUFFERING_PLAYING;
     }
 
     /**
      * 是否处于未播放状态
      */
     protected boolean isInIdleState() {
-        return mCurrentPlayState == ConstantKeys.CurrentState.STATE_IDLE;
+        return mCurrentPlayState == PlayerType.StateType.STATE_IDLE;
     }
 
     /**
      * 播放中止状态
      */
     private boolean isInStartAbortState() {
-        return mCurrentPlayState == ConstantKeys.CurrentState.STATE_START_ABORT;
+        return mCurrentPlayState == PlayerType.StateType.STATE_START_ABORT;
     }
 
     /**
@@ -671,19 +674,19 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         mPlayerContainer.setKeepScreenOn(false);
         if (PlayerUtils.isConnected(getContext().getApplicationContext())) {
             if (type == PlayerConstant.ErrorType.TYPE_UNEXPECTED) {
-                setPlayState(ConstantKeys.CurrentState.STATE_ERROR);
+                setPlayState(PlayerType.StateType.STATE_ERROR);
             } else if (type == PlayerConstant.ErrorType.TYPE_PARSE) {
-                setPlayState(ConstantKeys.CurrentState.STATE_PARSE_ERROR);
+                setPlayState(PlayerType.StateType.STATE_PARSE_ERROR);
             } else if (type == PlayerConstant.ErrorType.TYPE_SOURCE) {
-                setPlayState(ConstantKeys.CurrentState.STATE_ERROR);
+                setPlayState(PlayerType.StateType.STATE_ERROR);
             } else {
-                setPlayState(ConstantKeys.CurrentState.STATE_ERROR);
+                setPlayState(PlayerType.StateType.STATE_ERROR);
             }
         } else {
-            setPlayState(ConstantKeys.CurrentState.STATE_NETWORK_ERROR);
+            setPlayState(PlayerType.StateType.STATE_NETWORK_ERROR);
         }
-        setPlayState(ConstantKeys.CurrentState.STATE_ERROR);
-        VideoPlayerConfig config = VideoViewManager.getConfig();
+        setPlayState(PlayerType.StateType.STATE_ERROR);
+        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         if (config != null && config.mBuriedPointEvent != null) {
             //相当于进入了视频页面
             if (PlayerUtils.isConnected(getContext().getApplicationContext())) {
@@ -705,8 +708,8 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             //播放完成，清除进度
             mProgressManager.saveProgress(mUrl, 0);
         }
-        setPlayState(ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING);
-        VideoPlayerConfig config = VideoViewManager.getConfig();
+        setPlayState(PlayerType.StateType.STATE_BUFFERING_PLAYING);
+        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         if (config != null && config.mBuriedPointEvent != null) {
             //视频播放完成
             config.mBuriedPointEvent.playerCompletion(mUrl);
@@ -717,13 +720,13 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     public void onInfo(int what, int extra) {
         switch (what) {
             case PlayerConstant.MEDIA_INFO_BUFFERING_START:
-                setPlayState(ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED);
+                setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
                 break;
             case PlayerConstant.MEDIA_INFO_BUFFERING_END:
-                setPlayState(ConstantKeys.CurrentState.STATE_COMPLETED);
+                setPlayState(PlayerType.StateType.STATE_COMPLETED);
                 break;
             case PlayerConstant.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
-                setPlayState(ConstantKeys.CurrentState.STATE_PLAYING);
+                setPlayState(PlayerType.StateType.STATE_PLAYING);
                 if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
                     pause();
                 }
@@ -740,7 +743,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     @Override
     public void onPrepared() {
-        setPlayState(ConstantKeys.CurrentState.STATE_PREPARED);
+        setPlayState(PlayerType.StateType.STATE_PREPARED);
         if (mCurrentPosition > 0) {
             seekTo(mCurrentPosition);
         }
@@ -749,14 +752,15 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 获取当前播放器的状态
      */
-    public int getCurrentPlayerState() {
+    public int getCurrentWindowState() {
         return mCurrentPlayerState;
     }
 
     /**
      * 获取当前的播放状态
      */
-    public int getCurrentPlayState() {
+    public @PlayerType.StateType.Value
+    int getCurrentPlayState() {
         return mCurrentPlayState;
     }
 
@@ -819,7 +823,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         mAssetFileDescriptor = null;
         mUrl = url;
         mHeaders = headers;
-        VideoPlayerConfig config = VideoViewManager.getConfig();
+        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         if (config != null && config.mBuriedPointEvent != null) {
             //相当于进入了视频页面
             config.mBuriedPointEvent.playerIn(url);
@@ -902,7 +906,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         this.removeView(mPlayerContainer);
         //将播放器视图添加到DecorView中即实现了全屏
         decorView.addView(mPlayerContainer);
-        setPlayerState(ConstantKeys.PlayMode.MODE_FULL_SCREEN);
+        setWindowState(PlayerType.WindowType.FULL);
     }
 
     /**
@@ -924,8 +928,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         //把播放器视图从DecorView中移除并添加到当前FrameLayout中即退出了全屏
         decorView.removeView(mPlayerContainer);
         this.addView(mPlayerContainer);
-
-        setPlayerState(ConstantKeys.PlayMode.MODE_NORMAL);
+        setWindowState(PlayerType.WindowType.NORMAL);
     }
 
 
@@ -961,7 +964,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         params.gravity = Gravity.BOTTOM | Gravity.END;
         contentView.addView(mPlayerContainer, params);
         mIsTinyScreen = true;
-        setPlayerState(ConstantKeys.PlayMode.MODE_TINY_WINDOW);
+        setWindowState(PlayerType.WindowType.TINY);
     }
 
     /**
@@ -979,7 +982,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         this.addView(mPlayerContainer, params);
         mIsTinyScreen = false;
-        setPlayerState(ConstantKeys.PlayMode.MODE_NORMAL);
+        setWindowState(PlayerType.WindowType.NORMAL);
     }
 
     /**
@@ -1009,7 +1012,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 设置视频比例
      */
     @Override
-    public void setScreenScaleType(@ConstantKeys.ScreenScaleType int screenScaleType) {
+    public void setScreenScaleType(@PlayerType.ScaleType.Value int screenScaleType) {
         mCurrentScreenScaleType = screenScaleType;
         if (mRenderView != null) {
             mRenderView.setScaleType(screenScaleType);
@@ -1072,7 +1075,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 7                播放完成
      * 8                开始播放中止
      */
-    protected void setPlayState(@ConstantKeys.CurrentStateType int playState) {
+    protected void setPlayState(@PlayerType.StateType.Value int playState) {
         mCurrentPlayState = playState;
         if (mVideoController != null) {
             mVideoController.setPlayState(playState);
@@ -1094,15 +1097,15 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * MODE_FULL_SCREEN         全屏模式
      * MODE_TINY_WINDOW         小屏模式
      */
-    protected void setPlayerState(@ConstantKeys.PlayModeType int playerState) {
-        mCurrentPlayerState = playerState;
+    protected void setWindowState(@PlayerType.WindowType.Value int windowState) {
+        mCurrentPlayerState = windowState;
         if (mVideoController != null) {
-            mVideoController.setPlayerState(playerState);
+            mVideoController.setWindowState(windowState);
         }
         if (mOnStateChangeListeners != null) {
             for (OnVideoStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                 if (l != null) {
-                    l.onPlayerStateChanged(playerState);
+                    l.onPlayerStateChanged(windowState);
                 }
             }
         }

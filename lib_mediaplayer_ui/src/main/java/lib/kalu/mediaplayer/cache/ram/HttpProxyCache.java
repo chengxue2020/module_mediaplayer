@@ -1,8 +1,8 @@
 package lib.kalu.mediaplayer.cache.ram;
 
-import android.text.TextUtils;
+import static lib.kalu.mediaplayer.cache.ram.ProxyCacheUtils.DEFAULT_BUFFER_SIZE;
 
-import lib.kalu.mediaplayer.cache.ram.file.FileCache;
+import android.text.TextUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Locale;
 
-import static lib.kalu.mediaplayer.cache.ram.ProxyCacheUtils.DEFAULT_BUFFER_SIZE;
+import lib.kalu.mediaplayer.cache.ram.file.FileCache;
 
 /**
  * {@link ProxyCache} that read http url and writes data to {@link Socket}

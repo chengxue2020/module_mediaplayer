@@ -26,12 +26,12 @@ import android.view.SurfaceHolder;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
-import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
-import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
-
 import java.util.Map;
+
+import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
+import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
+import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
+import lib.kalu.mediaplayer.kernel.video.utils.PlayerConstant;
 
 
 /**

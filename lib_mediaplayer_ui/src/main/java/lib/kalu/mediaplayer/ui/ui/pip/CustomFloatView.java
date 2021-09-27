@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 package lib.kalu.mediaplayer.ui.ui.pip;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -26,14 +27,13 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.ui.config.ConstantKeys;
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-
 import lib.kalu.mediaplayer.R;
-
+import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
+import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
 
 /**
@@ -155,12 +155,12 @@ public class CustomFloatView extends FrameLayout implements InterControlView, Vi
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConstantKeys.CurrentState.STATE_IDLE:
+            case PlayerType.StateType.STATE_IDLE:
                 mIvStartPlay.setSelected(false);
                 mIvStartPlay.setVisibility(VISIBLE);
                 mPbLoading.setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PLAYING:
+            case PlayerType.StateType.STATE_PLAYING:
                 mIvStartPlay.setSelected(true);
                 mIvStartPlay.setVisibility(GONE);
                 mPbLoading.setVisibility(GONE);
@@ -174,34 +174,34 @@ public class CustomFloatView extends FrameLayout implements InterControlView, Vi
                 //开始刷新进度
                 mControlWrapper.startProgress();
                 break;
-            case ConstantKeys.CurrentState.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSED:
                 mIvStartPlay.setSelected(false);
                 mIvStartPlay.setVisibility(VISIBLE);
                 mPbLoading.setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARING:
                 mIvStartPlay.setVisibility(GONE);
                 mIvStartPlay.setVisibility(VISIBLE);
                 break;
-            case ConstantKeys.CurrentState.STATE_PREPARED:
+            case PlayerType.StateType.STATE_PREPARED:
                 mIvStartPlay.setVisibility(GONE);
                 mPbLoading.setVisibility(GONE);
                 break;
-            case ConstantKeys.CurrentState.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR:
                 mPbLoading.setVisibility(GONE);
                 mIvStartPlay.setVisibility(GONE);
                 bringToFront();
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                 mIvStartPlay.setVisibility(GONE);
                 mPbLoading.setVisibility(VISIBLE);
                 break;
-            case ConstantKeys.CurrentState.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_COMPLETED:
                 mIvStartPlay.setVisibility(GONE);
                 mPbLoading.setVisibility(GONE);
                 mIvStartPlay.setSelected(mControlWrapper.isPlaying());
                 break;
-            case ConstantKeys.CurrentState.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 bringToFront();
                 mPbBottomProgress.setProgress(0);
                 mPbBottomProgress.setSecondaryProgress(0);

@@ -1,11 +1,11 @@
 package lib.kalu.mediaplayer.cache.ram;
 
+import java.io.File;
+
 import lib.kalu.mediaplayer.cache.ram.file.DiskUsage;
 import lib.kalu.mediaplayer.cache.ram.file.FileNameGenerator;
 import lib.kalu.mediaplayer.cache.ram.headers.HeaderInjector;
 import lib.kalu.mediaplayer.cache.ram.sourcestorage.SourceInfoStorage;
-
-import java.io.File;
 
 /**
  * Configuration for proxy cache.
