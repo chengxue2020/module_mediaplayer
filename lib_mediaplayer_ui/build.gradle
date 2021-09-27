@@ -61,13 +61,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
-    compileOnly rootProject.ext.dependencies.support_appcompat
-    compileOnly rootProject.ext.dependencies.support_annotation
-    compileOnly rootProject.ext.dependencies.support_recyclerview
-    compileOnly rootProject.ext.dependencies.support_media2_common
-    compileOnly rootProject.ext.dependencies.support_media2_session
-    compileOnly rootProject.ext.dependencies.support_media2_widget
-    compileOnly rootProject.ext.dependencies.support_media2_player
+    implementation rootProject.ext.dependencies.support_appcompat
+    implementation rootProject.ext.dependencies.support_annotation
+    implementation rootProject.ext.dependencies.support_recyclerview
 
     // ijkplayer
     compileOnly rootProject.ext.dependencies.support_ijkplayer_java

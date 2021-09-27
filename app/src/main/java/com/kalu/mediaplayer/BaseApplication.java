@@ -59,6 +59,7 @@ public class BaseApplication extends MultiDexApplication {
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
                 .setLogEnabled(true)
+                // loading
                 //设置exo
                 .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerType.PlatformType.EXO))
                 //创建SurfaceView

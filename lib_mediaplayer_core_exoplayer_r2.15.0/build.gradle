@@ -111,19 +111,21 @@ repositories {
 }
 
 dependencies {
+
     implementation rootProject.ext.dependencies.support_appcompat
     implementation rootProject.ext.dependencies.support_annotation
     implementation rootProject.ext.dependencies.support_recyclerview
-    implementation(rootProject.ext.dependencies.support_media2_common) {
+
+    api(rootProject.ext.dependencies.support_media2_common) {
         exclude group: "com.google.guava"
     }
-    implementation(rootProject.ext.dependencies.support_media2_session) {
+    api(rootProject.ext.dependencies.support_media2_session) {
         exclude group: "com.google.guava"
     }
-    implementation(rootProject.ext.dependencies.support_media2_widget) {
+    api(rootProject.ext.dependencies.support_media2_widget) {
         exclude group: "com.google.guava"
     }
-    implementation(rootProject.ext.dependencies.support_media2_player) {
+    api(rootProject.ext.dependencies.support_media2_player) {
         exclude group: "com.google.guava"
     }
 
