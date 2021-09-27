@@ -36,15 +36,15 @@ android {
             minifyEnabled false
             zipAlignEnabled false
             shrinkResources false
-            multiDexEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+            multiDexEnabled true
+          //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
         debug {
             minifyEnabled false
             zipAlignEnabled false
             shrinkResources false
-            multiDexEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+            multiDexEnabled true
+          //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
     }
     compileOptions {

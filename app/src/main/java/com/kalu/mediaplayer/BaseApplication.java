@@ -47,36 +47,6 @@ public class BaseApplication extends MultiDexApplication {
         instance = this;
         ScreenDensityUtils.setup(this);
         ScreenDensityUtils.register(this, 375.0f, ScreenDensityUtils.MATCH_BASE_WIDTH, ScreenDensityUtils.MATCH_UNIT_DP);
-
-        initVideoUI();
-        initVideoCache();
-    }
-
-    private void initVideoUI() {
-        //播放器配置，注意：此为全局配置，按需开启
-        PlayerConfig build = PlayerConfig.newBuilder()
-                //设置视频全局埋点事件
-                .setBuriedPointEvent(new BuriedPointEventImpl())
-                //调试的时候请打开日志，方便排错
-                .setLogEnabled(true)
-                // loading
-                //设置exo
-                .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerType.PlatformType.EXO))
-                //创建SurfaceView
-                //.setRenderViewFactory(SurfaceViewFactory.create())
-                .setKeycodeImpl(new KeycodeImplSimulator())
-                .build();
-        PlayerConfigManager.getInstance().setConfig(build);
-    }
-
-    private void initVideoCache() {
-        CacheConfig build = new CacheConfig.Build()
-                .setIsEffective(true)
-                .setType(CacheType.ROM)
-                .setCacheMax(1000)
-                .setLog(false)
-                .build();
-        CacheConfigManager.getInstance().setConfig(build);
     }
 
     /**

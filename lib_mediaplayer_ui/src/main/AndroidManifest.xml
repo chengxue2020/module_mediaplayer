@@ -22,8 +22,8 @@
         android:supportsRtl="true">
 
         <provider
-            android:name=".context.MediaplayerContentProvider"
-            android:authorities="${applicationId}.contextprovider"
+            android:name="lib.kalu.mediaplayer.context.MediaplayerContentProvider"
+            android:authorities="${applicationId}.mediaplayer.contextprovider"
             android:exported="false"
             android:process=":mediaplayer" />
 

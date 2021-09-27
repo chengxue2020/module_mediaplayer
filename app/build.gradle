@@ -26,18 +26,18 @@ android {
     buildTypes {
         buildTypes {
             release {
-                minifyEnabled true
-                zipAlignEnabled true
-                shrinkResources true
+                minifyEnabled false
+                zipAlignEnabled false
+                shrinkResources false
                 multiDexEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+              //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
             }
             debug {
-                minifyEnabled true
+                minifyEnabled false
                 zipAlignEnabled true
-                shrinkResources true
+                shrinkResources false
                 multiDexEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+              //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
             }
         }
     }

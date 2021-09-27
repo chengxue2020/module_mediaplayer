@@ -9,6 +9,13 @@ import android.os.Bundle;
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
+import lib.kalu.mediaplayer.cache.config.CacheType;
+import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
+import lib.kalu.mediaplayer.keycode.KeycodeImplSimulator;
+import lib.kalu.mediaplayer.ui.config.PlayerConfig;
+import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.player.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
