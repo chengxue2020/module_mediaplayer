@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.common.util.LogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.kernel.music.config.MusicPlayAction;
 import lib.kalu.mediaplayer.kernel.music.service.PlayService;
 import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;

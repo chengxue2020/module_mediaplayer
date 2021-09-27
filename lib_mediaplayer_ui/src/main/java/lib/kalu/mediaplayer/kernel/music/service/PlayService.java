@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import lib.kalu.mediaplayer.common.util.LogUtil;
-import lib.kalu.mediaplayer.common.util.SpUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.SpUtil;
 import lib.kalu.mediaplayer.kernel.music.config.MusicConstant;
 import lib.kalu.mediaplayer.kernel.music.config.MusicPlayAction;
 import lib.kalu.mediaplayer.kernel.music.config.PlayModeEnum;

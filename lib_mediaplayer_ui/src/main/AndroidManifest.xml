@@ -22,7 +22,7 @@
         android:supportsRtl="true">
 
         <provider
-            android:name=".common.contentprovider.ContentProviderMediaplayer"
+            android:name=".context.MediaplayerContentProvider"
             android:authorities="${applicationId}.contextprovider"
             android:exported="false"
             android:process=":mediaplayer" />

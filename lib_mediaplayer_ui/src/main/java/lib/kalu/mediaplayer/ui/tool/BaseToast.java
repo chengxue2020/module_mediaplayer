@@ -24,7 +24,7 @@ import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
+import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
 
 
 /**
@@ -64,7 +64,7 @@ public final class BaseToast {
      * 检查上下文不能为空，必须先进性初始化操作
      */
     private static void checkContext() {
-        if (null == ContentProviderMediaplayer.getContextWeakReference()) {
+        if (null == MediaplayerContentProvider.getContextWeakReference()) {
             throw new NullPointerException("ToastUtils context is not null，please first init");
         }
     }
@@ -85,7 +85,7 @@ public final class BaseToast {
         if (!checkNull(mToast)) {
             mToast.get().cancel();
         }
-        Toast toast = Toast.makeText(ContentProviderMediaplayer.getContextWeakReference(), "", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(MediaplayerContentProvider.getContextWeakReference(), "", Toast.LENGTH_SHORT);
         toast.setText(content);
         toast.show();
         mToast = new SoftReference<>(toast);
@@ -107,7 +107,7 @@ public final class BaseToast {
         if (TextUtils.isEmpty(notice)) {
             return;
         }
-        new Builder(ContentProviderMediaplayer.getContextWeakReference())
+        new Builder(MediaplayerContentProvider.getContextWeakReference())
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)
@@ -115,8 +115,8 @@ public final class BaseToast {
                 .setTitle(notice)
                 .setTextColor(Color.WHITE)
                 .setBackgroundColor(toastBackColor)
-                .setRadius(dip2px(ContentProviderMediaplayer.getContextWeakReference(), 10))
-                .setElevation(dip2px(ContentProviderMediaplayer.getContextWeakReference(), 0))
+                .setRadius(dip2px(MediaplayerContentProvider.getContextWeakReference(), 10))
+                .setElevation(dip2px(MediaplayerContentProvider.getContextWeakReference(), 0))
                 .build()
                 .show();
     }
@@ -128,7 +128,7 @@ public final class BaseToast {
         if (TextUtils.isEmpty(notice)) {
             return;
         }
-        new Builder(ContentProviderMediaplayer.getContextWeakReference())
+        new Builder(MediaplayerContentProvider.getContextWeakReference())
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)
@@ -137,8 +137,8 @@ public final class BaseToast {
                 .setTitle(notice)
                 .setTextColor(Color.WHITE)
                 .setBackgroundColor(toastBackColor)
-                .setRadius(dip2px(ContentProviderMediaplayer.getContextWeakReference(), 10))
-                .setElevation(dip2px(ContentProviderMediaplayer.getContextWeakReference(), 0))
+                .setRadius(dip2px(MediaplayerContentProvider.getContextWeakReference(), 10))
+                .setElevation(dip2px(MediaplayerContentProvider.getContextWeakReference(), 0))
                 .build()
                 .show();
     }
@@ -150,7 +150,7 @@ public final class BaseToast {
         if (layout == 0) {
             return;
         }
-        new Builder(ContentProviderMediaplayer.getContextWeakReference())
+        new Builder(MediaplayerContentProvider.getContextWeakReference())
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)

@@ -4,8 +4,8 @@ import java.io.File;
 
 import lib.kalu.mediaplayer.cache.rom.model.SafeKeyGenerator;
 import lib.kalu.mediaplayer.cache.rom.model.VideoLocation;
-import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
-import lib.kalu.mediaplayer.common.util.LogUtil;
+import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
  * <pre>
@@ -22,7 +22,7 @@ public class SqlLiteCache {
     public final SafeKeyGenerator safeKeyGenerator;
 
     public SqlLiteCache() {
-        File path = DiskFileUtils.getFilePath(ContentProviderMediaplayer.getContextWeakReference());
+        File path = DiskFileUtils.getFilePath(MediaplayerContentProvider.getContextWeakReference());
         String pathString = path.getPath();
         LogUtil.log("SqlLiteCache-----pathString路径输出地址-"+pathString);
         this.safeKeyGenerator = new SafeKeyGenerator();

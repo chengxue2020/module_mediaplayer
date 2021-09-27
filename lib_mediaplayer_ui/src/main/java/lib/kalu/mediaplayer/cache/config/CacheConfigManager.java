@@ -11,7 +11,7 @@ import lib.kalu.mediaplayer.cache.rom.cache.VideoMapCache;
 import lib.kalu.mediaplayer.cache.rom.disk.DiskFileUtils;
 import lib.kalu.mediaplayer.cache.rom.disk.SqlLiteCache;
 import lib.kalu.mediaplayer.cache.rom.model.VideoLocation;
-import lib.kalu.mediaplayer.common.util.LogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
  * @description: 音视频播放记录本地缓存 最开始使用greenDao，二级缓存耗时100毫秒左右 磁盘+内存+key缓存+读写优化，耗时大概2到5毫秒左右

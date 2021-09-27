@@ -21,7 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import lib.kalu.mediaplayer.common.util.SpUtil;
+import lib.kalu.mediaplayer.util.SpUtil;
 import lib.kalu.mediaplayer.kernel.music.config.MusicConstant;
 import lib.kalu.mediaplayer.kernel.music.config.PlayModeEnum;
 import lib.kalu.mediaplayer.kernel.music.inter.OnPlayerEventListener;

@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.common.util;
+package lib.kalu.mediaplayer.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

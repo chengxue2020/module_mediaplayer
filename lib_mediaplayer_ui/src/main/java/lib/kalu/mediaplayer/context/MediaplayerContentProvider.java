@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.common.contentprovider;
+package lib.kalu.mediaplayer.context;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -12,10 +12,10 @@ import androidx.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 
-import lib.kalu.mediaplayer.common.util.LogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 @Keep
-public class ContentProviderMediaplayer extends ContentProvider {
+public class MediaplayerContentProvider extends ContentProvider {
 
     public static WeakReference<Context> weakReference = null;
 

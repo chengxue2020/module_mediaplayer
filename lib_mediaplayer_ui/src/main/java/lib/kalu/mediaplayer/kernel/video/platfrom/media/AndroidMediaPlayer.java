@@ -28,7 +28,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
+import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
@@ -96,7 +96,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         }
         try {
             Uri uri = Uri.parse(path);
-            mMediaPlayer.setDataSource(ContentProviderMediaplayer.getContextWeakReference(), uri, headers);
+            mMediaPlayer.setDataSource(MediaplayerContentProvider.getContextWeakReference(), uri, headers);
         } catch (Exception e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_PARSE, e.getMessage());
         }

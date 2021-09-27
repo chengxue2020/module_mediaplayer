@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.common.util;
+package lib.kalu.mediaplayer.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
+import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
 
 
 @Keep
@@ -46,7 +46,7 @@ public final class SpUtil {
     }
 
     private SpUtil(final String spName) {
-        sp = ContentProviderMediaplayer.getContextWeakReference().getSharedPreferences(spName, Context.MODE_PRIVATE);
+        sp = MediaplayerContentProvider.getContextWeakReference().getSharedPreferences(spName, Context.MODE_PRIVATE);
     }
 
     /**

@@ -9,7 +9,7 @@ import java.io.IOException;
 import lib.kalu.mediaplayer.cache.config.CacheConfig;
 import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
 import lib.kalu.mediaplayer.cache.rom.model.SafeKeyGenerator;
-import lib.kalu.mediaplayer.common.util.LogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
  * <pre>

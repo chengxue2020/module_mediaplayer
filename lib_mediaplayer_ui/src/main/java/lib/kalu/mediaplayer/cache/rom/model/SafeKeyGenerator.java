@@ -3,8 +3,8 @@ package lib.kalu.mediaplayer.cache.rom.model;
 import lib.kalu.mediaplayer.cache.config.CacheConfig;
 import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
 import lib.kalu.mediaplayer.cache.rom.cache.VideoLruCache;
-import lib.kalu.mediaplayer.common.util.LogUtil;
-import lib.kalu.mediaplayer.common.util.Md5Util;
+import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.Md5Util;
 
 /**
  * <pre>

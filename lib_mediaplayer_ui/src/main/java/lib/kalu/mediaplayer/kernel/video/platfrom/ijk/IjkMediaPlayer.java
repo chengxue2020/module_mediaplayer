@@ -29,7 +29,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.common.contentprovider.ContentProviderMediaplayer;
+import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
@@ -166,7 +166,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
             //解析path
             Uri uri = Uri.parse(path);
             if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
-                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(ContentProviderMediaplayer.getContextWeakReference(), uri);
+                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(MediaplayerContentProvider.getContextWeakReference(), uri);
                 mMediaPlayer.setDataSource(rawDataSourceProvider);
             } else {
                 //处理UA问题
@@ -176,7 +176,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
                         mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
                     }
                 }
-                mMediaPlayer.setDataSource(ContentProviderMediaplayer.getContextWeakReference(), uri, headers);
+                mMediaPlayer.setDataSource(MediaplayerContentProvider.getContextWeakReference(), uri, headers);
             }
         } catch (Exception e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_PARSE,e.getMessage());
