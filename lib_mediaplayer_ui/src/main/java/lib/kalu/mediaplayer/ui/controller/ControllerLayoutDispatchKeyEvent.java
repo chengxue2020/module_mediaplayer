@@ -52,29 +52,38 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
 
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         KeycodeImpl mKeycodeImpl = config.mKeycodeImpl;
+        // 返回
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.back() && isShowing()) {
+            hide();
+        }
+        // 方向键：中间
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.dpadCenter()) {
+            show();
+        }
+        // 快进
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.fastForward()) {
+            long position = mControlWrapper.getCurrentPosition() + 1000;
+            long duration = mControlWrapper.getDuration();
+            if (position > duration) {
+                position = duration;
+            }
+            mControlWrapper.seekTo(position);
+        }
+        // 快退
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.fastRewind()) {
+            long position = mControlWrapper.getCurrentPosition() - 1000;
+            if (position <= 0) {
+                position = 0;
+            }
+            mControlWrapper.seekTo(position);
+        }
         // 房子
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.home()) {
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.home()) {
             Toast.makeText(getContext(), "房子", Toast.LENGTH_SHORT).show();
         }
         // 菜单
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.menu()) {
             Toast.makeText(getContext(), "菜单", Toast.LENGTH_SHORT).show();
-        }
-        // 中间键
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.dpadCenter()) {
-            Toast.makeText(getContext(), "中间键", Toast.LENGTH_SHORT).show();
-        }
-        // 返回键
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.back()) {
-            Toast.makeText(getContext(), "返回键", Toast.LENGTH_SHORT).show();
-        }
-        // 左
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.dpadLeft()) {
-            Toast.makeText(getContext(), "左", Toast.LENGTH_SHORT).show();
-        }
-        // 右
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.dpadRight()) {
-            Toast.makeText(getContext(), "右", Toast.LENGTH_SHORT).show();
         }
 //        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
 //            Toast.makeText(getContext(), "显示", Toast.LENGTH_SHORT).show();
