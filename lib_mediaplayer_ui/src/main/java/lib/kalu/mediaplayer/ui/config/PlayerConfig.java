@@ -4,6 +4,7 @@ package lib.kalu.mediaplayer.ui.config;
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
+import lib.kalu.mediaplayer.buried.BuriedPointEvent;
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
 import lib.kalu.mediaplayer.keycode.KeycodeImpl;

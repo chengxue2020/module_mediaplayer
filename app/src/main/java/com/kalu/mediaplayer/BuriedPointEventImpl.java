@@ -1,7 +1,7 @@
 package com.kalu.mediaplayer;
 
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
-import lib.kalu.mediaplayer.ui.config.BuriedPointEvent;
+import lib.kalu.mediaplayer.buried.BuriedPointEvent;
 
 public class BuriedPointEventImpl implements BuriedPointEvent {
 
