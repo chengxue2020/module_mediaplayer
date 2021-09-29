@@ -11,8 +11,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.cache.config.CacheConfig;
-import lib.kalu.mediaplayer.cache.config.CacheType;
+import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
 
 

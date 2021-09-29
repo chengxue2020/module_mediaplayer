@@ -36,7 +36,7 @@ import com.google.android.exoplayer2.util.EventLogger;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerType;

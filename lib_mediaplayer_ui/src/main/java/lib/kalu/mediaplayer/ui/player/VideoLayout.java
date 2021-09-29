@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.cache.config.CacheConfig;
-import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
+import lib.kalu.mediaplayer.cache.CacheConfig;
+import lib.kalu.mediaplayer.cache.CacheConfigManager;
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;

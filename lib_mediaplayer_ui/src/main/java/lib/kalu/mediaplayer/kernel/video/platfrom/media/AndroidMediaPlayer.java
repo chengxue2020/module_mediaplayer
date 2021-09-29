@@ -29,7 +29,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.ui.config.PlayerType;

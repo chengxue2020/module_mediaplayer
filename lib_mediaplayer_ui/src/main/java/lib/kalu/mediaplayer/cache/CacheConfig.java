@@ -1,10 +1,8 @@
-package lib.kalu.mediaplayer.cache.config;
+package lib.kalu.mediaplayer.cache;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-
-import com.google.android.exoplayer2.upstream.cache.Cache;
 
 import java.io.Serializable;
 

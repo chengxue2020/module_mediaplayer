@@ -24,7 +24,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
@@ -33,8 +32,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import lib.kalu.mediaplayer.cache.config.CacheConfig;
-import lib.kalu.mediaplayer.cache.config.CacheType;
+import lib.kalu.mediaplayer.cache.CacheConfig;
+import lib.kalu.mediaplayer.cache.CacheType;
 
 /**
  * @description: exo视频播放器帮助类

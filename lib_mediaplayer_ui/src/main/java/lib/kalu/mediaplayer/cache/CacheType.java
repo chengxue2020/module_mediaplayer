@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.cache.config;
+package lib.kalu.mediaplayer.cache;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.Keep;

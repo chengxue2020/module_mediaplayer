@@ -2,14 +2,13 @@ package com.kalu.mediaplayer;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
-import lib.kalu.mediaplayer.cache.config.CacheConfig;
-import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
-import lib.kalu.mediaplayer.cache.config.CacheType;
+import lib.kalu.mediaplayer.cache.CacheConfig;
+import lib.kalu.mediaplayer.cache.CacheConfigManager;
+import lib.kalu.mediaplayer.cache.CacheType;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.keycode.KeycodeImplSimulator;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
