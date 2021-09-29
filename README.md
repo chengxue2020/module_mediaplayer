@@ -17,7 +17,8 @@ https://mvnrepository.com/search?q=exoplayer
 #### Update List
 ```
 ----------------------------------------
-update 2021-09-29
+2021-09-29
+
 1. 更新exoplayer-2.15.0
 2. 重构lib_mediaplayer_ui模块
 ```
