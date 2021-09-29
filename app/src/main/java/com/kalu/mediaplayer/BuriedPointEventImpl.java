@@ -97,7 +97,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      * @param url 视频url
      */
     @Override
-    public void videoToMedia(String url) {
+    public void videoToMusic(String url) {
         VideoLogUtils.i("BuriedPointEvent---视频切换音频--" + url);
     }
 }
