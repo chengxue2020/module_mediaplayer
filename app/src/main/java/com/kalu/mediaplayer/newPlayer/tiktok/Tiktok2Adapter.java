@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.cache.ram.cache.PreloadManager;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,7 @@ public class Tiktok2Adapter extends PagerAdapter {
 
         VideoInfoBean item = mVideoBeans.get(position);
         //开始预加载
-        PreloadManager.getInstance(context).addPreloadTask(item.getVideoUrl(), position);
+//        PreloadManager.getInstance(context).addPreloadTask(item.getVideoUrl(), position);
         Glide.with(context)
                 .load(item.getCover())
                 .placeholder(android.R.color.white)
@@ -90,7 +89,7 @@ public class Tiktok2Adapter extends PagerAdapter {
         container.removeView(itemView);
         VideoInfoBean item = mVideoBeans.get(position);
         //取消预加载
-        PreloadManager.getInstance(container.getContext()).removePreloadTask(item.getVideoUrl());
+//        PreloadManager.getInstance(container.getContext()).removePreloadTask(item.getVideoUrl());
         //保存起来用来复用
         mViewPool.add(itemView);
     }

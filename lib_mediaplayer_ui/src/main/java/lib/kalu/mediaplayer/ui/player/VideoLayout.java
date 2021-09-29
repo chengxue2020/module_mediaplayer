@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
@@ -312,7 +314,8 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         }
         boolean isStarted = false;
         if (isInIdleState() || isInStartAbortState()) {
-            isStarted = startPlay();
+            Context context = getContext();
+            isStarted = startPlay(context);
         } else if (isInPlaybackState()) {
             startInPlaybackState();
             isStarted = true;
@@ -330,7 +333,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      *
      * @return 是否成功开始播放
      */
-    protected boolean startPlay() {
+    protected boolean startPlay(@NonNull Context context) {
         //如果要显示移动网络提示则不继续播放
         if (showNetWarning()) {
             //中止播放
@@ -345,9 +348,9 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         if (mProgressManager != null) {
             mCurrentPosition = mProgressManager.getSavedProgress(mUrl);
         }
-        initPlayer();
+        initPlayer(context);
         addDisplay();
-        startPrepare(false);
+        startPrepare(context, false);
         return true;
     }
 
@@ -355,12 +358,12 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 初始化播放器
      */
-    protected void initPlayer() {
+    protected void initPlayer(@NonNull Context context) {
         //通过工厂模式创建对象
-        mMediaPlayer = mPlayerFactory.createPlayer();
+        mMediaPlayer = mPlayerFactory.createPlayer(context);
         mMediaPlayer.setOnVideoPlayerChangeListener(this);
         setInitOptions();
-        mMediaPlayer.initPlayer();
+        mMediaPlayer.initPlayer(context);
         setOptions();
     }
 
@@ -414,14 +417,14 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 开始准备播放（直接播放）
      */
-    protected void startPrepare(boolean reset) {
+    protected void startPrepare(@NonNull Context context, boolean reset) {
         if (reset) {
             mMediaPlayer.reset();
             //重新设置option，media player reset之后，option会失效
             setOptions();
         }
         //播放数据是否设置成功
-        if (prepareDataSource()) {
+        if (prepareDataSource(context)) {
             //准备开始播放
             mMediaPlayer.prepareAsync();
             //更改播放器的播放状态
@@ -437,12 +440,13 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      *
      * @return 播放数据是否设置成功
      */
-    protected boolean prepareDataSource() {
+    protected boolean prepareDataSource(@NonNull Context context) {
         if (mAssetFileDescriptor != null) {
             mMediaPlayer.setDataSource(mAssetFileDescriptor);
             return true;
         } else if (!TextUtils.isEmpty(mUrl)) {
-            mMediaPlayer.setDataSource(mUrl, mHeaders, true);
+            CacheConfig config = CacheConfigManager.getInstance().getCacheConfig();
+            mMediaPlayer.setDataSource(context, mUrl, mHeaders, config);
             return true;
         }
         return false;
@@ -585,7 +589,8 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             mCurrentPosition = 0;
         }
         addDisplay();
-        startPrepare(true);
+        Context context = getContext();
+        startPrepare(context, true);
         mPlayerContainer.setKeepScreenOn(true);
     }
 

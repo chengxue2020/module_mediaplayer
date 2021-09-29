@@ -15,7 +15,10 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.kernel.video.platfrom.media;
 
+import android.content.Context;
+
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 
@@ -37,7 +40,7 @@ public class MediaPlayerFactory extends PlayerFactory<AndroidMediaPlayer> {
     }
 
     @Override
-    public AndroidMediaPlayer createPlayer() {
+    public AndroidMediaPlayer createPlayer(@NonNull Context context) {
         return new AndroidMediaPlayer();
     }
 }

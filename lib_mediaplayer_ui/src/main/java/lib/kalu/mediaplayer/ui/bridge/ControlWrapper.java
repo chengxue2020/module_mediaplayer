@@ -16,6 +16,7 @@ limitations under the License.
 package lib.kalu.mediaplayer.ui.bridge;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 

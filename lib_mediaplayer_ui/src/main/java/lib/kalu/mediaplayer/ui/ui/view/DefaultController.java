@@ -207,11 +207,11 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
         if (isLocked) {
             mLockButton.setSelected(true);
             String string = getContext().getResources().getString(R.string.module_mediaplayer_string_locked);
-            BaseToast.showRoundRectToast(string);
+            BaseToast.showRoundRectToast(getContext(), string);
         } else {
             mLockButton.setSelected(false);
             String string = getContext().getResources().getString(R.string.module_mediaplayer_string_unlocked);
-            BaseToast.showRoundRectToast(string);
+            BaseToast.showRoundRectToast(getContext(), string);
         }
     }
 
@@ -324,7 +324,7 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
         if (isLocked()) {
             show();
             String string = getContext().getResources().getString(R.string.module_mediaplayer_string_lock_tip);
-            BaseToast.showRoundRectToast(string);
+            BaseToast.showRoundRectToast(getContext(), string);
             return true;
         }
         if (mControlWrapper.isFullScreen()) {

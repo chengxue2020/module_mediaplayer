@@ -1,6 +1,9 @@
 package lib.kalu.mediaplayer.kernel.video.platfrom.exo;
 
+import android.content.Context;
+
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 
@@ -21,7 +24,7 @@ public class ExoPlayerFactory extends PlayerFactory<ExoMediaPlayer> {
     }
 
     @Override
-    public ExoMediaPlayer createPlayer() {
-        return new ExoMediaPlayer();
+    public ExoMediaPlayer createPlayer(@NonNull Context context) {
+        return new ExoMediaPlayer(context);
     }
 }

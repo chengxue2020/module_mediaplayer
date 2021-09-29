@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.kernel.video.factory;
 import android.content.Context;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
 
@@ -29,6 +30,6 @@ public abstract class PlayerFactory<T extends VideoPlayerImpl> {
      * @param context 上下文
      * @return 具体的player
      */
-    public abstract T createPlayer();
+    public abstract T createPlayer(@NonNull Context context);
 
 }

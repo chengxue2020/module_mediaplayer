@@ -220,7 +220,7 @@ public class VideoMediaPlayer {
         mMediaPlayer.setOnTimedTextListener(mOnTimedTextListener);
         // 设置dataSource
         if (videoPlayer.getUrl() == null || videoPlayer.getUrl().length() == 0) {
-            BaseToast.showRoundRectToast("视频链接不能为空");
+//            BaseToast.showRoundRectToast("视频链接不能为空");
             return;
         }
         Uri path = Uri.parse(videoPlayer.getUrl());

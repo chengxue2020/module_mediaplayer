@@ -343,7 +343,7 @@ public class PlayService extends Service {
         if (audioMusics.isEmpty()) {
             return;
         }
-        int playMode = SpUtil.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
+        int playMode = SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
         int size = audioMusics.size();
         PlayModeEnum mode = PlayModeEnum.valueOf(playMode);
         switch (mode) {
@@ -382,7 +382,7 @@ public class PlayService extends Service {
         if (audioMusics.isEmpty()) {
             return;
         }
-        int playMode = SpUtil.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
+        int playMode = SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
         int size = audioMusics.size();
         PlayModeEnum mode = PlayModeEnum.valueOf(playMode);
         switch (mode) {
@@ -514,7 +514,7 @@ public class PlayService extends Service {
         LogUtil.log("PlayService"+"----id----"+ id);
         //保存当前播放的musicId，下次进来可以记录状态
         long musicId = Long.parseLong(id);
-        SpUtil.getInstance(MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
+        SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
         play(music);
     }
 
@@ -807,7 +807,7 @@ public class PlayService extends Service {
      */
     public void updatePlayingPosition() {
         int position = 0;
-        long id = SpUtil.getInstance(MusicConstant.SP_NAME).getLong(MusicConstant.MUSIC_ID,-1);
+        long id = SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).getLong(MusicConstant.MUSIC_ID,-1);
         if(audioMusics.isEmpty()){
             return;
         }
@@ -821,7 +821,7 @@ public class PlayService extends Service {
         }
         mPlayingPosition = position;
         long musicId = Long.parseLong(audioMusics.get(mPlayingPosition).getId());
-        SpUtil.getInstance(MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
+        SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
     }
 
 

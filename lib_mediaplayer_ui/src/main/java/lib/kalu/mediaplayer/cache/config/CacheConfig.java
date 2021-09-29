@@ -4,6 +4,8 @@ import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import com.google.android.exoplayer2.upstream.cache.Cache;
+
 import java.io.Serializable;
 
 /**
@@ -20,7 +22,11 @@ public class CacheConfig implements Serializable {
     /**
      * 内存缓存最大值
      */
-    private int mCacheMax;
+    private int mCacheMaxMB;
+    /**
+     * dir
+     */
+    private String mCacheDir = "temp";
     /**
      * 对视频链接加盐字符串
      * 处理md5加密的盐
@@ -31,7 +37,8 @@ public class CacheConfig implements Serializable {
      * 1，表示磁盘缓存
      * 2，表示内存缓存+磁盘缓存
      */
-    private int mType = CacheType.ALL;
+    private @CacheType
+    int mCacheType = CacheType.RAM;
     /**
      * 是否开启日志
      */
@@ -41,16 +48,21 @@ public class CacheConfig implements Serializable {
         return mIsEffective;
     }
 
-    public int getCacheMax() {
-        return mCacheMax;
+    public int getCacheMaxMB() {
+        return mCacheMaxMB;
+    }
+
+    public String getCacheDir() {
+        return mCacheDir;
     }
 
     public String getSalt() {
         return mSalt;
     }
 
-    public int getType() {
-        return mType;
+    public @CacheType
+    int getCacheType() {
+        return mCacheType;
     }
 
     public boolean isLog() {
@@ -61,9 +73,10 @@ public class CacheConfig implements Serializable {
         if (null == build)
             return;
         this.mIsEffective = build.mIsEffective;
-        this.mCacheMax = build.mCacheMax;
+        this.mCacheMaxMB = build.mCacheMaxMB;
+        this.mCacheDir = build.mCacheDir;
         this.mSalt = build.mSalt;
-        this.mType = build.mType;
+        this.mCacheType = build.mCacheType;
         this.mIsLog = build.mIsLog;
     }
 
@@ -78,10 +91,6 @@ public class CacheConfig implements Serializable {
          */
         private boolean mIsEffective = true;
         /**
-         * 内存缓存最大值
-         */
-        private int mCacheMax;
-        /**
          * 对视频链接加盐字符串
          * 处理md5加密的盐
          */
@@ -91,22 +100,39 @@ public class CacheConfig implements Serializable {
          * 1，表示磁盘缓存
          * 2，表示内存缓存+磁盘缓存
          */
-        private int mType = CacheType.ALL;
+        private int mCacheType = CacheType.RAM;
         /**
          * 是否开启日志
          */
         private boolean mIsLog = false;
+
+        /**
+         * dir
+         */
+        private String mCacheDir = "temp";
+        /**
+         * MB
+         */
+        private int mCacheMaxMB = 1024;
 
         public Build setIsEffective(boolean mIsEffective) {
             this.mIsEffective = mIsEffective;
             return this;
         }
 
-        public Build setCacheMax(@IntRange(from = 1, to = 2048) int value) {
-            if (value <= 0) {
-                value = 1000;
+        public Build setCacheDir(String dir) {
+            if (null == dir || dir.length() == 0) {
+                dir = "temp";
             }
-            this.mCacheMax = value;
+            this.mCacheDir = dir;
+            return this;
+        }
+
+        public Build setCacheMaxMB(@IntRange(from = 1024, to = 4096) int value) {
+            if (value <= 0) {
+                value = 1024;
+            }
+            this.mCacheMaxMB = value;
             return this;
         }
 
@@ -118,8 +144,8 @@ public class CacheConfig implements Serializable {
             return this;
         }
 
-        public Build setType(@CacheType.Value int type) {
-            this.mType = type;
+        public Build setCacheType(@CacheType.Value int type) {
+            this.mCacheType = type;
             return this;
         }
 

@@ -10,9 +10,9 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface CacheType {
 
-    int RAM = 0;
-    int ROM = 1;
-    int ALL = 2;
+    int RAM = 0x0001;
+    int ROM = 0x0002;
+    int ALL = 0x0003;
 
     @IntDef(value = {CacheType.ALL, CacheType.RAM, CacheType.ROM})
     @Retention(RetentionPolicy.SOURCE)

@@ -47,13 +47,13 @@ public class MediaActivity extends AppCompatActivity {
             public void onPrepared(MediaPlayer mp) {
                 //         mp.setLooping(true);
                 mp.start();// 播放
-                BaseToast.showRoundRectToast("开始播放！");
+                BaseToast.showRoundRectToast(getApplicationContext(), "开始播放！");
             }
         });
         mVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                BaseToast.showRoundRectToast("播放完毕！");
+                BaseToast.showRoundRectToast(getApplicationContext(), "播放完毕！");
             }
         });
     }

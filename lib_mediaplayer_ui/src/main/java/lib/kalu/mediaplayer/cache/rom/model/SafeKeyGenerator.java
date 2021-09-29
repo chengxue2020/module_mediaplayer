@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.cache.rom.model;
 
 import lib.kalu.mediaplayer.cache.config.CacheConfig;
 import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
-import lib.kalu.mediaplayer.cache.rom.cache.VideoLruCache;
+import lib.kalu.mediaplayer.cache.rom.cache.LruCacheCust;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.Md5Util;
 
@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.util.Md5Util;
  */
 public class SafeKeyGenerator {
 
-    private final VideoLruCache<Integer, String> loadIdToSafeHash = new VideoLruCache<>(1000);
+    private final LruCacheCust<Integer, String> loadIdToSafeHash = new LruCacheCust<>(1000);
 
     public SafeKeyGenerator() {
 

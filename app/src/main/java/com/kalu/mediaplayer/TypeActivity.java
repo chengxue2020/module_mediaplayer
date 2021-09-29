@@ -169,11 +169,11 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
             //切换原生
             setChangeVideoType(PlayerType.PlatformType.NATIVE);
         } else if (v == mTv21) {
-            BaseToast.showRoundRectToast("待完善");
+            BaseToast.showRoundRectToast(getApplicationContext(), "待完善");
         } else if (v == mTv22) {
-            BaseToast.showRoundRectToast("待完善");
+            BaseToast.showRoundRectToast(getApplicationContext(), "待完善");
         } else if (v == mTv23) {
-            BaseToast.showRoundRectToast("待完善");
+            BaseToast.showRoundRectToast(getApplicationContext(), "待完善");
         } else if (v == mTv31) {
             startActivity(new Intent(this, NormalActivity.class));
         } else if (v == mTv32) {
@@ -234,17 +234,17 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
             switch (type) {
                 case PlayerType.PlatformType.IJK:
                     playerFactory = IjkPlayerFactory.create();
-                    IjkMediaPlayer ijkVideoPlayer = (IjkMediaPlayer) playerFactory.createPlayer();
+                    IjkMediaPlayer ijkVideoPlayer = (IjkMediaPlayer) playerFactory.createPlayer(getApplicationContext());
                     mTvTitle.setText("视频内核：" + " (IjkPlayer)");
                     break;
                 case PlayerType.PlatformType.EXO:
                     playerFactory = ExoPlayerFactory.create();
-                    ExoMediaPlayer exoMediaPlayer = (ExoMediaPlayer) playerFactory.createPlayer();
+                    ExoMediaPlayer exoMediaPlayer = (ExoMediaPlayer) playerFactory.createPlayer(getApplicationContext());
                     mTvTitle.setText("视频内核：" + " (ExoPlayer)");
                     break;
                 case PlayerType.PlatformType.NATIVE:
                     playerFactory = MediaPlayerFactory.create();
-                    AndroidMediaPlayer androidMediaPlayer = (AndroidMediaPlayer) playerFactory.createPlayer();
+                    AndroidMediaPlayer androidMediaPlayer = (AndroidMediaPlayer) playerFactory.createPlayer(getApplicationContext());
                     mTvTitle.setText("视频内核：" + " (MediaPlayer)");
                     break;
             }

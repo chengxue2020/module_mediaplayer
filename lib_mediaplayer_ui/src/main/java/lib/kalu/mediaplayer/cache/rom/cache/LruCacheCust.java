@@ -15,7 +15,7 @@ import java.util.Set;
  *             此种缓存策略为框架默认提供, 可自行实现其他缓存策略, 如磁盘缓存
  * </pre>
  */
-public class VideoLruCache<K, V> implements InterCache<K, V> {
+public class LruCacheCust<K, V> implements ImplCache<K, V> {
 
     private final LinkedHashMap<K, V> cache = new LinkedHashMap<>(100, 0.75f, true);
     private final int initialMaxSize;
@@ -27,7 +27,7 @@ public class VideoLruCache<K, V> implements InterCache<K, V> {
      *
      * @param size 这个缓存的最大 size,这个 size 所使用的单位必须和 {@link #getItemSize(Object)} 所使用的单位一致.
      */
-    public VideoLruCache(int size) {
+    public LruCacheCust(int size) {
         if (size <= 0) {
             throw new IllegalArgumentException("size <= 0");
         }

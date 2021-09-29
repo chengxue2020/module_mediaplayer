@@ -12,8 +12,6 @@ import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.cache.ram.HttpProxyCacheServer;
-import lib.kalu.mediaplayer.cache.ram.cache.ProxyVideoCacheManager;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
@@ -87,7 +85,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
         adControlView.setListener(new AdControlView.AdControlListener() {
             @Override
             public void onAdClick() {
-                BaseToast.showRoundRectToast("广告点击跳转");
+                BaseToast.showRoundRectToast(getApplicationContext(), "广告点击跳转");
             }
 
             @Override
@@ -100,13 +98,13 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
         Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
         //设置控制器
         mVideoPlayerLayout.setController(controller);
-        HttpProxyCacheServer cacheServer = ProxyVideoCacheManager.getProxy(this);
-        String proxyUrl = cacheServer.getProxyUrl(URL_AD);
-        HttpProxyCacheServer server = new HttpProxyCacheServer(this);
-        String proxyVideoUrl = server.getProxyUrl(URL_AD);
+//        HttpProxyCacheServer cacheServer = ProxyVideoCacheManager.getProxy(this);
+//        String proxyUrl = cacheServer.getProxyUrl(URL_AD);
+//        HttpProxyCacheServer server = new HttpProxyCacheServer(this);
+//        String proxyVideoUrl = server.getProxyUrl(URL_AD);
 
 
-        mVideoPlayerLayout.setUrl(proxyUrl);
+        mVideoPlayerLayout.setUrl(URL_AD);
         mVideoPlayerLayout.start();
         //监听播放结束
         mVideoPlayerLayout.addOnStateChangeListener(new SimpleStateListener() {

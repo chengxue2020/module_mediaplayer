@@ -23,12 +23,12 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.BuildConfig;
 
 /**
- * desc
- * log
+ * description: LogUtil
+ * created by kalu on 2021/9/29
  */
 public final class LogUtil {
 
-    private static boolean isLog = false;
+    private static boolean isLog = BuildConfig.DEBUG;
 
     public static void setIsLog(boolean isLog) {
         LogUtil.isLog = isLog;

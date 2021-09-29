@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.kernel.video.impl;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -10,6 +11,8 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.config.CacheType;
 import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
 
 
@@ -29,16 +32,16 @@ public interface VideoPlayerImpl {
      * 初始化播放器实例
      * 视频播放器第一步：创建视频播放器
      */
-    void initPlayer();
+    void initPlayer(@NonNull Context context);
 
     /**
      * 视频播放器第二步： 设置数据
      *
      * @param path    播放地址
      * @param headers 播放地址请求头
-     * @param isCache 视频缓存
+     * @param config  视频缓存
      */
-    void setDataSource(@NonNull String path, @Nullable Map<String, String> headers, @NonNull boolean isCache);
+    void setDataSource(@NonNull Context context, @NonNull String path, @Nullable Map<String, String> headers, @NonNull CacheConfig config);
 
     /**
      * 用于播放raw和asset里面的视频文件

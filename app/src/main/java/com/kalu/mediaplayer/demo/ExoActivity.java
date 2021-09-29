@@ -47,7 +47,7 @@ public class ExoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exo_player);
         mVideoView = findViewById(R.id.video_view);
 
-        SimpleExoPlayer player = ExoPlayerFactory.create().createPlayer().getPlayer();
+        SimpleExoPlayer player = ExoPlayerFactory.create().createPlayer(getApplicationContext()).getPlayer();
         player.setPlayWhenReady(true);
         mVideoView.setPlayer(player);
         Uri uri = Uri.parse(ConstantVideo.VideoPlayerList[0]);

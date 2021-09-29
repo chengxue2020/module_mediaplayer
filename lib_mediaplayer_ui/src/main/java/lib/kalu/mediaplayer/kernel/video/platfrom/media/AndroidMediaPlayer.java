@@ -15,6 +15,7 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.kernel.video.platfrom.media;
 
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -28,7 +29,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
@@ -60,7 +61,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
     }
 
     @Override
-    public void initPlayer() {
+    public void initPlayer(@NonNull Context context) {
         mMediaPlayer = new MediaPlayer();
         setOptions();
         initListener();
@@ -86,7 +87,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
      * @param headers 播放地址请求头
      */
     @Override
-    public void setDataSource(String path, Map<String, String> headers, boolean isCahche) {
+    public void setDataSource(@NonNull Context context, String path, Map<String, String> headers, @NonNull CacheConfig config) {
         // 设置dataSource
         if (path == null || path.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
@@ -96,7 +97,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         }
         try {
             Uri uri = Uri.parse(path);
-            mMediaPlayer.setDataSource(MediaplayerContentProvider.getContextWeakReference(), uri, headers);
+            mMediaPlayer.setDataSource(context, uri, headers);
         } catch (Exception e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_PARSE, e.getMessage());
         }

@@ -1221,12 +1221,12 @@ public final class MediaItem implements Bundleable {
   /** The clipping properties. */
   public final ClippingProperties clippingProperties;
 
-  private MediaItem(
-      String mediaId,
-      ClippingProperties clippingProperties,
-      @Nullable PlaybackProperties playbackProperties,
-      LiveConfiguration liveConfiguration,
-      MediaMetadata mediaMetadata) {
+  public MediaItem(
+          String mediaId,
+          ClippingProperties clippingProperties,
+          @Nullable PlaybackProperties playbackProperties,
+          LiveConfiguration liveConfiguration,
+          MediaMetadata mediaMetadata) {
     this.mediaId = mediaId;
     this.playbackProperties = playbackProperties;
     this.liveConfiguration = liveConfiguration;

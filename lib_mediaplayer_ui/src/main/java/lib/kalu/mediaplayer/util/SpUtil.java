@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
-
 
 @Keep
 public final class SpUtil {
@@ -25,8 +23,8 @@ public final class SpUtil {
      *
      * @return {@link SpUtil}
      */
-    public static SpUtil getInstance() {
-        return getInstance("");
+    public static SpUtil getInstance(@NonNull Context context) {
+        return getInstance(context, "");
     }
 
     /**
@@ -35,18 +33,18 @@ public final class SpUtil {
      * @param spName sp 名
      * @return {@link SpUtil}
      */
-    public static SpUtil getInstance(String spName) {
+    public static SpUtil getInstance(@NonNull Context context, String spName) {
         if (isSpace(spName)) spName = "spUtils";
         SpUtil spUtils = SP_UTILS_MAP.get(spName);
         if (spUtils == null) {
-            spUtils = new SpUtil(spName);
+            spUtils = new SpUtil(context, spName);
             SP_UTILS_MAP.put(spName, spUtils);
         }
         return spUtils;
     }
 
-    private SpUtil(final String spName) {
-        sp = MediaplayerContentProvider.getContextWeakReference().getSharedPreferences(spName, Context.MODE_PRIVATE);
+    private SpUtil(@NonNull Context context, final String spName) {
+        sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
     }
 
     /**

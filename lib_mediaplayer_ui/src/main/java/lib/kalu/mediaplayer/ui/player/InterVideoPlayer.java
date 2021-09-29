@@ -30,6 +30,7 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.ui.player;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;

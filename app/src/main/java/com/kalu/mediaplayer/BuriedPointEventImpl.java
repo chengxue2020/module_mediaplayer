@@ -1,7 +1,5 @@
 package com.kalu.mediaplayer;
 
-import lib.kalu.mediaplayer.cache.config.CacheConfigManager;
-import lib.kalu.mediaplayer.cache.rom.model.VideoLocation;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.config.BuriedPointEvent;
 
@@ -89,8 +87,8 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
     @Override
     public void playerOutProgress(String url, long duration, long currentPosition) {
         VideoLogUtils.i("BuriedPointEvent---退出视频播放时候的播放进度百度比--" + url + "-----" + duration + "----" + currentPosition);
-        VideoLocation location = new VideoLocation(url, currentPosition, duration);
-        CacheConfigManager.getInstance().put(url, location);
+//        VideoLocation location = new VideoLocation(url, currentPosition, duration);
+//        CacheConfigManager.getInstance().put(url, location);
     }
 
     /**

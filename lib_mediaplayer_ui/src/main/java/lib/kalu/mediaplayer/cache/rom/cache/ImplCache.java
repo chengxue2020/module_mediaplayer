@@ -12,7 +12,7 @@ import java.util.Set;
  *     revise: 内存缓存，主要使用到了淘汰算法
  * </pre>
  */
-public interface InterCache<K, V> {
+public interface ImplCache<K, V> {
 
     /**
      * 返回当前缓存已占用的总 size

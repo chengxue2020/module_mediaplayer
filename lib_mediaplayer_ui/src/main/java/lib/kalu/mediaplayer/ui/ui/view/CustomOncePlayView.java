@@ -96,10 +96,10 @@ public class CustomOncePlayView extends LinearLayout implements InterControlView
                     if (PlayerUtils.isConnected(mContext)){
                         mControlWrapper.start();
                     } else {
-                        BaseToast.showRoundRectToast("请查看网络是否连接");
+                        BaseToast.showRoundRectToast(v.getContext(), "请查看网络是否连接");
                     }
                 } else {
-                    BaseToast.showRoundRectToast("时间还未到，请稍后再试");
+                    BaseToast.showRoundRectToast(v.getContext(), "时间还未到，请稍后再试");
                 }
             }
         });

@@ -926,7 +926,7 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                     }
                 }
             }else {
-                BaseToast.showRoundRectToast("请检测是否有网络");
+                BaseToast.showRoundRectToast(v.getContext(), "请检测是否有网络");
             }
         } else if (v == mFullScreen) {
             //全屏模式，重置锁屏，设置为未选中状态
@@ -952,14 +952,14 @@ public class VideoPlayerController extends AbsVideoPlayerController implements V
                 //开始从此位置播放
                 mVideoPlayer.restart();
             }else {
-                BaseToast.showRoundRectToast("请检测是否有网络");
+                BaseToast.showRoundRectToast(v.getContext(), "请检测是否有网络");
             }
         } else if (v == mReplay) {
             //重新播放
             if(PlayerUtils.isConnected(mContext)){
                 mRetry.performClick();
             }else {
-                BaseToast.showRoundRectToast("请检测是否有网络");
+                BaseToast.showRoundRectToast(v.getContext(), "请检测是否有网络");
             }
         } else if (v == mShare) {
             //分享

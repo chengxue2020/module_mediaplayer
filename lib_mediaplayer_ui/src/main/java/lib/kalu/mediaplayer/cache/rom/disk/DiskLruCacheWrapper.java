@@ -50,7 +50,7 @@ public class DiskLruCacheWrapper implements InterDiskCache {
         CacheConfig cacheConfig = CacheConfigManager.getInstance().getCacheConfig();
         this.directory = directory;
         this.safeKeyGenerator = safeKeyGenerator;
-        this.maxSize = cacheConfig.getCacheMax();
+        this.maxSize = cacheConfig.getCacheMaxMB();
     }
 
     private synchronized DiskLruCache getDiskCache() throws IOException {

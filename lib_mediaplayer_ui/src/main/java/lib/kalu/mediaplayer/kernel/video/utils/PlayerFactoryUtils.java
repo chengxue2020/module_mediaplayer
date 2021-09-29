@@ -1,6 +1,9 @@
 package lib.kalu.mediaplayer.kernel.video.utils;
 
+import android.content.Context;
+
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
@@ -49,15 +52,15 @@ public final class PlayerFactoryUtils {
      * @param type 类型
      * @return
      */
-    public static VideoPlayerImpl getVideoPlayer(@PlayerType.PlatformType.Value int type) {
+    public static VideoPlayerImpl getVideoPlayer(@NonNull Context context, @PlayerType.PlatformType.Value int type) {
         if (type == PlayerType.PlatformType.EXO) {
-            return ExoPlayerFactory.create().createPlayer();
+            return ExoPlayerFactory.create().createPlayer(context);
         } else if (type == PlayerType.PlatformType.IJK) {
-            return IjkPlayerFactory.create().createPlayer();
+            return IjkPlayerFactory.create().createPlayer(context);
         } else if (type == PlayerType.PlatformType.NATIVE) {
-            return MediaPlayerFactory.create().createPlayer();
+            return MediaPlayerFactory.create().createPlayer(context);
         } else {
-            return ExoPlayerFactory.create().createPlayer();
+            return ExoPlayerFactory.create().createPlayer(context);
         }
     }
 }

@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
-import lib.kalu.mediaplayer.cache.ram.cache.PreloadManager;
-import lib.kalu.mediaplayer.cache.ram.cache.ProxyVideoCacheManager;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
@@ -40,7 +38,6 @@ public class TikTok2Activity extends AppCompatActivity {
     private List<VideoInfoBean> mVideoList = new ArrayList<>();
     private Tiktok2Adapter mTiktok2Adapter;
     private VerticalViewPager mViewPager;
-    private PreloadManager mPreloadManager;
     private VideoLayout mVideoPlayerLayout;
     private DefaultController mController;
 
@@ -58,9 +55,6 @@ public class TikTok2Activity extends AppCompatActivity {
         if (mVideoPlayerLayout != null) {
             mVideoPlayerLayout.release();
         }
-        mPreloadManager.removeAllPreloadTask();
-        //清除缓存，实际使用可以不需要清除，这里为了方便测试
-        ProxyVideoCacheManager.clearAllCache(this);
     }
 
     @Override
@@ -110,7 +104,6 @@ public class TikTok2Activity extends AppCompatActivity {
     protected void initView() {
         initViewPager();
         initVideoView();
-        mPreloadManager = PreloadManager.getInstance(this);
         addData(null);
         Intent extras = getIntent();
         int index = extras.getIntExtra(KEY_INDEX, 0);
@@ -170,12 +163,6 @@ public class TikTok2Activity extends AppCompatActivity {
                 if (state == VerticalViewPager.SCROLL_STATE_DRAGGING) {
                     mCurItem = mViewPager.getCurrentItem();
                 }
-
-                if (state == VerticalViewPager.SCROLL_STATE_IDLE) {
-                    mPreloadManager.resumePreload(mCurPos, mIsReverseScroll);
-                } else {
-                    mPreloadManager.pausePreload(mCurPos, mIsReverseScroll);
-                }
             }
         });
 
@@ -220,9 +207,9 @@ public class TikTok2Activity extends AppCompatActivity {
                 PlayerUtils.removeViewFormParent(mVideoPlayerLayout);
 
                 VideoInfoBean tiktokBean = mVideoList.get(position);
-                String playUrl = mPreloadManager.getPlayUrl(tiktokBean.getVideoUrl());
-                VideoLogUtils.i("startPlay: " + "position: " + position + "  url: " + playUrl);
-                mVideoPlayerLayout.setUrl(playUrl);
+//                String playUrl = mPreloadManager.getPlayUrl(tiktokBean.getVideoUrl());
+//                VideoLogUtils.i("startPlay: " + "position: " + position + "  url: " + playUrl);
+                mVideoPlayerLayout.setUrl(tiktokBean.getVideoUrl());
                 mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
                 mController.addControlComponent(viewHolder.mTikTokView, true);
                 viewHolder.mPlayerContainer.addView(mVideoPlayerLayout, 0);

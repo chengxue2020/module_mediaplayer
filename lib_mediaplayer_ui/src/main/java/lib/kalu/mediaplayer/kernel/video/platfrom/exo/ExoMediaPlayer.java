@@ -36,7 +36,7 @@ import com.google.android.exoplayer2.util.EventLogger;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
@@ -66,8 +66,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     private RenderersFactory mRenderersFactory;
     private TrackSelector mTrackSelector;
 
-    public ExoMediaPlayer() {
-        Context context = MediaplayerContentProvider.getContextWeakReference();
+    public ExoMediaPlayer(@NonNull Context context) {
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
     }
 
@@ -78,9 +77,8 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     }
 
     @Override
-    public void initPlayer() {
+    public void initPlayer(@NonNull Context context) {
         //创建exo播放器
-        Context context = MediaplayerContentProvider.getContextWeakReference();
         mInternalPlayer = new SimpleExoPlayer.Builder(
                 context,
                 mRenderersFactory == null ? mRenderersFactory = new DefaultRenderersFactory(context) : mRenderersFactory,
@@ -126,7 +124,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
      * @param headers 播放地址请求头
      */
     @Override
-    public void setDataSource(@NonNull String path, @Nullable Map<String, String> headers, @NonNull boolean isCache) {
+    public void setDataSource(@NonNull Context context, @NonNull String path, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         // 设置dataSource
         if (path == null || path.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
@@ -134,7 +132,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
             }
             return;
         }
-        mMediaSource = mMediaSourceHelper.getMediaSource(MediaplayerContentProvider.getContextWeakReference(), path, headers, isCache);
+        mMediaSource = mMediaSourceHelper.getMediaSource(context, path, headers, config);
     }
 
     @Override

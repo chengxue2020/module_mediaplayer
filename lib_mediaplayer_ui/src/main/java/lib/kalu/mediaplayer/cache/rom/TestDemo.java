@@ -21,11 +21,11 @@ public class TestDemo {
 
         CacheConfig build = new CacheConfig.Build()
                 .setIsEffective(true)
-                .setType(CacheType.ALL)
-                .setCacheMax(1000)
+                .setCacheType(CacheType.ALL)
+                .setCacheMaxMB(1024)
                 .setLog(false)
                 .build();
-        CacheConfigManager.getInstance().setConfig(build);
+        CacheConfigManager.getInstance().setConfig(context, build);
 
         //保存播放位置
 //        VideoLocation location = new VideoLocation(url, currentPosition, duration);

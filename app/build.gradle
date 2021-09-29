@@ -86,6 +86,6 @@ dependencies {
     // mediaplayer
 //    api files('libs/rtmp-client-3.1.0.aar')
 //    api files('libs/lib_mediaplayer_exoplayer_r2.15.0_release_20210927.aar')
-//    api files('libs/lib_mediaplayer_ui_release_20210927.aar')
+//    api files('libs/lib_mediaplayer_ui_release_20210929.aar')
     api project(path: ':lib_mediaplayer_ui')
 }

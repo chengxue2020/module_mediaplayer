@@ -2,6 +2,7 @@ package com.kalu.mediaplayer;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
@@ -47,6 +48,31 @@ public class BaseApplication extends MultiDexApplication {
         instance = this;
         ScreenDensityUtils.setup(this);
         ScreenDensityUtils.register(this, 375.0f, ScreenDensityUtils.MATCH_BASE_WIDTH, ScreenDensityUtils.MATCH_UNIT_DP);
+
+        // init
+        PlayerConfig build = PlayerConfig.newBuilder()
+                //设置视频全局埋点事件
+                .setBuriedPointEvent(new BuriedPointEventImpl())
+                //调试的时候请打开日志，方便排错
+                .setLogEnabled(false)
+                // loading
+                //设置exo
+                .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerType.PlatformType.EXO))
+                //创建SurfaceView
+                //.setRenderViewFactory(SurfaceViewFactory.create())
+                .setKeycodeImpl(new KeycodeImplSimulator())
+                .build();
+        PlayerConfigManager.getInstance().setConfig(build);
+
+        // init
+        CacheConfig config = new CacheConfig.Build()
+                .setIsEffective(true)
+                .setCacheType(CacheType.ALL)
+                .setCacheMaxMB(1024)
+                .setCacheDir("temp")
+                .setLog(true)
+                .build();
+        CacheConfigManager.getInstance().setConfig(getApplicationContext(), config);
     }
 
     /**

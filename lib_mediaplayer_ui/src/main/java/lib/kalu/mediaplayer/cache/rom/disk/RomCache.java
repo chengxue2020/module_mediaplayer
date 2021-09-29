@@ -1,10 +1,13 @@
 package lib.kalu.mediaplayer.cache.rom.disk;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
 import java.io.File;
 
 import lib.kalu.mediaplayer.cache.rom.model.SafeKeyGenerator;
 import lib.kalu.mediaplayer.cache.rom.model.VideoLocation;
-import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
@@ -16,13 +19,13 @@ import lib.kalu.mediaplayer.util.LogUtil;
  *     revise:
  * </pre>
  */
-public class SqlLiteCache {
+public class RomCache {
 
     private InterDiskCache interDiskCache;
     public final SafeKeyGenerator safeKeyGenerator;
 
-    public SqlLiteCache() {
-        File path = DiskFileUtils.getFilePath(MediaplayerContentProvider.getContextWeakReference());
+    public RomCache(@NonNull Context context) {
+        File path = DiskFileUtils.getFilePath(context);
         String pathString = path.getPath();
         LogUtil.log("SqlLiteCache-----pathString路径输出地址-"+pathString);
         this.safeKeyGenerator = new SafeKeyGenerator();

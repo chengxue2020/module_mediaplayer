@@ -14,7 +14,7 @@ import java.util.Set;
  *     revise:
  * </pre>
  */
-public class SystemLruCache<K, V> {
+public class LruCache<K, V> {
 
     private final LinkedHashMap<K, V> map;
 
@@ -33,7 +33,7 @@ public class SystemLruCache<K, V> {
      *     the maximum number of entries in the cache. For all other caches,
      *     this is the maximum sum of the sizes of the entries in this cache.
      */
-    public SystemLruCache(int maxSize) {
+    public LruCache(int maxSize) {
         if (maxSize <= 0) {
             throw new IllegalArgumentException("maxSize <= 0");
         }

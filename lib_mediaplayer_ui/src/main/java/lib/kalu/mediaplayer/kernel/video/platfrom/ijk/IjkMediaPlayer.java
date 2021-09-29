@@ -16,6 +16,7 @@ limitations under the License.
 package lib.kalu.mediaplayer.kernel.video.platfrom.ijk;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -29,7 +30,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
@@ -62,7 +63,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     }
 
     @Override
-    public void initPlayer() {
+    public void initPlayer(@NonNull Context context) {
         mMediaPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
         //native日志
         tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(VideoLogUtils.isIsLog()
@@ -154,7 +155,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
      * @param headers 播放地址请求头
      */
     @Override
-    public void setDataSource(String path, Map<String, String> headers, boolean isCache) {
+    public void setDataSource(@NonNull Context context, String path, Map<String, String> headers, @NonNull CacheConfig config) {
         // 设置dataSource
         if(path==null || path.length()==0){
             if (getVideoPlayerChangeListener()!=null){
@@ -166,7 +167,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
             //解析path
             Uri uri = Uri.parse(path);
             if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
-                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(MediaplayerContentProvider.getContextWeakReference(), uri);
+                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
                 mMediaPlayer.setDataSource(rawDataSourceProvider);
             } else {
                 //处理UA问题
@@ -176,7 +177,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
                         mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
                     }
                 }
-                mMediaPlayer.setDataSource(MediaplayerContentProvider.getContextWeakReference(), uri, headers);
+                mMediaPlayer.setDataSource(context, uri, headers);
             }
         } catch (Exception e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_PARSE,e.getMessage());

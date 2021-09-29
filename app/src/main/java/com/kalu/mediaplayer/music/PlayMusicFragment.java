@@ -328,7 +328,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     }
 
     private void switchPlayMode() {
-        int playMode = SpUtil.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
+        int playMode = SpUtil.getInstance(getContext(), MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
         PlayModeEnum mode = PlayModeEnum.valueOf(playMode);
         switch (mode) {
             case LOOP:
@@ -343,13 +343,13 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
             default:
                 break;
         }
-        SpUtil.getInstance(MusicConstant.SP_NAME).put(MusicConstant.PLAY_MODE, mode.value());
+        SpUtil.getInstance(getContext(), MusicConstant.SP_NAME).put(MusicConstant.PLAY_MODE, mode.value());
         initPlayMode();
     }
 
 
     private void initPlayMode() {
-        int playMode = SpUtil.getInstance(MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
+        int playMode = SpUtil.getInstance(getContext(), MusicConstant.SP_NAME).getInt(MusicConstant.PLAY_MODE, 0);
         ivMode.setImageLevel(playMode);
     }
 

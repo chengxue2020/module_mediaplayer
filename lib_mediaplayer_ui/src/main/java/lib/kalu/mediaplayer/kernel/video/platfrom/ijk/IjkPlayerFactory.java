@@ -15,7 +15,10 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.kernel.video.platfrom.ijk;
 
+import android.content.Context;
+
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 
@@ -37,7 +40,7 @@ public class IjkPlayerFactory extends PlayerFactory<IjkMediaPlayer> {
     }
 
     @Override
-    public IjkMediaPlayer createPlayer() {
+    public IjkMediaPlayer createPlayer(@NonNull Context context) {
         return new IjkMediaPlayer();
     }
 }

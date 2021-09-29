@@ -24,7 +24,6 @@ import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.context.MediaplayerContentProvider;
 
 
 /**
@@ -63,8 +62,8 @@ public final class BaseToast {
     /**
      * 检查上下文不能为空，必须先进性初始化操作
      */
-    private static void checkContext() {
-        if (null == MediaplayerContentProvider.getContextWeakReference()) {
+    private static void checkContext(@NonNull Context context) {
+        if (null == context) {
             throw new NullPointerException("ToastUtils context is not null，please first init");
         }
     }
@@ -79,14 +78,14 @@ public final class BaseToast {
     private static Toast toast;
 
     @SuppressLint("ShowToast")
-    public static void showToast(String content) {
+    public static void showToast(@NonNull Context context, String msg) {
         checkMainThread();
-        checkContext();
+        checkContext(context);
         if (!checkNull(mToast)) {
             mToast.get().cancel();
         }
-        Toast toast = Toast.makeText(MediaplayerContentProvider.getContextWeakReference(), "", Toast.LENGTH_SHORT);
-        toast.setText(content);
+        Toast toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
+        toast.setText(msg);
         toast.show();
         mToast = new SoftReference<>(toast);
     }
@@ -101,13 +100,13 @@ public final class BaseToast {
      *
      * @param notice 内容
      */
-    public static void showRoundRectToast(CharSequence notice) {
+    public static void showRoundRectToast(@NonNull Context context, CharSequence notice) {
         checkMainThread();
-        checkContext();
+        checkContext(context);
         if (TextUtils.isEmpty(notice)) {
             return;
         }
-        new Builder(MediaplayerContentProvider.getContextWeakReference())
+        new Builder(context)
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)
@@ -115,20 +114,20 @@ public final class BaseToast {
                 .setTitle(notice)
                 .setTextColor(Color.WHITE)
                 .setBackgroundColor(toastBackColor)
-                .setRadius(dip2px(MediaplayerContentProvider.getContextWeakReference(), 10))
-                .setElevation(dip2px(MediaplayerContentProvider.getContextWeakReference(), 0))
+                .setRadius(dip2px(context, 10))
+                .setElevation(dip2px(context, 0))
                 .build()
                 .show();
     }
 
 
-    public static void showRoundRectToast(CharSequence notice, CharSequence desc) {
+    public static void showRoundRectToast(@NonNull Context context, CharSequence notice, CharSequence desc) {
         checkMainThread();
-        checkContext();
+        checkContext(context);
         if (TextUtils.isEmpty(notice)) {
             return;
         }
-        new Builder(MediaplayerContentProvider.getContextWeakReference())
+        new Builder(context)
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)
@@ -137,20 +136,20 @@ public final class BaseToast {
                 .setTitle(notice)
                 .setTextColor(Color.WHITE)
                 .setBackgroundColor(toastBackColor)
-                .setRadius(dip2px(MediaplayerContentProvider.getContextWeakReference(), 10))
-                .setElevation(dip2px(MediaplayerContentProvider.getContextWeakReference(), 0))
+                .setRadius(dip2px(context, 10))
+                .setElevation(dip2px(context, 0))
                 .build()
                 .show();
     }
 
 
-    public static void showRoundRectToast(@LayoutRes int layout) {
+    public static void showRoundRectToast(@NonNull Context context, @LayoutRes int layout) {
         checkMainThread();
-        checkContext();
+        checkContext(context);
         if (layout == 0) {
             return;
         }
-        new Builder(MediaplayerContentProvider.getContextWeakReference())
+        new Builder(context)
                 .setDuration(Toast.LENGTH_SHORT)
                 .setFill(false)
                 .setGravity(Gravity.CENTER)

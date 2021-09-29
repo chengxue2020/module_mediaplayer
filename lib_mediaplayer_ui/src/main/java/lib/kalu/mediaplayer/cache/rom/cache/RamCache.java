@@ -12,17 +12,17 @@ import lib.kalu.mediaplayer.cache.rom.model.VideoLocation;
  *     revise:
  * </pre>
  */
-public class VideoMapCache {
+public class RamCache {
 
     /**
      * 缓存
      */
-    private InterCache<String, VideoLocation> mCache;
+    private ImplCache<String, VideoLocation> mCache;
     private final SafeKeyGenerator safeKeyGenerator;
 
-    public VideoMapCache(){
+    public RamCache(){
         //默认设置存储最大值为1000条
-        mCache =  new VideoLruCache<>(1000);
+        mCache =  new LruCacheCust<>(1000);
         this.safeKeyGenerator = new SafeKeyGenerator();
     }
 

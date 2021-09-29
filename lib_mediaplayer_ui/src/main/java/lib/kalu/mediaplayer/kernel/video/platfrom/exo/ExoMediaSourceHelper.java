@@ -3,13 +3,15 @@ package lib.kalu.mediaplayer.kernel.video.platfrom.exo;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.database.ExoDatabaseProvider;
-import com.google.android.exoplayer2.ext.rtmp.RtmpDataSourceFactory;
+import com.google.android.exoplayer2.ext.rtmp.RtmpDataSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
@@ -30,6 +32,9 @@ import com.google.android.exoplayer2.util.Util;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
+
+import lib.kalu.mediaplayer.cache.config.CacheConfig;
+import lib.kalu.mediaplayer.cache.config.CacheType;
 
 /**
  * @description: exo视频播放器帮助类
@@ -60,35 +65,36 @@ public final class ExoMediaSourceHelper {
     /**
      * @param uri     视频url
      * @param headers 视频headers
-     * @param isCache 视频cache
      * @return
      */
-    public MediaSource getMediaSource(@NonNull Context context, @NonNull String uri, @Nullable Map<String, String> headers, @NonNull boolean isCache) {
+    public MediaSource getMediaSource(@NonNull Context context, @NonNull String uri, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         Uri contentUri = Uri.parse(uri);
         if ("rtmp".equals(contentUri.getScheme())) {
-            RtmpDataSourceFactory rtmpDataSourceFactory = new RtmpDataSourceFactory(null);
-            return new ProgressiveMediaSource.Factory(rtmpDataSourceFactory).createMediaSource(contentUri);
+            RtmpDataSource.Factory rtmpDataSourceFactory = new RtmpDataSource.Factory();
+            return new ProgressiveMediaSource.Factory(rtmpDataSourceFactory).createMediaSource(MediaItem.fromUri(contentUri));
         }
         int contentType = inferContentType(uri);
         DataSource.Factory factory;
-        if (isCache) {
-            factory = getCacheDataSourceFactory(context);
+        if (null != context && null != config && config.getCacheType() > CacheType.RAM) {
+            Toast.makeText(context, "磁盘缓存", Toast.LENGTH_SHORT).show();
+            factory = getCacheDataSourceFactory(context, config);
         } else {
-            factory = getDataSourceFactory(context);
+            Toast.makeText(context, "内存缓存", Toast.LENGTH_SHORT).show();
+            factory = new DefaultDataSourceFactory(context, getHttpDataSourceFactory());
         }
         if (mHttpDataSourceFactory != null) {
             setHeaders(headers);
         }
         switch (contentType) {
             case C.TYPE_DASH:
-                return new DashMediaSource.Factory(factory).createMediaSource(contentUri);
+                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
             case C.TYPE_SS:
-                return new SsMediaSource.Factory(factory).createMediaSource(contentUri);
+                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
             case C.TYPE_HLS:
-                return new HlsMediaSource.Factory(factory).createMediaSource(contentUri);
+                return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
             default:
             case C.TYPE_OTHER:
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(contentUri);
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
         }
     }
 
@@ -105,33 +111,44 @@ public final class ExoMediaSourceHelper {
         }
     }
 
-    private DataSource.Factory getCacheDataSourceFactory(@NonNull Context context) {
-        if (mCache == null) {
-            mCache = newCache(context);
+    private DataSource.Factory getCacheDataSourceFactory(@NonNull Context context, @NonNull CacheConfig config) {
+
+        int size;
+        String dir;
+        if (null != config) {
+            size = config.getCacheMaxMB();
+            dir = config.getCacheDir();
+        } else {
+            size = 1024;
+            dir = "temp";
         }
-        return new CacheDataSourceFactory(
-                mCache,
-                getDataSourceFactory(context),
-                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+
+        CacheDataSource.Factory factory = new CacheDataSource.Factory();
+
+        // 缓存策略：磁盘
+        if (null == mCache && null != context && null != config && config.getCacheType() > CacheType.RAM) {
+            // 缓存目录
+            File file = new File(context.getExternalCacheDir(), dir);
+            // 缓存大小，默认1024M，使用LRU算法实现
+            LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
+            ExoDatabaseProvider provider = new ExoDatabaseProvider(context);
+            mCache = new SimpleCache(file, evictor, provider);
+        }
+
+        if (null != mCache) {
+            factory.setCache(mCache);
+        }
+        factory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+        factory.setUpstreamDataSourceFactory(getHttpDataSourceFactory());
+        return factory;
+
+//        return new CacheDataSourceFactory(
+//                mCache,
+//                getDataSourceFactory(context),
+//                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+
     }
 
-    private Cache newCache(@NonNull Context context) {
-        return new SimpleCache(
-                //缓存目录
-                new File(context.getExternalCacheDir(), "exoplayer"),
-                //缓存大小，默认1024M，使用LRU算法实现
-                new LeastRecentlyUsedCacheEvictor(1024 * 1024 * 1024),
-                new ExoDatabaseProvider(context));
-    }
-
-    /**
-     * Returns a new DataSource factory.
-     *
-     * @return A new DataSource factory.
-     */
-    private DataSource.Factory getDataSourceFactory(@NonNull Context context) {
-        return new DefaultDataSourceFactory(context, getHttpDataSourceFactory());
-    }
 
     /**
      * Returns a new HttpDataSource factory.
@@ -172,9 +189,5 @@ public final class ExoMediaSourceHelper {
                 }
             }
         }
-    }
-
-    public void setCache(Cache cache) {
-        this.mCache = cache;
     }
 }
