@@ -31,9 +31,9 @@ public class CacheConfig implements Serializable {
      */
     private String mSalt = "salt_cache_config";
     /**
-     * 0，表示内存缓存
-     * 1，表示磁盘缓存
-     * 2，表示内存缓存+磁盘缓存
+     * 0x0001，表示内存缓存
+     * 0x0002，表示磁盘缓存
+     * 0x0003，表示内存缓存+磁盘缓存
      */
     private @CacheType
     int mCacheType = CacheType.RAM;

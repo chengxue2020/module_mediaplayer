@@ -12,8 +12,8 @@ import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
+import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
@@ -107,7 +107,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
         mVideoPlayerLayout.setUrl(URL_AD);
         mVideoPlayerLayout.start();
         //监听播放结束
-        mVideoPlayerLayout.addOnStateChangeListener(new SimpleStateListener() {
+        mVideoPlayerLayout.addOnStateChangeListener(new OnVideoStateListener() {
             @Override
             public void onPlayStateChanged(int playState) {
                 if (playState == PlayerType.StateType.STATE_BUFFERING_PLAYING) {

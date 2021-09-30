@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
@@ -103,7 +103,7 @@ public class RecyclerView2Fragment extends Fragment {
 
     protected void initVideoView() {
         mVideoView = new VideoLayout(context);
-        mVideoView.setOnStateChangeListener(new SimpleStateListener() {
+        mVideoView.setOnStateChangeListener(new OnVideoStateListener() {
             @Override
             public void onPlayStateChanged(int playState) {
                 //监听VideoViewManager释放，重置状态

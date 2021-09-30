@@ -18,9 +18,9 @@ import com.kalu.mediaplayer.R;
 
 import java.util.List;
 
+import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.ui.player.SimpleStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
@@ -79,7 +79,7 @@ public class TinyScreenActivity extends AppCompatActivity implements OnItemChild
 
     protected void initView() {
         mVideoPlayerLayout = new VideoLayout(this);
-        mVideoPlayerLayout.setOnStateChangeListener(new SimpleStateListener() {
+        mVideoPlayerLayout.setOnStateChangeListener(new OnVideoStateListener() {
             @Override
             public void onPlayStateChanged(int playState) {
                 if (playState == PlayerType.StateType.STATE_BUFFERING_PLAYING) {

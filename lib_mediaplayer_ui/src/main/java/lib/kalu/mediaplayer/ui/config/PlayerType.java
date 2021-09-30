@@ -12,9 +12,6 @@ public class PlayerType {
     /**
      * 播放模式
      * 普通模式，小窗口模式，正常模式三种其中一种
-     * MODE_NORMAL              普通模式
-     * MODE_FULL_SCREEN         全屏模式
-     * MODE_TINY_WINDOW         小屏模式
      */
     @Keep
     @Retention(RetentionPolicy.SOURCE)
@@ -37,38 +34,24 @@ public class PlayerType {
 
     /**
      * 播放状态，主要是指播放器的各种状态
-     * -4               链接为空
-     * -3               解析异常
-     * -2               播放错误，网络异常
-     * -1               播放错误
-     * 0                播放未开始，即将进行
-     * 1                播放准备中
-     * 2                播放准备就绪
-     * 3                正在播放
-     * 4                暂停播放
-     * 5                正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-     * 6                暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-     * 7                播放完成
-     * 8                开始播放中止
-     * 9                即将开播
      */
     @Keep
     @Retention(RetentionPolicy.SOURCE)
     public @interface StateType {
-        int STATE_URL_NULL = 0x2001;
-        int STATE_PARSE_ERROR = 0x2002;
-        int STATE_NETWORK_ERROR = 0x2003;
-        int STATE_ERROR = 0x2004;
-        int STATE_IDLE = 0x2005;
-        int STATE_PREPARING = 0x2006;
-        int STATE_PREPARED = 0x2007;
-        int STATE_PLAYING = 0x2008;
-        int STATE_PAUSED = 0x2009;
-        int STATE_BUFFERING_PLAYING = 0x2010;
-        int STATE_BUFFERING_PAUSED = 0x2011;
-        int STATE_COMPLETED = 0x2012;
-        int STATE_START_ABORT = 0x2013;
-        int STATE_ONCE_LIVE = 0x2014;
+        int STATE_URL_NULL = 0x2001; // 链接为空
+        int STATE_PARSE_ERROR = 0x2002; // 解析异常
+        int STATE_NETWORK_ERROR = 0x2003; // 播放错误，网络异常
+        int STATE_ERROR = 0x2004; // 播放错误
+        int STATE_IDLE = 0x2005; // 播放未开始，即将进行
+        int STATE_PREPARING = 0x2006; // 播放准备中
+        int STATE_PREPARED = 0x2007; // 播放准备就绪
+        int STATE_PLAYING = 0x2008; // 正在播放
+        int STATE_PAUSED = 0x2009; // 暂停播放
+        int STATE_BUFFERING_PLAYING = 0x2010; // 正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int STATE_BUFFERING_PAUSED = 0x2011; // 暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_COMPLETED = 0x2012; // 播放完成
+        int STATE_START_ABORT = 0x2013; // 开始播放中止
+        int STATE_ONCE_LIVE = 0x2014; // 即将开播
 
         @IntDef({STATE_ERROR, STATE_IDLE, STATE_PREPARING,
                 STATE_PREPARED, STATE_PLAYING, STATE_PAUSED,
@@ -89,18 +72,12 @@ public class PlayerType {
     @Keep
     @Retention(RetentionPolicy.SOURCE)
     public @interface ScaleType {
-        //默认类型
-        int SCREEN_SCALE_DEFAULT = 0x3001;
-        //16：9比例类型，最为常见
-        int SCREEN_SCALE_16_9 = 0x3002;
-        //4：3比例类型，也比较常见
-        int SCREEN_SCALE_4_3 = 0x3003;
-        //充满整个控件视图
-        int SCREEN_SCALE_MATCH_PARENT = 0x3004;
-        //原始类型，指视频的原始类型
-        int SCREEN_SCALE_ORIGINAL = 0x3005;
-        //剧中裁剪类型
-        int SCREEN_SCALE_CENTER_CROP = 0x3006;
+        int SCREEN_SCALE_DEFAULT = 0x3001; //默认类型
+        int SCREEN_SCALE_16_9 = 0x3002; //16：9比例类型，最为常见
+        int SCREEN_SCALE_4_3 = 0x3003;  //4：3比例类型，也比较常见
+        int SCREEN_SCALE_MATCH_PARENT = 0x3004; //充满整个控件视图
+        int SCREEN_SCALE_ORIGINAL = 0x3005; //原始类型，指视频的原始类型
+        int SCREEN_SCALE_CENTER_CROP = 0x3006; //剧中裁剪类型
 
         @IntDef({SCREEN_SCALE_DEFAULT, SCREEN_SCALE_16_9,
                 SCREEN_SCALE_4_3, SCREEN_SCALE_MATCH_PARENT,
@@ -139,16 +116,13 @@ public class PlayerType {
 
     /**
      * 通过注解限定类型
-     * IJK                 IjkPlayer，基于IjkPlayer封装播放器
-     * NATIVE              MediaPlayer，基于原生自带的播放器控件
-     * EXO                 基于谷歌视频播放器
      */
     @Keep
     @Retention(RetentionPolicy.SOURCE)
     public @interface PlatformType {
-        int NATIVE = 0x5001;
-        int EXO = 0x5002;
-        int IJK = 0x5003;
+        int NATIVE = 0x5001; // MediaPlayer，基于原生自带的播放器控件
+        int EXO = 0x5002; // 基于谷歌视频播放器
+        int IJK = 0x5003; // IjkPlayer，基于IjkPlayer封装播放器
 
         @IntDef({IJK, NATIVE, EXO})
         @Retention(RetentionPolicy.SOURCE)
@@ -162,14 +136,12 @@ public class PlayerType {
     /**
      * 通过注解限定类型
      * 加载loading的类型
-     * 1，是仿腾讯加载loading，其实是帧动画
-     * 2，是转圈加载loading，是补间动画
      */
     @Keep
     @Retention(RetentionPolicy.SOURCE)
     public @interface LoadingType {
-        int LOADING_RING = 0x6001;
-        int LOADING_QQ = 0x6002;
+        int LOADING_RING = 0x6001; // 是仿腾讯加载loading，其实是帧动画
+        int LOADING_QQ = 0x6002; // 是转圈加载loading，是补间动画
 
         @IntDef({LOADING_RING, LOADING_QQ})
         @Retention(RetentionPolicy.SOURCE)
@@ -183,24 +155,17 @@ public class PlayerType {
     /**
      * 控制器上的视频顶部View点击事件
      * 在竖屏模式下，默认是不显示，需要显示设置controller.setTopVisibility(true);
-     * 1.DOWNLOAD，下载
-     * 2.AUDIO，切换音频
-     * 3.SHARE，分享
-     * 4.MENU，菜单
-     * <p>
      * 在横屏模式下，默认是不显示，需要显示设置controller.setTvAndAudioVisibility(true,true);
-     * 5.TV，点击投影到电视上
-     * 6.HOR_AUDIO，音频
      */
     @Keep
     @Retention(RetentionPolicy.SOURCE)
     public @interface ControllerType {
-        int DOWNLOAD = 0x7001;
-        int AUDIO = 0x7002;
-        int SHARE = 0x7003;
-        int MENU = 0x7004;
-        int TV = 0x7005;
-        int HOR_AUDIO = 0x7006;
+        int DOWNLOAD = 0x7001; // 下载
+        int AUDIO = 0x7002; // 切换音频
+        int SHARE = 0x7003; // 分享
+        int MENU = 0x7004; // 菜单
+        int TV = 0x7005; // TV，点击投影到电视上
+        int HOR_AUDIO = 0x7006; // 音频
 
         @IntDef({DOWNLOAD, AUDIO,
                 SHARE, MENU, TV,
@@ -259,30 +224,11 @@ public class PlayerType {
     @Retention(RetentionPolicy.SOURCE)
     @Keep
     public @interface MediaType {
-        /**
-         * 视频传入url为空
-         */
-        int MEDIA_INFO_URL_NULL = -1;
-
-        /**
-         * 开始渲染视频画面
-         */
-        int MEDIA_INFO_VIDEO_RENDERING_START = 3;
-
-        /**
-         * 缓冲开始
-         */
-        int MEDIA_INFO_BUFFERING_START = 701;
-
-        /**
-         * 缓冲结束
-         */
-        int MEDIA_INFO_BUFFERING_END = 702;
-
-        /**
-         * 视频旋转信息
-         */
-        int MEDIA_INFO_VIDEO_ROTATION_CHANGED = 10001;
+        int MEDIA_INFO_URL_NULL = -1; // 视频传入url为空
+        int MEDIA_INFO_VIDEO_RENDERING_START = 3; // 开始渲染视频画面
+        int MEDIA_INFO_BUFFERING_START = 701; // 缓冲开始
+        int MEDIA_INFO_BUFFERING_END = 702; // 缓冲结束
+        int MEDIA_INFO_VIDEO_ROTATION_CHANGED = 10001; // 视频旋转信息
 
         @IntDef({MEDIA_INFO_URL_NULL, MEDIA_INFO_VIDEO_RENDERING_START, MEDIA_INFO_BUFFERING_START, MEDIA_INFO_BUFFERING_END, MEDIA_INFO_VIDEO_ROTATION_CHANGED})
         @Retention(RetentionPolicy.SOURCE)

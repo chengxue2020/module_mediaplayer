@@ -20,7 +20,7 @@ import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.player.OnVideoStateListener;
+import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoBuilder;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
@@ -246,7 +246,7 @@ public class NormalActivity extends AppCompatActivity implements View.OnClickLis
              * @param playerState                       播放模式
              */
             @Override
-            public void onPlayerStateChanged(int playerState) {
+            public void onWindowStateChanged(int playerState) {
                 switch (playerState) {
                     case PlayerType.WindowType.NORMAL:
                         //普通模式

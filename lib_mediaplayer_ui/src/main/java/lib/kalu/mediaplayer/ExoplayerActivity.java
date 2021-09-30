@@ -9,7 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.player.OnVideoStateListener;
+import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
 
@@ -73,7 +73,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
              * @param playerState                       播放模式
              */
             @Override
-            public void onPlayerStateChanged(int playerState) {
+            public void onWindowStateChanged(int playerState) {
                 switch (playerState) {
                     case PlayerType.WindowType.NORMAL:
                         onBackPressed();

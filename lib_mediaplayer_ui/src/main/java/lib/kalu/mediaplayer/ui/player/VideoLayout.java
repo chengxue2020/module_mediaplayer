@@ -32,6 +32,7 @@ import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
@@ -1109,7 +1110,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         if (mOnStateChangeListeners != null) {
             for (OnVideoStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                 if (l != null) {
-                    l.onPlayerStateChanged(windowState);
+                    l.onWindowStateChanged(windowState);
                 }
             }
         }
