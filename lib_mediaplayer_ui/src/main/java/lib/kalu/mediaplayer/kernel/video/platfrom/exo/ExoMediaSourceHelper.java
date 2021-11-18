@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -26,6 +27,7 @@ import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
@@ -68,32 +70,41 @@ public final class ExoMediaSourceHelper {
      */
     public MediaSource getMediaSource(@NonNull Context context, @NonNull String uri, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         Uri contentUri = Uri.parse(uri);
+        Log.e("EXO", "getMediaSource => scheme = " + contentUri.getScheme());
+        // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
-            RtmpDataSource.Factory rtmpDataSourceFactory = new RtmpDataSource.Factory();
-            return new ProgressiveMediaSource.Factory(rtmpDataSourceFactory).createMediaSource(MediaItem.fromUri(contentUri));
+            RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
+            return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
         }
-        int contentType = inferContentType(uri);
-        DataSource.Factory factory;
-        if (null != context && null != config && config.getCacheType() > CacheType.RAM) {
-            Toast.makeText(context, "磁盘缓存", Toast.LENGTH_SHORT).show();
-            factory = getCacheDataSourceFactory(context, config);
-        } else {
-            Toast.makeText(context, "内存缓存", Toast.LENGTH_SHORT).show();
-            factory = new DefaultDataSourceFactory(context, getHttpDataSourceFactory());
+        // rtsp
+        else if ("rtsp".equals(contentUri.getScheme())) {
+            return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));
         }
-        if (mHttpDataSourceFactory != null) {
-            setHeaders(headers);
-        }
-        switch (contentType) {
-            case C.TYPE_DASH:
-                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-            case C.TYPE_SS:
-                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-            case C.TYPE_HLS:
-                return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-            default:
-            case C.TYPE_OTHER:
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+        // other
+        else {
+            int contentType = inferContentType(uri);
+            DataSource.Factory factory;
+            if (null != context && null != config && config.getCacheType() > CacheType.RAM) {
+                Toast.makeText(context, "磁盘缓存", Toast.LENGTH_SHORT).show();
+                factory = getCacheDataSourceFactory(context, config);
+            } else {
+                Toast.makeText(context, "内存缓存", Toast.LENGTH_SHORT).show();
+                factory = new DefaultDataSourceFactory(context, getHttpDataSourceFactory());
+            }
+            if (mHttpDataSourceFactory != null) {
+                setHeaders(headers);
+            }
+            switch (contentType) {
+                case C.TYPE_DASH:
+                    return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+                case C.TYPE_SS:
+                    return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+                case C.TYPE_HLS:
+                    return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+                default:
+                case C.TYPE_OTHER:
+                    return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+            }
         }
     }
 

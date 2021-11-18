@@ -3,7 +3,9 @@ package com.kalu.mediaplayer;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -74,9 +76,10 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
         initListener();
 
         // 测试
-        Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-        intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
-        startActivity(intent);
+//        Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+////        intent.putExtra(ExoplayerActivity.INTENT_URL, "rtsp://spinterface.hbtn.com:5566/filename.format?providerid=beijing66&assetid=hstv71778_1616050229&contentname=hstv71778_1616050229&duration=5418.00&bitrate=7992000");
+//        intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
+//        startActivity(intent);
 
 
         //检测当前是用的哪个播放器
@@ -96,9 +99,14 @@ public class TypeActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.tv_3_0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                EditText editText = findViewById(R.id.url);
+                Editable text = editText.getText();
+
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, text.toString());
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://10.128.202.122:8001/ocrm/api/video/getVideoDetail/a1a11426813347ceb818dee0edbab3d5");
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
                 startActivity(intent);
             }
         });

@@ -61,7 +61,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
     }
 
     @Override
-    public void initPlayer(@NonNull Context context) {
+    public void initPlayer(@NonNull Context context, @NonNull String url) {
         mMediaPlayer = new MediaPlayer();
         setOptions();
         initListener();

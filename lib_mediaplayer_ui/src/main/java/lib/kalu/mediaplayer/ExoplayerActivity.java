@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
+
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
@@ -37,7 +38,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
         setContentView(R.layout.module_mediaplayer_activity_exoplayer);
 
         String url = getIntent().getStringExtra(INTENT_URL);
-        if (null == url || url.length() == 0 || !url.startsWith("http")) {
+        if (null == url || url.length() == 0) {
             onBackPressed();
             return;
         }

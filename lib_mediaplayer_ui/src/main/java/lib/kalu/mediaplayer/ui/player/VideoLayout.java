@@ -349,7 +349,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         if (mProgressManager != null) {
             mCurrentPosition = mProgressManager.getSavedProgress(mUrl);
         }
-        initPlayer(context);
+        initPlayer(context, mUrl);
         addDisplay();
         startPrepare(context, false);
         return true;
@@ -359,12 +359,12 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 初始化播放器
      */
-    protected void initPlayer(@NonNull Context context) {
+    protected void initPlayer(@NonNull Context context, @NonNull String url) {
         //通过工厂模式创建对象
         mMediaPlayer = mPlayerFactory.createPlayer(context);
         mMediaPlayer.setOnVideoPlayerChangeListener(this);
         setInitOptions();
-        mMediaPlayer.initPlayer(context);
+        mMediaPlayer.initPlayer(context, url);
         setOptions();
     }
 

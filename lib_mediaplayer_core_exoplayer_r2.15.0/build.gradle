@@ -135,6 +135,7 @@ dependencies {
 //    api(name: 'exoplayer-dash-2.15.0', ext: 'aar')
 //    api(name: 'exoplayer-hls-2.15.0', ext: 'aar')
 //    api(name: 'exoplayer-ui-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-rtsp-2.15.0', ext: 'aar')
 //    api(name: 'exoplayer-extension-rtmp-2.15.0', ext: 'aar')
 //    api(name: 'exoplayer-smoothstreaming-2.15.0', ext: 'aar')
 

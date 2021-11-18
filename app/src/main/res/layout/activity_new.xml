@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/whiteBg"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -102,14 +103,43 @@
                     android:text="2.3 封装思路" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_3_0"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/colorAccent"
-                android:padding="10dp"
-                android:text="3.0 横屏播放" />
+                android:background="@android:color/holo_red_dark"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <EditText
+                    android:id="@+id/url"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@android:color/holo_green_dark"
+                    android:gravity="center_vertical|left"
+                    android:singleLine="true"
+                    android:text="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+                    android:textSize="12sp" />
+                <!--                <EditText-->
+                <!--                    android:id="@+id/url"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="40dp"-->
+                <!--                    android:gravity="center_vertical|left"-->
+                <!--                    android:singleLine="true"-->
+                <!--                    android:text="rtsp://spinterface.hbtn.com:5566/filename.format?providerid=beijing66&amp;assetid=hstv71778_1616050229&amp;contentname=hstv71778_1616050229&amp;duration=5418.00&amp;bitrate=7992000"-->
+                <!--                    android:textSize="12sp" />-->
+
+                <Button
+                    android:id="@+id/tv_3_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorAccent"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:text="3.0 横屏播放" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_3_1"

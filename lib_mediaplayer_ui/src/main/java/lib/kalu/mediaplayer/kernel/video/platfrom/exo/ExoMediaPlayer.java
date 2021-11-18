@@ -15,7 +15,9 @@ import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -77,7 +79,8 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     }
 
     @Override
-    public void initPlayer(@NonNull Context context) {
+    public void initPlayer(@NonNull Context context, @NonNull String url) {
+
         //创建exo播放器
         mInternalPlayer = new SimpleExoPlayer.Builder(
                 context,
@@ -88,6 +91,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
                 DefaultBandwidthMeter.getSingletonInstance(context),
                 new AnalyticsCollector(Clock.DEFAULT))
                 .build();
+
         setOptions();
 
         //播放器日志

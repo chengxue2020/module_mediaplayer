@@ -63,7 +63,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     }
 
     @Override
-    public void initPlayer(@NonNull Context context) {
+    public void initPlayer(@NonNull Context context, @NonNull String url) {
         mMediaPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
         //native日志
         tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(VideoLogUtils.isIsLog()

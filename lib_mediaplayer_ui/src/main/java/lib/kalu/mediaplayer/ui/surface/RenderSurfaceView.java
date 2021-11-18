@@ -201,7 +201,4 @@ public class RenderSurfaceView extends SurfaceView implements InterSurfaceView {
 
         }
     };
-
-
-
 }

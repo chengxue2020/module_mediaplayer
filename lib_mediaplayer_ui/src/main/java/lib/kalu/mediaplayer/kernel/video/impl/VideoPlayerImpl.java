@@ -31,7 +31,7 @@ public interface VideoPlayerImpl {
      * 初始化播放器实例
      * 视频播放器第一步：创建视频播放器
      */
-    void initPlayer(@NonNull Context context);
+    void initPlayer(@NonNull Context context, @NonNull String url);
 
     /**
      * 视频播放器第二步： 设置数据
