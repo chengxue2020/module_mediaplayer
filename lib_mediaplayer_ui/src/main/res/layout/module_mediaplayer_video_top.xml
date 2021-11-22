@@ -1,34 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/module_mediaplayer_controller_top_root"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@drawable/module_mediaplayer_shape_background_shadow"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingLeft="14dp"
-    android:paddingRight="14dp">
+    android:background="@drawable/module_mediaplayer_shape_background_shadow">
+
+    <!-- 时间 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_controller_top_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="14dp"
+        android:background="#00000000"
+        android:gravity="center_vertical|right"
+        android:maxEms="3"
+        android:minEms="3"
+        android:textColor="@android:color/white"
+        android:textSize="8sp" />
+
+    <!-- 电量 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_controller_top_battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/module_mediaplayer_controller_top_time"
+        android:background="@drawable/module_mediaplayer_shape_battery_background"
+        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="2dp"
+        android:textColor="@android:color/white"
+        android:textSize="8sp" />
+
 
     <!-- 返回 -->
     <ImageView
         android:id="@+id/module_mediaplayer_controller_top_back"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="14dp"
         android:background="@drawable/module_mediaplayer_selector_background"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:padding="4dp"
         android:src="@drawable/module_mediaplayer_ic_player_back" />
 
     <!-- 标题 -->
     <TextView
         android:id="@+id/module_mediaplayer_controller_top_title"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_weight="1"
-        android:background="@android:color/holo_red_dark"
+        android:layout_toLeftOf="@id/module_mediaplayer_controller_top_battery"
+        android:layout_toRightOf="@id/module_mediaplayer_controller_top_back"
+        android:background="#00000000"
         android:ellipsize="end"
         android:maxLength="10"
         android:maxLines="1"
@@ -36,28 +68,4 @@
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 
-    <!-- 电量 -->
-    <TextView
-        android:id="@+id/module_mediaplayer_controller_top_battery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/module_mediaplayer_shape_battery_background"
-        android:gravity="center"
-        android:maxEms="3"
-        android:minEms="3"
-        android:textColor="@android:color/white"
-        android:textSize="8sp" />
-
-    <!-- 时间 -->
-    <TextView
-        android:id="@+id/module_mediaplayer_controller_top_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:gravity="center_vertical|right"
-        android:maxEms="3"
-        android:minEms="3"
-        android:textColor="@android:color/white"
-        android:textSize="8sp" />
-
-</LinearLayout>
+</RelativeLayout>
