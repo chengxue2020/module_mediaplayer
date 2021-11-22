@@ -18,6 +18,7 @@ package lib.kalu.mediaplayer.ui.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.Keep;
@@ -45,10 +47,8 @@ import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
  * created by kalu on 2021/9/16
  */
 @Keep
-public class DefaultController extends ControllerLayoutDispatchTouchEvent implements View.OnClickListener {
+public class DefaultController extends ControllerLayoutDispatchTouchEvent {
 
-    private ImageView mLockButton;
-    private ProgressBar mLoadingProgress;
     private ImageView thumb;
     private CustomTopView titleView;
     private CustomBottomView vodControlView;
@@ -80,18 +80,16 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
     @Override
     public void init() {
         super.init();
-        initFindViewById();
-        initListener();
         initConfig();
-    }
 
-    private void initFindViewById() {
-        mLockButton = findViewById(R.id.lock);
-        mLoadingProgress = findViewById(R.id.loading);
-    }
-
-    private void initListener() {
-        mLockButton.setOnClickListener(this);
+        //
+        View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mControlWrapper.toggleLockState();
+            }
+        });
     }
 
     private void initConfig() {
@@ -110,11 +108,11 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
     }
 
 
-
     /**
      * 快速添加各个组件
      * 需要注意各个层级
-     * @param title                             标题
+     *
+     * @param title 标题
      */
     public void addDefaultControlComponent(String title) {
         //添加自动完成播放界面view
@@ -151,17 +149,17 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
     /**
      * 切换直播/回放类型
      */
-    public void changePlayType(){
+    public void changePlayType() {
         if (IS_LIVE) {
             //添加底部播放控制条
-            if (liveControlView==null){
+            if (liveControlView == null) {
                 liveControlView = new CustomLiveControlView(getContext());
             }
             this.removeControlComponent(liveControlView);
             this.addControlComponent(liveControlView);
 
             //添加直播还未开始视图
-            if (customOncePlayView==null){
+            if (customOncePlayView == null) {
                 customOncePlayView = new CustomOncePlayView(getContext());
                 tvLiveWaitMessage = customOncePlayView.getTvMessage();
             }
@@ -169,12 +167,12 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
             this.addControlComponent(customOncePlayView);
 
             //直播视频，移除回放视图
-            if (vodControlView!=null){
+            if (vodControlView != null) {
                 this.removeControlComponent(vodControlView);
             }
         } else {
             //添加底部播放控制条
-            if (vodControlView==null){
+            if (vodControlView == null) {
                 vodControlView = new CustomBottomView(getContext());
                 //是否显示底部进度条。默认显示
                 vodControlView.showBottomProgress(true);
@@ -183,10 +181,10 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
             this.addControlComponent(vodControlView);
 
             //正常视频，移除直播视图
-            if (liveControlView!=null){
+            if (liveControlView != null) {
                 this.removeControlComponent(liveControlView);
             }
-            if (customOncePlayView!=null){
+            if (customOncePlayView != null) {
                 this.removeControlComponent(customOncePlayView);
             }
         }
@@ -195,42 +193,36 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
 
 
     @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.lock) {
-            mControlWrapper.toggleLockState();
-        }
-    }
-
-    @Override
     protected void onLockStateChanged(boolean isLocked) {
-        if (isLocked) {
-            mLockButton.setSelected(true);
-            String string = getContext().getResources().getString(R.string.module_mediaplayer_string_locked);
-            BaseToast.showRoundRectToast(getContext(), string);
-        } else {
-            mLockButton.setSelected(false);
-            String string = getContext().getResources().getString(R.string.module_mediaplayer_string_unlocked);
-            BaseToast.showRoundRectToast(getContext(), string);
-        }
+        View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
+        view.setSelected(isLocked ? true : false);
+        String string = getContext().getResources().getString(isLocked ? R.string.module_mediaplayer_string_locked : R.string.module_mediaplayer_string_unlocked);
+        BaseToast.showRoundRectToast(getContext(), string);
     }
 
     @Override
     protected void onVisibilityChanged(boolean isVisible, Animation anim) {
         if (mControlWrapper.isFullScreen()) {
+            View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
             if (isVisible) {
-                if (mLockButton.getVisibility() == GONE) {
-                    mLockButton.setVisibility(VISIBLE);
+                if (view.getVisibility() == GONE) {
+                    view.setVisibility(VISIBLE);
                     if (anim != null) {
-                        mLockButton.startAnimation(anim);
+                        view.startAnimation(anim);
                     }
                 }
             } else {
-                mLockButton.setVisibility(GONE);
+                view.setVisibility(GONE);
                 if (anim != null) {
-                    mLockButton.startAnimation(anim);
+                    view.startAnimation(anim);
                 }
             }
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    view.requestFocus();
+                }
+            }, 400);
         }
     }
 
@@ -240,22 +232,20 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
      * MODE_NORMAL              普通模式
      * MODE_FULL_SCREEN         全屏模式
      * MODE_TINY_WINDOW         小屏模式
-     * @param playerState                   播放模式
+     *
+     * @param playerState 播放模式
      */
     @Override
     protected void onPlayerStateChanged(int playerState) {
         super.onPlayerStateChanged(playerState);
+        View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
                 setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                mLockButton.setVisibility(GONE);
+                view.setVisibility(GONE);
                 break;
             case PlayerType.WindowType.FULL:
-                if (isShowing()) {
-                    mLockButton.setVisibility(VISIBLE);
-                } else {
-                    mLockButton.setVisibility(GONE);
-                }
+                view.setVisibility(isShowing() ? VISIBLE : GONE);
                 break;
         }
 
@@ -264,13 +254,13 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
             int dp24 = PlayerUtils.dp2px(getContext(), 24);
             int cutoutHeight = getCutoutHeight();
             if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                FrameLayout.LayoutParams lblp = (FrameLayout.LayoutParams) mLockButton.getLayoutParams();
+                FrameLayout.LayoutParams lblp = (FrameLayout.LayoutParams) view.getLayoutParams();
                 lblp.setMargins(dp24, 0, dp24, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mLockButton.getLayoutParams();
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
                 layoutParams.setMargins(dp24 + cutoutHeight, 0, dp24 + cutoutHeight, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mLockButton.getLayoutParams();
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
                 layoutParams.setMargins(dp24, 0, dp24, 0);
             }
         }
@@ -289,32 +279,35 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
      * 6                暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
      * 7                播放完成
      * 8                开始播放中止
-     * @param playState                     播放状态，主要是指播放器的各种状态
+     *
+     * @param playState 播放状态，主要是指播放器的各种状态
      */
     @Override
     protected void onPlayStateChanged(int playState) {
         super.onPlayStateChanged(playState);
+        View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
+        View viewLoading = findViewById(R.id.module_mediaplayer_controller_center_loading);
         switch (playState) {
             //调用release方法会回到此状态
             case PlayerType.StateType.STATE_IDLE:
-                mLockButton.setSelected(false);
-                mLoadingProgress.setVisibility(GONE);
+                view.setSelected(false);
+                viewLoading.setVisibility(GONE);
                 break;
             case PlayerType.StateType.STATE_PLAYING:
             case PlayerType.StateType.STATE_PAUSED:
             case PlayerType.StateType.STATE_PREPARED:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_COMPLETED:
-                mLoadingProgress.setVisibility(GONE);
+                viewLoading.setVisibility(GONE);
                 break;
             case PlayerType.StateType.STATE_PREPARING:
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
-                mLoadingProgress.setVisibility(VISIBLE);
+                viewLoading.setVisibility(VISIBLE);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
-                mLoadingProgress.setVisibility(GONE);
-                mLockButton.setVisibility(GONE);
-                mLockButton.setSelected(false);
+                viewLoading.setVisibility(GONE);
+                view.setVisibility(GONE);
+                view.setSelected(false);
                 break;
         }
     }
@@ -332,7 +325,7 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
         }
         Activity activity = PlayerUtils.scanForActivity(getContext());
         //如果不是全屏模式，则直接关闭页面activity
-        if (PlayerUtils.isActivityLiving(activity)){
+        if (PlayerUtils.isActivityLiving(activity)) {
             activity.finish();
         }
         return super.onBackPressed();
@@ -359,7 +352,7 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent implem
     }
 
     public void setTitle(String title) {
-        if (titleView!=null){
+        if (titleView != null) {
             titleView.setTitle(title);
         }
     }

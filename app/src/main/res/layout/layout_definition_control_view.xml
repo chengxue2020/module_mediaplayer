@@ -11,7 +11,7 @@
         android:layout_height="45dp"
         android:layout_gravity="bottom"
         android:gravity="center_vertical"
-        android:background="@drawable/module_mediaplayer_ic_player_mask_bottom"
+        android:background="@drawable/module_mediaplayer_shape_background_shadow"
         android:orientation="horizontal">
 
         <ImageView

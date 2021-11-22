@@ -57,12 +57,9 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
 
     protected ControlWrapper mControlWrapper;
     private LinearLayout mLlBottomContainer;
-    private ImageView mIvPlay;
-    private TextView mTvCurrTime;
     private SeekBar mSeekBar;
     private TextView mTvTotalTime;
-    private TextView mTvClarity;
-    private ImageView mIvFullscreen;
+//    private TextView mTvClarity;
     private ProgressBar mPbBottomProgress;
     private boolean mIsDragging;
     private boolean mIsShowBottomProgress = true;
@@ -83,11 +80,11 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
     }
 
     private void init() {
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(getLayoutId(), this, true);
         initFindViewById(view);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+        setVisibility(View.INVISIBLE);
         initListener();
         //5.1以下系统SeekBar高度需要设置成WRAP_CONTENT
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -95,35 +92,34 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
         }
     }
 
+    public int getLayoutId() {
+        return R.layout.module_mediaplayer_video_bottom;
+    }
+
     private void initFindViewById(View view) {
         mLlBottomContainer = view.findViewById(R.id.ll_bottom_container);
-        mIvPlay = view.findViewById(R.id.iv_play);
-        mTvCurrTime = view.findViewById(R.id.tv_curr_time);
         mSeekBar = view.findViewById(R.id.seekBar);
         mTvTotalTime = view.findViewById(R.id.tv_total_time);
-        mTvClarity = view.findViewById(R.id.tv_clarity);
-        mIvFullscreen = view.findViewById(R.id.iv_fullscreen);
         mPbBottomProgress = view.findViewById(R.id.pb_bottom_progress);
     }
 
     private void initListener() {
-        mIvFullscreen.setOnClickListener(this);
         mSeekBar.setOnSeekBarChangeListener(this);
-        mIvPlay.setOnClickListener(this);
+
+        View viewFull = findViewById(R.id.module_mediaplayer_controller_bottom_full);
+        viewFull.setOnClickListener(this);
+        View viewPlayer = findViewById(R.id.module_mediaplayer_controller_bottom_play);
+        viewPlayer.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
-        if (v == mIvFullscreen) {
+        if (v.getId() == R.id.module_mediaplayer_controller_bottom_full) {
             toggleFullScreen();
-        } else if (v == mIvPlay) {
+        } else if (v.getId() == R.id.module_mediaplayer_controller_bottom_play) {
             mControlWrapper.togglePlay();
         }
-    }
-
-    protected int getLayoutId() {
-        return R.layout.module_mediaplayer_video_bottom;
     }
 
     /**
@@ -169,6 +165,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
 
     @Override
     public void onPlayStateChanged(int playState) {
+        View viewPlayer = findViewById(R.id.module_mediaplayer_controller_bottom_play);
         switch (playState) {
             case PlayerType.StateType.STATE_IDLE:
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
@@ -186,7 +183,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
                 setVisibility(GONE);
                 break;
             case PlayerType.StateType.STATE_PLAYING:
-                mIvPlay.setSelected(true);
+                viewPlayer.setSelected(true);
                 if (mIsShowBottomProgress) {
                     if (mControlWrapper.isShowing()) {
                         mPbBottomProgress.setVisibility(GONE);
@@ -203,23 +200,24 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
                 mControlWrapper.startProgress();
                 break;
             case PlayerType.StateType.STATE_PAUSED:
-                mIvPlay.setSelected(false);
+                viewPlayer.setSelected(false);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
             case PlayerType.StateType.STATE_COMPLETED:
-                mIvPlay.setSelected(mControlWrapper.isPlaying());
+                viewPlayer.setSelected(mControlWrapper.isPlaying());
                 break;
         }
     }
 
     @Override
     public void onPlayerStateChanged(int playerState) {
+        View viewFull = findViewById(R.id.module_mediaplayer_controller_bottom_full);
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
-                mIvFullscreen.setSelected(false);
+                viewFull.setSelected(false);
                 break;
             case PlayerType.WindowType.FULL:
-                mIvFullscreen.setSelected(true);
+                viewFull.setSelected(true);
                 break;
         }
 
@@ -275,8 +273,10 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
         if (mTvTotalTime != null) {
             mTvTotalTime.setText(PlayerUtils.formatTime(duration));
         }
-        if (mTvCurrTime != null) {
-            mTvCurrTime.setText(PlayerUtils.formatTime(position));
+
+        TextView viewTime = findViewById(R.id.module_mediaplayer_controller_bottom_time);
+        if (viewTime != null) {
+            viewTime.setText(PlayerUtils.formatTime(position));
         }
 
 
@@ -337,8 +337,10 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
         }
         long duration = mControlWrapper.getDuration();
         long newPosition = (duration * progress) / mPbBottomProgress.getMax();
-        if (mTvCurrTime != null) {
-            mTvCurrTime.setText(PlayerUtils.formatTime(newPosition));
+
+        TextView viewTime = findViewById(R.id.module_mediaplayer_controller_bottom_time);
+        if (viewTime != null) {
+            viewTime.setText(PlayerUtils.formatTime(newPosition));
         }
     }
 

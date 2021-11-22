@@ -27,6 +27,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,7 +43,7 @@ import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
  * description: 控制器菜单 => 顶部 => 返回、标题、电量、时间
  * created by kalu on 2021/11/22
  */
-public class CustomTopView extends FrameLayout implements InterControlView {
+public class CustomTopView extends RelativeLayout implements InterControlView {
 
     private ControlWrapper mControlWrapper;
 //    private LinearLayout mLlTitleContainer;
@@ -68,7 +70,7 @@ public class CustomTopView extends FrameLayout implements InterControlView {
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_video_top, this, true);
         setFocusable(true);
         setFocusableInTouchMode(true);
-        setVisibility(GONE);
+        setVisibility(View.INVISIBLE);
 
         // 监听
         View view = findViewById(R.id.module_mediaplayer_controller_top_back);
@@ -234,10 +236,10 @@ public class CustomTopView extends FrameLayout implements InterControlView {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
-            if (null != extras){
+            if (null != extras) {
                 int current = extras.getInt("level", -1);// 获得当前电量
                 int total = extras.getInt("scale", -1);// 获得总电量
-                if(current != -1 && total != -1 && current<=total){
+                if (current != -1 && total != -1 && current <= total) {
                     int percent = current * 100 / total;
                     TextView viewBattery = findViewById(R.id.module_mediaplayer_controller_top_battery);
                     viewBattery.setText(percent + "");
