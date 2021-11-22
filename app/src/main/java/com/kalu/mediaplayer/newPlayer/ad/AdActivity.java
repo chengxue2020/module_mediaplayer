@@ -16,7 +16,7 @@ import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
-import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.DefaultController;
 
 public class AdActivity extends AppCompatActivity implements View.OnClickListener {
 

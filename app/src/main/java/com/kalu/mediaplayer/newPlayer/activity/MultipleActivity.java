@@ -14,7 +14,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.ui.player.VideoBuilder;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.DefaultController;
 
 
 public class MultipleActivity extends AppCompatActivity {

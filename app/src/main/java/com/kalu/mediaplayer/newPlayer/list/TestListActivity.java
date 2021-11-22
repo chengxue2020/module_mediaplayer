@@ -6,9 +6,6 @@ import com.kalu.mediaplayer.newPlayer.tiktok.TikTokListFragment;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.ui.old.other.VideoPlayerManager;
-
-
 /**
  * @author yc
  */
@@ -16,9 +13,6 @@ public class TestListActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (VideoPlayerManager.instance().onBackPressed()) {
-            return;
-        }
         super.onBackPressed();
     }
 
@@ -61,17 +55,13 @@ public class TestListActivity extends BaseActivity {
                     .add(R.id.container, new RecyclerView2Fragment())
                     .commit();
         }
-
     }
 
     @Override
     public void initListener() {
-
     }
 
     @Override
     public void initData() {
-
     }
-
 }

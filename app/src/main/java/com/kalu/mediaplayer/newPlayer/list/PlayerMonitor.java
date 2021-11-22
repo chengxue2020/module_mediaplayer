@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
+import lib.kalu.mediaplayer.ui.widget.InterControlView;
 
 public class PlayerMonitor implements InterControlView {
 

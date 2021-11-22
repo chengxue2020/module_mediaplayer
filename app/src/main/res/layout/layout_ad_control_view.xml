@@ -15,7 +15,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="5dp"
-            android:background="@drawable/module_mediaplayer_shape_back_bg"
+            android:background="@drawable/module_mediaplayer_selector_background"
             android:src="@drawable/module_mediaplayer_ic_player_back" />
 
 
@@ -47,7 +47,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="5dp"
-            android:background="@drawable/module_mediaplayer_shape_back_bg"
+            android:background="@drawable/module_mediaplayer_selector_background"
             android:src="@drawable/module_mediaplayer_selector_play_button" />
 
         <View
@@ -76,7 +76,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="5dp"
-            android:background="@drawable/module_mediaplayer_shape_back_bg"
+            android:background="@drawable/module_mediaplayer_selector_background"
             android:src="@drawable/module_mediaplayer_ic_player_volume_off" />
 
         <ImageView
@@ -85,7 +85,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="5dp"
-            android:background="@drawable/module_mediaplayer_shape_back_bg"
+            android:background="@drawable/module_mediaplayer_selector_background"
             android:src="@drawable/module_mediaplayer_selector_full_screen_button" />
     </LinearLayout>
 </FrameLayout>

@@ -24,8 +24,8 @@ import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoBuilder;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.ui.ui.view.CustomErrorView;
-import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomErrorView;
+import lib.kalu.mediaplayer.ui.widget.DefaultController;
 
 public class NormalActivity extends AppCompatActivity implements View.OnClickListener {
 

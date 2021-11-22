@@ -18,7 +18,7 @@ import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
+import lib.kalu.mediaplayer.ui.widget.InterControlView;
 
 public class TikTokView extends FrameLayout implements InterControlView {
 

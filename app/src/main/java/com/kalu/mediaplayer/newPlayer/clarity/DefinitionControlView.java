@@ -27,7 +27,7 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.ui.view.CustomBottomView;
+import lib.kalu.mediaplayer.ui.widget.CustomBottomView;
 
 public class DefinitionControlView extends CustomBottomView {
 

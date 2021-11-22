@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.Nullable;
@@ -17,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kalu.mediaplayer.demo.DemoActivity;
 import com.kalu.mediaplayer.m3u8.M3u8Activity;
 import com.kalu.mediaplayer.music.MusicPlayerActivity;
-import com.kalu.mediaplayer.oldPlayer.OldActivity;
 
 import java.util.List;
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(TypeActivity.class);
                 break;
             case R.id.tv_3:
-                startActivity(OldActivity.class);
+                Toast.makeText(getApplicationContext(), "null", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_4:
                 startCheckService();

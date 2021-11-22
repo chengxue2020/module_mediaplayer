@@ -10,19 +10,19 @@
         android:layout_height="40dp"
         android:layout_gravity="center|start"
         android:layout_margin="10dp"
-        android:background="@drawable/module_mediaplayer_shape_back_bg"
-        android:padding="10dp"
+        android:background="@drawable/module_mediaplayer_selector_background"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:padding="10dp"
         android:src="@drawable/module_mediaplayer_selector_lock_button"
         android:visibility="gone"
         tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/loading"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:indeterminateDrawable="@drawable/module_mediaplayer_pb_loading_ring"
         android:indeterminateDuration="2000"

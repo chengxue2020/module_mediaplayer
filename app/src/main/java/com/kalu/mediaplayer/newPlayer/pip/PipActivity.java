@@ -16,8 +16,8 @@ import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.ui.ui.pip.FloatVideoManager;
-import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.pip.FloatVideoManager;
+import lib.kalu.mediaplayer.ui.widget.DefaultController;
 
 public class PipActivity extends AppCompatActivity {
 

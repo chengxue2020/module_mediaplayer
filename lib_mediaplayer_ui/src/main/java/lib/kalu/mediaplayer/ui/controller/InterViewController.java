@@ -15,7 +15,7 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.ui.controller;
 
-import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
+import lib.kalu.mediaplayer.ui.widget.InterControlView;
 
 /**
  * <pre>

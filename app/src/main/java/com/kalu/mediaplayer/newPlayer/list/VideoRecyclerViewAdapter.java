@@ -18,7 +18,7 @@ import com.kalu.mediaplayer.R;
 import java.util.List;
 
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.ui.ui.view.CustomPrepareView;
+import lib.kalu.mediaplayer.ui.widget.CustomPrepareView;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecyclerViewAdapter.VideoHolder> {
 

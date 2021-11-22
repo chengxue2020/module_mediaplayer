@@ -18,8 +18,8 @@ import java.util.List;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.ui.view.CustomBottomView;
-import lib.kalu.mediaplayer.ui.ui.view.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomBottomView;
+import lib.kalu.mediaplayer.ui.widget.DefaultController;
 
 public class ClarityActivity extends AppCompatActivity implements View.OnClickListener {
 

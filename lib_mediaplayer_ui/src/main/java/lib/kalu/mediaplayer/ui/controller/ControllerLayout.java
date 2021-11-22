@@ -45,7 +45,7 @@ import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.tool.NetworkUtils;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.tool.StatesCutoutUtils;
-import lib.kalu.mediaplayer.ui.ui.view.InterControlView;
+import lib.kalu.mediaplayer.ui.widget.InterControlView;
 
 
 /**
