@@ -7,7 +7,7 @@ https://mvnrepository.com/search?q=exoplayer
 ```
 
 #
-#### Tiso List
+#### Todo List
 ```
 1. 持续优化，删除冗余模块
 2. 适配TV
