@@ -36,28 +36,15 @@ import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.controller.IGestureComponent;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
- * 手势控制
- */
-
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2017/11/9
- *     desc  : 手势控制
- *     revise: 用于滑动改变亮度和音量的功能
- * </pre>
+ * description:手势控制, 用于滑动改变亮度和音量的功能
+ * created by kalu on 2021/11/23
  */
 public class CustomGestureView extends FrameLayout implements IGestureComponent {
 
-    private Context mContext;
     private ControlWrapper mControlWrapper;
-    private LinearLayout mLlCenterContainer;
-    private ImageView mIvIcon;
-    private TextView mTvPercent;
-    private ProgressBar mProPercent;
 
     public CustomGestureView(@NonNull Context context) {
         super(context);
@@ -74,29 +61,16 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
         init(context);
     }
 
-    private void init(Context context){
+    private void init(Context context) {
+        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_video_gesture, this, true);
         setFocusable(true);
         setFocusableInTouchMode(true);
-        this.mContext = context;
-        setVisibility(GONE);
-        View view = LayoutInflater.from(mContext).inflate(
-                R.layout.module_mediaplayer_video_gesture, this, true);
-        initFindViewById(view);
+        setVisibility(INVISIBLE);
         initListener();
     }
 
-    private void initFindViewById(View view) {
-        mLlCenterContainer = view.findViewById(R.id.ll_center_container);
-        mIvIcon = view.findViewById(R.id.iv_icon);
-        mTvPercent = view.findViewById(R.id.tv_percent);
-        mProPercent = view.findViewById(R.id.pro_percent);
-
-    }
-
     private void initListener() {
-
     }
-
 
     @Override
     public void attach(@NonNull ControlWrapper controlWrapper) {
@@ -124,8 +98,9 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
     @Override
     public void onStartSlide() {
         mControlWrapper.hide();
-        mLlCenterContainer.setVisibility(VISIBLE);
-        mLlCenterContainer.setAlpha(1f);
+        View viewRoot = findViewById(R.id.module_mediaplayer_controller_gesture_root);
+        viewRoot.setVisibility(VISIBLE);
+        viewRoot.setAlpha(1f);
     }
 
     /**
@@ -134,14 +109,15 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
      */
     @Override
     public void onStopSlide() {
-        mLlCenterContainer.animate()
+        View viewRoot = findViewById(R.id.module_mediaplayer_controller_gesture_root);
+        viewRoot.animate()
                 .alpha(0f)
                 .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        mLlCenterContainer.setVisibility(GONE);
+                        viewRoot.setVisibility(GONE);
                     }
                 })
                 .start();
@@ -149,47 +125,54 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
 
     /**
      * 滑动调整进度
-     * @param slidePosition 滑动进度
+     *
+     * @param slidePosition   滑动进度
      * @param currentPosition 当前播放进度
-     * @param duration 视频总长度
+     * @param duration        视频总长度
      */
     @Override
     public void onPositionChange(int slidePosition, int currentPosition, int duration) {
-        mProPercent.setVisibility(GONE);
+        LogUtil.log("onPositionChange => slidePosition = " + slidePosition + ", currentPosition = " + currentPosition + ", duration = " + duration);
+        TextView viewText = findViewById(R.id.module_mediaplayer_controller_gesture_text);
         if (slidePosition > currentPosition) {
-            mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_player_fast_forward);
+            viewText.setText("快进\n" + String.format("%s/%s", PlayerUtils.formatTime(slidePosition), PlayerUtils.formatTime(duration)));
         } else {
-            mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_player_fast_rewind);
+            viewText.setText("快退\n" + String.format("%s/%s", PlayerUtils.formatTime(slidePosition), PlayerUtils.formatTime(duration)));
         }
-        mTvPercent.setText(String.format("%s/%s", PlayerUtils.formatTime(slidePosition), PlayerUtils.formatTime(duration)));
+        ProgressBar viewProgress = findViewById(R.id.module_mediaplayer_controller_gesture_progress);
+        viewProgress.setVisibility(GONE);
     }
 
     /**
      * 滑动调整亮度
+     *
      * @param percent 亮度百分比
      */
     @Override
     public void onBrightnessChange(int percent) {
-        mProPercent.setVisibility(VISIBLE);
-        mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_palyer_brightness);
-        mTvPercent.setText(percent + "%");
-        mProPercent.setProgress(percent);
+        TextView viewText = findViewById(R.id.module_mediaplayer_controller_gesture_text);
+        viewText.setText("亮度\n" + percent + "%");
+        ProgressBar viewProgress = findViewById(R.id.module_mediaplayer_controller_gesture_progress);
+        viewProgress.setVisibility(VISIBLE);
+        viewProgress.setProgress(percent);
     }
 
     /**
      * 滑动调整音量
+     *
      * @param percent 音量百分比
      */
     @Override
     public void onVolumeChange(int percent) {
-        mProPercent.setVisibility(VISIBLE);
+        TextView viewText = findViewById(R.id.module_mediaplayer_controller_gesture_text);
         if (percent <= 0) {
-            mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_player_volume_off);
+            viewText.setText("静音\n" + percent + "%");
         } else {
-            mIvIcon.setImageResource(R.drawable.module_mediaplayer_ic_player_volume_up);
+            viewText.setText("音量\n" + percent + "%");
         }
-        mTvPercent.setText(percent + "%");
-        mProPercent.setProgress(percent);
+        ProgressBar viewProgress = findViewById(R.id.module_mediaplayer_controller_gesture_progress);
+        viewProgress.setVisibility(VISIBLE);
+        viewProgress.setProgress(percent);
     }
 
     @Override

@@ -14,9 +14,10 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="14dp"
         android:background="@drawable/module_mediaplayer_shape_battery_background"
-        android:gravity="center"
-        android:paddingLeft="5dp"
-        android:paddingRight="2dp"
+        android:gravity="center_vertical|right"
+        android:maxEms="2"
+        android:minEms="2"
+        android:paddingRight="3dp"
         android:textColor="@android:color/white"
         android:textSize="8sp" />
 
