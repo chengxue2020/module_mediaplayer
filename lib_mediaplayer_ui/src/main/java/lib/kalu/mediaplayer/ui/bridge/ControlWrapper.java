@@ -19,9 +19,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.ui.controller.ImplController;
 import lib.kalu.mediaplayer.ui.player.InterVideoPlayer;
@@ -290,6 +293,12 @@ public class ControlWrapper implements InterVideoPlayer, ImplController {
     @Override
     public int getCutoutHeight() {
         return mController.getCutoutHeight();
+    }
+
+    @Nullable
+    @Override
+    public ImageView getPrepare() {
+        return null;
     }
 
     @Override

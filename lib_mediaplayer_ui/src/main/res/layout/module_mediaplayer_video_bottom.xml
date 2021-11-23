@@ -7,7 +7,7 @@
 
     <!-- jindutiao -->
     <ProgressBar
-        android:id="@+id/pb_bottom_progress"
+        android:id="@+id/module_mediaplayer_controller_bottom_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -16,12 +16,11 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:max="1000"
-        android:progressDrawable="@drawable/module_mediaplayer_progress_bar_style"
+        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
         android:visibility="invisible" />
 
-
     <LinearLayout
-        android:id="@+id/ll_bottom_container"
+        android:id="@+id/module_mediaplayer_controller_bottom_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="14dp"
@@ -62,7 +61,7 @@
             tools:text="00:00" />
 
         <SeekBar
-            android:id="@+id/seekBar"
+            android:id="@+id/module_mediaplayer_controller_bottom_seek"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
@@ -74,12 +73,14 @@
             android:max="1000"
             android:maxHeight="2dp"
             android:minHeight="2dp"
-            android:progressDrawable="@drawable/module_mediaplayer_seek_progress"
-            android:thumb="@drawable/module_mediaplayer_seek_thumb"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
+            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
             android:visibility="visible" />
 
         <TextView
-            android:id="@+id/tv_total_time"
+            android:id="@+id/module_mediaplayer_controller_bottom_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"

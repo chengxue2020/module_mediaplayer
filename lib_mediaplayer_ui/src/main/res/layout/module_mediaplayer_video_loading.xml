@@ -11,7 +11,7 @@
         android:id="@+id/pb_loading_ring"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:indeterminateDrawable="@drawable/module_mediaplayer_pb_loading_ring"
+        android:indeterminateDrawable="@drawable/module_mediaplayer_shape_loading"
         android:visibility="visible" />
     <ProgressBar
         android:id="@+id/pb_loading_qq"

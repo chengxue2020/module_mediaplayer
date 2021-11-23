@@ -24,7 +24,7 @@ import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.widget.pip.FloatVideoManager;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 /**
  * 悬浮播放终极版
@@ -33,7 +33,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
 
     private FloatVideoManager mPIPManager;
     private VideoLayout mVideoView;
-    private DefaultController mController;
+    private CustomCenterController mController;
     private List<VideoInfoBean> mVideos;
     private LinearLayoutManager mLinearLayoutManager;
 
@@ -47,7 +47,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
     protected void initView() {
         mPIPManager = FloatVideoManager.getInstance(this);
         mVideoView = PlayerConfigManager.instance().get(FloatVideoManager.PIP);
-        mController = new DefaultController(this);
+        mController = new CustomCenterController(this);
         initRecyclerView();
     }
 

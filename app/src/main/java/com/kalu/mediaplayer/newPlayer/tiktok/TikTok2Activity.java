@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 
 /**
@@ -38,7 +38,7 @@ public class TikTok2Activity extends AppCompatActivity {
     private Tiktok2Adapter mTiktok2Adapter;
     private VerticalViewPager mViewPager;
     private VideoLayout mVideoPlayerLayout;
-    private DefaultController mController;
+    private CustomCenterController mController;
 
     private static final String KEY_INDEX = "index";
 
@@ -121,7 +121,7 @@ public class TikTok2Activity extends AppCompatActivity {
         mVideoPlayerLayout.setLooping(true);
         //以下只能二选一，看你的需求
         mVideoPlayerLayout.setRenderViewFactory(TikTokRenderViewFactory.create());
-        mController = new DefaultController(this);
+        mController = new CustomCenterController(this);
         mVideoPlayerLayout.setController(mController);
     }
 

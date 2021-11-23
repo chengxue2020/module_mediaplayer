@@ -16,7 +16,7 @@ import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 public class AdActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,7 +27,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
     private Button mBtnCrop;
     private Button mBtnGif;
     private static final String URL_AD = "https://gslb.miaopai.com/stream/IR3oMYDhrON5huCmf7sHCfnU5YKEkgO2.mp4";
-    DefaultController controller;
+    CustomCenterController controller;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
     }
 
     private void initVideoPlayer() {
-        controller = new DefaultController(this);
+        controller = new CustomCenterController(this);
         AdControlView adControlView = new AdControlView(this);
         adControlView.setListener(new AdControlView.AdControlListener() {
             @Override
@@ -95,7 +95,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
         });
         controller.addControlComponent(adControlView);
         //设置视频背景图
-        Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
+        Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
         //设置控制器
         mVideoPlayerLayout.setController(controller);
 //        HttpProxyCacheServer cacheServer = ProxyVideoCacheManager.getProxy(this);

@@ -17,7 +17,7 @@ import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.widget.pip.FloatVideoManager;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 public class PipActivity extends AppCompatActivity {
 
@@ -69,7 +69,7 @@ public class PipActivity extends AppCompatActivity {
     private void initVideoPlayer() {
         mPIPManager = FloatVideoManager.getInstance(this);
         VideoLayout videoView = PlayerConfigManager.instance().get(FloatVideoManager.PIP);
-        DefaultController controller = new DefaultController(this);
+        CustomCenterController controller = new CustomCenterController(this);
         videoView.setController(controller);
         if (mPIPManager.isStartFloatWindow()) {
             mPIPManager.stopFloatWindow();
@@ -77,7 +77,7 @@ public class PipActivity extends AppCompatActivity {
             controller.setPlayState(videoView.getCurrentPlayState());
         } else {
             mPIPManager.setActClass(PipActivity.class);
-            ImageView thumb = controller.getThumb();
+            ImageView thumb = controller.getPrepare();
             Glide.with(this)
                     .load(R.drawable.image_default)
                     .placeholder(android.R.color.darker_gray)

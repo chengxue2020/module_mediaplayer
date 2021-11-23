@@ -44,23 +44,13 @@ import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2017/11/9
- *     desc  : 底部控制栏视图
- *     revise: 用于普通播放器
- * </pre>
+ * description: 底部控制栏视图
+ * created by kalu on 2021/11/23
  */
 @Keep
 public class CustomBottomView extends FrameLayout implements InterControlView, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     protected ControlWrapper mControlWrapper;
-    private LinearLayout mLlBottomContainer;
-    private SeekBar mSeekBar;
-    private TextView mTvTotalTime;
-//    private TextView mTvClarity;
-    private ProgressBar mPbBottomProgress;
     private boolean mIsDragging;
     private boolean mIsShowBottomProgress = true;
 
@@ -80,15 +70,15 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
     }
 
     private void init() {
-        View view = LayoutInflater.from(getContext()).inflate(getLayoutId(), this, true);
-        initFindViewById(view);
+        LayoutInflater.from(getContext()).inflate(getLayoutId(), this, true);
         setFocusable(true);
         setFocusableInTouchMode(true);
         setVisibility(View.INVISIBLE);
         initListener();
         //5.1以下系统SeekBar高度需要设置成WRAP_CONTENT
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            mPbBottomProgress.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
+            progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
     }
 
@@ -96,15 +86,10 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
         return R.layout.module_mediaplayer_video_bottom;
     }
 
-    private void initFindViewById(View view) {
-        mLlBottomContainer = view.findViewById(R.id.ll_bottom_container);
-        mSeekBar = view.findViewById(R.id.seekBar);
-        mTvTotalTime = view.findViewById(R.id.tv_total_time);
-        mPbBottomProgress = view.findViewById(R.id.pb_bottom_progress);
-    }
-
     private void initListener() {
-        mSeekBar.setOnSeekBarChangeListener(this);
+
+        SeekBar seekBar = findViewById(R.id.module_mediaplayer_controller_bottom_seek);
+        seekBar.setOnSeekBarChangeListener(this);
 
         View viewFull = findViewById(R.id.module_mediaplayer_controller_bottom_full);
         viewFull.setOnClickListener(this);
@@ -141,24 +126,26 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
 
     @Override
     public void onVisibilityChanged(boolean isVisible, Animation anim) {
+        View view = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
+        View viewRoot = findViewById(R.id.module_mediaplayer_controller_bottom_root);
         if (isVisible) {
-            mLlBottomContainer.setVisibility(VISIBLE);
+            viewRoot.setVisibility(VISIBLE);
             if (anim != null) {
-                mLlBottomContainer.startAnimation(anim);
+                viewRoot.startAnimation(anim);
             }
             if (mIsShowBottomProgress) {
-                mPbBottomProgress.setVisibility(GONE);
+                view.setVisibility(GONE);
             }
         } else {
-            mLlBottomContainer.setVisibility(GONE);
+            viewRoot.setVisibility(GONE);
             if (anim != null) {
-                mLlBottomContainer.startAnimation(anim);
+                viewRoot.startAnimation(anim);
             }
             if (mIsShowBottomProgress) {
-                mPbBottomProgress.setVisibility(VISIBLE);
+                view.setVisibility(VISIBLE);
                 AlphaAnimation animation = new AlphaAnimation(0f, 1f);
                 animation.setDuration(300);
-                mPbBottomProgress.startAnimation(animation);
+                view.startAnimation(animation);
             }
         }
     }
@@ -166,14 +153,17 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
     @Override
     public void onPlayStateChanged(int playState) {
         View viewPlayer = findViewById(R.id.module_mediaplayer_controller_bottom_play);
+        View viewRoot = findViewById(R.id.module_mediaplayer_controller_bottom_root);
+        ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
         switch (playState) {
             case PlayerType.StateType.STATE_IDLE:
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 setVisibility(GONE);
-                mPbBottomProgress.setProgress(0);
-                mPbBottomProgress.setSecondaryProgress(0);
-                mSeekBar.setProgress(0);
-                mSeekBar.setSecondaryProgress(0);
+                progressBar.setProgress(0);
+                progressBar.setSecondaryProgress(0);
+                SeekBar seekBar = findViewById(R.id.module_mediaplayer_controller_bottom_seek);
+                seekBar.setProgress(0);
+                seekBar.setSecondaryProgress(0);
                 break;
             case PlayerType.StateType.STATE_START_ABORT:
             case PlayerType.StateType.STATE_PREPARING:
@@ -186,14 +176,14 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
                 viewPlayer.setSelected(true);
                 if (mIsShowBottomProgress) {
                     if (mControlWrapper.isShowing()) {
-                        mPbBottomProgress.setVisibility(GONE);
-                        mLlBottomContainer.setVisibility(VISIBLE);
+                        progressBar.setVisibility(GONE);
+                        viewRoot.setVisibility(VISIBLE);
                     } else {
-                        mLlBottomContainer.setVisibility(GONE);
-                        mPbBottomProgress.setVisibility(VISIBLE);
+                        viewRoot.setVisibility(GONE);
+                        progressBar.setVisibility(VISIBLE);
                     }
                 } else {
-                    mLlBottomContainer.setVisibility(GONE);
+                    viewRoot.setVisibility(GONE);
                 }
                 setVisibility(VISIBLE);
                 //开始刷新进度
@@ -212,6 +202,8 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
     @Override
     public void onPlayerStateChanged(int playerState) {
         View viewFull = findViewById(R.id.module_mediaplayer_controller_bottom_full);
+        View viewRoot = findViewById(R.id.module_mediaplayer_controller_bottom_root);
+        ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
                 viewFull.setSelected(false);
@@ -226,14 +218,14 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
             int orientation = activity.getRequestedOrientation();
             int cutoutHeight = mControlWrapper.getCutoutHeight();
             if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                mLlBottomContainer.setPadding(0, 0, 0, 0);
-                mPbBottomProgress.setPadding(0, 0, 0, 0);
+                viewRoot.setPadding(0, 0, 0, 0);
+                progressBar.setPadding(0, 0, 0, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                mLlBottomContainer.setPadding(cutoutHeight, 0, 0, 0);
-                mPbBottomProgress.setPadding(cutoutHeight, 0, 0, 0);
+                viewRoot.setPadding(cutoutHeight, 0, 0, 0);
+                progressBar.setPadding(cutoutHeight, 0, 0, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-                mLlBottomContainer.setPadding(0, 0, cutoutHeight, 0);
-                mPbBottomProgress.setPadding(0, 0, cutoutHeight, 0);
+                viewRoot.setPadding(0, 0, cutoutHeight, 0);
+                progressBar.setPadding(0, 0, cutoutHeight, 0);
             }
         }
     }
@@ -250,28 +242,31 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
             return;
         }
 
-        if (mSeekBar != null) {
+        SeekBar seekBar = findViewById(R.id.module_mediaplayer_controller_bottom_seek);
+        if (seekBar != null) {
+            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
             if (duration > 0) {
-                mSeekBar.setEnabled(true);
-                int pos = (int) (position * 1.0 / duration * mSeekBar.getMax());
-                mSeekBar.setProgress(pos);
-                mPbBottomProgress.setProgress(pos);
+                seekBar.setEnabled(true);
+                int pos = (int) (position * 1.0 / duration * seekBar.getMax());
+                seekBar.setProgress(pos);
+                progressBar.setProgress(pos);
             } else {
-                mSeekBar.setEnabled(false);
+                seekBar.setEnabled(false);
             }
             int percent = mControlWrapper.getBufferedPercentage();
             if (percent >= 95) {
                 //解决缓冲进度不能100%问题
-                mSeekBar.setSecondaryProgress(mSeekBar.getMax());
-                mPbBottomProgress.setSecondaryProgress(mPbBottomProgress.getMax());
+                seekBar.setSecondaryProgress(seekBar.getMax());
+                progressBar.setSecondaryProgress(progressBar.getMax());
             } else {
-                mSeekBar.setSecondaryProgress(percent * 10);
-                mPbBottomProgress.setSecondaryProgress(percent * 10);
+                seekBar.setSecondaryProgress(percent * 10);
+                progressBar.setSecondaryProgress(percent * 10);
             }
         }
 
-        if (mTvTotalTime != null) {
-            mTvTotalTime.setText(PlayerUtils.formatTime(duration));
+        TextView viewTotal = findViewById(R.id.module_mediaplayer_controller_bottom_total);
+        if (viewTotal != null) {
+            viewTotal.setText(PlayerUtils.formatTime(duration));
         }
 
         TextView viewTime = findViewById(R.id.module_mediaplayer_controller_bottom_time);
@@ -322,8 +317,9 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
         long duration = mControlWrapper.getDuration();
-        long newPosition = (duration * seekBar.getProgress()) / mPbBottomProgress.getMax();
+        long newPosition = (duration * seekBar.getProgress()) / progressBar.getMax();
         mControlWrapper.seekTo((int) newPosition);
         mIsDragging = false;
         mControlWrapper.startProgress();
@@ -335,8 +331,9 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
         if (!fromUser) {
             return;
         }
+        ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
         long duration = mControlWrapper.getDuration();
-        long newPosition = (duration * progress) / mPbBottomProgress.getMax();
+        long newPosition = (duration * progress) / progressBar.getMax();
 
         TextView viewTime = findViewById(R.id.module_mediaplayer_controller_bottom_time);
         if (viewTime != null) {

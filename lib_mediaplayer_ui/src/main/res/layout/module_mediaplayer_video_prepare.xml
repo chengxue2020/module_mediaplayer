@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/iv_thumb"
+        android:id="@+id/module_mediaplayer_controller_prepare_thumb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:background="#000000"
+        android:scaleType="centerCrop"
+        android:src="@null"
+        android:visibility="visible" />
 
     <ImageView
-        android:id="@+id/iv_start_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:id="@+id/module_mediaplayer_controller_prepare_play"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:src="@drawable/module_mediaplayer_selector_play_button" />
+        android:src="@drawable/module_mediaplayer_selector_play_button"
+        android:visibility="invisible" />
 
+    <!-- 转圈 -->
     <ProgressBar
-        android:id="@+id/pb_loading"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/module_mediaplayer_pb_loading_ring"
+        android:id="@+id/module_mediaplayer_controller_prepare_loading"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/module_mediaplayer_shape_loading"
         android:indeterminateDuration="2000"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:visibility="invisible" />
 
     <FrameLayout
         android:id="@+id/fl_net_warning"
@@ -70,4 +73,4 @@
         </LinearLayout>
     </FrameLayout>
 
-</FrameLayout>
+</RelativeLayout>

@@ -46,7 +46,6 @@ import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 public class CustomTopView extends RelativeLayout implements InterControlView {
 
     private ControlWrapper mControlWrapper;
-//    private LinearLayout mLlTitleContainer;
 
     // 电量监控
     private BatteryReceiver mBatteryReceiver = new BatteryReceiver();

@@ -3,4 +3,6 @@
     <color name="module_mediaplayer_color_bc000000">#bc000000</color>
     <color name="module_mediaplayer_color_40000000">#40000000</color>
     <color name="module_mediaplayer_color_d03e49">#d03e49</color>
+    <color name="module_mediaplayer_color_5ad03e49">#5ad03e49</color>
+    <color name="module_mediaplayer_color_96d03e49">#96d03e49</color>
 </resources>

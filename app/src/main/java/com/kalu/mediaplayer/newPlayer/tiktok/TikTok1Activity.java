@@ -30,7 +30,7 @@ import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 
 /**
@@ -44,7 +44,7 @@ public class TikTok1Activity extends AppCompatActivity {
     protected RecyclerView mRecyclerView;
     protected PagerLayoutManager mLinearLayoutManager;
     protected VideoLayout mVideoView;
-    protected DefaultController mController;
+    protected CustomCenterController mController;
 
     /**
      * 当前播放的位置
@@ -131,7 +131,7 @@ public class TikTok1Activity extends AppCompatActivity {
                 }
             }
         });
-        mController = new DefaultController(this);
+        mController = new CustomCenterController(this);
         mVideoView.setController(mController);
     }
 

@@ -77,7 +77,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
             mPlayerContainer = itemView.findViewById(R.id.player_container);
             mTitle = itemView.findViewById(R.id.tv_title);
             mPrepareView = itemView.findViewById(R.id.prepare_view);
-            mThumb = mPrepareView.getThumb();
+            mThumb = mPrepareView.getPrepare();
             if (mOnItemChildClickListener != null) {
                 mPlayerContainer.setOnClickListener(this);
             }

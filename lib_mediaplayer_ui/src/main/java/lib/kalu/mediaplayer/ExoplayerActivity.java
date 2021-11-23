@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -45,12 +45,13 @@ public final class ExoplayerActivity extends AppCompatActivity {
 
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         // 基础视频播放器
-        DefaultController controller = new DefaultController(this);
+        CustomCenterController controller = new CustomCenterController(this);
         controller.setEnableOrientation(false);
+        controller.setPrepareBackground(Color.RED);
 
-        // 设置视频背景图
-        ColorDrawable colorDrawable = new ColorDrawable(Color.BLACK);
-        controller.getThumb().setImageDrawable(colorDrawable);
+//        // 设置视频背景图
+//        ColorDrawable colorDrawable = new ColorDrawable(Color.RED);
+//        controller.getThumb().setImageDrawable(colorDrawable);
 
         // 控制器
         videoLayout.setController(controller);

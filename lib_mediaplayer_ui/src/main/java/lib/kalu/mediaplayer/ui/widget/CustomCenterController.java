@@ -18,16 +18,13 @@ package lib.kalu.mediaplayer.ui.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.Keep;
@@ -47,9 +44,9 @@ import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
  * created by kalu on 2021/9/16
  */
 @Keep
-public class DefaultController extends ControllerLayoutDispatchTouchEvent {
+public class CustomCenterController extends ControllerLayoutDispatchTouchEvent {
 
-    private ImageView thumb;
+    private ImageView mThumb;
     private CustomTopView titleView;
     private CustomBottomView vodControlView;
     private CustomLiveControlView liveControlView;
@@ -60,21 +57,21 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent {
      */
     public static boolean IS_LIVE = false;
 
-    public DefaultController(@NonNull Context context) {
+    public CustomCenterController(@NonNull Context context) {
         this(context, null);
     }
 
-    public DefaultController(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CustomCenterController(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DefaultController(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public CustomCenterController(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
     public int initLayout() {
-        return R.layout.module_mediaplayer_video_standard;
+        return R.layout.module_mediaplayer_video_center;
     }
 
     @Override
@@ -127,7 +124,7 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent {
 
         //添加与加载视图界面view，准备播放界面
         CustomPrepareView prepareView = new CustomPrepareView(getContext());
-        thumb = prepareView.getThumb();
+        mThumb = prepareView.getPrepare();
         prepareView.setClickStart();
         this.addControlComponent(prepareView);
 
@@ -347,8 +344,10 @@ public class DefaultController extends ControllerLayoutDispatchTouchEvent {
 
     }
 
-    public ImageView getThumb() {
-        return thumb;
+    @Nullable
+    @Override
+    public ImageView getPrepare() {
+        return mThumb;
     }
 
     public void setTitle(String title) {

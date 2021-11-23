@@ -29,7 +29,7 @@ import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 public class RecyclerView2Fragment extends Fragment {
 
@@ -39,7 +39,7 @@ public class RecyclerView2Fragment extends Fragment {
     protected LinearLayoutManager mLinearLayoutManager;
 
     protected VideoLayout mVideoView;
-    protected DefaultController mController;
+    protected CustomCenterController mController;
 
     /**
      * 当前播放的位置
@@ -114,7 +114,7 @@ public class RecyclerView2Fragment extends Fragment {
                 }
             }
         });
-        mController = new DefaultController(context);
+        mController = new CustomCenterController(context);
         mVideoView.setController(mController);
     }
 

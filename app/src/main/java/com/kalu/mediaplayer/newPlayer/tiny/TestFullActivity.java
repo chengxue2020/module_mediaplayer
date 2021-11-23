@@ -13,7 +13,7 @@ import com.kalu.mediaplayer.R;
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 
 /**
@@ -70,9 +70,9 @@ public class TestFullActivity extends BaseActivity implements View.OnClickListen
         mBtnTiny1 = (Button) findViewById(R.id.btn_tiny_1);
         mBtnTiny2 = (Button) findViewById(R.id.btn_tiny_2);
 
-        DefaultController controller = new DefaultController(this);
+        CustomCenterController controller = new CustomCenterController(this);
         //设置视频背景图
-        Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
+        Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.setUrl(ConstantVideo.VideoPlayerList[0]);

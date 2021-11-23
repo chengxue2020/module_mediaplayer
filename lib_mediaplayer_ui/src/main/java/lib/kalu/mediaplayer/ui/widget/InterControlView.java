@@ -17,10 +17,12 @@ package lib.kalu.mediaplayer.ui.widget;
 
 import android.view.View;
 import android.view.animation.Animation;
+import android.widget.ImageView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
 
 
@@ -96,4 +98,7 @@ public interface InterControlView {
      */
     void onLockStateChanged(boolean isLocked);
 
+    default ImageView getPrepare() {
+        return null;
+    }
 }

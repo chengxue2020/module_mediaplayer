@@ -19,7 +19,7 @@ import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.widget.CustomBottomView;
-import lib.kalu.mediaplayer.ui.widget.DefaultController;
+import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
 public class ClarityActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -81,7 +81,7 @@ public class ClarityActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initVideoPlayer() {
-        DefaultController controller = new DefaultController(this);
+        CustomCenterController controller = new CustomCenterController(this);
         CustomBottomView bottomView = controller.getBottomView();
         if (bottomView != null) {
             controller.removeControlComponent(bottomView);
@@ -103,7 +103,7 @@ public class ClarityActivity extends AppCompatActivity implements View.OnClickLi
         mDefinitionControlView.setData(videos);
         controller.addControlComponent(mDefinitionControlView);
         //设置视频背景图
-        Glide.with(this).load(R.drawable.image_default).into(controller.getThumb());
+        Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.setUrl(clarites.get(0).getVideoUrl());

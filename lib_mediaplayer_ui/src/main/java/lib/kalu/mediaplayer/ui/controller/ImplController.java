@@ -15,6 +15,16 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.ui.controller;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.ImageView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * <pre>
  *     @author yangchong
@@ -103,4 +113,38 @@ public interface ImplController {
      * 获取刘海的高度
      */
     int getCutoutHeight();
+
+
+    /************************/
+
+    @Nullable
+    default ImageView getPrepare() {
+        return null;
+    }
+
+    default void setPrepareBackground(@ColorInt int color) {
+        ImageView view = getPrepare();
+        if (null != view) {
+            view.setImageDrawable(null);
+            view.setBackgroundColor(color);
+        }
+    }
+
+    default void setPrepareImageResource(@DrawableRes int resId) {
+        ImageView view = getPrepare();
+        if (null != view) {
+            view.setBackgroundColor(Color.TRANSPARENT);
+            view.setImageResource(resId);
+        }
+    }
+
+    default void setPrepareImageDrawable(@NonNull Drawable drawable) {
+        ImageView view = getPrepare();
+        if (null != view) {
+            view.setBackgroundColor(Color.TRANSPARENT);
+            view.setImageDrawable(drawable);
+        }
+    }
+
+    /************************/
 }

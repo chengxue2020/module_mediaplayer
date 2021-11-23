@@ -81,5 +81,5 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_gravity="top"
-        android:progressDrawable="@drawable/module_mediaplayer_progress_bar_style" />
+        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress" />
 </FrameLayout>

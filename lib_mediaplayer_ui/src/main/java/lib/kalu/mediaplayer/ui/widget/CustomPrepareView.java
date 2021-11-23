@@ -45,13 +45,8 @@ import lib.kalu.mediaplayer.ui.config.PlayerType;
  */
 public class CustomPrepareView extends FrameLayout implements InterControlView {
 
-    private Context mContext;
     private ControlWrapper mControlWrapper;
-    private ImageView mIvThumb;
-    private ImageView mIvStartPlay;
-    private ProgressBar mPbLoading;
     private FrameLayout mFlNetWarning;
-    private TextView mTvMessage;
     private TextView mTvStart;
 
     public CustomPrepareView(@NonNull Context context) {
@@ -70,21 +65,16 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
     }
 
 
-    private void init(Context context){
+    private void init(Context context) {
         setFocusable(true);
         setFocusableInTouchMode(true);
-        this.mContext = context;
         View view = LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_prepare, this, true);
         initFindViewById(view);
         initListener();
     }
 
     private void initFindViewById(View view) {
-        mIvThumb = view.findViewById(R.id.iv_thumb);
-        mIvStartPlay = view.findViewById(R.id.iv_start_play);
-        mPbLoading = view.findViewById(R.id.pb_loading);
         mFlNetWarning = view.findViewById(R.id.fl_net_warning);
-        mTvMessage = view.findViewById(R.id.tv_message);
         mTvStart = view.findViewById(R.id.tv_start);
     }
 
@@ -128,13 +118,16 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
 
     @Override
     public void onPlayStateChanged(int playState) {
+        View viewLoading = findViewById(R.id.module_mediaplayer_controller_prepare_loading);
+        View viewPlay = findViewById(R.id.module_mediaplayer_controller_prepare_play);
+        View viewThumb = findViewById(R.id.module_mediaplayer_controller_prepare_thumb);
         switch (playState) {
             case PlayerType.StateType.STATE_PREPARING:
                 bringToFront();
                 setVisibility(VISIBLE);
-                mIvStartPlay.setVisibility(View.GONE);
+                viewPlay.setVisibility(View.GONE);
                 mFlNetWarning.setVisibility(GONE);
-                mPbLoading.setVisibility(View.VISIBLE);
+                viewLoading.setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_PLAYING:
             case PlayerType.StateType.STATE_PAUSED:
@@ -148,10 +141,10 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
             case PlayerType.StateType.STATE_IDLE:
                 setVisibility(VISIBLE);
                 bringToFront();
-                mPbLoading.setVisibility(View.GONE);
+                viewLoading.setVisibility(View.GONE);
                 mFlNetWarning.setVisibility(GONE);
-                mIvStartPlay.setVisibility(View.VISIBLE);
-                mIvThumb.setVisibility(View.VISIBLE);
+                viewPlay.setVisibility(View.VISIBLE);
+                viewThumb.setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_START_ABORT:
                 setVisibility(VISIBLE);
@@ -163,20 +156,19 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
 
     @Override
     public void onPlayerStateChanged(int playerState) {
-
     }
 
     @Override
     public void setProgress(int duration, int position) {
-
     }
 
     @Override
     public void onLockStateChanged(boolean isLocked) {
-
     }
 
-    public ImageView getThumb() {
-        return mIvThumb;
+    @Override
+    public ImageView getPrepare() {
+        ImageView viewThumb = findViewById(R.id.module_mediaplayer_controller_prepare_thumb);
+        return viewThumb;
     }
 }

@@ -32,6 +32,7 @@ package lib.kalu.mediaplayer.ui.player;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
@@ -107,7 +108,6 @@ public interface InterVideoPlayer {
      * @return 百分比
      */
     int getBufferedPercentage();
-
 
     void startFullScreen();
 
