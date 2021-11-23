@@ -4,13 +4,13 @@
     android:layout_height="match_parent">
 
 
-    <lib.kalu.mediaplayer.videoui.player.VideoLayout
+    <lib.kalu.mediaplayer.ui.player.VideoLayout
         android:id="@+id/video_player1"
         android:layout_width="match_parent"
         android:layout_height="240dp"/>
 
 
-    <lib.kalu.mediaplayer.videoui.player.VideoLayout
+    <lib.kalu.mediaplayer.ui.player.VideoLayout
         android:id="@+id/video_player2"
         android:layout_width="match_parent"
         android:layout_height="180dp"/>

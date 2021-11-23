@@ -13,7 +13,7 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
-        <lib.kalu.mediaplayer.videoui.player.VideoLayout
+        <lib.kalu.mediaplayer.ui.player.VideoLayout
             android:id="@+id/video_player"
             android:layout_width="match_parent"
             android:layout_height="240dp" />
