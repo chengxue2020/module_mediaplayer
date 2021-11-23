@@ -21,16 +21,16 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
-        <receiver
-            android:name="lib.kalu.mediaplayer.ui.old.other.BatterReceiver"
-            android:process=":mediaplayer" />
-        <receiver
-            android:name="lib.kalu.mediaplayer.ui.old.other.NetChangedReceiver"
-            android:process=":mediaplayer">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver-->
+<!--            android:name="lib.kalu.mediaplayer.ui.old.other.BatterReceiver"-->
+<!--            android:process=":mediaplayer" />-->
+<!--        <receiver-->
+<!--            android:name="lib.kalu.mediaplayer.ui.old.other.NetChangedReceiver"-->
+<!--            android:process=":mediaplayer">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
         <service
             android:name="lib.kalu.mediaplayer.kernel.music.service.PlayService"
