@@ -47,12 +47,6 @@ import java.lang.reflect.Field;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView mTvTitle;
-    private TextView mTv11;
-    private TextView mTv12;
-    private TextView mTv13;
-    private TextView mTv21;
-    private TextView mTv22;
-    private TextView mTv23;
     private TextView mTv31;
     private TextView mTv32;
     private TextView mTv33;
@@ -99,32 +93,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mTvTitle.setText("视频内核：" + " (unknown)");
         }
 
-        // 横屏
-        findViewById(R.id.tv_3_0).setOnClickListener(new View.OnClickListener() {
+        // rtsp
+        findViewById(R.id.main_rtsp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                EditText editText = findViewById(R.id.url);
-                Editable text = editText.getText();
-
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, text.toString());
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov");
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
-//                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://10.128.202.122:8001/ocrm/api/video/getVideoDetail/a1a11426813347ceb818dee0edbab3d5");
-//                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
                 startActivity(intent);
+            }
+        });
+        // m3u8
+        findViewById(R.id.main_m3u8).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
+
+        // exo
+        findViewById(R.id.main_exo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setChangeVideoType(PlayerType.PlatformType.EXO);
+            }
+        });
+
+        // android
+        findViewById(R.id.main_android).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setChangeVideoType(PlayerType.PlatformType.NATIVE);
             }
         });
     }
 
     private void initFindViewById() {
         mTvTitle = findViewById(R.id.tv_title);
-        mTv11 = findViewById(R.id.tv_1_1);
-        mTv12 = findViewById(R.id.tv_1_2);
-        mTv13 = findViewById(R.id.tv_1_3);
-        mTv21 = findViewById(R.id.tv_2_1);
-        mTv22 = findViewById(R.id.tv_2_2);
-        mTv23 = findViewById(R.id.tv_2_3);
         mTv31 = findViewById(R.id.tv_3_1);
         mTv32 = findViewById(R.id.tv_3_2);
         mTv33 = findViewById(R.id.tv_3_3);
@@ -145,12 +153,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initListener() {
-        mTv11.setOnClickListener(this);
-        mTv12.setOnClickListener(this);
-        mTv13.setOnClickListener(this);
-        mTv21.setOnClickListener(this);
-        mTv22.setOnClickListener(this);
-        mTv23.setOnClickListener(this);
         mTv31.setOnClickListener(this);
         mTv32.setOnClickListener(this);
         mTv33.setOnClickListener(this);
@@ -172,22 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (v == mTv11) {
-            //切换ijk
-            setChangeVideoType(PlayerType.PlatformType.IJK);
-        } else if (v == mTv12) {
-            //切换exo
-            setChangeVideoType(PlayerType.PlatformType.EXO);
-        } else if (v == mTv13) {
-            //切换原生
-            setChangeVideoType(PlayerType.PlatformType.NATIVE);
-        } else if (v == mTv21) {
-            BaseToast.showRoundRectToast(getApplicationContext(), "待完善");
-        } else if (v == mTv22) {
-            BaseToast.showRoundRectToast(getApplicationContext(), "待完善");
-        } else if (v == mTv23) {
-            BaseToast.showRoundRectToast(getApplicationContext(), "待完善");
-        } else if (v == mTv31) {
+        if (v == mTv31) {
             startActivity(new Intent(this, PortraitActivity.class));
         } else if (v == mTv32) {
             startActivity(new Intent(this, TestFullActivity.class));
