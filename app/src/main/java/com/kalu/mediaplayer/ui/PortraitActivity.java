@@ -1,4 +1,4 @@
-package com.kalu.mediaplayer.newPlayer.activity;
+package com.kalu.mediaplayer.ui;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -27,7 +27,7 @@ import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.widget.CustomErrorView;
 import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
 
-public class NormalActivity extends AppCompatActivity implements View.OnClickListener {
+public class PortraitActivity extends AppCompatActivity implements View.OnClickListener {
 
     private VideoLayout mVideoPlayer;
     private Button mBtnScaleNormal;

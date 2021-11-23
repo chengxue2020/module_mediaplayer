@@ -11,7 +11,7 @@
         android:layout_height="45dp"
         android:layout_gravity="bottom"
         android:gravity="center_vertical"
-        android:background="@drawable/module_mediaplayer_shape_background_shadow"
+        android:background="@drawable/module_mediaplayer_shape_shadow_top"
         android:orientation="horizontal">
 
         <ImageView
@@ -43,7 +43,7 @@
             android:minHeight="2dp"
             android:paddingEnd="0dp"
             android:paddingStart="0dp"
-            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
+            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
             android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
             android:thumbOffset="0dp" />
 
@@ -84,7 +84,7 @@
         android:layout_height="2dp"
         android:layout_gravity="bottom"
         android:max="1000"
-        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
+        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
         android:visibility="gone" />
 
 </FrameLayout>

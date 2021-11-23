@@ -20,7 +20,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
         <activity
-            android:name="com.kalu.mediaplayer.TypeActivity"
+            android:name="com.kalu.mediaplayer.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:process=":demo"
             android:screenOrientation="portrait">
@@ -30,6 +30,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--  -->
+        <activity
+            android:name="com.kalu.mediaplayer.ui.PortraitActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":demo"
+            android:screenOrientation="portrait" />
+
         <!--        <activity android:name="com.kalu.mediaplayer.MainActivity"-->
         <!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
         <!--            android:screenOrientation="portrait">-->
@@ -39,54 +47,14 @@
         <!--                <category android:name="android.intent.category.LAUNCHER" />-->
         <!--            </intent-filter>-->
         <!--        </activity>-->
-        <!--        <activity android:name="com.kalu.mediaplayer.TypeActivity"/>-->
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestTinyActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestClarityActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestRecyclerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestFragmentActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestEightVideoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
+        <!--        <activity android:name="com.kalu.mediaplayer.MainActivity"/>-->
         <activity
             android:name="com.kalu.mediaplayer.newPlayer.list.TestListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:process=":demo"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestWindowActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestNormalActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.kalu.mediaplayer.newPlayer.tiny.TestFullActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestSavePosActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:process=":demo"
             android:screenOrientation="portrait" />
@@ -99,11 +67,6 @@
         <!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
         <!--            android:screenOrientation="portrait"/>-->
         <activity
-            android:name="com.kalu.mediaplayer.newPlayer.activity.NormalActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.kalu.mediaplayer.newPlayer.activity.MultipleActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
@@ -114,11 +77,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.kalu.mediaplayer.newPlayer.tiktok.TikTok1Activity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.TestFullActivity2"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:process=":demo"
             android:screenOrientation="portrait" />
@@ -147,10 +105,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:process=":demo"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.kalu.mediaplayer.oldPlayer.OldActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":demo"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.kalu.mediaplayer.newPlayer.pip.PipActivity"

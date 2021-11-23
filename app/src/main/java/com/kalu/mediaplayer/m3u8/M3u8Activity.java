@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.kalu.mediaplayer.newPlayer.activity.NormalActivity;
+import com.kalu.mediaplayer.ui.PortraitActivity;
 import com.kalu.mediaplayer.R;
 
 import java.io.File;
@@ -202,7 +202,7 @@ public class M3u8Activity extends AppCompatActivity {
 
     public void onPlay(View view) {
         String url = etUrl.getText().toString().trim();
-        Intent intent = new Intent(this, NormalActivity.class);
+        Intent intent = new Intent(this, PortraitActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
     }

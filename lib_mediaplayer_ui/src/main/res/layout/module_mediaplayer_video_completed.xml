@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/module_mediaplayer_shape_background_shadow"
+        android:background="@drawable/module_mediaplayer_shape_shadow_top"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="12dp"

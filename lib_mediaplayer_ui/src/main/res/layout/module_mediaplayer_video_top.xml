@@ -3,7 +3,7 @@
     android:id="@+id/module_mediaplayer_controller_top_root"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@drawable/module_mediaplayer_shape_background_shadow">
+    android:background="@drawable/module_mediaplayer_shape_shadow_top">
 
     <!-- 电量 -->
     <TextView

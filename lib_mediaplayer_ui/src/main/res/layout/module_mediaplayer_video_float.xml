@@ -55,7 +55,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:max="1000"
-        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
+        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
         android:visibility="visible" />
 
 </FrameLayout>
