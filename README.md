@@ -11,9 +11,12 @@
 ----------------------------------------
 
 2021-11-23
+
 1. 优化ui
 2. 删除冗余模块
 3. 添加rtsp支持
+
+---------------------------------------
 
 2021-09-29
 
@@ -23,7 +26,7 @@
 #
 #### 资料
 ```
-https://github.com/yangchong211/YCVideoPlayer
 https://github.com/google/ExoPlayer
 https://mvnrepository.com/search?q=exoplayer
+https://github.com/yangchong211/YCVideoPlayer
 ```
