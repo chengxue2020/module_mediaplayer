@@ -23,6 +23,8 @@ public final class ExoplayerActivity extends AppCompatActivity {
     @Keep
     public static final int RESULT_CODE = 31001;
     @Keep
+    public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
+    @Keep
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
     @Keep
     public static final String INTENT_URL = "intent_url"; // 视频Url
@@ -47,7 +49,13 @@ public final class ExoplayerActivity extends AppCompatActivity {
         // 基础视频播放器
         CustomCenterController controller = new CustomCenterController(this);
         controller.setEnableOrientation(false);
-        controller.setPrepareBackground(Color.RED);
+
+        int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, -1);
+        if (resId != -1) {
+            controller.setPrepareImageResource(resId);
+        } else {
+            controller.setPrepareBackground(Color.BLACK);
+        }
 
 //        // 设置视频背景图
 //        ColorDrawable colorDrawable = new ColorDrawable(Color.RED);

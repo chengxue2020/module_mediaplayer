@@ -130,14 +130,14 @@
                 <!--                    android:text="rtsp://spinterface.hbtn.com:5566/filename.format?providerid=beijing66&amp;assetid=hstv71778_1616050229&amp;contentname=hstv71778_1616050229&amp;duration=5418.00&amp;bitrate=7992000"-->
                 <!--                    android:textSize="12sp" />-->
 
-                <Button
+                <TextView
                     android:id="@+id/tv_3_0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorAccent"
                     android:focusable="true"
                     android:padding="10dp"
-                    android:text="3.0 横屏播放" />
+                    android:text="横屏播放" />
 
             </LinearLayout>
 

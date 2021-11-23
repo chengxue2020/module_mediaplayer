@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
                 intent.putExtra(ExoplayerActivity.INTENT_URL, text.toString());
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://10.128.202.122:8001/ocrm/api/video/getVideoDetail/a1a11426813347ceb818dee0edbab3d5");
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
                 startActivity(intent);
