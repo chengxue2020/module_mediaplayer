@@ -66,6 +66,16 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/main_rtmp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="01 => 横屏播放 => rtmp" />
+
+            <TextView
                 android:id="@+id/main_rtsp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,7 +83,7 @@
                 android:background="@color/colorAccent"
                 android:focusable="true"
                 android:padding="10dp"
-                android:text="01 => 横屏播放 => rtsp" />
+                android:text="02 => 横屏播放 => rtsp" />
 
             <TextView
                 android:id="@+id/main_m3u8"
@@ -83,7 +93,7 @@
                 android:background="@color/colorAccent"
                 android:focusable="true"
                 android:padding="10dp"
-                android:text="02 => 横屏播放 => m3u8" />
+                android:text="03 => 横屏播放 => m3u8" />
 
             <TextView
                 android:id="@+id/tv_3_1"
@@ -92,7 +102,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="03 => 竖屏播放" />
+                android:text="04 => 竖屏播放" />
 
             <TextView
                 android:id="@+id/tv_3_2"

@@ -30,12 +30,15 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 
+import org.checkerframework.checker.lock.qual.LockHeld;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.cache.CacheType;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
  * @description: exo视频播放器帮助类
@@ -46,7 +49,6 @@ public final class ExoMediaSourceHelper {
     private static ExoMediaSourceHelper sInstance;
     private final String mUserAgent;
     private HttpDataSource.Factory mHttpDataSourceFactory;
-    private Cache mCache;
 
     private ExoMediaSourceHelper(@NonNull Context context) {
         mUserAgent = Util.getUserAgent(context, context.getApplicationInfo().name);
@@ -70,7 +72,7 @@ public final class ExoMediaSourceHelper {
      */
     public MediaSource getMediaSource(@NonNull Context context, @NonNull String uri, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         Uri contentUri = Uri.parse(uri);
-        Log.e("EXO", "getMediaSource => scheme = " + contentUri.getScheme());
+        Log.e("EXO", "createFactory => scheme = " + contentUri.getScheme() + ", uri = " + uri);
         // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
             RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
@@ -78,7 +80,8 @@ public final class ExoMediaSourceHelper {
         }
         // rtsp
         else if ("rtsp".equals(contentUri.getScheme())) {
-            return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));
+            RtspMediaSource.Factory factory = new RtspMediaSource.Factory();
+            return factory.createMediaSource(MediaItem.fromUri(contentUri));
         }
         // other
         else {
@@ -86,7 +89,7 @@ public final class ExoMediaSourceHelper {
             DataSource.Factory factory;
             if (null != context && null != config && config.getCacheType() > CacheType.RAM) {
                 Toast.makeText(context, "磁盘缓存", Toast.LENGTH_SHORT).show();
-                factory = getCacheDataSourceFactory(context, config);
+                factory = createFactory(context, uri, config);
             } else {
                 Toast.makeText(context, "内存缓存", Toast.LENGTH_SHORT).show();
                 factory = new DefaultDataSourceFactory(context, getHttpDataSourceFactory());
@@ -120,45 +123,6 @@ public final class ExoMediaSourceHelper {
             return C.TYPE_OTHER;
         }
     }
-
-    private DataSource.Factory getCacheDataSourceFactory(@NonNull Context context, @NonNull CacheConfig config) {
-
-        int size;
-        String dir;
-        if (null != config) {
-            size = config.getCacheMaxMB();
-            dir = config.getCacheDir();
-        } else {
-            size = 1024;
-            dir = "temp";
-        }
-
-        CacheDataSource.Factory factory = new CacheDataSource.Factory();
-
-        // 缓存策略：磁盘
-        if (null == mCache && null != context && null != config && config.getCacheType() > CacheType.RAM) {
-            // 缓存目录
-            File file = new File(context.getExternalCacheDir(), dir);
-            // 缓存大小，默认1024M，使用LRU算法实现
-            LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
-            ExoDatabaseProvider provider = new ExoDatabaseProvider(context);
-            mCache = new SimpleCache(file, evictor, provider);
-        }
-
-        if (null != mCache) {
-            factory.setCache(mCache);
-        }
-        factory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-        factory.setUpstreamDataSourceFactory(getHttpDataSourceFactory());
-        return factory;
-
-//        return new CacheDataSourceFactory(
-//                mCache,
-//                getDataSourceFactory(context),
-//                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-
-    }
-
 
     /**
      * Returns a new HttpDataSource factory.
@@ -199,5 +163,44 @@ public final class ExoMediaSourceHelper {
                 }
             }
         }
+    }
+
+    private DataSource.Factory createFactory(@NonNull Context context, @NonNull String uri, @NonNull CacheConfig config) {
+
+        LogUtil.log("createFactory => uri = " + uri);
+        int size;
+        String dir;
+        if (null != config) {
+            size = config.getCacheMaxMB();
+            dir = config.getCacheDir();
+        } else {
+            size = 1024;
+            dir = "temp";
+        }
+
+        CacheDataSource.Factory factory = new CacheDataSource.Factory();
+
+        // 缓存策略：磁盘
+        if (null != context && null != config && config.getCacheType() > CacheType.RAM) {
+            // 缓存目录
+            File file = new File(context.getExternalCacheDir(), dir);
+            // 缓存大小，默认1024M，使用LRU算法实现
+            LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
+            ExoDatabaseProvider provider = new ExoDatabaseProvider(context);
+            SimpleCache cache = new SimpleCache(file, evictor, provider);
+            factory.setCache(cache);
+            LogUtil.log("createFactory => cache = " + cache);
+        }
+
+        factory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+        factory.setUpstreamDataSourceFactory(getHttpDataSourceFactory());
+        return factory;
+
+
+//        return new CacheDataSourceFactory(
+//                mCache,
+//                getDataSourceFactory(context),
+//                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+
     }
 }

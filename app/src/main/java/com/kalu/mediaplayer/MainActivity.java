@@ -93,12 +93,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mTvTitle.setText("视频内核：" + " (unknown)");
         }
 
+        // rtmp
+        findViewById(R.id.main_rtmp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtmp://58.200.131.2:1935/livetv/cctv1");
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
         // rtsp
         findViewById(R.id.main_rtsp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov");
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
             }
@@ -108,7 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://yunqivedio.alicdn.com/2017yq/v2/0x0/96d79d3f5400514a6883869399708e11/96d79d3f5400514a6883869399708e11.m3u8");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
             }
