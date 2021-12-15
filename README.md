@@ -10,6 +10,12 @@
 ```
 ----------------------------------------
 
+2021-12-15
+
+1. 更新exoplayer2.16.1
+
+----------------------------------------
+
 2021-11-23
 
 1. 优化ui
@@ -23,6 +29,21 @@
 1. 更新exoplayer-2.15.0
 2. 重构lib_mediaplayer_ui模块
 ```
+
+#
+#### Jar
+```
+files('libs/androidx-annotation-1.2.0.jar')
+files('libs/commons-io-2.5.jar')
+files('libs/guava-30.1.1-android.jar')
+files('libs/failureaccess-1.0.1.jar')
+files('libs/checker-qual-2.5.0.jar')
+files('libs/checker-compat-qual-2.5.0.jar')
+files('libs/j2objc-annotations-1.3.jar')
+files('libs/error_prone_annotations-2.10.0.jar')
+files('libs/annotations-3.0.1.jar')
+```
+
 #
 #### 资料
 ```

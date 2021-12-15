@@ -1,10 +1,14 @@
 include ':app'
 
-// r2.14.0
-//include ':lib_exoplayer_source_r2.14.0_mediiaplayer_aar'
+// jar
+//include ':lib_mediaplayer_core_exoplayer_jar'
 
+// r2.14.0
+//include ':lib_mediaplayer_core_exoplayer_r2.14.0'
 // r2.15.0
-include ':lib_mediaplayer_core_exoplayer_r2.15.0'
+//include ':lib_mediaplayer_core_exoplayer_r2.15.0'
+// r2.16.1
+include ':lib_mediaplayer_core_exoplayer_r2.16.1'
 
 // mediaplayer_source
 include ':lib_mediaplayer_ui'

@@ -27,6 +27,7 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Map;
 
@@ -155,7 +156,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
      * @param headers 播放地址请求头
      */
     @Override
-    public void setDataSource(@NonNull Context context, String path, Map<String, String> headers, @NonNull CacheConfig config) {
+    public void setDataSource(@NonNull Context context,@NonNull boolean cache,  String path, Map<String, String> headers, @NonNull CacheConfig config) {
         // 设置dataSource
         if(path==null || path.length()==0){
             if (getVideoPlayerChangeListener()!=null){

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.keycode.KeycodeImpl;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
@@ -49,6 +50,11 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+
+        // 直播禁用
+        Object tag = getTag(R.id.module_mediaplayer_id_live);
+        if (null != tag)
+            return super.dispatchKeyEvent(event);
 
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         KeycodeImpl mKeycodeImpl = config.mKeycodeImpl;
@@ -94,7 +100,8 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
 //        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
 //            Toast.makeText(getContext(), "显示", Toast.LENGTH_SHORT).show();
 //            show();
-//        } else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+//        }
+//        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
 //            Toast.makeText(getContext(), "隐藏", Toast.LENGTH_SHORT).show();
 //            hide();
 //        } else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
@@ -110,4 +117,6 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
 //        }
         return super.dispatchKeyEvent(event);
     }
+
+    /******************************/
 }

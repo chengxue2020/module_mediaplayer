@@ -28,7 +28,7 @@ buildscript {
     ext.support_material_version = '1.2.1'
     ext.support_coordinatorlayout_version = '1.1.0'
     ext.support_constraintlayout_version = '2.0.4'
-    ext.support_media2_version = '1.1.3'
+    ext.support_media2_version = '1.2.0'
 
     // 三方: 2020-01-03
     ext.support_aspectjrt_version = '1.9.6' // 不要改动
@@ -102,10 +102,10 @@ ext {
 
     constant = [
 
-            compileSdkVersion      : 30,
-            buildToolsVersion      : "30.0.3",
+            compileSdkVersion      : 31,
+            buildToolsVersion      : "31.0.0",
             minSdkVersion          : 17,
-            targetSdkVersion       : 30, // 28之后强制使用https, 否则报错, 或者networkSecurityConfig
+            targetSdkVersion       : 31, // 28之后强制使用https, 否则报错, 或者networkSecurityConfig
 
             abiFilters             : "armeabi", // armeabi-v7a,x86
             ndkVersion             : "21.4.7075529", // 21.0.6113669

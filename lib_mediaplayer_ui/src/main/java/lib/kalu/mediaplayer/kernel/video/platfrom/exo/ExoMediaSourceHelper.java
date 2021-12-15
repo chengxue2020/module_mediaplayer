@@ -19,18 +19,15 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
-import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
-
-import org.checkerframework.checker.lock.qual.LockHeld;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -66,13 +63,13 @@ public final class ExoMediaSourceHelper {
     }
 
     /**
-     * @param uri     视频url
+     * @param url     视频url
      * @param headers 视频headers
      * @return
      */
-    public MediaSource getMediaSource(@NonNull Context context, @NonNull String uri, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
-        Uri contentUri = Uri.parse(uri);
-        Log.e("EXO", "createFactory => scheme = " + contentUri.getScheme() + ", uri = " + uri);
+    public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
+        Uri contentUri = Uri.parse(url);
+        LogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", cache = " + cache + ", url = " + url);
         // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
             RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
@@ -85,15 +82,25 @@ public final class ExoMediaSourceHelper {
         }
         // other
         else {
-            int contentType = inferContentType(uri);
+            int contentType = inferContentType(url);
             DataSource.Factory factory;
-            if (null != context && null != config && config.getCacheType() > CacheType.RAM) {
-                Toast.makeText(context, "磁盘缓存", Toast.LENGTH_SHORT).show();
-                factory = createFactory(context, uri, config);
-            } else {
-                Toast.makeText(context, "内存缓存", Toast.LENGTH_SHORT).show();
-                factory = new DefaultDataSourceFactory(context, getHttpDataSourceFactory());
+
+            // 磁盘缓存
+            if (cache && null != context && null != config && config.getCacheType() > CacheType.RAM) {
+                LogUtil.log("getMediaSource => 磁盘缓存");
+                factory = createFactory(context, url, config);
             }
+            // 内存缓存
+            else if (cache) {
+                LogUtil.log("getMediaSource => 内存缓存");
+                factory = new DefaultDataSource.Factory(context, getHttpDataSourceFactory());
+            }
+            // 不缓存
+            else {
+                LogUtil.log("getMediaSource => 不缓存");
+                factory = new DefaultDataSource.Factory(context);
+            }
+
             if (mHttpDataSourceFactory != null) {
                 setHeaders(headers);
             }
@@ -131,13 +138,13 @@ public final class ExoMediaSourceHelper {
      */
     private DataSource.Factory getHttpDataSourceFactory() {
         if (mHttpDataSourceFactory == null) {
-            mHttpDataSourceFactory = new DefaultHttpDataSourceFactory(
-                    mUserAgent,
-                    null,
-                    DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
-                    DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
-                    //http->https重定向支持
-                    true);
+            DefaultHttpDataSource.Factory factory = new DefaultHttpDataSource.Factory();
+            factory.setUserAgent(mUserAgent);
+            factory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
+            factory.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
+            factory.setAllowCrossProtocolRedirects(true);
+            factory.setKeepPostFor302Redirects(true);
+            mHttpDataSourceFactory = factory;
         }
         return mHttpDataSourceFactory;
     }
@@ -159,7 +166,7 @@ public final class ExoMediaSourceHelper {
                         }
                     }
                 } else {
-                    mHttpDataSourceFactory.getDefaultRequestProperties().set(key, value);
+                    mHttpDataSourceFactory.setDefaultRequestProperties(headers);
                 }
             }
         }

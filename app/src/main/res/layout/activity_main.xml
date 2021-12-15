@@ -96,13 +96,23 @@
                 android:text="03 => 横屏播放 => m3u8" />
 
             <TextView
+                android:id="@+id/main_m3u8_live"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="04 => 横屏播放 => m3u8 => live" />
+
+            <TextView
                 android:id="@+id/tv_3_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/colorAccent"
                 android:padding="10dp"
-                android:text="04 => 竖屏播放" />
+                android:text="05 => 竖屏播放" />
 
             <TextView
                 android:id="@+id/tv_3_2"

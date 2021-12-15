@@ -69,8 +69,11 @@ dependencies {
     compileOnly rootProject.ext.dependencies.support_ijkplayer_java
     compileOnly rootProject.ext.dependencies.support_ijkplayer_armv7a
 
+    // tools
+//    compileOnly files('libs/lib_mediaplayer_core_exoplayer_jar.jar')
+
     // exoplayer
-    api project(path: ':lib_mediaplayer_core_exoplayer_r2.15.0')
+    api project(path: ':lib_mediaplayer_core_exoplayer_r2.16.1')
 //    implementation(name: 'exoplayer-2.11.8', ext: 'aar')
 //    implementation(name: 'exoplayer-core-2.11.8', ext: 'aar')
 //    implementation(name: 'exoplayer-dash-2.11.8', ext: 'aar')

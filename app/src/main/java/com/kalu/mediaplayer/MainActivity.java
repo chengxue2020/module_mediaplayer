@@ -124,6 +124,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
             }
         });
+        // m3u8-live
+        findViewById(R.id.main_m3u8_live).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://106.115.24.33:9901/tsfile/live/0117_1.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
 
         // exo
         findViewById(R.id.main_exo).setOnClickListener(new View.OnClickListener() {

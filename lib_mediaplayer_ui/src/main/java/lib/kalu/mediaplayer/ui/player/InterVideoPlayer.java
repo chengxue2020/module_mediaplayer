@@ -54,7 +54,13 @@ public interface InterVideoPlayer {
      *
      * @param url url
      */
-    void setUrl(String url);
+    void setUrl(@NonNull String url);
+    /**
+     * 设置链接
+     *
+     * @param url url
+     */
+    void setUrl(@NonNull boolean cache, @NonNull String url);
 
     /**
      * 获取播放链接

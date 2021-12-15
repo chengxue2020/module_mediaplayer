@@ -87,7 +87,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
      * @param headers 播放地址请求头
      */
     @Override
-    public void setDataSource(@NonNull Context context, String path, Map<String, String> headers, @NonNull CacheConfig config) {
+    public void setDataSource(@NonNull Context context, @NonNull boolean cache, String path, Map<String, String> headers, @NonNull CacheConfig config) {
         // 设置dataSource
         if (path == null || path.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {

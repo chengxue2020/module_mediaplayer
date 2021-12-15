@@ -44,7 +44,7 @@ public final class LogUtil {
 
     public static void log(@NonNull String message, @Nullable Throwable throwable) {
 
-        if (!isLog || !BuildConfig.DEBUG)
+        if (!isLog)
             return;
 
         if (null == message || message.length() == 0)

@@ -23,7 +23,8 @@
             android:name="com.kalu.mediaplayer.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:process=":demo"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -105,7 +106,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:process=":demo"
             android:screenOrientation="portrait" />
-            android:screenOrientation="portrait" />
+        android:screenOrientation="portrait" />
         <activity
             android:name="com.kalu.mediaplayer.newPlayer.pip.PipActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

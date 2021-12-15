@@ -57,6 +57,11 @@ public class ControlWrapper implements InterVideoPlayer, ImplController {
     }
 
     @Override
+    public void setUrl(@NonNull boolean cache, @NonNull String url) {
+        mVideoPlayer.setUrl(cache, url);
+    }
+
+    @Override
     public String getUrl() {
         return mVideoPlayer.getUrl();
     }

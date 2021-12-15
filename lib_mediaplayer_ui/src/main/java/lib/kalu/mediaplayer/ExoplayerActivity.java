@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,10 @@ public final class ExoplayerActivity extends AppCompatActivity {
     public static final int RESULT_CODE = 31001;
     @Keep
     public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
+    @Keep
+    public static final String INTENT_LIVE = "intent_live"; // 直播源
+    @Keep
+    public static final String INTENT_CACHE = "intent_cache"; // 缓存
     @Keep
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
     @Keep
@@ -46,10 +51,10 @@ public final class ExoplayerActivity extends AppCompatActivity {
         }
 
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
-        // 基础视频播放器
+
+        // 控制器
         CustomCenterController controller = new CustomCenterController(this);
         controller.setEnableOrientation(false);
-
         int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, -1);
         if (resId != -1) {
             controller.setPrepareImageResource(resId);
@@ -57,15 +62,20 @@ public final class ExoplayerActivity extends AppCompatActivity {
             controller.setPrepareBackground(Color.BLACK);
         }
 
-//        // 设置视频背景图
-//        ColorDrawable colorDrawable = new ColorDrawable(Color.RED);
-//        controller.getThumb().setImageDrawable(colorDrawable);
+        // 直播
+        boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
+        controller.setLive(live);
 
         // 控制器
         videoLayout.setController(controller);
 
+//        // 设置视频背景图
+//        ColorDrawable colorDrawable = new ColorDrawable(Color.RED);
+//        controller.getThumb().setImageDrawable(colorDrawable);
+
         // 设置视频播放链接地址
-        videoLayout.setUrl(url);
+        boolean cache = getIntent().getBooleanExtra(INTENT_CACHE, false);
+        videoLayout.setUrl(cache, url);
         videoLayout.showNetWarning();
         // 全屏
         videoLayout.startFullScreen();

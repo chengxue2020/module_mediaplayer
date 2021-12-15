@@ -9,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
@@ -51,9 +52,9 @@ public class ExoActivity extends AppCompatActivity {
         player.setPlayWhenReady(true);
         mVideoView.setPlayer(player);
         Uri uri = Uri.parse(ConstantVideo.VideoPlayerList[0]);
-        DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("user-agent");
-        ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(
-                dataSourceFactory).createMediaSource(uri);
+        DefaultHttpDataSource.Factory factory = new DefaultHttpDataSource.Factory();
+        factory.setUserAgent("user-agent");
+        ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(factory).createMediaSource(uri);
         // 播放
         player.prepare(mediaSource);
     }

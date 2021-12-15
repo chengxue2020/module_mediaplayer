@@ -82,6 +82,10 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     protected String mUrl;
     /**
+     * 缓存
+     */
+    protected boolean mCache;
+    /**
      * 当前视频地址的请求头
      */
     protected Map<String, String> mHeaders;
@@ -447,7 +451,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             return true;
         } else if (!TextUtils.isEmpty(mUrl)) {
             CacheConfig config = CacheConfigManager.getInstance().getCacheConfig();
-            mMediaPlayer.setDataSource(context, mUrl, mHeaders, config);
+            mMediaPlayer.setDataSource(context, mCache, mUrl, mHeaders, config);
             return true;
         }
         return false;
@@ -804,8 +808,16 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 设置视频地址
      */
     @Override
-    public void setUrl(String url) {
-        setUrl(url, null);
+    public void setUrl(@NonNull String url) {
+        setUrl(false, url, null);
+    }
+
+    /**
+     * 设置视频地址
+     */
+    @Override
+    public void setUrl(@NonNull boolean cache, @NonNull String url) {
+        setUrl(cache, url, null);
     }
 
     /**
@@ -824,8 +836,9 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * @param url     视频地址
      * @param headers 请求头
      */
-    public void setUrl(String url, Map<String, String> headers) {
+    public void setUrl(@NonNull boolean cache, @NonNull String url, Map<String, String> headers) {
         mAssetFileDescriptor = null;
+        mCache = cache;
         mUrl = url;
         mHeaders = headers;
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();

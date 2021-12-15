@@ -35,6 +35,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
+import com.google.android.exoplayer2.video.VideoSize;
 
 import java.util.Map;
 
@@ -106,7 +107,6 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
      */
     private void initListener() {
         mInternalPlayer.addListener(this);
-        mInternalPlayer.addVideoListener(this);
     }
 
     public void setTrackSelector(TrackSelector trackSelector) {
@@ -124,19 +124,19 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     /**
      * 设置播放地址
      *
-     * @param path    播放地址
+     * @param url    播放地址
      * @param headers 播放地址请求头
      */
     @Override
-    public void setDataSource(@NonNull Context context, @NonNull String path, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
+    public void setDataSource(@NonNull Context context,@NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         // 设置dataSource
-        if (path == null || path.length() == 0) {
+        if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
                 getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
             }
             return;
         }
-        mMediaSource = mMediaSourceHelper.getMediaSource(context, path, headers, config);
+        mMediaSource = mMediaSourceHelper.getMediaSource(context, cache, url, headers, config);
     }
 
     @Override
@@ -260,8 +260,8 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     public void release() {
         if (mInternalPlayer != null) {
             mInternalPlayer.removeListener(this);
-            mInternalPlayer.removeVideoListener(this);
-            final SimpleExoPlayer player = mInternalPlayer;
+//            mInternalPlayer.removeVideoListener(this);
+            final ExoPlayer player = mInternalPlayer;
             mInternalPlayer = null;
 
             // TODO: 2021-05-21  同步释放，防止卡顿
@@ -450,11 +450,11 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     }
 
     @Override
-    public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+    public void onVideoSizeChanged(VideoSize videoSize) {
         if (getVideoPlayerChangeListener() != null) {
-            getVideoPlayerChangeListener().onVideoSizeChanged(width, height);
-            if (unappliedRotationDegrees > 0) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, unappliedRotationDegrees);
+            getVideoPlayerChangeListener().onVideoSizeChanged(videoSize.width, videoSize.height);
+            if (videoSize.unappliedRotationDegrees > 0) {
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees);
             }
         }
     }

@@ -38,7 +38,8 @@
 
         <receiver
             android:name="lib.kalu.mediaplayer.kernel.music.receiver.NotificationStatusBarReceiver"
-            android:process=":mediaplayer">
+            android:process=":mediaplayer"
+            android:exported="false">
             <intent-filter>
                 <action android:name="lib.kalu.status_bar" />
             </intent-filter>
@@ -46,7 +47,8 @@
 
         <receiver
             android:name="lib.kalu.mediaplayer.kernel.music.receiver.EarphoneControlReceiver"
-            android:process=":mediaplayer">
+            android:process=":mediaplayer"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
@@ -54,7 +56,8 @@
 
         <receiver
             android:name="lib.kalu.mediaplayer.kernel.music.receiver.AudioBroadcastReceiver"
-            android:process=":mediaplayer">
+            android:process=":mediaplayer"
+            android:exported="false">
             <intent-filter>
                 <action android:name="lib.kalu.lock" />
             </intent-filter>

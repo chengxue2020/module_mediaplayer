@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
@@ -114,6 +115,11 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
     public ControllerLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
+    }
+
+    @Override
+    public void setLive(boolean live) {
+        setTag(R.id.module_mediaplayer_id_live, live ? 1 : null);
     }
 
     @Override
