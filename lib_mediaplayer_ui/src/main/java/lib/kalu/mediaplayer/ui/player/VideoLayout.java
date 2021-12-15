@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;

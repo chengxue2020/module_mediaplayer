@@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.widget.InterControlView;
@@ -395,6 +396,12 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        // 直播禁用
+        Object tag = getTag(R.id.module_mediaplayer_id_live);
+        if (null != tag)
+            return super.onTouchEvent(event);
+
         MediaLogUtil.log("事件----------事件触摸----------");
         //滑动结束时事件处理
         if (!mGestureDetector.onTouchEvent(event)) {
