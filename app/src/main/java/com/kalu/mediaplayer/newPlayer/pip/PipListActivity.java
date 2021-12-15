@@ -128,7 +128,6 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
             releaseVideoView();
         }
         VideoInfoBean videoBean = mVideos.get(position);
-        mVideoView.setUrl(videoBean.getVideoUrl());
         View itemView = mLinearLayoutManager.findViewByPosition(position);
         if (itemView == null) return;
         //注意：要先设置控制才能去设置控制器的状态。
@@ -140,7 +139,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
         mController.addControlComponent(viewHolder.mPrepareView, true);
         PlayerUtils.removeViewFormParent(mVideoView);
         viewHolder.mPlayerContainer.addView(mVideoView, 0);
-        mVideoView.start();
+        mVideoView.start(videoBean.getVideoUrl());
         mPIPManager.setPlayingPosition(position);
     }
 

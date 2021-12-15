@@ -17,7 +17,6 @@ import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
@@ -26,6 +25,7 @@ import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.widget.CustomErrorView;
 import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.util.PlayerFactoryUtils;
 
 public class PortraitActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -119,10 +119,9 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
 
 
         //设置视频播放链接地址
-        mVideoPlayer.setUrl(url);
         //开始播放
         mVideoPlayer.startFullScreen();
-        mVideoPlayer.start();
+        mVideoPlayer.start(url);
 //        mVideoPlayer.postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
@@ -212,7 +211,7 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
         //视频缓冲完毕，准备开始播放时回调
         mVideoPlayer.onPrepared();
         //重新播放
-        mVideoPlayer.replay(true);
+        mVideoPlayer.restart(true);
         //继续播放
         mVideoPlayer.resume();
         //调整播放进度
@@ -224,7 +223,7 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
         //设置音量 0.0f-1.0f 之间
         mVideoPlayer.setVolume(1, 1);
         //开始播放
-        mVideoPlayer.start();
+        mVideoPlayer.start("");
 
 
         //进入全屏

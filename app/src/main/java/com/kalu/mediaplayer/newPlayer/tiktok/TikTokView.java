@@ -15,10 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.widget.InterControlView;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public class TikTokView extends FrameLayout implements InterControlView {
 
@@ -48,7 +48,7 @@ public class TikTokView extends FrameLayout implements InterControlView {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mControlWrapper.togglePlay();
+                mControlWrapper.toggle();
             }
         });
         mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
@@ -96,24 +96,24 @@ public class TikTokView extends FrameLayout implements InterControlView {
     public void onPlayStateChanged(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_IDLE:
-                VideoLogUtils.e("STATE_IDLE " + hashCode());
+                MediaLogUtil.log("STATE_IDLE " + hashCode());
                 thumb.setVisibility(VISIBLE);
                 break;
             case PlayerType.StateType.STATE_PLAYING:
-                VideoLogUtils.e("STATE_PLAYING " + hashCode());
+                MediaLogUtil.log("STATE_PLAYING " + hashCode());
                 thumb.setVisibility(GONE);
                 mPlayBtn.setVisibility(GONE);
                 break;
             case PlayerType.StateType.STATE_PAUSED:
-                VideoLogUtils.e("STATE_PAUSED " + hashCode());
+                MediaLogUtil.log("STATE_PAUSED " + hashCode());
                 thumb.setVisibility(GONE);
                 mPlayBtn.setVisibility(VISIBLE);
                 break;
             case PlayerType.StateType.STATE_PREPARED:
-                VideoLogUtils.e("STATE_PREPARED " + hashCode());
+                MediaLogUtil.log("STATE_PREPARED " + hashCode());
                 break;
             case PlayerType.StateType.STATE_ERROR:
-                VideoLogUtils.e("STATE_ERROR " + hashCode());
+                MediaLogUtil.log("STATE_ERROR " + hashCode());
                 Toast.makeText(getContext(), R.string.module_mediaplayer_string_error_message, Toast.LENGTH_SHORT).show();
                 break;
         }

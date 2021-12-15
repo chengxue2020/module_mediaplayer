@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.m3u8.bean.M3u8;
 import lib.kalu.mediaplayer.m3u8.inter.OnDownloadListener;
 import lib.kalu.mediaplayer.m3u8.inter.OnM3u8InfoListener;
@@ -26,6 +25,7 @@ import lib.kalu.mediaplayer.m3u8.manager.M3u8LiveManger;
 import lib.kalu.mediaplayer.m3u8.task.M3u8DownloadTask;
 import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
 import lib.kalu.mediaplayer.m3u8.utils.NetSpeedUtils;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 public class M3u8Activity extends AppCompatActivity {
@@ -55,19 +55,19 @@ public class M3u8Activity extends AppCompatActivity {
             @Override
             public void onSuccess(M3u8 m3U8) {
                 tvConsole.append("\n\n获取成功了" + m3U8);
-                VideoLogUtils.e("获取成功了" + m3U8);
+                MediaLogUtil.log("获取成功了" + m3U8);
             }
 
             @Override
             public void onStart() {
                 tvConsole.append("\n\n开始获取信息");
-                VideoLogUtils.e("开始获取信息");
+                MediaLogUtil.log("开始获取信息");
             }
 
             @Override
             public void onError(Throwable errorMsg) {
                 tvConsole.append("\n\n出错了" + errorMsg);
-                VideoLogUtils.e("出错了" + errorMsg);
+                MediaLogUtil.log("出错了" + errorMsg);
             }
         });
     }
@@ -84,7 +84,7 @@ public class M3u8Activity extends AppCompatActivity {
         task1.download(url, new OnDownloadListener() {
             @Override
             public void onDownloading(final long itemFileSize, final int totalTs, final int curTs) {
-                VideoLogUtils.e(task1.getTaskId() + "下载中.....itemFileSize=" + itemFileSize + "\ttotalTs=" + totalTs + "\tcurTs=" + curTs);
+                MediaLogUtil.log(task1.getTaskId() + "下载中.....itemFileSize=" + itemFileSize + "\ttotalTs=" + totalTs + "\tcurTs=" + curTs);
                 tvConsole.append("\n\n下载中....." + itemFileSize + "\t" + totalTs + "\t" + curTs);
             }
 
@@ -93,7 +93,7 @@ public class M3u8Activity extends AppCompatActivity {
              */
             @Override
             public void onSuccess() {
-                VideoLogUtils.e(task1.getTaskId() + "下载完成了");
+                MediaLogUtil.log(task1.getTaskId() + "下载完成了");
                 tvConsole.append("\n\n下载完成");
             }
 
@@ -106,13 +106,13 @@ public class M3u8Activity extends AppCompatActivity {
             public void onProgress(final long curLenght) {
                 if (curLenght - lastLength > 0) {
                     final String speed = NetSpeedUtils.getInstance().displayFileSize(curLenght - lastLength) + "/s";
-                    VideoLogUtils.e(task1.getTaskId() + "speed = " + speed);
+                    MediaLogUtil.log(task1.getTaskId() + "speed = " + speed);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            VideoLogUtils.e("更新了");
+                            MediaLogUtil.log("更新了");
                             tvSpeed1.setText(speed);
-                            VideoLogUtils.e(tvSpeed1.getText().toString());
+                            MediaLogUtil.log(tvSpeed1.getText().toString());
                         }
                     });
                     lastLength = curLenght;
@@ -122,14 +122,14 @@ public class M3u8Activity extends AppCompatActivity {
 
             @Override
             public void onStart() {
-                VideoLogUtils.e(task1.getTaskId() + "开始下载了");
+                MediaLogUtil.log(task1.getTaskId() + "开始下载了");
                 tvConsole.append("\n\n开始下载");
             }
 
             @Override
             public void onError(Throwable errorMsg) {
                 tvConsole.append("\n\n出错了" + errorMsg);
-                VideoLogUtils.e(task1.getTaskId() + "出错了" + errorMsg);
+                MediaLogUtil.log(task1.getTaskId() + "出错了" + errorMsg);
             }
         });
     }
@@ -169,13 +169,13 @@ public class M3u8Activity extends AppCompatActivity {
                     public void onProgress(long curLength) {
                         if (curLength - lastLength > 0) {
                             final String speed = NetSpeedUtils.getInstance().displayFileSize(curLength - lastLength) + "/s";
-                            VideoLogUtils.e(task1.getTaskId() + "speed = " + speed);
+                            MediaLogUtil.log(task1.getTaskId() + "speed = " + speed);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    VideoLogUtils.e("更新了");
+                                    MediaLogUtil.log("更新了");
                                     tvSpeed1.setText(speed + "( 第" + (curTsIndex + 1) + "个视频 )");
-                                    VideoLogUtils.e(tvSpeed1.getText().toString());
+                                    MediaLogUtil.log(tvSpeed1.getText().toString());
                                 }
                             });
                             lastLength = curLength;

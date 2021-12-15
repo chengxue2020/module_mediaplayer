@@ -474,8 +474,8 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
     /**
      * 播放和暂停
      */
-    protected void togglePlay() {
-        mControlWrapper.togglePlay();
+    protected void toggle() {
+        mControlWrapper.toggle();
     }
 
     /**

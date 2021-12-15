@@ -50,6 +50,19 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implements InterVideoPlayer, OnVideoPlayerChangeListener {
 
     /**
+     * 当前播放视频的地址
+     */
+    private String mUrl = null;
+    /**
+     * 缓存
+     */
+    protected boolean mCache = false;
+    /**
+     * 当前视频地址的请求头
+     */
+    protected Map<String, String> mHeaders = null;
+
+    /**
      * 播放器
      */
     protected P mMediaPlayer;
@@ -75,19 +88,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 是否静音
      */
     protected boolean mIsMute;
-
-    /**
-     * 当前播放视频的地址
-     */
-    protected String mUrl;
-    /**
-     * 缓存
-     */
-    protected boolean mCache;
-    /**
-     * 当前视频地址的请求头
-     */
-    protected Map<String, String> mHeaders;
     /**
      * assets文件
      */
@@ -115,12 +115,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     protected boolean mIsTinyScreen;
     protected int[] mTinyScreenSize = {0, 0};
-    /**
-     * 监听系统中音频焦点改变
-     */
-    protected boolean mEnableAudioFocus;
-    @Nullable
-    protected AudioFocusHelper mAudioFocusHelper;
 
     /**
      * OnStateChangeListener集合，保存了所有开发者设置的监听器
@@ -178,7 +172,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
     private void initConfig() {
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        mEnableAudioFocus = config.mEnableAudioFocus;
         mProgressManager = config.mProgressManager;
         mPlayerFactory = config.mPlayerFactory;
         mCurrentScreenScaleType = config.mScreenScaleType;
@@ -270,7 +263,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
     private void initAttrs(AttributeSet attrs) {
         TypedArray a = getContext().getApplicationContext().obtainStyledAttributes(attrs, R.styleable.VideoPlayer);
-        mEnableAudioFocus = a.getBoolean(R.styleable.VideoPlayer_enableAudioFocus, mEnableAudioFocus);
         mIsLooping = a.getBoolean(R.styleable.VideoPlayer_looping, false);
         mCurrentScreenScaleType = a.getInt(R.styleable.VideoPlayer_screenScaleType, mCurrentScreenScaleType);
         mPlayerBackgroundColor = a.getColor(R.styleable.VideoPlayer_playerBackgroundColor, Color.BLACK);
@@ -284,10 +276,8 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         mPlayerContainer = new FrameLayout(getContext());
         //设置背景颜色，目前设置为纯黑色
         mPlayerContainer.setBackgroundColor(mPlayerBackgroundColor);
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
         //将布局添加到该视图中
-        this.addView(mPlayerContainer, params);
+        this.addView(mPlayerContainer, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     /**
@@ -300,36 +290,64 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         mVideoController = mediaController;
         if (mediaController != null) {
             mediaController.setMediaPlayer(this);
-            LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
-            mPlayerContainer.addView(mVideoController, params);
+            mPlayerContainer.addView(mVideoController, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
     }
 
     /**
      * 开始播放，注意：调用此方法后必须调用{@link #release()}释放播放器，否则会导致内存泄漏
      */
+    /**
+     * public void setUrl(@NonNull boolean cache, @NonNull String url, Map<String, String> headers) {
+     * //        mAssetFileDescriptor = null;
+     * //        mCache = cache;
+     * //        mUrl = url;
+     * //        mHeaders = headers;
+     * //        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
+     * //        if (config != null && config.mBuriedPointEvent != null) {
+     * //            //相当于进入了视频页面
+     * //            config.mBuriedPointEvent.playerIn(url);
+     * //        }
+     * //    }
+     *
+     * @param cache
+     * @param url
+     */
     @Override
-    public void start() {
+    public void start(@NonNull boolean cache, @NonNull String url, @NonNull Map<String, String> headers) {
         if (mVideoController == null) {
             //在调用start方法前，请先初始化视频控制器，调用setController方法
-            throw new VideoException(VideoException.CODE_NOT_SET_CONTROLLER,
-                    "Controller must not be null , please setController first");
+            throw new VideoException(VideoException.CODE_NOT_SET_CONTROLLER, "Controller must not be null , please setController first");
         }
+
+        // release
+        if (null != mUrl && mUrl.length() > 0) {
+            release();
+            clearUrl();
+        }
+
         boolean isStarted = false;
         if (isInIdleState() || isInStartAbortState()) {
-            Context context = getContext();
-            isStarted = startPlay(context);
+            isStarted = startPlay(cache, url, headers);
         } else if (isInPlaybackState()) {
             startInPlaybackState();
             isStarted = true;
         }
         if (isStarted) {
             mPlayerContainer.setKeepScreenOn(true);
-            if (mAudioFocusHelper != null) {
-                mAudioFocusHelper.requestFocus();
-            }
         }
+    }
+
+    @Override
+    public void restart(@NonNull boolean reset) {
+        if (null == mUrl || mUrl.length() <= 0)
+            return;
+        if (reset) {
+            mCurrentPosition = 0;
+        }
+        addDisplay();
+        startPrepare(true);
+        mPlayerContainer.setKeepScreenOn(true);
     }
 
     /**
@@ -337,37 +355,42 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      *
      * @return 是否成功开始播放
      */
-    protected boolean startPlay(@NonNull Context context) {
+    protected boolean startPlay(@NonNull boolean cache, @NonNull String url, @NonNull Map<String, String> headers) {
         //如果要显示移动网络提示则不继续播放
-        if (showNetWarning()) {
-            //中止播放
+
+        // 中止播放
+        boolean showNetWarning = showNetWarning();
+        if (showNetWarning) {
             setPlayState(PlayerType.StateType.STATE_START_ABORT);
             return false;
         }
-        //监听音频焦点改变
-        if (mEnableAudioFocus) {
-            mAudioFocusHelper = new AudioFocusHelper(this);
-        }
+
         //读取播放进度
         if (mProgressManager != null) {
             mCurrentPosition = mProgressManager.getSavedProgress(mUrl);
         }
-        initPlayer(context, mUrl);
+
+        // fix bug
+        release();
+
+        // update
+        updateUrl(cache, url, headers);
+
+        initPlayer();
         addDisplay();
-        startPrepare(context, false);
+        startPrepare(false);
         return true;
     }
-
 
     /**
      * 初始化播放器
      */
-    protected void initPlayer(@NonNull Context context, @NonNull String url) {
+    protected void initPlayer() {
         //通过工厂模式创建对象
-        mMediaPlayer = mPlayerFactory.createPlayer(context);
+        mMediaPlayer = mPlayerFactory.createPlayer(getContext());
         mMediaPlayer.setOnVideoPlayerChangeListener(this);
         setInitOptions();
-        mMediaPlayer.initPlayer(context, url);
+        mMediaPlayer.initPlayer(getContext(), mUrl);
         setOptions();
     }
 
@@ -413,29 +436,27 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         //绑定mMediaPlayer对象
         mRenderView.attachToPlayer(mMediaPlayer);
         //添加渲染view到Container布局中
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        mPlayerContainer.addView(mRenderView.getView(), 0, params);
+        mPlayerContainer.addView(mRenderView.getView(), 0, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER));
     }
 
     /**
      * 开始准备播放（直接播放）
      */
-    protected void startPrepare(@NonNull Context context, boolean reset) {
-        if (reset) {
+    protected void startPrepare(@NonNull boolean replay) {
+        if (replay) {
             mMediaPlayer.reset();
             //重新设置option，media player reset之后，option会失效
             setOptions();
         }
         //播放数据是否设置成功
-        if (prepareDataSource(context)) {
+        boolean prepareDataSource = prepareDataSource(mCache, mUrl, mHeaders);
+        if (prepareDataSource) {
             //准备开始播放
             mMediaPlayer.prepareAsync();
             //更改播放器的播放状态
             setPlayState(PlayerType.StateType.STATE_PREPARING);
             //更改播放器播放模式状态
-            setWindowState(isFullScreen() ? PlayerType.WindowType.FULL :
-                    isTinyScreen() ? PlayerType.WindowType.TINY : PlayerType.WindowType.NORMAL);
+            setWindowState(isFullScreen() ? PlayerType.WindowType.FULL : isTinyScreen() ? PlayerType.WindowType.TINY : PlayerType.WindowType.NORMAL);
         }
     }
 
@@ -444,13 +465,13 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      *
      * @return 播放数据是否设置成功
      */
-    protected boolean prepareDataSource(@NonNull Context context) {
+    protected boolean prepareDataSource(@NonNull boolean cache, @NonNull String url, @NonNull Map<String, String> headers) {
         if (mAssetFileDescriptor != null) {
             mMediaPlayer.setDataSource(mAssetFileDescriptor);
             return true;
-        } else if (!TextUtils.isEmpty(mUrl)) {
+        } else if (null != url && url.length() > 0) {
             CacheConfig config = CacheConfigManager.getInstance().getCacheConfig();
-            mMediaPlayer.setDataSource(context, mCache, mUrl, mHeaders, config);
+            mMediaPlayer.setDataSource(getContext(), cache, url, headers, config);
             return true;
         }
         return false;
@@ -469,12 +490,13 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     @Override
     public void pause() {
+
+        if (null == mUrl || mUrl.length() <= 0)
+            return;
+
         if (isInPlaybackState() && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
             setPlayState(PlayerType.StateType.STATE_PAUSED);
-            if (mAudioFocusHelper != null) {
-                mAudioFocusHelper.abandonFocus();
-            }
             mPlayerContainer.setKeepScreenOn(false);
         }
     }
@@ -483,12 +505,13 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 继续播放
      */
     public void resume() {
+
+        if (null == mUrl || mUrl.length() <= 0)
+            return;
+
         if (isInPlaybackState() && !mMediaPlayer.isPlaying()) {
             mMediaPlayer.start();
             setPlayState(PlayerType.StateType.STATE_PLAYING);
-            if (mAudioFocusHelper != null) {
-                mAudioFocusHelper.requestFocus();
-            }
             mPlayerContainer.setKeepScreenOn(true);
         }
     }
@@ -528,12 +551,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            //关闭AudioFocus监听
-            if (mAudioFocusHelper != null) {
-                mAudioFocusHelper.abandonFocus();
-                mAudioFocusHelper.release();
-                mAudioFocusHelper = null;
             }
             //关闭屏幕常亮
             mPlayerContainer.setKeepScreenOn(false);
@@ -580,22 +597,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     private boolean isInStartAbortState() {
         return mCurrentPlayState == PlayerType.StateType.STATE_START_ABORT;
-    }
-
-    /**
-     * 重新播放
-     *
-     * @param resetPosition 是否从头开始播放
-     */
-    @Override
-    public void replay(boolean resetPosition) {
-        if (resetPosition) {
-            mCurrentPosition = 0;
-        }
-        addDisplay();
-        Context context = getContext();
-        startPrepare(context, true);
-        mPlayerContainer.setKeepScreenOn(true);
     }
 
     /**
@@ -803,55 +804,54 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         return 1f;
     }
 
-    /**
-     * 设置视频地址
-     */
-    @Override
-    public void setUrl(@NonNull String url) {
-        setUrl(false, url, null);
-    }
-
-    /**
-     * 设置视频地址
-     */
-    @Override
-    public void setUrl(@NonNull boolean cache, @NonNull String url) {
-        setUrl(cache, url, null);
-    }
-
-    /**
-     * 获取视频地址
-     *
-     * @return
-     */
-    @Override
-    public String getUrl() {
-        return this.mUrl;
-    }
-
-    /**
-     * 设置包含请求头信息的视频地址
-     *
-     * @param url     视频地址
-     * @param headers 请求头
-     */
-    public void setUrl(@NonNull boolean cache, @NonNull String url, Map<String, String> headers) {
-        mAssetFileDescriptor = null;
-        mCache = cache;
-        mUrl = url;
-        mHeaders = headers;
-        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        if (config != null && config.mBuriedPointEvent != null) {
-            //相当于进入了视频页面
-            config.mBuriedPointEvent.playerIn(url);
-        }
-    }
+//    /**
+//     * 设置视频地址
+//     */
+//    @Override
+//    public void setUrl(@NonNull String url) {
+//        setUrl(false, url, null);
+//    }
+//
+//    /**
+//     * 设置视频地址
+//     */
+//    @Override
+//    public void setUrl(@NonNull boolean cache, @NonNull String url) {
+//        setUrl(cache, url, null);
+//    }
+//
+//    /**
+//     * 获取视频地址
+//     *
+//     * @return
+//     */
+//    @Override
+//    public String getUrl() {
+//        return this.mUrl;
+//    }
+//
+//    /**
+//     * 设置包含请求头信息的视频地址
+//     *
+//     * @param url     视频地址
+//     * @param headers 请求头
+//     */
+//    public void setUrl(@NonNull boolean cache, @NonNull String url, Map<String, String> headers) {
+//        mAssetFileDescriptor = null;
+//        mCache = cache;
+//        mUrl = url;
+//        mHeaders = headers;
+//        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
+//        if (config != null && config.mBuriedPointEvent != null) {
+//            //相当于进入了视频页面
+//            config.mBuriedPointEvent.playerIn(url);
+//        }
+//    }
 
     /**
      * 用于播放assets里面的视频文件
      */
     public void setAssetFileDescriptor(AssetFileDescriptor fd) {
-        mUrl = null;
         this.mAssetFileDescriptor = fd;
     }
 
@@ -1195,8 +1195,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         if (videoBuilder.mCurrentPosition > 0) {
             this.mCurrentPosition = videoBuilder.mCurrentPosition;
         }
-        //是否开启AudioFocus监听， 默认开启
-        this.mEnableAudioFocus = videoBuilder.mEnableAudioFocus;
     }
 
     @Override
@@ -1206,5 +1204,21 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             mVideoController.dispatchKeyEvent(event);
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    /*************************/
+
+    private final void updateUrl(@NonNull boolean cache, @NonNull String url, @NonNull Map<String, String> headers) {
+        mAssetFileDescriptor = null;
+        mUrl = url;
+        mCache = cache;
+        mHeaders = headers;
+    }
+
+    private final void clearUrl() {
+        mAssetFileDescriptor = null;
+        mUrl = null;
+        mCache = false;
+        mHeaders = null;
     }
 }

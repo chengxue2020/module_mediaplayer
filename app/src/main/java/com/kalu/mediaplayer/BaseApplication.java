@@ -9,11 +9,11 @@ import androidx.multidex.MultiDexApplication;
 import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.cache.CacheConfigManager;
 import lib.kalu.mediaplayer.cache.CacheType;
-import lib.kalu.mediaplayer.kernel.video.utils.PlayerFactoryUtils;
 import lib.kalu.mediaplayer.keycode.KeycodeImplSimulator;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.util.PlayerFactoryUtils;
 
 public class BaseApplication extends MultiDexApplication {
 

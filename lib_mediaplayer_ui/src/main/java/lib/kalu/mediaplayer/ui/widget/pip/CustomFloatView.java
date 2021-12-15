@@ -106,7 +106,7 @@ public class CustomFloatView extends FrameLayout implements InterControlView, Vi
             FloatVideoManager.getInstance(mContext).stopFloatWindow();
             FloatVideoManager.getInstance(mContext).reset();
         } else if (v == mIvStartPlay) {
-            mControlWrapper.togglePlay();
+            mControlWrapper.toggle();
         } else if (v == mIvSkip) {
             if (FloatVideoManager.getInstance(mContext).getActClass() != null) {
                 Intent intent = new Intent(getContext(), FloatVideoManager.getInstance(mContext).getActClass());

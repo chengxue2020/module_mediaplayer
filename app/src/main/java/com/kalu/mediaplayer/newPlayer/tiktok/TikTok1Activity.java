@@ -183,7 +183,6 @@ public class TikTok1Activity extends AppCompatActivity {
             releaseVideoView();
         }
         VideoInfoBean videoBean = mVideos.get(position);
-        mVideoView.setUrl(videoBean.getVideoUrl());
         View itemView = mLinearLayoutManager.findViewByPosition(position);
         if (itemView == null) return;
         VideoRecyclerViewAdapter.VideoHolder viewHolder = (VideoRecyclerViewAdapter.VideoHolder) itemView.getTag();
@@ -193,7 +192,7 @@ public class TikTok1Activity extends AppCompatActivity {
         viewHolder.mPlayerContainer.addView(mVideoView, 0);
         //播放之前将VideoView添加到VideoViewManager以便在别的页面也能操作它
         PlayerConfigManager.instance().add(mVideoView, "list");
-        mVideoView.start();
+        mVideoView.start(videoBean.getVideoUrl());
         mCurPos = position;
     }
 

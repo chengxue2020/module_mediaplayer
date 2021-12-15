@@ -101,7 +101,7 @@ public class CustomErrorView extends LinearLayout implements InterControlView, V
     public void onClick(View v) {
         if (v == mTvRetry){
             setVisibility(GONE);
-            mControlWrapper.replay(false);
+            mControlWrapper.restart(false);
         } else if (v == mIvStopFullscreen){
             //点击返回键
             if (mControlWrapper.isFullScreen()) {

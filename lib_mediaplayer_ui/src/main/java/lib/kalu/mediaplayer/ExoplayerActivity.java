@@ -75,12 +75,11 @@ public final class ExoplayerActivity extends AppCompatActivity {
 
         // 设置视频播放链接地址
         boolean cache = getIntent().getBooleanExtra(INTENT_CACHE, false);
-        videoLayout.setUrl(cache, url);
         videoLayout.showNetWarning();
         // 全屏
         videoLayout.startFullScreen();
         // 开始播放
-        videoLayout.start();
+        videoLayout.start(cache, url);
 
         // 监听
         videoLayout.setOnStateChangeListener(new OnVideoStateListener() {

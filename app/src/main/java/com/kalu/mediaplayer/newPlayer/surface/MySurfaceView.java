@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
 
@@ -134,7 +134,7 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
                             m_circle_r, paint);
                 }
             }
-            VideoLogUtils.e("MySurfaceView-----Draw");
+            MediaLogUtil.log("MySurfaceView-----Draw");
             System.out.println("MySurfaceView-----Draw");
             // 完成画画，把画布显示在屏幕上
             mHolder.unlockCanvasAndPost(mCanvas);
@@ -145,14 +145,14 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        VideoLogUtils.e("MySurfaceView-----onDraw");
+        MediaLogUtil.log("MySurfaceView-----onDraw");
         System.out.println("MySurfaceView-----onDraw");
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        VideoLogUtils.e("MySurfaceView-----draw");
+        MediaLogUtil.log("MySurfaceView-----draw");
         System.out.println("MySurfaceView-----draw");
     }
 }

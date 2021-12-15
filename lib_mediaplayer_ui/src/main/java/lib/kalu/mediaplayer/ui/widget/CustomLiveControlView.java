@@ -97,9 +97,9 @@ public class CustomLiveControlView extends FrameLayout implements InterControlVi
         if (id == R.id.iv_full_screen) {
             toggleFullScreen();
         } else if (id == R.id.iv_play) {
-            mControlWrapper.togglePlay();
+            mControlWrapper.toggle();
         } else if (id == R.id.iv_refresh) {
-            mControlWrapper.replay(true);
+            mControlWrapper.restart(true);
         }
     }
 

@@ -208,11 +208,10 @@ public class TikTok2Activity extends AppCompatActivity {
                 VideoInfoBean tiktokBean = mVideoList.get(position);
 //                String playUrl = mPreloadManager.getPlayUrl(tiktokBean.getVideoUrl());
 //                VideoLogUtils.i("startPlay: " + "position: " + position + "  url: " + playUrl);
-                mVideoPlayerLayout.setUrl(tiktokBean.getVideoUrl());
                 mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
                 mController.addControlComponent(viewHolder.mTikTokView, true);
                 viewHolder.mPlayerContainer.addView(mVideoPlayerLayout, 0);
-                mVideoPlayerLayout.start();
+                mVideoPlayerLayout.start(tiktokBean.getVideoUrl());
                 mCurPos = position;
                 break;
             }

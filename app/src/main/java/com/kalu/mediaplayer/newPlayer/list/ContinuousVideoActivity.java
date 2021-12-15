@@ -90,8 +90,7 @@ public class ContinuousVideoActivity extends AppCompatActivity implements View.O
         Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
         //设置控制器
         mVideoPlayerLayout.setController(controller);
-        mVideoPlayerLayout.setUrl(ConstantVideo.VideoPlayerList[0]);
-        mVideoPlayerLayout.start();
+        mVideoPlayerLayout.start(ConstantVideo.VideoPlayerList[0]);
 
         //监听播放结束
         mVideoPlayerLayout.addOnStateChangeListener(new OnVideoStateListener() {
@@ -106,10 +105,9 @@ public class ContinuousVideoActivity extends AppCompatActivity implements View.O
                         mVideoPlayerLayout.release();
                         //重新设置数据
                         VideoInfoBean videoBean = data.get(mCurrentVideoPosition);
-                        mVideoPlayerLayout.setUrl(videoBean.getVideoUrl());
                         mVideoPlayerLayout.setController(controller);
                         //开始播放
-                        mVideoPlayerLayout.start();
+                        mVideoPlayerLayout.start(videoBean.getVideoUrl());
                     }
                 }
             }

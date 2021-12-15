@@ -20,7 +20,6 @@ import com.kalu.mediaplayer.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
@@ -28,6 +27,7 @@ import lib.kalu.mediaplayer.ui.player.VideoLayout;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * 普通的列表播放
@@ -86,7 +86,7 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(@NonNull View view) {
-                VideoLogUtils.i("addOnChildAttachStateChangeListener-----AttachedToWindow---" + view);
+                MediaLogUtil.log("addOnChildAttachStateChangeListener-----AttachedToWindow---" + view);
             }
 
             /**
@@ -96,7 +96,7 @@ public class RecyclerViewFragment extends Fragment {
              */
             @Override
             public void onChildViewDetachedFromWindow(@NonNull View view) {
-                VideoLogUtils.i("addOnChildAttachStateChangeListener-----DetachedFromWindow---" + view);
+                MediaLogUtil.log("addOnChildAttachStateChangeListener-----DetachedFromWindow---" + view);
                 FrameLayout playerContainer = view.findViewById(R.id.player_container);
                 View v = playerContainer.getChildAt(0);
                 if (v != null && v == mVideoView && !mVideoView.isFullScreen()) {
@@ -171,7 +171,6 @@ public class RecyclerViewFragment extends Fragment {
             releaseVideoView();
         }
         VideoInfoBean videoBean = mVideos.get(position);
-        mVideoView.setUrl(videoBean.getVideoUrl());
         View itemView = mLinearLayoutManager.findViewByPosition(position);
         if (itemView == null) return;
         VideoRecyclerViewAdapter.VideoHolder viewHolder = (VideoRecyclerViewAdapter.VideoHolder) itemView.getTag();
@@ -181,7 +180,7 @@ public class RecyclerViewFragment extends Fragment {
         viewHolder.mPlayerContainer.addView(mVideoView, 0);
         //播放之前将VideoView添加到VideoViewManager以便在别的页面也能操作它
         PlayerConfigManager.instance().add(mVideoView, "list");
-        mVideoView.start();
+        mVideoView.start(videoBean.getVideoUrl());
         mCurPos = position;
     }
 

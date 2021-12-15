@@ -75,9 +75,8 @@ public class TestFullActivity extends BaseActivity implements View.OnClickListen
         Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
         //设置控制器
         mVideoPlayerLayout.setController(controller);
-        mVideoPlayerLayout.setUrl(ConstantVideo.VideoPlayerList[0]);
         mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
-        mVideoPlayerLayout.start();
+        mVideoPlayerLayout.start(ConstantVideo.VideoPlayerList[0]);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.kalu.mediaplayer;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.buried.BuriedPointEvent;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public class BuriedPointEventImpl implements BuriedPointEvent {
 
@@ -12,7 +12,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void playerIn(String url) {
-        VideoLogUtils.i("BuriedPointEvent---进入视频播放--" + url);
+        MediaLogUtil.log("BuriedPointEvent---进入视频播放--" + url);
     }
 
     /**
@@ -22,7 +22,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void playerDestroy(String url) {
-        VideoLogUtils.i("BuriedPointEvent---退出视频播放--" + url);
+        MediaLogUtil.log("BuriedPointEvent---退出视频播放--" + url);
     }
 
     /**
@@ -32,7 +32,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void playerCompletion(String url) {
-        VideoLogUtils.i("BuriedPointEvent---视频播放完成--" + url);
+        MediaLogUtil.log("BuriedPointEvent---视频播放完成--" + url);
     }
 
     /**
@@ -43,7 +43,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void onError(String url, boolean isNetError) {
-        VideoLogUtils.i("BuriedPointEvent---视频播放异常--" + url);
+        MediaLogUtil.log("BuriedPointEvent---视频播放异常--" + url);
     }
 
     /**
@@ -53,7 +53,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void clickAd(String url) {
-        VideoLogUtils.i("BuriedPointEvent---点击了视频广告--" + url);
+        MediaLogUtil.log("BuriedPointEvent---点击了视频广告--" + url);
     }
 
     /**
@@ -63,7 +63,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void playerAndProved(String url) {
-        VideoLogUtils.i("BuriedPointEvent---视频试看点击--" + url);
+        MediaLogUtil.log("BuriedPointEvent---视频试看点击--" + url);
     }
 
     /**
@@ -74,7 +74,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void playerOutProgress(String url, float progress) {
-        VideoLogUtils.i("BuriedPointEvent---退出视频播放时候的播放进度百度比--" + url + "-----" + progress);
+        MediaLogUtil.log("BuriedPointEvent---退出视频播放时候的播放进度百度比--" + url + "-----" + progress);
     }
 
     /**
@@ -86,7 +86,7 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void playerOutProgress(String url, long duration, long currentPosition) {
-        VideoLogUtils.i("BuriedPointEvent---退出视频播放时候的播放进度百度比--" + url + "-----" + duration + "----" + currentPosition);
+        MediaLogUtil.log("BuriedPointEvent---退出视频播放时候的播放进度百度比--" + url + "-----" + duration + "----" + currentPosition);
 //        VideoLocation location = new VideoLocation(url, currentPosition, duration);
 //        CacheConfigManager.getInstance().put(url, location);
     }
@@ -98,6 +98,6 @@ public class BuriedPointEventImpl implements BuriedPointEvent {
      */
     @Override
     public void videoToMusic(String url) {
-        VideoLogUtils.i("BuriedPointEvent---视频切换音频--" + url);
+        MediaLogUtil.log("BuriedPointEvent---视频切换音频--" + url);
     }
 }

@@ -143,7 +143,6 @@ public class TinyScreenActivity extends AppCompatActivity implements OnItemChild
             releaseVideoView();
         }
         VideoInfoBean videoBean = mVideos.get(position);
-        mVideoPlayerLayout.setUrl(videoBean.getVideoUrl());
         View itemView = mLinearLayoutManager.findViewByPosition(position);
         if (itemView == null) return;
         //注意：要先设置控制才能去设置控制器的状态。
@@ -155,7 +154,7 @@ public class TinyScreenActivity extends AppCompatActivity implements OnItemChild
         mController.addControlComponent(viewHolder.mPrepareView, true);
         PlayerUtils.removeViewFormParent(mVideoPlayerLayout);
         viewHolder.mPlayerContainer.addView(mVideoPlayerLayout, 0);
-        mVideoPlayerLayout.start();
+        mVideoPlayerLayout.start(videoBean.getVideoUrl());
         mCurPos = position;
     }
 

@@ -36,6 +36,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import java.util.Map;
+
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
@@ -49,30 +51,40 @@ import lib.kalu.mediaplayer.ui.config.PlayerType;
  */
 public interface InterVideoPlayer {
 
-    /**
-     * 设置链接
-     *
-     * @param url url
-     */
-    void setUrl(@NonNull String url);
-    /**
-     * 设置链接
-     *
-     * @param url url
-     */
-    void setUrl(@NonNull boolean cache, @NonNull String url);
+    default void start(@NonNull String url) {
+        start(false, url, null);
+    }
 
-    /**
-     * 获取播放链接
-     *
-     * @return 链接
-     */
-    String getUrl();
+    default void start(@NonNull boolean cache, @NonNull String url) {
+        start(cache, url, null);
+    }
 
     /**
      * 开始播放
+     *
+     * @param cache
+     * @param url
+     * @param headers
      */
-    void start();
+    void start(@NonNull boolean cache, @NonNull String url, @NonNull Map<String, String> headers);
+
+    default void restart() {
+        restart(false);
+    }
+
+    /**
+     * 重新播放
+     *
+     * @param reset 是否从头开始播放
+     */
+    void restart(@NonNull boolean reset);
+
+//    /**
+//     * 获取播放链接
+//     *
+//     * @return 链接
+//     */
+//    String getUrl();
 
     /**
      * 暂停播放
@@ -132,8 +144,6 @@ public interface InterVideoPlayer {
     float getSpeed();
 
     long getTcpSpeed();
-
-    void replay(@NonNull boolean resetPosition);
 
     void setMirrorRotation(boolean enable);
 

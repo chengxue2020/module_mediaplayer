@@ -26,6 +26,8 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Map;
+
 import lib.kalu.mediaplayer.ui.controller.ImplController;
 import lib.kalu.mediaplayer.ui.player.InterVideoPlayer;
 
@@ -42,33 +44,38 @@ import lib.kalu.mediaplayer.ui.player.InterVideoPlayer;
  */
 @Keep
 public class ControlWrapper implements InterVideoPlayer, ImplController {
-    
+
     private InterVideoPlayer mVideoPlayer;
     private ImplController mController;
-    
+
     public ControlWrapper(@NonNull InterVideoPlayer videoPlayer, @NonNull ImplController controller) {
         mVideoPlayer = videoPlayer;
         mController = controller;
     }
 
+//    @Override
+//    public void setUrl(String url) {
+//        mVideoPlayer.setUrl(url);
+//    }
+//
+//    @Override
+//    public void setUrl(@NonNull boolean cache, @NonNull String url) {
+//        mVideoPlayer.setUrl(cache, url);
+//    }
+//
+//    @Override
+//    public String getUrl() {
+//        return mVideoPlayer.getUrl();
+//    }
+
     @Override
-    public void setUrl(String url) {
-        mVideoPlayer.setUrl(url);
+    public void start(@NonNull boolean cache, @NonNull String url, @NonNull Map<String, String> headers) {
+        mVideoPlayer.start(cache, url, headers);
     }
 
     @Override
-    public void setUrl(@NonNull boolean cache, @NonNull String url) {
-        mVideoPlayer.setUrl(cache, url);
-    }
-
-    @Override
-    public String getUrl() {
-        return mVideoPlayer.getUrl();
-    }
-
-    @Override
-    public void start() {
-        mVideoPlayer.start();
+    public void restart(@NonNull boolean reset) {
+        mVideoPlayer.restart(reset);
     }
 
     @Override
@@ -147,11 +154,6 @@ public class ControlWrapper implements InterVideoPlayer, ImplController {
     }
 
     @Override
-    public void replay(boolean resetPosition) {
-        mVideoPlayer.replay(resetPosition);
-    }
-
-    @Override
     public void setMirrorRotation(boolean enable) {
         mVideoPlayer.setMirrorRotation(enable);
     }
@@ -189,11 +191,11 @@ public class ControlWrapper implements InterVideoPlayer, ImplController {
     /**
      * 播放和暂停
      */
-    public void togglePlay() {
+    public void toggle() {
         if (isPlaying()) {
             pause();
         } else {
-            start();
+            restart();
         }
     }
 
@@ -235,7 +237,7 @@ public class ControlWrapper implements InterVideoPlayer, ImplController {
         if (isFullScreen()) {
             stopFullScreen();
             if (width > height) {
-               activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
         } else {
             startFullScreen();

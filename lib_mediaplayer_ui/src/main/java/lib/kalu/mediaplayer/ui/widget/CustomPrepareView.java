@@ -84,7 +84,7 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
             public void onClick(View v) {
                 mFlNetWarning.setVisibility(GONE);
                 PlayerConfigManager.instance().setPlayOnMobileNetwork(true);
-                mControlWrapper.start();
+                mControlWrapper.restart();
             }
         });
     }
@@ -96,7 +96,7 @@ public class CustomPrepareView extends FrameLayout implements InterControlView {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mControlWrapper.start();
+                mControlWrapper.restart();
             }
         });
     }

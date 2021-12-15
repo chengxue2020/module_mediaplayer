@@ -214,7 +214,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         //如果没有锁屏，
         if (!isLocked() && isInPlaybackState()) {
             //播放和暂停
-            togglePlay();
+            toggle();
         }
         return true;
     }

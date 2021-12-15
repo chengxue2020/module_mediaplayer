@@ -137,7 +137,7 @@ public class AdControlView extends FrameLayout implements InterControlView, View
         } else if (id == R.id.ad_time) {
             if (mListener != null) mListener.onSkipAd();
         } else if (id == R.id.iv_play) {
-            mControlWrapper.togglePlay();
+            mControlWrapper.toggle();
         }
     }
 

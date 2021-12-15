@@ -90,8 +90,7 @@ public class ClarityActivity extends AppCompatActivity implements View.OnClickLi
         mDefinitionControlView.setOnRateSwitchListener(new DefinitionControlView.OnRateSwitchListener() {
             @Override
             public void onRateChange(String url) {
-                mVideoPlayerLayout.setUrl(url);
-                mVideoPlayerLayout.replay(false);
+                mVideoPlayerLayout.start(url);
             }
         });
         List<VideoInfoBean> clarites = getClarites();
@@ -106,8 +105,7 @@ public class ClarityActivity extends AppCompatActivity implements View.OnClickLi
         Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
         //设置控制器
         mVideoPlayerLayout.setController(controller);
-        mVideoPlayerLayout.setUrl(clarites.get(0).getVideoUrl());
-        mVideoPlayerLayout.start();
+        mVideoPlayerLayout.start(clarites.get(0).getVideoUrl());
     }
 
 

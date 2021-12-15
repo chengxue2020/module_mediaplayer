@@ -21,13 +21,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 import lib.kalu.mediaplayer.util.SpUtil;
 import lib.kalu.mediaplayer.kernel.music.config.MusicConstant;
 import lib.kalu.mediaplayer.kernel.music.config.PlayModeEnum;
 import lib.kalu.mediaplayer.kernel.music.inter.OnPlayerEventListener;
 import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
 import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 
 import com.kalu.mediaplayer.R;
@@ -79,7 +79,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        VideoLogUtils.e(TAG + "setUserVisibleHint" + isVisibleToUser);
+        MediaLogUtil.log(TAG + "setUserVisibleHint" + isVisibleToUser);
     }
 
     /**
@@ -92,7 +92,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        VideoLogUtils.e(TAG + "onHiddenChanged" + hidden);
+        MediaLogUtil.log(TAG + "onHiddenChanged" + hidden);
         if (!hidden) {
             initData();
         }
@@ -393,7 +393,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
         sbProgress.setProgress((int) BaseAppHelper.get().getMusicService().getCurrentPosition());
         sbProgress.setSecondaryProgress(0);
         sbProgress.setMax((int) playingMusic.getDuration());
-        VideoLogUtils.e("-----------------------" + (int) playingMusic.getDuration());
+        MediaLogUtil.log("-----------------------" + (int) playingMusic.getDuration());
         mLastProgress = 0;
         tvCurrentTime.setText("00:00");
         tvTotalTime.setText(PlayerUtils.formatTime(playingMusic.getDuration()));
@@ -444,7 +444,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onBufferingUpdate(int percent) {
         if (sbProgress.getMax() > 0 && percent > 0) {
-            VideoLogUtils.e("setOnPlayEventListener---percent---" + sbProgress.getMax() + "-----" + percent);
+            MediaLogUtil.log("setOnPlayEventListener---percent---" + sbProgress.getMax() + "-----" + percent);
             sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
         }
     }

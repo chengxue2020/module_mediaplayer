@@ -103,7 +103,7 @@ public class CustomBottomView extends FrameLayout implements InterControlView, V
         if (v.getId() == R.id.module_mediaplayer_controller_bottom_full) {
             toggleFullScreen();
         } else if (v.getId() == R.id.module_mediaplayer_controller_bottom_play) {
-            mControlWrapper.togglePlay();
+            mControlWrapper.toggle();
         }
     }
 

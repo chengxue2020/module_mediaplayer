@@ -23,7 +23,6 @@ public class PlayerConfig {
 
     public final boolean mPlayOnMobileNetwork;
     public final boolean mEnableOrientation;
-    public final boolean mEnableAudioFocus;
     public final boolean mIsEnableLog;
     public final ProgressManager mProgressManager;
     public final PlayerFactory mPlayerFactory;
@@ -39,7 +38,6 @@ public class PlayerConfig {
         mIsEnableLog = builder.mIsEnableLog;
         mEnableOrientation = builder.mEnableOrientation;
         mPlayOnMobileNetwork = builder.mPlayOnMobileNetwork;
-        mEnableAudioFocus = builder.mEnableAudioFocus;
         mProgressManager = builder.mProgressManager;
         mScreenScaleType = builder.mScreenScaleType;
         if (null == builder.mKeycodeImpl) {
@@ -84,10 +82,6 @@ public class PlayerConfig {
          * 是否监听设备方向来切换全屏/半屏， 默认不开启
          */
         private boolean mEnableOrientation;
-        /**
-         * 是否开启AudioFocus监听， 默认开启
-         */
-        private boolean mEnableAudioFocus = true;
         /**
          * 设置进度管理器，用于保存播放进度
          */
@@ -145,14 +139,6 @@ public class PlayerConfig {
          */
         public Builder setPlayOnMobileNetwork(boolean playOnMobileNetwork) {
             mPlayOnMobileNetwork = playOnMobileNetwork;
-            return this;
-        }
-
-        /**
-         * 是否开启AudioFocus监听， 默认开启
-         */
-        public Builder setEnableAudioFocus(boolean enableAudioFocus) {
-            mEnableAudioFocus = enableAudioFocus;
             return this;
         }
 

@@ -64,8 +64,7 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             //不是无缝播放的情况
             String url = intent.getStringExtra(IntentKeys.URL);
-            mVideoView.setUrl(url);
-            mVideoView.start();
+            mVideoView.start(url);
         }
     }
 

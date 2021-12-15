@@ -104,8 +104,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
 //        String proxyVideoUrl = server.getProxyUrl(URL_AD);
 
 
-        mVideoPlayerLayout.setUrl(URL_AD);
-        mVideoPlayerLayout.start();
+        mVideoPlayerLayout.start(URL_AD);
         //监听播放结束
         mVideoPlayerLayout.addOnStateChangeListener(new OnVideoStateListener() {
             @Override
@@ -125,10 +124,8 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
         mVideoPlayerLayout.release();
         controller.removeAllControlComponent();
         controller.addDefaultControlComponent("正片");
-        //重新设置数据
-        mVideoPlayerLayout.setUrl(ConstantVideo.VideoPlayerList[0]);
         //开始播放
-        mVideoPlayerLayout.start();
+        mVideoPlayerLayout.start(ConstantVideo.VideoPlayerList[0]);
     }
 
     private void initListener() {

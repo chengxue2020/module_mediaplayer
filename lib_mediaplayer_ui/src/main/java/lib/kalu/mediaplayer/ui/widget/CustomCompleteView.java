@@ -101,7 +101,7 @@ public class CustomCompleteView extends FrameLayout implements InterControlView,
     public void onClick(View v) {
         if (v == mLlReplay){
             //点击重播
-            mControlWrapper.replay(true);
+            mControlWrapper.restart(true);
         }
 //        else if (v == mLlShare){
 //            //点击分享

@@ -94,7 +94,7 @@ public class CustomOncePlayView extends LinearLayout implements InterControlView
                 if (playState == PlayerType.StateType.STATE_ONCE_LIVE){
                     //即将开播
                     if (PlayerUtils.isConnected(mContext)){
-                        mControlWrapper.start();
+                        mControlWrapper.restart();
                     } else {
                         BaseToast.showRoundRectToast(v.getContext(), "请查看网络是否连接");
                     }

@@ -41,7 +41,7 @@ public class MultipleActivity extends AppCompatActivity {
 
     private void initVideoPlayer() {
         //必须设置
-        player1.setUrl(VOD_URL_1);
+//        player1.setUrl(VOD_URL_1);
         VideoBuilder.Builder builder = VideoBuilder.newBuilder();
         builder.setEnableAudioFocus(false);
         VideoBuilder videoPlayerBuilder = new VideoBuilder(builder);
@@ -51,7 +51,7 @@ public class MultipleActivity extends AppCompatActivity {
         mVideoViews.add(player1);
 
         //必须设置
-        player2.setUrl(VOD_URL_2);
+//        player2.setUrl(VOD_URL_2);
         VideoBuilder.Builder builder2 = VideoBuilder.newBuilder();
         builder.setEnableAudioFocus(false);
         VideoBuilder videoPlayerBuilder2 = new VideoBuilder(builder2);
