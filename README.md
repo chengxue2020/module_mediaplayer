@@ -1,17 +1,17 @@
 #
-#### exoplayer module
+#### 模块
 
 ![image](https://github.com/153437803/module_mediaplayer/blob/master/exoplayer.png )
 
 #
-#### Todo List
+#### 计划
 ```
 1. 持续优化，删除冗余模块
 2. 适配TV
 ```
 
 #
-#### Update List
+#### 更新
 ```
 ----------------------------------------
 
