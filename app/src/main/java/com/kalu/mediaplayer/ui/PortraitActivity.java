@@ -174,8 +174,6 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
         //设置小屏的宽高
         int[] mTinyScreenSize = {0, 0};
         builder.setTinyScreenSize(mTinyScreenSize);
-        //是否开启AudioFocus监听， 默认开启
-        builder.setEnableAudioFocus(false);
         mVideoPlayer.setVideoBuilder(videoPlayerBuilder);
         //截图
         Bitmap bitmap = mVideoPlayer.doScreenShot();
@@ -365,8 +363,6 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
                 .setPlayerFactory(player)
                 //在移动环境下调用start()后是否继续播放，默认不继续播放
                 .setPlayOnMobileNetwork(false)
-                //是否开启AudioFocus监听， 默认开启
-                .setEnableAudioFocus(true)
                 //是否适配刘海屏，默认适配
                 .setAdaptCutout(true)
                 //监听设备方向来切换全屏/半屏， 默认不开启

@@ -5,6 +5,7 @@ import static com.google.android.exoplayer2.ExoPlaybackException.TYPE_SOURCE;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.os.Handler;
+import android.util.Pair;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -20,8 +21,10 @@ import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RendererConfiguration;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.analytics.AnalyticsCollector;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.LoadEventInfo;
@@ -29,12 +32,15 @@ import com.google.android.exoplayer2.source.MediaLoadData;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MediaSourceEventListener;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.ExoTrackSelection;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.video.VideoSize;
+
+import org.checkerframework.checker.nullness.compatqual.NullableType;
 
 import java.util.Map;
 
@@ -54,7 +60,7 @@ import lib.kalu.mediaplayer.ui.config.PlayerType;
 @Keep
 public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
 
-    protected SimpleExoPlayer mInternalPlayer;
+    protected ExoPlayer mInternalPlayer;
     protected MediaSource mMediaSource;
     protected ExoMediaSourceHelper mMediaSourceHelper;
     private PlaybackParameters mSpeedPlaybackParameters;
@@ -63,9 +69,9 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     private boolean mIsPreparing;
     private boolean mIsBuffering;
 
-    private LoadControl mLoadControl;
-    private RenderersFactory mRenderersFactory;
-    private TrackSelector mTrackSelector;
+//    private LoadControl mLoadControl;
+//    private RenderersFactory mRenderersFactory;
+//    private TrackSelector mTrackSelector;
 
     public ExoMediaPlayer(@NonNull Context context) {
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
@@ -73,7 +79,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
 
     @NonNull
     @Override
-    public SimpleExoPlayer getPlayer() {
+    public ExoPlayer getPlayer() {
         return mInternalPlayer;
     }
 
@@ -81,21 +87,28 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     public void initPlayer(@NonNull Context context, @NonNull String url) {
 
         //创建exo播放器
-        mInternalPlayer = new SimpleExoPlayer.Builder(
-                context,
-                mRenderersFactory == null ? mRenderersFactory = new DefaultRenderersFactory(context) : mRenderersFactory,
-                mTrackSelector == null ? mTrackSelector = new DefaultTrackSelector(context) : mTrackSelector,
-                new DefaultMediaSourceFactory(context),
-                mLoadControl == null ? mLoadControl = new DefaultLoadControl() : mLoadControl,
-                DefaultBandwidthMeter.getSingletonInstance(context),
-                new AnalyticsCollector(Clock.DEFAULT))
-                .build();
+//        mInternalPlayer = new SimpleExoPlayer.Builder(
+//                context,
+//                mRenderersFactory == null ? mRenderersFactory =  : mRenderersFactory,
+//                mTrackSelector == null ? mTrackSelector =  : mTrackSelector,
+//               ,
+//                )
+//                .build();
+
+        ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
+        builder.setAnalyticsCollector(new AnalyticsCollector(Clock.DEFAULT));
+        builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
+        builder.setLoadControl(new DefaultLoadControl());
+        builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
+        builder.setTrackSelector(new DefaultTrackSelector(context));
+        builder.setRenderersFactory(new DefaultRenderersFactory(context));
+        mInternalPlayer = builder.build();
 
         setOptions();
 
         //播放器日志
-        if (mTrackSelector instanceof MappingTrackSelector) {
-            mInternalPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
+        if (mInternalPlayer.getTrackSelector() instanceof MappingTrackSelector) {
+            mInternalPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mInternalPlayer.getTrackSelector(), "ExoPlayer"));
         }
         initListener();
     }
@@ -107,17 +120,17 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
         mInternalPlayer.addListener(this);
     }
 
-    public void setTrackSelector(TrackSelector trackSelector) {
-        mTrackSelector = trackSelector;
-    }
+//    public void setTrackSelector(TrackSelector trackSelector) {
+//        mTrackSelector = trackSelector;
+//    }
+//
+//    public void setRenderersFactory(RenderersFactory renderersFactory) {
+//        mRenderersFactory = renderersFactory;
+//    }
 
-    public void setRenderersFactory(RenderersFactory renderersFactory) {
-        mRenderersFactory = renderersFactory;
-    }
-
-    public void setLoadControl(LoadControl loadControl) {
-        mLoadControl = loadControl;
-    }
+//    public void setLoadControl(LoadControl loadControl) {
+//        mLoadControl = loadControl;
+//    }
 
     /**
      * 设置播放地址

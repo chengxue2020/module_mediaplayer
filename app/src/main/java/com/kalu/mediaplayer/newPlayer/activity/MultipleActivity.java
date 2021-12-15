@@ -43,7 +43,6 @@ public class MultipleActivity extends AppCompatActivity {
         //必须设置
 //        player1.setUrl(VOD_URL_1);
         VideoBuilder.Builder builder = VideoBuilder.newBuilder();
-        builder.setEnableAudioFocus(false);
         VideoBuilder videoPlayerBuilder = new VideoBuilder(builder);
         player1.setVideoBuilder(videoPlayerBuilder);
         CustomCenterController controller1 = new CustomCenterController(this);
@@ -53,7 +52,6 @@ public class MultipleActivity extends AppCompatActivity {
         //必须设置
 //        player2.setUrl(VOD_URL_2);
         VideoBuilder.Builder builder2 = VideoBuilder.newBuilder();
-        builder.setEnableAudioFocus(false);
         VideoBuilder videoPlayerBuilder2 = new VideoBuilder(builder2);
         player2.setVideoBuilder(videoPlayerBuilder2);
         CustomCenterController controller2 = new CustomCenterController(this);

@@ -1212,6 +1212,12 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         mUrl = url;
         mCache = cache;
         mHeaders = headers;
+
+        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
+        if (config != null && config.mBuriedPointEvent != null) {
+            //相当于进入了视频页面
+            config.mBuriedPointEvent.playerIn(url);
+        }
     }
 
     private final void clearUrl() {

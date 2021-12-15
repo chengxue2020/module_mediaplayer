@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -48,7 +49,7 @@ public class ExoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exo_player);
         mVideoView = findViewById(R.id.video_view);
 
-        SimpleExoPlayer player = ExoPlayerFactory.create().createPlayer(getApplicationContext()).getPlayer();
+        ExoPlayer player = ExoPlayerFactory.create().createPlayer(getApplicationContext()).getPlayer();
         player.setPlayWhenReady(true);
         mVideoView.setPlayer(player);
         Uri uri = Uri.parse(ConstantVideo.VideoPlayerList[0]);
