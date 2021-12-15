@@ -30,10 +30,10 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.widget.InterControlView;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
@@ -368,7 +368,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        VideoLogUtils.e("事件----------事件拦截----------");
+        MediaLogUtil.log("事件----------事件拦截----------");
         return super.onInterceptTouchEvent(ev);
     }
 
@@ -383,7 +383,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        VideoLogUtils.e("事件----------事件分发----------");
+        MediaLogUtil.log("事件----------事件分发----------");
         return super.dispatchTouchEvent(ev);
     }
 
@@ -395,7 +395,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        VideoLogUtils.e("事件----------事件触摸----------");
+        MediaLogUtil.log("事件----------事件触摸----------");
         //滑动结束时事件处理
         if (!mGestureDetector.onTouchEvent(event)) {
             int action = event.getAction();

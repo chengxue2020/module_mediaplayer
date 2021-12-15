@@ -22,8 +22,8 @@ import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.player.VideoLayout;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * @description: 视频播放器管理器，管理当前正在播放的VideoView，以及播放器配置
@@ -132,7 +132,7 @@ public class PlayerConfigManager {
      */
     public void add(VideoLayout videoView, String tag) {
         if (!(videoView.getContext() instanceof Application)) {
-            VideoLogUtils.i("The Context of this VideoView is not an Application Context," +
+            MediaLogUtil.log("The Context of this VideoView is not an Application Context," +
                     "you must remove it after release,or it will lead to memory leek.");
         }
         VideoLayout old = get(tag);

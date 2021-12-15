@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer.kernel.video.platfrom.exo;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,13 +19,11 @@ import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
-import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
@@ -35,7 +32,7 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.cache.CacheType;
-import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * @description: exo视频播放器帮助类
@@ -69,7 +66,7 @@ public final class ExoMediaSourceHelper {
      */
     public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         Uri contentUri = Uri.parse(url);
-        LogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", cache = " + cache + ", url = " + url);
+        MediaLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", cache = " + cache + ", url = " + url);
         // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
             RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
@@ -87,17 +84,17 @@ public final class ExoMediaSourceHelper {
 
             // 磁盘缓存
             if (cache && null != context && null != config && config.getCacheType() > CacheType.RAM) {
-                LogUtil.log("getMediaSource => 磁盘缓存");
+                MediaLogUtil.log("getMediaSource => 磁盘缓存");
                 factory = createFactory(context, url, config);
             }
             // 内存缓存
             else if (cache) {
-                LogUtil.log("getMediaSource => 内存缓存");
+                MediaLogUtil.log("getMediaSource => 内存缓存");
                 factory = new DefaultDataSource.Factory(context, getHttpDataSourceFactory());
             }
             // 不缓存
             else {
-                LogUtil.log("getMediaSource => 不缓存");
+                MediaLogUtil.log("getMediaSource => 不缓存");
                 factory = new DefaultDataSource.Factory(context);
             }
 
@@ -174,7 +171,7 @@ public final class ExoMediaSourceHelper {
 
     private DataSource.Factory createFactory(@NonNull Context context, @NonNull String uri, @NonNull CacheConfig config) {
 
-        LogUtil.log("createFactory => uri = " + uri);
+        MediaLogUtil.log("createFactory => uri = " + uri);
         int size;
         String dir;
         if (null != config) {
@@ -196,7 +193,7 @@ public final class ExoMediaSourceHelper {
             ExoDatabaseProvider provider = new ExoDatabaseProvider(context);
             SimpleCache cache = new SimpleCache(file, evictor, provider);
             factory.setCache(cache);
-            LogUtil.log("createFactory => cache = " + cache);
+            MediaLogUtil.log("createFactory => cache = " + cache);
         }
 
         factory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);

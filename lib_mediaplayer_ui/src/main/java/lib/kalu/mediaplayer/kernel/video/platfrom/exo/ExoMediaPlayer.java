@@ -17,7 +17,6 @@ import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -41,7 +40,6 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 
 /**
@@ -96,7 +94,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
         setOptions();
 
         //播放器日志
-        if (VideoLogUtils.isIsLog() && mTrackSelector instanceof MappingTrackSelector) {
+        if (mTrackSelector instanceof MappingTrackSelector) {
             mInternalPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
         }
         initListener();
@@ -124,11 +122,11 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     /**
      * 设置播放地址
      *
-     * @param url    播放地址
+     * @param url     播放地址
      * @param headers 播放地址请求头
      */
     @Override
-    public void setDataSource(@NonNull Context context,@NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
+    public void setDataSource(@NonNull Context context, @NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {

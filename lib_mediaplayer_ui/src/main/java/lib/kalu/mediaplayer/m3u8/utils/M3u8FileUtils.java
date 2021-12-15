@@ -1,7 +1,5 @@
 package lib.kalu.mediaplayer.m3u8.utils;
 
-import android.util.Log;
-
 import androidx.annotation.Keep;
 
 import org.apache.commons.io.FileUtils;
@@ -20,6 +18,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.m3u8.bean.M3u8;
 import lib.kalu.mediaplayer.m3u8.bean.M3u8Ts;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
@@ -202,7 +201,7 @@ public final class M3u8FileUtils {
                 }
             }
         }
-        Log.e("hdltag", "getLimitM3U8Ts(MUtils.java:152):" + downList);
+        MediaLogUtil.log("getLimitM3U8Ts(MUtils.java:152):" + downList);
         return downList;
     }
 }

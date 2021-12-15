@@ -28,7 +28,6 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 
 import androidx.annotation.CallSuper;
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -38,7 +37,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
@@ -48,6 +46,7 @@ import lib.kalu.mediaplayer.ui.tool.NetworkUtils;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.tool.StatesCutoutUtils;
 import lib.kalu.mediaplayer.ui.widget.InterControlView;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
@@ -442,7 +441,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
                 mCutoutHeight = (int) PlayerUtils.getStatusBarHeightPortrait(mActivity);
             }
         }
-        VideoLogUtils.d("hasCutout: " + mHasCutout + " cutout height: " + mCutoutHeight);
+        MediaLogUtil.log("hasCutout: " + mHasCutout + " cutout height: " + mCutoutHeight);
     }
 
     /**

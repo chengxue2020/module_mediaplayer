@@ -71,7 +71,6 @@ public class M3u8InfoManger {
             @Override
             public void run() {
                 try {
-//                    Log.e("hdltag", "run(M3U8InfoManger.java:62):" + url);
                     M3u8 m3u8 = M3u8FileUtils.parseIndex(url);
                     handlerSuccess(m3u8);
                 } catch (IOException e) {

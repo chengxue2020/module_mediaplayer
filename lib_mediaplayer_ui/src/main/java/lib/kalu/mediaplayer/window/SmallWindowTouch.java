@@ -1,11 +1,12 @@
 package lib.kalu.mediaplayer.window;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Keep;
+
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
@@ -38,7 +39,7 @@ public class SmallWindowTouch implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
-        Log.e("onTouch","---X---"+X + "---Y---"+Y);
+        MediaLogUtil.log("onTouch => ---X---" + X + "---Y---" + Y);
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = X;

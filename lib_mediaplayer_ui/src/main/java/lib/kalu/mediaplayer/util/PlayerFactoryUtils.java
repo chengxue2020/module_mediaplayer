@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.kernel.video.utils;
+package lib.kalu.mediaplayer.util;
 
 import android.content.Context;
 
@@ -30,9 +30,7 @@ public final class PlayerFactoryUtils {
      * @return
      */
     public static PlayerFactory getPlayer(@PlayerType.PlatformType int type) {
-        if (type == PlayerType.PlatformType.EXO) {
-            return ExoPlayerFactory.create();
-        } else if (type == PlayerType.PlatformType.IJK) {
+        if (type == PlayerType.PlatformType.IJK) {
             return IjkPlayerFactory.create();
         } else if (type == PlayerType.PlatformType.NATIVE) {
             return MediaPlayerFactory.create();
@@ -53,9 +51,7 @@ public final class PlayerFactoryUtils {
      * @return
      */
     public static VideoPlayerImpl getVideoPlayer(@NonNull Context context, @PlayerType.PlatformType.Value int type) {
-        if (type == PlayerType.PlatformType.EXO) {
-            return ExoPlayerFactory.create().createPlayer(context);
-        } else if (type == PlayerType.PlatformType.IJK) {
+        if (type == PlayerType.PlatformType.IJK) {
             return IjkPlayerFactory.create().createPlayer(context);
         } else if (type == PlayerType.PlatformType.NATIVE) {
             return MediaPlayerFactory.create().createPlayer(context);

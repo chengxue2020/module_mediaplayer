@@ -23,8 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,7 +34,7 @@ import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
 import lib.kalu.mediaplayer.ui.config.PlayerType;
 import lib.kalu.mediaplayer.ui.controller.IGestureComponent;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * description:手势控制, 用于滑动改变亮度和音量的功能
@@ -132,7 +130,7 @@ public class CustomGestureView extends FrameLayout implements IGestureComponent 
      */
     @Override
     public void onPositionChange(int slidePosition, int currentPosition, int duration) {
-        LogUtil.log("onPositionChange => slidePosition = " + slidePosition + ", currentPosition = " + currentPosition + ", duration = " + duration);
+        MediaLogUtil.log("onPositionChange => slidePosition = " + slidePosition + ", currentPosition = " + currentPosition + ", duration = " + duration);
         TextView viewText = findViewById(R.id.module_mediaplayer_controller_gesture_text);
         if (slidePosition > currentPosition) {
             viewText.setText("快进\n" + String.format("%s/%s", PlayerUtils.formatTime(slidePosition), PlayerUtils.formatTime(duration)));

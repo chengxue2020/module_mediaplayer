@@ -1,14 +1,11 @@
 package lib.kalu.mediaplayer.cache;
 
 import android.content.Context;
-import android.os.Debug;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import java.io.IOException;
-
-import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * @description: 音视频播放记录本地缓存 最开始使用greenDao，二级缓存耗时100毫秒左右 磁盘+内存+key缓存+读写优化，耗时大概2到5毫秒左右
@@ -32,8 +29,8 @@ public class CacheConfigManager {
 
     public void setConfig(@NonNull Context context, @NonNull CacheConfig config) {
         this.cacheConfig = config;
-        LogUtil.setIsLog(cacheConfig.isLog());
-        LogUtil.log("CacheConfigManager-----init初始化-");
+        MediaLogUtil.setIsLog(cacheConfig.isLog());
+        MediaLogUtil.log("CacheConfigManager-----init初始化-");
     }
 
     public @NonNull

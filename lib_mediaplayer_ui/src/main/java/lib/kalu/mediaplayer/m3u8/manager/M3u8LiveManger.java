@@ -188,7 +188,6 @@ public class M3u8LiveManger {
                                 }
                                 downloadedFileList.add(file);
                                 Log.i("hdltag", "run(M3U8LiveManger.java:138):下完一个了" + file.getAbsolutePath());
-//                                Log.e("hdltag", "run(M3U8DownloadTask.java:188):进度\t" + totalTs + "-----" + curTs);
                             } else {
                                 handlerError(new Throwable(String.valueOf(conn.getResponseCode())));
                             }
@@ -274,7 +273,6 @@ public class M3u8LiveManger {
                                 addTs(m3u8.getTsList());
 //                                m3U8TsList.addAll(m3u8.getTsList());
                             }
-//                            Log.e("hdltag", "run(M3U8LiveManger.java:59):" + m3u8);
                         } catch (IOException e) {
                             e.printStackTrace();
                             handlerError(e);

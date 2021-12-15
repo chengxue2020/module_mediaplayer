@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ import lib.kalu.mediaplayer.cache.CacheConfigManager;
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
-import lib.kalu.mediaplayer.kernel.video.utils.VideoLogUtils;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.ui.config.PlayerConfig;
 import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
@@ -42,6 +40,7 @@ import lib.kalu.mediaplayer.ui.surface.SurfaceFactory;
 import lib.kalu.mediaplayer.ui.tool.BaseToast;
 import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
 import lib.kalu.mediaplayer.ui.tool.VideoException;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * @description: 播放器具体实现类
@@ -185,7 +184,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         mCurrentScreenScaleType = config.mScreenScaleType;
         mRenderViewFactory = config.mRenderViewFactory;
         //设置是否打印日志
-        VideoLogUtils.setIsLog(config.mIsEnableLog);
+        MediaLogUtil.setIsLog(config.mIsEnableLog);
     }
 
     /**
@@ -203,7 +202,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        VideoLogUtils.d("onAttachedToWindow");
+        MediaLogUtil.log("onAttachedToWindow");
         //init();
         //在构造函数初始化时addView
     }
@@ -223,7 +222,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        VideoLogUtils.d("onDetachedFromWindow");
+        MediaLogUtil.log("onDetachedFromWindow");
         if (mVideoController != null) {
             mVideoController.destroy();
         }
@@ -263,7 +262,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     @Override
     protected Parcelable onSaveInstanceState() {
-        VideoLogUtils.d("onSaveInstanceState: " + mCurrentPosition);
+        MediaLogUtil.log("onSaveInstanceState: " + mCurrentPosition);
         //activity切到后台后可能被系统回收，故在此处进行进度保存
         saveProgress();
         return super.onSaveInstanceState();
@@ -552,7 +551,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     protected void saveProgress() {
         if (mProgressManager != null && mCurrentPosition > 0) {
-            VideoLogUtils.d("saveProgress: " + mCurrentPosition);
+            MediaLogUtil.log("saveProgress: " + mCurrentPosition);
             mProgressManager.saveProgress(mUrl, mCurrentPosition);
         }
     }
@@ -629,7 +628,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     public void seekTo(long pos) {
         long seek;
         if (pos < 0) {
-            VideoLogUtils.d("设置参数-------设置开始跳转播放位置不能小于0");
+            MediaLogUtil.log("设置参数-------设置开始跳转播放位置不能小于0");
             seek = 0;
         } else {
             seek = pos;
@@ -1202,7 +1201,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        Log.e("VideoLayout", "dispatchKeyEvent => " + event.getKeyCode());
+        MediaLogUtil.log("dispatchKeyEvent => " + event.getKeyCode());
         if (null != mVideoController) {
             mVideoController.dispatchKeyEvent(event);
         }
