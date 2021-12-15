@@ -1,4 +1,9 @@
 #
+#### exoplayer module
+
+![image](https://github.com/153437803/module_mediaplayer/blob/master/exoplayer.png )
+
+#
 #### Todo List
 ```
 1. 持续优化，删除冗余模块
