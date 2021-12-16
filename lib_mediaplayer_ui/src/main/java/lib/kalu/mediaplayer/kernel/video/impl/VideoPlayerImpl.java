@@ -33,14 +33,14 @@ public interface VideoPlayerImpl {
      */
     void initPlayer(@NonNull Context context, @NonNull String url);
 
-    /**
-     * 视频播放器第二步： 设置数据
-     *
-     * @param url     播放地址
-     * @param headers 播放地址请求头
-     * @param config  视频缓存
-     */
-    void setDataSource(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config);
+//    /**
+//     * 视频播放器第二步： 设置数据
+//     *
+//     * @param url     播放地址
+//     * @param headers 播放地址请求头
+//     * @param config  视频缓存
+//     */
+//    void setDataSource(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config);
 
     /**
      * 用于播放raw和asset里面的视频文件
@@ -59,7 +59,7 @@ public interface VideoPlayerImpl {
      * 准备开始播放（异步）
      * 视频播放器第四步：开始加载【异步】
      */
-    void prepareAsync();
+    void prepareAsync(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers);
 
     /*----------------------------第二部分：视频播放器状态方法----------------------------------*/
 

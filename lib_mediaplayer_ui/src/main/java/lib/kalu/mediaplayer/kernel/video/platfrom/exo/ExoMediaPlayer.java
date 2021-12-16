@@ -36,6 +36,7 @@ import com.google.android.exoplayer2.video.VideoSize;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.cache.CacheConfig;
+import lib.kalu.mediaplayer.cache.CacheConfigManager;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.listener.OnVideoPlayerChangeListener;
 import lib.kalu.mediaplayer.config.PlayerType;
@@ -54,8 +55,8 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
 
     protected ExoPlayer mExoPlayer;
-    protected MediaSource mMediaSource;
-    protected ExoMediaSourceHelper mMediaSourceHelper;
+    //    protected MediaSource mMediaSource;
+//    protected ExoMediaSourceHelper mMediaSourceHelper;
     private PlaybackParameters mSpeedPlaybackParameters;
     private int mLastReportedPlaybackState = Player.STATE_IDLE;
     private boolean mLastReportedPlayWhenReady = false;
@@ -66,8 +67,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
 //    private RenderersFactory mRenderersFactory;
 //    private TrackSelector mTrackSelector;
 
-    public ExoMediaPlayer(@NonNull Context context) {
-        mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
+    public ExoMediaPlayer() {
     }
 
     @NonNull
@@ -120,23 +120,22 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
 //        mLoadControl = loadControl;
 //    }
 
-    /**
-     * 设置播放地址
-     *
-     * @param url     播放地址
-     * @param headers 播放地址请求头
-     */
-    @Override
-    public void setDataSource(@NonNull Context context, @NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
-        // 设置dataSource
-        if (url == null || url.length() == 0) {
-            if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
-            }
-            return;
-        }
-        mMediaSource = mMediaSourceHelper.getMediaSource(context, cache, url, headers, config);
-    }
+//    /**
+//     * 设置播放地址
+//     *
+//     * @param url     播放地址
+//     * @param headers 播放地址请求头
+//     */
+////    @Override
+//    public void setDataSource(@NonNull Context context, @NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
+//        // 设置dataSource
+//        if (url == null || url.length() == 0) {
+//            if (getVideoPlayerChangeListener() != null) {
+//                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
+//            }
+//            return;
+//        }
+//    }
 
     @Override
     public void setDataSource(AssetFileDescriptor fd) {
@@ -147,20 +146,33 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
      * 准备开始播放（异步）
      */
     @Override
-    public void prepareAsync() {
+    public void prepareAsync(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers) {
+
+        if (url == null || url.length() == 0) {
+            if (getVideoPlayerChangeListener() != null) {
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
+            }
+            return;
+        }
+
         if (mExoPlayer == null) {
             return;
         }
-        if (mMediaSource == null) {
-            return;
-        }
+//        if (mMediaSource == null) {
+//            return;
+//        }
         if (mSpeedPlaybackParameters != null) {
             mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
         }
         mIsPreparing = true;
-        mMediaSource.addEventListener(new Handler(), mMediaSourceEventListener);
+
+        CacheConfig config = CacheConfigManager.getInstance().getCacheConfig();
+        MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, live, url, headers, config);
+        mediaSource.addEventListener(new Handler(), mMediaSourceEventListener);
+
         //准备播放
-        mExoPlayer.prepare(mMediaSource);
+        mExoPlayer.setMediaSource(mediaSource);
+        mExoPlayer.prepare();
     }
 
     /**

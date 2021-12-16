@@ -1,94 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/complete_container"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/module_mediaplayer_shape_shadow_top"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="12dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="12dp">
+    <ImageView
+        android:id="@+id/controller_complete_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:src="@drawable/module_mediaplayer_ic_player_back" />
 
-        <ImageView
-            android:id="@+id/iv_stop_fullscreen"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/module_mediaplayer_ic_player_back"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </LinearLayout>
+    <Space
+        android:id="@+id/controller_complete_temp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
 
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/controller_complete_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:layout_above="@id/controller_complete_temp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/module_mediaplayer_string_replay"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
-        <LinearLayout
-            android:id="@+id/ll_replay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="visible">
+    <TextView
+        android:id="@+id/controller_complete_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/controller_complete_temp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/module_mediaplayer_bg_retry"
+        android:clickable="true"
+        android:drawableLeft="@drawable/module_mediaplayer_ic_player_replay"
+        android:drawablePadding="6dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:paddingLeft="14dp"
+        android:paddingTop="6dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="6dp"
+        android:text="@string/module_mediaplayer_string_retry"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
-            <ImageView
-                android:id="@+id/iv_replay"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:background="@drawable/module_mediaplayer_bg_retry"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:padding="10dp"
-                android:src="@drawable/module_mediaplayer_ic_player_replay" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/module_mediaplayer_string_replay"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
-
-
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/ll_share"-->
-        <!--            android:visibility="visible"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginLeft="5dp"-->
-        <!--            android:layout_marginRight="5dp"-->
-        <!--            android:layout_gravity="center"-->
-        <!--            android:gravity="center_horizontal"-->
-        <!--            android:orientation="vertical">-->
-        <!--            <ImageView-->
-        <!--                android:id="@+id/iv_share"-->
-        <!--                android:layout_width="100dp"-->
-        <!--                android:layout_height="40dp"-->
-        <!--                android:layout_gravity="center"-->
-        <!--                android:background="@drawable/module_mediaplayer_bg_retry"-->
-        <!--                android:padding="10dp"-->
-        <!--                android:src="@drawable/module_mediaplayer_ic_palyer_share" />-->
-        <!--            <TextView-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:text="@string/module_mediaplayer_string_share"-->
-        <!--                android:layout_marginTop="12dp"-->
-        <!--                android:textColor="@android:color/white" />-->
-        <!--        </LinearLayout>-->
-    </LinearLayout>
-
-</FrameLayout>
+</RelativeLayout>

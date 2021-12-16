@@ -27,6 +27,7 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Map;
 
@@ -148,42 +149,6 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     }
 
     /**
-     * 设置播放地址
-     *
-     * @param path    播放地址
-     * @param headers 播放地址请求头
-     */
-    @Override
-    public void setDataSource(@NonNull Context context, @NonNull boolean cache, String path, Map<String, String> headers, @NonNull CacheConfig config) {
-        // 设置dataSource
-        if (path == null || path.length() == 0) {
-            if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
-            }
-            return;
-        }
-        try {
-            //解析path
-            Uri uri = Uri.parse(path);
-            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
-                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
-                mMediaPlayer.setDataSource(rawDataSourceProvider);
-            } else {
-                //处理UA问题
-                if (headers != null) {
-                    String userAgent = headers.get("User-Agent");
-                    if (!TextUtils.isEmpty(userAgent)) {
-                        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
-                    }
-                }
-                mMediaPlayer.setDataSource(context, uri, headers);
-            }
-        } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
-        }
-    }
-
-    /**
      * 用于播放raw和asset里面的视频文件
      */
     @Override
@@ -211,11 +176,36 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         }
     }
 
-    /**
-     * 准备开始播放（异步）
-     */
     @Override
-    public void prepareAsync() {
+    public void prepareAsync(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers) {
+
+        // 设置dataSource
+        if (url == null || url.length() == 0) {
+            if (getVideoPlayerChangeListener() != null) {
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
+            }
+            return;
+        }
+        try {
+            //解析path
+            Uri uri = Uri.parse(url);
+            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
+                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
+                mMediaPlayer.setDataSource(rawDataSourceProvider);
+            } else {
+                //处理UA问题
+                if (headers != null) {
+                    String userAgent = headers.get("User-Agent");
+                    if (!TextUtils.isEmpty(userAgent)) {
+                        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
+                    }
+                }
+                mMediaPlayer.setDataSource(context, uri, headers);
+            }
+        } catch (Exception e) {
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
+        }
+
         try {
             mMediaPlayer.prepareAsync();
         } catch (IllegalStateException e) {

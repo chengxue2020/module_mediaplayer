@@ -90,6 +90,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mTvTitle.setText("视频内核：" + " (unknown)");
         }
 
+        // rtp_live
+        findViewById(R.id.main_rtp_live).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtp://239.111.205.131:5140");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
         // rtmp
         findViewById(R.id.main_rtmp).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://106.115.24.33:9901/tsfile/live/0013_1.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://125.107.19.216:9901/tsfile/live/0142_1.m3u8");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);

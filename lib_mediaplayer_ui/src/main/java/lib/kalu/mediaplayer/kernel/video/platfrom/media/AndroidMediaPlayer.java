@@ -26,6 +26,7 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Map;
 
@@ -81,29 +82,6 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
     }
 
     /**
-     * 设置播放地址
-     *
-     * @param path    播放地址
-     * @param headers 播放地址请求头
-     */
-    @Override
-    public void setDataSource(@NonNull Context context, @NonNull boolean cache, String path, Map<String, String> headers, @NonNull CacheConfig config) {
-        // 设置dataSource
-        if (path == null || path.length() == 0) {
-            if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
-            }
-            return;
-        }
-        try {
-            Uri uri = Uri.parse(path);
-            mMediaPlayer.setDataSource(context, uri, headers);
-        } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
-        }
-    }
-
-    /**
      * 用于播放raw和asset里面的视频文件
      */
     @Override
@@ -146,16 +124,6 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
     public void stop() {
         try {
             mMediaPlayer.stop();
-        } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
-        }
-    }
-
-    @Override
-    public void prepareAsync() {
-        try {
-            mIsPreparing = true;
-            mMediaPlayer.prepareAsync();
         } catch (IllegalStateException e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
@@ -254,6 +222,29 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
             } catch (Exception e) {
                 getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
             }
+        }
+    }
+
+    @Override
+    public void prepareAsync(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers) {
+            // 设置dataSource
+        if (url == null || url.length() == 0) {
+            if (getVideoPlayerChangeListener() != null) {
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
+            }
+            return;
+        }
+        try {
+            Uri uri = Uri.parse(url);
+            mMediaPlayer.setDataSource(context, uri, headers);
+        } catch (Exception e) {
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
+        }
+        try {
+            mIsPreparing = true;
+            mMediaPlayer.prepareAsync();
+        } catch (IllegalStateException e) {
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 

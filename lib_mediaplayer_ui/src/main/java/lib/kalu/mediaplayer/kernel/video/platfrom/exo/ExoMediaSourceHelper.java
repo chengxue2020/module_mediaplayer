@@ -2,19 +2,24 @@ package lib.kalu.mediaplayer.kernel.video.platfrom.exo;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.database.ExoDatabaseProvider;
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
 import com.google.android.exoplayer2.ext.rtmp.RtmpDataSource;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.hls.DefaultHlsExtractorFactory;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
@@ -29,7 +34,9 @@ import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.cache.CacheType;
@@ -41,23 +48,17 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  */
 public final class ExoMediaSourceHelper {
 
-    private static ExoMediaSourceHelper sInstance;
-    private final String mUserAgent;
-    private HttpDataSource.Factory mHttpDataSourceFactory;
+    private final WeakHashMap<String, SimpleCache> mWHM = new WeakHashMap<>();
 
-    private ExoMediaSourceHelper(@NonNull Context context) {
-        mUserAgent = Util.getUserAgent(context, context.getApplicationInfo().name);
+    private ExoMediaSourceHelper() {
     }
 
-    public static ExoMediaSourceHelper getInstance(Context context) {
-        if (sInstance == null) {
-            synchronized (ExoMediaSourceHelper.class) {
-                if (sInstance == null) {
-                    sInstance = new ExoMediaSourceHelper(context);
-                }
-            }
-        }
-        return sInstance;
+    private static final class Holder {
+        private final static ExoMediaSourceHelper mInstance = new ExoMediaSourceHelper();
+    }
+
+    public static ExoMediaSourceHelper getInstance() {
+        return Holder.mInstance;
     }
 
     /**
@@ -80,127 +81,118 @@ public final class ExoMediaSourceHelper {
         }
         // other
         else {
-            int contentType = inferContentType(url);
-            DataSource.Factory factory;
+            // http
+            DefaultHttpDataSource.Factory http = new DefaultHttpDataSource.Factory();
+            http.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+            http.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
+            http.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
+            http.setAllowCrossProtocolRedirects(true);
+            http.setKeepPostFor302Redirects(true);
+
+            // head
+            refreshHeaders(http, headers);
 
             // 本地缓存
             if (!live && null != context && null != config && config.getCacheType() == CacheType.DEFAULT) {
                 MediaLogUtil.log("getMediaSource => 策略, 本地缓存");
-                factory = createFactory(context, url, config);
+
+                // cache
+                int size;
+                String dir;
+                if (null != config) {
+                    size = config.getCacheMaxMB();
+                    dir = config.getCacheDir();
+                } else {
+                    size = 1024;
+                    dir = "temp";
+                }
+
+                CacheDataSource.Factory factory = new CacheDataSource.Factory();
+
+                // 缓存策略：磁盘
+                if (null != context && null != config && config.getCacheType() == CacheType.DEFAULT) {
+                    if (!mWHM.containsKey(dir)) {
+                        File file = new File(context.getExternalCacheDir(), dir);
+                        LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
+                        StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
+                        SimpleCache simpleCache = new SimpleCache(file, evictor, provider);
+                        mWHM.put(dir, simpleCache);
+                    }
+                    factory.setCache(mWHM.get(dir));
+                }
+
+                factory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+                factory.setUpstreamDataSourceFactory(http);
+                return createMediaSource(url, factory);
             }
             // 默认
             else {
                 MediaLogUtil.log("getMediaSource => 默认, 不缓存");
-                factory = new DefaultDataSource.Factory(context);
-            }
-
-            if (mHttpDataSourceFactory != null) {
-                setHeaders(headers);
-            }
-            switch (contentType) {
-                case C.TYPE_DASH:
-                    return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-                case C.TYPE_SS:
-                    return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-                case C.TYPE_HLS:
-                    return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-                default:
-                case C.TYPE_OTHER:
-                    return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+                DefaultDataSource.Factory factory = new DefaultDataSource.Factory(context, http);
+                return createMediaSource(url, factory);
             }
         }
     }
 
-    private int inferContentType(String fileName) {
-        fileName = fileName.toLowerCase();
-        if (fileName.contains(".mpd")) {
-            return C.TYPE_DASH;
-        } else if (fileName.contains(".m3u8")) {
-            return C.TYPE_HLS;
-        } else if (fileName.matches(".*\\.ism(l)?(/manifest(\\(.+\\))?)?")) {
-            return C.TYPE_SS;
+    private final MediaSource createMediaSource(@NonNull String url, @NonNull DataSource.Factory factory) {
+
+        int contentType;
+        if (url.toLowerCase().contains(".mpd")) {
+            contentType = C.TYPE_DASH;
+        } else if (url.toLowerCase().contains(".m3u8")) {
+            contentType = C.TYPE_HLS;
+        } else if (url.toLowerCase().matches(".*\\.ism(l)?(/manifest(\\(.+\\))?)?")) {
+            contentType = C.TYPE_SS;
         } else {
-            return C.TYPE_OTHER;
+            contentType = C.TYPE_OTHER;
+        }
+
+        switch (contentType) {
+            case C.TYPE_DASH:
+                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(url));
+            case C.TYPE_SS:
+                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(url));
+            case C.TYPE_HLS:
+                return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(url));
+            default:
+                DefaultExtractorsFactory extractors = new DefaultExtractorsFactory();
+                extractors.setConstantBitrateSeekingEnabled(true);
+                return new ProgressiveMediaSource.Factory(factory, extractors).createMediaSource(MediaItem.fromUri(url));
         }
     }
 
-    /**
-     * Returns a new HttpDataSource factory.
-     *
-     * @return A new HttpDataSource factory.
-     */
-    private DataSource.Factory getHttpDataSourceFactory() {
-        if (mHttpDataSourceFactory == null) {
-            DefaultHttpDataSource.Factory factory = new DefaultHttpDataSource.Factory();
-            factory.setUserAgent(mUserAgent);
-            factory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
-            factory.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
-            factory.setAllowCrossProtocolRedirects(true);
-            factory.setKeepPostFor302Redirects(true);
-            mHttpDataSourceFactory = factory;
-        }
-        return mHttpDataSourceFactory;
-    }
+    private void refreshHeaders(@NonNull HttpDataSource.Factory factory, @NonNull Map<String, String> map) {
 
-    private void setHeaders(Map<String, String> headers) {
-        if (headers != null && headers.size() > 0) {
-            for (Map.Entry<String, String> header : headers.entrySet()) {
-                String key = header.getKey();
-                String value = header.getValue();
-                //如果发现用户通过header传递了UA，则强行将HttpDataSourceFactory里面的userAgent字段替换成用户的
-                if (TextUtils.equals(key, "User-Agent")) {
-                    if (!TextUtils.isEmpty(value)) {
-                        try {
-                            Field userAgentField = mHttpDataSourceFactory.getClass().getDeclaredField("userAgent");
-                            userAgentField.setAccessible(true);
-                            userAgentField.set(mHttpDataSourceFactory, value);
-                        } catch (Exception e) {
-                            //ignore
-                        }
-                    }
-                } else {
-                    mHttpDataSourceFactory.setDefaultRequestProperties(headers);
-                }
+        if (null == map || map.size() <= 0)
+            return;
+
+        String userAgent = null;
+        HashMap<String, String> mapFormat = new HashMap<>();
+
+        for (String temp : map.keySet()) {
+            if (null == temp || temp.length() <= 0)
+                continue;
+            String value = mapFormat.get(temp);
+            if (null == value || value.length() <= 0)
+                continue;
+            if ("User-Agent".equals(temp)) {
+                userAgent = value;
+            } else {
+                mapFormat.put(temp, value);
             }
         }
-    }
 
-    private DataSource.Factory createFactory(@NonNull Context context, @NonNull String uri, @NonNull CacheConfig config) {
-
-        MediaLogUtil.log("createFactory => uri = " + uri);
-        int size;
-        String dir;
-        if (null != config) {
-            size = config.getCacheMaxMB();
-            dir = config.getCacheDir();
-        } else {
-            size = 1024;
-            dir = "temp";
+        //如果发现用户通过header传递了UA，则强行将HttpDataSourceFactory里面的userAgent字段替换成用户的
+        if (null != userAgent) {
+            try {
+                Field userAgentField = factory.getClass().getDeclaredField("userAgent");
+                userAgentField.setAccessible(true);
+                userAgentField.set(factory, userAgent);
+            } catch (Exception e) {
+            }
         }
 
-        CacheDataSource.Factory factory = new CacheDataSource.Factory();
-
-        // 缓存策略：磁盘
-        if (null != context && null != config && config.getCacheType() == CacheType.DEFAULT) {
-            // 缓存目录
-            File file = new File(context.getExternalCacheDir(), dir);
-            // 缓存大小，默认1024M，使用LRU算法实现
-            LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
-            StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
-            SimpleCache cache = new SimpleCache(file, evictor, provider);
-            factory.setCache(cache);
-            MediaLogUtil.log("createFactory => cache = " + cache);
-        }
-
-        factory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-        factory.setUpstreamDataSourceFactory(getHttpDataSourceFactory());
-        return factory;
-
-
-//        return new CacheDataSourceFactory(
-//                mCache,
-//                getDataSourceFactory(context),
-//                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-
+        // add
+        factory.setDefaultRequestProperties(mapFormat);
     }
 }

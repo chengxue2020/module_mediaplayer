@@ -25,6 +25,7 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,79 +45,47 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  *     revise:
  * </pre>
  */
-public class CustomCompleteView extends FrameLayout implements ImplController, View.OnClickListener {
+public class CustomCompleteView extends FrameLayout implements ImplController {
 
-    private Context mContext;
     private ControlWrapper mControlWrapper;
-    private FrameLayout mCompleteContainer;
-    private ImageView mIvStopFullscreen;
-    private LinearLayout mLlReplay;
-    private ImageView mIvReplay;
-//    private LinearLayout mLlShare;
-//    private ImageView mIvShare;
 
     public CustomCompleteView(@NonNull Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public CustomCompleteView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public CustomCompleteView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init();
     }
 
-    private void init(Context context){
+    private void init() {
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_completed, this, true);
         setFocusable(true);
         setFocusableInTouchMode(true);
-        this.mContext = context;
-        setVisibility(GONE);
-        View view = LayoutInflater.from(mContext).inflate(
-                R.layout.module_mediaplayer_video_completed, this, true);
-        initFindViewById(view);
-        initListener();
         setClickable(true);
-    }
+        setVisibility(GONE);
 
-    private void initFindViewById(View view) {
-        mCompleteContainer = view.findViewById(R.id.complete_container);
-        mIvStopFullscreen = view.findViewById(R.id.iv_stop_fullscreen);
-        mLlReplay = view.findViewById(R.id.ll_replay);
-        mIvReplay = view.findViewById(R.id.iv_replay);
-//        mLlShare = view.findViewById(R.id.ll_share);
-//        mIvShare = view.findViewById(R.id.iv_share);
-    }
-
-    private void initListener() {
-        mLlReplay.setOnClickListener(this);
-//        mLlShare.setOnClickListener(this);
-        mIvStopFullscreen.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == mLlReplay){
-            //点击重播
-            mControlWrapper.restart(true);
-        }
-//        else if (v == mLlShare){
-//            //点击分享
-//            BaseToast.showRoundRectToast("点击分享，后期完善");
-//        }
-        else if (v == mIvStopFullscreen){
-            //点击返回键
-            if (mControlWrapper.isFullScreen()) {
-                Activity activity = PlayerUtils.scanForActivity(mContext);
-                if (activity != null && !activity.isFinishing()) {
-                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    mControlWrapper.stopFullScreen();
-                }
+        // 重试
+        findViewById(R.id.controller_complete_retry).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                restart(mControlWrapper);
             }
-        }
+        });
+
+        // 返回
+        findViewById(R.id.controller_complete_back).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(getContext(), mControlWrapper);
+            }
+        });
     }
 
     @Override
@@ -138,7 +107,8 @@ public class CustomCompleteView extends FrameLayout implements ImplController, V
     public void onPlayStateChanged(int playState) {
         if (playState == PlayerType.StateType.STATE_BUFFERING_PLAYING) {
             setVisibility(VISIBLE);
-            mIvStopFullscreen.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
+            View view = findViewById(R.id.controller_complete_back);
+            view.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
             bringToFront();
         } else {
             setVisibility(GONE);
@@ -148,16 +118,19 @@ public class CustomCompleteView extends FrameLayout implements ImplController, V
     @Override
     public void onWindowStateChanged(int playerState) {
         if (playerState == PlayerType.WindowType.FULL) {
-            mIvStopFullscreen.setVisibility(VISIBLE);
+            View view = findViewById(R.id.controller_complete_back);
+            view.setVisibility(VISIBLE);
         } else if (playerState == PlayerType.WindowType.NORMAL) {
-            mIvStopFullscreen.setVisibility(GONE);
+            View view = findViewById(R.id.controller_complete_back);
+            view.setVisibility(GONE);
         }
 
-        Activity activity = PlayerUtils.scanForActivity(mContext);
+        Activity activity = PlayerUtils.scanForActivity(getContext());
         if (activity != null && mControlWrapper.hasCutout()) {
             int orientation = activity.getRequestedOrientation();
             int cutoutHeight = mControlWrapper.getCutoutHeight();
-            LinearLayout.LayoutParams sflp = (LinearLayout.LayoutParams) mIvStopFullscreen.getLayoutParams();
+            View view = findViewById(R.id.controller_complete_back);
+            RelativeLayout.LayoutParams sflp = (RelativeLayout.LayoutParams) view.getLayoutParams();
             if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                 sflp.setMargins(0, 0, 0, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {

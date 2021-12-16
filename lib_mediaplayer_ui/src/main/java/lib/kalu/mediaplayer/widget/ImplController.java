@@ -15,6 +15,9 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.widget;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -22,6 +25,7 @@ import android.widget.ImageView;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
 
 
@@ -106,5 +110,24 @@ public interface ImplController {
 
     default ImageView getPrepare() {
         return null;
+    }
+
+    default void restart(@NonNull ControlWrapper wrapper) {
+        if (null == wrapper)
+            return;
+        wrapper.restart(true);
+    }
+
+    default void finish(@NonNull Context context, @NonNull ControlWrapper wrapper) {
+        if (null == wrapper)
+            return;
+        boolean full = wrapper.isFullScreen();
+        if (!full)
+            return;
+        Activity activity = PlayerUtils.scanForActivity(context);
+        if (null == activity || activity.isFinishing())
+            return;
+        wrapper.stopFullScreen();
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 }

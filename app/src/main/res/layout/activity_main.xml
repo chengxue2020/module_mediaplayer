@@ -66,6 +66,16 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/main_rtp_live"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="01 => 横屏播放 => rtp => live" />
+
+            <TextView
                 android:id="@+id/main_rtmp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

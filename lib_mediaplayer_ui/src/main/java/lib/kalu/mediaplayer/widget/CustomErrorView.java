@@ -67,7 +67,6 @@ public class CustomErrorView extends LinearLayout implements ImplController {
         init();
     }
 
-
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_error, this, true);
         setClickable(true);

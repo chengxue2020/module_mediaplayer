@@ -458,38 +458,17 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
         // 重置
         if (reset) {
-            boolean prepareDataSource = prepareDataSource(mLive, mUrl, mHeaders);
-            if (prepareDataSource) {
-                //准备开始播放
-                mMediaPlayer.prepareAsync();
-                //更改播放器的播放状态
-                setPlayState(PlayerType.StateType.STATE_PREPARING);
-                //更改播放器播放模式状态
-                setWindowState(isFullScreen() ? PlayerType.WindowType.FULL : isTinyScreen() ? PlayerType.WindowType.TINY : PlayerType.WindowType.NORMAL);
-            }
+            //准备开始播放
+            mMediaPlayer.prepareAsync(getContext(), mLive, mUrl, mHeaders);
+            //更改播放器的播放状态
+            setPlayState(PlayerType.StateType.STATE_PREPARING);
+            //更改播放器播放模式状态
+            setWindowState(isFullScreen() ? PlayerType.WindowType.FULL : isTinyScreen() ? PlayerType.WindowType.TINY : PlayerType.WindowType.NORMAL);
         }
         // 重试
         else {
             //准备开始播放
-            mMediaPlayer.prepareAsync();
-        }
-    }
-
-    /**
-     * 设置播放数据
-     *
-     * @return 播放数据是否设置成功
-     */
-    protected boolean prepareDataSource(@NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
-        if (mAssetFileDescriptor != null) {
-            mMediaPlayer.setDataSource(mAssetFileDescriptor);
-            return true;
-        } else if (null != url && url.length() > 0) {
-            CacheConfig config = CacheConfigManager.getInstance().getCacheConfig();
-            mMediaPlayer.setDataSource(getContext(), live, url, headers, config);
-            return true;
-        } else {
-            return false;
+            mMediaPlayer.prepareAsync(getContext(), mLive, mUrl, mHeaders);
         }
     }
 
@@ -703,7 +682,9 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         if (!connected) {
             setPlayState(PlayerType.StateType.STATE_NETWORK_ERROR);
         } else if (type == PlayerType.ErrorType.ERROR_RETRY) {
-            restart(false);
+            // TODO: 2021/12/16
+//            restart(false);
+            setPlayState(PlayerType.StateType.STATE_ERROR);
         } else if (type == PlayerType.ErrorType.ERROR_UNEXPECTED) {
             setPlayState(PlayerType.StateType.STATE_ERROR);
         } else if (type == PlayerType.ErrorType.ERROR_PARSE) {
