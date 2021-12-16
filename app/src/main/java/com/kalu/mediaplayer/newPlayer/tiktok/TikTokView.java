@@ -15,12 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.widget.InterControlView;
+import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.widget.ImplController;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class TikTokView extends FrameLayout implements InterControlView {
+public class TikTokView extends FrameLayout implements ImplController {
 
     private ImageView thumb;
     private ImageView mPlayBtn;
@@ -120,7 +120,7 @@ public class TikTokView extends FrameLayout implements InterControlView {
     }
 
     @Override
-    public void onPlayerStateChanged(int playerState) {
+    public void onWindowStateChanged(int playerState) {
 
     }
 

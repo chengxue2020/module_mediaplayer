@@ -1,62 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/module_mediaplayer_shape_shadow_top"
-        android:gravity="center_vertical"
-        android:paddingTop="10dp"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/iv_stop_fullscreen"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/module_mediaplayer_ic_player_back"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/controller_error_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:src="@drawable/module_mediaplayer_ic_player_back" />
 
+    <Space
+        android:id="@+id/controller_error_temp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <TextView
+        android:id="@+id/controller_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/controller_error_temp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/module_mediaplayer_string_error_message"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/controller_error_retry"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/controller_error_temp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/module_mediaplayer_bg_retry"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:gravity="center"
-        android:orientation="vertical">
+        android:paddingLeft="18dp"
+        android:paddingTop="4dp"
+        android:paddingRight="18dp"
+        android:paddingBottom="4dp"
+        android:text="@string/module_mediaplayer_string_retry"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tv_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:text="@string/module_mediaplayer_string_error_message"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/tv_retry"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/module_mediaplayer_bg_retry"
-            android:gravity="center"
-            android:paddingLeft="18dp"
-            android:paddingTop="4dp"
-            android:paddingRight="18dp"
-            android:paddingBottom="4dp"
-            android:textSize="14sp"
-            android:text="@string/module_mediaplayer_string_retry"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
-</FrameLayout>
+</RelativeLayout>
 

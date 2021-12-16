@@ -622,11 +622,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
   private void handleIoException(IOException e, @ErrorCode int errorCode) {
     ExoPlaybackException error = ExoPlaybackException.createForSource(e, errorCode);
-    @Nullable MediaPeriodHolder playingPeriod = queue.getPlayingPeriod();
+
+    @Nullable
+    MediaPeriodHolder playingPeriod = queue.getPlayingPeriod();
+
+    // TODO: 2021/12/16
     if (playingPeriod != null) {
       // We ensure that all IOException throwing methods are only executed for the playing period.
       error = error.copyWithMediaPeriodId(playingPeriod.info.id);
     }
+
     Log.e(TAG, "Playback error", error);
     stopInternal(/* forceResetRenderers= */ false, /* acknowledgeStop= */ false);
     playbackInfo = playbackInfo.copyWithPlaybackError(error);

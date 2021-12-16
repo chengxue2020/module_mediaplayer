@@ -16,7 +16,7 @@ import com.kalu.mediaplayer.R;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.config.VideoInfoBean;
 
 public class TikTok1ListAdapter extends RecyclerView.Adapter<TikTok1ListAdapter.TikTokListViewHolder> {
 

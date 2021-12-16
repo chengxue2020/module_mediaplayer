@@ -1326,7 +1326,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
       listeners.queueEvent(
           /* eventFlag= */ C.INDEX_UNSET,
           listener ->
-              listener.onPlayerStateChanged(
+              listener.onPlayWhenReadyChanged(
                   newPlaybackInfo.playWhenReady, newPlaybackInfo.playbackState));
     }
     if (previousPlaybackInfo.playbackState != newPlaybackInfo.playbackState) {

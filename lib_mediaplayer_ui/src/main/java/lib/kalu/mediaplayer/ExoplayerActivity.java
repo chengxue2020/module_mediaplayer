@@ -3,17 +3,15 @@ package lib.kalu.mediaplayer;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
-import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.widget.CustomCenterController;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -27,8 +25,6 @@ public final class ExoplayerActivity extends AppCompatActivity {
     public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
     @Keep
     public static final String INTENT_LIVE = "intent_live"; // 直播源
-    @Keep
-    public static final String INTENT_CACHE = "intent_cache"; // 缓存
     @Keep
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
     @Keep
@@ -74,12 +70,11 @@ public final class ExoplayerActivity extends AppCompatActivity {
 //        controller.getThumb().setImageDrawable(colorDrawable);
 
         // 设置视频播放链接地址
-        boolean cache = getIntent().getBooleanExtra(INTENT_CACHE, false);
         videoLayout.showNetWarning();
         // 全屏
         videoLayout.startFullScreen();
         // 开始播放
-        videoLayout.start(cache, url);
+        videoLayout.start(live, url);
 
         // 监听
         videoLayout.setOnStateChangeListener(new OnVideoStateListener() {
@@ -157,14 +152,6 @@ public final class ExoplayerActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
-        if (videoLayout == null || !videoLayout.onBackPressed()) {
-            finish();
-        }
     }
 
     @Override

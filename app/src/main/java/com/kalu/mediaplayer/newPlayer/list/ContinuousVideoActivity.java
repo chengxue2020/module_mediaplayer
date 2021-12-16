@@ -15,10 +15,10 @@ import com.kalu.mediaplayer.R;
 import java.util.List;
 
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.VideoInfoBean;
+import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.widget.CustomCenterController;
 
 /**
  * 连续播放列表视频

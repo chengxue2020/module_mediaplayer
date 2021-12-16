@@ -5,12 +5,12 @@ import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.InterControlView;
+import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.util.PlayerUtils;
+import lib.kalu.mediaplayer.widget.ImplController;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class PlayerMonitor implements InterControlView {
+public class PlayerMonitor implements ImplController {
 
     private ControlWrapper mControlWrapper;
     private static final String TAG = "PlayerMonitor";
@@ -36,7 +36,7 @@ public class PlayerMonitor implements InterControlView {
     }
 
     @Override
-    public void onPlayerStateChanged(int playerState) {
+    public void onWindowStateChanged(int playerState) {
         MediaLogUtil.log(TAG + "---" + "onPlayerStateChanged: " + PlayerUtils.playerState2str(playerState));
     }
 

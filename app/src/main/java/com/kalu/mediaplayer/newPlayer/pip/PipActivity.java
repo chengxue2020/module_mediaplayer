@@ -14,10 +14,10 @@ import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.ui.widget.pip.FloatVideoManager;
-import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.widget.pip.FloatVideoManager;
+import lib.kalu.mediaplayer.widget.CustomCenterController;
 
 public class PipActivity extends AppCompatActivity {
 

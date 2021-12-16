@@ -10,7 +10,7 @@ import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.kernel.video.platfrom.exo.ExoPlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkPlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.config.PlayerType;
 
 /**
  * @description: 工具类

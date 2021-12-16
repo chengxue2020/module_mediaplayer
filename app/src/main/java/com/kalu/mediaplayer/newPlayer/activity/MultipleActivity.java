@@ -12,9 +12,9 @@ import com.kalu.mediaplayer.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.player.VideoBuilder;
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.player.VideoBuilder;
+import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.widget.CustomCenterController;
 
 
 public class MultipleActivity extends AppCompatActivity {

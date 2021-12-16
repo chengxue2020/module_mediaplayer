@@ -32,7 +32,7 @@ import java.util.Map;
 import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.config.PlayerType;
 
 
 /**
@@ -99,7 +99,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
             Uri uri = Uri.parse(path);
             mMediaPlayer.setDataSource(context, uri, headers);
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_PARSE, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
         }
     }
 
@@ -111,7 +111,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         try {
             mMediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -123,7 +123,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         try {
             mMediaPlayer.start();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -135,7 +135,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         try {
             mMediaPlayer.pause();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -147,7 +147,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         try {
             mMediaPlayer.stop();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -157,7 +157,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
             mIsPreparing = true;
             mMediaPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -188,7 +188,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         try {
             mMediaPlayer.seekTo((int) time);
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -252,7 +252,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
             try {
                 mMediaPlayer.setSurface(surface);
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
             }
         }
     }
@@ -267,7 +267,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         try {
             mMediaPlayer.setDisplay(holder);
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -282,7 +282,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         try {
             mMediaPlayer.setVolume(v1, v2);
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -296,7 +296,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
         try {
             mMediaPlayer.setLooping(isLooping);
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -316,7 +316,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
             try {
                 mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(speed));
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
             }
         }
     }
@@ -333,7 +333,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
             try {
                 return mMediaPlayer.getPlaybackParams().getSpeed();
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
             }
         }
         return 1f;
@@ -353,7 +353,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
     private MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, "监听异常" + what + ", extra: " + extra);
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, "监听异常" + what + ", extra: " + extra);
             return true;
         }
     };

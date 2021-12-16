@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.config.VideoInfoBean;
 import java.util.ArrayList;
 import java.util.List;
 

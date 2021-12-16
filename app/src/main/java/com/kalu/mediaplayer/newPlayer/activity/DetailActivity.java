@@ -14,10 +14,10 @@ import androidx.core.view.ViewCompat;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.util.PlayerUtils;
+import lib.kalu.mediaplayer.widget.CustomCenterController;
 
 public class DetailActivity extends AppCompatActivity {
 

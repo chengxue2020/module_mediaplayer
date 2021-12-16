@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.VideoInfoBean;
+import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.util.PlayerUtils;
+import lib.kalu.mediaplayer.widget.CustomCenterController;
 
 
 /**

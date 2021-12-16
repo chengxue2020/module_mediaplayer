@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -17,14 +16,14 @@ import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
-import lib.kalu.mediaplayer.ui.config.PlayerConfig;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.config.PlayerConfig;
+import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
-import lib.kalu.mediaplayer.ui.player.VideoBuilder;
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.ui.widget.CustomErrorView;
-import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.player.VideoBuilder;
+import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.widget.CustomErrorView;
+import lib.kalu.mediaplayer.widget.CustomCenterController;
 import lib.kalu.mediaplayer.util.PlayerFactoryUtils;
 
 public class PortraitActivity extends AppCompatActivity implements View.OnClickListener {

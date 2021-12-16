@@ -28,7 +28,7 @@ import lib.kalu.mediaplayer.kernel.music.config.PlayModeEnum;
 import lib.kalu.mediaplayer.kernel.music.inter.OnPlayerEventListener;
 import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
 import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.util.PlayerUtils;
 
 import com.kalu.mediaplayer.R;
 

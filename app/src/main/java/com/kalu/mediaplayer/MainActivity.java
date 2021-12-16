@@ -3,9 +3,7 @@ package com.kalu.mediaplayer;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -32,11 +30,10 @@ import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkMediaPlayer;
 import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkPlayerFactory;
 import lib.kalu.mediaplayer.kernel.video.platfrom.media.AndroidMediaPlayer;
 import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
-import lib.kalu.mediaplayer.ui.config.PlayerConfig;
-import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.tool.BaseToast;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.config.PlayerConfig;
+import lib.kalu.mediaplayer.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.util.PlayerUtils;
 
 import java.lang.reflect.Field;
 
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://106.115.24.33:9901/tsfile/live/0117_1.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://106.115.24.33:9901/tsfile/live/0013_1.m3u8");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);

@@ -40,7 +40,7 @@ public interface VideoPlayerImpl {
      * @param headers 播放地址请求头
      * @param config  视频缓存
      */
-    void setDataSource(@NonNull Context context, @NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config);
+    void setDataSource(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config);
 
     /**
      * 用于播放raw和asset里面的视频文件

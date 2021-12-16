@@ -36,7 +36,7 @@ public class CacheConfig implements Serializable {
      * 0x0003，表示内存缓存+磁盘缓存
      */
     private @CacheType
-    int mCacheType = CacheType.RAM;
+    int mCacheType = CacheType.DEFAULT;
     /**
      * 是否开启日志
      */
@@ -98,7 +98,7 @@ public class CacheConfig implements Serializable {
          * 1，表示磁盘缓存
          * 2，表示内存缓存+磁盘缓存
          */
-        private int mCacheType = CacheType.RAM;
+        private int mCacheType = CacheType.DEFAULT;
         /**
          * 是否开启日志
          */

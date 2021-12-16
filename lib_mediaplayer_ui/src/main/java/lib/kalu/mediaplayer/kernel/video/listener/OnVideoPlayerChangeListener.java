@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.kernel.video.listener;
 
-import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.config.PlayerType;
 
 /**
  * @description: 播放器event监听

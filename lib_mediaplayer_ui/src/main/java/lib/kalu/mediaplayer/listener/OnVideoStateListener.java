@@ -18,7 +18,7 @@ package lib.kalu.mediaplayer.listener;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.config.PlayerType;
 
 /**
  * <pre>

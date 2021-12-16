@@ -3,7 +3,7 @@ package com.kalu.mediaplayer;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.config.VideoInfoBean;
 
 public class ConstantVideo {
 

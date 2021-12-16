@@ -19,10 +19,10 @@ import androidx.core.content.ContextCompat;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.InterControlView;
+import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.util.PlayerUtils;
+import lib.kalu.mediaplayer.widget.ImplController;
 import master.flame.danmaku.controller.DrawHandler;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
@@ -34,7 +34,7 @@ import master.flame.danmaku.danmaku.model.android.SpannedCacheStuffer;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.ui.widget.DanmakuView;
 
-public class MyDanmakuView extends DanmakuView implements InterControlView {
+public class MyDanmakuView extends DanmakuView implements ImplController {
 
     private DanmakuContext mContext;
     private BaseDanmakuParser mParser;
@@ -144,7 +144,7 @@ public class MyDanmakuView extends DanmakuView implements InterControlView {
     }
 
     @Override
-    public void onPlayerStateChanged(int playerState) {
+    public void onWindowStateChanged(int playerState) {
 
     }
 

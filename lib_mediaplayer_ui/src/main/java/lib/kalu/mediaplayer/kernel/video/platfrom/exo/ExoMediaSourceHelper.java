@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.database.ExoDatabaseProvider;
+import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
 import com.google.android.exoplayer2.ext.rtmp.RtmpDataSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
@@ -64,9 +65,9 @@ public final class ExoMediaSourceHelper {
      * @param headers 视频headers
      * @return
      */
-    public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
+    public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         Uri contentUri = Uri.parse(url);
-        MediaLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", cache = " + cache + ", url = " + url);
+        MediaLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", live = " + live + ", url = " + url);
         // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
             RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
@@ -82,19 +83,14 @@ public final class ExoMediaSourceHelper {
             int contentType = inferContentType(url);
             DataSource.Factory factory;
 
-            // 磁盘缓存
-            if (cache && null != context && null != config && config.getCacheType() > CacheType.RAM) {
-                MediaLogUtil.log("getMediaSource => 磁盘缓存");
+            // 本地缓存
+            if (!live && null != context && null != config && config.getCacheType() == CacheType.DEFAULT) {
+                MediaLogUtil.log("getMediaSource => 策略, 本地缓存");
                 factory = createFactory(context, url, config);
             }
-            // 内存缓存
-            else if (cache) {
-                MediaLogUtil.log("getMediaSource => 内存缓存");
-                factory = new DefaultDataSource.Factory(context, getHttpDataSourceFactory());
-            }
-            // 不缓存
+            // 默认
             else {
-                MediaLogUtil.log("getMediaSource => 不缓存");
+                MediaLogUtil.log("getMediaSource => 默认, 不缓存");
                 factory = new DefaultDataSource.Factory(context);
             }
 
@@ -185,12 +181,12 @@ public final class ExoMediaSourceHelper {
         CacheDataSource.Factory factory = new CacheDataSource.Factory();
 
         // 缓存策略：磁盘
-        if (null != context && null != config && config.getCacheType() > CacheType.RAM) {
+        if (null != context && null != config && config.getCacheType() == CacheType.DEFAULT) {
             // 缓存目录
             File file = new File(context.getExternalCacheDir(), dir);
             // 缓存大小，默认1024M，使用LRU算法实现
             LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
-            ExoDatabaseProvider provider = new ExoDatabaseProvider(context);
+            StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
             SimpleCache cache = new SimpleCache(file, evictor, provider);
             factory.setCache(cache);
             MediaLogUtil.log("createFactory => cache = " + cache);

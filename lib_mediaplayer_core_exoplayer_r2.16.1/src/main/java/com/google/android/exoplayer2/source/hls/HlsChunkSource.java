@@ -379,14 +379,14 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
       partIndex = nextMediaSequenceAndPartIndexWithoutAdapting.second;
     }
 
+    // todo fixbug BehindLiveWindowException
     if (chunkMediaSequence < playlist.mediaSequence) {
       fatalError = new BehindLiveWindowException();
       return;
     }
 
     @Nullable
-    SegmentBaseHolder segmentBaseHolder =
-        getNextSegmentHolder(playlist, chunkMediaSequence, partIndex);
+    SegmentBaseHolder segmentBaseHolder = getNextSegmentHolder(playlist, chunkMediaSequence, partIndex);
     if (segmentBaseHolder == null) {
       if (!playlist.hasEndTag) {
         // Reload the playlist in case of a live stream.

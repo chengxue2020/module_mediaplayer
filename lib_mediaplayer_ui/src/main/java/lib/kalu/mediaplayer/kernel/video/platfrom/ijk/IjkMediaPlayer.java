@@ -33,7 +33,7 @@ import java.util.Map;
 import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.kernel.video.core.VideoPlayerCore;
 import lib.kalu.mediaplayer.kernel.video.platfrom.PlatfromPlayer;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
+import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
@@ -179,7 +179,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
                 mMediaPlayer.setDataSource(context, uri, headers);
             }
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_PARSE, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
         }
     }
 
@@ -191,7 +191,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -206,7 +206,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
             try {
                 mMediaPlayer.setSurface(surface);
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
             }
         }
     }
@@ -219,7 +219,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -231,7 +231,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.pause();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -243,7 +243,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.start();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -255,7 +255,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.stop();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -286,7 +286,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         try {
             mMediaPlayer.seekTo((int) time);
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, e.getMessage());
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
 
@@ -398,7 +398,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     private IMediaPlayer.OnErrorListener onErrorListener = new IMediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.TYPE_UNEXPECTED, "监听异常" + framework_err + ", extra: " + impl_err);
+            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, "监听异常" + framework_err + ", extra: " + impl_err);
             MediaLogUtil.log("IjkVideoPlayer----listener---------onError ——> STATE_ERROR ———— what：" + framework_err + ", extra: " + impl_err);
             return true;
         }

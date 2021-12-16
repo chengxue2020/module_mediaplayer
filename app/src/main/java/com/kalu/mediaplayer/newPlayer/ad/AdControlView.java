@@ -15,13 +15,13 @@ import androidx.annotation.Nullable;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.ui.bridge.ControlWrapper;
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.InterControlView;
+import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.util.PlayerUtils;
+import lib.kalu.mediaplayer.widget.ImplController;
 
 
-public class AdControlView extends FrameLayout implements InterControlView, View.OnClickListener {
+public class AdControlView extends FrameLayout implements ImplController, View.OnClickListener {
 
     private Context mContext;
     protected TextView mAdTime, mAdDetail;
@@ -99,7 +99,7 @@ public class AdControlView extends FrameLayout implements InterControlView, View
     }
 
     @Override
-    public void onPlayerStateChanged(int playerState) {
+    public void onWindowStateChanged(int playerState) {
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
                 mBack.setVisibility(GONE);

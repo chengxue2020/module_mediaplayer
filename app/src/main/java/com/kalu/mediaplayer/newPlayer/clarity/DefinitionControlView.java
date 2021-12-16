@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
-import lib.kalu.mediaplayer.ui.widget.CustomBottomView;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.util.PlayerUtils;
+import lib.kalu.mediaplayer.widget.CustomBottomView;
 
 public class DefinitionControlView extends CustomBottomView {
 
@@ -91,8 +91,8 @@ public class DefinitionControlView extends CustomBottomView {
     }
 
     @Override
-    public void onPlayerStateChanged(int playerState) {
-        super.onPlayerStateChanged(playerState);
+    public void onWindowStateChanged(int playerState) {
+        super.onWindowStateChanged(playerState);
         if (playerState == PlayerType.WindowType.FULL) {
             mDefinition.setVisibility(VISIBLE);
         } else {

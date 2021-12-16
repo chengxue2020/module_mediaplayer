@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.ui.player.VideoLayout;
-import lib.kalu.mediaplayer.ui.widget.CustomBottomView;
-import lib.kalu.mediaplayer.ui.widget.CustomCenterController;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.VideoInfoBean;
+import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.widget.CustomBottomView;
+import lib.kalu.mediaplayer.widget.CustomCenterController;
 
 public class ClarityActivity extends AppCompatActivity implements View.OnClickListener {
 

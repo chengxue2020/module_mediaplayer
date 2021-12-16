@@ -16,7 +16,7 @@ import com.kalu.mediaplayer.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
+import lib.kalu.mediaplayer.config.VideoInfoBean;
 
 public class TikTokListFragment extends Fragment {
 

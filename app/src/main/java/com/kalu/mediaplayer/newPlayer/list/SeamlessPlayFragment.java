@@ -16,10 +16,10 @@ import com.kalu.mediaplayer.R;
 import com.kalu.mediaplayer.newPlayer.activity.DetailActivity;
 import com.kalu.mediaplayer.newPlayer.activity.IntentKeys;
 
-import lib.kalu.mediaplayer.ui.config.PlayerType;
-import lib.kalu.mediaplayer.ui.config.VideoInfoBean;
-import lib.kalu.mediaplayer.ui.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.ui.tool.PlayerUtils;
+import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.VideoInfoBean;
+import lib.kalu.mediaplayer.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.util.PlayerUtils;
 
 /**
  * 无缝播放
