@@ -15,10 +15,10 @@ import androidx.annotation.Nullable;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.controller.ControlWrapper;
+import lib.kalu.mediaplayer.core.controller.ControllerWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 
 
 public class AdControlView extends FrameLayout implements ImplComponent, View.OnClickListener {
@@ -28,7 +28,7 @@ public class AdControlView extends FrameLayout implements ImplComponent, View.On
     protected ImageView mBack, mVolume, mFullScreen, mPlayButton;
     protected AdControlListener mListener;
 
-    private ControlWrapper mControlWrapper;
+    private ControllerWrapper mControllerWrapper;
 
     public AdControlView(@NonNull Context context) {
         super(context);
@@ -71,8 +71,8 @@ public class AdControlView extends FrameLayout implements ImplComponent, View.On
     }
 
     @Override
-    public void attach(@NonNull ControlWrapper controlWrapper) {
-        mControlWrapper = controlWrapper;
+    public void attach(@NonNull ControllerWrapper controllerWrapper) {
+        mControllerWrapper = controllerWrapper;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class AdControlView extends FrameLayout implements ImplComponent, View.On
     public void onPlayStateChanged(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_PLAYING:
-                mControlWrapper.startProgress();
+                mControllerWrapper.startProgress();
                 mPlayButton.setSelected(true);
                 break;
             case PlayerType.StateType.STATE_PAUSED:
@@ -137,13 +137,13 @@ public class AdControlView extends FrameLayout implements ImplComponent, View.On
         } else if (id == R.id.ad_time) {
             if (mListener != null) mListener.onSkipAd();
         } else if (id == R.id.iv_play) {
-            mControlWrapper.toggle();
+            mControllerWrapper.toggle();
         }
     }
 
     private void doMute() {
-        mControlWrapper.setMute(!mControlWrapper.isMute());
-        mVolume.setImageResource(mControlWrapper.isMute() ? R.mipmap.ic_launcher : R.mipmap.ic_launcher);
+        mControllerWrapper.setMute(!mControllerWrapper.isMute());
+        mVolume.setImageResource(mControllerWrapper.isMute() ? R.mipmap.ic_launcher : R.mipmap.ic_launcher);
     }
 
     /**
@@ -151,7 +151,7 @@ public class AdControlView extends FrameLayout implements ImplComponent, View.On
      */
     private void toggleFullScreen() {
         Activity activity = PlayerUtils.scanForActivity(getContext());
-        mControlWrapper.toggleFullScreen(activity);
+        mControllerWrapper.toggleFullScreen(activity);
     }
 
     public void setListener(AdControlListener listener) {

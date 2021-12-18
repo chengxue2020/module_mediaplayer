@@ -19,8 +19,8 @@ import java.util.List;
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.config.VideoInfoBean;
-import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
-import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.core.controller.standard.ControllerStandard;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 

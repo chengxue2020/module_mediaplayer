@@ -5,11 +5,11 @@ import android.content.Context;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
-import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
-import lib.kalu.mediaplayer.kernel.video.platfrom.exo.ExoPlayerFactory;
-import lib.kalu.mediaplayer.kernel.video.platfrom.ijk.IjkPlayerFactory;
-import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.factory.PlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.impl.VideoPlayerImpl;
+import lib.kalu.mediaplayer.core.kernel.video.platfrom.exo.ExoPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.platfrom.ijk.IjkPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.platfrom.media.MediaPlayerFactory;
 import lib.kalu.mediaplayer.config.PlayerType;
 
 /**

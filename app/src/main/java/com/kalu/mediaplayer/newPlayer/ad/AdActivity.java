@@ -11,10 +11,10 @@ import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
+import lib.kalu.mediaplayer.core.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.util.BaseToast;
 
 public class AdActivity extends AppCompatActivity implements View.OnClickListener {

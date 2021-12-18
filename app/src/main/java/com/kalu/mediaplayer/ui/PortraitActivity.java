@@ -14,14 +14,14 @@ import com.kalu.mediaplayer.BuriedPointEventImpl;
 import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.controller.component.ComponentError;
-import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
-import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
+import lib.kalu.mediaplayer.core.controller.component.ComponentError;
+import lib.kalu.mediaplayer.core.controller.standard.ControllerStandard;
+import lib.kalu.mediaplayer.core.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.config.PlayerConfig;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
-import lib.kalu.mediaplayer.widget.player.VideoBuilder;
-import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.core.player.VideoBuilder;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.util.PlayerFactoryUtils;
 

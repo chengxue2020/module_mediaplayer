@@ -5,7 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
+import lib.kalu.mediaplayer.core.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.widget.surface.InterSurfaceView;
 

@@ -22,7 +22,7 @@ import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 
-import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**

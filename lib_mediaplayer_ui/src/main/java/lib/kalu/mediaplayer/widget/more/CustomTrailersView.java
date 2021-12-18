@@ -24,8 +24,8 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.controller.ControlWrapper;
-import lib.kalu.mediaplayer.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.ControllerWrapper;
+import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 
 /**
  * <pre>
@@ -57,7 +57,7 @@ public class CustomTrailersView extends FrameLayout implements ImplComponent, Vi
     }
 
     @Override
-    public void attach(@NonNull ControlWrapper controlWrapper) {
+    public void attach(@NonNull ControllerWrapper controllerWrapper) {
 
     }
 

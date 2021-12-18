@@ -22,7 +22,7 @@ import android.view.View;
 import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 

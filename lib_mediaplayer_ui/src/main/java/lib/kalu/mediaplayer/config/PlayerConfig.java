@@ -5,11 +5,11 @@ import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.buried.BuriedPointEvent;
-import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
-import lib.kalu.mediaplayer.kernel.video.platfrom.media.MediaPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.factory.PlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.platfrom.media.MediaPlayerFactory;
 import lib.kalu.mediaplayer.keycode.KeycodeImpl;
 import lib.kalu.mediaplayer.keycode.KeycodeImplTV;
-import lib.kalu.mediaplayer.widget.player.ProgressManager;
+import lib.kalu.mediaplayer.core.player.ProgressManager;
 import lib.kalu.mediaplayer.widget.surface.SurfaceFactory;
 import lib.kalu.mediaplayer.widget.surface.TextureViewFactory;
 

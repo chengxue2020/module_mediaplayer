@@ -8,7 +8,7 @@
     android:background="@color/whiteBg">
 
 
-    <lib.kalu.mediaplayer.widget.player.VideoLayout
+    <lib.kalu.mediaplayer.core.player.VideoLayout
         android:id="@+id/video_player"
         android:layout_width="match_parent"
         android:layout_height="240dp"/>

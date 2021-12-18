@@ -23,11 +23,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import lib.kalu.mediaplayer.util.SpUtil;
-import lib.kalu.mediaplayer.kernel.music.config.MusicConstant;
-import lib.kalu.mediaplayer.kernel.music.config.PlayModeEnum;
-import lib.kalu.mediaplayer.kernel.music.inter.OnPlayerEventListener;
-import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
-import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
+import lib.kalu.mediaplayer.core.kernel.music.config.MusicConstant;
+import lib.kalu.mediaplayer.core.kernel.music.config.PlayModeEnum;
+import lib.kalu.mediaplayer.core.kernel.music.inter.OnPlayerEventListener;
+import lib.kalu.mediaplayer.core.kernel.music.model.AudioBean;
+import lib.kalu.mediaplayer.core.kernel.music.tool.BaseAppHelper;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 import com.kalu.mediaplayer.R;

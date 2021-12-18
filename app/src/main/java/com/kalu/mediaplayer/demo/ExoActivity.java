@@ -11,12 +11,11 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
-import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.kernel.video.platfrom.exo.ExoPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.platfrom.exo.ExoPlayerFactory;
 
 public class ExoActivity extends AppCompatActivity {
 

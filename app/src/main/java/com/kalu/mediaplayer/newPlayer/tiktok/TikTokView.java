@@ -15,9 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.controller.ControlWrapper;
+import lib.kalu.mediaplayer.core.controller.ControllerWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public class TikTokView extends FrameLayout implements ImplComponent {
@@ -25,7 +25,7 @@ public class TikTokView extends FrameLayout implements ImplComponent {
     private ImageView thumb;
     private ImageView mPlayBtn;
 
-    private ControlWrapper mControlWrapper;
+    private ControllerWrapper mControllerWrapper;
     private int mScaledTouchSlop;
     private int mStartX, mStartY;
 
@@ -48,7 +48,7 @@ public class TikTokView extends FrameLayout implements ImplComponent {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mControlWrapper.toggle();
+                mControllerWrapper.toggle();
             }
         });
         mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
@@ -78,8 +78,8 @@ public class TikTokView extends FrameLayout implements ImplComponent {
     }
 
     @Override
-    public void attach(@NonNull ControlWrapper controlWrapper) {
-        mControlWrapper = controlWrapper;
+    public void attach(@NonNull ControllerWrapper controllerWrapper) {
+        mControllerWrapper = controllerWrapper;
     }
 
     @Override

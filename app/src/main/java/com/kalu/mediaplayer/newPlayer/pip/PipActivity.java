@@ -12,8 +12,8 @@ import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
-import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.core.controller.standard.ControllerStandard;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.widget.pip.FloatVideoManager;
 

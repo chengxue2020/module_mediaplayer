@@ -19,10 +19,10 @@ import androidx.core.content.ContextCompat;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.controller.ControlWrapper;
+import lib.kalu.mediaplayer.core.controller.ControllerWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import master.flame.danmaku.controller.DrawHandler;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
@@ -101,7 +101,7 @@ public class MyDanmakuView extends DanmakuView implements ImplComponent {
     }
 
     @Override
-    public void attach(@NonNull ControlWrapper controlWrapper) {
+    public void attach(@NonNull ControllerWrapper controllerWrapper) {
     }
 
     @Override

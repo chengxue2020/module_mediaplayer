@@ -26,7 +26,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.kernel.video.impl.VideoPlayerImpl;
+import lib.kalu.mediaplayer.core.kernel.video.impl.VideoPlayerImpl;
 
 /**
  * <pre>

@@ -14,9 +14,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.kernel.music.inter.OnPlayerEventListener;
-import lib.kalu.mediaplayer.kernel.music.model.AudioBean;
-import lib.kalu.mediaplayer.kernel.music.tool.BaseAppHelper;
+import lib.kalu.mediaplayer.core.kernel.music.inter.OnPlayerEventListener;
+import lib.kalu.mediaplayer.core.kernel.music.model.AudioBean;
+import lib.kalu.mediaplayer.core.kernel.music.tool.BaseAppHelper;
 
 public class MusicPlayerActivity extends AppCompatActivity implements View.OnClickListener {
 

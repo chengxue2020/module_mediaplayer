@@ -32,9 +32,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.controller.ControlWrapper;
+import lib.kalu.mediaplayer.core.controller.ControllerWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 
 /**
  * <pre>
@@ -47,7 +47,7 @@ import lib.kalu.mediaplayer.controller.impl.ImplComponent;
  */
 public class CustomFloatView extends FrameLayout implements ImplComponent, View.OnClickListener {
 
-    private ControlWrapper mControlWrapper;
+    private ControllerWrapper mControllerWrapper;
     private Context mContext;
     private ImageView mIvStartPlay;
     private ProgressBar mPbLoading;
@@ -106,7 +106,7 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
             FloatVideoManager.getInstance(mContext).stopFloatWindow();
             FloatVideoManager.getInstance(mContext).reset();
         } else if (v == mIvStartPlay) {
-            mControlWrapper.toggle();
+            mControllerWrapper.toggle();
         } else if (v == mIvSkip) {
             if (FloatVideoManager.getInstance(mContext).getActClass() != null) {
                 Intent intent = new Intent(getContext(), FloatVideoManager.getInstance(mContext).getActClass());
@@ -117,8 +117,8 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
     }
 
     @Override
-    public void attach(@NonNull ControlWrapper controlWrapper) {
-        mControlWrapper = controlWrapper;
+    public void attach(@NonNull ControllerWrapper controllerWrapper) {
+        mControllerWrapper = controllerWrapper;
     }
 
     @Override
@@ -165,14 +165,14 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
                 mIvStartPlay.setVisibility(GONE);
                 mPbLoading.setVisibility(GONE);
                 if (mIsShowBottomProgress) {
-                    if (mControlWrapper.isShowing()) {
+                    if (mControllerWrapper.isShowing()) {
                         mPbBottomProgress.setVisibility(GONE);
                     } else {
                         mPbBottomProgress.setVisibility(VISIBLE);
                     }
                 }
                 //开始刷新进度
-                mControlWrapper.startProgress();
+                mControllerWrapper.startProgress();
                 break;
             case PlayerType.StateType.STATE_PAUSED:
                 mIvStartPlay.setSelected(false);
@@ -199,7 +199,7 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
             case PlayerType.StateType.STATE_COMPLETED:
                 mIvStartPlay.setVisibility(GONE);
                 mPbLoading.setVisibility(GONE);
-                mIvStartPlay.setSelected(mControlWrapper.isPlaying());
+                mIvStartPlay.setSelected(mControllerWrapper.isPlaying());
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 bringToFront();
@@ -220,7 +220,7 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
             int pos = (int) (position * 1.0 / duration * mPbBottomProgress.getMax());
             mPbBottomProgress.setProgress(pos);
         }
-        int percent = mControlWrapper.getBufferedPercentage();
+        int percent = mControllerWrapper.getBufferedPercentage();
         if (percent >= 95) {
             //解决缓冲进度不能100%问题
             mPbBottomProgress.setSecondaryProgress(mPbBottomProgress.getMax());

@@ -24,11 +24,11 @@ import com.kalu.mediaplayer.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
+import lib.kalu.mediaplayer.core.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.config.VideoInfoBean;
-import lib.kalu.mediaplayer.widget.player.VideoLayout;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 

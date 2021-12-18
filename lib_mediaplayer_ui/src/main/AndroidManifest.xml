@@ -33,11 +33,11 @@
 <!--        </receiver>-->
 
         <service
-            android:name="lib.kalu.mediaplayer.kernel.music.service.PlayService"
+            android:name=".core.kernel.music.service.PlayService"
             android:process=":mediaplayer" />
 
         <receiver
-            android:name="lib.kalu.mediaplayer.kernel.music.receiver.NotificationStatusBarReceiver"
+            android:name=".core.kernel.music.receiver.NotificationStatusBarReceiver"
             android:process=":mediaplayer"
             android:exported="false">
             <intent-filter>
@@ -46,7 +46,7 @@
         </receiver>
 
         <receiver
-            android:name="lib.kalu.mediaplayer.kernel.music.receiver.EarphoneControlReceiver"
+            android:name=".core.kernel.music.receiver.EarphoneControlReceiver"
             android:process=":mediaplayer"
             android:exported="false">
             <intent-filter>
@@ -55,7 +55,7 @@
         </receiver>
 
         <receiver
-            android:name="lib.kalu.mediaplayer.kernel.music.receiver.AudioBroadcastReceiver"
+            android:name=".core.kernel.music.receiver.AudioBroadcastReceiver"
             android:process=":mediaplayer"
             android:exported="false">
             <intent-filter>
