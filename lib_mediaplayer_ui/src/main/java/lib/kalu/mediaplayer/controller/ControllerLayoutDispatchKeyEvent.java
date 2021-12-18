@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.widget.controller;
+package lib.kalu.mediaplayer.controller;
 
 import android.content.Context;
 import android.os.Build;
@@ -50,9 +50,8 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        // 直播禁用
-        Object tag = getTag(R.id.module_mediaplayer_id_live);
-        if (null != tag)
+        // 禁用
+        if (!isEnabled())
             return super.dispatchKeyEvent(event);
 
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();

@@ -23,15 +23,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 

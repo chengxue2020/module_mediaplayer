@@ -69,22 +69,6 @@ dependencies {
     compileOnly rootProject.ext.dependencies.support_ijkplayer_java
     compileOnly rootProject.ext.dependencies.support_ijkplayer_armv7a
 
-    // tools
-//    compileOnly files('libs/lib_mediaplayer_core_exoplayer_jar.jar')
-
     // exoplayer
     api project(path: ':lib_mediaplayer_core_exoplayer_r2.16.1')
-//    implementation(name: 'exoplayer-2.11.8', ext: 'aar')
-//    implementation(name: 'exoplayer-core-2.11.8', ext: 'aar')
-//    implementation(name: 'exoplayer-dash-2.11.8', ext: 'aar')
-//    implementation(name: 'exoplayer-hls-2.11.8', ext: 'aar')
-//    implementation(name: 'exoplayer-ui-2.11.8', ext: 'aar')
-//    implementation(name: 'exoplayer-extension-rtmp-2.11.8', ext: 'aar')
-//    implementation(name: 'exoplayer-smoothstreaming-2.11.8', ext: 'aar')
-//    implementation rootProject.ext.dependencies.support_exoplayer
-//    implementation rootProject.ext.dependencies.support_exoplayer_core
-//    implementation rootProject.ext.dependencies.support_exoplayer_dash
-//    implementation rootProject.ext.dependencies.support_exoplayer_hls
-//    implementation rootProject.ext.dependencies.support_exoplayer_rtmp
-//    implementation rootProject.ext.dependencies.support_exoplayer_smoothstreaming
 }

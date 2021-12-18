@@ -13,10 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget.controller;
+package lib.kalu.mediaplayer.controller;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import androidx.annotation.ColorInt;
@@ -117,12 +118,12 @@ public interface ImplController {
     /************************/
 
     @Nullable
-    default ImageView getPrepare() {
+    default ImageView findPrepare() {
         return null;
     }
 
     default void setPrepareBackground(@ColorInt int color) {
-        ImageView view = getPrepare();
+        ImageView view = findPrepare();
         if (null != view) {
             view.setImageDrawable(null);
             view.setBackgroundColor(color);
@@ -130,7 +131,7 @@ public interface ImplController {
     }
 
     default void setPrepareImageResource(@DrawableRes int resId) {
-        ImageView view = getPrepare();
+        ImageView view = findPrepare();
         if (null != view) {
             view.setBackgroundColor(Color.TRANSPARENT);
             view.setImageResource(resId);
@@ -138,10 +139,26 @@ public interface ImplController {
     }
 
     default void setPrepareImageDrawable(@NonNull Drawable drawable) {
-        ImageView view = getPrepare();
+        ImageView view = findPrepare();
         if (null != view) {
             view.setBackgroundColor(Color.TRANSPARENT);
             view.setImageDrawable(drawable);
+        }
+    }
+
+    default void setPrepareImageUrl(@NonNull String url) {
+
+        if (null == url || url.length() <= 0)
+            return;
+
+        ImageView imageView = findPrepare();
+        if (null == imageView)
+            return;
+
+        try {
+            imageView.setBackgroundColor(Color.TRANSPARENT);
+            imageView.setImageURI(Uri.parse(url));
+        }catch (Exception e){
         }
     }
 

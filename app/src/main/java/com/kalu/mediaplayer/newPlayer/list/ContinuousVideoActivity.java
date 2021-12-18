@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.config.VideoInfoBean;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 /**
  * 连续播放列表视频
@@ -85,9 +85,7 @@ public class ContinuousVideoActivity extends AppCompatActivity implements View.O
     }
 
     private void initVideoPlayer() {
-        CustomCenterController controller = new CustomCenterController(this);
-        //设置视频背景图
-        Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
+        ControllerDefault controller = new ControllerDefault(this);
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.start(ConstantVideo.VideoPlayerList[0]);

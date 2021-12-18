@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget.controller;
+package lib.kalu.mediaplayer.controller;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -26,7 +26,6 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.widget.controller.ImplController;
 import lib.kalu.mediaplayer.widget.player.InterVideoPlayer;
 
 
@@ -298,12 +297,6 @@ public class ControlWrapper implements InterVideoPlayer, ImplController {
     @Override
     public int getCutoutHeight() {
         return mController.getCutoutHeight();
-    }
-
-    @Nullable
-    @Override
-    public ImageView getPrepare() {
-        return null;
     }
 
     @Override

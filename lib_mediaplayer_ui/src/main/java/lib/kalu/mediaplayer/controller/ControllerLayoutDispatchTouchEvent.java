@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget.controller;
+package lib.kalu.mediaplayer.controller;
 
 import android.app.Activity;
 import android.content.Context;
@@ -167,7 +167,11 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        return mGestureDetector.onTouchEvent(event);
+        if (!isEnabled()) {
+            return super.onTouchEvent(event);
+        } else {
+            return mGestureDetector.onTouchEvent(event);
+        }
     }
 
     /**
@@ -397,9 +401,8 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        // 直播禁用
-        Object tag = getTag(R.id.module_mediaplayer_id_live);
-        if (null != tag)
+        // 禁用
+        if (!isEnabled())
             return super.onTouchEvent(event);
 
         MediaLogUtil.log("事件----------事件触摸----------");

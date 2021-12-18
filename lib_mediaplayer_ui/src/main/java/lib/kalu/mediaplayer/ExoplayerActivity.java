@@ -9,9 +9,11 @@ import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.ControllerLayout;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
+import lib.kalu.mediaplayer.widget.ControllerLive;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -24,9 +26,9 @@ public final class ExoplayerActivity extends AppCompatActivity {
     @Keep
     public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
     @Keep
-    public static final String INTENT_LIVE = "intent_live"; // 直播源
-    @Keep
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
+    @Keep
+    public static final String INTENT_LIVE = "intent_live"; // 直播
     @Keep
     public static final String INTENT_URL = "intent_url"; // 视频Url
     @Keep
@@ -46,24 +48,30 @@ public final class ExoplayerActivity extends AppCompatActivity {
             return;
         }
 
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
+        boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
 
         // 控制器
-        CustomCenterController controller = new CustomCenterController(this);
-        controller.setEnableOrientation(false);
-        int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, -1);
-        if (resId != -1) {
-            controller.setPrepareImageResource(resId);
-        } else {
-            controller.setPrepareBackground(Color.BLACK);
-        }
+        ControllerLayout controllerLayout;
 
         // 直播
-        boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
-        controller.setLive(live);
+        if (live) {
+            controllerLayout = new ControllerLive(this);
+        }
+        // 点播
+        else {
+            controllerLayout = new ControllerDefault(this);
+        }
+        controllerLayout.setEnableOrientation(false);
+        int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, -1);
+        if (resId != -1) {
+            controllerLayout.setPrepareImageResource(resId);
+        } else {
+            controllerLayout.setPrepareBackground(Color.BLACK);
+        }
 
         // 控制器
-        videoLayout.setController(controller);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
+        videoLayout.setController(controllerLayout);
 
 //        // 设置视频背景图
 //        ColorDrawable colorDrawable = new ColorDrawable(Color.RED);

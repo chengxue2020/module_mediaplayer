@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget.controller;
+package lib.kalu.mediaplayer.controller;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ import java.util.Map;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.widget.CustomPrepareView;
 import lib.kalu.mediaplayer.widget.player.InterVideoPlayer;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.util.NetworkUtils;
@@ -49,22 +51,14 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : 控制器基类
- *     revise: 此类集成各种事件的处理逻辑，包括
- *             1.播放器状态改变: {@link #handleWindowStateChanged(int)} (int)}
- *             2.播放状态改变: {@link #handlePlayStateChanged(int)}
- *             3.控制视图的显示和隐藏: {@link #handleVisibilityChanged(boolean, Animation)}
- *             4.播放进度改变: {@link #handleSetProgress(int, int)}
- *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
- *             6.设备方向监听: {@link #onOrientationChanged(int)}
- *
- * </pre>
+ * 1.播放器状态改变: {@link #handleWindowStateChanged(int)} (int)}
+ * *             2.播放状态改变: {@link #handlePlayStateChanged(int)}
+ * *             3.控制视图的显示和隐藏: {@link #handleVisibilityChanged(boolean, Animation)}
+ * *             4.播放进度改变: {@link #handleSetProgress(int, int)}
+ * *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
+ * *             6.设备方向监听: {@link #onOrientationChanged(int)}
  */
-public abstract class ControllerLayout extends FrameLayout implements lib.kalu.mediaplayer.widget.controller.ImplController,
+public abstract class ControllerLayout extends FrameLayout implements lib.kalu.mediaplayer.controller.ImplController,
         InterViewController, OrientationHelper.OnOrientationChangeListener {
 
     //播放器包装类，集合了MediaPlayerControl的api和IVideoController的api
@@ -116,11 +110,6 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     }
 
     @Override
-    public void setLive(boolean live) {
-        setTag(R.id.module_mediaplayer_id_live, live ? 1 : null);
-    }
-
-    @Override
     public void init() {
         try {
             LayoutInflater.from(getContext()).inflate(initLayout(), this, true);
@@ -166,26 +155,12 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
         mOrientationHelper.setOnOrientationChangeListener(this);
     }
 
-    /**
-     * 添加控制组件，最后面添加的在最下面，合理组织添加顺序，可让ControlComponent位于不同的层级
-     *
-     * @param controlViews view
-     */
     @Override
-    public void addControlComponent(ImplController... controlViews) {
-        for (ImplController item : controlViews) {
-            addControlComponent(item, false);
-        }
-    }
+    public void add(@NonNull ImplController controlView, @NonNull boolean isPrivate) {
 
-    /**
-     * 添加控制组件，最后面添加的在最下面，合理组织添加顺序，可让InterControlView位于不同的层级
-     *
-     * @param controlView view
-     * @param isPrivate   是否为独有的组件，如果是就不添加到控制器中
-     */
-    @Override
-    public void addControlComponent(ImplController controlView, boolean isPrivate) {
+        if (isPrivate && !isEnabled())
+            return;
+
         mControlComponents.put(controlView, isPrivate);
         if (mControlWrapper != null) {
             controlView.attach(mControlWrapper);
@@ -196,39 +171,29 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
         }
     }
 
-    /**
-     * 移除控制组件
-     *
-     * @param controlView view
-     */
     @Override
-    public void removeControlComponent(ImplController controlView) {
-        removeView(controlView.getView());
-        mControlComponents.remove(controlView);
+    public void remove(@NonNull ImplController view) {
+
+        removeView(view.getView());
+        mControlComponents.remove(view);
     }
 
-    /**
-     * 移除所有的组件
-     */
     @Override
-    public void removeAllControlComponent() {
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            removeView(next.getKey().getView());
-        }
-        mControlComponents.clear();
-    }
+    public void removeAll(boolean isPrivate) {
 
-    /**
-     * 移除所有独有的组件
-     */
-    @Override
-    public void removeAllPrivateComponents() {
-        Iterator<Map.Entry<ImplController, Boolean>> it = mControlComponents.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<ImplController, Boolean> next = it.next();
-            if (next.getValue()) {
-                it.remove();
+        if (isPrivate) {
+            Iterator<Map.Entry<ImplController, Boolean>> it = mControlComponents.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<ImplController, Boolean> next = it.next();
+                if (next.getValue()) {
+                    it.remove();
+                }
             }
+        } else {
+            for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
+                removeView(next.getKey().getView());
+            }
+            mControlComponents.clear();
         }
     }
 
@@ -652,7 +617,7 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
                 mOrientation = 0;
                 mIsLocked = false;
                 mIsShowing = false;
-                removeAllPrivateComponents();
+                removeAll(true);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 mIsLocked = false;
@@ -746,6 +711,4 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     protected void onLockStateChanged(boolean isLocked) {
 
     }
-
-    //------------------------ end handle event change ------------------------//
 }

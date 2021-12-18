@@ -137,7 +137,7 @@ public class SeamlessPlayFragment extends RecyclerViewAutoPlayFragment {
         PlayerUtils.removeViewFormParent(mVideoView);
         viewHolder.mPlayerContainer.addView(mVideoView, 0);
 
-        mController.addControlComponent(viewHolder.mPrepareView, true);
+        mController.add(viewHolder.mPrepareView, true);
         mController.setPlayState(mVideoView.getCurrentPlayState());
         mController.setWindowState(mVideoView.getCurrentWindowState());
 

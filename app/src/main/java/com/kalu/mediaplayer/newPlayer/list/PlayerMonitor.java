@@ -5,7 +5,7 @@ import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.widget.ImplController;
 import lib.kalu.mediaplayer.util.MediaLogUtil;

@@ -32,7 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.widget.ImplController;
 

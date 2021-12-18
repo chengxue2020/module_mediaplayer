@@ -25,6 +25,7 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.Keep;
@@ -33,7 +34,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.widget.controller.ControllerLayoutDispatchTouchEvent;
+import lib.kalu.mediaplayer.controller.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
@@ -44,28 +45,23 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  * created by kalu on 2021/9/16
  */
 @Keep
-public class CustomCenterController extends ControllerLayoutDispatchTouchEvent {
+public class ControllerDefault extends ControllerLayoutDispatchTouchEvent {
 
-    private ImageView mThumb;
     private CustomTopView titleView;
     private CustomBottomView vodControlView;
     private CustomLiveControlView liveControlView;
     private CustomOncePlayView customOncePlayView;
     private TextView tvLiveWaitMessage;
-    /**
-     * 是否是直播，默认不是
-     */
-    public static boolean IS_LIVE = false;
 
-    public CustomCenterController(@NonNull Context context) {
+    public ControllerDefault(@NonNull Context context) {
         this(context, null);
     }
 
-    public CustomCenterController(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ControllerDefault(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CustomCenterController(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public ControllerDefault(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -99,7 +95,7 @@ public class CustomCenterController extends ControllerLayoutDispatchTouchEvent {
         //滑动调节亮度，音量，进度，默认开启
         setGestureEnabled(true);
         //先移除多有的视图view
-        removeAllControlComponent();
+        removeAll(false);
         //添加视图到界面
         addDefaultControlComponent("");
     }
@@ -115,31 +111,26 @@ public class CustomCenterController extends ControllerLayoutDispatchTouchEvent {
         //添加自动完成播放界面view
         CustomCompleteView completeView = new CustomCompleteView(getContext());
         completeView.setVisibility(GONE);
-        this.addControlComponent(completeView);
+        this.add(completeView);
 
         //添加错误界面view
-        CustomErrorView errorView = new CustomErrorView(getContext());
-        errorView.setVisibility(GONE);
-        this.addControlComponent(errorView);
+        this.add(new CustomErrorView(getContext()));
 
         //添加与加载视图界面view，准备播放界面
-        CustomPrepareView prepareView = new CustomPrepareView(getContext());
-        mThumb = prepareView.getPrepare();
-        prepareView.setClickStart();
-        this.addControlComponent(prepareView);
+        this.add(new CustomPrepareView(getContext()));
 
         //添加标题栏
         titleView = new CustomTopView(getContext());
         titleView.setTitle(title);
         titleView.setVisibility(VISIBLE);
-        this.addControlComponent(titleView);
+        this.add(titleView);
 
         //添加直播/回放视频底部控制视图
         changePlayType();
 
         //添加滑动控制视图
         CustomGestureView gestureControlView = new CustomGestureView(getContext());
-        this.addControlComponent(gestureControlView);
+        this.add(gestureControlView);
     }
 
 
@@ -147,45 +138,25 @@ public class CustomCenterController extends ControllerLayoutDispatchTouchEvent {
      * 切换直播/回放类型
      */
     public void changePlayType() {
-        if (IS_LIVE) {
-            //添加底部播放控制条
-            if (liveControlView == null) {
-                liveControlView = new CustomLiveControlView(getContext());
-            }
-            this.removeControlComponent(liveControlView);
-            this.addControlComponent(liveControlView);
 
-            //添加直播还未开始视图
-            if (customOncePlayView == null) {
-                customOncePlayView = new CustomOncePlayView(getContext());
-                tvLiveWaitMessage = customOncePlayView.getTvMessage();
-            }
-            this.removeControlComponent(customOncePlayView);
-            this.addControlComponent(customOncePlayView);
-
-            //直播视频，移除回放视图
-            if (vodControlView != null) {
-                this.removeControlComponent(vodControlView);
-            }
-        } else {
-            //添加底部播放控制条
-            if (vodControlView == null) {
-                vodControlView = new CustomBottomView(getContext());
-                //是否显示底部进度条。默认显示
-                vodControlView.showBottomProgress(true);
-            }
-            this.removeControlComponent(vodControlView);
-            this.addControlComponent(vodControlView);
-
-            //正常视频，移除直播视图
-            if (liveControlView != null) {
-                this.removeControlComponent(liveControlView);
-            }
-            if (customOncePlayView != null) {
-                this.removeControlComponent(customOncePlayView);
-            }
+        //添加底部播放控制条
+        if (vodControlView == null) {
+            vodControlView = new CustomBottomView(getContext());
+            //是否显示底部进度条。默认显示
+            vodControlView.showBottomProgress(true);
         }
-        setCanChangePosition(!IS_LIVE);
+        this.remove(vodControlView);
+        this.add(vodControlView);
+
+        //正常视频，移除直播视图
+        if (liveControlView != null) {
+            this.remove(liveControlView);
+        }
+        if (customOncePlayView != null) {
+            this.add(customOncePlayView);
+        }
+
+        setCanChangePosition(!isEnabled());
     }
 
 
@@ -344,12 +315,6 @@ public class CustomCenterController extends ControllerLayoutDispatchTouchEvent {
 
     }
 
-    @Nullable
-    @Override
-    public ImageView getPrepare() {
-        return mThumb;
-    }
-
     public void setTitle(String title) {
         if (titleView != null) {
             titleView.setTitle(title);
@@ -360,8 +325,14 @@ public class CustomCenterController extends ControllerLayoutDispatchTouchEvent {
         return vodControlView;
     }
 
-
     public TextView getTvLiveWaitMessage() {
         return tvLiveWaitMessage;
+    }
+
+    @Nullable
+    @Override
+    public ImageView findPrepare() {
+        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_prepare_image);
+        return imageView;
     }
 }

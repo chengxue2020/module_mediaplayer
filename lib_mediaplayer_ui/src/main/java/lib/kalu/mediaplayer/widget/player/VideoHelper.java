@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import lib.kalu.mediaplayer.widget.controller.ControllerLayout;
+import lib.kalu.mediaplayer.controller.ControllerLayout;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 /**

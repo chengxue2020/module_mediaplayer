@@ -15,7 +15,7 @@ import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 
 /**
@@ -77,11 +77,9 @@ public class DanmuActivity extends BaseActivity implements View.OnClickListener 
         StateAppBar.translucentStatusBar(this, true);
         initFindViewById();
 
-        CustomCenterController controller = new CustomCenterController(this);
+        ControllerDefault controller = new ControllerDefault(this);
         mMyDanmakuView = new MyDanmakuView(this);
-        controller.addControlComponent(mMyDanmakuView);
-        //设置视频背景图
-        Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
+        controller.add(mMyDanmakuView);
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);

@@ -26,7 +26,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.controller.ControlWrapper;
 
 
 /**
@@ -107,10 +107,6 @@ public interface ImplController {
      * @param isLocked 是否锁屏
      */
     void onLockStateChanged(boolean isLocked);
-
-    default ImageView getPrepare() {
-        return null;
-    }
 
     default void restart(@NonNull ControlWrapper wrapper) {
         if (null == wrapper)

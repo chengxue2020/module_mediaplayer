@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.kalu.mediaplayer.R;
 
-import lib.kalu.mediaplayer.widget.controller.ControlWrapper;
+import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.widget.ImplController;

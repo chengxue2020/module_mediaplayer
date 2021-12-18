@@ -13,7 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget.controller;
+package lib.kalu.mediaplayer.controller;
+
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.widget.ImplController;
 
@@ -28,37 +30,22 @@ import lib.kalu.mediaplayer.widget.ImplController;
  */
 public interface InterViewController {
 
-    void setLive(boolean live);
-
     /**
      * 添加控制组件，最后面添加的在最下面，合理组织添加顺序，可让ControlComponent位于不同的层级
      *
-     * @param controlViews view
+     * @param views
      */
-    void addControlComponent(ImplController... controlViews);
+    default void add(@NonNull ImplController... views) {
+        if (null == views)
+            return;
+        for (ImplController temp : views) {
+            add(temp, false);
+        }
+    }
 
-    /**
-     * 添加控制组件，最后面添加的在最下面，合理组织添加顺序，可让InterControlView位于不同的层级
-     *
-     * @param controlView view
-     * @param isPrivate   是否为独有的组件，如果是就不添加到控制器中
-     */
-    void addControlComponent(ImplController controlView, boolean isPrivate);
+    void add(@NonNull ImplController controlView, @NonNull boolean isPrivate);
 
-    /**
-     * 移除控制组件
-     *
-     * @param controlView view
-     */
-    void removeControlComponent(ImplController controlView);
+    void remove(@NonNull ImplController view);
 
-    /**
-     * 移除所有的组件
-     */
-    void removeAllControlComponent();
-
-    /**
-     * 移除所有独有的组件
-     */
-    void removeAllPrivateComponents();
+    void removeAll(boolean isPrivate);
 }

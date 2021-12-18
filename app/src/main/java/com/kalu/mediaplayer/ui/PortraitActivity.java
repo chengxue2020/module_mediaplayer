@@ -23,7 +23,7 @@ import lib.kalu.mediaplayer.widget.player.VideoBuilder;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.widget.CustomErrorView;
-import lib.kalu.mediaplayer.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.ControllerDefault;
 import lib.kalu.mediaplayer.util.PlayerFactoryUtils;
 
 public class PortraitActivity extends AppCompatActivity implements View.OnClickListener {
@@ -111,7 +111,7 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
         //创建基础视频播放器，一般播放器的功能
 
 
-        CustomCenterController basisVideoController = new CustomCenterController(this);
+        ControllerDefault basisVideoController = new ControllerDefault(this);
         basisVideoController.setEnableOrientation(false);
         //设置控制器
         mVideoPlayer.setController(basisVideoController);
@@ -127,8 +127,6 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
 //                mVideoPlayer.start();
 //            }
 //        },300);
-        //设置视频背景图
-        Glide.with(this).load(R.drawable.image_default).into(basisVideoController.getPrepare());
     }
 
     private void initListener() {
@@ -308,17 +306,16 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
         });
 
         //设置视频背景图
-        CustomCenterController controller = (CustomCenterController) mVideoPlayer.getVideoController();
-        Glide.with(this).load(R.drawable.image_default).into(controller.getPrepare());
+        ControllerDefault controller = (ControllerDefault) mVideoPlayer.getVideoController();
         //设置视频标题
         controller.setTitle("视频标题");
         //添加自定义视图。每添加一个视图，都是方式层级树的最上层
         CustomErrorView customErrorView = new CustomErrorView(this);
-        controller.addControlComponent(customErrorView);
+        controller.add(customErrorView);
         //移除控制组件
-        controller.removeControlComponent(customErrorView);
+        controller.remove(customErrorView);
         //移除所有的组件
-        controller.removeAllControlComponent();
+        controller.removeAll(false);
         //隐藏播放视图
         controller.hide();
         //显示播放视图

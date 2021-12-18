@@ -24,7 +24,7 @@ import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.widget.pip.FloatVideoManager;
-import lib.kalu.mediaplayer.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 /**
  * 悬浮播放终极版
@@ -33,7 +33,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
 
     private FloatVideoManager mPIPManager;
     private VideoLayout mVideoView;
-    private CustomCenterController mController;
+    private ControllerDefault mController;
     private List<VideoInfoBean> mVideos;
     private LinearLayoutManager mLinearLayoutManager;
 
@@ -47,7 +47,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
     protected void initView() {
         mPIPManager = FloatVideoManager.getInstance(this);
         mVideoView = PlayerConfigManager.instance().get(FloatVideoManager.PIP);
-        mController = new CustomCenterController(this);
+        mController = new ControllerDefault(this);
         initRecyclerView();
     }
 
@@ -136,7 +136,7 @@ public class PipListActivity extends AppCompatActivity implements OnItemChildCli
 
         VideoRecyclerViewAdapter.VideoHolder viewHolder = (VideoRecyclerViewAdapter.VideoHolder) itemView.getTag();
         //把列表中预置的PrepareView添加到控制器中，注意isPrivate此处只能为true。
-        mController.addControlComponent(viewHolder.mPrepareView, true);
+        mController.add(viewHolder.mPrepareView, true);
         PlayerUtils.removeViewFormParent(mVideoView);
         viewHolder.mPlayerContainer.addView(mVideoView, 0);
         mVideoView.start(videoBean.getVideoUrl());

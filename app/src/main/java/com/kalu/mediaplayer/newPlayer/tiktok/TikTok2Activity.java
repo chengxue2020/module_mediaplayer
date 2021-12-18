@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.config.VideoInfoBean;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.CustomCenterController;
+import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 
 /**
@@ -38,7 +38,7 @@ public class TikTok2Activity extends AppCompatActivity {
     private Tiktok2Adapter mTiktok2Adapter;
     private VerticalViewPager mViewPager;
     private VideoLayout mVideoPlayerLayout;
-    private CustomCenterController mController;
+    private ControllerDefault mController;
 
     private static final String KEY_INDEX = "index";
 
@@ -121,7 +121,7 @@ public class TikTok2Activity extends AppCompatActivity {
         mVideoPlayerLayout.setLooping(true);
         //以下只能二选一，看你的需求
         mVideoPlayerLayout.setRenderViewFactory(TikTokRenderViewFactory.create());
-        mController = new CustomCenterController(this);
+        mController = new ControllerDefault(this);
         mVideoPlayerLayout.setController(mController);
     }
 
@@ -209,7 +209,7 @@ public class TikTok2Activity extends AppCompatActivity {
 //                String playUrl = mPreloadManager.getPlayUrl(tiktokBean.getVideoUrl());
 //                VideoLogUtils.i("startPlay: " + "position: " + position + "  url: " + playUrl);
                 mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
-                mController.addControlComponent(viewHolder.mTikTokView, true);
+                mController.add(viewHolder.mTikTokView, true);
                 viewHolder.mPlayerContainer.addView(mVideoPlayerLayout, 0);
                 mVideoPlayerLayout.start(tiktokBean.getVideoUrl());
                 mCurPos = position;

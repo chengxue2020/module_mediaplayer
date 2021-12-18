@@ -43,10 +43,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
     public void onBindViewHolder(@NonNull VideoHolder holder, @SuppressLint("RecyclerView") int position) {
         VideoInfoBean videoBean = videos.get(position);
 
-        Glide.with(holder.mThumb.getContext())
-                .load(videoBean.getCover())
-                .placeholder(android.R.color.darker_gray)
-                .into(holder.mThumb);
         holder.mTitle.setText(videoBean.getTitle());
 
         holder.mPosition = position;
@@ -69,7 +65,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
         public int mPosition;
         public FrameLayout mPlayerContainer;
         public TextView mTitle;
-        public ImageView mThumb;
         public CustomPrepareView mPrepareView;
 
         VideoHolder(View itemView) {
@@ -77,7 +72,6 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
             mPlayerContainer = itemView.findViewById(R.id.player_container);
             mTitle = itemView.findViewById(R.id.tv_title);
             mPrepareView = itemView.findViewById(R.id.prepare_view);
-            mThumb = mPrepareView.getPrepare();
             if (mOnItemChildClickListener != null) {
                 mPlayerContainer.setOnClickListener(this);
             }
