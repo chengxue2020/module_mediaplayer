@@ -24,13 +24,13 @@ import com.kalu.mediaplayer.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.config.VideoInfoBean;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 
 /**
@@ -44,7 +44,7 @@ public class TikTok1Activity extends AppCompatActivity {
     protected RecyclerView mRecyclerView;
     protected PagerLayoutManager mLinearLayoutManager;
     protected VideoLayout mVideoView;
-    protected ControllerDefault mController;
+    protected ControllerStandard mController;
 
     /**
      * 当前播放的位置
@@ -131,7 +131,7 @@ public class TikTok1Activity extends AppCompatActivity {
                 }
             }
         });
-        mController = new ControllerDefault(this);
+        mController = new ControllerStandard(this);
         mVideoView.setController(mController);
     }
 
@@ -187,7 +187,7 @@ public class TikTok1Activity extends AppCompatActivity {
         if (itemView == null) return;
         VideoRecyclerViewAdapter.VideoHolder viewHolder = (VideoRecyclerViewAdapter.VideoHolder) itemView.getTag();
         //把列表中预置的PrepareView添加到控制器中，注意isPrivate此处只能为true。
-        mController.add(viewHolder.mPrepareView, true);
+        mController.addComponent(viewHolder.mPrepareView, true);
         PlayerUtils.removeViewFormParent(mVideoView);
         viewHolder.mPlayerContainer.addView(mVideoView, 0);
         //播放之前将VideoView添加到VideoViewManager以便在别的页面也能操作它

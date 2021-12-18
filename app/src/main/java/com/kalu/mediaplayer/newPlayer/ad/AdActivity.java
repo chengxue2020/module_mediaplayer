@@ -7,16 +7,15 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.util.BaseToast;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 public class AdActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,7 +26,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
     private Button mBtnCrop;
     private Button mBtnGif;
     private static final String URL_AD = "https://gslb.miaopai.com/stream/IR3oMYDhrON5huCmf7sHCfnU5YKEkgO2.mp4";
-    ControllerDefault controller;
+    ControllerStandard controller;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +79,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
     }
 
     private void initVideoPlayer() {
-        controller = new ControllerDefault(this);
+        controller = new ControllerStandard(this);
         AdControlView adControlView = new AdControlView(this);
         adControlView.setListener(new AdControlView.AdControlListener() {
             @Override
@@ -93,7 +92,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
                 playVideo();
             }
         });
-        controller.add(adControlView);
+        controller.addComponent(adControlView);
         //设置控制器
         mVideoPlayerLayout.setController(controller);
 //        HttpProxyCacheServer cacheServer = ProxyVideoCacheManager.getProxy(this);
@@ -120,7 +119,7 @@ public class AdActivity extends AppCompatActivity implements View.OnClickListene
      */
     private void playVideo() {
         mVideoPlayerLayout.release();
-        controller.removeAll(false);
+        controller.removeComponentAll(false);
         controller.addDefaultControlComponent("正片");
         //开始播放
         mVideoPlayerLayout.start(ConstantVideo.VideoPlayerList[0]);

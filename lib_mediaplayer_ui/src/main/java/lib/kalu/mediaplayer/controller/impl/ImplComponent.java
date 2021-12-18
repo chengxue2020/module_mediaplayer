@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.impl;
 
 import android.app.Activity;
 import android.content.Context;
@@ -41,7 +41,7 @@ import lib.kalu.mediaplayer.controller.ControlWrapper;
  * </pre>
  */
 @Keep
-public interface ImplController {
+public interface ImplComponent {
 
     /**
      * 这个是绑定视图操作
@@ -126,4 +126,6 @@ public interface ImplController {
         wrapper.stopFullScreen();
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
+
+    /*************/
 }

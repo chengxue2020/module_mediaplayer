@@ -18,10 +18,10 @@ import com.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.ImplController;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 
 
-public class AdControlView extends FrameLayout implements ImplController, View.OnClickListener {
+public class AdControlView extends FrameLayout implements ImplComponent, View.OnClickListener {
 
     private Context mContext;
     protected TextView mAdTime, mAdDetail;

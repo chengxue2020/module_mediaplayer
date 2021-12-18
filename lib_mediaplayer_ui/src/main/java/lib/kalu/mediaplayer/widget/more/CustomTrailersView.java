@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.controller.ControlWrapper;
-import lib.kalu.mediaplayer.widget.ImplController;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 
 /**
  * <pre>
@@ -36,7 +36,7 @@ import lib.kalu.mediaplayer.widget.ImplController;
  *     revise:
  * </pre>
  */
-public class CustomTrailersView extends FrameLayout implements ImplController, View.OnClickListener {
+public class CustomTrailersView extends FrameLayout implements ImplComponent, View.OnClickListener {
 
     public CustomTrailersView(@NonNull Context context) {
         super(context);

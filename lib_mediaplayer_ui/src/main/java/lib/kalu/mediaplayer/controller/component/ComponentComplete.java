@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.component;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 
@@ -43,21 +44,21 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  *     revise:
  * </pre>
  */
-public class CustomCompleteView extends FrameLayout implements ImplController {
+public class ComponentComplete extends FrameLayout implements ImplComponent {
 
     private ControlWrapper mControlWrapper;
 
-    public CustomCompleteView(@NonNull Context context) {
+    public ComponentComplete(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public CustomCompleteView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentComplete(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public CustomCompleteView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentComplete(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

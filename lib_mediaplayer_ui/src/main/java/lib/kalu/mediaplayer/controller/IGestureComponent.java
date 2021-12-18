@@ -15,7 +15,7 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.controller;
 
-import lib.kalu.mediaplayer.widget.ImplController;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 
 /**
  * <pre>
@@ -26,7 +26,7 @@ import lib.kalu.mediaplayer.widget.ImplController;
  *     revise:
  * </pre>
  */
-public interface IGestureComponent extends ImplController {
+public interface IGestureComponent extends ImplComponent {
 
     /**
      * 开始滑动

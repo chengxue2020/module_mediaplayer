@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.standard;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,7 +25,6 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.Keep;
@@ -35,9 +34,16 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.controller.ControllerLayoutDispatchTouchEvent;
+import lib.kalu.mediaplayer.controller.component.ComponentBottom;
+import lib.kalu.mediaplayer.controller.component.ComponentComplete;
+import lib.kalu.mediaplayer.controller.component.ComponentError;
+import lib.kalu.mediaplayer.controller.component.ComponentGesture;
+import lib.kalu.mediaplayer.controller.component.ComponentLive;
+import lib.kalu.mediaplayer.controller.component.ComponentOnce;
+import lib.kalu.mediaplayer.controller.component.ComponentPrepare;
+import lib.kalu.mediaplayer.controller.component.ComponentTop;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-
 
 /**
  * description: 控制器 - mobile
@@ -45,23 +51,23 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  * created by kalu on 2021/9/16
  */
 @Keep
-public class ControllerDefault extends ControllerLayoutDispatchTouchEvent {
+public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
-    private CustomTopView titleView;
-    private CustomBottomView vodControlView;
-    private CustomLiveControlView liveControlView;
-    private CustomOncePlayView customOncePlayView;
+    private ComponentTop titleView;
+    private ComponentBottom vodControlView;
+    private ComponentLive liveControlView;
+    private ComponentOnce customOncePlayView;
     private TextView tvLiveWaitMessage;
 
-    public ControllerDefault(@NonNull Context context) {
+    public ControllerStandard(@NonNull Context context) {
         this(context, null);
     }
 
-    public ControllerDefault(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ControllerStandard(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ControllerDefault(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public ControllerStandard(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -95,7 +101,7 @@ public class ControllerDefault extends ControllerLayoutDispatchTouchEvent {
         //滑动调节亮度，音量，进度，默认开启
         setGestureEnabled(true);
         //先移除多有的视图view
-        removeAll(false);
+        removeComponentAll(false);
         //添加视图到界面
         addDefaultControlComponent("");
     }
@@ -109,28 +115,28 @@ public class ControllerDefault extends ControllerLayoutDispatchTouchEvent {
      */
     public void addDefaultControlComponent(String title) {
         //添加自动完成播放界面view
-        CustomCompleteView completeView = new CustomCompleteView(getContext());
+        ComponentComplete completeView = new ComponentComplete(getContext());
         completeView.setVisibility(GONE);
-        this.add(completeView);
+        this.addComponent(completeView);
 
         //添加错误界面view
-        this.add(new CustomErrorView(getContext()));
+        this.addComponent(new ComponentError(getContext()));
 
         //添加与加载视图界面view，准备播放界面
-        this.add(new CustomPrepareView(getContext()));
+        this.addComponent(new ComponentPrepare(getContext()));
 
         //添加标题栏
-        titleView = new CustomTopView(getContext());
+        titleView = new ComponentTop(getContext());
         titleView.setTitle(title);
         titleView.setVisibility(VISIBLE);
-        this.add(titleView);
+        this.addComponent(titleView);
 
         //添加直播/回放视频底部控制视图
         changePlayType();
 
         //添加滑动控制视图
-        CustomGestureView gestureControlView = new CustomGestureView(getContext());
-        this.add(gestureControlView);
+        ComponentGesture gestureControlView = new ComponentGesture(getContext());
+        this.addComponent(gestureControlView);
     }
 
 
@@ -141,19 +147,19 @@ public class ControllerDefault extends ControllerLayoutDispatchTouchEvent {
 
         //添加底部播放控制条
         if (vodControlView == null) {
-            vodControlView = new CustomBottomView(getContext());
+            vodControlView = new ComponentBottom(getContext());
             //是否显示底部进度条。默认显示
             vodControlView.showBottomProgress(true);
         }
-        this.remove(vodControlView);
-        this.add(vodControlView);
+        this.removeComponent(vodControlView);
+        this.addComponent(vodControlView);
 
         //正常视频，移除直播视图
         if (liveControlView != null) {
-            this.remove(liveControlView);
+            this.removeComponent(liveControlView);
         }
         if (customOncePlayView != null) {
-            this.add(customOncePlayView);
+            this.addComponent(customOncePlayView);
         }
 
         setCanChangePosition(!isEnabled());
@@ -321,7 +327,7 @@ public class ControllerDefault extends ControllerLayoutDispatchTouchEvent {
         }
     }
 
-    public CustomBottomView getBottomView() {
+    public ComponentBottom getBottomView() {
         return vodControlView;
     }
 

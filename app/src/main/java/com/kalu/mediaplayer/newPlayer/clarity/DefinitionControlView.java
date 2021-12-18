@@ -26,10 +26,10 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.component.ComponentBottom;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.CustomBottomView;
 
-public class DefinitionControlView extends CustomBottomView {
+public class DefinitionControlView extends ComponentBottom {
 
     private TextView mDefinition;
 

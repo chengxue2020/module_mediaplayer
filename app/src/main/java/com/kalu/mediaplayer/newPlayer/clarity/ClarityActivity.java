@@ -7,8 +7,6 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-
 import com.kalu.mediaplayer.R;
 
 import java.util.ArrayList;
@@ -17,9 +15,9 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.config.VideoInfoBean;
+import lib.kalu.mediaplayer.controller.component.ComponentBottom;
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.CustomBottomView;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 public class ClarityActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -81,10 +79,10 @@ public class ClarityActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initVideoPlayer() {
-        ControllerDefault controller = new ControllerDefault(this);
-        CustomBottomView bottomView = controller.getBottomView();
+        ControllerStandard controller = new ControllerStandard(this);
+        ComponentBottom bottomView = controller.getBottomView();
         if (bottomView != null) {
-            controller.remove(bottomView);
+            controller.removeComponent(bottomView);
         }
         DefinitionControlView mDefinitionControlView = new DefinitionControlView(this);
         mDefinitionControlView.setOnRateSwitchListener(new DefinitionControlView.OnRateSwitchListener() {
@@ -100,7 +98,7 @@ public class ClarityActivity extends AppCompatActivity implements View.OnClickLi
             videos.put(videoClarity.getGrade(), videoClarity.getVideoUrl());
         }
         mDefinitionControlView.setData(videos);
-        controller.add(mDefinitionControlView);
+        controller.addComponent(mDefinitionControlView);
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.start(clarites.get(0).getVideoUrl());

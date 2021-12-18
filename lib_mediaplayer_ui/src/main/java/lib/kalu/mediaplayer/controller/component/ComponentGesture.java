@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.component;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -40,21 +40,21 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * description:手势控制, 用于滑动改变亮度和音量的功能
  * created by kalu on 2021/11/23
  */
-public class CustomGestureView extends FrameLayout implements IGestureComponent {
+public class ComponentGesture extends FrameLayout implements IGestureComponent {
 
     private ControlWrapper mControlWrapper;
 
-    public CustomGestureView(@NonNull Context context) {
+    public ComponentGesture(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public CustomGestureView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentGesture(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public CustomGestureView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentGesture(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

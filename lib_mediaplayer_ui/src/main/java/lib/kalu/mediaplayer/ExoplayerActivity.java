@@ -10,10 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.controller.ControllerLayout;
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
-import lib.kalu.mediaplayer.widget.ControllerLive;
+import lib.kalu.mediaplayer.controller.live.ControllerLive;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -59,7 +59,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
         }
         // 点播
         else {
-            controllerLayout = new ControllerDefault(this);
+            controllerLayout = new ControllerStandard(this);
         }
         controllerLayout.setEnableOrientation(false);
         int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, -1);
@@ -72,10 +72,6 @@ public final class ExoplayerActivity extends AppCompatActivity {
         // 控制器
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         videoLayout.setController(controllerLayout);
-
-//        // 设置视频背景图
-//        ColorDrawable colorDrawable = new ColorDrawable(Color.RED);
-//        controller.getThumb().setImageDrawable(colorDrawable);
 
         // 设置视频播放链接地址
         videoLayout.showNetWarning();

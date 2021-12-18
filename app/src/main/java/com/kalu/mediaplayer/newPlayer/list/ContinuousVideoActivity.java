@@ -7,18 +7,17 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
 import java.util.List;
 
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.config.VideoInfoBean;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 /**
  * 连续播放列表视频
@@ -85,7 +84,7 @@ public class ContinuousVideoActivity extends AppCompatActivity implements View.O
     }
 
     private void initVideoPlayer() {
-        ControllerDefault controller = new ControllerDefault(this);
+        ControllerStandard controller = new ControllerStandard(this);
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.start(ConstantVideo.VideoPlayerList[0]);

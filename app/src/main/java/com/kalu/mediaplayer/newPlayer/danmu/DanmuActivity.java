@@ -5,17 +5,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.BaseActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 
 /**
@@ -77,9 +76,9 @@ public class DanmuActivity extends BaseActivity implements View.OnClickListener 
         StateAppBar.translucentStatusBar(this, true);
         initFindViewById();
 
-        ControllerDefault controller = new ControllerDefault(this);
+        ControllerStandard controller = new ControllerStandard(this);
         mMyDanmakuView = new MyDanmakuView(this);
-        controller.add(mMyDanmakuView);
+        controller.addComponent(mMyDanmakuView);
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);

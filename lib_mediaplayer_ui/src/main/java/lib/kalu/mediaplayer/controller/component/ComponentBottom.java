@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.component;
 
 import android.app.Activity;
 import android.content.Context;
@@ -39,6 +39,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerConfig;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 /**
@@ -46,23 +47,23 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  * created by kalu on 2021/11/23
  */
 @Keep
-public class CustomBottomView extends FrameLayout implements ImplController, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class ComponentBottom extends FrameLayout implements ImplComponent, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     protected ControlWrapper mControlWrapper;
     private boolean mIsDragging;
     private boolean mIsShowBottomProgress = true;
 
-    public CustomBottomView(@NonNull Context context) {
+    public ComponentBottom(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public CustomBottomView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentBottom(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public CustomBottomView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentBottom(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

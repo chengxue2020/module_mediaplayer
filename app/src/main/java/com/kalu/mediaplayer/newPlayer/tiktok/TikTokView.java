@@ -17,10 +17,10 @@ import com.kalu.mediaplayer.R;
 
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.widget.ImplController;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class TikTokView extends FrameLayout implements ImplController {
+public class TikTokView extends FrameLayout implements ImplComponent {
 
     private ImageView thumb;
     private ImageView mPlayBtn;

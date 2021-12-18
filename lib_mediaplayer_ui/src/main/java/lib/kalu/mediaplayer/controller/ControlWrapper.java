@@ -18,14 +18,13 @@ package lib.kalu.mediaplayer.controller;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.widget.ImageView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.util.Map;
 
+import lib.kalu.mediaplayer.controller.impl.ImplController;
 import lib.kalu.mediaplayer.widget.player.InterVideoPlayer;
 
 

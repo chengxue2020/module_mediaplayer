@@ -14,10 +14,10 @@ import androidx.core.view.ViewCompat;
 
 import com.kalu.mediaplayer.R;
 
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
         //把播放器添加到页面的容器中
         mPlayerContainer.addView(mVideoView);
         //设置新的控制器
-        ControllerDefault controller = new ControllerDefault(DetailActivity.this);
+        ControllerStandard controller = new ControllerStandard(DetailActivity.this);
         mVideoView.setController(controller);
 
         Intent intent = getIntent();

@@ -10,11 +10,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.BuriedPointEventImpl;
 import com.kalu.mediaplayer.ConstantVideo;
 import com.kalu.mediaplayer.R;
 
+import lib.kalu.mediaplayer.controller.component.ComponentError;
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.config.PlayerConfig;
 import lib.kalu.mediaplayer.config.PlayerType;
@@ -22,8 +23,6 @@ import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.widget.player.VideoBuilder;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.widget.CustomErrorView;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 import lib.kalu.mediaplayer.util.PlayerFactoryUtils;
 
 public class PortraitActivity extends AppCompatActivity implements View.OnClickListener {
@@ -111,7 +110,7 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
         //创建基础视频播放器，一般播放器的功能
 
 
-        ControllerDefault basisVideoController = new ControllerDefault(this);
+        ControllerStandard basisVideoController = new ControllerStandard(this);
         basisVideoController.setEnableOrientation(false);
         //设置控制器
         mVideoPlayer.setController(basisVideoController);
@@ -306,16 +305,16 @@ public class PortraitActivity extends AppCompatActivity implements View.OnClickL
         });
 
         //设置视频背景图
-        ControllerDefault controller = (ControllerDefault) mVideoPlayer.getVideoController();
+        ControllerStandard controller = (ControllerStandard) mVideoPlayer.getVideoController();
         //设置视频标题
         controller.setTitle("视频标题");
         //添加自定义视图。每添加一个视图，都是方式层级树的最上层
-        CustomErrorView customErrorView = new CustomErrorView(this);
-        controller.add(customErrorView);
+        ComponentError customErrorView = new ComponentError(this);
+        controller.addComponent(customErrorView);
         //移除控制组件
-        controller.remove(customErrorView);
+        controller.removeComponent(customErrorView);
         //移除所有的组件
-        controller.removeAll(false);
+        controller.removeComponentAll(false);
         //隐藏播放视图
         controller.hide();
         //显示播放视图

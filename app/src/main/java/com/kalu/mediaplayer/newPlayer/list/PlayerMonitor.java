@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.ImplController;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class PlayerMonitor implements ImplController {
+public class PlayerMonitor implements ImplComponent {
 
     private ControlWrapper mControlWrapper;
     private static final String TAG = "PlayerMonitor";

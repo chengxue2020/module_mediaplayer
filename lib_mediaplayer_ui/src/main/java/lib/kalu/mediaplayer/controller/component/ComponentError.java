@@ -13,9 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.component;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,7 +33,7 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.util.BaseToast;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 
@@ -40,66 +42,59 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  *     @author yangchong
  *     blog  : https://github.com/yangchong211
  *     time  : 2017/11/9
- *     desc  : 即将开播视图
+ *     desc  : 出错提示界面
  *     revise:
  * </pre>
  */
-public class CustomOncePlayView extends LinearLayout implements ImplController {
+public class ComponentError extends LinearLayout implements ImplComponent {
 
-    private Context mContext;
     private float mDownX;
     private float mDownY;
-    private TextView mTvMessage;
-    private TextView mTvRetry;
-    private int playState;
+
     private ControlWrapper mControlWrapper;
 
-    public CustomOncePlayView(Context context) {
+    public ComponentError(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
-    public CustomOncePlayView(Context context, @Nullable AttributeSet attrs) {
+    public ComponentError(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
-    public CustomOncePlayView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentError(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init();
     }
 
-
-    private void init(Context context){
+    private void init() {
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_error, this, true);
+        setClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
-        this.mContext = context;
         setVisibility(GONE);
-        View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.module_mediaplayer_video_once_live, this, true);
-        initFindViewById(view);
-        initListener();
-        setClickable(true);
-    }
 
-    private void initFindViewById(View view) {
-        mTvMessage = view.findViewById(R.id.tv_message);
-        mTvRetry = view.findViewById(R.id.tv_retry);
-    }
-
-    private void initListener() {
-        mTvRetry.setOnClickListener(new OnClickListener() {
+        // 重试
+        findViewById(R.id.controller_error_retry).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (playState == PlayerType.StateType.STATE_ONCE_LIVE){
-                    //即将开播
-                    if (PlayerUtils.isConnected(mContext)){
-                        mControlWrapper.restart();
-                    } else {
-                        BaseToast.showRoundRectToast(v.getContext(), "请查看网络是否连接");
+                setVisibility(GONE);
+                mControlWrapper.restart(true);
+            }
+        });
+
+        // 返回
+        findViewById(R.id.controller_error_back).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击返回键
+                if (mControlWrapper.isFullScreen()) {
+                    Activity activity = PlayerUtils.scanForActivity(getContext());
+                    if (activity != null && !activity.isFinishing()) {
+                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        mControlWrapper.stopFullScreen();
                     }
-                } else {
-                    BaseToast.showRoundRectToast(v.getContext(), "时间还未到，请稍后再试");
                 }
             }
         });
@@ -122,11 +117,37 @@ public class CustomOncePlayView extends LinearLayout implements ImplController {
 
     @Override
     public void onPlayStateChanged(int playState) {
-        this.playState = playState;
-        if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
-            //即将开播
+        if (playState == PlayerType.StateType.STATE_ERROR) {
+            bringToFront();
             setVisibility(VISIBLE);
-        } else {
+
+            View view = findViewById(R.id.controller_error_back);
+            view.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
+
+            TextView textView = findViewById(R.id.controller_error_message);
+            textView.setText("视频播放异常");
+        } else if (playState == PlayerType.StateType.STATE_NETWORK_ERROR) {
+            bringToFront();
+            setVisibility(VISIBLE);
+
+            View view = findViewById(R.id.controller_error_back);
+            view.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
+
+            TextView textView = findViewById(R.id.controller_error_message);
+            textView.setText("无网络，请检查网络设置");
+        } else if (playState == PlayerType.StateType.STATE_PARSE_ERROR) {
+            bringToFront();
+            setVisibility(VISIBLE);
+
+            View view = findViewById(R.id.controller_error_back);
+            view.setVisibility(mControlWrapper.isFullScreen() ? VISIBLE : GONE);
+            //mTvMessage.setText("视频解析异常");
+
+            TextView textView = findViewById(R.id.controller_error_message);
+            textView.setText("视频加载错误");
+        } else if (playState == PlayerType.StateType.STATE_IDLE) {
+            setVisibility(GONE);
+        } else if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             setVisibility(GONE);
         }
     }
@@ -165,11 +186,6 @@ public class CustomOncePlayView extends LinearLayout implements ImplController {
                 break;
         }
         return super.dispatchTouchEvent(ev);
-    }
-
-
-    public TextView getTvMessage() {
-        return mTvMessage;
     }
 
 }

@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.live;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,6 +32,8 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.controller.ControllerLayoutDispatchTouchEvent;
+import lib.kalu.mediaplayer.controller.component.ComponentError;
+import lib.kalu.mediaplayer.controller.component.ComponentPrepare;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
@@ -78,13 +80,13 @@ public class ControllerLive extends ControllerLayoutDispatchTouchEvent {
         //滑动调节亮度，音量，进度，默认开启
         setGestureEnabled(false);
         //先移除多有的视图view
-        removeAll(false);
+        removeComponentAll(false);
 
         // 错误界面view
-        this.add(new CustomErrorView(getContext()));
+        this.addComponent(new ComponentError(getContext()));
 
         // 加载界面view
-        this.add(new CustomPrepareView(getContext()));
+        this.addComponent(new ComponentPrepare(getContext()));
     }
 
 

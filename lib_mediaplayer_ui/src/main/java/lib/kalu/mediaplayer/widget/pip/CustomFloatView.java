@@ -34,7 +34,7 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.widget.ImplController;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 
 /**
  * <pre>
@@ -45,7 +45,7 @@ import lib.kalu.mediaplayer.widget.ImplController;
  *     revise:
  * </pre>
  */
-public class CustomFloatView extends FrameLayout implements ImplController, View.OnClickListener {
+public class CustomFloatView extends FrameLayout implements ImplComponent, View.OnClickListener {
 
     private ControlWrapper mControlWrapper;
     private Context mContext;

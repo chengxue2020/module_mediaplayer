@@ -5,15 +5,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.bumptech.glide.Glide;
 import com.kalu.mediaplayer.BaseActivity;
 import com.kalu.mediaplayer.ConstantVideo;
 
 import com.kalu.mediaplayer.R;
 import cn.ycbjie.ycstatusbarlib.bar.StateAppBar;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 
 /**
@@ -70,7 +69,7 @@ public class TestFullActivity extends BaseActivity implements View.OnClickListen
         mBtnTiny1 = (Button) findViewById(R.id.btn_tiny_1);
         mBtnTiny2 = (Button) findViewById(R.id.btn_tiny_2);
 
-        ControllerDefault controller = new ControllerDefault(this);
+        ControllerStandard controller = new ControllerStandard(this);
         //设置控制器
         mVideoPlayerLayout.setController(controller);
         mVideoPlayerLayout.setScreenScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);

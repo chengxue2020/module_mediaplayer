@@ -5,20 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 
 import com.kalu.mediaplayer.R;
 
 import java.util.List;
 
 import lib.kalu.mediaplayer.config.VideoInfoBean;
-import lib.kalu.mediaplayer.widget.CustomPrepareView;
+import lib.kalu.mediaplayer.controller.component.ComponentPrepare;
 
 public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecyclerViewAdapter.VideoHolder> {
 
@@ -65,7 +62,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
         public int mPosition;
         public FrameLayout mPlayerContainer;
         public TextView mTitle;
-        public CustomPrepareView mPrepareView;
+        public ComponentPrepare mPrepareView;
 
         VideoHolder(View itemView) {
             super(itemView);

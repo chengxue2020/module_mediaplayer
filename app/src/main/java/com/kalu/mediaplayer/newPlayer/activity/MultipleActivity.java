@@ -12,9 +12,9 @@ import com.kalu.mediaplayer.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.widget.player.VideoBuilder;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 
 public class MultipleActivity extends AppCompatActivity {
@@ -45,7 +45,7 @@ public class MultipleActivity extends AppCompatActivity {
         VideoBuilder.Builder builder = VideoBuilder.newBuilder();
         VideoBuilder videoPlayerBuilder = new VideoBuilder(builder);
         player1.setVideoBuilder(videoPlayerBuilder);
-        ControllerDefault controller1 = new ControllerDefault(this);
+        ControllerStandard controller1 = new ControllerStandard(this);
         player1.setController(controller1);
         mVideoViews.add(player1);
 
@@ -54,7 +54,7 @@ public class MultipleActivity extends AppCompatActivity {
         VideoBuilder.Builder builder2 = VideoBuilder.newBuilder();
         VideoBuilder videoPlayerBuilder2 = new VideoBuilder(builder2);
         player2.setVideoBuilder(videoPlayerBuilder2);
-        ControllerDefault controller2 = new ControllerDefault(this);
+        ControllerStandard controller2 = new ControllerStandard(this);
         player2.setController(controller2);
         mVideoViews.add(player2);
     }

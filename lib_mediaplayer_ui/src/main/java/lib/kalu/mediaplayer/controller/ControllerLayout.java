@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
@@ -37,16 +36,16 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.widget.CustomPrepareView;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.controller.impl.ImplComponentAction;
+import lib.kalu.mediaplayer.controller.impl.ImplController;
 import lib.kalu.mediaplayer.widget.player.InterVideoPlayer;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.util.NetworkUtils;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.StatesCutoutUtils;
-import lib.kalu.mediaplayer.widget.ImplController;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
@@ -58,8 +57,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
  * *             6.设备方向监听: {@link #onOrientationChanged(int)}
  */
-public abstract class ControllerLayout extends FrameLayout implements lib.kalu.mediaplayer.controller.ImplController,
-        InterViewController, OrientationHelper.OnOrientationChangeListener {
+public abstract class ControllerLayout extends FrameLayout implements ImplController, ImplComponentAction, OrientationHelper.OnOrientationChangeListener {
 
     //播放器包装类，集合了MediaPlayerControl的api和IVideoController的api
     protected ControlWrapper mControlWrapper;
@@ -86,7 +84,7 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
 
     //保存了所有的控制组件
     //使用LinkedHashMap有序
-    protected LinkedHashMap<ImplController, Boolean> mControlComponents = new LinkedHashMap<>();
+    protected LinkedHashMap<ImplComponent, Boolean> mControlComponents = new LinkedHashMap<>();
 
     public ControllerLayout(@NonNull Context context) {
         super(context);
@@ -147,8 +145,8 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     public void setMediaPlayer(InterVideoPlayer mediaPlayer) {
         mControlWrapper = new ControlWrapper(mediaPlayer, this);
         //绑定ControlComponent和Controller
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             component.attach(mControlWrapper);
         }
         //开始监听设备方向
@@ -156,7 +154,7 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     }
 
     @Override
-    public void add(@NonNull ImplController controlView, @NonNull boolean isPrivate) {
+    public void addComponent(@NonNull ImplComponent controlView, @NonNull boolean isPrivate) {
 
         if (isPrivate && !isEnabled())
             return;
@@ -172,25 +170,25 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     }
 
     @Override
-    public void remove(@NonNull ImplController view) {
+    public void removeComponent(@NonNull ImplComponent view) {
 
         removeView(view.getView());
         mControlComponents.remove(view);
     }
 
     @Override
-    public void removeAll(boolean isPrivate) {
+    public void removeComponentAll(boolean isPrivate) {
 
         if (isPrivate) {
-            Iterator<Map.Entry<ImplController, Boolean>> it = mControlComponents.entrySet().iterator();
+            Iterator<Map.Entry<ImplComponent, Boolean>> it = mControlComponents.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<ImplController, Boolean> next = it.next();
+                Map.Entry<ImplComponent, Boolean> next = it.next();
                 if (next.getValue()) {
                     it.remove();
                 }
             }
         } else {
-            for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
+            for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
                 removeView(next.getKey().getView());
             }
             mControlComponents.clear();
@@ -580,8 +578,8 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     private void handleVisibilityChanged(boolean isVisible, Animation anim) {
         if (!mIsLocked) {
             //没锁住时才向ControlComponent下发此事件
-            for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-                ImplController component = next.getKey();
+            for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+                ImplComponent component = next.getKey();
                 component.onVisibilityChanged(isVisible, anim);
             }
         }
@@ -599,8 +597,8 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     }
 
     private void handlePlayStateChanged(int playState) {
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             component.onPlayStateChanged(playState);
         }
         onPlayStateChanged(playState);
@@ -617,7 +615,7 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
                 mOrientation = 0;
                 mIsLocked = false;
                 mIsShowing = false;
-                removeAll(true);
+                removeComponentAll(true);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 mIsLocked = false;
@@ -635,8 +633,8 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
      * @param playerState 播放器状态
      */
     private void handleWindowStateChanged(int playerState) {
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             component.onWindowStateChanged(playerState);
         }
         onPlayerStateChanged(playerState);
@@ -680,8 +678,8 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     }
 
     private void handleSetProgress(int duration, int position) {
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             component.setProgress(duration, position);
         }
         setProgress(duration, position);
@@ -698,8 +696,8 @@ public abstract class ControllerLayout extends FrameLayout implements lib.kalu.m
     }
 
     private void handleLockStateChanged(boolean isLocked) {
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             component.onLockStateChanged(isLocked);
         }
         onLockStateChanged(isLocked);

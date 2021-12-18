@@ -22,8 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.controller.ControllerLayoutDispatchTouchEvent;
-import lib.kalu.mediaplayer.widget.CustomCompleteView;
-import lib.kalu.mediaplayer.widget.CustomErrorView;
+import lib.kalu.mediaplayer.controller.component.ComponentComplete;
+import lib.kalu.mediaplayer.controller.component.ComponentError;
 
 /**
  * <pre>
@@ -62,8 +62,8 @@ public class CustomFloatController extends ControllerLayoutDispatchTouchEvent {
     @Override
     public void init() {
         super.init();
-        add(new CustomCompleteView(getContext()));
-        add(new CustomErrorView(getContext()));
-        add(new CustomFloatView(getContext()));
+        addComponent(new ComponentComplete(getContext()));
+        addComponent(new ComponentError(getContext()));
+        addComponent(new CustomFloatView(getContext()));
     }
 }

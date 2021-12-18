@@ -18,19 +18,19 @@ import com.kalu.mediaplayer.R;
 
 import java.util.List;
 
+import lib.kalu.mediaplayer.controller.standard.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.config.VideoInfoBean;
 import lib.kalu.mediaplayer.widget.player.VideoLayout;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.ControllerDefault;
 
 /**
  * 小窗播放
  */
 public class TinyScreenActivity extends AppCompatActivity implements OnItemChildClickListener {
 
-    private ControllerDefault mController;
+    private ControllerStandard mController;
     private List<VideoInfoBean> mVideos;
     private LinearLayoutManager mLinearLayoutManager;
     private VideoLayout mVideoPlayerLayout;
@@ -90,7 +90,7 @@ public class TinyScreenActivity extends AppCompatActivity implements OnItemChild
                 }
             }
         });
-        mController = new ControllerDefault(this);
+        mController = new ControllerStandard(this);
         initRecyclerView();
     }
 
@@ -151,7 +151,7 @@ public class TinyScreenActivity extends AppCompatActivity implements OnItemChild
 
         VideoRecyclerViewAdapter.VideoHolder viewHolder = (VideoRecyclerViewAdapter.VideoHolder) itemView.getTag();
         //把列表中预置的PrepareView添加到控制器中，注意isPrivate此处只能为true。
-        mController.add(viewHolder.mPrepareView, true);
+        mController.addComponent(viewHolder.mPrepareView, true);
         PlayerUtils.removeViewFormParent(mVideoPlayerLayout);
         viewHolder.mPlayerContainer.addView(mVideoPlayerLayout, 0);
         mVideoPlayerLayout.start(videoBean.getVideoUrl());

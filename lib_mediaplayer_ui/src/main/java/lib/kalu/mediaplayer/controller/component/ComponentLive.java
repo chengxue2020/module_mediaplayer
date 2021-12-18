@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.component;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,6 +32,7 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 
@@ -44,7 +45,7 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  *     revise: 用于直播
  * </pre>
  */
-public class CustomLiveControlView extends FrameLayout implements ImplController, View.OnClickListener {
+public class ComponentLive extends FrameLayout implements ImplComponent, View.OnClickListener {
 
     private Context mContext;
     private ControlWrapper mControlWrapper;
@@ -53,17 +54,17 @@ public class CustomLiveControlView extends FrameLayout implements ImplController
     private ImageView mIvRefresh;
     private ImageView mIvFullScreen;
 
-    public CustomLiveControlView(@NonNull Context context) {
+    public ComponentLive(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public CustomLiveControlView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentLive(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public CustomLiveControlView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentLive(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

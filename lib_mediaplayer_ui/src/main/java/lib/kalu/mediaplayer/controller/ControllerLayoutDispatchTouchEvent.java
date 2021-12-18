@@ -30,10 +30,9 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.ImplController;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
@@ -265,8 +264,8 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
             }
 
             if (mChangePosition || mChangeBrightness || mChangeVolume) {
-                for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-                    ImplController component = next.getKey();
+                for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+                    ImplComponent component = next.getKey();
                     if (component instanceof IGestureComponent) {
                         ((IGestureComponent) component).onStartSlide();
                     }
@@ -292,8 +291,8 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         int position = (int) (deltaX / width * 120000 + currentPosition);
         if (position > duration) position = duration;
         if (position < 0) position = 0;
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             if (component instanceof IGestureComponent) {
                 ((IGestureComponent) component).onPositionChange(position, currentPosition, duration);
             }
@@ -318,8 +317,8 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         int percent = (int) (brightness * 100);
         attributes.screenBrightness = brightness;
         window.setAttributes(attributes);
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             if (component instanceof IGestureComponent) {
                 ((IGestureComponent) component).onBrightnessChange(percent);
             }
@@ -335,8 +334,8 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         if (index < 0) index = 0;
         int percent = (int) (index / streamMaxVolume * 100);
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) index, 0);
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             if (component instanceof IGestureComponent) {
                 ((IGestureComponent) component).onVolumeChange(percent);
             }
@@ -435,8 +434,8 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
     }
 
     private void stopSlide() {
-        for (Map.Entry<ImplController, Boolean> next : mControlComponents.entrySet()) {
-            ImplController component = next.getKey();
+        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+            ImplComponent component = next.getKey();
             if (component instanceof IGestureComponent) {
                 //结束滑动
                 ((IGestureComponent) component).onStopSlide();

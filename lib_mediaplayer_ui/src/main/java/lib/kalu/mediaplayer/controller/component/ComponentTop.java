@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.component;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -35,30 +35,31 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 /**
  * description: 控制器菜单 => 顶部 => 返回、标题、电量、时间
  * created by kalu on 2021/11/22
  */
-public class CustomTopView extends RelativeLayout implements ImplController {
+public class ComponentTop extends RelativeLayout implements ImplComponent {
 
     private ControlWrapper mControlWrapper;
 
     // 电量监控
     private BatteryReceiver mBatteryReceiver = new BatteryReceiver();
 
-    public CustomTopView(@NonNull Context context) {
+    public ComponentTop(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public CustomTopView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentTop(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public CustomTopView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentTop(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

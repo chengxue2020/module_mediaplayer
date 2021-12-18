@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.controller.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -21,8 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,25 +29,26 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.controller.ControlWrapper;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.controller.impl.ImplComponent;
 
 /**
  * 预加载准备播放页面视图
  */
-public class CustomPrepareView extends FrameLayout implements ImplController {
+public class ComponentPrepare extends FrameLayout implements ImplComponent {
 
     private ControlWrapper mControlWrapper;
 
-    public CustomPrepareView(@NonNull Context context) {
+    public ComponentPrepare(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public CustomPrepareView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentPrepare(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public CustomPrepareView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentPrepare(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
