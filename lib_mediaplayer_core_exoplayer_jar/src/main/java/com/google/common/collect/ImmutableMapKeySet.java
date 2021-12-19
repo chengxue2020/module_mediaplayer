@@ -16,14 +16,10 @@
 
 package com.google.common.collect;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import java.io.Serializable;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * {@code keySet()} implementation for {@link ImmutableMap}.
@@ -50,12 +46,7 @@ final class ImmutableMapKeySet<K, V> extends IndexedImmutableSet<K> {
   }
 
   @Override
-  public Spliterator<K> spliterator() {
-    return map.keySpliterator();
-  }
-
-  @Override
-  public boolean contains(@Nullable Object object) {
+  public boolean contains(@NullableDecl Object object) {
     return map.containsKey(object);
   }
 
@@ -65,19 +56,17 @@ final class ImmutableMapKeySet<K, V> extends IndexedImmutableSet<K> {
   }
 
   @Override
-  public void forEach(Consumer<? super K> action) {
-    checkNotNull(action);
-    map.forEach((k, v) -> action.accept(k));
-  }
-
-  @Override
   boolean isPartialView() {
     return true;
   }
 
-  // No longer used for new writes, but kept so that old data can still be read.
   @GwtIncompatible // serialization
-  @SuppressWarnings("unused")
+  @Override
+  Object writeReplace() {
+    return new KeySetSerializedForm<K>(map);
+  }
+
+  @GwtIncompatible // serialization
   private static class KeySetSerializedForm<K> implements Serializable {
     final ImmutableMap<K, ?> map;
 

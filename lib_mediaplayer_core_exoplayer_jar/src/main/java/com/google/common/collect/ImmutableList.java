@@ -19,6 +19,7 @@ package com.google.common.collect;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkPositionIndex;
 import static com.google.common.base.Preconditions.checkPositionIndexes;
 import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 import static com.google.common.collect.ObjectArrays.checkElementsNotNull;
@@ -26,9 +27,7 @@ import static com.google.common.collect.RegularImmutableList.EMPTY;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.errorprone.annotations.DoNotCall;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -39,11 +38,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collector;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A {@link List} whose contents will never change, with many other important properties detailed at
@@ -61,17 +56,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @SuppressWarnings("serial") // we're overriding default serialization
 public abstract class ImmutableList<E> extends ImmutableCollection<E>
     implements List<E>, RandomAccess {
-
-  /**
-   * Returns a {@code Collector} that accumulates the input elements into a new {@code
-   * ImmutableList}, in encounter order.
-   *
-   * @since 21.0
-   */
-  public static <E> Collector<E, ?, ImmutableList<E>> toImmutableList() {
-    return CollectCollectors.toImmutableList();
-  }
-
   /**
    * Returns the empty immutable list. This list behaves and performs comparably to {@link
    * Collections#emptyList}, and is preferable mainly for consistency and maintainability of your
@@ -91,7 +75,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    * @throws NullPointerException if {@code element} is null
    */
   public static <E> ImmutableList<E> of(E element) {
-    return new SingletonImmutableList<E>(element);
+    return construct(element);
   }
 
   /**
@@ -284,14 +268,9 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    * @since 3.0
    */
   public static <E> ImmutableList<E> copyOf(E[] elements) {
-    switch (elements.length) {
-      case 0:
-        return of();
-      case 1:
-        return of(elements[0]);
-      default:
-        return construct(elements.clone());
-    }
+    return (elements.length == 0)
+        ? ImmutableList.<E>of()
+        : ImmutableList.<E>construct(elements.clone());
   }
 
   /**
@@ -356,22 +335,12 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     return asImmutableList(elements, elements.length);
   }
 
-  /**
-   * Views the array as an immutable list. Copies if the specified range does not cover the complete
-   * array. Does not check for nulls.
-   */
+  /** Views the array as an immutable list. Does not check for nulls. */
   static <E> ImmutableList<E> asImmutableList(Object[] elements, int length) {
-    switch (length) {
-      case 0:
-        return of();
-      case 1:
-        return of((E) elements[0]);
-      default:
-        if (length < elements.length) {
-          elements = Arrays.copyOf(elements, length);
-        }
-        return new RegularImmutableList<E>(elements);
+    if (length == 0) {
+      return of();
     }
+    return new RegularImmutableList<E>(elements, length);
   }
 
   ImmutableList() {}
@@ -388,37 +357,47 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     return listIterator(0);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public UnmodifiableListIterator<E> listIterator(int index) {
-    return new AbstractIndexedListIterator<E>(size(), index) {
-      @Override
-      protected E get(int index) {
-        return ImmutableList.this.get(index);
-      }
-    };
+    checkPositionIndex(index, size());
+    if (isEmpty()) {
+      return (UnmodifiableListIterator<E>) EMPTY_ITR;
+    } else {
+      return new Itr<E>(this, index);
+    }
   }
 
-  @Override
-  public void forEach(Consumer<? super E> consumer) {
-    checkNotNull(consumer);
-    int n = size();
-    for (int i = 0; i < n; i++) {
-      consumer.accept(get(i));
+  /** A singleton implementation of iterator() for the empty ImmutableList. */
+  private static final UnmodifiableListIterator<Object> EMPTY_ITR =
+      new Itr<Object>(RegularImmutableList.EMPTY, 0);
+
+  static class Itr<E> extends AbstractIndexedListIterator<E> {
+    private final ImmutableList<E> list;
+
+    Itr(ImmutableList<E> list, int index) {
+      super(list.size(), index);
+      this.list = list;
+    }
+
+    @Override
+    protected E get(int index) {
+      return list.get(index);
     }
   }
 
   @Override
-  public int indexOf(@Nullable Object object) {
+  public int indexOf(@NullableDecl Object object) {
     return (object == null) ? -1 : Lists.indexOfImpl(this, object);
   }
 
   @Override
-  public int lastIndexOf(@Nullable Object object) {
+  public int lastIndexOf(@NullableDecl Object object) {
     return (object == null) ? -1 : Lists.lastIndexOfImpl(this, object);
   }
 
   @Override
-  public boolean contains(@Nullable Object object) {
+  public boolean contains(@NullableDecl Object object) {
     return indexOf(object) >= 0;
   }
 
@@ -437,8 +416,6 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
       return this;
     } else if (length == 0) {
       return of();
-    } else if (length == 1) {
-      return of(get(fromIndex));
     } else {
       return subListUnchecked(fromIndex, toIndex);
     }
@@ -464,6 +441,21 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     @Override
     public int size() {
       return length;
+    }
+
+    @Override
+    Object[] internalArray() {
+      return ImmutableList.this.internalArray();
+    }
+
+    @Override
+    int internalArrayStart() {
+      return ImmutableList.this.internalArrayStart() + offset;
+    }
+
+    @Override
+    int internalArrayEnd() {
+      return ImmutableList.this.internalArrayStart() + offset + length;
     }
 
     @Override
@@ -493,7 +485,6 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final boolean addAll(int index, Collection<? extends E> newElements) {
     throw new UnsupportedOperationException();
   }
@@ -507,7 +498,6 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final E set(int index, E element) {
     throw new UnsupportedOperationException();
   }
@@ -520,7 +510,6 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    */
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final void add(int index, E element) {
     throw new UnsupportedOperationException();
   }
@@ -534,34 +523,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final E remove(int index) {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * Guaranteed to throw an exception and leave the list unmodified.
-   *
-   * @throws UnsupportedOperationException always
-   * @deprecated Unsupported operation.
-   */
-  @Deprecated
-  @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
-  public final void replaceAll(UnaryOperator<E> operator) {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * Guaranteed to throw an exception and leave the list unmodified.
-   *
-   * @throws UnsupportedOperationException always
-   * @deprecated Unsupported operation.
-   */
-  @Deprecated
-  @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
-  public final void sort(Comparator<? super E> c) {
     throw new UnsupportedOperationException();
   }
 
@@ -573,11 +535,6 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   @Override
   public final ImmutableList<E> asList() {
     return this;
-  }
-
-  @Override
-  public Spliterator<E> spliterator() {
-    return CollectSpliterators.indexed(size(), SPLITERATOR_CHARACTERISTICS, this::get);
   }
 
   @Override
@@ -622,18 +579,18 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     }
 
     @Override
-    public boolean contains(@Nullable Object object) {
+    public boolean contains(@NullableDecl Object object) {
       return forwardList.contains(object);
     }
 
     @Override
-    public int indexOf(@Nullable Object object) {
+    public int indexOf(@NullableDecl Object object) {
       int index = forwardList.lastIndexOf(object);
       return (index >= 0) ? reverseIndex(index) : -1;
     }
 
     @Override
-    public int lastIndexOf(@Nullable Object object) {
+    public int lastIndexOf(@NullableDecl Object object) {
       int index = forwardList.indexOf(object);
       return (index >= 0) ? reverseIndex(index) : -1;
     }
@@ -662,7 +619,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   }
 
   @Override
-  public boolean equals(@Nullable Object obj) {
+  public boolean equals(@NullableDecl Object obj) {
     return Lists.equalsImpl(this, obj);
   }
 
@@ -752,11 +709,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @since 2.0
    */
-  public static final class Builder<E> extends ImmutableCollection.Builder<E> {
-    @VisibleForTesting Object[] contents;
-    private int size;
-    private boolean forceCopy;
-
+  public static final class Builder<E> extends ArrayBasedBuilder<E> {
     /**
      * Creates a new builder. The returned builder is equivalent to the builder generated by {@link
      * ImmutableList#builder}.
@@ -766,18 +719,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     }
 
     Builder(int capacity) {
-      this.contents = new Object[capacity];
-      this.size = 0;
-    }
-
-    private void getReadyToExpandTo(int minCapacity) {
-      if (contents.length < minCapacity) {
-        this.contents = Arrays.copyOf(contents, expandedCapacity(contents.length, minCapacity));
-        forceCopy = false;
-      } else if (forceCopy) {
-        contents = Arrays.copyOf(contents, contents.length);
-        forceCopy = false;
-      }
+      super(capacity);
     }
 
     /**
@@ -790,9 +732,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     @CanIgnoreReturnValue
     @Override
     public Builder<E> add(E element) {
-      checkNotNull(element);
-      getReadyToExpandTo(size + 1);
-      contents[size++] = element;
+      super.add(element);
       return this;
     }
 
@@ -806,15 +746,8 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     @CanIgnoreReturnValue
     @Override
     public Builder<E> add(E... elements) {
-      checkElementsNotNull(elements);
-      add(elements, elements.length);
+      super.add(elements);
       return this;
-    }
-
-    private void add(Object[] elements, int n) {
-      getReadyToExpandTo(size + n);
-      System.arraycopy(elements, 0, contents, size, n);
-      size += n;
     }
 
     /**
@@ -827,16 +760,6 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     @CanIgnoreReturnValue
     @Override
     public Builder<E> addAll(Iterable<? extends E> elements) {
-      checkNotNull(elements);
-      if (elements instanceof Collection) {
-        Collection<?> collection = (Collection<?>) elements;
-        getReadyToExpandTo(size + collection.size());
-        if (collection instanceof ImmutableCollection) {
-          ImmutableCollection<?> immutableCollection = (ImmutableCollection<?>) collection;
-          size = immutableCollection.copyIntoArray(contents, size);
-          return this;
-        }
-      }
       super.addAll(elements);
       return this;
     }
@@ -856,9 +779,8 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     }
 
     @CanIgnoreReturnValue
-    Builder<E> combine(Builder<E> builder) {
-      checkNotNull(builder);
-      add(builder.contents, builder.size);
+    Builder<E> combine(Builder<E> other) {
+      addAll(other.contents, other.size);
       return this;
     }
 

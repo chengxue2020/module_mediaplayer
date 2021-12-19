@@ -18,7 +18,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.j2objc.annotations.ReflectionSupport;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 @GwtCompatible(emulated = true)
 @ReflectionSupport(value = ReflectionSupport.Level.FULL)
@@ -151,7 +151,7 @@ abstract class InterruptibleTask<T> extends AtomicReference<Runnable> implements
    * Any interruption that happens as a result of calling interruptTask will arrive before this
    * method is called. Complete Futures here.
    */
-  abstract void afterRanInterruptibly(@Nullable T result, @Nullable Throwable error);
+  abstract void afterRanInterruptibly(@NullableDecl T result, @NullableDecl Throwable error);
 
   /**
    * Interrupts the running task. Because this internally calls {@link Thread#interrupt()} which can

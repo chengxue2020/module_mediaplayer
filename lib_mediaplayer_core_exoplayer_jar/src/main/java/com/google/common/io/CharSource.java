@@ -24,22 +24,17 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.errorprone.annotations.MustBeClosed;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A readable source of characters, such as a text file. Unlike a {@link Reader}, a {@code
@@ -113,48 +108,6 @@ public abstract class CharSource {
     return (reader instanceof BufferedReader)
         ? (BufferedReader) reader
         : new BufferedReader(reader);
-  }
-
-  /**
-   * Opens a new {@link Stream} for reading text one line at a time from this source. This method
-   * returns a new, independent stream each time it is called.
-   *
-   * <p>The returned stream is lazy and only reads from the source in the terminal operation. If an
-   * I/O error occurs while the stream is reading from the source or when the stream is closed, an
-   * {@link UncheckedIOException} is thrown.
-   *
-   * <p>Like {@link BufferedReader#readLine()}, this method considers a line to be a sequence of
-   * text that is terminated by (but does not include) one of {@code \r\n}, {@code \r} or {@code
-   * \n}. If the source's content does not end in a line termination sequence, it is treated as if
-   * it does.
-   *
-   * <p>The caller is responsible for ensuring that the returned stream is closed. For example:
-   *
-   * <pre>{@code
-   * try (Stream<String> lines = source.lines()) {
-   *   lines.map(...)
-   *      .filter(...)
-   *      .forEach(...);
-   * }
-   * }</pre>
-   *
-   * @throws IOException if an I/O error occurs while opening the stream
-   * @since 22.0
-   */
-  @Beta
-  @MustBeClosed
-  public Stream<String> lines() throws IOException {
-    BufferedReader reader = openBufferedStream();
-    return reader
-        .lines()
-        .onClose(
-            () -> {
-              try {
-                reader.close();
-              } catch (IOException e) {
-                throw new UncheckedIOException(e);
-              }
-            });
   }
 
   /**
@@ -295,7 +248,8 @@ public abstract class CharSource {
    *
    * @throws IOException if an I/O error occurs while reading from this source
    */
-  public @Nullable String readFirstLine() throws IOException {
+  @NullableDecl
+  public String readFirstLine() throws IOException {
     Closer closer = Closer.create();
     try {
       BufferedReader reader = closer.register(openBufferedStream());
@@ -362,29 +316,6 @@ public abstract class CharSource {
       throw closer.rethrow(e);
     } finally {
       closer.close();
-    }
-  }
-
-  /**
-   * Reads all lines of text from this source, running the given {@code action} for each line as it
-   * is read.
-   *
-   * <p>Like {@link BufferedReader#readLine()}, this method considers a line to be a sequence of
-   * text that is terminated by (but does not include) one of {@code \r\n}, {@code \r} or {@code
-   * \n}. If the source's content does not end in a line termination sequence, it is treated as if
-   * it does.
-   *
-   * @throws IOException if an I/O error occurs while reading from this source or if {@code action}
-   *     throws an {@code UncheckedIOException}
-   * @since 22.0
-   */
-  @Beta
-  public void forEachLine(Consumer<? super String> action) throws IOException {
-    try (Stream<String> lines = lines()) {
-      // The lines should be ordered regardless in most cases, but use forEachOrdered to be sure
-      lines.forEachOrdered(action);
-    } catch (UncheckedIOException e) {
-      throw e.getCause();
     }
   }
 
@@ -574,11 +505,6 @@ public abstract class CharSource {
           return endOfData();
         }
       };
-    }
-
-    @Override
-    public Stream<String> lines() {
-      return Streams.stream(linesIterator());
     }
 
     @Override

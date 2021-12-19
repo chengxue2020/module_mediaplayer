@@ -18,9 +18,8 @@ package com.google.common.graph;
 
 import com.google.common.annotations.Beta;
 import com.google.errorprone.annotations.DoNotMock;
-import java.util.Optional;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * An interface for <a
@@ -309,35 +308,6 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
 
   /**
    * Returns the single edge that directly connects {@code nodeU} to {@code nodeV}, if one is
-   * present, or {@code Optional.empty()} if no such edge exists.
-   *
-   * <p>In an undirected network, this is equal to {@code edgeConnecting(nodeV, nodeU)}.
-   *
-   * @throws IllegalArgumentException if there are multiple parallel edges connecting {@code nodeU}
-   *     to {@code nodeV}
-   * @throws IllegalArgumentException if {@code nodeU} or {@code nodeV} is not an element of this
-   *     network
-   * @since 23.0
-   */
-  Optional<E> edgeConnecting(N nodeU, N nodeV);
-
-  /**
-   * Returns the single edge that directly connects {@code endpoints} (in the order, if any,
-   * specified by {@code endpoints}), if one is present, or {@code Optional.empty()} if no such edge
-   * exists.
-   *
-   * <p>If this graph is directed, the endpoints must be ordered.
-   *
-   * @throws IllegalArgumentException if there are multiple parallel edges connecting {@code nodeU}
-   *     to {@code nodeV}
-   * @throws IllegalArgumentException if either endpoint is not an element of this network
-   * @throws IllegalArgumentException if the endpoints are unordered and the graph is directed
-   * @since 27.1
-   */
-  Optional<E> edgeConnecting(EndpointPair<N> endpoints);
-
-  /**
-   * Returns the single edge that directly connects {@code nodeU} to {@code nodeV}, if one is
    * present, or {@code null} if no such edge exists.
    *
    * <p>In an undirected network, this is equal to {@code edgeConnectingOrNull(nodeV, nodeU)}.
@@ -348,7 +318,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    *     network
    * @since 23.0
    */
-  @Nullable
+  @NullableDecl
   E edgeConnectingOrNull(N nodeU, N nodeV);
 
   /**
@@ -363,7 +333,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * @throws IllegalArgumentException if the endpoints are unordered and the graph is directed
    * @since 27.1
    */
-  @Nullable
+  @NullableDecl
   E edgeConnectingOrNull(EndpointPair<N> endpoints);
 
   /**
@@ -415,7 +385,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * <p>A reference implementation of this is provided by {@link AbstractNetwork#equals(Object)}.
    */
   @Override
-  boolean equals(@Nullable Object object);
+  boolean equals(@NullableDecl Object object);
 
   /**
    * Returns the hash code for this network. The hash code of a network is defined as the hash code

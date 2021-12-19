@@ -35,9 +35,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Provides static methods for working with {@code Collection} instances.
@@ -97,7 +95,7 @@ public final class Collections2 {
    * Delegates to {@link Collection#contains}. Returns {@code false} if the {@code contains} method
    * throws a {@code ClassCastException} or {@code NullPointerException}.
    */
-  static boolean safeContains(Collection<?> collection, @Nullable Object object) {
+  static boolean safeContains(Collection<?> collection, @NullableDecl Object object) {
     checkNotNull(collection);
     try {
       return collection.contains(object);
@@ -110,7 +108,7 @@ public final class Collections2 {
    * Delegates to {@link Collection#remove}. Returns {@code false} if the {@code remove} method
    * throws a {@code ClassCastException} or {@code NullPointerException}.
    */
-  static boolean safeRemove(Collection<?> collection, @Nullable Object object) {
+  static boolean safeRemove(Collection<?> collection, @NullableDecl Object object) {
     checkNotNull(collection);
     try {
       return collection.remove(object);
@@ -153,7 +151,7 @@ public final class Collections2 {
     }
 
     @Override
-    public boolean contains(@Nullable Object element) {
+    public boolean contains(@NullableDecl Object element) {
       if (safeContains(unfiltered, element)) {
         @SuppressWarnings("unchecked") // element is in unfiltered, so it must be an E
         E e = (E) element;
@@ -178,40 +176,36 @@ public final class Collections2 {
     }
 
     @Override
-    public Spliterator<E> spliterator() {
-      return CollectSpliterators.filter(unfiltered.spliterator(), predicate);
-    }
-
-    @Override
-    public void forEach(Consumer<? super E> action) {
-      checkNotNull(action);
-      unfiltered.forEach(
-          (E e) -> {
-            if (predicate.test(e)) {
-              action.accept(e);
-            }
-          });
-    }
-
-    @Override
     public boolean remove(Object element) {
       return contains(element) && unfiltered.remove(element);
     }
 
     @Override
     public boolean removeAll(final Collection<?> collection) {
-      return removeIf(collection::contains);
+      boolean changed = false;
+      Iterator<E> itr = unfiltered.iterator();
+      while (itr.hasNext()) {
+        E e = itr.next();
+        if (predicate.apply(e) && collection.contains(e)) {
+          itr.remove();
+          changed = true;
+        }
+      }
+      return changed;
     }
 
     @Override
     public boolean retainAll(final Collection<?> collection) {
-      return removeIf(element -> !collection.contains(element));
-    }
-
-    @Override
-    public boolean removeIf(java.util.function.Predicate<? super E> filter) {
-      checkNotNull(filter);
-      return unfiltered.removeIf(element -> predicate.apply(element) && filter.test(element));
+      boolean changed = false;
+      Iterator<E> itr = unfiltered.iterator();
+      while (itr.hasNext()) {
+        E e = itr.next();
+        if (predicate.apply(e) && !collection.contains(e)) {
+          itr.remove();
+          changed = true;
+        }
+      }
+      return changed;
     }
 
     @Override
@@ -283,23 +277,6 @@ public final class Collections2 {
     @Override
     public Iterator<T> iterator() {
       return Iterators.transform(fromCollection.iterator(), function);
-    }
-
-    @Override
-    public Spliterator<T> spliterator() {
-      return CollectSpliterators.map(fromCollection.spliterator(), function);
-    }
-
-    @Override
-    public void forEach(Consumer<? super T> action) {
-      checkNotNull(action);
-      fromCollection.forEach((F f) -> action.accept(function.apply(f)));
-    }
-
-    @Override
-    public boolean removeIf(java.util.function.Predicate<? super T> filter) {
-      checkNotNull(filter);
-      return fromCollection.removeIf(element -> filter.test(function.apply(element)));
     }
 
     @Override
@@ -489,7 +466,7 @@ public final class Collections2 {
     }
 
     @Override
-    public boolean contains(@Nullable Object obj) {
+    public boolean contains(@NullableDecl Object obj) {
       if (obj instanceof List) {
         List<?> list = (List<?>) obj;
         return isPermutation(inputList, list);
@@ -504,7 +481,7 @@ public final class Collections2 {
   }
 
   private static final class OrderedPermutationIterator<E> extends AbstractIterator<List<E>> {
-    @Nullable List<E> nextPermutation;
+    @NullableDecl List<E> nextPermutation;
     final Comparator<? super E> comparator;
 
     OrderedPermutationIterator(List<E> list, Comparator<? super E> comparator) {
@@ -600,7 +577,7 @@ public final class Collections2 {
     }
 
     @Override
-    public boolean contains(@Nullable Object obj) {
+    public boolean contains(@NullableDecl Object obj) {
       if (obj instanceof List) {
         List<?> list = (List<?>) obj;
         return isPermutation(inputList, list);
@@ -682,8 +659,24 @@ public final class Collections2 {
     if (first.size() != second.size()) {
       return false;
     }
-    Multiset<?> firstMultiset = HashMultiset.create(first);
-    Multiset<?> secondMultiset = HashMultiset.create(second);
-    return firstMultiset.equals(secondMultiset);
+    ObjectCountHashMap<?> firstCounts = counts(first);
+    ObjectCountHashMap<?> secondCounts = counts(second);
+    if (first.size() != second.size()) {
+      return false;
+    }
+    for (int i = 0; i < first.size(); i++) {
+      if (firstCounts.getValue(i) != secondCounts.get(firstCounts.getKey(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static <E> ObjectCountHashMap<E> counts(Collection<E> collection) {
+    ObjectCountHashMap<E> map = new ObjectCountHashMap<>();
+    for (E e : collection) {
+      map.put(e, map.get(e) + 1);
+    }
+    return map;
   }
 }

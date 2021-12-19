@@ -22,8 +22,7 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Ints;
 import java.util.Comparator;
-import java.util.function.ObjIntConsumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * An immutable sorted multiset with one or more distinct elements.
@@ -68,14 +67,6 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   }
 
   @Override
-  public void forEachEntry(ObjIntConsumer<? super E> action) {
-    checkNotNull(action);
-    for (int i = 0; i < length; i++) {
-      action.accept(elementSet.asList().get(i), getCount(i));
-    }
-  }
-
-  @Override
   public Entry<E> firstEntry() {
     return isEmpty() ? null : getEntry(0);
   }
@@ -86,7 +77,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   }
 
   @Override
-  public int count(@Nullable Object element) {
+  public int count(@NullableDecl Object element) {
     int index = elementSet.indexOf(element);
     return (index >= 0) ? getCount(index) : 0;
   }

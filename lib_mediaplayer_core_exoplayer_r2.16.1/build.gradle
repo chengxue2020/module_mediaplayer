@@ -47,12 +47,11 @@ android {
             //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
     }
+
+    //jdk1.8
     compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-    }
-    lintOptions {
-        abortOnError false
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 //    lintOptions {
 //        // true--关闭lint报告的分析进度
@@ -111,7 +110,6 @@ repositories {
 }
 
 dependencies {
-
     implementation rootProject.ext.dependencies.support_appcompat
     implementation rootProject.ext.dependencies.support_annotation
     implementation rootProject.ext.dependencies.support_recyclerview

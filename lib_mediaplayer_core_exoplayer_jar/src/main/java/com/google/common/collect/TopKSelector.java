@@ -27,17 +27,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * An accumulator that selects the "top" {@code k} elements added to it, relative to a provided
  * comparator. "Top" can mean the greatest or the lowest elements, specified in the factory used to
  * create the {@code TopKSelector} instance.
  *
- * <p>If your input data is available as a {@link Stream}, prefer passing {@link
- * Comparators#least(int)} to {@link Stream#collect(java.util.stream.Collector)}. If it is available
- * as an {@link Iterable} or {@link Iterator}, prefer {@link Ordering#leastOf(Iterable, int)}.
+ * <p>If your input data is available as an {@link Iterable} or {@link Iterator}, prefer {@link
+ * Ordering#leastOf(Iterable, int)}, which provides the same implementation with an interface
+ * tailored to that use case.
  *
  * <p>This uses the same efficient implementation as {@link Ordering#leastOf(Iterable, int)},
  * offering expected O(n + k log k) performance (worst case O(n log k)) for n calls to {@link
@@ -51,8 +50,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Louis Wasserman
  */
-@GwtCompatible
-final class TopKSelector<T> {
+@GwtCompatible final class TopKSelector<T> {
 
   /**
    * Returns a {@code TopKSelector} that collects the lowest {@code k} elements added to it,
@@ -111,7 +109,7 @@ final class TopKSelector<T> {
    * The largest of the lowest k elements we've seen so far relative to this comparator. If
    * bufferSize ≥ k, then we can ignore any elements greater than this value.
    */
-  private @Nullable T threshold;
+  @NullableDecl private T threshold;
 
   private TopKSelector(Comparator<? super T> comparator, int k) {
     this.comparator = checkNotNull(comparator, "comparator");
@@ -127,7 +125,7 @@ final class TopKSelector<T> {
    * Adds {@code elem} as a candidate for the top {@code k} elements. This operation takes amortized
    * O(1) time.
    */
-  public void offer(@Nullable T elem) {
+  public void offer(@NullableDecl T elem) {
     if (k == 0) {
       return;
     } else if (bufferSize == 0) {
@@ -218,13 +216,6 @@ final class TopKSelector<T> {
     T tmp = buffer[i];
     buffer[i] = buffer[j];
     buffer[j] = tmp;
-  }
-
-  TopKSelector<T> combine(TopKSelector<T> other) {
-    for (int i = 0; i < other.bufferSize; i++) {
-      this.offer(other.buffer[i]);
-    }
-    return this;
   }
 
   /**

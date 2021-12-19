@@ -144,7 +144,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
      * @return this {@code Builder} object
      */
     @CanIgnoreReturnValue
-    public ImmutableValueGraph.Builder<N, V> addNode(N node) {
+    public Builder<N, V> addNode(N node) {
       mutableValueGraph.addNode(node);
       return this;
     }
@@ -166,7 +166,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
      *     #allowsSelfLoops()}
      */
     @CanIgnoreReturnValue
-    public ImmutableValueGraph.Builder<N, V> putEdgeValue(N nodeU, N nodeV, V value) {
+    public Builder<N, V> putEdgeValue(N nodeU, N nodeV, V value) {
       mutableValueGraph.putEdgeValue(nodeU, nodeV, value);
       return this;
     }
@@ -191,7 +191,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
      * @throws IllegalArgumentException if the endpoints are unordered and the graph is directed
      */
     @CanIgnoreReturnValue
-    public ImmutableValueGraph.Builder<N, V> putEdgeValue(EndpointPair<N> endpoints, V value) {
+    public Builder<N, V> putEdgeValue(EndpointPair<N> endpoints, V value) {
       mutableValueGraph.putEdgeValue(endpoints, value);
       return this;
     }

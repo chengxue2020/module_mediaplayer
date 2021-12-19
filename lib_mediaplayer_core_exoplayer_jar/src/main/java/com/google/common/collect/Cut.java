@@ -20,7 +20,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.primitives.Booleans;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Implementation detail for the internal structure of {@link Range} instances. Represents a unique
@@ -33,9 +33,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, Serializable {
-  final @Nullable C endpoint;
+  @NullableDecl final C endpoint;
 
-  Cut(@Nullable C endpoint) {
+  Cut(@NullableDecl C endpoint) {
     this.endpoint = endpoint;
   }
 
@@ -326,7 +326,7 @@ abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, Serializ
         case CLOSED:
           return this;
         case OPEN:
-          @Nullable C previous = domain.previous(endpoint);
+          @NullableDecl C previous = domain.previous(endpoint);
           return (previous == null) ? Cut.<C>belowAll() : new AboveValue<C>(previous);
         default:
           throw new AssertionError();
@@ -337,7 +337,7 @@ abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, Serializ
     Cut<C> withUpperBoundType(BoundType boundType, DiscreteDomain<C> domain) {
       switch (boundType) {
         case CLOSED:
-          @Nullable C previous = domain.previous(endpoint);
+          @NullableDecl C previous = domain.previous(endpoint);
           return (previous == null) ? Cut.<C>aboveAll() : new AboveValue<C>(previous);
         case OPEN:
           return this;
@@ -409,7 +409,7 @@ abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, Serializ
         case OPEN:
           return this;
         case CLOSED:
-          @Nullable C next = domain.next(endpoint);
+          @NullableDecl C next = domain.next(endpoint);
           return (next == null) ? Cut.<C>belowAll() : belowValue(next);
         default:
           throw new AssertionError();
@@ -420,7 +420,7 @@ abstract class Cut<C extends Comparable> implements Comparable<Cut<C>>, Serializ
     Cut<C> withUpperBoundType(BoundType boundType, DiscreteDomain<C> domain) {
       switch (boundType) {
         case OPEN:
-          @Nullable C next = domain.next(endpoint);
+          @NullableDecl C next = domain.next(endpoint);
           return (next == null) ? Cut.<C>aboveAll() : belowValue(next);
         case CLOSED:
           return this;

@@ -18,26 +18,28 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /** @see Maps#immutableEntry(Object, Object) */
 @GwtCompatible(serializable = true)
 class ImmutableEntry<K, V> extends AbstractMapEntry<K, V> implements Serializable {
-  final @Nullable K key;
-  final @Nullable V value;
+  @NullableDecl final K key;
+  @NullableDecl final V value;
 
-  ImmutableEntry(@Nullable K key, @Nullable V value) {
+  ImmutableEntry(@NullableDecl K key, @NullableDecl V value) {
     this.key = key;
     this.value = value;
   }
 
   @Override
-  public final @Nullable K getKey() {
+  @NullableDecl
+  public final K getKey() {
     return key;
   }
 
   @Override
-  public final @Nullable V getValue() {
+  @NullableDecl
+  public final V getValue() {
     return value;
   }
 

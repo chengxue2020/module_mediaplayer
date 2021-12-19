@@ -19,7 +19,7 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Predicate;
 import java.util.List;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Implementation of {@link Multimaps#filterKeys(ListMultimap, Predicate)}.
@@ -44,7 +44,7 @@ final class FilteredKeyListMultimap<K, V> extends FilteredKeyMultimap<K, V>
   }
 
   @Override
-  public List<V> removeAll(@Nullable Object key) {
+  public List<V> removeAll(@NullableDecl Object key) {
     return (List<V>) super.removeAll(key);
   }
 

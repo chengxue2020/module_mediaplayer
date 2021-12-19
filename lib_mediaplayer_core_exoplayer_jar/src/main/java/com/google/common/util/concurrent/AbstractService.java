@@ -32,11 +32,10 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.ForOverride;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.j2objc.annotations.WeakOuter;
-import java.time.Duration;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Base class for implementing services that can handle {@link #doStart} and {@link #doStop}
@@ -306,12 +305,6 @@ public abstract class AbstractService implements Service {
     }
   }
 
-  /** @since 28.0 */
-  @Override
-  public final void awaitRunning(Duration timeout) throws TimeoutException {
-    Service.super.awaitRunning(timeout);
-  }
-
   @Override
   public final void awaitRunning(long timeout, TimeUnit unit) throws TimeoutException {
     if (monitor.enterWhenUninterruptibly(hasReachedRunning, timeout, unit)) {
@@ -337,12 +330,6 @@ public abstract class AbstractService implements Service {
     } finally {
       monitor.leave();
     }
-  }
-
-  /** @since 28.0 */
-  @Override
-  public final void awaitTerminated(Duration timeout) throws TimeoutException {
-    Service.super.awaitTerminated(timeout);
   }
 
   @Override
@@ -588,14 +575,14 @@ public abstract class AbstractService implements Service {
      * The exception that caused this service to fail. This will be {@code null} unless the service
      * has failed.
      */
-    final @Nullable Throwable failure;
+    @NullableDecl final Throwable failure;
 
     StateSnapshot(State internalState) {
       this(internalState, false, null);
     }
 
     StateSnapshot(
-        State internalState, boolean shutdownWhenStartupFinishes, @Nullable Throwable failure) {
+        State internalState, boolean shutdownWhenStartupFinishes, @NullableDecl Throwable failure) {
       checkArgument(
           !shutdownWhenStartupFinishes || internalState == STARTING,
           "shutdownWhenStartupFinishes can only be set if state is STARTING. Got %s instead.",

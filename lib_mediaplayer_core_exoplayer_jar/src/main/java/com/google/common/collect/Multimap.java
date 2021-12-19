@@ -16,8 +16,6 @@
 
 package com.google.common.collect;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CompatibleWith;
@@ -27,8 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A collection that maps keys to values, similar to {@link Map}, but in which each key may be
@@ -183,20 +180,21 @@ public interface Multimap<K, V> {
    * Returns {@code true} if this multimap contains at least one key-value pair with the key {@code
    * key}.
    */
-  boolean containsKey(@CompatibleWith("K") @Nullable Object key);
+  boolean containsKey(@CompatibleWith("K") @NullableDecl Object key);
 
   /**
    * Returns {@code true} if this multimap contains at least one key-value pair with the value
    * {@code value}.
    */
-  boolean containsValue(@CompatibleWith("V") @Nullable Object value);
+  boolean containsValue(@CompatibleWith("V") @NullableDecl Object value);
 
   /**
    * Returns {@code true} if this multimap contains at least one key-value pair with the key {@code
    * key} and the value {@code value}.
    */
   boolean containsEntry(
-      @CompatibleWith("K") @Nullable Object key, @CompatibleWith("V") @Nullable Object value);
+      @CompatibleWith("K") @NullableDecl Object key,
+      @CompatibleWith("V") @NullableDecl Object value);
 
   // Modification Operations
 
@@ -211,7 +209,7 @@ public interface Multimap<K, V> {
    *     multimap already contained the key-value pair and doesn't allow duplicates
    */
   @CanIgnoreReturnValue
-  boolean put(@Nullable K key, @Nullable V value);
+  boolean put(@NullableDecl K key, @NullableDecl V value);
 
   /**
    * Removes a single key-value pair with the key {@code key} and the value {@code value} from this
@@ -222,7 +220,8 @@ public interface Multimap<K, V> {
    */
   @CanIgnoreReturnValue
   boolean remove(
-      @CompatibleWith("K") @Nullable Object key, @CompatibleWith("V") @Nullable Object value);
+      @CompatibleWith("K") @NullableDecl Object key,
+      @CompatibleWith("V") @NullableDecl Object value);
 
   // Bulk Operations
 
@@ -241,7 +240,7 @@ public interface Multimap<K, V> {
    * @return {@code true} if the multimap changed
    */
   @CanIgnoreReturnValue
-  boolean putAll(@Nullable K key, Iterable<? extends V> values);
+  boolean putAll(@NullableDecl K key, Iterable<? extends V> values);
 
   /**
    * Stores all key-value pairs of {@code multimap} in this multimap, in the order returned by
@@ -262,7 +261,7 @@ public interface Multimap<K, V> {
    *     no effect on the multimap.
    */
   @CanIgnoreReturnValue
-  Collection<V> replaceValues(@Nullable K key, Iterable<? extends V> values);
+  Collection<V> replaceValues(@NullableDecl K key, Iterable<? extends V> values);
 
   /**
    * Removes all values associated with the key {@code key}.
@@ -274,7 +273,7 @@ public interface Multimap<K, V> {
    *     modifiable, but updating it will have no effect on the multimap.
    */
   @CanIgnoreReturnValue
-  Collection<V> removeAll(@CompatibleWith("K") @Nullable Object key);
+  Collection<V> removeAll(@CompatibleWith("K") @NullableDecl Object key);
 
   /** Removes all key-value pairs from the multimap, leaving it {@linkplain #isEmpty empty}. */
   void clear();
@@ -288,7 +287,7 @@ public interface Multimap<K, V> {
    *
    * <p>Changes to the returned collection will update the underlying multimap, and vice versa.
    */
-  Collection<V> get(@Nullable K key);
+  Collection<V> get(@NullableDecl K key);
 
   /**
    * Returns a view collection of all <i>distinct</i> keys contained in this multimap. Note that the
@@ -328,21 +327,6 @@ public interface Multimap<K, V> {
   Collection<Entry<K, V>> entries();
 
   /**
-   * Performs the given action for all key-value pairs contained in this multimap. If an ordering is
-   * specified by the {@code Multimap} implementation, actions will be performed in the order of
-   * iteration of {@link #entries()}. Exceptions thrown by the action are relayed to the caller.
-   *
-   * <p>To loop over all keys and their associated value collections, write {@code
-   * Multimaps.asMap(multimap).forEach((key, valueCollection) -> action())}.
-   *
-   * @since 21.0
-   */
-  default void forEach(BiConsumer<? super K, ? super V> action) {
-    checkNotNull(action);
-    entries().forEach(entry -> action.accept(entry.getKey(), entry.getValue()));
-  }
-
-  /**
    * Returns a view of this multimap as a {@code Map} from each distinct key to the nonempty
    * collection of that key's associated values. Note that {@code this.asMap().get(k)} is equivalent
    * to {@code this.get(k)} only when {@code k} is a key contained in the multimap; otherwise it
@@ -370,7 +354,7 @@ public interface Multimap<K, V> {
    * multimaps are equal, because they both have empty {@link #asMap} views.
    */
   @Override
-  boolean equals(@Nullable Object obj);
+  boolean equals(@NullableDecl Object obj);
 
   /**
    * Returns the hash code for this multimap.

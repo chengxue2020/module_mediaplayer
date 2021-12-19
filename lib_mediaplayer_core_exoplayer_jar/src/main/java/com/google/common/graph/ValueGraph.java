@@ -18,9 +18,8 @@ package com.google.common.graph;
 
 import com.google.common.annotations.Beta;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * An interface for <a
@@ -277,29 +276,6 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
   boolean hasEdgeConnecting(EndpointPair<N> endpoints);
 
   /**
-   * Returns the value of the edge that connects {@code nodeU} to {@code nodeV} (in the order, if
-   * any, specified by {@code endpoints}), if one is present; otherwise, returns {@code
-   * Optional.empty()}.
-   *
-   * @throws IllegalArgumentException if {@code nodeU} or {@code nodeV} is not an element of this
-   *     graph
-   * @since 23.0 (since 20.0 with return type {@code V})
-   */
-  Optional<V> edgeValue(N nodeU, N nodeV);
-
-  /**
-   * Returns the value of the edge that connects {@code endpoints} (in the order, if any, specified
-   * by {@code endpoints}), if one is present; otherwise, returns {@code Optional.empty()}.
-   *
-   * <p>If this graph is directed, the endpoints must be ordered.
-   *
-   * @throws IllegalArgumentException if either endpoint is not an element of this graph
-   * @throws IllegalArgumentException if the endpoints are unordered and the graph is directed
-   * @since 27.1
-   */
-  Optional<V> edgeValue(EndpointPair<N> endpoints);
-
-  /**
    * Returns the value of the edge that connects {@code nodeU} to {@code nodeV}, if one is present;
    * otherwise, returns {@code defaultValue}.
    *
@@ -309,8 +285,8 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
    * @throws IllegalArgumentException if {@code nodeU} or {@code nodeV} is not an element of this
    *     graph
    */
-  @Nullable
-  V edgeValueOrDefault(N nodeU, N nodeV, @Nullable V defaultValue);
+  @NullableDecl
+  V edgeValueOrDefault(N nodeU, N nodeV, @NullableDecl V defaultValue);
 
   /**
    * Returns the value of the edge that connects {@code endpoints} (in the order, if any, specified
@@ -322,8 +298,8 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
    * @throws IllegalArgumentException if the endpoints are unordered and the graph is directed
    * @since 27.1
    */
-  @Nullable
-  V edgeValueOrDefault(EndpointPair<N> endpoints, @Nullable V defaultValue);
+  @NullableDecl
+  V edgeValueOrDefault(EndpointPair<N> endpoints, @NullableDecl V defaultValue);
 
   //
   // ValueGraph identity
@@ -350,7 +326,7 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
    * <p>A reference implementation of this is provided by {@link AbstractValueGraph#equals(Object)}.
    */
   @Override
-  boolean equals(@Nullable Object object);
+  boolean equals(@NullableDecl Object object);
 
   /**
    * Returns the hash code for this graph. The hash code of a graph is defined as the hash code of a

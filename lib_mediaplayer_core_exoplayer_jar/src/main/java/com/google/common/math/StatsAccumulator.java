@@ -23,9 +23,6 @@ import static java.lang.Double.isNaN;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
 import java.util.Iterator;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
 /**
  * A mutable object which accumulates double values and tracks some basic statistics over all the
@@ -129,37 +126,6 @@ public final class StatsAccumulator {
     for (long value : values) {
       add(value);
     }
-  }
-
-  /**
-   * Adds the given values to the dataset. The stream will be completely consumed by this method.
-   *
-   * @param values a series of values
-   * @since 28.2
-   */
-  public void addAll(DoubleStream values) {
-    addAll(values.collect(StatsAccumulator::new, StatsAccumulator::add, StatsAccumulator::addAll));
-  }
-
-  /**
-   * Adds the given values to the dataset. The stream will be completely consumed by this method.
-   *
-   * @param values a series of values
-   * @since 28.2
-   */
-  public void addAll(IntStream values) {
-    addAll(values.collect(StatsAccumulator::new, StatsAccumulator::add, StatsAccumulator::addAll));
-  }
-
-  /**
-   * Adds the given values to the dataset. The stream will be completely consumed by this method.
-   *
-   * @param values a series of values, which will be converted to {@code double} values (this may
-   *     cause loss of precision for longs of magnitude over 2^53 (slightly over 9e15))
-   * @since 28.2
-   */
-  public void addAll(LongStream values) {
-    addAll(values.collect(StatsAccumulator::new, StatsAccumulator::add, StatsAccumulator::addAll));
   }
 
   /**

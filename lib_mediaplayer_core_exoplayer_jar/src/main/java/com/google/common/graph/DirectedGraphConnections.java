@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * An implementation of {@link GraphConnections} for directed graphs.
@@ -133,14 +133,14 @@ final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
    * LinkedHashMap combines two such edges into a single node-value pair, even though the edges may
    * not have been inserted consecutively.
    */
-  @Nullable private final List<NodeConnection<N>> orderedNodeConnections;
+  @NullableDecl private final List<NodeConnection<N>> orderedNodeConnections;
 
   private int predecessorCount;
   private int successorCount;
 
   private DirectedGraphConnections(
       Map<N, Object> adjacentNodeValues,
-      @Nullable List<NodeConnection<N>> orderedNodeConnections,
+      @NullableDecl List<NodeConnection<N>> orderedNodeConnections,
       int predecessorCount,
       int successorCount) {
     this.adjacentNodeValues = checkNotNull(adjacentNodeValues);
@@ -261,7 +261,7 @@ final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
         }
 
         @Override
-        public boolean contains(@Nullable Object obj) {
+        public boolean contains(@NullableDecl Object obj) {
           return adjacentNodeValues.containsKey(obj);
         }
       };
@@ -310,7 +310,7 @@ final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
       }
 
       @Override
-      public boolean contains(@Nullable Object obj) {
+      public boolean contains(@NullableDecl Object obj) {
         return isPredecessor(adjacentNodeValues.get(obj));
       }
     };
@@ -358,7 +358,7 @@ final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
       }
 
       @Override
-      public boolean contains(@Nullable Object obj) {
+      public boolean contains(@NullableDecl Object obj) {
         return isSuccessor(adjacentNodeValues.get(obj));
       }
     };
@@ -549,11 +549,11 @@ final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
     return (V) previousSuccessor;
   }
 
-  private static boolean isPredecessor(@Nullable Object value) {
+  private static boolean isPredecessor(@NullableDecl Object value) {
     return (value == PRED) || (value instanceof PredAndSucc);
   }
 
-  private static boolean isSuccessor(@Nullable Object value) {
+  private static boolean isSuccessor(@NullableDecl Object value) {
     return (value != PRED) && (value != null);
   }
 }

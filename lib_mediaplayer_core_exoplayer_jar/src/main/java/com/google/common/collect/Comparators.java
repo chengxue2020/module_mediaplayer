@@ -17,16 +17,12 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.CollectPreconditions.checkNonnegative;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collector;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Provides static methods for working with {@link Comparator} instances. For many other helpful
@@ -43,6 +39,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @since 21.0
  * @author Louis Wasserman
  */
+@Beta
 @GwtCompatible
 public final class Comparators {
   private Comparators() {}
@@ -61,7 +58,6 @@ public final class Comparators {
   // Note: 90% of the time we don't add type parameters or wildcards that serve only to "tweak" the
   // desired return type. However, *nested* generics introduce a special class of problems that we
   // think tip it over into being worthwhile.
-  @Beta
   public static <T, S extends T> Comparator<Iterable<S>> lexicographical(Comparator<T> comparator) {
     return new LexicographicalOrdering<S>(checkNotNull(comparator));
   }
@@ -71,7 +67,6 @@ public final class Comparators {
    * equal to the element that preceded it, according to the specified comparator. Note that this is
    * always true when the iterable has fewer than two elements.
    */
-  @Beta
   public static <T> boolean isInOrder(Iterable<? extends T> iterable, Comparator<T> comparator) {
     checkNotNull(comparator);
     Iterator<? extends T> it = iterable.iterator();
@@ -93,7 +88,6 @@ public final class Comparators {
    * greater than the element that preceded it, according to the specified comparator. Note that
    * this is always true when the iterable has fewer than two elements.
    */
-  @Beta
   public static <T> boolean isInStrictOrder(
       Iterable<? extends T> iterable, Comparator<T> comparator) {
     checkNotNull(comparator);
@@ -109,87 +103,6 @@ public final class Comparators {
       }
     }
     return true;
-  }
-
-  /**
-   * Returns a {@code Collector} that returns the {@code k} smallest (relative to the specified
-   * {@code Comparator}) input elements, in ascending order, as an unmodifiable {@code List}. Ties
-   * are broken arbitrarily.
-   *
-   * <p>For example:
-   *
-   * <pre>{@code
-   * Stream.of("foo", "quux", "banana", "elephant")
-   *     .collect(least(2, comparingInt(String::length)))
-   * // returns {"foo", "quux"}
-   * }</pre>
-   *
-   * <p>This {@code Collector} uses O(k) memory and takes expected time O(n) (worst-case O(n log
-   * k)), as opposed to e.g. {@code Stream.sorted(comparator).limit(k)}, which currently takes O(n
-   * log n) time and O(n) space.
-   *
-   * @throws IllegalArgumentException if {@code k < 0}
-   * @since 22.0
-   */
-  public static <T> Collector<T, ?, List<T>> least(int k, Comparator<? super T> comparator) {
-    checkNonnegative(k, "k");
-    checkNotNull(comparator);
-    return Collector.of(
-        () -> TopKSelector.<T>least(k, comparator),
-        TopKSelector::offer,
-        TopKSelector::combine,
-        TopKSelector::topK,
-        Collector.Characteristics.UNORDERED);
-  }
-
-  /**
-   * Returns a {@code Collector} that returns the {@code k} greatest (relative to the specified
-   * {@code Comparator}) input elements, in descending order, as an unmodifiable {@code List}. Ties
-   * are broken arbitrarily.
-   *
-   * <p>For example:
-   *
-   * <pre>{@code
-   * Stream.of("foo", "quux", "banana", "elephant")
-   *     .collect(greatest(2, comparingInt(String::length)))
-   * // returns {"elephant", "banana"}
-   * }</pre>
-   *
-   * <p>This {@code Collector} uses O(k) memory and takes expected time O(n) (worst-case O(n log
-   * k)), as opposed to e.g. {@code Stream.sorted(comparator.reversed()).limit(k)}, which currently
-   * takes O(n log n) time and O(n) space.
-   *
-   * @throws IllegalArgumentException if {@code k < 0}
-   * @since 22.0
-   */
-  public static <T> Collector<T, ?, List<T>> greatest(int k, Comparator<? super T> comparator) {
-    return least(k, comparator.reversed());
-  }
-
-  /**
-   * Returns a comparator of {@link Optional} values which treats {@link Optional#empty} as less
-   * than all other values, and orders the rest using {@code valueComparator} on the contained
-   * value.
-   *
-   * @since 22.0
-   */
-  @Beta
-  public static <T> Comparator<Optional<T>> emptiesFirst(Comparator<? super T> valueComparator) {
-    checkNotNull(valueComparator);
-    return Comparator.comparing(o -> o.orElse(null), Comparator.nullsFirst(valueComparator));
-  }
-
-  /**
-   * Returns a comparator of {@link Optional} values which treats {@link Optional#empty} as greater
-   * than all other values, and orders the rest using {@code valueComparator} on the contained
-   * value.
-   *
-   * @since 22.0
-   */
-  @Beta
-  public static <T> Comparator<Optional<T>> emptiesLast(Comparator<? super T> valueComparator) {
-    checkNotNull(valueComparator);
-    return Comparator.comparing(o -> o.orElse(null), Comparator.nullsLast(valueComparator));
   }
 
   /**
@@ -226,7 +139,7 @@ public final class Comparators {
    * @since 30.0
    */
   @Beta
-  public static <T> T min(@Nullable T a, @Nullable T b, Comparator<T> comparator) {
+  public static <T> T min(@NullableDecl T a, @NullableDecl T b, Comparator<T> comparator) {
     return (comparator.compare(a, b) <= 0) ? a : b;
   }
 
@@ -264,7 +177,7 @@ public final class Comparators {
    * @since 30.0
    */
   @Beta
-  public static <T> T max(@Nullable T a, @Nullable T b, Comparator<T> comparator) {
+  public static <T> T max(@NullableDecl T a, @NullableDecl T b, Comparator<T> comparator) {
     return (comparator.compare(a, b) >= 0) ? a : b;
   }
 }

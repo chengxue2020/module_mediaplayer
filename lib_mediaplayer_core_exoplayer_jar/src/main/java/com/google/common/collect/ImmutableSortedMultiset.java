@@ -18,8 +18,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.math.IntMath;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.errorprone.annotations.DoNotCall;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -28,9 +29,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collector;
 
 /**
  * A {@link SortedMultiset} whose contents will never change, with many other important properties
@@ -52,49 +50,6 @@ import java.util.stream.Collector;
 public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultisetFauxverideShim<E>
     implements SortedMultiset<E> {
   // TODO(lowasser): GWT compatibility
-
-  /**
-   * Returns a {@code Collector} that accumulates the input elements into a new {@code
-   * ImmutableMultiset}. Elements are sorted by the specified comparator.
-   *
-   * <p><b>Warning:</b> {@code comparator} should be <i>consistent with {@code equals}</i> as
-   * explained in the {@link Comparator} documentation.
-   *
-   * @since 21.0
-   */
-  public static <E> Collector<E, ?, ImmutableSortedMultiset<E>> toImmutableSortedMultiset(
-      Comparator<? super E> comparator) {
-    return toImmutableSortedMultiset(comparator, Function.identity(), e -> 1);
-  }
-
-  /**
-   * Returns a {@code Collector} that accumulates elements into an {@code ImmutableSortedMultiset}
-   * whose elements are the result of applying {@code elementFunction} to the inputs, with counts
-   * equal to the result of applying {@code countFunction} to the inputs.
-   *
-   * <p>If the mapped elements contain duplicates (according to {@code comparator}), the first
-   * occurrence in encounter order appears in the resulting multiset, with count equal to the sum of
-   * the outputs of {@code countFunction.applyAsInt(t)} for each {@code t} mapped to that element.
-   *
-   * @since 22.0
-   */
-  public static <T, E> Collector<T, ?, ImmutableSortedMultiset<E>> toImmutableSortedMultiset(
-      Comparator<? super E> comparator,
-      Function<? super T, ? extends E> elementFunction,
-      ToIntFunction<? super T> countFunction) {
-    checkNotNull(comparator);
-    checkNotNull(elementFunction);
-    checkNotNull(countFunction);
-    return Collector.of(
-        () -> TreeMultiset.create(comparator),
-        (multiset, t) ->
-            multiset.add(checkNotNull(elementFunction.apply(t)), countFunction.applyAsInt(t)),
-        (multiset1, multiset2) -> {
-          multiset1.addAll(multiset2);
-          return multiset1;
-        },
-        (Multiset<E> multiset) -> copyOfSortedEntries(comparator, multiset.entrySet()));
-  }
 
   /** Returns the empty immutable sorted multiset. */
   @SuppressWarnings("unchecked")
@@ -251,6 +206,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
    *
    * @throws NullPointerException if {@code comparator} or any of {@code elements} is null
    */
+  @SuppressWarnings("unchecked")
   public static <E> ImmutableSortedMultiset<E> copyOf(
       Comparator<? super E> comparator, Iterable<? extends E> elements) {
     if (elements instanceof ImmutableSortedMultiset) {
@@ -264,10 +220,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
         }
       }
     }
-    elements = Lists.newArrayList(elements); // defensive copy
-    TreeMultiset<E> sortedCopy = TreeMultiset.create(checkNotNull(comparator));
-    Iterables.addAll(sortedCopy, elements);
-    return copyOfSortedEntries(comparator, sortedCopy.entrySet());
+    return new Builder<E>(comparator).addAll(elements).build();
   }
 
   /**
@@ -353,7 +306,6 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final Entry<E> pollFirstEntry() {
     throw new UnsupportedOperationException();
   }
@@ -369,7 +321,6 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final Entry<E> pollLastEntry() {
     throw new UnsupportedOperationException();
   }
@@ -449,12 +400,83 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
    * @since 12.0
    */
   public static class Builder<E> extends ImmutableMultiset.Builder<E> {
+    /*
+     * We keep an array of elements and counts.  Periodically -- when we need more room in the
+     * array, or when we're building, or the like -- we sort, deduplicate, and combine the counts.
+     * Negative counts indicate a setCount operation with ~counts[i].
+     */
+
+    private final Comparator<? super E> comparator;
+
+    @VisibleForTesting E[] elements;
+    private int[] counts;
+
+    /*
+     * The number of used positions in the elements array.  We deduplicate periodically, so this
+     * may fluctuate up and down.
+     */
+    private int length;
+
+    // True if we just called build() and the elements array is being used by a created ISM, meaning
+    // we shouldn't modify that array further.
+    private boolean forceCopyElements;
+
     /**
      * Creates a new builder. The returned builder is equivalent to the builder generated by {@link
      * ImmutableSortedMultiset#orderedBy(Comparator)}.
      */
+    @SuppressWarnings("unchecked")
     public Builder(Comparator<? super E> comparator) {
-      super(TreeMultiset.<E>create(checkNotNull(comparator)));
+      super(true); // doesn't allocate hash table in supertype
+      this.comparator = checkNotNull(comparator);
+      this.elements = (E[]) new Object[ImmutableCollection.Builder.DEFAULT_INITIAL_CAPACITY];
+      this.counts = new int[ImmutableCollection.Builder.DEFAULT_INITIAL_CAPACITY];
+    }
+
+    /** Check if we need to do deduplication and coalescing, and if so, do it. */
+    private void maintenance() {
+      if (length == elements.length) {
+        dedupAndCoalesce(true);
+      } else if (forceCopyElements) {
+        this.elements = Arrays.copyOf(elements, elements.length);
+        // we don't currently need to copy the counts array, because we don't use it directly
+        // in built ISMs
+      }
+      forceCopyElements = false;
+    }
+
+    private void dedupAndCoalesce(boolean maybeExpand) {
+      if (length == 0) {
+        return;
+      }
+      E[] sortedElements = Arrays.copyOf(elements, length);
+      Arrays.sort(sortedElements, comparator);
+      int uniques = 1;
+      for (int i = 1; i < sortedElements.length; i++) {
+        if (comparator.compare(sortedElements[uniques - 1], sortedElements[i]) < 0) {
+          sortedElements[uniques] = sortedElements[i];
+          uniques++;
+        }
+      }
+      Arrays.fill(sortedElements, uniques, length, null);
+      if (maybeExpand && uniques * 4 > length * 3) {
+        // lots of nonduplicated elements, expand the array by 50%
+        sortedElements =
+            Arrays.copyOf(sortedElements, IntMath.saturatedAdd(length, length / 2 + 1));
+      }
+      int[] sortedCounts = new int[sortedElements.length];
+      for (int i = 0; i < length; i++) {
+        int index = Arrays.binarySearch(sortedElements, 0, uniques, elements[i], comparator);
+        if (counts[i] >= 0) {
+          sortedCounts[index] += counts[i];
+        } else {
+          sortedCounts[index] = ~counts[i];
+        }
+      }
+      // Note that we're not getting rid, yet, of elements with count 0.  We'll do that in build().
+      this.elements = sortedElements;
+      this.counts = sortedCounts;
+      this.length = uniques;
     }
 
     /**
@@ -467,8 +489,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     @CanIgnoreReturnValue
     @Override
     public Builder<E> add(E element) {
-      super.add(element);
-      return this;
+      return addCopies(element, 1);
     }
 
     /**
@@ -481,7 +502,9 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     @CanIgnoreReturnValue
     @Override
     public Builder<E> add(E... elements) {
-      super.add(elements);
+      for (E element : elements) {
+        add(element);
+      }
       return this;
     }
 
@@ -499,7 +522,15 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     @CanIgnoreReturnValue
     @Override
     public Builder<E> addCopies(E element, int occurrences) {
-      super.addCopies(element, occurrences);
+      checkNotNull(element);
+      CollectPreconditions.checkNonnegative(occurrences, "occurrences");
+      if (occurrences == 0) {
+        return this;
+      }
+      maintenance();
+      elements[length] = element;
+      counts[length] = occurrences;
+      length++;
       return this;
     }
 
@@ -516,7 +547,12 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     @CanIgnoreReturnValue
     @Override
     public Builder<E> setCount(E element, int count) {
-      super.setCount(element, count);
+      checkNotNull(element);
+      CollectPreconditions.checkNonnegative(count, "count");
+      maintenance();
+      elements[length] = element;
+      counts[length] = ~count;
+      length++;
       return this;
     }
 
@@ -530,7 +566,15 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     @CanIgnoreReturnValue
     @Override
     public Builder<E> addAll(Iterable<? extends E> elements) {
-      super.addAll(elements);
+      if (elements instanceof Multiset) {
+        for (Entry<? extends E> entry : ((Multiset<? extends E>) elements).entrySet()) {
+          addCopies(entry.getElement(), entry.getCount());
+        }
+      } else {
+        for (E e : elements) {
+          add(e);
+        }
+      }
       return this;
     }
 
@@ -544,8 +588,27 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
     @CanIgnoreReturnValue
     @Override
     public Builder<E> addAll(Iterator<? extends E> elements) {
-      super.addAll(elements);
+      while (elements.hasNext()) {
+        add(elements.next());
+      }
       return this;
+    }
+
+    private void dedupAndCoalesceAndDeleteEmpty() {
+      dedupAndCoalesce(false);
+
+      // If there was a setCount(elem, 0), those elements are still present.  Eliminate them.
+      int size = 0;
+      for (int i = 0; i < length; i++) {
+        if (counts[i] > 0) {
+          elements[size] = elements[i];
+          counts[size] = counts[i];
+          size++;
+        }
+      }
+      Arrays.fill(elements, size, length, null);
+      Arrays.fill(counts, size, length, 0);
+      length = size;
     }
 
     /**
@@ -554,7 +617,18 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableSortedMultiset
      */
     @Override
     public ImmutableSortedMultiset<E> build() {
-      return copyOfSorted((SortedMultiset<E>) contents);
+      dedupAndCoalesceAndDeleteEmpty();
+      if (length == 0) {
+        return emptyMultiset(comparator);
+      }
+      RegularImmutableSortedSet<E> elementSet =
+          (RegularImmutableSortedSet<E>) ImmutableSortedSet.construct(comparator, length, elements);
+      long[] cumulativeCounts = new long[length + 1];
+      for (int i = 0; i < length; i++) {
+        cumulativeCounts[i + 1] = cumulativeCounts[i] + counts[i];
+      }
+      forceCopyElements = true;
+      return new RegularImmutableSortedMultiset<E>(elementSet, cumulativeCounts, 0, length);
     }
   }
 

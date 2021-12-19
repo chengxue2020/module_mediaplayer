@@ -49,12 +49,7 @@ import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.Spliterator;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.Collector;
-import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Provides static methods acting on or generating a {@code Multimap}.
@@ -72,86 +67,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtCompatible(emulated = true)
 public final class Multimaps {
   private Multimaps() {}
-
-  /**
-   * Returns a {@code Collector} accumulating entries into a {@code Multimap} generated from the
-   * specified supplier. The keys and values of the entries are the result of applying the provided
-   * mapping functions to the input elements, accumulated in the encounter order of the stream.
-   *
-   * <p>Example:
-   *
-   * <pre>{@code
-   * static final ListMultimap<Character, String> FIRST_LETTER_MULTIMAP =
-   *     Stream.of("banana", "apple", "carrot", "asparagus", "cherry")
-   *         .collect(
-   *             toMultimap(
-   *                  str -> str.charAt(0),
-   *                  str -> str.substring(1),
-   *                  MultimapBuilder.treeKeys().arrayListValues()::build));
-   *
-   * // is equivalent to
-   *
-   * static final ListMultimap<Character, String> FIRST_LETTER_MULTIMAP;
-   *
-   * static {
-   *     FIRST_LETTER_MULTIMAP = MultimapBuilder.treeKeys().arrayListValues().build();
-   *     FIRST_LETTER_MULTIMAP.put('b', "anana");
-   *     FIRST_LETTER_MULTIMAP.put('a', "pple");
-   *     FIRST_LETTER_MULTIMAP.put('a', "sparagus");
-   *     FIRST_LETTER_MULTIMAP.put('c', "arrot");
-   *     FIRST_LETTER_MULTIMAP.put('c', "herry");
-   * }
-   * }</pre>
-   *
-   * @since 21.0
-   */
-  public static <T, K, V, M extends Multimap<K, V>> Collector<T, ?, M> toMultimap(
-      java.util.function.Function<? super T, ? extends K> keyFunction,
-      java.util.function.Function<? super T, ? extends V> valueFunction,
-      java.util.function.Supplier<M> multimapSupplier) {
-    return CollectCollectors.toMultimap(keyFunction, valueFunction, multimapSupplier);
-  }
-
-  /**
-   * Returns a {@code Collector} accumulating entries into a {@code Multimap} generated from the
-   * specified supplier. Each input element is mapped to a key and a stream of values, each of which
-   * are put into the resulting {@code Multimap}, in the encounter order of the stream and the
-   * encounter order of the streams of values.
-   *
-   * <p>Example:
-   *
-   * <pre>{@code
-   * static final ListMultimap<Character, Character> FIRST_LETTER_MULTIMAP =
-   *     Stream.of("banana", "apple", "carrot", "asparagus", "cherry")
-   *         .collect(
-   *             flatteningToMultimap(
-   *                  str -> str.charAt(0),
-   *                  str -> str.substring(1).chars().mapToObj(c -> (char) c),
-   *                  MultimapBuilder.linkedHashKeys().arrayListValues()::build));
-   *
-   * // is equivalent to
-   *
-   * static final ListMultimap<Character, Character> FIRST_LETTER_MULTIMAP;
-   *
-   * static {
-   *     FIRST_LETTER_MULTIMAP = MultimapBuilder.linkedHashKeys().arrayListValues().build();
-   *     FIRST_LETTER_MULTIMAP.putAll('b', Arrays.asList('a', 'n', 'a', 'n', 'a'));
-   *     FIRST_LETTER_MULTIMAP.putAll('a', Arrays.asList('p', 'p', 'l', 'e'));
-   *     FIRST_LETTER_MULTIMAP.putAll('c', Arrays.asList('a', 'r', 'r', 'o', 't'));
-   *     FIRST_LETTER_MULTIMAP.putAll('a', Arrays.asList('s', 'p', 'a', 'r', 'a', 'g', 'u', 's'));
-   *     FIRST_LETTER_MULTIMAP.putAll('c', Arrays.asList('h', 'e', 'r', 'r', 'y'));
-   * }
-   * }</pre>
-   *
-   * @since 21.0
-   */
-  @Beta
-  public static <T, K, V, M extends Multimap<K, V>> Collector<T, ?, M> flatteningToMultimap(
-      java.util.function.Function<? super T, ? extends K> keyFunction,
-      java.util.function.Function<? super T, ? extends Stream<? extends V>> valueFunction,
-      java.util.function.Supplier<M> multimapSupplier) {
-    return CollectCollectors.flatteningToMultimap(keyFunction, valueFunction, multimapSupplier);
-  }
 
   /**
    * Creates a new {@code Multimap} backed by {@code map}, whose internal value collections are
@@ -625,11 +540,11 @@ public final class Multimaps {
   private static class UnmodifiableMultimap<K, V> extends ForwardingMultimap<K, V>
       implements Serializable {
     final Multimap<K, V> delegate;
-    @LazyInit transient @Nullable Collection<Entry<K, V>> entries;
-    @LazyInit transient @Nullable Multiset<K> keys;
-    @LazyInit transient @Nullable Set<K> keySet;
-    @LazyInit transient @Nullable Collection<V> values;
-    @LazyInit transient @Nullable Map<K, Collection<V>> map;
+    @LazyInit @NullableDecl transient Collection<Entry<K, V>> entries;
+    @LazyInit @NullableDecl transient Multiset<K> keys;
+    @LazyInit @NullableDecl transient Set<K> keySet;
+    @LazyInit @NullableDecl transient Collection<V> values;
+    @LazyInit @NullableDecl transient Map<K, Collection<V>> map;
 
     UnmodifiableMultimap(final Multimap<K, V> delegate) {
       this.delegate = checkNotNull(delegate);
@@ -671,11 +586,6 @@ public final class Multimaps {
         entries = result = unmodifiableEntries(delegate.entries());
       }
       return result;
-    }
-
-    @Override
-    public void forEach(BiConsumer<? super K, ? super V> consumer) {
-      delegate.forEach(checkNotNull(consumer));
     }
 
     @Override
@@ -1687,17 +1597,6 @@ public final class Multimaps {
     }
 
     @Override
-    public Spliterator<K> spliterator() {
-      return CollectSpliterators.map(multimap.entries().spliterator(), Map.Entry::getKey);
-    }
-
-    @Override
-    public void forEach(Consumer<? super K> consumer) {
-      checkNotNull(consumer);
-      multimap.entries().forEach(entry -> consumer.accept(entry.getKey()));
-    }
-
-    @Override
     int distinctElements() {
       return multimap.asMap().size();
     }
@@ -1708,7 +1607,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean contains(@Nullable Object element) {
+    public boolean contains(@NullableDecl Object element) {
       return multimap.containsKey(element);
     }
 
@@ -1718,13 +1617,13 @@ public final class Multimaps {
     }
 
     @Override
-    public int count(@Nullable Object element) {
+    public int count(@NullableDecl Object element) {
       Collection<V> values = Maps.safeGet(multimap.asMap(), element);
       return (values == null) ? 0 : values.size();
     }
 
     @Override
-    public int remove(@Nullable Object element, int occurrences) {
+    public int remove(@NullableDecl Object element, int occurrences) {
       checkNonnegative(occurrences, "occurrences");
       if (occurrences == 0) {
         return count(element);
@@ -1775,7 +1674,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean contains(@Nullable Object o) {
+    public boolean contains(@NullableDecl Object o) {
       if (o instanceof Map.Entry) {
         Entry<?, ?> entry = (Entry<?, ?>) o;
         return multimap().containsEntry(entry.getKey(), entry.getValue());
@@ -1784,7 +1683,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean remove(@Nullable Object o) {
+    public boolean remove(@NullableDecl Object o) {
       if (o instanceof Map.Entry) {
         Entry<?, ?> entry = (Entry<?, ?>) o;
         return multimap().remove(entry.getKey(), entry.getValue());
@@ -2165,7 +2064,7 @@ public final class Multimaps {
     return new FilteredEntrySetMultimap<>(multimap.unfiltered(), predicate);
   }
 
-  static boolean equalsImpl(Multimap<?, ?> multimap, @Nullable Object object) {
+  static boolean equalsImpl(Multimap<?, ?> multimap, @NullableDecl Object object) {
     if (object == multimap) {
       return true;
     }

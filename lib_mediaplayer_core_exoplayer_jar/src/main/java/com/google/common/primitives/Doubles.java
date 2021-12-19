@@ -34,9 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.RandomAccess;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Static utility methods pertaining to {@code double} primitives, that are not already found in
@@ -555,11 +553,6 @@ public final class Doubles extends DoublesMethodsForWeb {
     }
 
     @Override
-    public Spliterator.OfDouble spliterator() {
-      return Spliterators.spliterator(array, start, end, 0);
-    }
-
-    @Override
     public boolean contains(Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Double)
@@ -610,7 +603,7 @@ public final class Doubles extends DoublesMethodsForWeb {
     }
 
     @Override
-    public boolean equals(@Nullable Object object) {
+    public boolean equals(@NullableDecl Object object) {
       if (object == this) {
         return true;
       }
@@ -709,7 +702,8 @@ public final class Doubles extends DoublesMethodsForWeb {
    */
   @Beta
   @GwtIncompatible // regular expressions
-  public static @Nullable Double tryParse(String string) {
+  @NullableDecl
+  public static Double tryParse(String string) {
     if (FLOATING_POINT_PATTERN.matcher(string).matches()) {
       // TODO(lowasser): could be potentially optimized, but only with
       // extensive testing

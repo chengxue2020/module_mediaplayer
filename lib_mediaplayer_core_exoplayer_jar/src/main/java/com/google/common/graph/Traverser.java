@@ -28,7 +28,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * An object that can traverse the nodes that are reachable from a specified (set of) start node(s)
@@ -478,7 +478,7 @@ public abstract class Traverser<N> {
      * into {@code horizon} between calls to {@code visitNext()}. This causes them to receive
      * additional values interleaved with those shown above.)
      */
-    @Nullable
+    @NullableDecl
     abstract N visitNext(Deque<Iterator<? extends N>> horizon);
   }
 

@@ -48,10 +48,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.function.Consumer;
-import java.util.stream.Collector;
-import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Static utility methods pertaining to {@link Set} instances. Also see this class's counterparts
@@ -135,17 +132,6 @@ public final class Sets {
         return ImmutableSet.of();
       }
     }
-  }
-
-  /**
-   * Returns a {@code Collector} that accumulates the input elements into a new {@code ImmutableSet}
-   * with an implementation specialized for enums. Unlike {@link ImmutableSet#toImmutableSet}, the
-   * resulting set will iterate over elements in their enum definition order, not encounter order.
-   *
-   * @since 21.0
-   */
-  public static <E extends Enum<E>> Collector<E, ?, ImmutableSet<E>> toImmutableEnumSet() {
-    return CollectCollectors.toImmutableEnumSet();
   }
 
   /**
@@ -637,19 +623,6 @@ public final class Sets {
     @CanIgnoreReturnValue
     @Deprecated
     @Override
-    public final boolean removeIf(java.util.function.Predicate<? super E> filter) {
-      throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Guaranteed to throw an exception and leave the collection unmodified.
-     *
-     * @throws UnsupportedOperationException always
-     * @deprecated Unsupported operation.
-     */
-    @CanIgnoreReturnValue
-    @Deprecated
-    @Override
     public final boolean retainAll(Collection<?> elementsToKeep) {
       throw new UnsupportedOperationException();
     }
@@ -729,16 +702,6 @@ public final class Sets {
       }
 
       @Override
-      public Stream<E> stream() {
-        return Stream.concat(set1.stream(), set2.stream().filter(e -> !set1.contains(e)));
-      }
-
-      @Override
-      public Stream<E> parallelStream() {
-        return stream().parallel();
-      }
-
-      @Override
       public boolean contains(Object object) {
         return set1.contains(object) || set2.contains(object);
       }
@@ -808,16 +771,6 @@ public final class Sets {
       }
 
       @Override
-      public Stream<E> stream() {
-        return set1.stream().filter(set2::contains);
-      }
-
-      @Override
-      public Stream<E> parallelStream() {
-        return set1.parallelStream().filter(set2::contains);
-      }
-
-      @Override
       public int size() {
         int size = 0;
         for (E e : set1) {
@@ -876,16 +829,6 @@ public final class Sets {
             return endOfData();
           }
         };
-      }
-
-      @Override
-      public Stream<E> stream() {
-        return set1.stream().filter(e -> !set2.contains(e));
-      }
-
-      @Override
-      public Stream<E> parallelStream() {
-        return set1.parallelStream().filter(e -> !set2.contains(e));
       }
 
       @Override
@@ -1003,7 +946,7 @@ public final class Sets {
    * Iterables#filter(Iterable, Class)} for related functionality.)
    *
    * <p><b>Java 8 users:</b> many use cases for this method are better addressed by {@link
-   * Stream#filter}. This method is not being deprecated, but we gently encourage
+   * java.util.stream.Stream#filter}. This method is not being deprecated, but we gently encourage
    * you to migrate to streams.
    */
   // TODO(kevinb): how to omit that last sentence when building GWT javadoc?
@@ -1103,7 +1046,7 @@ public final class Sets {
     }
 
     @Override
-    public boolean equals(@Nullable Object object) {
+    public boolean equals(@NullableDecl Object object) {
       return equalsImpl(this, object);
     }
 
@@ -1170,12 +1113,14 @@ public final class Sets {
     }
 
     @Override
-    public @Nullable E lower(E e) {
+    @NullableDecl
+    public E lower(E e) {
       return Iterators.find(unfiltered().headSet(e, false).descendingIterator(), predicate, null);
     }
 
     @Override
-    public @Nullable E floor(E e) {
+    @NullableDecl
+    public E floor(E e) {
       return Iterators.find(unfiltered().headSet(e, true).descendingIterator(), predicate, null);
     }
 
@@ -1393,7 +1338,7 @@ public final class Sets {
     }
 
     @Override
-    public boolean contains(@Nullable Object object) {
+    public boolean contains(@NullableDecl Object object) {
       if (!(object instanceof List)) {
         return false;
       }
@@ -1412,7 +1357,7 @@ public final class Sets {
     }
 
     @Override
-    public boolean equals(@Nullable Object object) {
+    public boolean equals(@NullableDecl Object object) {
       // Warning: this is broken if size() == 0, so it is critical that we
       // substitute an empty ImmutableSet to the user in place of this
       if (object instanceof CartesianSet) {
@@ -1512,7 +1457,7 @@ public final class Sets {
     }
 
     @Override
-    public boolean contains(@Nullable Object o) {
+    public boolean contains(@NullableDecl Object o) {
       Integer index = inputSet.get(o);
       return index != null && (mask & (1 << index)) != 0;
     }
@@ -1548,7 +1493,7 @@ public final class Sets {
     }
 
     @Override
-    public boolean contains(@Nullable Object obj) {
+    public boolean contains(@NullableDecl Object obj) {
       if (obj instanceof Set) {
         Set<?> set = (Set<?>) obj;
         return inputSet.keySet().containsAll(set);
@@ -1557,7 +1502,7 @@ public final class Sets {
     }
 
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(@NullableDecl Object obj) {
       if (obj instanceof PowerSet) {
         PowerSet<?> that = (PowerSet<?>) obj;
         return inputSet.keySet().equals(that.inputSet.keySet());
@@ -1617,7 +1562,7 @@ public final class Sets {
     }
     return new AbstractSet<Set<E>>() {
       @Override
-      public boolean contains(@Nullable Object o) {
+      public boolean contains(@NullableDecl Object o) {
         if (o instanceof Set) {
           Set<?> s = (Set<?>) o;
           return s.size() == size && index.keySet().containsAll(s);
@@ -1641,7 +1586,6 @@ public final class Sets {
               if (bitToFlip == index.size()) {
                 return endOfData();
               }
-
               /*
                * The current set in sorted order looks like
                * {firstSetBit, firstSetBit + 1, ..., bitToFlip - 1, ...}
@@ -1662,7 +1606,7 @@ public final class Sets {
             final BitSet copy = (BitSet) bits.clone();
             return new AbstractSet<E>() {
               @Override
-              public boolean contains(@Nullable Object o) {
+              public boolean contains(@NullableDecl Object o) {
                 Integer i = index.get(o);
                 return i != null && copy.get(i);
               }
@@ -1717,7 +1661,7 @@ public final class Sets {
   }
 
   /** An implementation for {@link Set#equals(Object)}. */
-  static boolean equalsImpl(Set<?> s, @Nullable Object object) {
+  static boolean equalsImpl(Set<?> s, @NullableDecl Object object) {
     if (s == object) {
       return true;
     }
@@ -1768,28 +1712,6 @@ public final class Sets {
       return unmodifiableDelegate;
     }
 
-    // default methods not forwarded by ForwardingSortedSet
-
-    @Override
-    public boolean removeIf(java.util.function.Predicate<? super E> filter) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Stream<E> stream() {
-      return delegate.stream();
-    }
-
-    @Override
-    public Stream<E> parallelStream() {
-      return delegate.parallelStream();
-    }
-
-    @Override
-    public void forEach(Consumer<? super E> action) {
-      delegate.forEach(action);
-    }
-
     @Override
     public E lower(E e) {
       return delegate.lower(e);
@@ -1820,7 +1742,7 @@ public final class Sets {
       throw new UnsupportedOperationException();
     }
 
-    private transient @Nullable UnmodifiableNavigableSet<E> descendingSet;
+    @NullableDecl private transient UnmodifiableNavigableSet<E> descendingSet;
 
     @Override
     public NavigableSet<E> descendingSet() {

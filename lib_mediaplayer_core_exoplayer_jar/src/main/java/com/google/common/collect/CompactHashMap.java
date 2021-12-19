@@ -16,7 +16,6 @@
 
 package com.google.common.collect;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.CollectPreconditions.checkRemove;
 import static com.google.common.collect.CompactHashing.UNSET;
 import static com.google.common.collect.Hashing.smearedHash;
@@ -33,7 +32,9 @@ import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.AbstractCollection;
 import java.util.AbstractMap;
+import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
@@ -42,12 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * CompactHashMap is an implementation of a Map. All optional operations (put and remove) are
@@ -138,7 +134,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
    *   <li>null, if no entries have yet been added to the map
    * </ul>
    */
-  @Nullable private transient Object table;
+  @NullableDecl private transient Object table;
 
   /**
    * Contains the logical entries, in the range of [0, size()). The high bits of each int are the
@@ -155,19 +151,19 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
    *
    * <p>The pointers in [size(), entries.length) are all "null" (UNSET).
    */
-  @VisibleForTesting transient int @Nullable [] entries;
+  @VisibleForTesting @NullableDecl transient int[] entries;
 
   /**
    * The keys of the entries in the map, in the range of [0, size()). The keys in [size(),
    * keys.length) are all {@code null}.
    */
-  @VisibleForTesting transient Object @Nullable [] keys;
+  @VisibleForTesting @NullableDecl transient Object[] keys;
 
   /**
    * The values of the entries in the map, in the range of [0, size()). The values in [size(),
    * values.length) are all {@code null}.
    */
-  @VisibleForTesting transient Object @Nullable [] values;
+  @VisibleForTesting @NullableDecl transient Object[] values;
 
   /**
    * Keeps track of metadata like the number of hash table bits and modifications of this data
@@ -227,7 +223,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
 
   @SuppressWarnings("unchecked")
   @VisibleForTesting
-  @Nullable
+  @NullableDecl
   Map<K, V> delegateOrNull() {
     if (table instanceof Map) {
       return (Map<K, V>) table;
@@ -281,11 +277,12 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
 
   @CanIgnoreReturnValue
   @Override
-  public @Nullable V put(@Nullable K key, @Nullable V value) {
+  @NullableDecl
+  public V put(@NullableDecl K key, @NullableDecl V value) {
     if (needsAllocArrays()) {
       allocArrays();
     }
-    @Nullable Map<K, V> delegate = delegateOrNull();
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.put(key, value);
     }
@@ -317,7 +314,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
         if (CompactHashing.getHashPrefix(entry, mask) == hashPrefix
             && Objects.equal(key, keys[entryIndex])) {
           @SuppressWarnings("unchecked") // known to be a V
-          @Nullable
+          @NullableDecl
           V oldValue = (V) values[entryIndex];
 
           values[entryIndex] = value;
@@ -349,7 +346,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   /**
    * Creates a fresh entry with the specified object at the specified position in the entry arrays.
    */
-  void insertEntry(int entryIndex, @Nullable K key, @Nullable V value, int hash, int mask) {
+  void insertEntry(int entryIndex, @NullableDecl K key, @NullableDecl V value, int hash, int mask) {
     this.entries[entryIndex] = CompactHashing.maskCombine(hash, UNSET, mask);
     this.keys[entryIndex] = key;
     this.values[entryIndex] = value;
@@ -415,7 +412,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     return newMask;
   }
 
-  private int indexOf(@Nullable Object key) {
+  private int indexOf(@NullableDecl Object key) {
     if (needsAllocArrays()) {
       return -1;
     }
@@ -439,15 +436,15 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   }
 
   @Override
-  public boolean containsKey(@Nullable Object key) {
-    @Nullable Map<K, V> delegate = delegateOrNull();
+  public boolean containsKey(@NullableDecl Object key) {
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     return (delegate != null) ? delegate.containsKey(key) : indexOf(key) != -1;
   }
 
   @SuppressWarnings("unchecked") // known to be a V
   @Override
-  public V get(@Nullable Object key) {
-    @Nullable Map<K, V> delegate = delegateOrNull();
+  public V get(@NullableDecl Object key) {
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.get(key);
     }
@@ -462,8 +459,9 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   @CanIgnoreReturnValue
   @SuppressWarnings("unchecked") // known to be a V
   @Override
-  public @Nullable V remove(@Nullable Object key) {
-    @Nullable Map<K, V> delegate = delegateOrNull();
+  @NullableDecl
+  public V remove(@NullableDecl Object key) {
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.remove(key);
     }
@@ -471,7 +469,8 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     return (oldValue == NOT_FOUND) ? null : (V) oldValue;
   }
 
-  private @Nullable Object removeHelper(@Nullable Object key) {
+  @NullableDecl
+  private Object removeHelper(@NullableDecl Object key) {
     if (needsAllocArrays()) {
       return NOT_FOUND;
     }
@@ -483,7 +482,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
       return NOT_FOUND;
     }
 
-    @Nullable Object oldValue = values[index];
+    @NullableDecl Object oldValue = values[index];
 
     moveLastEntry(index, mask);
     size--;
@@ -499,7 +498,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     int srcIndex = size() - 1;
     if (dstIndex < srcIndex) {
       // move last entry to deleted spot
-      @Nullable Object key = keys[srcIndex];
+      @NullableDecl Object key = keys[srcIndex];
       keys[dstIndex] = key;
       values[dstIndex] = values[srcIndex];
       keys[srcIndex] = null;
@@ -597,21 +596,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     }
   }
 
-  @SuppressWarnings("unchecked") // known to be Ks and Vs
-  @Override
-  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-    checkNotNull(function);
-    @Nullable Map<K, V> delegate = delegateOrNull();
-    if (delegate != null) {
-      delegate.replaceAll(function);
-    } else {
-      for (int i = 0; i < size; i++) {
-        values[i] = function.apply((K) keys[i], (V) values[i]);
-      }
-    }
-  }
-
-  private transient @Nullable Set<K> keySetView;
+  @NullableDecl private transient Set<K> keySetView;
 
   @Override
   public Set<K> keySet() {
@@ -623,39 +608,20 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   }
 
   @WeakOuter
-  class KeySetView extends Maps.KeySet<K, V> {
-    KeySetView() {
-      super(CompactHashMap.this);
+  class KeySetView extends AbstractSet<K> {
+    @Override
+    public int size() {
+      return CompactHashMap.this.size();
     }
 
     @Override
-    public Object[] toArray() {
-      if (needsAllocArrays()) {
-        return new Object[0];
-      }
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      return (delegate != null)
-          ? delegate.keySet().toArray()
-          : ObjectArrays.copyAsObjectArray(keys, 0, size);
+    public boolean contains(Object o) {
+      return CompactHashMap.this.containsKey(o);
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
-      if (needsAllocArrays()) {
-        if (a.length > 0) {
-          a[0] = null;
-        }
-        return a;
-      }
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      return (delegate != null)
-          ? delegate.keySet().toArray(a)
-          : ObjectArrays.toArrayImpl(keys, 0, size, a);
-    }
-
-    @Override
-    public boolean remove(@Nullable Object o) {
-      @Nullable Map<K, V> delegate = delegateOrNull();
+    public boolean remove(@NullableDecl Object o) {
+      @NullableDecl Map<K, V> delegate = delegateOrNull();
       return (delegate != null)
           ? delegate.keySet().remove(o)
           : CompactHashMap.this.removeHelper(o) != NOT_FOUND;
@@ -667,33 +633,13 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     }
 
     @Override
-    public Spliterator<K> spliterator() {
-      if (needsAllocArrays()) {
-        return Spliterators.spliterator(new Object[0], Spliterator.DISTINCT | Spliterator.ORDERED);
-      }
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      return (delegate != null)
-          ? delegate.keySet().spliterator()
-          : Spliterators.spliterator(keys, 0, size, Spliterator.DISTINCT | Spliterator.ORDERED);
-    }
-
-    @SuppressWarnings("unchecked") // known to be Ks
-    @Override
-    public void forEach(Consumer<? super K> action) {
-      checkNotNull(action);
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      if (delegate != null) {
-        delegate.keySet().forEach(action);
-      } else {
-        for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
-          action.accept((K) keys[i]);
-        }
-      }
+    public void clear() {
+      CompactHashMap.this.clear();
     }
   }
 
   Iterator<K> keySetIterator() {
-    @Nullable Map<K, V> delegate = delegateOrNull();
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.keySet().iterator();
     }
@@ -706,21 +652,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     };
   }
 
-  @SuppressWarnings("unchecked") // known to be Ks and Vs
-  @Override
-  public void forEach(BiConsumer<? super K, ? super V> action) {
-    checkNotNull(action);
-    @Nullable Map<K, V> delegate = delegateOrNull();
-    if (delegate != null) {
-      delegate.forEach(action);
-    } else {
-      for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
-        action.accept((K) keys[i], (V) values[i]);
-      }
-    }
-  }
-
-  private transient @Nullable Set<Entry<K, V>> entrySetView;
+  @NullableDecl private transient Set<Entry<K, V>> entrySetView;
 
   @Override
   public Set<Entry<K, V>> entrySet() {
@@ -732,10 +664,16 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   }
 
   @WeakOuter
-  class EntrySetView extends Maps.EntrySet<K, V> {
+  class EntrySetView extends AbstractSet<Entry<K, V>> {
+
     @Override
-    Map<K, V> map() {
-      return CompactHashMap.this;
+    public int size() {
+      return CompactHashMap.this.size();
+    }
+
+    @Override
+    public void clear() {
+      CompactHashMap.this.clear();
     }
 
     @Override
@@ -744,17 +682,8 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     }
 
     @Override
-    public Spliterator<Entry<K, V>> spliterator() {
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      return (delegate != null)
-          ? delegate.entrySet().spliterator()
-          : CollectSpliterators.indexed(
-              size, Spliterator.DISTINCT | Spliterator.ORDERED, MapEntry::new);
-    }
-
-    @Override
-    public boolean contains(@Nullable Object o) {
-      @Nullable Map<K, V> delegate = delegateOrNull();
+    public boolean contains(@NullableDecl Object o) {
+      @NullableDecl Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return delegate.entrySet().contains(o);
       } else if (o instanceof Entry) {
@@ -766,8 +695,8 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     }
 
     @Override
-    public boolean remove(@Nullable Object o) {
-      @Nullable Map<K, V> delegate = delegateOrNull();
+    public boolean remove(@NullableDecl Object o) {
+      @NullableDecl Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return delegate.entrySet().remove(o);
       } else if (o instanceof Entry) {
@@ -794,7 +723,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   }
 
   Iterator<Entry<K, V>> entrySetIterator() {
-    @Nullable Map<K, V> delegate = delegateOrNull();
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.entrySet().iterator();
     }
@@ -807,7 +736,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   }
 
   final class MapEntry extends AbstractMapEntry<K, V> {
-    private final @Nullable K key;
+    @NullableDecl private final K key;
 
     private int lastKnownIndex;
 
@@ -817,7 +746,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
       this.lastKnownIndex = index;
     }
 
-    @Nullable
+    @NullableDecl
     @Override
     public K getKey() {
       return key;
@@ -833,8 +762,9 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
 
     @SuppressWarnings("unchecked") // known to be a V
     @Override
-    public @Nullable V getValue() {
-      @Nullable Map<K, V> delegate = delegateOrNull();
+    @NullableDecl
+    public V getValue() {
+      @NullableDecl Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return delegate.get(key);
       }
@@ -845,7 +775,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     @SuppressWarnings("unchecked") // known to be a V
     @Override
     public V setValue(V value) {
-      @Nullable Map<K, V> delegate = delegateOrNull();
+      @NullableDecl Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return delegate.put(key, value);
       }
@@ -863,7 +793,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
 
   @Override
   public int size() {
-    @Nullable Map<K, V> delegate = delegateOrNull();
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     return (delegate != null) ? delegate.size() : size;
   }
 
@@ -873,8 +803,8 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   }
 
   @Override
-  public boolean containsValue(@Nullable Object value) {
-    @Nullable Map<K, V> delegate = delegateOrNull();
+  public boolean containsValue(@NullableDecl Object value) {
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.containsValue(value);
     }
@@ -886,7 +816,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     return false;
   }
 
-  private transient @Nullable Collection<V> valuesView;
+  @NullableDecl private transient Collection<V> valuesView;
 
   @Override
   public Collection<V> values() {
@@ -898,69 +828,25 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
   }
 
   @WeakOuter
-  class ValuesView extends Maps.Values<K, V> {
-    ValuesView() {
-      super(CompactHashMap.this);
+  class ValuesView extends AbstractCollection<V> {
+    @Override
+    public int size() {
+      return CompactHashMap.this.size();
+    }
+
+    @Override
+    public void clear() {
+      CompactHashMap.this.clear();
     }
 
     @Override
     public Iterator<V> iterator() {
       return valuesIterator();
     }
-
-    @SuppressWarnings("unchecked") // known to be Vs
-    @Override
-    public void forEach(Consumer<? super V> action) {
-      checkNotNull(action);
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      if (delegate != null) {
-        delegate.values().forEach(action);
-      } else {
-        for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
-          action.accept((V) values[i]);
-        }
-      }
-    }
-
-    @Override
-    public Spliterator<V> spliterator() {
-      if (needsAllocArrays()) {
-        return Spliterators.spliterator(new Object[0], Spliterator.ORDERED);
-      }
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      return (delegate != null)
-          ? delegate.values().spliterator()
-          : Spliterators.spliterator(values, 0, size, Spliterator.ORDERED);
-    }
-
-    @Override
-    public Object[] toArray() {
-      if (needsAllocArrays()) {
-        return new Object[0];
-      }
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      return (delegate != null)
-          ? delegate.values().toArray()
-          : ObjectArrays.copyAsObjectArray(values, 0, size);
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-      if (needsAllocArrays()) {
-        if (a.length > 0) {
-          a[0] = null;
-        }
-        return a;
-      }
-      @Nullable Map<K, V> delegate = delegateOrNull();
-      return (delegate != null)
-          ? delegate.values().toArray(a)
-          : ObjectArrays.toArrayImpl(values, 0, size, a);
-    }
   }
 
   Iterator<V> valuesIterator() {
-    @Nullable Map<K, V> delegate = delegateOrNull();
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.values().iterator();
     }
@@ -981,7 +867,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
     if (needsAllocArrays()) {
       return;
     }
-    @Nullable Map<K, V> delegate = delegateOrNull();
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       Map<K, V> newDelegate = createHashFloodingResistantDelegate(size());
       newDelegate.putAll(delegate);
@@ -1005,7 +891,7 @@ class CompactHashMap<K, V> extends AbstractMap<K, V> implements Serializable {
       return;
     }
     incrementModCount();
-    @Nullable Map<K, V> delegate = delegateOrNull();
+    @NullableDecl Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       metadata =
           Ints.constrainToRange(size(), CompactHashing.DEFAULT_SIZE, CompactHashing.MAX_SIZE);

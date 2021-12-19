@@ -25,10 +25,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.j2objc.annotations.J2ObjCIncompatible;
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,10 +34,11 @@ import java.util.concurrent.TimeUnit;
  *
  * <p>In contrast, <i>wall time</i> is a reading of "now" as given by a method like
  * {@link System#currentTimeMillis()}, best represented as an {@link Instant}. Such values
- * <i>can</i> be subtracted to obtain a {@code Duration} (such as by {@code Duration.between}), but
- * doing so does <i>not</i> give a reliable measurement of elapsed time, because wall time readings
- * are inherently approximate, routinely affected by periodic clock corrections. Because this class
- * (by default) uses {@link System#nanoTime}, it is unaffected by these changes.
+ *
+ * <p><i>can</i> be subtracted to obtain a {@code Duration} (such as by {@code Duration.between}),
+ * but doing so does <i>not</i> give a reliable measurement of elapsed time, because wall time
+ * readings are inherently approximate, routinely affected by periodic clock corrections. Because
+ * this class (by default) uses {@link System#nanoTime}, it is unaffected by these changes.
  *
  * <p>Use this class instead of direct calls to {@link System#nanoTime} for two reasons:
  *
@@ -58,7 +56,7 @@ import java.util.concurrent.TimeUnit;
  * doSomething();
  * stopwatch.stop(); // optional
  *
- * Duration duration = stopwatch.elapsed();
+ * long millis = stopwatch.elapsed(MILLISECONDS);
  *
  * log.info("time: " + stopwatch); // formatted string like "12.3 ms"
  * }</pre>
@@ -87,7 +85,7 @@ import java.util.concurrent.TimeUnit;
  * @author Kevin Bourrillion
  * @since 10.0
  */
-@GwtCompatible(emulated = true)
+@GwtCompatible
 @SuppressWarnings("GoodTime") // lots of violations
 public final class Stopwatch {
   private final Ticker ticker;
@@ -197,29 +195,13 @@ public final class Stopwatch {
    * Returns the current elapsed time shown on this stopwatch, expressed in the desired time unit,
    * with any fraction rounded down.
    *
-   * <p><b>Note:</b> the overhead of measurement can be more than a microsecond, so it is generally
-   * not useful to specify {@link TimeUnit#NANOSECONDS} precision here.
-   *
-   * <p>It is generally not a good idea to use an ambiguous, unitless {@code long} to represent
-   * elapsed time. Therefore, we recommend using {@link #elapsed()} instead, which returns a
-   * strongly-typed {@code Duration} instance.
+   * <p>Note that the overhead of measurement can be more than a microsecond, so it is generally not
+   * useful to specify {@link TimeUnit#NANOSECONDS} precision here.
    *
    * @since 14.0 (since 10.0 as {@code elapsedTime()})
    */
   public long elapsed(TimeUnit desiredUnit) {
     return desiredUnit.convert(elapsedNanos(), NANOSECONDS);
-  }
-
-  /**
-   * Returns the current elapsed time shown on this stopwatch as a {@link Duration}. Unlike {@link
-   * #elapsed(TimeUnit)}, this method does not lose any precision due to rounding.
-   *
-   * @since 22.0
-   */
-  @GwtIncompatible
-  @J2ObjCIncompatible
-  public Duration elapsed() {
-    return Duration.ofNanos(elapsedNanos());
   }
 
   /** Returns a string representation of the current elapsed time. */

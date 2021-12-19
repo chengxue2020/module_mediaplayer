@@ -23,7 +23,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /** Implementation of {@link Futures#immediateFuture}. */
 @GwtCompatible
@@ -33,9 +33,9 @@ class ImmediateFuture<V> implements ListenableFuture<V> {
 
   private static final Logger log = Logger.getLogger(ImmediateFuture.class.getName());
 
-  private final @Nullable V value;
+  @NullableDecl private final V value;
 
-  ImmediateFuture(@Nullable V value) {
+  ImmediateFuture(@NullableDecl V value) {
     this.value = value;
   }
 

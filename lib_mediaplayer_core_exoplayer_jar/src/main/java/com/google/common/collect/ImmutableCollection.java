@@ -17,22 +17,21 @@
 package com.google.common.collect;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.CollectPreconditions.checkNonnegative;
+import static com.google.common.collect.ObjectArrays.checkElementsNotNull;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.errorprone.annotations.DoNotCall;
 import com.google.errorprone.annotations.DoNotMock;
 import java.io.Serializable;
 import java.util.AbstractCollection;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.function.Predicate;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A {@link Collection} whose contents will never change, and which offers a few additional
@@ -165,24 +164,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 // TODO(kevinb): I think we should push everything down to "BaseImmutableCollection" or something,
 // just to do everything we can to emphasize the "practically an interface" nature of this class.
 public abstract class ImmutableCollection<E> extends AbstractCollection<E> implements Serializable {
-  /*
-   * We expect SIZED (and SUBSIZED, if applicable) to be added by the spliterator factory methods.
-   * These are properties of the collection as a whole; SIZED and SUBSIZED are more properties of
-   * the spliterator implementation.
-   */
-  static final int SPLITERATOR_CHARACTERISTICS =
-      Spliterator.IMMUTABLE | Spliterator.NONNULL | Spliterator.ORDERED;
 
   ImmutableCollection() {}
 
   /** Returns an unmodifiable iterator across the elements in this collection. */
   @Override
   public abstract UnmodifiableIterator<E> iterator();
-
-  @Override
-  public Spliterator<E> spliterator() {
-    return Spliterators.spliterator(this, SPLITERATOR_CHARACTERISTICS);
-  }
 
   private static final Object[] EMPTY_ARRAY = {};
 
@@ -211,7 +198,8 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   }
 
   /** If this collection is backed by an array of its elements in insertion order, returns it. */
-  Object @Nullable [] internalArray() {
+  @NullableDecl
+  Object[] internalArray() {
     return null;
   }
 
@@ -232,7 +220,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   }
 
   @Override
-  public abstract boolean contains(@Nullable Object object);
+  public abstract boolean contains(@NullableDecl Object object);
 
   /**
    * Guaranteed to throw an exception and leave the collection unmodified.
@@ -243,7 +231,6 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final boolean add(E e) {
     throw new UnsupportedOperationException();
   }
@@ -257,7 +244,6 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final boolean remove(Object object) {
     throw new UnsupportedOperationException();
   }
@@ -271,7 +257,6 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final boolean addAll(Collection<? extends E> newElements) {
     throw new UnsupportedOperationException();
   }
@@ -285,7 +270,6 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final boolean removeAll(Collection<?> oldElements) {
     throw new UnsupportedOperationException();
   }
@@ -299,20 +283,6 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean removeIf(Predicate<? super E> filter) {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * Guaranteed to throw an exception and leave the collection unmodified.
-   *
-   * @throws UnsupportedOperationException always
-   * @deprecated Unsupported operation.
-   */
-  @Deprecated
-  @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final boolean retainAll(Collection<?> elementsToKeep) {
     throw new UnsupportedOperationException();
   }
@@ -325,7 +295,6 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
    */
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final void clear() {
     throw new UnsupportedOperationException();
   }
@@ -341,14 +310,7 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
    * @since 2.0
    */
   public ImmutableList<E> asList() {
-    switch (size()) {
-      case 0:
-        return ImmutableList.of();
-      case 1:
-        return ImmutableList.of(iterator().next());
-      default:
-        return new RegularImmutableAsList<E>(this, toArray());
-    }
+    return isEmpty() ? ImmutableList.<E>of() : ImmutableList.<E>asImmutableList(toArray());
   }
 
   /**
@@ -477,5 +439,72 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> imple
      * ImmutableCollection} from this method.
      */
     public abstract ImmutableCollection<E> build();
+  }
+
+  abstract static class ArrayBasedBuilder<E> extends Builder<E> {
+    Object[] contents;
+    int size;
+    boolean forceCopy;
+
+    ArrayBasedBuilder(int initialCapacity) {
+      checkNonnegative(initialCapacity, "initialCapacity");
+      this.contents = new Object[initialCapacity];
+      this.size = 0;
+    }
+
+    /*
+     * Expand the absolute capacity of the builder so it can accept at least the specified number of
+     * elements without being resized. Also, if we've already built a collection backed by the
+     * current array, create a new array.
+     */
+    private void getReadyToExpandTo(int minCapacity) {
+      if (contents.length < minCapacity) {
+        this.contents =
+            Arrays.copyOf(this.contents, expandedCapacity(contents.length, minCapacity));
+        forceCopy = false;
+      } else if (forceCopy) {
+        this.contents = contents.clone();
+        forceCopy = false;
+      }
+    }
+
+    @CanIgnoreReturnValue
+    @Override
+    public ArrayBasedBuilder<E> add(E element) {
+      checkNotNull(element);
+      getReadyToExpandTo(size + 1);
+      contents[size++] = element;
+      return this;
+    }
+
+    @CanIgnoreReturnValue
+    @Override
+    public Builder<E> add(E... elements) {
+      addAll(elements, elements.length);
+      return this;
+    }
+
+    final void addAll(Object[] elements, int n) {
+      checkElementsNotNull(elements, n);
+      getReadyToExpandTo(size + n);
+      System.arraycopy(elements, 0, contents, size, n);
+      size += n;
+    }
+
+    @CanIgnoreReturnValue
+    @Override
+    public Builder<E> addAll(Iterable<? extends E> elements) {
+      if (elements instanceof Collection) {
+        Collection<?> collection = (Collection<?>) elements;
+        getReadyToExpandTo(size + collection.size());
+        if (collection instanceof ImmutableCollection) {
+          ImmutableCollection<?> immutableCollection = (ImmutableCollection<?>) collection;
+          size = immutableCollection.copyIntoArray(contents, size);
+          return this;
+        }
+      }
+      super.addAll(elements);
+      return this;
+    }
   }
 }

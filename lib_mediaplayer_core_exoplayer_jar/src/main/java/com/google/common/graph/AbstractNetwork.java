@@ -33,9 +33,8 @@ import com.google.common.math.IntMath;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * This class provides a skeletal implementation of {@link Network}. It is recommended to extend
@@ -90,7 +89,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
           // Network<LinkedList>.
           @SuppressWarnings("unchecked")
           @Override
-          public boolean contains(@Nullable Object obj) {
+          public boolean contains(@NullableDecl Object obj) {
             if (!(obj instanceof EndpointPair)) {
               return false;
             }
@@ -195,18 +194,8 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
   }
 
   @Override
-  public Optional<E> edgeConnecting(N nodeU, N nodeV) {
-    return Optional.ofNullable(edgeConnectingOrNull(nodeU, nodeV));
-  }
-
-  @Override
-  public Optional<E> edgeConnecting(EndpointPair<N> endpoints) {
-    validateEndpoints(endpoints);
-    return edgeConnecting(endpoints.nodeU(), endpoints.nodeV());
-  }
-
-  @Override
-  public @Nullable E edgeConnectingOrNull(N nodeU, N nodeV) {
+  @NullableDecl
+  public E edgeConnectingOrNull(N nodeU, N nodeV) {
     Set<E> edgesConnecting = edgesConnecting(nodeU, nodeV);
     switch (edgesConnecting.size()) {
       case 0:
@@ -219,7 +208,8 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
   }
 
   @Override
-  public @Nullable E edgeConnectingOrNull(EndpointPair<N> endpoints) {
+  @NullableDecl
+  public E edgeConnectingOrNull(EndpointPair<N> endpoints) {
     validateEndpoints(endpoints);
     return edgeConnectingOrNull(endpoints.nodeU(), endpoints.nodeV());
   }
@@ -254,7 +244,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
   }
 
   @Override
-  public final boolean equals(@Nullable Object obj) {
+  public final boolean equals(@NullableDecl Object obj) {
     if (obj == this) {
       return true;
     }

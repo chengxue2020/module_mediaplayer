@@ -22,9 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * CompactLinkedHashSet is an implementation of a Set, which a predictable iteration order that
@@ -105,13 +103,13 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
    * Pointer to the predecessor of an entry in insertion order. ENDPOINT indicates a node is the
    * first node in insertion order; all values at indices ≥ {@link #size()} are UNSET.
    */
-  private transient int @Nullable [] predecessor;
+  @NullableDecl private transient int[] predecessor;
 
   /**
    * Pointer to the successor of an entry in insertion order. ENDPOINT indicates a node is the last
    * node in insertion order; all values at indices ≥ {@link #size()} are UNSET.
    */
-  private transient int @Nullable [] successor;
+  @NullableDecl private transient int[] successor;
 
   /** Pointer to the first node in the linked list, or {@code ENDPOINT} if there are no entries. */
   private transient int firstEntry;
@@ -183,7 +181,7 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
   }
 
   @Override
-  void insertEntry(int entryIndex, @Nullable E object, int hash, int mask) {
+  void insertEntry(int entryIndex, @NullableDecl E object, int hash, int mask) {
     super.insertEntry(entryIndex, object, hash, mask);
     setSucceeds(lastEntry, entryIndex);
     setSucceeds(entryIndex, ENDPOINT);
@@ -228,11 +226,6 @@ class CompactLinkedHashSet<E> extends CompactHashSet<E> {
   @Override
   public <T> T[] toArray(T[] a) {
     return ObjectArrays.toArrayImpl(this, a);
-  }
-
-  @Override
-  public Spliterator<E> spliterator() {
-    return Spliterators.spliterator(this, Spliterator.ORDERED | Spliterator.DISTINCT);
   }
 
   @Override

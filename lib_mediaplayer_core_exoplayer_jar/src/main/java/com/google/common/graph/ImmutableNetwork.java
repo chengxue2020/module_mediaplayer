@@ -180,7 +180,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
      * @return this {@code Builder} object
      */
     @CanIgnoreReturnValue
-    public ImmutableNetwork.Builder<N, E> addNode(N node) {
+    public Builder<N, E> addNode(N node) {
       mutableNetwork.addNode(node);
       return this;
     }
@@ -207,7 +207,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
      *     #allowsParallelEdges()} or {@link #allowsSelfLoops()}
      */
     @CanIgnoreReturnValue
-    public ImmutableNetwork.Builder<N, E> addEdge(N nodeU, N nodeV, E edge) {
+    public Builder<N, E> addEdge(N nodeU, N nodeV, E edge) {
       mutableNetwork.addEdge(nodeU, nodeV, edge);
       return this;
     }
@@ -238,7 +238,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
      * @throws IllegalArgumentException if the endpoints are unordered and the network is directed
      */
     @CanIgnoreReturnValue
-    public ImmutableNetwork.Builder<N, E> addEdge(EndpointPair<N> endpoints, E edge) {
+    public Builder<N, E> addEdge(EndpointPair<N> endpoints, E edge) {
       mutableNetwork.addEdge(endpoints, edge);
       return this;
     }

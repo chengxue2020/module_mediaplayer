@@ -16,7 +16,6 @@ package com.google.common.util.concurrent;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.util.concurrent.Internal.toNanosSaturated;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static com.google.common.util.concurrent.Uninterruptibles.getUninterruptibly;
 
@@ -33,7 +32,6 @@ import com.google.common.util.concurrent.ImmediateFuture.ImmediateFailedFuture;
 import com.google.common.util.concurrent.internal.InternalFutureFailureAccess;
 import com.google.common.util.concurrent.internal.InternalFutures;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -46,7 +44,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Static utility methods pertaining to the {@link Future} interface.
@@ -127,7 +125,7 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
    * getters just return the value. This {@code Future} can't be canceled or timed out and its
    * {@code isDone()} method always returns {@code true}.
    */
-  public static <V> ListenableFuture<V> immediateFuture(@Nullable V value) {
+  public static <V> ListenableFuture<V> immediateFuture(@NullableDecl V value) {
     if (value == null) {
       // This cast is safe because null is assignable to V for all V (i.e. it is bivariant)
       @SuppressWarnings("unchecked")
@@ -208,19 +206,6 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
     TrustedListenableFutureTask<O> task = TrustedListenableFutureTask.create(callable);
     executor.execute(task);
     return task;
-  }
-
-  /**
-   * Schedules {@code callable} on the specified {@code executor}, returning a {@code Future}.
-   *
-   * @throws RejectedExecutionException if the task cannot be scheduled for execution
-   * @since 28.0
-   */
-  @Beta
-  @GwtIncompatible // java.util.concurrent.ScheduledExecutorService
-  public static <O> ListenableFuture<O> scheduleAsync(
-      AsyncCallable<O> callable, Duration delay, ScheduledExecutorService executorService) {
-    return scheduleAsync(callable, toNanosSaturated(delay), TimeUnit.NANOSECONDS, executorService);
   }
 
   /**
@@ -360,24 +345,6 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
       AsyncFunction<? super X, ? extends V> fallback,
       Executor executor) {
     return AbstractCatchingFuture.create(input, exceptionType, fallback, executor);
-  }
-
-  /**
-   * Returns a future that delegates to another but will finish early (via a {@link
-   * TimeoutException} wrapped in an {@link ExecutionException}) if the specified duration expires.
-   *
-   * <p>The delegate future is interrupted and cancelled if it times out.
-   *
-   * @param delegate The future to delegate to.
-   * @param time when to timeout the future
-   * @param scheduledExecutor The executor service to enforce the timeout.
-   * @since 28.0
-   */
-  @Beta
-  @GwtIncompatible // java.util.concurrent.ScheduledExecutorService
-  public static <V> ListenableFuture<V> withTimeout(
-      ListenableFuture<V> delegate, Duration time, ScheduledExecutorService scheduledExecutor) {
-    return withTimeout(delegate, toNanosSaturated(time), TimeUnit.NANOSECONDS, scheduledExecutor);
   }
 
   /**
@@ -1115,6 +1082,7 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
      * IllegalArgumentException here, in part to keep its recommendation simple: Static methods
      * should throw IllegalStateException only when they use static state.
      *
+     *
      * Why do we deviate here? The answer: We want for fluentFuture.getDone() to throw the same
      * exception as Futures.getDone(fluentFuture).
      */
@@ -1170,57 +1138,6 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
   public static <V, X extends Exception> V getChecked(Future<V> future, Class<X> exceptionClass)
       throws X {
     return FuturesGetChecked.getChecked(future, exceptionClass);
-  }
-
-  /**
-   * Returns the result of {@link Future#get(long, TimeUnit)}, converting most exceptions to a new
-   * instance of the given checked exception type. This reduces boilerplate for a common use of
-   * {@code Future} in which it is unnecessary to programmatically distinguish between exception
-   * types or to extract other information from the exception instance.
-   *
-   * <p>Exceptions from {@code Future.get} are treated as follows:
-   *
-   * <ul>
-   *   <li>Any {@link ExecutionException} has its <i>cause</i> wrapped in an {@code X} if the cause
-   *       is a checked exception, an {@link UncheckedExecutionException} if the cause is a {@code
-   *       RuntimeException}, or an {@link ExecutionError} if the cause is an {@code Error}.
-   *   <li>Any {@link InterruptedException} is wrapped in an {@code X} (after restoring the
-   *       interrupt).
-   *   <li>Any {@link TimeoutException} is wrapped in an {@code X}.
-   *   <li>Any {@link CancellationException} is propagated untouched, as is any other {@link
-   *       RuntimeException} (though {@code get} implementations are discouraged from throwing such
-   *       exceptions).
-   * </ul>
-   *
-   * <p>The overall principle is to continue to treat every checked exception as a checked
-   * exception, every unchecked exception as an unchecked exception, and every error as an error. In
-   * addition, the cause of any {@code ExecutionException} is wrapped in order to ensure that the
-   * new stack trace matches that of the current thread.
-   *
-   * <p>Instances of {@code exceptionClass} are created by choosing an arbitrary public constructor
-   * that accepts zero or more arguments, all of type {@code String} or {@code Throwable}
-   * (preferring constructors with at least one {@code String}) and calling the constructor via
-   * reflection. If the exception did not already have a cause, one is set by calling {@link
-   * Throwable#initCause(Throwable)} on it. If no such constructor exists, an {@code
-   * IllegalArgumentException} is thrown.
-   *
-   * @throws X if {@code get} throws any checked exception except for an {@code ExecutionException}
-   *     whose cause is not itself a checked exception
-   * @throws UncheckedExecutionException if {@code get} throws an {@code ExecutionException} with a
-   *     {@code RuntimeException} as its cause
-   * @throws ExecutionError if {@code get} throws an {@code ExecutionException} with an {@code
-   *     Error} as its cause
-   * @throws CancellationException if {@code get} throws a {@code CancellationException}
-   * @throws IllegalArgumentException if {@code exceptionClass} extends {@code RuntimeException} or
-   *     does not have a suitable constructor
-   * @since 28.0
-   */
-  @Beta
-  @CanIgnoreReturnValue
-  @GwtIncompatible // reflection
-  public static <V, X extends Exception> V getChecked(
-      Future<V> future, Class<X> exceptionClass, Duration timeout) throws X {
-    return getChecked(future, exceptionClass, toNanosSaturated(timeout), TimeUnit.NANOSECONDS);
   }
 
   /**

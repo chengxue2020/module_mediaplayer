@@ -23,7 +23,6 @@ import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
-import com.google.errorprone.annotations.CheckReturnValue;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -46,8 +45,8 @@ import java.util.concurrent.Executor;
  * LoadingCache<Key, Graph> cache = CacheBuilder.newBuilder().build(loader);
  * }</pre>
  *
- * <p>Since this example doesn't support reloading or bulk loading, it can also be specified much
- * more simply:
+ * <p>Since this example doesn't support reloading or bulk loading, if you're able to use lambda
+ * expressions it can be specified even more easily:
  *
  * <pre>{@code
  * CacheLoader<Key, Graph> loader = CacheLoader.from(key -> createExpensiveGraph(key));
@@ -130,13 +129,13 @@ public abstract class CacheLoader<K, V> {
   }
 
   /**
-   * Returns a cache loader that uses {@code function} to load keys, without supporting either
-   * reloading or bulk loading. This allows creating a cache loader using a lambda expression.
+   * Returns a cache loader that uses {@code function} to load keys, and without supporting either
+   * reloading or bulk loading. This is most useful when you can pass a lambda expression. Otherwise
+   * it is useful mostly when you already have an existing function instance.
    *
    * @param function the function to be used for loading values; must never return {@code null}
    * @return a cache loader that loads values by passing each key to {@code function}
    */
-  @CheckReturnValue
   public static <K, V> CacheLoader<K, V> from(Function<K, V> function) {
     return new FunctionToCacheLoader<>(function);
   }
@@ -150,7 +149,6 @@ public abstract class CacheLoader<K, V> {
    * @return a cache loader that loads values by calling {@link Supplier#get}, irrespective of the
    *     key
    */
-  @CheckReturnValue
   public static <V> CacheLoader<Object, V> from(Supplier<V> supplier) {
     return new SupplierToCacheLoader<V>(supplier);
   }
@@ -180,7 +178,6 @@ public abstract class CacheLoader<K, V> {
    *
    * @since 17.0
    */
-  @CheckReturnValue
   @GwtIncompatible // Executor + Futures
   public static <K, V> CacheLoader<K, V> asyncReloading(
       final CacheLoader<K, V> loader, final Executor executor) {

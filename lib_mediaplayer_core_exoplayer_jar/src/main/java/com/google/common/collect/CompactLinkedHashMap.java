@@ -19,15 +19,10 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.j2objc.annotations.WeakOuter;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * CompactLinkedHashMap is an implementation of a Map with insertion or LRU iteration order,
@@ -82,7 +77,7 @@ class CompactLinkedHashMap<K, V> extends CompactHashMap<K, V> {
    * <p>A node with "prev" pointer equal to {@code ENDPOINT} is the first node in the linked list,
    * and a node with "next" pointer equal to {@code ENDPOINT} is the last node.
    */
-  @VisibleForTesting transient long @Nullable [] links;
+  @VisibleForTesting @NullableDecl transient long[] links;
 
   /** Pointer to the first node in the linked list, or {@code ENDPOINT} if there are no entries. */
   private transient int firstEntry;
@@ -166,7 +161,7 @@ class CompactLinkedHashMap<K, V> extends CompactHashMap<K, V> {
   }
 
   @Override
-  void insertEntry(int entryIndex, @Nullable K key, @Nullable V value, int hash, int mask) {
+  void insertEntry(int entryIndex, @NullableDecl K key, @NullableDecl V value, int hash, int mask) {
     super.insertEntry(entryIndex, key, value, hash, mask);
     setSucceeds(lastEntry, entryIndex);
     setSucceeds(entryIndex, ENDPOINT);
@@ -211,62 +206,6 @@ class CompactLinkedHashMap<K, V> extends CompactHashMap<K, V> {
   @Override
   int adjustAfterRemove(int indexBeforeRemove, int indexRemoved) {
     return (indexBeforeRemove >= size()) ? indexRemoved : indexBeforeRemove;
-  }
-
-  @Override
-  Set<Entry<K, V>> createEntrySet() {
-    @WeakOuter
-    class EntrySetImpl extends EntrySetView {
-      @Override
-      public Spliterator<Entry<K, V>> spliterator() {
-        return Spliterators.spliterator(this, Spliterator.ORDERED | Spliterator.DISTINCT);
-      }
-    }
-    return new EntrySetImpl();
-  }
-
-  @Override
-  Set<K> createKeySet() {
-    @WeakOuter
-    class KeySetImpl extends KeySetView {
-      @Override
-      public Object[] toArray() {
-        return ObjectArrays.toArrayImpl(this);
-      }
-
-      @Override
-      public <T> T[] toArray(T[] a) {
-        return ObjectArrays.toArrayImpl(this, a);
-      }
-
-      @Override
-      public Spliterator<K> spliterator() {
-        return Spliterators.spliterator(this, Spliterator.ORDERED | Spliterator.DISTINCT);
-      }
-    }
-    return new KeySetImpl();
-  }
-
-  @Override
-  Collection<V> createValues() {
-    @WeakOuter
-    class ValuesImpl extends ValuesView {
-      @Override
-      public Object[] toArray() {
-        return ObjectArrays.toArrayImpl(this);
-      }
-
-      @Override
-      public <T> T[] toArray(T[] a) {
-        return ObjectArrays.toArrayImpl(this, a);
-      }
-
-      @Override
-      public Spliterator<V> spliterator() {
-        return Spliterators.spliterator(this, Spliterator.ORDERED);
-      }
-    }
-    return new ValuesImpl();
   }
 
   @Override

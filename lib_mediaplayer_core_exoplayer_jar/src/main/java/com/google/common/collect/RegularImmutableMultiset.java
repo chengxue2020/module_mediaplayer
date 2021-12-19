@@ -14,17 +14,14 @@
 
 package com.google.common.collect;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Objects;
-import com.google.common.collect.Multisets.ImmutableEntry;
+import com.google.common.annotations.GwtIncompatible;
+import com.google.common.collect.Multiset.Entry;
 import com.google.common.primitives.Ints;
 import com.google.errorprone.annotations.concurrent.LazyInit;
-import java.util.Arrays;
-import java.util.Collection;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import com.google.j2objc.annotations.WeakOuter;
+import java.io.Serializable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Implementation of {@link ImmutableMultiset} with zero or more elements.
@@ -35,118 +32,21 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtCompatible(emulated = true, serializable = true)
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
-  static final ImmutableMultiset<Object> EMPTY = create(ImmutableList.<Entry<Object>>of());
+  static final RegularImmutableMultiset<Object> EMPTY =
+      new RegularImmutableMultiset<>(ObjectCountHashMap.create());
 
-  static <E> ImmutableMultiset<E> create(Collection<? extends Entry<? extends E>> entries) {
-    int distinct = entries.size();
-    @SuppressWarnings("unchecked")
-    ImmutableEntry<E>[] entryArray = new ImmutableEntry[distinct];
-    if (distinct == 0) {
-      return new RegularImmutableMultiset<>(entryArray, null, 0, 0, ImmutableSet.of());
-    }
-    int tableSize = Hashing.closedTableSize(distinct, MAX_LOAD_FACTOR);
-    int mask = tableSize - 1;
-    @SuppressWarnings("unchecked")
-    ImmutableEntry<E>[] hashTable = new ImmutableEntry[tableSize];
-
-    int index = 0;
-    int hashCode = 0;
-    long size = 0;
-    for (Entry<? extends E> entry : entries) {
-      E element = checkNotNull(entry.getElement());
-      int count = entry.getCount();
-      int hash = element.hashCode();
-      int bucket = Hashing.smear(hash) & mask;
-      ImmutableEntry<E> bucketHead = hashTable[bucket];
-      ImmutableEntry<E> newEntry;
-      if (bucketHead == null) {
-        boolean canReuseEntry =
-            entry instanceof ImmutableEntry && !(entry instanceof NonTerminalEntry);
-        newEntry =
-            canReuseEntry
-                ? (ImmutableEntry<E>) entry
-                : new ImmutableEntry<E>(element, count);
-      } else {
-        newEntry = new NonTerminalEntry<E>(element, count, bucketHead);
-      }
-      hashCode += hash ^ count;
-      entryArray[index++] = newEntry;
-      hashTable[bucket] = newEntry;
-      size += count;
-    }
-
-    return hashFloodingDetected(hashTable)
-        ? JdkBackedImmutableMultiset.create(ImmutableList.asImmutableList(entryArray))
-        : new RegularImmutableMultiset<E>(
-            entryArray, hashTable, Ints.saturatedCast(size), hashCode, null);
-  }
-
-  private static boolean hashFloodingDetected(ImmutableEntry<?>[] hashTable) {
-    for (int i = 0; i < hashTable.length; i++) {
-      int bucketLength = 0;
-      for (ImmutableEntry<?> entry = hashTable[i];
-           entry != null;
-           entry = entry.nextInBucket()) {
-        bucketLength++;
-        if (bucketLength > MAX_HASH_BUCKET_LENGTH) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Closed addressing tends to perform well even with high load factors. Being conservative here
-   * ensures that the table is still likely to be relatively sparse (hence it misses fast) while
-   * saving space.
-   */
-  @VisibleForTesting static final double MAX_LOAD_FACTOR = 1.0;
-
-  /**
-   * Maximum allowed false positive probability of detecting a hash flooding attack given random
-   * input.
-   */
-  @VisibleForTesting static final double HASH_FLOODING_FPP = 0.001;
-
-  /**
-   * Maximum allowed length of a hash table bucket before falling back to a j.u.HashMap based
-   * implementation. Experimentally determined.
-   */
-  @VisibleForTesting static final int MAX_HASH_BUCKET_LENGTH = 9;
-
-  private final transient ImmutableEntry<E>[] entries;
-  private final transient ImmutableEntry<E> @Nullable [] hashTable;
+  final transient ObjectCountHashMap<E> contents;
   private final transient int size;
-  private final transient int hashCode;
 
   @LazyInit private transient ImmutableSet<E> elementSet;
 
-  private RegularImmutableMultiset(
-      ImmutableEntry<E>[] entries,
-      ImmutableEntry<E>[] hashTable,
-      int size,
-      int hashCode,
-      ImmutableSet<E> elementSet) {
-    this.entries = entries;
-    this.hashTable = hashTable;
-    this.size = size;
-    this.hashCode = hashCode;
-    this.elementSet = elementSet;
-  }
-
-  private static final class NonTerminalEntry<E> extends ImmutableEntry<E> {
-    private final ImmutableEntry<E> nextInBucket;
-
-    NonTerminalEntry(E element, int count, ImmutableEntry<E> nextInBucket) {
-      super(element, count);
-      this.nextInBucket = nextInBucket;
+  RegularImmutableMultiset(ObjectCountHashMap<E> contents) {
+    this.contents = contents;
+    long size = 0;
+    for (int i = 0; i < contents.size(); i++) {
+      size += contents.getValue(i);
     }
-
-    @Override
-    public ImmutableEntry<E> nextInBucket() {
-      return nextInBucket;
-    }
+    this.size = Ints.saturatedCast(size);
   }
 
   @Override
@@ -155,21 +55,8 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
   }
 
   @Override
-  public int count(@Nullable Object element) {
-    ImmutableEntry<E>[] hashTable = this.hashTable;
-    if (element == null || hashTable == null) {
-      return 0;
-    }
-    int hash = Hashing.smearedHash(element);
-    int mask = hashTable.length - 1;
-    for (ImmutableEntry<E> entry = hashTable[hash & mask];
-         entry != null;
-         entry = entry.nextInBucket()) {
-      if (Objects.equal(element, entry.getElement())) {
-        return entry.getCount();
-      }
-    }
-    return 0;
+  public int count(@NullableDecl Object element) {
+    return contents.get(element);
   }
 
   @Override
@@ -180,16 +67,70 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
   @Override
   public ImmutableSet<E> elementSet() {
     ImmutableSet<E> result = elementSet;
-    return (result == null) ? elementSet = new ElementSet<E>(Arrays.asList(entries), this) : result;
+    return (result == null) ? elementSet = new ElementSet() : result;
+  }
+
+  @WeakOuter
+  private final class ElementSet extends IndexedImmutableSet<E> {
+
+    @Override
+    E get(int index) {
+      return contents.getKey(index);
+    }
+
+    @Override
+    public boolean contains(@NullableDecl Object object) {
+      return RegularImmutableMultiset.this.contains(object);
+    }
+
+    @Override
+    boolean isPartialView() {
+      return true;
+    }
+
+    @Override
+    public int size() {
+      return contents.size();
+    }
   }
 
   @Override
   Entry<E> getEntry(int index) {
-    return entries[index];
+    return contents.getEntry(index);
   }
 
+  @GwtIncompatible
+  private static class SerializedForm implements Serializable {
+    final Object[] elements;
+    final int[] counts;
+
+    SerializedForm(Multiset<?> multiset) {
+      int distinct = multiset.entrySet().size();
+      elements = new Object[distinct];
+      counts = new int[distinct];
+      int i = 0;
+      for (Entry<?> entry : multiset.entrySet()) {
+        elements[i] = entry.getElement();
+        counts[i] = entry.getCount();
+        i++;
+      }
+    }
+
+    Object readResolve() {
+      Builder<Object> builder =
+          new Builder<Object>(elements.length);
+      for (int i = 0; i < elements.length; i++) {
+        builder.addCopies(elements[i], counts[i]);
+      }
+      return builder.build();
+    }
+
+    private static final long serialVersionUID = 0;
+  }
+
+  @GwtIncompatible
   @Override
-  public int hashCode() {
-    return hashCode;
+  Object writeReplace() {
+    return new SerializedForm(this);
   }
 }

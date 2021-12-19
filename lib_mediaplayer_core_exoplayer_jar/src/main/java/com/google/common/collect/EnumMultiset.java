@@ -30,8 +30,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.ObjIntConsumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Multiset implementation specialized for enum elements, supporting all single-element operations
@@ -94,7 +93,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
     this.counts = new int[enumConstants.length];
   }
 
-  private boolean isActuallyE(@Nullable Object o) {
+  private boolean isActuallyE(@NullableDecl Object o) {
     if (o instanceof Enum) {
       Enum<?> e = (Enum<?>) o;
       int index = e.ordinal();
@@ -107,7 +106,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
    * Returns {@code element} cast to {@code E}, if it actually is a nonnull E. Otherwise, throws
    * either a NullPointerException or a ClassCastException as appropriate.
    */
-  void checkIsE(@Nullable Object element) {
+  void checkIsE(@NullableDecl Object element) {
     checkNotNull(element);
     if (!isActuallyE(element)) {
       throw new ClassCastException("Expected an " + type + " but got " + element);
@@ -125,7 +124,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
   }
 
   @Override
-  public int count(@Nullable Object element) {
+  public int count(@NullableDecl Object element) {
     if (!isActuallyE(element)) {
       return 0;
     }
@@ -157,7 +156,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
   // Modification Operations
   @CanIgnoreReturnValue
   @Override
-  public int remove(@Nullable Object element, int occurrences) {
+  public int remove(@NullableDecl Object element, int occurrences) {
     if (!isActuallyE(element)) {
       return 0;
     }
@@ -273,16 +272,6 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
         };
       }
     };
-  }
-
-  @Override
-  public void forEachEntry(ObjIntConsumer<? super E> action) {
-    checkNotNull(action);
-    for (int i = 0; i < enumConstants.length; i++) {
-      if (counts[i] > 0) {
-        action.accept(enumConstants[i], counts[i]);
-      }
-    }
   }
 
   @Override

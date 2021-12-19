@@ -31,9 +31,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Static utility methods for {@link Graph}, {@link ValueGraph}, and {@link Network} instances.
@@ -99,7 +98,10 @@ public final class Graphs {
    * cycle in the graph.
    */
   private static <N> boolean subgraphHasCycle(
-      Graph<N> graph, Map<Object, NodeVisitState> visitedNodes, N node, @Nullable N previousNode) {
+      Graph<N> graph,
+      Map<Object, NodeVisitState> visitedNodes,
+      N node,
+      @NullableDecl N previousNode) {
     NodeVisitState state = visitedNodes.get(node);
     if (state == NodeVisitState.COMPLETE) {
       return false;
@@ -126,7 +128,7 @@ public final class Graphs {
    * from B to A).
    */
   private static boolean canTraverseWithoutReusingEdge(
-      Graph<?> graph, Object nextNode, @Nullable Object previousNode) {
+      Graph<?> graph, Object nextNode, @NullableDecl Object previousNode) {
     if (graph.isDirected() || !Objects.equal(previousNode, nextNode)) {
       return true;
     }
@@ -360,22 +362,14 @@ public final class Graphs {
     }
 
     @Override
-    public Optional<V> edgeValue(N nodeU, N nodeV) {
-      return delegate().edgeValue(nodeV, nodeU); // transpose
-    }
-
-    @Override
-    public Optional<V> edgeValue(EndpointPair<N> endpoints) {
-      return delegate().edgeValue(transpose(endpoints));
-    }
-
-    @Override
-    public @Nullable V edgeValueOrDefault(N nodeU, N nodeV, @Nullable V defaultValue) {
+    @NullableDecl
+    public V edgeValueOrDefault(N nodeU, N nodeV, @NullableDecl V defaultValue) {
       return delegate().edgeValueOrDefault(nodeV, nodeU, defaultValue); // transpose
     }
 
     @Override
-    public @Nullable V edgeValueOrDefault(EndpointPair<N> endpoints, @Nullable V defaultValue) {
+    @NullableDecl
+    public V edgeValueOrDefault(EndpointPair<N> endpoints, @NullableDecl V defaultValue) {
       return delegate().edgeValueOrDefault(transpose(endpoints), defaultValue);
     }
   }
@@ -436,16 +430,6 @@ public final class Graphs {
     @Override
     public Set<E> edgesConnecting(EndpointPair<N> endpoints) {
       return delegate().edgesConnecting(transpose(endpoints));
-    }
-
-    @Override
-    public Optional<E> edgeConnecting(N nodeU, N nodeV) {
-      return delegate().edgeConnecting(nodeV, nodeU); // transpose
-    }
-
-    @Override
-    public Optional<E> edgeConnecting(EndpointPair<N> endpoints) {
-      return delegate().edgeConnecting(transpose(endpoints));
     }
 
     @Override

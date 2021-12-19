@@ -161,7 +161,7 @@ public final class ArrayListMultimap<K, V>
     stream.defaultReadObject();
     expectedValuesPerKey = DEFAULT_VALUES_PER_KEY;
     int distinctKeys = Serialization.readCount(stream);
-    Map<K, Collection<V>> map = Maps.newHashMap();
+    Map<K, Collection<V>> map = CompactHashMap.create();
     setMap(map);
     Serialization.populateMultimap(this, stream, distinctKeys);
   }

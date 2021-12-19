@@ -19,13 +19,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.ForOverride;
 import java.io.Serializable;
-import java.util.function.BiPredicate;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A strategy for determining whether two instances are considered equivalent, and for computing
  * hash codes in a manner consistent with that equivalence. Two examples of equivalences are the
  * {@linkplain #identity() identity equivalence} and the {@linkplain #equals "equals" equivalence}.
+ *
+ * <p><b>For users targeting Android API level 24 or higher:</b> This class will eventually
+ * implement {@code BiPredicate<T, T>} (as it does in the main Guava artifact), but we currently
+ * target a lower API level. In the meantime, if you have support for method references you can use
+ * an equivalence as a bi-predicate like this: {@code myEquivalence::equivalent}.
  *
  * @author Bob Lee
  * @author Ben Yu
@@ -34,7 +38,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *     source-compatible</a> since 4.0)
  */
 @GwtCompatible
-public abstract class Equivalence<T> implements BiPredicate<T, T> {
+public abstract class Equivalence<T> {
   /** Constructor for use by subclasses. */
   protected Equivalence() {}
 
@@ -55,7 +59,7 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
    * <p>Note that all calls to {@code equivalent(x, y)} are expected to return the same result as
    * long as neither {@code x} nor {@code y} is modified.
    */
-  public final boolean equivalent(@Nullable T a, @Nullable T b) {
+  public final boolean equivalent(@NullableDecl T a, @NullableDecl T b) {
     if (a == b) {
       return true;
     }
@@ -66,22 +70,8 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
   }
 
   /**
-   * @deprecated Provided only to satisfy the {@link BiPredicate} interface; use {@link #equivalent}
-   *     instead.
-   * @since 21.0
-   */
-  @Deprecated
-  @Override
-  public final boolean test(@Nullable T t, @Nullable T u) {
-    return equivalent(t, u);
-  }
-
-  /**
-   * Implemented by the user to determine whether {@code a} and {@code b} are considered equivalent,
-   * subject to the requirements specified in {@link #equivalent}.
-   *
-   * <p>This method should not be called except by {@link #equivalent}. When {@link #equivalent}
-   * calls this method, {@code a} and {@code b} are guaranteed to be distinct, non-null instances.
+   * This method should not be called except by {@link #equivalent}. When {@link #equivalent} calls
+   * this method, {@code a} and {@code b} are guaranteed to be distinct, non-null instances.
    *
    * @since 10.0 (previously, subclasses would override equivalent())
    */
@@ -105,7 +95,7 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
    *   <li>{@code hash(null)} is {@code 0}.
    * </ul>
    */
-  public final int hash(@Nullable T t) {
+  public final int hash(@NullableDecl T t) {
     if (t == null) {
       return 0;
     }
@@ -158,7 +148,7 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
    *
    * @since 10.0
    */
-  public final <S extends T> Wrapper<S> wrap(@Nullable S reference) {
+  public final <S extends T> Wrapper<S> wrap(@NullableDecl S reference) {
     return new Wrapper<S>(this, reference);
   }
 
@@ -184,15 +174,16 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
    */
   public static final class Wrapper<T> implements Serializable {
     private final Equivalence<? super T> equivalence;
-    private final @Nullable T reference;
+    @NullableDecl private final T reference;
 
-    private Wrapper(Equivalence<? super T> equivalence, @Nullable T reference) {
+    private Wrapper(Equivalence<? super T> equivalence, @NullableDecl T reference) {
       this.equivalence = checkNotNull(equivalence);
       this.reference = reference;
     }
 
     /** Returns the (possibly null) reference wrapped by this instance. */
-    public @Nullable T get() {
+    @NullableDecl
+    public T get() {
       return reference;
     }
 
@@ -202,7 +193,7 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
      * equivalence.
      */
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(@NullableDecl Object obj) {
       if (obj == this) {
         return true;
       }
@@ -264,27 +255,27 @@ public abstract class Equivalence<T> implements BiPredicate<T, T> {
    *
    * @since 10.0
    */
-  public final Predicate<T> equivalentTo(@Nullable T target) {
+  public final Predicate<T> equivalentTo(@NullableDecl T target) {
     return new EquivalentToPredicate<T>(this, target);
   }
 
   private static final class EquivalentToPredicate<T> implements Predicate<T>, Serializable {
 
     private final Equivalence<T> equivalence;
-    private final @Nullable T target;
+    @NullableDecl private final T target;
 
-    EquivalentToPredicate(Equivalence<T> equivalence, @Nullable T target) {
+    EquivalentToPredicate(Equivalence<T> equivalence, @NullableDecl T target) {
       this.equivalence = checkNotNull(equivalence);
       this.target = target;
     }
 
     @Override
-    public boolean apply(@Nullable T input) {
+    public boolean apply(@NullableDecl T input) {
       return equivalence.equivalent(input, target);
     }
 
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(@NullableDecl Object obj) {
       if (this == obj) {
         return true;
       }

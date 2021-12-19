@@ -26,7 +26,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps.IteratorBasedAbstractMap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.errorprone.annotations.DoNotCall;
 import com.google.j2objc.annotations.WeakOuter;
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -35,8 +34,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Spliterator;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Fixed-size {@link Table} implementation backed by a two-dimensional array.
@@ -190,9 +188,11 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
 
     abstract String getKeyRole();
 
-    abstract @Nullable V getValue(int index);
+    @NullableDecl
+    abstract V getValue(int index);
 
-    abstract @Nullable V setValue(int index, V newValue);
+    @NullableDecl
+    abstract V setValue(int index, V newValue);
 
     @Override
     public int size() {
@@ -234,20 +234,15 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
       };
     }
 
-    @Override
-    Spliterator<Entry<K, V>> entrySpliterator() {
-      return CollectSpliterators.indexed(size(), Spliterator.ORDERED, this::getEntry);
-    }
-
     // TODO(lowasser): consider an optimized values() implementation
 
     @Override
-    public boolean containsKey(@Nullable Object key) {
+    public boolean containsKey(@NullableDecl Object key) {
       return keyIndex.containsKey(key);
     }
 
     @Override
-    public V get(@Nullable Object key) {
+    public V get(@NullableDecl Object key) {
       Integer index = keyIndex.get(key);
       if (index == null) {
         return null;
@@ -326,7 +321,7 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
    *     to the number of allowed column keys
    */
   @CanIgnoreReturnValue
-  public V set(int rowIndex, int columnIndex, @Nullable V value) {
+  public V set(int rowIndex, int columnIndex, @NullableDecl V value) {
     // In GWT array access never throws IndexOutOfBoundsException.
     checkElementIndex(rowIndex, rowList.size());
     checkElementIndex(columnIndex, columnList.size());
@@ -360,7 +355,6 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
    * @throws UnsupportedOperationException always
    * @deprecated Use {@link #eraseAll}
    */
-  @DoNotCall("Always throws UnsupportedOperationException")
   @Override
   @Deprecated
   public void clear() {
@@ -379,7 +373,7 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
    * constructed.
    */
   @Override
-  public boolean contains(@Nullable Object rowKey, @Nullable Object columnKey) {
+  public boolean contains(@NullableDecl Object rowKey, @NullableDecl Object columnKey) {
     return containsRow(rowKey) && containsColumn(columnKey);
   }
 
@@ -388,7 +382,7 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
    * table was constructed.
    */
   @Override
-  public boolean containsColumn(@Nullable Object columnKey) {
+  public boolean containsColumn(@NullableDecl Object columnKey) {
     return columnKeyToIndex.containsKey(columnKey);
   }
 
@@ -397,12 +391,12 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
    * constructed.
    */
   @Override
-  public boolean containsRow(@Nullable Object rowKey) {
+  public boolean containsRow(@NullableDecl Object rowKey) {
     return rowKeyToIndex.containsKey(rowKey);
   }
 
   @Override
-  public boolean containsValue(@Nullable Object value) {
+  public boolean containsValue(@NullableDecl Object value) {
     for (V[] row : array) {
       for (V element : row) {
         if (Objects.equal(value, element)) {
@@ -414,7 +408,7 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
   }
 
   @Override
-  public V get(@Nullable Object rowKey, @Nullable Object columnKey) {
+  public V get(@NullableDecl Object rowKey, @NullableDecl Object columnKey) {
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     return (rowIndex == null || columnIndex == null) ? null : at(rowIndex, columnIndex);
@@ -436,7 +430,7 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
    */
   @CanIgnoreReturnValue
   @Override
-  public V put(R rowKey, C columnKey, @Nullable V value) {
+  public V put(R rowKey, C columnKey, @NullableDecl V value) {
     checkNotNull(rowKey);
     checkNotNull(columnKey);
     Integer rowIndex = rowKeyToIndex.get(rowKey);
@@ -472,7 +466,6 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
    * @throws UnsupportedOperationException always
    * @deprecated Use {@link #erase}
    */
-  @DoNotCall("Always throws UnsupportedOperationException")
   @CanIgnoreReturnValue
   @Override
   @Deprecated
@@ -494,7 +487,7 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
    *     for the keys
    */
   @CanIgnoreReturnValue
-  public V erase(@Nullable Object rowKey, @Nullable Object columnKey) {
+  public V erase(@NullableDecl Object rowKey, @NullableDecl Object columnKey) {
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     if (rowIndex == null || columnIndex == null) {
@@ -534,12 +527,6 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
         return getCell(index);
       }
     };
-  }
-
-  @Override
-  Spliterator<Cell<R, C, V>> cellSpliterator() {
-    return CollectSpliterators.indexed(
-        size(), Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.DISTINCT, this::getCell);
   }
 
   private Cell<R, C, V> getCell(final int index) {
@@ -623,7 +610,7 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
     return columnKeyToIndex.keySet();
   }
 
-  private transient @Nullable ColumnMap columnMap;
+  @NullableDecl private transient ColumnMap columnMap;
 
   @Override
   public Map<C, Map<R, V>> columnMap() {
@@ -711,7 +698,7 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
     return rowKeyToIndex.keySet();
   }
 
-  private transient @Nullable RowMap rowMap;
+  @NullableDecl private transient RowMap rowMap;
 
   @Override
   public Map<R, Map<C, V>> rowMap() {
@@ -768,11 +755,6 @@ public final class ArrayTable<R, C, V> extends AbstractTable<R, C, V> implements
         return getValue(index);
       }
     };
-  }
-
-  @Override
-  Spliterator<V> valuesSpliterator() {
-    return CollectSpliterators.indexed(size(), Spliterator.ORDERED, this::getValue);
   }
 
   private static final long serialVersionUID = 0;

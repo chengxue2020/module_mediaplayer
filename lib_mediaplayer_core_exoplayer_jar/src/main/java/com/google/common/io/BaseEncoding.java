@@ -35,7 +35,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A binary encoding scheme for reversibly translating between byte sequences and printable ASCII
@@ -190,10 +190,11 @@ public abstract class BaseEncoding {
   private static byte[] extract(byte[] result, int length) {
     if (length == result.length) {
       return result;
+    } else {
+      byte[] trunc = new byte[length];
+      System.arraycopy(result, 0, trunc, 0, length);
+      return trunc;
     }
-    byte[] trunc = new byte[length];
-    System.arraycopy(result, 0, trunc, 0, length);
-    return trunc;
   }
 
   /**
@@ -225,8 +226,7 @@ public abstract class BaseEncoding {
    *
    * @throws DecodingException if the input is not a valid encoded string according to this
    *     encoding.
-   */
-  final byte[] decodeChecked(CharSequence chars)
+   */ final byte[] decodeChecked(CharSequence chars)
       throws DecodingException {
     chars = trimTrailingPadding(chars);
     byte[] tmp = new byte[maxDecodedSize(chars.length())];
@@ -516,25 +516,27 @@ public abstract class BaseEncoding {
     Alphabet upperCase() {
       if (!hasLowerCase()) {
         return this;
+      } else {
+        checkState(!hasUpperCase(), "Cannot call upperCase() on a mixed-case alphabet");
+        char[] upperCased = new char[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+          upperCased[i] = Ascii.toUpperCase(chars[i]);
+        }
+        return new Alphabet(name + ".upperCase()", upperCased);
       }
-      checkState(!hasUpperCase(), "Cannot call upperCase() on a mixed-case alphabet");
-      char[] upperCased = new char[chars.length];
-      for (int i = 0; i < chars.length; i++) {
-        upperCased[i] = Ascii.toUpperCase(chars[i]);
-      }
-      return new Alphabet(name + ".upperCase()", upperCased);
     }
 
     Alphabet lowerCase() {
       if (!hasUpperCase()) {
         return this;
+      } else {
+        checkState(!hasLowerCase(), "Cannot call lowerCase() on a mixed-case alphabet");
+        char[] lowerCased = new char[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+          lowerCased[i] = Ascii.toLowerCase(chars[i]);
+        }
+        return new Alphabet(name + ".lowerCase()", lowerCased);
       }
-      checkState(!hasLowerCase(), "Cannot call lowerCase() on a mixed-case alphabet");
-      char[] lowerCased = new char[chars.length];
-      for (int i = 0; i < chars.length; i++) {
-        lowerCased[i] = Ascii.toLowerCase(chars[i]);
-      }
-      return new Alphabet(name + ".lowerCase()", lowerCased);
     }
 
     public boolean matches(char c) {
@@ -547,7 +549,7 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    public boolean equals(@Nullable Object other) {
+    public boolean equals(@NullableDecl Object other) {
       if (other instanceof Alphabet) {
         Alphabet that = (Alphabet) other;
         return Arrays.equals(this.chars, that.chars);
@@ -565,13 +567,13 @@ public abstract class BaseEncoding {
     // TODO(lowasser): provide a useful toString
     final Alphabet alphabet;
 
-    final @Nullable Character paddingChar;
+    @NullableDecl final Character paddingChar;
 
-    StandardBaseEncoding(String name, String alphabetChars, @Nullable Character paddingChar) {
+    StandardBaseEncoding(String name, String alphabetChars, @NullableDecl Character paddingChar) {
       this(new Alphabet(name, alphabetChars.toCharArray()), paddingChar);
     }
 
-    StandardBaseEncoding(Alphabet alphabet, @Nullable Character paddingChar) {
+    StandardBaseEncoding(Alphabet alphabet, @NullableDecl Character paddingChar) {
       this.alphabet = checkNotNull(alphabet);
       checkArgument(
           paddingChar == null || !alphabet.matches(paddingChar),
@@ -829,8 +831,8 @@ public abstract class BaseEncoding {
       return new SeparatedBaseEncoding(this, separator, afterEveryChars);
     }
 
-    @LazyInit private transient @Nullable BaseEncoding upperCase;
-    @LazyInit private transient @Nullable BaseEncoding lowerCase;
+    @LazyInit @NullableDecl private transient BaseEncoding upperCase;
+    @LazyInit @NullableDecl private transient BaseEncoding lowerCase;
 
     @Override
     public BaseEncoding upperCase() {
@@ -852,7 +854,7 @@ public abstract class BaseEncoding {
       return result;
     }
 
-    BaseEncoding newInstance(Alphabet alphabet, @Nullable Character paddingChar) {
+    BaseEncoding newInstance(Alphabet alphabet, @NullableDecl Character paddingChar) {
       return new StandardBaseEncoding(alphabet, paddingChar);
     }
 
@@ -871,7 +873,7 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    public boolean equals(@Nullable Object other) {
+    public boolean equals(@NullableDecl Object other) {
       if (other instanceof StandardBaseEncoding) {
         StandardBaseEncoding that = (StandardBaseEncoding) other;
         return this.alphabet.equals(that.alphabet)
@@ -928,17 +930,17 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    BaseEncoding newInstance(Alphabet alphabet, @Nullable Character paddingChar) {
+    BaseEncoding newInstance(Alphabet alphabet, @NullableDecl Character paddingChar) {
       return new Base16Encoding(alphabet);
     }
   }
 
   static final class Base64Encoding extends StandardBaseEncoding {
-    Base64Encoding(String name, String alphabetChars, @Nullable Character paddingChar) {
+    Base64Encoding(String name, String alphabetChars, @NullableDecl Character paddingChar) {
       this(new Alphabet(name, alphabetChars.toCharArray()), paddingChar);
     }
 
-    private Base64Encoding(Alphabet alphabet, @Nullable Character paddingChar) {
+    private Base64Encoding(Alphabet alphabet, @NullableDecl Character paddingChar) {
       super(alphabet, paddingChar);
       checkArgument(alphabet.chars.length == 64);
     }
@@ -985,7 +987,7 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    BaseEncoding newInstance(Alphabet alphabet, @Nullable Character paddingChar) {
+    BaseEncoding newInstance(Alphabet alphabet, @NullableDecl Character paddingChar) {
       return new Base64Encoding(alphabet, paddingChar);
     }
   }
@@ -1036,12 +1038,13 @@ public abstract class BaseEncoding {
       }
 
       @Override
-      public Appendable append(@Nullable CharSequence chars, int off, int len) throws IOException {
+      public Appendable append(@NullableDecl CharSequence chars, int off, int len)
+          throws IOException {
         throw new UnsupportedOperationException();
       }
 
       @Override
-      public Appendable append(@Nullable CharSequence chars) throws IOException {
+      public Appendable append(@NullableDecl CharSequence chars) throws IOException {
         throw new UnsupportedOperationException();
       }
     };

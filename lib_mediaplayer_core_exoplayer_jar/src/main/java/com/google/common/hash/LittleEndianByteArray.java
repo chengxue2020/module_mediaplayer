@@ -164,18 +164,18 @@ final class LittleEndianByteArray {
      *
      * @return a sun.misc.Unsafe instance if successful
      */
-    private static sun.misc.Unsafe getUnsafe() {
+    private static Unsafe getUnsafe() {
       try {
-        return sun.misc.Unsafe.getUnsafe();
+        return Unsafe.getUnsafe();
       } catch (SecurityException tryReflectionInstead) {
         // We'll try reflection instead.
       }
       try {
         return java.security.AccessController.doPrivileged(
-            new java.security.PrivilegedExceptionAction<sun.misc.Unsafe>() {
+            new java.security.PrivilegedExceptionAction<Unsafe>() {
               @Override
-              public sun.misc.Unsafe run() throws Exception {
-                Class<sun.misc.Unsafe> k = sun.misc.Unsafe.class;
+              public Unsafe run() throws Exception {
+                Class<Unsafe> k = Unsafe.class;
                 for (java.lang.reflect.Field f : k.getDeclaredFields()) {
                   f.setAccessible(true);
                   Object x = f.get(null);

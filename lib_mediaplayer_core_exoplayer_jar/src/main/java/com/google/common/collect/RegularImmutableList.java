@@ -16,10 +16,10 @@
 
 package com.google.common.collect;
 
+import static com.google.common.base.Preconditions.checkElementIndex;
+
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.VisibleForTesting;
-import java.util.Spliterator;
-import java.util.Spliterators;
 
 /**
  * Implementation of {@link ImmutableList} backed by a simple array.
@@ -29,17 +29,19 @@ import java.util.Spliterators;
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 class RegularImmutableList<E> extends ImmutableList<E> {
-  static final ImmutableList<Object> EMPTY = new RegularImmutableList<>(new Object[0]);
+  static final ImmutableList<Object> EMPTY = new RegularImmutableList<>(new Object[0], 0);
 
   @VisibleForTesting final transient Object[] array;
+  private final transient int size;
 
-  RegularImmutableList(Object[] array) {
+  RegularImmutableList(Object[] array, int size) {
     this.array = array;
+    this.size = size;
   }
 
   @Override
   public int size() {
-    return array.length;
+    return size;
   }
 
   @Override
@@ -59,33 +61,21 @@ class RegularImmutableList<E> extends ImmutableList<E> {
 
   @Override
   int internalArrayEnd() {
-    return array.length;
+    return size;
   }
 
   @Override
   int copyIntoArray(Object[] dst, int dstOff) {
-    System.arraycopy(array, 0, dst, dstOff, array.length);
-    return dstOff + array.length;
+    System.arraycopy(array, 0, dst, dstOff, size);
+    return dstOff + size;
   }
 
   // The fake cast to E is safe because the creation methods only allow E's
   @Override
   @SuppressWarnings("unchecked")
   public E get(int index) {
+    checkElementIndex(index, size);
     return (E) array[index];
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public UnmodifiableListIterator<E> listIterator(int index) {
-    // for performance
-    // The fake cast to E is safe because the creation methods only allow E's
-    return (UnmodifiableListIterator<E>) Iterators.forArray(array, 0, array.length, index);
-  }
-
-  @Override
-  public Spliterator<E> spliterator() {
-    return Spliterators.spliterator(array, SPLITERATOR_CHARACTERISTICS);
   }
 
   // TODO(lowasser): benchmark optimizations for equals() and see if they're worthwhile

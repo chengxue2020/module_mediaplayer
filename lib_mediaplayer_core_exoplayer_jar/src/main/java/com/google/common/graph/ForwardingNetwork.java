@@ -16,7 +16,6 @@
 
 package com.google.common.graph;
 
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -128,16 +127,6 @@ abstract class ForwardingNetwork<N, E> extends AbstractNetwork<N, E> {
   @Override
   public Set<E> edgesConnecting(EndpointPair<N> endpoints) {
     return delegate().edgesConnecting(endpoints);
-  }
-
-  @Override
-  public Optional<E> edgeConnecting(N nodeU, N nodeV) {
-    return delegate().edgeConnecting(nodeU, nodeV);
-  }
-
-  @Override
-  public Optional<E> edgeConnecting(EndpointPair<N> endpoints) {
-    return delegate().edgeConnecting(endpoints);
   }
 
   @Override

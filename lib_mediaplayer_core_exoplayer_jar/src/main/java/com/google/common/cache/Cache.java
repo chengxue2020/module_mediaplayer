@@ -18,14 +18,13 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ExecutionError;
 import com.google.common.util.concurrent.UncheckedExecutionException;
-import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.CompatibleWith;
 import com.google.errorprone.annotations.DoNotMock;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A semi-persistent mapping from keys to values. Cache entries are manually added using {@link
@@ -48,7 +47,7 @@ public interface Cache<K, V> {
    *
    * @since 11.0
    */
-  @Nullable
+  @NullableDecl
   V getIfPresent(@CompatibleWith("K") Object key);
 
   /**
@@ -142,7 +141,6 @@ public interface Cache<K, V> {
   void invalidateAll();
 
   /** Returns the approximate number of entries in this cache. */
-  @CheckReturnValue
   long size();
 
   /**
@@ -156,7 +154,6 @@ public interface Cache<K, V> {
    * all values is returned.
    *
    */
-  @CheckReturnValue
   CacheStats stats();
 
   /**
@@ -166,8 +163,12 @@ public interface Cache<K, V> {
    * <p>Iterators from the returned map are at least <i>weakly consistent</i>: they are safe for
    * concurrent use, but if the cache is modified (including by eviction) after the iterator is
    * created, it is undefined which of the changes (if any) will be reflected in that iterator.
+   *
+   * <p><b>Warning to users of Java 8+:</b> do not call any of the new <i>default methods</i> that
+   * have been newly added to {@link ConcurrentMap}! These are marked with "Since: 1.8" in the
+   * {@code ConcurrentMap} documentation. They will not function correctly and it is impossible for
+   * Guava to fix them until Guava is ready to <i>require</i> Java 8 for all users.
    */
-  @CheckReturnValue
   ConcurrentMap<K, V> asMap();
 
   /**

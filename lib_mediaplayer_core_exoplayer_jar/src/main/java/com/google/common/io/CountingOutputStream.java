@@ -16,6 +16,7 @@ package com.google.common.io;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtIncompatible;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.io.OutputStream;
  * @author Chris Nokleberg
  * @since 1.0
  */
+@Beta
 @GwtIncompatible
 public final class CountingOutputStream extends FilterOutputStream {
 

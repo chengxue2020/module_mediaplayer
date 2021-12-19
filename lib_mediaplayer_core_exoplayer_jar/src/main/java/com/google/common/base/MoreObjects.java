@@ -15,11 +15,14 @@
 package com.google.common.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.logging.Level.WARNING;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.Arrays;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import java.util.logging.Logger;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Helper functions that operate on any {@code Object}, and are not already provided in {@link
@@ -54,7 +57,7 @@ public final class MoreObjects {
    * @throws NullPointerException if both {@code first} and {@code second} are null
    * @since 18.0 (since 3.0 as {@code Objects.firstNonNull()}).
    */
-  public static <T> T firstNonNull(@Nullable T first, @Nullable T second) {
+  public static <T> T firstNonNull(@NullableDecl T first, @NullableDecl T second) {
     if (first != null) {
       return first;
     }
@@ -141,6 +144,38 @@ public final class MoreObjects {
    * @since 18.0 (since 2.0 as {@code Objects.ToStringHelper}).
    */
   public static final class ToStringHelper {
+    @GuardedBy("ToStringHelper.class")
+    private static boolean performedJava8CompatibilityCheck;
+
+    private static void java8CompatibilityCheck() {
+      @SuppressWarnings("GuardedBy")
+      boolean racyReadForDoubleCheckedLock = performedJava8CompatibilityCheck;
+      if (racyReadForDoubleCheckedLock) {
+        return;
+      }
+      synchronized (ToStringHelper.class) {
+        if (performedJava8CompatibilityCheck) {
+          return;
+        }
+        performedJava8CompatibilityCheck = true;
+      }
+
+      try {
+        Java8Usage.performCheck();
+      } catch (Throwable underlying) {
+        Exception toLog =
+            new Exception(
+                "Guava will drop support for Java 7 in 2021. Please let us know if this will cause"
+                    + " you problems: https://github.com/google/guava/issues/5269",
+                underlying);
+        Logger.getLogger(ToStringHelper.class.getName())
+            .log(
+                WARNING,
+                "Java 7 compatibility warning: See https://github.com/google/guava/issues/5269",
+                toLog);
+      }
+    }
+
     private final String className;
     private final ValueHolder holderHead = new ValueHolder();
     private ValueHolder holderTail = holderHead;
@@ -148,6 +183,7 @@ public final class MoreObjects {
 
     /** Use {@link MoreObjects#toStringHelper(Object)} to create an instance. */
     private ToStringHelper(String className) {
+      java8CompatibilityCheck();
       this.className = checkNotNull(className);
     }
 
@@ -170,7 +206,7 @@ public final class MoreObjects {
      * called, in which case this name/value pair will not be added.
      */
     @CanIgnoreReturnValue
-    public ToStringHelper add(String name, @Nullable Object value) {
+    public ToStringHelper add(String name, @NullableDecl Object value) {
       return addHolder(name, value);
     }
 
@@ -241,7 +277,7 @@ public final class MoreObjects {
      * readable name.
      */
     @CanIgnoreReturnValue
-    public ToStringHelper addValue(@Nullable Object value) {
+    public ToStringHelper addValue(@NullableDecl Object value) {
       return addHolder(value);
     }
 
@@ -366,13 +402,13 @@ public final class MoreObjects {
       return valueHolder;
     }
 
-    private ToStringHelper addHolder(@Nullable Object value) {
+    private ToStringHelper addHolder(@NullableDecl Object value) {
       ValueHolder valueHolder = addHolder();
       valueHolder.value = value;
       return this;
     }
 
-    private ToStringHelper addHolder(String name, @Nullable Object value) {
+    private ToStringHelper addHolder(String name, @NullableDecl Object value) {
       ValueHolder valueHolder = addHolder();
       valueHolder.value = value;
       valueHolder.name = checkNotNull(name);
@@ -380,9 +416,9 @@ public final class MoreObjects {
     }
 
     private static final class ValueHolder {
-      @Nullable String name;
-      @Nullable Object value;
-      @Nullable ValueHolder next;
+      @NullableDecl String name;
+      @NullableDecl Object value;
+      @NullableDecl ValueHolder next;
     }
   }
 

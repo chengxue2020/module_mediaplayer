@@ -24,22 +24,14 @@ import static com.google.common.collect.Maps.keyOrNull;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.errorprone.annotations.DoNotCall;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.SortedMap;
-import java.util.Spliterator;
 import java.util.TreeMap;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A {@link NavigableMap} whose contents will never change, with many other important properties
@@ -61,44 +53,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtCompatible(serializable = true, emulated = true)
 public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxverideShim<K, V>
     implements NavigableMap<K, V> {
-  /**
-   * Returns a {@link Collector} that accumulates elements into an {@code ImmutableSortedMap} whose
-   * keys and values are the result of applying the provided mapping functions to the input
-   * elements. The generated map is sorted by the specified comparator.
-   *
-   * <p>If the mapped keys contain duplicates (according to the specified comparator), an {@code
-   * IllegalArgumentException} is thrown when the collection operation is performed. (This differs
-   * from the {@code Collector} returned by {@link Collectors#toMap(Function, Function)}, which
-   * throws an {@code IllegalStateException}.)
-   *
-   * @since 21.0
-   */
-  public static <T, K, V> Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-      Comparator<? super K> comparator,
-      Function<? super T, ? extends K> keyFunction,
-      Function<? super T, ? extends V> valueFunction) {
-    return CollectCollectors.toImmutableSortedMap(comparator, keyFunction, valueFunction);
-  }
-
-  /**
-   * Returns a {@link Collector} that accumulates elements into an {@code ImmutableSortedMap} whose
-   * keys and values are the result of applying the provided mapping functions to the input
-   * elements.
-   *
-   * <p>If the mapped keys contain duplicates (according to the comparator), the the values are
-   * merged using the specified merging function. Entries will appear in the encounter order of the
-   * first occurrence of the key.
-   *
-   * @since 21.0
-   */
-  public static <T, K, V> Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-      Comparator<? super K> comparator,
-      Function<? super T, ? extends K> keyFunction,
-      Function<? super T, ? extends V> valueFunction,
-      BinaryOperator<V> mergeFunction) {
-    return CollectCollectors.toImmutableSortedMap(
-        comparator, keyFunction, valueFunction, mergeFunction);
-  }
 
   /*
    * TODO(kevinb): Confirm that ImmutableSortedMap is faster to construct and
@@ -233,8 +187,8 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
   }
 
   /**
-   * Returns an immutable map containing the given entries, with keys sorted by their natural
-   * ordering.
+   * Returns an immutable map containing the given entries, with keys sorted by the provided
+   * comparator.
    *
    * <p>This method is not type-safe, as it may be called on a map with keys that are not mutually
    * comparable.
@@ -389,8 +343,8 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
           }
         }
         return new ImmutableSortedMap<>(
-            new RegularImmutableSortedSet<K>(new RegularImmutableList<K>(keys), comparator),
-            new RegularImmutableList<V>(values));
+            new RegularImmutableSortedSet<K>(ImmutableList.<K>asImmutableList(keys), comparator),
+            ImmutableList.<V>asImmutableList(values));
     }
   }
 
@@ -444,6 +398,8 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
    * @since 2.0
    */
   public static class Builder<K, V> extends ImmutableMap.Builder<K, V> {
+    private transient Object[] keys;
+    private transient Object[] values;
     private final Comparator<? super K> comparator;
 
     /**
@@ -452,7 +408,21 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
      */
     @SuppressWarnings("unchecked")
     public Builder(Comparator<? super K> comparator) {
+      this(comparator, ImmutableCollection.Builder.DEFAULT_INITIAL_CAPACITY);
+    }
+
+    private Builder(Comparator<? super K> comparator, int initialCapacity) {
       this.comparator = checkNotNull(comparator);
+      this.keys = new Object[initialCapacity];
+      this.values = new Object[initialCapacity];
+    }
+
+    private void ensureCapacity(int minCapacity) {
+      if (minCapacity > keys.length) {
+        int newCapacity = ImmutableCollection.Builder.expandedCapacity(keys.length, minCapacity);
+        this.keys = Arrays.copyOf(keys, newCapacity);
+        this.values = Arrays.copyOf(values, newCapacity);
+      }
     }
 
     /**
@@ -463,7 +433,11 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
     @CanIgnoreReturnValue
     @Override
     public Builder<K, V> put(K key, V value) {
-      super.put(key, value);
+      ensureCapacity(size + 1);
+      checkEntryNotNull(key, value);
+      keys[size] = key;
+      values[size] = value;
+      size++;
       return this;
     }
 
@@ -521,14 +495,16 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
     @Beta
     @Override
     @Deprecated
-    @DoNotCall("Always throws UnsupportedOperationException")
-    public final Builder<K, V> orderEntriesByValue(Comparator<? super V> valueComparator) {
+    public Builder<K, V> orderEntriesByValue(Comparator<? super V> valueComparator) {
       throw new UnsupportedOperationException("Not available on ImmutableSortedMap.Builder");
     }
 
-    @Override
-    Builder<K, V> combine(ImmutableMap.Builder<K, V> other) {
-      super.combine(other);
+    @CanIgnoreReturnValue
+    Builder<K, V> combine(Builder<K, V> other) {
+      ensureCapacity(size + other.size);
+      System.arraycopy(other.keys, 0, this.keys, this.size, other.size);
+      System.arraycopy(other.values, 0, this.values, this.size, other.size);
+      size += other.size;
       return this;
     }
 
@@ -544,9 +520,31 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
         case 0:
           return emptyMap(comparator);
         case 1:
-          return of(comparator, entries[0].getKey(), entries[0].getValue());
+          return of(comparator, (K) keys[0], (V) values[0]);
         default:
-          return fromEntries(comparator, false, entries, size);
+          Object[] sortedKeys = Arrays.copyOf(keys, size);
+          Arrays.sort((K[]) sortedKeys, comparator);
+          Object[] sortedValues = new Object[size];
+
+          // We might, somehow, be able to reorder values in-place.  But it doesn't seem like
+          // there's a way around creating the separate sortedKeys array, and if we're allocating
+          // one array of size n, we might as well allocate two -- to say nothing of the allocation
+          // done in Arrays.sort.
+          for (int i = 0; i < size; i++) {
+            if (i > 0 && comparator.compare((K) sortedKeys[i - 1], (K) sortedKeys[i]) == 0) {
+              throw new IllegalArgumentException(
+                  "keys required to be distinct but compared as equal: "
+                      + sortedKeys[i - 1]
+                      + " and "
+                      + sortedKeys[i]);
+            }
+            int index = Arrays.binarySearch((K[]) sortedKeys, (K) keys[i], comparator);
+            sortedValues[index] = values[i];
+          }
+          return new ImmutableSortedMap<K, V>(
+              new RegularImmutableSortedSet<K>(
+                  ImmutableList.<K>asImmutableList(sortedKeys), comparator),
+              ImmutableList.<V>asImmutableList(sortedValues));
       }
     }
   }
@@ -574,16 +572,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
   }
 
   @Override
-  public void forEach(BiConsumer<? super K, ? super V> action) {
-    checkNotNull(action);
-    ImmutableList<K> keyList = keySet.asList();
-    for (int i = 0; i < size(); i++) {
-      action.accept(keyList.get(i), valueList.get(i));
-    }
-  }
-
-  @Override
-  public V get(@Nullable Object key) {
+  public V get(@NullableDecl Object key) {
     int index = keySet.indexOf(key);
     return (index == -1) ? null : valueList.get(index);
   }
@@ -608,18 +597,8 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
       }
 
       @Override
-      public Spliterator<Entry<K, V>> spliterator() {
-        return asList().spliterator();
-      }
-
-      @Override
-      public void forEach(Consumer<? super Entry<K, V>> action) {
-        asList().forEach(action);
-      }
-
-      @Override
       ImmutableList<Entry<K, V>> createAsList() {
-        return new ImmutableAsList<Entry<K, V>>() {
+        return new ImmutableList<Entry<K, V>>() {
           @Override
           public Entry<K, V> get(int index) {
             return new AbstractMap.SimpleImmutableEntry<>(
@@ -627,14 +606,13 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
           }
 
           @Override
-          public Spliterator<Entry<K, V>> spliterator() {
-            return CollectSpliterators.indexed(
-                size(), ImmutableSet.SPLITERATOR_CHARACTERISTICS, this::get);
+          boolean isPartialView() {
+            return true;
           }
 
           @Override
-          ImmutableCollection<Entry<K, V>> delegateCollection() {
-            return EntrySet.this;
+          public int size() {
+            return ImmutableSortedMap.this.size();
           }
         };
       }
@@ -863,7 +841,6 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final Entry<K, V> pollFirstEntry() {
     throw new UnsupportedOperationException();
   }
@@ -877,7 +854,6 @@ public final class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxveride
   @CanIgnoreReturnValue
   @Deprecated
   @Override
-  @DoNotCall("Always throws UnsupportedOperationException")
   public final Entry<K, V> pollLastEntry() {
     throw new UnsupportedOperationException();
   }

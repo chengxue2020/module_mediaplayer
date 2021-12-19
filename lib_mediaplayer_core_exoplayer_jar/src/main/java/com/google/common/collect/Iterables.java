@@ -36,10 +36,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.RandomAccess;
 import java.util.Set;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * An assortment of mainly legacy static utility methods that operate on or return objects of type
@@ -47,7 +44,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * in the {@link Iterators} class.
  *
  * <p><b>Java 8 users:</b> several common uses for this class are now more comprehensively addressed
- * by the new {@link Stream} library. Read the method documentation below for
+ * by the new {@link java.util.stream.Stream} library. Read the method documentation below for
  * comparisons. This class is not being deprecated, but we gently encourage you to migrate to
  * streams.
  *
@@ -102,17 +99,6 @@ public final class Iterables {
     }
 
     @Override
-    public void forEach(Consumer<? super T> action) {
-      iterable.forEach(action);
-    }
-
-    @SuppressWarnings("unchecked") // safe upcast, assuming no one has a crazy Spliterator subclass
-    @Override
-    public Spliterator<T> spliterator() {
-      return (Spliterator<T>) iterable.spliterator();
-    }
-
-    @Override
     public String toString() {
       return iterable.toString();
     }
@@ -132,7 +118,7 @@ public final class Iterables {
    * cases where {@link Collection#contains} might throw {@link NullPointerException} or {@link
    * ClassCastException}.
    */
-  public static boolean contains(Iterable<?> iterable, @Nullable Object element) {
+  public static boolean contains(Iterable<?> iterable, @NullableDecl Object element) {
     if (iterable instanceof Collection) {
       Collection<?> collection = (Collection<?>) iterable;
       return Collections2.safeContains(collection, element);
@@ -181,9 +167,6 @@ public final class Iterables {
    * The behavior of this method is not specified if {@code predicate} is dependent on {@code
    * removeFrom}.
    *
-   * <p><b>Java 8 users:</b> if {@code removeFrom} is a {@link Collection}, use {@code
-   * removeFrom.removeIf(predicate)} instead.
-   *
    * @param removeFrom the iterable to (potentially) remove elements from
    * @param predicate a predicate that determines whether an element should be removed
    * @return {@code true} if any elements were removed from the iterable
@@ -192,15 +175,70 @@ public final class Iterables {
    */
   @CanIgnoreReturnValue
   public static <T> boolean removeIf(Iterable<T> removeFrom, Predicate<? super T> predicate) {
-    if (removeFrom instanceof Collection) {
-      return ((Collection<T>) removeFrom).removeIf(predicate);
+    if (removeFrom instanceof RandomAccess && removeFrom instanceof List) {
+      return removeIfFromRandomAccessList((List<T>) removeFrom, checkNotNull(predicate));
     }
     return Iterators.removeIf(removeFrom.iterator(), predicate);
   }
 
+  private static <T> boolean removeIfFromRandomAccessList(
+      List<T> list, Predicate<? super T> predicate) {
+    // Note: Not all random access lists support set(). Additionally, it's possible
+    // for a list to reject setting an element, such as when the list does not permit
+    // duplicate elements. For both of those cases,  we need to fall back to a slower
+    // implementation.
+    int from = 0;
+    int to = 0;
+
+    for (; from < list.size(); from++) {
+      T element = list.get(from);
+      if (!predicate.apply(element)) {
+        if (from > to) {
+          try {
+            list.set(to, element);
+          } catch (UnsupportedOperationException e) {
+            slowRemoveIfForRemainingElements(list, predicate, to, from);
+            return true;
+          } catch (IllegalArgumentException e) {
+            slowRemoveIfForRemainingElements(list, predicate, to, from);
+            return true;
+          }
+        }
+        to++;
+      }
+    }
+
+    // Clear the tail of any remaining items
+    list.subList(to, list.size()).clear();
+    return from != to;
+  }
+
+  private static <T> void slowRemoveIfForRemainingElements(
+      List<T> list, Predicate<? super T> predicate, int to, int from) {
+    // Here we know that:
+    // * (to < from) and that both are valid indices.
+    // * Everything with (index < to) should be kept.
+    // * Everything with (to <= index < from) should be removed.
+    // * The element with (index == from) should be kept.
+    // * Everything with (index > from) has not been checked yet.
+
+    // Check from the end of the list backwards (minimize expected cost of
+    // moving elements when remove() is called). Stop before 'from' because
+    // we already know that should be kept.
+    for (int n = list.size() - 1; n > from; n--) {
+      if (predicate.apply(list.get(n))) {
+        list.remove(n);
+      }
+    }
+    // And now remove everything in the range [to, from) (going backwards).
+    for (int n = from - 1; n >= to; n--) {
+      list.remove(n);
+    }
+  }
+
   /** Removes and returns the first matching element, or returns {@code null} if there is none. */
-  static <T> @Nullable T removeFirstMatching(
-      Iterable<T> removeFrom, Predicate<? super T> predicate) {
+  @NullableDecl
+  static <T> T removeFirstMatching(Iterable<T> removeFrom, Predicate<? super T> predicate) {
     checkNotNull(predicate);
     Iterator<T> iterator = removeFrom.iterator();
     while (iterator.hasNext()) {
@@ -263,8 +301,8 @@ public final class Iterables {
    *
    * @throws IllegalArgumentException if the iterator contains multiple elements
    */
-  public static <T> @Nullable T getOnlyElement(
-      Iterable<? extends T> iterable, @Nullable T defaultValue) {
+  @NullableDecl
+  public static <T> T getOnlyElement(Iterable<? extends T> iterable, @NullableDecl T defaultValue) {
     return Iterators.getOnlyElement(iterable.iterator(), defaultValue);
   }
 
@@ -331,7 +369,7 @@ public final class Iterables {
    * @see java.util.Collections#frequency(Collection, Object) Collections.frequency(Collection,
    *     Object)
    */
-  public static int frequency(Iterable<?> iterable, @Nullable Object element) {
+  public static int frequency(Iterable<?> iterable, @NullableDecl Object element) {
     if ((iterable instanceof Multiset)) {
       return ((Multiset<?>) iterable).count(element);
     } else if ((iterable instanceof Set)) {
@@ -364,11 +402,6 @@ public final class Iterables {
       @Override
       public Iterator<T> iterator() {
         return Iterators.cycle(iterable);
-      }
-
-      @Override
-      public Spliterator<T> spliterator() {
-        return Stream.generate(() -> iterable).flatMap(Streams::stream).spliterator();
       }
 
       @Override
@@ -558,22 +591,6 @@ public final class Iterables {
       public Iterator<T> iterator() {
         return Iterators.filter(unfiltered.iterator(), retainIfTrue);
       }
-
-      @Override
-      public void forEach(Consumer<? super T> action) {
-        checkNotNull(action);
-        unfiltered.forEach(
-            (T a) -> {
-              if (retainIfTrue.test(a)) {
-                action.accept(a);
-              }
-            });
-      }
-
-      @Override
-      public Spliterator<T> spliterator() {
-        return CollectSpliterators.filter(unfiltered.spliterator(), retainIfTrue);
-      }
     };
   }
 
@@ -641,8 +658,11 @@ public final class Iterables {
    *
    * @since 7.0
    */
-  public static <T> @Nullable T find(
-      Iterable<? extends T> iterable, Predicate<? super T> predicate, @Nullable T defaultValue) {
+  @NullableDecl
+  public static <T> T find(
+      Iterable<? extends T> iterable,
+      Predicate<? super T> predicate,
+      @NullableDecl T defaultValue) {
     return Iterators.find(iterable.iterator(), predicate, defaultValue);
   }
 
@@ -697,17 +717,6 @@ public final class Iterables {
       public Iterator<T> iterator() {
         return Iterators.transform(fromIterable.iterator(), function);
       }
-
-      @Override
-      public void forEach(Consumer<? super T> action) {
-        checkNotNull(action);
-        fromIterable.forEach((F f) -> action.accept(function.apply(f)));
-      }
-
-      @Override
-      public Spliterator<T> spliterator() {
-        return CollectSpliterators.map(fromIterable.spliterator(), function);
-      }
     };
   }
 
@@ -744,8 +753,9 @@ public final class Iterables {
    * @throws IndexOutOfBoundsException if {@code position} is negative
    * @since 4.0
    */
-  public static <T> @Nullable T get(
-      Iterable<? extends T> iterable, int position, @Nullable T defaultValue) {
+  @NullableDecl
+  public static <T> T get(
+      Iterable<? extends T> iterable, int position, @NullableDecl T defaultValue) {
     checkNotNull(iterable);
     Iterators.checkNonnegative(position);
     if (iterable instanceof List) {
@@ -775,7 +785,8 @@ public final class Iterables {
    * @return the first element of {@code iterable} or the default value
    * @since 7.0
    */
-  public static <T> @Nullable T getFirst(Iterable<? extends T> iterable, @Nullable T defaultValue) {
+  @NullableDecl
+  public static <T> T getFirst(Iterable<? extends T> iterable, @NullableDecl T defaultValue) {
     return Iterators.getNext(iterable.iterator(), defaultValue);
   }
 
@@ -812,7 +823,8 @@ public final class Iterables {
    * @return the last element of {@code iterable} or the default value
    * @since 3.0
    */
-  public static <T> @Nullable T getLast(Iterable<? extends T> iterable, @Nullable T defaultValue) {
+  @NullableDecl
+  public static <T> T getLast(Iterable<? extends T> iterable, @NullableDecl T defaultValue) {
     if (iterable instanceof Collection) {
       Collection<? extends T> c = (Collection<? extends T>) iterable;
       if (c.isEmpty()) {
@@ -891,17 +903,6 @@ public final class Iterables {
           }
         };
       }
-
-      @Override
-      public Spliterator<T> spliterator() {
-        if (iterable instanceof List) {
-          final List<T> list = (List<T>) iterable;
-          int toSkip = Math.min(list.size(), numberToSkip);
-          return list.subList(toSkip, list.size()).spliterator();
-        } else {
-          return Streams.stream(iterable).skip(numberToSkip).spliterator();
-        }
-      }
     };
   }
 
@@ -925,11 +926,6 @@ public final class Iterables {
       @Override
       public Iterator<T> iterator() {
         return Iterators.limit(iterable.iterator(), limitSize);
-      }
-
-      @Override
-      public Spliterator<T> spliterator() {
-        return Streams.stream(iterable).limit(limitSize).spliterator();
       }
     };
   }

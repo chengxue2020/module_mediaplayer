@@ -23,9 +23,9 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.CharBuffer;
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 import java.util.Queue;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A class for reading lines of text. Provides the same functionality as {@link
@@ -39,11 +39,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtIncompatible
 public final class LineReader {
   private final Readable readable;
-  private final @Nullable Reader reader;
+  @NullableDecl private final Reader reader;
   private final CharBuffer cbuf = createBuffer();
   private final char[] buf = cbuf.array();
 
-  private final Queue<String> lines = new ArrayDeque<>();
+  private final Queue<String> lines = new LinkedList<>();
   private final LineBuffer lineBuf =
       new LineBuffer() {
         @Override

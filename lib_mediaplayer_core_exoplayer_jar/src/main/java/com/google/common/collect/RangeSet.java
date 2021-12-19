@@ -15,11 +15,11 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.Beta;
-import com.google.errorprone.annotations.DoNotMock;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.errorprone.annotations.DoNotMock;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A set comprising zero or more {@linkplain Range#isEmpty nonempty}, {@linkplain
@@ -53,7 +53,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @DoNotMock("Use ImmutableRangeSet or TreeRangeSet")
 @GwtIncompatible
 public interface RangeSet<C extends Comparable> {
-  // TODO(lowasser): consider adding default implementations of some of these methods
 
   // Query methods
 
@@ -102,14 +101,7 @@ public interface RangeSet<C extends Comparable> {
    *
    * @since 21.0
    */
-  default boolean enclosesAll(Iterable<Range<C>> other) {
-    for (Range<C> range : other) {
-      if (!encloses(range)) {
-        return false;
-      }
-    }
-    return true;
-  }
+  boolean enclosesAll(Iterable<Range<C>> other);
 
   /** Returns {@code true} if this range set contains no ranges. */
   boolean isEmpty();
@@ -220,11 +212,7 @@ public interface RangeSet<C extends Comparable> {
    *     operation
    * @since 21.0
    */
-  default void addAll(Iterable<Range<C>> ranges) {
-    for (Range<C> range : ranges) {
-      add(range);
-    }
-  }
+  void addAll(Iterable<Range<C>> ranges);
 
   /**
    * Removes all of the ranges from the specified range set from this range set (optional
@@ -249,11 +237,7 @@ public interface RangeSet<C extends Comparable> {
    *     operation
    * @since 21.0
    */
-  default void removeAll(Iterable<Range<C>> ranges) {
-    for (Range<C> range : ranges) {
-      remove(range);
-    }
-  }
+  void removeAll(Iterable<Range<C>> ranges);
 
   // Object methods
 
@@ -262,7 +246,7 @@ public interface RangeSet<C extends Comparable> {
    * according to {@link Range#equals(Object)}.
    */
   @Override
-  boolean equals(@Nullable Object obj);
+  boolean equals(@NullableDecl Object obj);
 
   /** Returns {@code asRanges().hashCode()}. */
   @Override

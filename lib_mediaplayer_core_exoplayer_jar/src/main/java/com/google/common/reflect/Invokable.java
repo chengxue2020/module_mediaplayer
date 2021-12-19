@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.InvocationTargetException;
@@ -31,7 +30,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Wrapper around either a {@link Method} or a {@link Constructor}. Convenience API is provided to
@@ -97,7 +96,7 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
   // All subclasses are owned by us and we'll make sure to get the R type right.
   @SuppressWarnings("unchecked")
   @CanIgnoreReturnValue
-  public final R invoke(@Nullable T receiver, Object... args)
+  public final R invoke(@NullableDecl T receiver, Object... args)
       throws InvocationTargetException, IllegalAccessException {
     return (R) invokeInternal(receiver, checkNotNull(args));
   }
@@ -117,12 +116,9 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
   public final ImmutableList<Parameter> getParameters() {
     Type[] parameterTypes = getGenericParameterTypes();
     Annotation[][] annotations = getParameterAnnotations();
-    AnnotatedType[] annotatedTypes = getAnnotatedParameterTypes();
     ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
     for (int i = 0; i < parameterTypes.length; i++) {
-      builder.add(
-          new Parameter(
-              this, i, TypeToken.of(parameterTypes[i]), annotations[i], annotatedTypes[i]));
+      builder.add(new Parameter(this, i, TypeToken.of(parameterTypes[i]), annotations[i]));
     }
     return builder.build();
   }
@@ -177,12 +173,10 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
     return (TypeToken<T>) TypeToken.of(getDeclaringClass());
   }
 
-  abstract Object invokeInternal(@Nullable Object receiver, Object[] args)
+  abstract Object invokeInternal(@NullableDecl Object receiver, Object[] args)
       throws InvocationTargetException, IllegalAccessException;
 
   abstract Type[] getGenericParameterTypes();
-
-  abstract AnnotatedType[] getAnnotatedParameterTypes();
 
   /** This should never return a type that's not a subtype of Throwable. */
   abstract Type[] getGenericExceptionTypes();
@@ -190,8 +184,6 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
   abstract Annotation[][] getParameterAnnotations();
 
   abstract Type getGenericReturnType();
-
-  public abstract AnnotatedType getAnnotatedReturnType();
 
   static class MethodInvokable<T> extends Invokable<T, Object> {
 
@@ -203,7 +195,7 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
     }
 
     @Override
-    final Object invokeInternal(@Nullable Object receiver, Object[] args)
+    final Object invokeInternal(@NullableDecl Object receiver, Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       return method.invoke(receiver, args);
     }
@@ -216,16 +208,6 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
     @Override
     Type[] getGenericParameterTypes() {
       return method.getGenericParameterTypes();
-    }
-
-    @Override
-    AnnotatedType[] getAnnotatedParameterTypes() {
-      return method.getAnnotatedParameterTypes();
-    }
-
-    @Override
-    public AnnotatedType getAnnotatedReturnType() {
-      return method.getAnnotatedReturnType();
     }
 
     @Override
@@ -267,7 +249,7 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
     }
 
     @Override
-    final Object invokeInternal(@Nullable Object receiver, Object[] args)
+    final Object invokeInternal(@NullableDecl Object receiver, Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       try {
         return constructor.newInstance(args);
@@ -303,16 +285,6 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
         }
       }
       return types;
-    }
-
-    @Override
-    AnnotatedType[] getAnnotatedParameterTypes() {
-      return constructor.getAnnotatedParameterTypes();
-    }
-
-    @Override
-    public AnnotatedType getAnnotatedReturnType() {
-      return constructor.getAnnotatedReturnType();
     }
 
     @Override

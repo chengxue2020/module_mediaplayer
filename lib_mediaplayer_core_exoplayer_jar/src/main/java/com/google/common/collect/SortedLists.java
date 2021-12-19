@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.RandomAccess;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * Static methods pertaining to sorted {@link List} instances.
@@ -35,15 +35,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Louis Wasserman
  */
 @GwtCompatible
-@Beta
-final class SortedLists {
+@Beta final class SortedLists {
   private SortedLists() {}
 
   /**
    * A specification for which index to return if the list contains at least one element that
    * compares as equal to the key.
-   */
-  enum KeyPresentBehavior {
+   */ enum KeyPresentBehavior {
     /**
      * Return the index of any list element that compares as equal to the key. No guarantees are
      * made as to which index is returned, if more than one element compares as equal to the key.
@@ -130,8 +128,7 @@ final class SortedLists {
   /**
    * A specification for which index to return if the list contains no elements that compare as
    * equal to the key.
-   */
-  enum KeyAbsentBehavior {
+   */ enum KeyAbsentBehavior {
     /**
      * Return the index of the next lower element in the list, or {@code -1} if there is no such
      * element.
@@ -199,7 +196,7 @@ final class SortedLists {
   public static <E, K extends Comparable> int binarySearch(
       List<E> list,
       Function<? super E, K> keyFunction,
-      @Nullable K key,
+      @NullableDecl K key,
       KeyPresentBehavior presentBehavior,
       KeyAbsentBehavior absentBehavior) {
     return binarySearch(
@@ -216,7 +213,7 @@ final class SortedLists {
   public static <E, K> int binarySearch(
       List<E> list,
       Function<? super E, K> keyFunction,
-      @Nullable K key,
+      @NullableDecl K key,
       Comparator<? super K> keyComparator,
       KeyPresentBehavior presentBehavior,
       KeyAbsentBehavior absentBehavior) {
@@ -249,7 +246,7 @@ final class SortedLists {
    */
   public static <E> int binarySearch(
       List<? extends E> list,
-      @Nullable E key,
+      @NullableDecl E key,
       Comparator<? super E> comparator,
       KeyPresentBehavior presentBehavior,
       KeyAbsentBehavior absentBehavior) {

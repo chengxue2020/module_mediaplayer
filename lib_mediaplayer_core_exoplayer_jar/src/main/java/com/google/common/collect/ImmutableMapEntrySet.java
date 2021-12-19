@@ -20,9 +20,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import java.io.Serializable;
 import java.util.Map.Entry;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * {@code entrySet()} implementation for {@link ImmutableMap}.
@@ -62,18 +60,8 @@ abstract class ImmutableMapEntrySet<K, V> extends ImmutableSet<Entry<K, V>> {
     }
 
     @Override
-    public Spliterator<Entry<K, V>> spliterator() {
-      return entries.spliterator();
-    }
-
-    @Override
-    public void forEach(Consumer<? super Entry<K, V>> action) {
-      entries.forEach(action);
-    }
-
-    @Override
     ImmutableList<Entry<K, V>> createAsList() {
-      return new RegularImmutableAsList<>(this, entries);
+      return entries;
     }
   }
 
@@ -87,7 +75,7 @@ abstract class ImmutableMapEntrySet<K, V> extends ImmutableSet<Entry<K, V>> {
   }
 
   @Override
-  public boolean contains(@Nullable Object object) {
+  public boolean contains(@NullableDecl Object object) {
     if (object instanceof Entry) {
       Entry<?, ?> entry = (Entry<?, ?>) object;
       V value = map().get(entry.getKey());

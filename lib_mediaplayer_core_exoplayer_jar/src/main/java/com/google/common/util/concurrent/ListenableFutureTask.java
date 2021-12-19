@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A {@link FutureTask} that also implements the {@link ListenableFuture} interface. Unlike {@code
@@ -70,7 +70,7 @@ public class ListenableFutureTask<V> extends FutureTask<V> implements Listenable
    *     ListenableFutureTask.create(runnable, null)}
    * @since 10.0
    */
-  public static <V> ListenableFutureTask<V> create(Runnable runnable, @Nullable V result) {
+  public static <V> ListenableFutureTask<V> create(Runnable runnable, @NullableDecl V result) {
     return new ListenableFutureTask<V>(runnable, result);
   }
 
@@ -78,7 +78,7 @@ public class ListenableFutureTask<V> extends FutureTask<V> implements Listenable
     super(callable);
   }
 
-  ListenableFutureTask(Runnable runnable, @Nullable V result) {
+  ListenableFutureTask(Runnable runnable, @NullableDecl V result) {
     super(runnable, result);
   }
 

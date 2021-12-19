@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.concurrent.locks.LockSupport;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * An abstract implementation of {@link ListenableFuture}, intended for advanced users only. More
@@ -191,8 +191,8 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
   private static final class Waiter {
     static final Waiter TOMBSTONE = new Waiter(false /* ignored param */);
 
-    volatile @Nullable Thread thread;
-    volatile @Nullable Waiter next;
+    @NullableDecl volatile Thread thread;
+    @NullableDecl volatile Waiter next;
 
     /**
      * Constructor for the TOMBSTONE, avoids use of ATOMIC_HELPER in case this class is loaded
@@ -269,7 +269,7 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
     final Executor executor;
 
     // writes to next are made visible by subsequent CAS's on the listeners field
-    @Nullable Listener next;
+    @NullableDecl Listener next;
 
     Listener(Runnable task, Executor executor) {
       this.task = task;
@@ -314,9 +314,9 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
     }
 
     final boolean wasInterrupted;
-    final @Nullable Throwable cause;
+    @NullableDecl final Throwable cause;
 
-    Cancellation(boolean wasInterrupted, @Nullable Throwable cause) {
+    Cancellation(boolean wasInterrupted, @NullableDecl Throwable cause) {
       this.wasInterrupted = wasInterrupted;
       this.cause = cause;
     }
@@ -362,13 +362,13 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
    *       argument.
    * </ul>
    */
-  private volatile @Nullable Object value;
+  @NullableDecl private volatile Object value;
 
   /** All listeners. */
-  private volatile @Nullable Listener listeners;
+  @NullableDecl private volatile Listener listeners;
 
   /** All waiting threads. */
-  private volatile @Nullable Waiter waiters;
+  @NullableDecl private volatile Waiter waiters;
 
   /** Constructor for use by subclasses. */
   protected AbstractFuture() {}
@@ -670,7 +670,7 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
    *
    * <p>The default implementation does nothing.
    *
-   * <p>This method is likely to be deprecated. Prefer to override {@link #afterDone}, checking
+   * <p>This method is likely to be deprecated. Prefer to override {@link #afterDone}, consulting
    * {@link #wasInterrupted} to decide whether to interrupt your task.
    *
    * @since 10.0
@@ -740,7 +740,7 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
    * @return true if the attempt was accepted, completing the {@code Future}
    */
   @CanIgnoreReturnValue
-  protected boolean set(@Nullable V value) {
+  protected boolean set(@NullableDecl V value) {
     Object valueToSet = value == null ? NULL : value;
     if (ATOMIC_HELPER.casValue(this, null, valueToSet)) {
       complete(this);
@@ -1024,7 +1024,8 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
    * @since 27.0
    */
   @Override
-  protected final @Nullable Throwable tryInternalFastPathGetFailure() {
+  @NullableDecl
+  protected final Throwable tryInternalFastPathGetFailure() {
     if (this instanceof Trusted) {
       Object obj = value;
       if (obj instanceof Failure) {
@@ -1038,7 +1039,7 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
    * If this future has been cancelled (and possibly interrupted), cancels (and possibly interrupts)
    * the given future (if available).
    */
-  final void maybePropagateCancellationTo(@Nullable Future<?> related) {
+  final void maybePropagateCancellationTo(@NullableDecl Future<?> related) {
     if (related != null & isCancelled()) {
       related.cancel(wasInterrupted());
     }
@@ -1107,7 +1108,8 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
    * @return null if an explanation cannot be provided (e.g. because the future is done).
    * @since 23.0
    */
-  protected @Nullable String pendingToString() {
+  @NullableDecl
+  protected String pendingToString() {
     // TODO(diamondm) consider moving this into addPendingString so it's always in the output
     if (this instanceof ScheduledFuture) {
       return "remaining delay=["
@@ -1421,7 +1423,7 @@ public abstract class AbstractFuture<V> extends InternalFutureFailureAccess
   }
 
   private static CancellationException cancellationExceptionWithCause(
-      @Nullable String message, @Nullable Throwable cause) {
+      @NullableDecl String message, @NullableDecl Throwable cause) {
     CancellationException exception = new CancellationException(message);
     exception.initCause(cause);
     return exception;

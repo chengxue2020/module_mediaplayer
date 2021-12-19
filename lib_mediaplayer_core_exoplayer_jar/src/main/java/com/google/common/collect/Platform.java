@@ -29,12 +29,9 @@ import java.util.Set;
  */
 @GwtCompatible(emulated = true)
 final class Platform {
-  private static final java.util.logging.Logger logger =
-      java.util.logging.Logger.getLogger(Platform.class.getName());
-
   /** Returns the platform preferred implementation of a map based on a hash table. */
   static <K, V> Map<K, V> newHashMapWithExpectedSize(int expectedSize) {
-    return Maps.newHashMapWithExpectedSize(expectedSize);
+    return CompactHashMap.createWithExpectedSize(expectedSize);
   }
 
   /**
@@ -42,12 +39,12 @@ final class Platform {
    * table.
    */
   static <K, V> Map<K, V> newLinkedHashMapWithExpectedSize(int expectedSize) {
-    return Maps.newLinkedHashMapWithExpectedSize(expectedSize);
+    return CompactLinkedHashMap.createWithExpectedSize(expectedSize);
   }
 
   /** Returns the platform preferred implementation of a set based on a hash table. */
   static <E> Set<E> newHashSetWithExpectedSize(int expectedSize) {
-    return Sets.newHashSetWithExpectedSize(expectedSize);
+    return CompactHashSet.createWithExpectedSize(expectedSize);
   }
 
   /**
@@ -55,7 +52,7 @@ final class Platform {
    * table.
    */
   static <E> Set<E> newLinkedHashSetWithExpectedSize(int expectedSize) {
-    return Sets.newLinkedHashSetWithExpectedSize(expectedSize);
+    return CompactLinkedHashSet.createWithExpectedSize(expectedSize);
   }
 
   /**
@@ -63,7 +60,7 @@ final class Platform {
    * for insertions.
    */
   static <K, V> Map<K, V> preservesInsertionOrderOnPutsMap() {
-    return Maps.newLinkedHashMap();
+    return CompactHashMap.create();
   }
 
   /**
@@ -71,7 +68,7 @@ final class Platform {
    * for insertions.
    */
   static <E> Set<E> preservesInsertionOrderOnAddsSet() {
-    return Sets.newLinkedHashSet();
+    return CompactHashSet.create();
   }
 
   /**
@@ -112,26 +109,7 @@ final class Platform {
     return exponent;
   }
 
-  static void checkGwtRpcEnabled() {
-    String propertyName = "guava.gwt.emergency_reenable_rpc";
-
-    if (!Boolean.parseBoolean(System.getProperty(propertyName, "false"))) {
-      throw new UnsupportedOperationException(
-          com.google.common.base.Strings.lenientFormat(
-              "We are removing GWT-RPC support for Guava types. You can temporarily reenable"
-                  + " support by setting the system property %s to true. For more about system"
-                  + " properties, see %s. For more about Guava's GWT-RPC support, see %s.",
-              propertyName,
-              "https://stackoverflow.com/q/5189914/28465",
-              "https://groups.google.com/d/msg/guava-announce/zHZTFg7YF3o/rQNnwdHeEwAJ"));
-    }
-    logger.log(
-        java.util.logging.Level.WARNING,
-        "Later in 2020, we will remove GWT-RPC support for Guava types. You are seeing this"
-            + " warning because you are sending a Guava type over GWT-RPC, which will break. You"
-            + " can identify which type by looking at the class name in the attached stack trace.",
-        new Throwable());
-  }
+  static void checkGwtRpcEnabled() {}
 
   private Platform() {}
 }

@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * A future whose value is derived from a collection of input futures.
@@ -52,7 +52,7 @@ abstract class AggregateFuture<InputT, OutputT> extends AggregateFutureState<Out
    * In certain circumstances, this field might theoretically not be visible to an afterDone() call
    * triggered by cancel(). For details, see the comments on the fields of TimeoutFuture.
    */
-  private @Nullable ImmutableCollection<? extends ListenableFuture<? extends InputT>> futures;
+  @NullableDecl private ImmutableCollection<? extends ListenableFuture<? extends InputT>> futures;
 
   private final boolean allMustSucceed;
   private final boolean collectsValues;
@@ -222,12 +222,11 @@ abstract class AggregateFuture<InputT, OutputT> extends AggregateFutureState<Out
     }
   }
 
-  private void log(Throwable throwable) {
+  private static void log(Throwable throwable) {
     String message =
         (throwable instanceof Error)
             ? "Input Future failed with Error"
-            : "An additional input failed after the first. Logging it after adding the first"
-                + " failure as a suppressed exception.";
+            : "Got more than one input Future failure. Logging failures after the first";
     logger.log(SEVERE, message, throwable);
   }
 
@@ -256,7 +255,7 @@ abstract class AggregateFuture<InputT, OutputT> extends AggregateFutureState<Out
   }
 
   private void decrementCountAndMaybeComplete(
-      @Nullable
+      @NullableDecl
           ImmutableCollection<? extends Future<? extends InputT>>
               futuresIfNeedToCollectAtCompletion) {
     int newRemaining = decrementRemainingAndGet();
@@ -267,7 +266,7 @@ abstract class AggregateFuture<InputT, OutputT> extends AggregateFutureState<Out
   }
 
   private void processCompleted(
-      @Nullable
+      @NullableDecl
           ImmutableCollection<? extends Future<? extends InputT>>
               futuresIfNeedToCollectAtCompletion) {
     if (futuresIfNeedToCollectAtCompletion != null) {
@@ -323,7 +322,7 @@ abstract class AggregateFuture<InputT, OutputT> extends AggregateFutureState<Out
    * If {@code allMustSucceed} is true, called as each future completes; otherwise, if {@code
    * collectsValues} is true, called for each future when all futures complete.
    */
-  abstract void collectOneValue(int index, @Nullable InputT returnValue);
+  abstract void collectOneValue(int index, @NullableDecl InputT returnValue);
 
   abstract void handleAllCompleted();
 

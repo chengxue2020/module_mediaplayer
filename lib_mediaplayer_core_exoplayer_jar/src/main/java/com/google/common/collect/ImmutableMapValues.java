@@ -16,15 +16,11 @@
 
 package com.google.common.collect;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import java.io.Serializable;
 import java.util.Map.Entry;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 /**
  * {@code values()} implementation for {@link ImmutableMap}.
@@ -63,12 +59,7 @@ final class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
   }
 
   @Override
-  public Spliterator<V> spliterator() {
-    return CollectSpliterators.map(map.entrySet().spliterator(), Entry::getValue);
-  }
-
-  @Override
-  public boolean contains(@Nullable Object object) {
+  public boolean contains(@NullableDecl Object object) {
     return object != null && Iterators.contains(iterator(), object);
   }
 
@@ -80,29 +71,31 @@ final class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
   @Override
   public ImmutableList<V> asList() {
     final ImmutableList<Entry<K, V>> entryList = map.entrySet().asList();
-    return new ImmutableAsList<V>() {
+    return new ImmutableList<V>() {
       @Override
       public V get(int index) {
         return entryList.get(index).getValue();
       }
 
       @Override
-      ImmutableCollection<V> delegateCollection() {
-        return ImmutableMapValues.this;
+      boolean isPartialView() {
+        return true;
+      }
+
+      @Override
+      public int size() {
+        return entryList.size();
       }
     };
   }
 
   @GwtIncompatible // serialization
   @Override
-  public void forEach(Consumer<? super V> action) {
-    checkNotNull(action);
-    map.forEach((k, v) -> action.accept(v));
+  Object writeReplace() {
+    return new SerializedForm<V>(map);
   }
 
-  // No longer used for new writes, but kept so that old data can still be read.
   @GwtIncompatible // serialization
-  @SuppressWarnings("unused")
   private static class SerializedForm<V> implements Serializable {
     final ImmutableMap<?, V> map;
 
