@@ -61,7 +61,6 @@ repositories {
 
 dependencies {
     // implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.android.material:material:1.2.1'
@@ -86,7 +85,7 @@ dependencies {
 
     // mediaplayer
 //    api files('libs/rtmp-client-3.1.0.aar')
-//    api files('libs/lib_mediaplayer_exoplayer_r2.16.1_release_20211215.aar')
-//    api files('libs/lib_mediaplayer_ui_release_20211215.aar')
-    api project(path: ':lib_mediaplayer_ui')
+    api files('libs/lib_mediaplayer_exoplayer_r2.16.1_release_20211219.aar')
+    api files('libs/lib_mediaplayer_ui_release_20211219.aar')
+//    api project(path: ':lib_mediaplayer_ui')
 }

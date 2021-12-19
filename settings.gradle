@@ -1,7 +1,7 @@
 include ':app'
 
 // jar
-include ':lib_mediaplayer_core_exoplayer_jar'
+//include ':lib_mediaplayer_core_exoplayer_jar'
 
 // r2.14.0
 //include ':lib_mediaplayer_core_exoplayer_r2.14.0'

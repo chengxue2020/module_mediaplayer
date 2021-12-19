@@ -56,3 +56,9 @@ https://github.com/google/ExoPlayer
 https://mvnrepository.com/search?q=exoplayer
 https://github.com/yangchong211/YCVideoPlayer
 ```
+
+#
+#### 记录
+```
+1. android 6.0 crash[指定版本=>'com.google.guava:guava:30.1-android']
+```
