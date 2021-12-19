@@ -17,6 +17,12 @@
 
 2021-12-15
 
+1. 解决android6.0 crash [指定版本=>'com.google.guava:guava:30.1-android']
+
+----------------------------------------
+
+2021-12-15
+
 1. 更新exoplayer2.16.1
 
 ----------------------------------------
@@ -40,7 +46,7 @@
 ```
 files('libs/androidx-annotation-1.2.0.jar')
 files('libs/commons-io-2.5.jar')
-files('libs/guava-30.1.1-android.jar')
+files('libs/guava-30.1-android.jar')
 files('libs/failureaccess-1.0.1.jar')
 files('libs/checker-qual-2.5.0.jar')
 files('libs/checker-compat-qual-2.5.0.jar')
