@@ -4,6 +4,13 @@
 ![image](https://github.com/153437803/module_mediaplayer/blob/master/exoplayer.png )
 
 #
+####  计划
+```
+1. 支持TV
+2. 支持ndk编辑ijkplayer源码
+```
+
+#
 #### 更新
 ```
 ----------------------------------------
