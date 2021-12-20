@@ -7,7 +7,7 @@
 ####  计划
 ```
 1. 支持TV
-2. 支持ndk编辑ijkplayer源码
+2. 支持ndk编译ijkplayer源码
 ```
 
 #
