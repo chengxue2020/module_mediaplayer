@@ -4,13 +4,6 @@
 ![image](https://github.com/153437803/module_mediaplayer/blob/master/exoplayer.png )
 
 #
-#### 计划
-```
-1. 持续优化，删除冗余模块
-2. 适配TV
-```
-
-#
 #### 更新
 ```
 ----------------------------------------
