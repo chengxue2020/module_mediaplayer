@@ -1194,14 +1194,14 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         }
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        MediaLogUtil.log("dispatchKeyEvent => " + event.getKeyCode());
-        if (null != mVideoController) {
-            mVideoController.dispatchKeyEvent(event);
-        }
-        return super.dispatchKeyEvent(event);
-    }
+//    @Override
+//    public boolean dispatchKeyEvent(KeyEvent event) {
+//        MediaLogUtil.log("dispatchKeyEvent => " + event.getKeyCode());
+//        if (null != mVideoController) {
+//            mVideoController.dispatchKeyEvent(event);
+//        }
+//        return super.dispatchKeyEvent(event);
+//    }
 
     /*************************/
 
