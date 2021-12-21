@@ -25,7 +25,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.core.controller.ControllerWrapper;
+import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 
 
 /**

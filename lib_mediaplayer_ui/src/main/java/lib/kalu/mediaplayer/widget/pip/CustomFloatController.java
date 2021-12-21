@@ -21,7 +21,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.core.controller.core.ControllerLayoutDispatchTouchEvent;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 

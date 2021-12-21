@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.core.controller.live;
+package lib.kalu.mediaplayer.core.controller;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,7 +31,8 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.core.controller.core.ControllerLayoutDispatchTouchEvent;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentPrepare;
 import lib.kalu.mediaplayer.util.BaseToast;
@@ -44,7 +45,7 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  * created by kalu on 2021/9/16
  */
 @Keep
-public class ControllerLive extends ControllerLayoutDispatchTouchEvent {
+public class ControllerLive extends ControllerLayout {
 
     public ControllerLive(@NonNull Context context) {
         this(context, null);
@@ -71,14 +72,6 @@ public class ControllerLive extends ControllerLayoutDispatchTouchEvent {
     }
 
     private void initConfig() {
-        //根据屏幕方向自动进入/退出全屏
-        setEnableOrientation(true);
-        //设置可以滑动调节进度
-        setCanChangePosition(false);
-        //竖屏也开启手势操作，默认关闭
-        setEnableInNormal(false);
-        //滑动调节亮度，音量，进度，默认开启
-        setGestureEnabled(false);
         //先移除多有的视图view
         removeComponentAll(false);
 

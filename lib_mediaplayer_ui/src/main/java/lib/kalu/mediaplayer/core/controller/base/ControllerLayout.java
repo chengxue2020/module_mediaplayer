@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.core.controller.core;
+package lib.kalu.mediaplayer.core.controller.base;
 
 import android.app.Activity;
 import android.content.Context;
@@ -38,7 +38,6 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.core.controller.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponentAction;
 import lib.kalu.mediaplayer.core.controller.impl.ImplController;
@@ -110,7 +109,19 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
     }
 
     @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+    }
+
+    @Override
     public void init() {
+        setFocusable(false);
+        setFocusableInTouchMode(false);
+        setClickable(false);
+        setLongClickable(false);
         try {
             LayoutInflater.from(getContext()).inflate(initLayout(), this, true);
         } catch (Exception e) {

@@ -9,10 +9,10 @@ import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.core.controller.core.ControllerLayout;
-import lib.kalu.mediaplayer.core.controller.standard.ControllerStandard;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.controller.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnVideoStateListener;
-import lib.kalu.mediaplayer.core.controller.live.ControllerLive;
+import lib.kalu.mediaplayer.core.controller.ControllerLive;
 import lib.kalu.mediaplayer.core.player.VideoLayout;
 
 /**

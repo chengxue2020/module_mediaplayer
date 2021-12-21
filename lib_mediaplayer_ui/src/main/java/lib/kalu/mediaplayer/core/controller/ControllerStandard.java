@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.core.controller.standard;
+package lib.kalu.mediaplayer.core.controller;
 
 import android.app.Activity;
 import android.content.Context;
@@ -33,7 +33,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.core.controller.core.ControllerLayoutDispatchTouchEvent;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.core.controller.component.ComponentBottom;
 import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;

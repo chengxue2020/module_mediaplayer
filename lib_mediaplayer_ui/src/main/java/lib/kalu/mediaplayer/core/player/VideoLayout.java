@@ -31,7 +31,7 @@ import lib.kalu.mediaplayer.listener.OnVideoStateListener;
 import lib.kalu.mediaplayer.config.PlayerConfig;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.core.controller.core.ControllerLayout;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.player.impl.ImplPlayer;
 import lib.kalu.mediaplayer.widget.surface.InterSurfaceView;
 import lib.kalu.mediaplayer.widget.surface.SurfaceFactory;
