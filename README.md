@@ -59,6 +59,7 @@ files('libs/annotations-3.0.1.jar')
 #### 资料
 ```
 https://github.com/google/ExoPlayer
+https://github.com/bilibili/ijkplayer
 https://mvnrepository.com/search?q=exoplayer
 https://github.com/yangchong211/YCVideoPlayer
 ```
