@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/module_mediaplayer_controller_prepare_image"
+        android:id="@+id/module_mediaplayer_controller_prepare_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000"
@@ -23,14 +23,34 @@
         android:src="@drawable/module_mediaplayer_selector_play_button"
         android:visibility="invisible" />
 
+    <Space
+        android:id="@+id/module_mediaplayer_controller_prepare_center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
     <!-- 转圈 -->
     <ProgressBar
-        android:id="@+id/module_mediaplayer_controller_prepare_loading"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
+        android:id="@+id/module_mediaplayer_controller_prepare_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/module_mediaplayer_controller_prepare_center"
+        android:layout_centerHorizontal="true"
         android:indeterminateDrawable="@drawable/module_mediaplayer_shape_loading"
         android:indeterminateDuration="2000"
+        android:visibility="invisible" />
+
+    <!-- 提示 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_controller_prepare_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/module_mediaplayer_controller_prepare_center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/module_mediaplayer_color_ffffff"
+        android:textSize="14sp"
         android:visibility="invisible" />
 
     <FrameLayout

@@ -15,12 +15,20 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.core.controller.impl;
 
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -116,47 +124,107 @@ public interface ImplController {
     /************************/
 
     @Nullable
-    default ImageView findPrepare() {
+    default ImageView findPrepareBackground() {
         return null;
     }
 
-    default void setPrepareBackground(@ColorInt int color) {
-        ImageView view = findPrepare();
-        if (null != view) {
-            view.setImageDrawable(null);
-            view.setBackgroundColor(color);
-        }
+    @Nullable
+    default ProgressBar findPrepareProgress() {
+        return null;
     }
 
-    default void setPrepareImageResource(@DrawableRes int resId) {
-        ImageView view = findPrepare();
-        if (null != view) {
-            view.setBackgroundColor(Color.TRANSPARENT);
-            view.setImageResource(resId);
-        }
+    @Nullable
+    default TextView findPrepareTip() {
+        return null;
     }
 
-    default void setPrepareImageDrawable(@NonNull Drawable drawable) {
-        ImageView view = findPrepare();
-        if (null != view) {
-            view.setBackgroundColor(Color.TRANSPARENT);
-            view.setImageDrawable(drawable);
-        }
+    default void setPrepareBackgroundColor(@ColorInt int color) {
+        ImageView view = findPrepareBackground();
+        if (null == view)
+            return;
+        view.setImageDrawable(null);
+        view.setBackgroundColor(color);
     }
 
-    default void setPrepareImageUrl(@NonNull String url) {
+    default void setPrepareBackgroundResource(@DrawableRes int resId) {
+        ImageView view = findPrepareBackground();
+        if (null == view)
+            return;
+        view.setBackgroundColor(Color.TRANSPARENT);
+        view.setImageResource(resId);
+    }
 
-        if (null == url || url.length() <= 0)
+    default void setPrepareBackgroundDrawable(@NonNull Drawable drawable) {
+        ImageView view = findPrepareBackground();
+        if (null == view)
+            return;
+        view.setBackgroundColor(Color.TRANSPARENT);
+        view.setImageDrawable(drawable);
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    default void setPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
+        ProgressBar progressBar = findPrepareProgress();
+        if (null == progressBar)
+            return;
+        ViewGroup.LayoutParams layoutParams = progressBar.getLayoutParams();
+        if (null == layoutParams)
+            return;
+////                float v1 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, width, resources.getDisplayMetrics());
+////                float v2 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, height, resources.getDisplayMetrics());
+////                layoutParams.width = (int) v1;
+////                layoutParams.height = (int) v2;
+        try {
+            Resources resources = progressBar.getResources();
+            Drawable drawable = resources.getDrawable(resId);
+            progressBar.setIndeterminateDrawable(drawable);
+            layoutParams.width = drawable.getIntrinsicWidth();
+            layoutParams.height = drawable.getIntrinsicHeight();
+            progressBar.setLayoutParams(layoutParams);
+        } catch (Exception e) {
+        }
+//        layoutParams.width = resources.getDimensionPixelOffset(width);
+//        layoutParams.height = resources.getDimensionPixelOffset(height);
+    }
+
+    default void setPrepareTipText(@NonNull String text) {
+
+        if (null == text || text.length() <= 0)
             return;
 
-        ImageView imageView = findPrepare();
-        if (null == imageView)
+        TextView textView = findPrepareTip();
+        if (null == textView)
             return;
 
         try {
-            imageView.setBackgroundColor(Color.TRANSPARENT);
-            imageView.setImageURI(Uri.parse(url));
-        }catch (Exception e){
+            textView.setText(text);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setPrepareTipColor(@ColorRes int id) {
+
+        TextView textView = findPrepareTip();
+        if (null == textView)
+            return;
+
+        try {
+            int color = textView.getResources().getColor(id);
+            textView.setTextColor(color);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setPrepareTipSize(@DimenRes int dimen) {
+
+        TextView textView = findPrepareTip();
+        if (null == textView)
+            return;
+
+        try {
+            float dimension = textView.getResources().getDimension(dimen);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
+        } catch (Exception e) {
         }
     }
 

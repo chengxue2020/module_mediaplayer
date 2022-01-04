@@ -86,16 +86,18 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
 
     @Override
     public void onPlayStateChanged(int playState) {
-        View viewLoading = findViewById(R.id.module_mediaplayer_controller_prepare_loading);
         View viewPlay = findViewById(R.id.module_mediaplayer_controller_prepare_play);
-        View viewThumb = findViewById(R.id.module_mediaplayer_controller_prepare_image);
+        View viewBackground = findViewById(R.id.module_mediaplayer_controller_prepare_background);
+        View viewProgress = findViewById(R.id.module_mediaplayer_controller_prepare_progress);
+        View viewTip = findViewById(R.id.module_mediaplayer_controller_prepare_tip);
         switch (playState) {
             case PlayerType.StateType.STATE_PREPARING:
                 bringToFront();
                 setVisibility(VISIBLE);
                 viewPlay.setVisibility(View.GONE);
                 findViewById(R.id.fl_net_warning).setVisibility(GONE);
-                viewLoading.setVisibility(View.VISIBLE);
+                viewProgress.setVisibility(View.VISIBLE);
+                viewTip.setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_PLAYING:
             case PlayerType.StateType.STATE_PAUSED:
@@ -109,10 +111,11 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
             case PlayerType.StateType.STATE_IDLE:
                 setVisibility(VISIBLE);
                 bringToFront();
-                viewLoading.setVisibility(View.GONE);
+                viewProgress.setVisibility(View.GONE);
+                viewTip.setVisibility(View.GONE);
                 findViewById(R.id.fl_net_warning).setVisibility(GONE);
                 viewPlay.setVisibility(View.VISIBLE);
-                viewThumb.setVisibility(View.VISIBLE);
+                viewBackground.setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_START_ABORT:
                 setVisibility(VISIBLE);

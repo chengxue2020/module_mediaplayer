@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
@@ -337,8 +338,22 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     @Nullable
     @Override
-    public ImageView findPrepare() {
-        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_prepare_image);
+    public ProgressBar findPrepareProgress() {
+        ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_prepare_progress);
+        return progressBar;
+    }
+
+    @Nullable
+    @Override
+    public ImageView findPrepareBackground() {
+        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_prepare_background);
         return imageView;
+    }
+
+    @Nullable
+    @Override
+    public TextView findPrepareTip() {
+        TextView textView = findViewById(R.id.module_mediaplayer_controller_prepare_tip);
+        return textView;
     }
 }
