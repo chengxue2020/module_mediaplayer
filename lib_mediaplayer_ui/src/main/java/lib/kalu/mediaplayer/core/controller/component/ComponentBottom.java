@@ -279,7 +279,7 @@ public class ComponentBottom extends FrameLayout implements ImplComponent, View.
             if (time <= 0) {
                 time = 5;
             }
-            long currentPosition = mControllerWrapper.getCurrentPosition();
+            long currentPosition = mControllerWrapper.getPosition();
             Log.d("progress---", "duration---" + duration + "--currentPosition--" + currentPosition);
             if (duration - currentPosition < 2 * time * 1000) {
                 //当前视频播放到最后3s时，弹出toast提示：即将自动为您播放下一个视频。

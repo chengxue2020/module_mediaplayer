@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -27,7 +26,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.impl.VideoPlayerImpl;
 import lib.kalu.mediaplayer.core.kernel.video.listener.OnVideoPlayerChangeListener;
-import lib.kalu.mediaplayer.listener.OnVideoStateListener;
+import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 import lib.kalu.mediaplayer.config.PlayerConfig;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
@@ -117,7 +116,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * OnStateChangeListener集合，保存了所有开发者设置的监听器
      */
-    protected List<OnVideoStateListener> mOnStateChangeListeners;
+    protected List<OnMediaStateListener> mOnStateChangeListeners;
 
     /**
      * 进度管理器，设置之后播放器会记录播放进度，以便下次播放恢复进度
@@ -312,21 +311,24 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * @param url
      */
     @Override
-    public void start(@NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
+    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers, @NonNull OnMediaStateListener listener) {
         if (mVideoController == null) {
             //在调用start方法前，请先初始化视频控制器，调用setController方法
             throw new VideoException(VideoException.CODE_NOT_SET_CONTROLLER, "Controller must not be null , please setController first");
         }
 
+        clearOnStateChangeListeners();
+        setOnStateChangeListener(listener);
+
         // release
-        if (null != mUrl && mUrl.length() > 0) {
-            release();
-            clearUrl();
-        }
+//        if (null != mUrl && mUrl.length() > 0) {
+        release();
+        clearUrl();
+//        }
 
         boolean isStarted = false;
         if (isInIdleState() || isInStartAbortState()) {
-            isStarted = startPlay(live, url, headers);
+            isStarted = startPlay(seekPosition, live, url, headers);
         } else if (isInPlaybackState()) {
             startInPlaybackState();
             isStarted = true;
@@ -346,7 +348,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         if (reset) {
             initCanvas();
         }
-        startPrepare(reset);
+        startPrepare(0, reset);
         mPlayerContainer.setKeepScreenOn(true);
     }
 
@@ -355,7 +357,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      *
      * @return 是否成功开始播放
      */
-    protected boolean startPlay(@NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
+    protected boolean startPlay(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
         //如果要显示移动网络提示则不继续播放
 
         // 中止播放
@@ -378,7 +380,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
         initPlayer();
         initCanvas();
-        startPrepare(true);
+        startPrepare(seekPosition, true);
         return true;
     }
 
@@ -444,8 +446,8 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      *
      * @param reset
      */
-    protected void startPrepare(@NonNull boolean reset) {
-        MediaLogUtil.log("startPrepare => reset = " + reset);
+    protected void startPrepare(@NonNull long seekPosition, @NonNull boolean reset) {
+        MediaLogUtil.log("startPrepare => seekPosition = " + seekPosition + ", reset = " + reset);
 
         if (reset) {
             mMediaPlayer.reset();
@@ -453,12 +455,28 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             setOptions();
         }
 
-        // 重置
-        if (reset) {
-            //准备开始播放
-            mMediaPlayer.prepareAsync(getContext(), mLive, mUrl, mHeaders);
+        if (null == mUrl || mUrl.length() <= 0) {
             //更改播放器的播放状态
             setPlayState(PlayerType.StateType.STATE_PREPARING);
+            // 播放状态
+            setPlayState(PlayerType.StateType.STATE_URL_NULL);
+//            postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                }
+//            }, 100);
+        }
+        // 重置
+        else if (reset) {
+            //更改播放器的播放状态
+            setPlayState(PlayerType.StateType.STATE_PREPARING);
+            mMediaPlayer.prepareAsync(getContext(), mLive, mUrl, mHeaders);
+            //准备开始播放
+            if (seekPosition < 0) {
+                seekPosition = 0;
+            }
+            mCurrentPosition = seekPosition;
             //更改播放器播放模式状态
             setWindowState(isFullScreen() ? PlayerType.WindowType.FULL : isTinyScreen() ? PlayerType.WindowType.TINY : PlayerType.WindowType.NORMAL);
         }
@@ -520,8 +538,8 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
                 //计算退出视频时候的进度
                 long duration = getDuration();
-                long currentPosition = getCurrentPosition();
-                float progress = (currentPosition * 1.0f) / (duration * 1.0f);
+                long position = getPosition();
+                float progress = (position * 1.0f) / (duration * 1.0f);
                 config.mBuriedPointEvent.playerOutProgress(mUrl, progress);
                 config.mBuriedPointEvent.playerOutProgress(mUrl, duration, mCurrentPosition);
             }
@@ -606,7 +624,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 获取当前播放的位置
      */
     @Override
-    public long getCurrentPosition() {
+    public long getPosition() {
         if (isInPlaybackState()) {
             mCurrentPosition = mMediaPlayer.getCurrentPosition();
             return mCurrentPosition;
@@ -1095,7 +1113,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             mVideoController.setPlayState(playState);
         }
         if (mOnStateChangeListeners != null) {
-            for (OnVideoStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
+            for (OnMediaStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                 if (l != null) {
                     l.onPlayStateChanged(playState);
                 }
@@ -1117,7 +1135,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             mVideoController.setWindowState(windowState);
         }
         if (mOnStateChangeListeners != null) {
-            for (OnVideoStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
+            for (OnMediaStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                 if (l != null) {
                     l.onWindowStateChanged(windowState);
                 }
@@ -1128,7 +1146,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 添加一个播放状态监听器，播放状态发生变化时将会调用。
      */
-    public void addOnStateChangeListener(@NonNull OnVideoStateListener listener) {
+    public void addOnStateChangeListener(@NonNull OnMediaStateListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         }
@@ -1138,7 +1156,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 移除某个播放状态监听
      */
-    public void removeOnStateChangeListener(@NonNull OnVideoStateListener listener) {
+    public void removeOnStateChangeListener(@NonNull OnMediaStateListener listener) {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.remove(listener);
         }
@@ -1146,9 +1164,9 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
     /**
      * 设置一个播放状态监听器，播放状态发生变化时将会调用，
-     * 如果你想同时设置多个监听器，推荐 {@link #addOnStateChangeListener(OnVideoStateListener)}。
+     * 如果你想同时设置多个监听器，推荐 {@link #addOnStateChangeListener(OnMediaStateListener)}。
      */
-    public void setOnStateChangeListener(@NonNull OnVideoStateListener listener) {
+    private void setOnStateChangeListener(@NonNull OnMediaStateListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         } else {
@@ -1160,7 +1178,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 移除所有播放状态监听
      */
-    public void clearOnStateChangeListeners() {
+    private void clearOnStateChangeListeners() {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.clear();
         }

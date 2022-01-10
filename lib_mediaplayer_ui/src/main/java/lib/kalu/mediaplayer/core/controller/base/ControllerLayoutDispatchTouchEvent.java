@@ -288,7 +288,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         deltaX = -deltaX;
         int width = getMeasuredWidth();
         int duration = (int) mControllerWrapper.getDuration();
-        int currentPosition = (int) mControllerWrapper.getCurrentPosition();
+        int currentPosition = (int) mControllerWrapper.getPosition();
         int position = (int) (deltaX / width * 120000 + currentPosition);
         if (position > duration) position = duration;
         if (position < 0) position = 0;

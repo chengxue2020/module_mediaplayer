@@ -117,7 +117,16 @@ public class ComponentError extends LinearLayout implements ImplComponent {
 
     @Override
     public void onPlayStateChanged(int playState) {
-        if (playState == PlayerType.StateType.STATE_ERROR) {
+        if (playState == PlayerType.StateType.STATE_URL_NULL) {
+            bringToFront();
+            setVisibility(VISIBLE);
+
+            View view = findViewById(R.id.controller_error_back);
+            view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
+
+            TextView textView = findViewById(R.id.controller_error_message);
+            textView.setText("暂无节目");
+        } else if (playState == PlayerType.StateType.STATE_ERROR) {
             bringToFront();
             setVisibility(VISIBLE);
 

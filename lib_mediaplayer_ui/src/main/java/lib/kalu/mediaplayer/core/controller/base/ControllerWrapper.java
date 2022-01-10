@@ -26,6 +26,7 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.core.controller.impl.ImplController;
 import lib.kalu.mediaplayer.core.player.impl.ImplPlayer;
+import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 
 
 /**
@@ -52,8 +53,8 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
-    public void start(@NonNull boolean cache, @NonNull String url, @NonNull Map<String, String> headers) {
-        mPlayer.start(cache, url, headers);
+    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers, @NonNull OnMediaStateListener listener) {
+        mPlayer.start(seekPosition, live, url, headers, listener);
     }
 
     @Override
@@ -72,8 +73,8 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
-    public long getCurrentPosition() {
-        return mPlayer.getCurrentPosition();
+    public long getPosition() {
+        return mPlayer.getPosition();
     }
 
     @Override

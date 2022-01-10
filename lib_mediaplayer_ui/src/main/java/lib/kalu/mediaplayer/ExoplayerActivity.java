@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.controller.ControllerStandard;
-import lib.kalu.mediaplayer.listener.OnVideoStateListener;
+import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 import lib.kalu.mediaplayer.core.controller.ControllerLive;
 import lib.kalu.mediaplayer.core.player.VideoLayout;
 
@@ -78,10 +78,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
         // 全屏
         videoLayout.startFullScreen();
         // 开始播放
-        videoLayout.start(live, url);
-
-        // 监听
-        videoLayout.setOnStateChangeListener(new OnVideoStateListener() {
+        videoLayout.start(live, url, new OnMediaStateListener() {
             /**
              * 播放模式
              * 普通模式，小窗口模式，正常模式三种其中一种
@@ -162,7 +159,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
     public void finish() {
 
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
-        long browsing = videoLayout.getCurrentPosition() / 1000;
+        long browsing = videoLayout.getPosition() / 1000;
         if (browsing < 0) {
             browsing = 0;
         }

@@ -68,7 +68,7 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
         // 快进
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.fastForward()) {
             MediaLogUtil.log("dispatchKeyEvent[快进] => " + event.getKeyCode());
-            long position = mControllerWrapper.getCurrentPosition() + 1000;
+            long position = mControllerWrapper.getPosition() + 1000;
             long duration = mControllerWrapper.getDuration();
             if (position > duration) {
                 position = duration;
@@ -78,7 +78,7 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
         // 快退
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.fastRewind()) {
             MediaLogUtil.log("dispatchKeyEvent[快退] => " + event.getKeyCode());
-            long position = mControllerWrapper.getCurrentPosition() - 1000;
+            long position = mControllerWrapper.getPosition() - 1000;
             if (position <= 0) {
                 position = 0;
             }

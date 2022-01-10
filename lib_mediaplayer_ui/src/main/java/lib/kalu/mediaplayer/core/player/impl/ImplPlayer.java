@@ -37,6 +37,7 @@ import androidx.annotation.NonNull;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 
 /**
  * <pre>
@@ -50,11 +51,23 @@ import lib.kalu.mediaplayer.config.PlayerType;
 public interface ImplPlayer {
 
     default void start(@NonNull String url) {
-        start(false, url, null);
+        start(0, false, url, null, null);
+    }
+
+    default void start(@NonNull String url, @NonNull OnMediaStateListener listener) {
+        start(0, false, url, null, listener);
+    }
+
+    default void start(@NonNull long seekPosition, @NonNull String url, @NonNull OnMediaStateListener listener) {
+        start(seekPosition, false, url, null, listener);
     }
 
     default void start(@NonNull boolean live, @NonNull String url) {
-        start(live, url, null);
+        start(0, live, url, null, null);
+    }
+
+    default void start(@NonNull boolean live, @NonNull String url, @NonNull OnMediaStateListener listener) {
+        start(0, live, url, null, listener);
     }
 
     /**
@@ -64,7 +77,7 @@ public interface ImplPlayer {
      * @param url
      * @param headers
      */
-    void start(@NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers);
+    void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers, @NonNull OnMediaStateListener listener);
 
     default void restart() {
         restart(false);
@@ -102,12 +115,19 @@ public interface ImplPlayer {
      *
      * @return long类型
      */
-    long getCurrentPosition();
+    long getPosition();
+
+    /**
+     * 获取当前缓冲百分比
+     *
+     * @return 百分比
+     */
+    int getBufferedPercentage();
 
     /**
      * 调整播放进度
      *
-     * @param pos 位置
+     * @param pos 位置 毫秒 => System.currentTimeMillis(), getTime()
      */
     void seekTo(long pos);
 
@@ -117,13 +137,6 @@ public interface ImplPlayer {
      * @return 是否处于播放状态
      */
     boolean isPlaying();
-
-    /**
-     * 获取当前缓冲百分比
-     *
-     * @return 百分比
-     */
-    int getBufferedPercentage();
 
     void startFullScreen();
 

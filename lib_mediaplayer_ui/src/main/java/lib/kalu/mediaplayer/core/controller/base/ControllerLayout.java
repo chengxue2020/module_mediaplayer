@@ -385,7 +385,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
     };
 
     private int setProgress() {
-        int position = (int) mControllerWrapper.getCurrentPosition();
+        int position = (int) mControllerWrapper.getPosition();
         int duration = (int) mControllerWrapper.getDuration();
         handleSetProgress(duration, position);
         return position;
