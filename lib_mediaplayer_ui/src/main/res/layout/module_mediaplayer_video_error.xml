@@ -46,7 +46,8 @@
         android:paddingBottom="4dp"
         android:text="@string/module_mediaplayer_string_retry"
         android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="invisible" />
 
 </RelativeLayout>
 
