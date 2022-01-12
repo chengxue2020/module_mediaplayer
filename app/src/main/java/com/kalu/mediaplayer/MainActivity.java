@@ -127,7 +127,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8");
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://114.118.13.20:8080/movie/xingjitansuoyizhiban/playlist.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://114.118.13.20:8080/movie/yaolinglingguoyuban/playlist.m3u8");
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
             }

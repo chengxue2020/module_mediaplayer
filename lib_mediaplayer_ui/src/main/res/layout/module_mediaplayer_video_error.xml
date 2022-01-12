@@ -5,7 +5,7 @@
     android:background="@android:color/black">
 
     <ImageView
-        android:id="@+id/controller_error_back"
+        android:id="@+id/module_mediaplayer_controller_error_back"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:padding="12dp"
@@ -20,7 +20,7 @@
         android:layout_marginBottom="10dp" />
 
     <TextView
-        android:id="@+id/controller_error_message"
+        android:id="@+id/module_mediaplayer_controller_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/controller_error_temp"
@@ -30,7 +30,7 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/controller_error_retry"
+        android:id="@+id/module_mediaplayer_controller_error_retry"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_below="@id/controller_error_temp"

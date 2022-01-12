@@ -124,6 +124,11 @@ public interface ImplController {
     /************************/
 
     @Nullable
+    default TextView findComponentError() {
+        return null;
+    }
+
+    @Nullable
     default ImageView findPrepareBackground() {
         return null;
     }
@@ -224,6 +229,18 @@ public interface ImplController {
         try {
             float dimension = textView.getResources().getDimension(dimen);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setComponentErrorImage(@DrawableRes int res) {
+
+        TextView textView = findComponentError();
+        if (null == textView)
+            return;
+
+        try {
+            textView.setCompoundDrawablesWithIntrinsicBounds(0, res, 0, 0);
         } catch (Exception e) {
         }
     }

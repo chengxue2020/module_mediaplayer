@@ -76,7 +76,7 @@ public class ComponentError extends LinearLayout implements ImplComponent {
         setVisibility(GONE);
 
         // 重试
-        findViewById(R.id.controller_error_retry).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.module_mediaplayer_controller_error_retry).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 setVisibility(GONE);
@@ -85,7 +85,7 @@ public class ComponentError extends LinearLayout implements ImplComponent {
         });
 
         // 返回
-        findViewById(R.id.controller_error_back).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.module_mediaplayer_controller_error_back).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //点击返回键
@@ -117,43 +117,36 @@ public class ComponentError extends LinearLayout implements ImplComponent {
 
     @Override
     public void onPlayStateChanged(int playState) {
+
+        TextView textView = findViewById(R.id.module_mediaplayer_controller_error_message);
+        textView.setText("\"节目暂未开播, 敬请期待\"");
+
         if (playState == PlayerType.StateType.STATE_URL_NULL) {
             bringToFront();
             setVisibility(VISIBLE);
 
-            View view = findViewById(R.id.controller_error_back);
+            View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
 
-            TextView textView = findViewById(R.id.controller_error_message);
-            textView.setText("暂无节目");
         } else if (playState == PlayerType.StateType.STATE_ERROR) {
             bringToFront();
             setVisibility(VISIBLE);
 
-            View view = findViewById(R.id.controller_error_back);
+            View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
-
-            TextView textView = findViewById(R.id.controller_error_message);
-            textView.setText("视频播放异常");
         } else if (playState == PlayerType.StateType.STATE_NETWORK_ERROR) {
             bringToFront();
             setVisibility(VISIBLE);
 
-            View view = findViewById(R.id.controller_error_back);
+            View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
-
-            TextView textView = findViewById(R.id.controller_error_message);
-            textView.setText("无网络，请检查网络设置");
         } else if (playState == PlayerType.StateType.STATE_PARSE_ERROR) {
             bringToFront();
             setVisibility(VISIBLE);
 
-            View view = findViewById(R.id.controller_error_back);
+            View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
             //mTvMessage.setText("视频解析异常");
-
-            TextView textView = findViewById(R.id.controller_error_message);
-            textView.setText("视频加载错误");
         } else if (playState == PlayerType.StateType.STATE_IDLE) {
             setVisibility(GONE);
         } else if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
@@ -196,5 +189,4 @@ public class ComponentError extends LinearLayout implements ImplComponent {
         }
         return super.dispatchTouchEvent(ev);
     }
-
 }

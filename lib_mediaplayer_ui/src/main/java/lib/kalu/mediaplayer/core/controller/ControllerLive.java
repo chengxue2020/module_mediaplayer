@@ -122,7 +122,6 @@ public class ControllerLive extends ControllerLayout {
                 layoutParams.setMargins(dp24, 0, dp24, 0);
             }
         }
-
     }
 
     @Override
@@ -197,6 +196,13 @@ public class ControllerLive extends ControllerLayout {
     public ImageView findPrepareBackground() {
         ImageView imageView = findViewById(R.id.module_mediaplayer_controller_prepare_background);
         return imageView;
+    }
+
+    @Nullable
+    @Override
+    public TextView findComponentError() {
+        TextView textView = findViewById(R.id.module_mediaplayer_controller_prepare_tip);
+        return textView;
     }
 
     @Nullable
