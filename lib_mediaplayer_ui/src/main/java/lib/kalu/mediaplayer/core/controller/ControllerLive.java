@@ -50,15 +50,7 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
 public class ControllerLive extends ControllerLayout {
 
     public ControllerLive(@NonNull Context context) {
-        this(context, null);
-    }
-
-    public ControllerLive(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public ControllerLive(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context);
     }
 
     @Override
@@ -201,7 +193,7 @@ public class ControllerLive extends ControllerLayout {
     @Nullable
     @Override
     public TextView findComponentError() {
-        TextView textView = findViewById(R.id.module_mediaplayer_controller_prepare_tip);
+        TextView textView = findViewById(R.id.module_mediaplayer_controller_error_message);
         return textView;
     }
 

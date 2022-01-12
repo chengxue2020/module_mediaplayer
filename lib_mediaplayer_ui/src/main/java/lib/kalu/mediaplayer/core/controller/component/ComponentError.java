@@ -118,9 +118,6 @@ public class ComponentError extends LinearLayout implements ImplComponent {
     @Override
     public void onPlayStateChanged(int playState) {
 
-        TextView textView = findViewById(R.id.module_mediaplayer_controller_error_message);
-        textView.setText("\"节目暂未开播, 敬请期待\"");
-
         if (playState == PlayerType.StateType.STATE_URL_NULL) {
             bringToFront();
             setVisibility(VISIBLE);

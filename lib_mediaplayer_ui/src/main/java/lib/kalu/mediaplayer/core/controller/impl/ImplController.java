@@ -29,9 +29,13 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
+import androidx.annotation.Dimension;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+
+import com.google.android.exoplayer2.text.Cue;
 
 /**
  * <pre>
@@ -143,7 +147,7 @@ public interface ImplController {
         return null;
     }
 
-    default void setPrepareBackgroundColor(@ColorInt int color) {
+    default void setComponentPrepareBackgroundColor(@ColorInt int color) {
         ImageView view = findPrepareBackground();
         if (null == view)
             return;
@@ -151,7 +155,7 @@ public interface ImplController {
         view.setBackgroundColor(color);
     }
 
-    default void setPrepareBackgroundResource(@DrawableRes int resId) {
+    default void setComponentPrepareBackgroundResource(@DrawableRes int resId) {
         ImageView view = findPrepareBackground();
         if (null == view)
             return;
@@ -159,7 +163,7 @@ public interface ImplController {
         view.setImageResource(resId);
     }
 
-    default void setPrepareBackgroundDrawable(@NonNull Drawable drawable) {
+    default void setComponentPrepareBackgroundDrawable(@NonNull Drawable drawable) {
         ImageView view = findPrepareBackground();
         if (null == view)
             return;
@@ -168,7 +172,7 @@ public interface ImplController {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    default void setPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
+    default void setComponentPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
         ProgressBar progressBar = findPrepareProgress();
         if (null == progressBar)
             return;
@@ -192,7 +196,7 @@ public interface ImplController {
 //        layoutParams.height = resources.getDimensionPixelOffset(height);
     }
 
-    default void setPrepareTipText(@NonNull String text) {
+    default void setComponentPrepareText(@NonNull String text) {
 
         if (null == text || text.length() <= 0)
             return;
@@ -207,7 +211,19 @@ public interface ImplController {
         }
     }
 
-    default void setPrepareTipColor(@ColorRes int id) {
+    default void setComponentPrepareText(@StringRes int res) {
+
+        TextView textView = findPrepareTip();
+        if (null == textView)
+            return;
+
+        try {
+            textView.setText(res);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setComponentPrepareTextColor(@ColorRes int id) {
 
         TextView textView = findPrepareTip();
         if (null == textView)
@@ -220,7 +236,7 @@ public interface ImplController {
         }
     }
 
-    default void setPrepareTipSize(@DimenRes int dimen) {
+    default void setComponentPrepareTextSize(@DimenRes int dimen) {
 
         TextView textView = findPrepareTip();
         if (null == textView)
@@ -232,6 +248,8 @@ public interface ImplController {
         } catch (Exception e) {
         }
     }
+
+    /********************  ComponentError  **********************/
 
     default void setComponentErrorImage(@DrawableRes int res) {
 
@@ -245,5 +263,55 @@ public interface ImplController {
         }
     }
 
-    /************************/
+    default void setComponentErrorText(@NonNull String msg) {
+
+        TextView textView = findComponentError();
+        if (null == textView)
+            return;
+
+        try {
+            textView.setText(msg);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setComponentErrorText(@StringRes int res) {
+
+        TextView textView = findComponentError();
+        if (null == textView)
+            return;
+
+        try {
+            textView.setText(res);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setComponentErrorTextSize(@DimenRes int dimen) {
+
+        TextView textView = findComponentError();
+        if (null == textView)
+            return;
+
+        try {
+            int offset = textView.getResources().getDimensionPixelOffset(dimen);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setComponentErrorTextColor(@ColorRes int id) {
+
+        TextView textView = findComponentError();
+        if (null == textView)
+            return;
+
+        try {
+            int color = textView.getResources().getColor(id);
+            textView.setTextColor(color);
+        } catch (Exception e) {
+        }
+    }
+
+    /********************  ComponentError  **********************/
 }
