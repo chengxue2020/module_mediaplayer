@@ -155,7 +155,7 @@ public class ComponentBottom extends FrameLayout implements ImplComponent, View.
         View viewRoot = findViewById(R.id.module_mediaplayer_controller_bottom_root);
         ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
         switch (playState) {
-            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 setVisibility(GONE);
                 progressBar.setProgress(0);

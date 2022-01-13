@@ -155,7 +155,7 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_INIT:
                 mIvStartPlay.setSelected(false);
                 mIvStartPlay.setVisibility(VISIBLE);
                 mPbLoading.setVisibility(GONE);

@@ -160,7 +160,7 @@ public class ComponentTop extends RelativeLayout implements ImplComponent {
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_START_ABORT:
             case PlayerType.StateType.STATE_PREPARING:
             case PlayerType.StateType.STATE_PREPARED:

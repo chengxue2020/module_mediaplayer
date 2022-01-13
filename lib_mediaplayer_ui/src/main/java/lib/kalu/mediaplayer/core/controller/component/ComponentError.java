@@ -125,7 +125,7 @@ public class ComponentError extends LinearLayout implements ImplComponent {
             View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
 
-        } else if (playState == PlayerType.StateType.STATE_RELEASE) {
+        } else if (playState == PlayerType.StateType.STATE_CLEAN) {
             bringToFront();
             setVisibility(VISIBLE);
 
@@ -150,7 +150,7 @@ public class ComponentError extends LinearLayout implements ImplComponent {
             View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
             //mTvMessage.setText("视频解析异常");
-        } else if (playState == PlayerType.StateType.STATE_IDLE) {
+        } else if (playState == PlayerType.StateType.STATE_INIT) {
             setVisibility(GONE);
         } else if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             setVisibility(GONE);

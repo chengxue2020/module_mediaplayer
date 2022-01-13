@@ -537,7 +537,7 @@ public final class PlayerUtils {
         String playStateString;
         switch (state) {
             default:
-            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_INIT:
                 playStateString = "idle";
                 break;
             case PlayerType.StateType.STATE_PREPARING:

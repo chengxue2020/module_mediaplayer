@@ -158,7 +158,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
     private boolean isInPlaybackState() {
         return mControllerWrapper != null
                 && mCurPlayState != PlayerType.StateType.STATE_ERROR
-                && mCurPlayState != PlayerType.StateType.STATE_IDLE
+                && mCurPlayState != PlayerType.StateType.STATE_INIT
                 && mCurPlayState != PlayerType.StateType.STATE_PREPARING
                 && mCurPlayState != PlayerType.StateType.STATE_PREPARED
                 && mCurPlayState != PlayerType.StateType.STATE_START_ABORT

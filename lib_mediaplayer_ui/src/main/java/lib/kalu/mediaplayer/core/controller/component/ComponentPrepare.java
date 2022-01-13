@@ -108,7 +108,7 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
             case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
                 break;
-            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_INIT:
                 setVisibility(VISIBLE);
                 bringToFront();
                 viewProgress.setVisibility(View.GONE);

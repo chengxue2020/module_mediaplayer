@@ -264,7 +264,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         View viewLoading = findViewById(R.id.module_mediaplayer_controller_center_loading);
         switch (playState) {
             //调用release方法会回到此状态
-            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_INIT:
                 view.setSelected(false);
                 viewLoading.setVisibility(GONE);
                 break;

@@ -623,7 +623,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
     @CallSuper
     protected void onPlayStateChanged(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_IDLE:
+            case PlayerType.StateType.STATE_INIT:
                 mOrientationHelper.disable();
                 mOrientation = 0;
                 mIsLocked = false;

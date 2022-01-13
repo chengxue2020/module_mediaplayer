@@ -121,7 +121,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
             @Override
             public void onPlayStateChanged(int playState) {
                 switch (playState) {
-                    case PlayerType.StateType.STATE_IDLE:
+                    case PlayerType.StateType.STATE_INIT:
                         //播放未开始，初始化
                         break;
                     case PlayerType.StateType.STATE_START_ABORT:
