@@ -705,7 +705,6 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
      * @param position 视频当前时长
      */
     protected void setProgress(int duration, int position) {
-
     }
 
     private void handleLockStateChanged(boolean isLocked) {

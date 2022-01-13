@@ -32,6 +32,7 @@ import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.player.impl.ImplPlayer;
+import lib.kalu.mediaplayer.listener.OnMediaProgressManager;
 import lib.kalu.mediaplayer.widget.surface.InterSurfaceView;
 import lib.kalu.mediaplayer.widget.surface.SurfaceFactory;
 import lib.kalu.mediaplayer.util.BaseToast;
@@ -122,7 +123,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 进度管理器，设置之后播放器会记录播放进度，以便下次播放恢复进度
      */
     @Nullable
-    protected ProgressManager mProgressManager;
+    protected OnMediaProgressManager mProgressManager;
 
     /**
      * 循环播放
@@ -311,14 +312,14 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * @param url
      */
     @Override
-    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers, @NonNull OnMediaStateListener listener) {
+    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
         if (mVideoController == null) {
             //在调用start方法前，请先初始化视频控制器，调用setController方法
             throw new VideoException(VideoException.CODE_NOT_SET_CONTROLLER, "Controller must not be null , please setController first");
         }
 
-        clearOnStateChangeListeners();
-        setOnStateChangeListener(listener);
+//        clearOnStateChangeListeners();
+//        setOnStateChangeListener(listener);
 
         // release
 //        if (null != mUrl && mUrl.length() > 0) {
@@ -885,7 +886,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 设置进度管理器，用于保存播放进度
      */
-    public void setProgressManager(@Nullable ProgressManager progressManager) {
+    public void setProgressManager(@Nullable OnMediaProgressManager progressManager) {
         this.mProgressManager = progressManager;
     }
 
@@ -1166,7 +1167,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 设置一个播放状态监听器，播放状态发生变化时将会调用，
      * 如果你想同时设置多个监听器，推荐 {@link #addOnStateChangeListener(OnMediaStateListener)}。
      */
-    private void setOnStateChangeListener(@NonNull OnMediaStateListener listener) {
+    public void setOnStateChangeListener(@NonNull OnMediaStateListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         } else {
@@ -1178,7 +1179,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 移除所有播放状态监听
      */
-    private void clearOnStateChangeListeners() {
+    public void clearOnStateChangeListeners() {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.clear();
         }

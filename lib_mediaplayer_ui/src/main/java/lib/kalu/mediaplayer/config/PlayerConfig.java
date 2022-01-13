@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.core.kernel.video.factory.PlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.platfrom.media.MediaPlayerFactory;
 import lib.kalu.mediaplayer.keycode.KeycodeImpl;
 import lib.kalu.mediaplayer.keycode.KeycodeImplTV;
-import lib.kalu.mediaplayer.core.player.ProgressManager;
+import lib.kalu.mediaplayer.listener.OnMediaProgressManager;
 import lib.kalu.mediaplayer.widget.surface.SurfaceFactory;
 import lib.kalu.mediaplayer.widget.surface.TextureViewFactory;
 
@@ -24,7 +24,7 @@ public class PlayerConfig {
     public final boolean mPlayOnMobileNetwork;
     public final boolean mEnableOrientation;
     public final boolean mIsEnableLog;
-    public final ProgressManager mProgressManager;
+    public final OnMediaProgressManager mProgressManager;
     public final PlayerFactory mPlayerFactory;
     public final BuriedPointEvent mBuriedPointEvent;
     public final int mScreenScaleType;
@@ -85,7 +85,7 @@ public class PlayerConfig {
         /**
          * 设置进度管理器，用于保存播放进度
          */
-        private ProgressManager mProgressManager;
+        private OnMediaProgressManager mProgressManager;
         /**
          * 自定义播放核心
          */
@@ -145,7 +145,7 @@ public class PlayerConfig {
         /**
          * 设置进度管理器，用于保存播放进度
          */
-        public Builder setProgressManager(@Nullable ProgressManager progressManager) {
+        public Builder setProgressManager(@Nullable OnMediaProgressManager progressManager) {
             mProgressManager = progressManager;
             return this;
         }

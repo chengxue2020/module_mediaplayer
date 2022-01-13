@@ -78,7 +78,8 @@ public final class ExoplayerActivity extends AppCompatActivity {
         // 全屏
         videoLayout.startFullScreen();
         // 开始播放
-        videoLayout.start(live, url, new OnMediaStateListener() {
+        videoLayout.start(live, url);
+        videoLayout.setOnStateChangeListener(new OnMediaStateListener() {
             /**
              * 播放模式
              * 普通模式，小窗口模式，正常模式三种其中一种
