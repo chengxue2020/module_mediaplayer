@@ -125,6 +125,12 @@ public class ComponentError extends LinearLayout implements ImplComponent {
             View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
 
+        } else if (playState == PlayerType.StateType.STATE_RELEASE) {
+            bringToFront();
+            setVisibility(VISIBLE);
+
+            View view = findViewById(R.id.module_mediaplayer_controller_error_back);
+            view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
         } else if (playState == PlayerType.StateType.STATE_ERROR) {
             bringToFront();
             setVisibility(VISIBLE);

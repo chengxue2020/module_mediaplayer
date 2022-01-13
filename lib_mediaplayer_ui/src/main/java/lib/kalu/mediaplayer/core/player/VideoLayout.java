@@ -570,6 +570,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             //重置播放进度
             mCurrentPosition = 0;
             //切换转态
+            setPlayState(PlayerType.StateType.STATE_RELEASE);
             setPlayState(PlayerType.StateType.STATE_IDLE);
         }
     }

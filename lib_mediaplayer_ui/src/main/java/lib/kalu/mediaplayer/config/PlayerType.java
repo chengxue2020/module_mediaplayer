@@ -38,6 +38,7 @@ public class PlayerType {
     @Keep
     @Retention(RetentionPolicy.SOURCE)
     public @interface StateType {
+        int STATE_RELEASE = 2000;
         int STATE_IDLE = 2001; // 播放未开始，即将进行
         int STATE_PREPARING = 2002; // 播放准备中
         int STATE_PREPARED = 2003; // 播放准备就绪
@@ -54,7 +55,7 @@ public class PlayerType {
         int STATE_NETWORK_ERROR = 2013; // 播放错误，网络异常
         int STATE_ERROR = 2014; // 播放错误
 
-        @IntDef({STATE_ERROR, STATE_IDLE, STATE_PREPARING,
+        @IntDef({STATE_RELEASE, STATE_ERROR, STATE_IDLE, STATE_PREPARING,
                 STATE_PREPARED, STATE_PLAYING, STATE_PAUSED,
                 STATE_BUFFERING_PLAYING, STATE_BUFFERING_PAUSED,
                 STATE_COMPLETED, STATE_START_ABORT, STATE_NETWORK_ERROR,
