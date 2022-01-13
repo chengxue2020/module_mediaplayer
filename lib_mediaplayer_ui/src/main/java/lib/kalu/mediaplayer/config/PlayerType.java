@@ -38,24 +38,24 @@ public class PlayerType {
     @Keep
     @Retention(RetentionPolicy.SOURCE)
     public @interface StateType {
-        int STATE_RELEASE = 2000;
-        int STATE_IDLE = 2001; // 播放未开始，即将进行
-        int STATE_PREPARING = 2002; // 播放准备中
-        int STATE_PREPARED = 2003; // 播放准备就绪
-        int STATE_PLAYING = 2004; // 正在播放
-        int STATE_PAUSED = 2005; // 暂停播放
-        int STATE_BUFFERING_PLAYING = 2006; // 正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int STATE_BUFFERING_PAUSED = 2007; // 暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_COMPLETED = 2008; // 播放完成
-        int STATE_START_ABORT = 2009; // 开始播放中止
-        int STATE_ONCE_LIVE = 2010; // 即将开播
+        int STATE_INIT = 2001; // 播放未开始，即将进行
+        int STATE_CLEAN = 2002; //
+        int STATE_PREPARING = 2003; // 播放准备中
+        int STATE_PREPARED = 2004; // 播放准备就绪
+        int STATE_PLAYING = 2005; // 正在播放
+        int STATE_PAUSED = 2006; // 暂停播放
+        int STATE_BUFFERING_PLAYING = 2007; // 正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int STATE_BUFFERING_PAUSED = 2008; // 暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_COMPLETED = 2009; // 播放完成
+        int STATE_START_ABORT = 2010; // 开始播放中止
+        int STATE_ONCE_LIVE = 2011; // 即将开播
 
-        int STATE_URL_NULL = 2011; // 链接为空
-        int STATE_PARSE_ERROR = 2012; // 解析异常
-        int STATE_NETWORK_ERROR = 2013; // 播放错误，网络异常
-        int STATE_ERROR = 2014; // 播放错误
+        int STATE_URL_NULL = 2012; // 链接为空
+        int STATE_PARSE_ERROR = 2013; // 解析异常
+        int STATE_NETWORK_ERROR = 2014; // 播放错误，网络异常
+        int STATE_ERROR = 2015; // 播放错误
 
-        @IntDef({STATE_RELEASE, STATE_ERROR, STATE_IDLE, STATE_PREPARING,
+        @IntDef({STATE_INIT, STATE_ERROR, STATE_CLEAN, STATE_PREPARING,
                 STATE_PREPARED, STATE_PLAYING, STATE_PAUSED,
                 STATE_BUFFERING_PLAYING, STATE_BUFFERING_PAUSED,
                 STATE_COMPLETED, STATE_START_ABORT, STATE_NETWORK_ERROR,

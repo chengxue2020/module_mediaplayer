@@ -94,11 +94,11 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 当前正在播放视频的位置
      */
     protected long mCurrentPosition;
-    /**
-     * 当前播放器的状态
-     * 比如：错误，开始播放，暂停播放，缓存中等等状态
-     */
-    protected int mCurrentPlayState = PlayerType.StateType.STATE_IDLE;
+//    /**
+//     * 当前播放器的状态
+//     * 比如：错误，开始播放，暂停播放，缓存中等等状态
+//     */
+//    protected int mCurrentPlayState = PlayerType.StateType.STATE_INIT;
     /**
      * 播放模式，普通模式，小窗口模式，正常模式等等
      * 存在局限性：比如小窗口下的正在播放模式，那么mCurrentMode就是STATE_PLAYING，而不是MODE_TINY_WINDOW并存
@@ -328,7 +328,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 //        }
 
         boolean isStarted = false;
-        if (isInIdleState() || isInStartAbortState()) {
+        if (isInit() || isInStartAbortState()) {
             isStarted = startPlay(seekPosition, live, url, headers);
         } else if (isInPlaybackState()) {
             startInPlaybackState();
@@ -531,7 +531,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 释放播放器
      */
     public void release() {
-        if (!isInIdleState()) {
+        if (!isInit()) {
             PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
             if (config != null && config.mBuriedPointEvent != null) {
                 //退出视频播放
@@ -570,8 +570,8 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             //重置播放进度
             mCurrentPosition = 0;
             //切换转态
-            setPlayState(PlayerType.StateType.STATE_RELEASE);
-            setPlayState(PlayerType.StateType.STATE_IDLE);
+            setPlayState(PlayerType.StateType.STATE_CLEAN);
+            setPlayState(PlayerType.StateType.STATE_INIT);
         }
     }
 
@@ -589,26 +589,33 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 是否处于播放状态
      */
     protected boolean isInPlaybackState() {
+
+        if (null == mMediaPlayer)
+            return false;
+
+        int state = getPlayState();
         return mMediaPlayer != null
-                && mCurrentPlayState != PlayerType.StateType.STATE_ERROR
-                && mCurrentPlayState != PlayerType.StateType.STATE_IDLE
-                && mCurrentPlayState != PlayerType.StateType.STATE_PREPARING
-                && mCurrentPlayState != PlayerType.StateType.STATE_START_ABORT
-                && mCurrentPlayState != PlayerType.StateType.STATE_BUFFERING_PLAYING;
+                && state != PlayerType.StateType.STATE_ERROR
+                && state != PlayerType.StateType.STATE_INIT
+                && state != PlayerType.StateType.STATE_PREPARING
+                && state != PlayerType.StateType.STATE_START_ABORT
+                && state != PlayerType.StateType.STATE_BUFFERING_PLAYING;
     }
 
     /**
      * 是否处于未播放状态
      */
-    protected boolean isInIdleState() {
-        return mCurrentPlayState == PlayerType.StateType.STATE_IDLE;
+    protected boolean isInit() {
+        int state = getPlayState();
+        return state == PlayerType.StateType.STATE_INIT;
     }
 
     /**
      * 播放中止状态
      */
     private boolean isInStartAbortState() {
-        return mCurrentPlayState == PlayerType.StateType.STATE_START_ABORT;
+        int state = getPlayState();
+        return state == PlayerType.StateType.STATE_START_ABORT;
     }
 
     /**
@@ -780,14 +787,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     public int getCurrentWindowState() {
         return mCurrentPlayerState;
-    }
-
-    /**
-     * 获取当前的播放状态
-     */
-    public @PlayerType.StateType.Value
-    int getCurrentPlayState() {
-        return mCurrentPlayState;
     }
 
     /**
@@ -1095,6 +1094,18 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     }
 
     /**
+     * 获取当前的播放状态
+     */
+    @PlayerType.StateType.Value
+    public int getPlayState() {
+        try {
+            return (int) getTag(R.id.module_mediaplayer_id_state_code);
+        } catch (Exception e) {
+            return PlayerType.StateType.STATE_INIT;
+        }
+    }
+
+    /**
      * 向Controller设置播放状态，用于控制Controller的ui展示
      * 这里使用注解限定符，不要使用1，2这种直观数字，不方便知道意思
      * 播放状态，主要是指播放器的各种状态
@@ -1109,15 +1120,15 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 7                播放完成
      * 8                开始播放中止
      */
-    protected void setPlayState(@PlayerType.StateType.Value int playState) {
-        mCurrentPlayState = playState;
+    protected void setPlayState(@PlayerType.StateType.Value int state) {
+        setTag(R.id.module_mediaplayer_id_state_code, state);
         if (mVideoController != null) {
-            mVideoController.setPlayState(playState);
+            mVideoController.setPlayState(state);
         }
         if (mOnStateChangeListeners != null) {
             for (OnMediaStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                 if (l != null) {
-                    l.onPlayStateChanged(playState);
+                    l.onPlayStateChanged(state);
                 }
             }
         }
