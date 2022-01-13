@@ -785,7 +785,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     /**
      * 获取当前播放器的状态
      */
-    public int getCurrentWindowState() {
+    public int getWindowState() {
         return mCurrentPlayerState;
     }
 
