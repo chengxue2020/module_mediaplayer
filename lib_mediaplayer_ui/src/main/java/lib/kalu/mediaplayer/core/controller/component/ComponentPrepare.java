@@ -114,7 +114,7 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
                 viewProgress.setVisibility(View.GONE);
                 viewTip.setVisibility(View.GONE);
                 findViewById(R.id.fl_net_warning).setVisibility(GONE);
-                viewPlay.setVisibility(View.VISIBLE);
+                viewPlay.setVisibility(View.GONE);
                 viewBackground.setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_START_ABORT:
