@@ -21,24 +21,21 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
-<!--        <receiver-->
-<!--            android:name="lib.kalu.mediaplayer.ui.old.other.BatterReceiver"-->
-<!--            android:process=":mediaplayer" />-->
-<!--        <receiver-->
-<!--            android:name="lib.kalu.mediaplayer.ui.old.other.NetChangedReceiver"-->
-<!--            android:process=":mediaplayer">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+        <!--        <receiver-->
+        <!--            android:name="lib.kalu.mediaplayer.ui.old.other.BatterReceiver"-->
+        <!--            android:process=":mediaplayer" />-->
+        <!--        <receiver-->
+        <!--            android:name="lib.kalu.mediaplayer.ui.old.other.NetChangedReceiver"-->
+        <!--            android:process=":mediaplayer">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
 
-        <service
-            android:name=".core.kernel.music.service.PlayService"
-            android:process=":mediaplayer" />
+        <service android:name=".core.kernel.music.service.PlayService" />
 
         <receiver
             android:name=".core.kernel.music.receiver.NotificationStatusBarReceiver"
-            android:process=":mediaplayer"
             android:exported="false">
             <intent-filter>
                 <action android:name="lib.kalu.status_bar" />
@@ -47,7 +44,6 @@
 
         <receiver
             android:name=".core.kernel.music.receiver.EarphoneControlReceiver"
-            android:process=":mediaplayer"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -56,7 +52,6 @@
 
         <receiver
             android:name=".core.kernel.music.receiver.AudioBroadcastReceiver"
-            android:process=":mediaplayer"
             android:exported="false">
             <intent-filter>
                 <action android:name="lib.kalu.lock" />
@@ -67,7 +62,6 @@
             android:name="lib.kalu.mediaplayer.ExoplayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
             android:exported="false"
-            android:process=":mediaplayer"
             android:screenOrientation="landscape"
             android:theme="@style/MediaplayerThemeFull" />
 
