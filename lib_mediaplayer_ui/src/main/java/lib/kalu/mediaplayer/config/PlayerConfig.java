@@ -32,7 +32,7 @@ public class PlayerConfig {
     public final boolean mAdaptCutout;
     public final boolean mIsShowToast;
     public final long mShowToastTime;
-    public final KeycodeImpl mKeycodeImpl;
+    public final KeycodeImpl mKeycode;
 
     private PlayerConfig(Builder builder) {
         mIsEnableLog = builder.mIsEnableLog;
@@ -40,10 +40,10 @@ public class PlayerConfig {
         mPlayOnMobileNetwork = builder.mPlayOnMobileNetwork;
         mProgressManager = builder.mProgressManager;
         mScreenScaleType = builder.mScreenScaleType;
-        if (null == builder.mKeycodeImpl) {
-            mKeycodeImpl = new KeycodeImplTV();
+        if (null == builder.mKeycode) {
+            mKeycode = new KeycodeImplTV();
         } else {
-            mKeycodeImpl = builder.mKeycodeImpl;
+            mKeycode = builder.mKeycode;
         }
         if (builder.mPlayerFactory == null) {
             //默认为AndroidMediaPlayer
@@ -115,14 +115,14 @@ public class PlayerConfig {
          */
         private long mShowToastTime = 5;
 
-        private KeycodeImpl mKeycodeImpl;
+        private KeycodeImpl mKeycode;
 
-        public KeycodeImpl getKeycodeImpl() {
-            return mKeycodeImpl;
+        public KeycodeImpl getKeycode() {
+            return mKeycode;
         }
 
-        public Builder setKeycodeImpl(KeycodeImpl mKeycodeImpl) {
-            this.mKeycodeImpl = mKeycodeImpl;
+        public Builder setKeycode(KeycodeImpl mKeycode) {
+            this.mKeycode = mKeycode;
             return this;
         }
 
