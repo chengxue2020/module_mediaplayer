@@ -54,7 +54,7 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
             return super.dispatchKeyEvent(event);
 
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        KeycodeImpl mKeycodeImpl = config.mKeycodeImpl;
+        KeycodeImpl mKeycodeImpl = config.mKeycode;
         // 返回
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.back() && isShowing()) {
             MediaLogUtil.log("dispatchKeyEvent[返回] => " + event.getKeyCode());
