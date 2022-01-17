@@ -159,8 +159,8 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         return mControllerWrapper != null
                 && mCurPlayState != PlayerType.StateType.STATE_ERROR
                 && mCurPlayState != PlayerType.StateType.STATE_INIT
-                && mCurPlayState != PlayerType.StateType.STATE_PREPARING
-                && mCurPlayState != PlayerType.StateType.STATE_PREPARED
+                && mCurPlayState != PlayerType.StateType.STATE_PREPARE_START
+                && mCurPlayState != PlayerType.StateType.STATE_PREPARE_END
                 && mCurPlayState != PlayerType.StateType.STATE_START_ABORT
                 && mCurPlayState != PlayerType.StateType.STATE_BUFFERING_PLAYING;
     }

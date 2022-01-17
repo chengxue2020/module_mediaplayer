@@ -177,8 +177,8 @@ public class ComponentGesture extends FrameLayout implements ImplGesture {
     public void onPlayStateChanged(int playState) {
         if (playState == PlayerType.StateType.STATE_INIT
                 || playState == PlayerType.StateType.STATE_START_ABORT
-                || playState == PlayerType.StateType.STATE_PREPARING
-                || playState == PlayerType.StateType.STATE_PREPARED
+                || playState == PlayerType.StateType.STATE_PREPARE_START
+                || playState == PlayerType.StateType.STATE_PREPARE_END
                 || playState == PlayerType.StateType.STATE_ERROR
                 || playState == PlayerType.StateType.STATE_BUFFERING_PLAYING
                 || playState == PlayerType.StateType.STATE_ONCE_LIVE) {

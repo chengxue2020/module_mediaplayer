@@ -40,26 +40,31 @@ public class PlayerType {
     public @interface StateType {
         int STATE_INIT = 2001; // 播放未开始，即将进行
         int STATE_CLEAN = 2002; //
-        int STATE_PREPARING = 2003; // 播放准备中
-        int STATE_PREPARED = 2004; // 播放准备就绪
-        int STATE_PLAYING = 2005; // 正在播放
+        int STATE_PREPARE_START = 2003; // 播放准备, 开始
+        int STATE_PREPARE_END = 2004; // 播放准备, 完成
+        int STATE_START = 2005; // 开始播放
+        int STATE_END = 2009; // 播放完成
         int STATE_PAUSED = 2006; // 暂停播放
         int STATE_BUFFERING_PLAYING = 2007; // 正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
         int STATE_BUFFERING_PAUSED = 2008; // 暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_END = 2009; // 播放完成
         int STATE_START_ABORT = 2010; // 开始播放中止
         int STATE_ONCE_LIVE = 2011; // 即将开播
 
-        int STATE_URL_NULL = 2012; // 链接为空
-        int STATE_PARSE_ERROR = 2013; // 解析异常
-        int STATE_NETWORK_ERROR = 2014; // 播放错误，网络异常
+        int STATE_ERROR_URL = 2012; // 视频地址错误【null】
+        int STATE_ERROR_PARSE = 2013; // 解析异常
+        int STATE_ERROR_NETWORK = 2014; // 播放错误，网络异常
         int STATE_ERROR = 2015; // 播放错误
 
-        @IntDef({STATE_INIT, STATE_ERROR, STATE_CLEAN, STATE_PREPARING,
-                STATE_PREPARED, STATE_PLAYING, STATE_PAUSED,
+        @IntDef({STATE_INIT, STATE_ERROR, STATE_CLEAN,
+                STATE_START, STATE_PAUSED,
                 STATE_BUFFERING_PLAYING, STATE_BUFFERING_PAUSED,
-                STATE_END, STATE_START_ABORT, STATE_NETWORK_ERROR,
-                STATE_PARSE_ERROR, STATE_URL_NULL, STATE_ONCE_LIVE})
+                STATE_END, STATE_START_ABORT,
+                STATE_PREPARE_START,
+                STATE_PREPARE_END,
+                STATE_ERROR_PARSE,
+                STATE_ERROR_NETWORK,
+                STATE_ERROR_URL,
+                STATE_ONCE_LIVE})
         @Retention(RetentionPolicy.SOURCE)
         @Keep
         @interface Value {

@@ -165,13 +165,13 @@ public class ComponentBottom extends FrameLayout implements ImplComponent, View.
                 seekBar.setSecondaryProgress(0);
                 break;
             case PlayerType.StateType.STATE_START_ABORT:
-            case PlayerType.StateType.STATE_PREPARING:
-            case PlayerType.StateType.STATE_PREPARED:
+            case PlayerType.StateType.STATE_PREPARE_START:
+            case PlayerType.StateType.STATE_PREPARE_END:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
                 break;
-            case PlayerType.StateType.STATE_PLAYING:
+            case PlayerType.StateType.STATE_START:
                 viewPlayer.setSelected(true);
                 if (mIsShowBottomProgress) {
                     if (mControllerWrapper.isShowing()) {

@@ -118,7 +118,7 @@ public class ComponentError extends LinearLayout implements ImplComponent {
     @Override
     public void onPlayStateChanged(int playState) {
 
-        if (playState == PlayerType.StateType.STATE_URL_NULL) {
+        if (playState == PlayerType.StateType.STATE_ERROR_URL) {
             bringToFront();
             setVisibility(VISIBLE);
 
@@ -137,13 +137,13 @@ public class ComponentError extends LinearLayout implements ImplComponent {
 
             View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
-        } else if (playState == PlayerType.StateType.STATE_NETWORK_ERROR) {
+        } else if (playState == PlayerType.StateType.STATE_ERROR_NETWORK) {
             bringToFront();
             setVisibility(VISIBLE);
 
             View view = findViewById(R.id.module_mediaplayer_controller_error_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);
-        } else if (playState == PlayerType.StateType.STATE_PARSE_ERROR) {
+        } else if (playState == PlayerType.StateType.STATE_ERROR_PARSE) {
             bringToFront();
             setVisibility(VISIBLE);
 

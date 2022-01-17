@@ -459,20 +459,14 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
         if (null == mUrl || mUrl.length() <= 0) {
             //更改播放器的播放状态
-            setPlayState(PlayerType.StateType.STATE_PREPARING);
+            setPlayState(PlayerType.StateType.STATE_PREPARE_START);
             // 播放状态
-            setPlayState(PlayerType.StateType.STATE_URL_NULL);
-//            postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                }
-//            }, 100);
+            setPlayState(PlayerType.StateType.STATE_ERROR_URL);
         }
         // 重置
         else if (reset) {
             //更改播放器的播放状态
-            setPlayState(PlayerType.StateType.STATE_PREPARING);
+            setPlayState(PlayerType.StateType.STATE_PREPARE_START);
             mMediaPlayer.prepareAsync(getContext(), mLive, mUrl, mHeaders);
             //准备开始播放
             if (seekPosition < 0) {
@@ -494,7 +488,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     protected void startInPlaybackState() {
         mMediaPlayer.start();
-        setPlayState(PlayerType.StateType.STATE_PLAYING);
+        setPlayState(PlayerType.StateType.STATE_START);
     }
 
     /**
@@ -523,7 +517,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
         if (isInPlaybackState() && !mMediaPlayer.isPlaying()) {
             mMediaPlayer.start();
-            setPlayState(PlayerType.StateType.STATE_PLAYING);
+            setPlayState(PlayerType.StateType.STATE_START);
             mPlayerContainer.setKeepScreenOn(true);
         }
     }
@@ -598,7 +592,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         return mMediaPlayer != null
                 && state != PlayerType.StateType.STATE_ERROR
                 && state != PlayerType.StateType.STATE_INIT
-                && state != PlayerType.StateType.STATE_PREPARING
+                && state != PlayerType.StateType.STATE_PREPARE_START
                 && state != PlayerType.StateType.STATE_START_ABORT
                 && state != PlayerType.StateType.STATE_BUFFERING_PLAYING;
     }
@@ -705,7 +699,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         mPlayerContainer.setKeepScreenOn(false);
         boolean connected = PlayerUtils.isConnected(getContext());
         if (!connected) {
-            setPlayState(PlayerType.StateType.STATE_NETWORK_ERROR);
+            setPlayState(PlayerType.StateType.STATE_ERROR_NETWORK);
         } else if (type == PlayerType.ErrorType.ERROR_RETRY) {
             // TODO: 2021/12/16
 //            restart(false);
@@ -713,7 +707,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         } else if (type == PlayerType.ErrorType.ERROR_UNEXPECTED) {
             setPlayState(PlayerType.StateType.STATE_ERROR);
         } else if (type == PlayerType.ErrorType.ERROR_PARSE) {
-            setPlayState(PlayerType.StateType.STATE_PARSE_ERROR);
+            setPlayState(PlayerType.StateType.STATE_ERROR_PARSE);
         } else if (type == PlayerType.ErrorType.ERROR_SOURCE) {
             setPlayState(PlayerType.StateType.STATE_ERROR);
         } else {
@@ -760,7 +754,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
                 setPlayState(PlayerType.StateType.STATE_END);
                 break;
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
-                setPlayState(PlayerType.StateType.STATE_PLAYING);
+                setPlayState(PlayerType.StateType.STATE_START);
                 if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
                     pause();
                 }
@@ -777,7 +771,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      */
     @Override
     public void onPrepared() {
-        setPlayState(PlayerType.StateType.STATE_PREPARED);
+        setPlayState(PlayerType.StateType.STATE_PREPARE_END);
         if (mCurrentPosition > 0) {
             seekTo(mCurrentPosition);
         }

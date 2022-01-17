@@ -139,14 +139,14 @@ public class ComponentLive extends FrameLayout implements ImplComponent, View.On
         switch (playState) {
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_START_ABORT:
-            case PlayerType.StateType.STATE_PREPARING:
-            case PlayerType.StateType.STATE_PREPARED:
+            case PlayerType.StateType.STATE_PREPARE_START:
+            case PlayerType.StateType.STATE_PREPARE_END:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
             case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
                 break;
-            case PlayerType.StateType.STATE_PLAYING:
+            case PlayerType.StateType.STATE_START:
                 mIvPlay.setSelected(true);
                 break;
             case PlayerType.StateType.STATE_PAUSED:

@@ -91,7 +91,7 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
         View viewProgress = findViewById(R.id.module_mediaplayer_controller_prepare_progress);
         View viewTip = findViewById(R.id.module_mediaplayer_controller_prepare_tip);
         switch (playState) {
-            case PlayerType.StateType.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARE_START:
                 bringToFront();
                 setVisibility(VISIBLE);
                 viewPlay.setVisibility(View.GONE);
@@ -99,7 +99,7 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
                 viewProgress.setVisibility(View.VISIBLE);
                 viewTip.setVisibility(View.VISIBLE);
                 break;
-            case PlayerType.StateType.STATE_PLAYING:
+            case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_PAUSED:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:

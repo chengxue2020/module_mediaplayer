@@ -131,10 +131,10 @@ public final class ExoplayerActivity extends AppCompatActivity {
                     case PlayerType.StateType.STATE_START_ABORT:
                         //开始播放中止
                         break;
-                    case PlayerType.StateType.STATE_PREPARING:
+                    case PlayerType.StateType.STATE_PREPARE_START:
                         //播放准备中
                         break;
-                    case PlayerType.StateType.STATE_PREPARED:
+                    case PlayerType.StateType.STATE_PREPARE_END:
                         //播放准备就绪
                         break;
                     case PlayerType.StateType.STATE_ERROR:
@@ -143,7 +143,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
                     case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                         //正在缓冲
                         break;
-                    case PlayerType.StateType.STATE_PLAYING:
+                    case PlayerType.StateType.STATE_START:
                         //正在播放
                         break;
                     case PlayerType.StateType.STATE_PAUSED:

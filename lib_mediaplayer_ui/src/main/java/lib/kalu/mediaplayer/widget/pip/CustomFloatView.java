@@ -160,7 +160,7 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
                 mIvStartPlay.setVisibility(VISIBLE);
                 mPbLoading.setVisibility(GONE);
                 break;
-            case PlayerType.StateType.STATE_PLAYING:
+            case PlayerType.StateType.STATE_START:
                 mIvStartPlay.setSelected(true);
                 mIvStartPlay.setVisibility(GONE);
                 mPbLoading.setVisibility(GONE);
@@ -179,11 +179,11 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
                 mIvStartPlay.setVisibility(VISIBLE);
                 mPbLoading.setVisibility(GONE);
                 break;
-            case PlayerType.StateType.STATE_PREPARING:
+            case PlayerType.StateType.STATE_PREPARE_START:
                 mIvStartPlay.setVisibility(GONE);
                 mIvStartPlay.setVisibility(VISIBLE);
                 break;
-            case PlayerType.StateType.STATE_PREPARED:
+            case PlayerType.StateType.STATE_PREPARE_END:
                 mIvStartPlay.setVisibility(GONE);
                 mPbLoading.setVisibility(GONE);
                 break;
