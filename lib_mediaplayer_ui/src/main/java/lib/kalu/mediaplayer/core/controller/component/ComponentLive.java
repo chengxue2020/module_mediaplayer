@@ -153,7 +153,7 @@ public class ComponentLive extends FrameLayout implements ImplComponent, View.On
                 mIvPlay.setSelected(false);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
-            case PlayerType.StateType.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_END:
                 mIvPlay.setSelected(mControllerWrapper.isPlaying());
                 break;
         }

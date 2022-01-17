@@ -555,8 +555,8 @@ public final class PlayerUtils {
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                 playStateString = "buffering";
                 break;
-            case PlayerType.StateType.STATE_COMPLETED:
-                playStateString = "buffered";
+            case PlayerType.StateType.STATE_END:
+                playStateString = "end";
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 playStateString = "playback completed";

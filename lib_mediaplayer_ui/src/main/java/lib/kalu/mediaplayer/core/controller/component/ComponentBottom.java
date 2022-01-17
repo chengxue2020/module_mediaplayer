@@ -192,7 +192,7 @@ public class ComponentBottom extends FrameLayout implements ImplComponent, View.
                 viewPlayer.setSelected(false);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
-            case PlayerType.StateType.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_END:
                 viewPlayer.setSelected(mControllerWrapper.isPlaying());
                 break;
         }

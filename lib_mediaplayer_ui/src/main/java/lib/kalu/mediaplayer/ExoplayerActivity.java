@@ -14,6 +14,7 @@ import lib.kalu.mediaplayer.core.controller.ControllerStandard;
 import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 import lib.kalu.mediaplayer.core.controller.ControllerLive;
 import lib.kalu.mediaplayer.core.player.VideoLayout;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -120,6 +121,9 @@ public final class ExoplayerActivity extends AppCompatActivity {
              */
             @Override
             public void onPlayStateChanged(int playState) {
+                MediaLogUtil.setIsLog(true);
+                MediaLogUtil.log("onPlayStateChanged => playState = " + playState);
+
                 switch (playState) {
                     case PlayerType.StateType.STATE_INIT:
                         //播放未开始，初始化
@@ -148,7 +152,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
                     case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                         //暂停缓冲
                         break;
-                    case PlayerType.StateType.STATE_COMPLETED:
+                    case PlayerType.StateType.STATE_END:
                         //播放完成
                         break;
                 }

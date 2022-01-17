@@ -103,7 +103,7 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
             case PlayerType.StateType.STATE_PAUSED:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
-            case PlayerType.StateType.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_END:
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
             case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);

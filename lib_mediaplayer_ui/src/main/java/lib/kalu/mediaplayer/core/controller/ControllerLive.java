@@ -131,7 +131,7 @@ public class ControllerLive extends ControllerLayout {
             case PlayerType.StateType.STATE_PAUSED:
             case PlayerType.StateType.STATE_PREPARED:
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_COMPLETED:
+            case PlayerType.StateType.STATE_END:
                 viewLoading.setVisibility(GONE);
                 break;
             case PlayerType.StateType.STATE_PREPARING:

@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -741,7 +742,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             //播放完成，清除进度
             mProgressManager.saveProgress(mUrl, 0);
         }
-        setPlayState(PlayerType.StateType.STATE_BUFFERING_PLAYING);
+        setPlayState(PlayerType.StateType.STATE_END);
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         if (config != null && config.mBuriedPointEvent != null) {
             //视频播放完成
@@ -756,7 +757,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
                 setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
                 break;
             case PlayerType.MediaType.MEDIA_INFO_BUFFERING_END:
-                setPlayState(PlayerType.StateType.STATE_COMPLETED);
+                setPlayState(PlayerType.StateType.STATE_END);
                 break;
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
                 setPlayState(PlayerType.StateType.STATE_PLAYING);
@@ -1071,6 +1072,10 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
             return mRenderView.doScreenShot();
         }
         return null;
+    }
+
+    public View getRenderView() {
+        return mRenderView.getView();
     }
 
     /**
