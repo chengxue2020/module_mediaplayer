@@ -31,13 +31,12 @@
         android:visibility="invisible" />
 
     <!-- 转圈 -->
-    <ProgressBar
+    <lib.kalu.mediaplayer.widget.MediaProgressBar
         android:id="@+id/module_mediaplayer_controller_prepare_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_above="@id/module_mediaplayer_controller_prepare_center"
         android:layout_centerHorizontal="true"
-        android:indeterminateDrawable="@drawable/module_mediaplayer_shape_loading"
         android:indeterminateDuration="2000"
         android:visibility="invisible" />
 

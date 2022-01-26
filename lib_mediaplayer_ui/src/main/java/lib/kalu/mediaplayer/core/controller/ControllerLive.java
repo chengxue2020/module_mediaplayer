@@ -178,9 +178,9 @@ public class ControllerLive extends ControllerLayout {
 
     @Nullable
     @Override
-    public ProgressBar findPrepareProgress() {
-        ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_prepare_progress);
-        return progressBar;
+    public View findPrepareProgress() {
+        View view = findViewById(R.id.module_mediaplayer_controller_prepare_progress);
+        return view;
     }
 
     @Nullable

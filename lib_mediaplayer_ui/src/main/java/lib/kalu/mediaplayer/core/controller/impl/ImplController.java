@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -138,7 +139,7 @@ public interface ImplController {
     }
 
     @Nullable
-    default ProgressBar findPrepareProgress() {
+    default View findPrepareProgress() {
         return null;
     }
 
@@ -172,29 +173,48 @@ public interface ImplController {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
-        ProgressBar progressBar = findPrepareProgress();
-        if (null == progressBar)
+    default void setComponentPrepareProgressBarIndeterminateDrawable(@DimenRes int resId) {
+        View view = findPrepareProgress();
+        if (null == view)
             return;
-        ViewGroup.LayoutParams layoutParams = progressBar.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (null == layoutParams)
             return;
-////                float v1 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, width, resources.getDisplayMetrics());
-////                float v2 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, height, resources.getDisplayMetrics());
-////                layoutParams.width = (int) v1;
-////                layoutParams.height = (int) v2;
         try {
-            Resources resources = progressBar.getResources();
-            Drawable drawable = resources.getDrawable(resId);
-            progressBar.setIndeterminateDrawable(drawable);
-            layoutParams.width = drawable.getIntrinsicWidth();
-            layoutParams.height = drawable.getIntrinsicHeight();
-            progressBar.setLayoutParams(layoutParams);
+            Resources resources = view.getResources();
+            int offset = resources.getDimensionPixelOffset(resId);
+            layoutParams.width = offset;
+            layoutParams.height = offset;
+            view.setLayoutParams(layoutParams);
         } catch (Exception e) {
         }
 //        layoutParams.width = resources.getDimensionPixelOffset(width);
 //        layoutParams.height = resources.getDimensionPixelOffset(height);
     }
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
+//        View progressBar = findPrepareProgress();
+//        if (null == progressBar)
+//            return;
+//        ViewGroup.LayoutParams layoutParams = progressBar.getLayoutParams();
+//        if (null == layoutParams)
+//            return;
+//////                float v1 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, width, resources.getDisplayMetrics());
+//////                float v2 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, height, resources.getDisplayMetrics());
+//////                layoutParams.width = (int) v1;
+//////                layoutParams.height = (int) v2;
+//        try {
+//            Resources resources = progressBar.getResources();
+//            Drawable drawable = resources.getDrawable(resId);
+//            progressBar.setIndeterminateDrawable(drawable);
+//            layoutParams.width = drawable.getIntrinsicWidth();
+//            layoutParams.height = drawable.getIntrinsicHeight();
+//            progressBar.setLayoutParams(layoutParams);
+//        } catch (Exception e) {
+//        }
+////        layoutParams.width = resources.getDimensionPixelOffset(width);
+////        layoutParams.height = resources.getDimensionPixelOffset(height);
+//    }
 
     default void setComponentPrepareText(@NonNull String text) {
 
