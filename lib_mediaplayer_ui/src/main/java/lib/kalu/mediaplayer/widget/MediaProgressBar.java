@@ -99,14 +99,17 @@ public class MediaProgressBar extends TextView {
                     canvas.save();
                     canvas.rotate(36 * (i % 10), cx, cy);
                 }
-                int color = Color.parseColor("#FFFFFFFF");
+                int color = Color.parseColor("#FFA7A7A7");
                 paint.setColor(color);
             } else {
-                int ff = Integer.parseInt("FF", 16);
-                int temp = (ff / 11) * (i - num);
-                String hex = Integer.toHexString(ff - temp);
-                int color = Color.parseColor("#" + hex + "FFFFFF");
-                paint.setColor(color);
+                try {
+                    int ff = Integer.parseInt("FF", 16);
+                    int temp = (ff / 11) * (i - num);
+                    String hex = Integer.toHexString(ff - temp);
+                    int color = Color.parseColor("#" + hex + "A7A7A7");
+                    paint.setColor(color);
+                } catch (Exception e) {
+                }
             }
             RectF rectF = new RectF(left, top, right, bottom);
             canvas.drawRoundRect(rectF, rx, ry, paint);
