@@ -204,6 +204,13 @@ public class ControllerLive extends ControllerLayout {
         return textView;
     }
 
+    @Nullable
+    @Override
+    public View findCenterProgress() {
+        View view = findViewById(R.id.module_mediaplayer_controller_center_loading);
+        return view;
+    }
+
     @Override
     public void destroy() {
     }

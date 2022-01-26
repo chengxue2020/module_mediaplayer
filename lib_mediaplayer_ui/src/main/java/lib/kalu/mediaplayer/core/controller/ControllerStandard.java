@@ -356,4 +356,11 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         TextView textView = findViewById(R.id.module_mediaplayer_controller_prepare_tip);
         return textView;
     }
+
+    @Nullable
+    @Override
+    public View findCenterProgress() {
+        View view = findViewById(R.id.module_mediaplayer_controller_center_loading);
+        return view;
+    }
 }

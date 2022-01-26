@@ -145,6 +145,11 @@ public interface ImplController {
     }
 
     @Nullable
+    default View findCenterProgress() {
+        return null;
+    }
+
+    @Nullable
     default TextView findPrepareTip() {
         return null;
     }
@@ -328,4 +333,26 @@ public interface ImplController {
     }
 
     /********************  ComponentError  **********************/
+
+    /********************  ComponentCenter  **********************/
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    default void setComponentCenterProgressBarDimens(@DimenRes int resId) {
+        View view = findCenterProgress();
+        if (null == view)
+            return;
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (null == layoutParams)
+            return;
+        try {
+            Resources resources = view.getResources();
+            int offset = resources.getDimensionPixelOffset(resId);
+            layoutParams.width = offset;
+            layoutParams.height = offset;
+            view.setLayoutParams(layoutParams);
+        } catch (Exception e) {
+        }
+    }
+
+    /********************  ComponentCenter  **********************/
 }
