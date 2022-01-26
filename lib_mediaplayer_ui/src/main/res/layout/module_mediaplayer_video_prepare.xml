@@ -47,7 +47,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/module_mediaplayer_controller_prepare_center"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
         android:textColor="@color/module_mediaplayer_color_ffffff"
         android:textSize="14sp"
         android:visibility="invisible" />

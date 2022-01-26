@@ -7,65 +7,61 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.RectF;
-import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 @Keep
 @SuppressLint("AppCompatCustomView")
-public class MediaProgressBar extends TextView {
+public class MediaProgressBar3 extends TextView implements Handler.Callback {
 
-    public MediaProgressBar(Context context) {
+    public MediaProgressBar3(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public MediaProgressBar(Context context, @Nullable AttributeSet attrs) {
+    public MediaProgressBar3(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
-    }
-
-    public MediaProgressBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public MediaProgressBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
     private final void init() {
 //        setEnabled(true);
-        setTag(0);
+        setHint(String.valueOf(0));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
+        super.onDraw(canvas);
 
-        if (View.VISIBLE != getVisibility())
-            return;
+//        if (View.VISIBLE != getVisibility())
+//            return;
+//
+//        boolean enabled = isEnabled();
+//        if (!enabled)
+//            return;
+//
+//        setEnabled(false);
 
         // 循环次数
         int num;
         int length = 10;
         try {
-            num = (int) getTag();
+            num = Integer.parseInt(String.valueOf(getHint()));
             if (num + 1 >= length) {
                 num = 0;
             }
         } catch (Exception e) {
             num = 0;
         }
-        setTag(num + 1);
+        setHint(String.valueOf(num + 1));
 
         // 画笔
         TextPaint paint = getPaint();
@@ -88,7 +84,6 @@ public class MediaProgressBar extends TextView {
 
         // init
         paint.setColor(Color.parseColor("#00000000"));
-//        paint.setColor(Color.WHITE);
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         canvas.drawCircle(cx, cy, Math.min(cx, cy), paint);
 
@@ -99,13 +94,13 @@ public class MediaProgressBar extends TextView {
                     canvas.save();
                     canvas.rotate(36 * (i % 10), cx, cy);
                 }
-                int color = Color.parseColor("#FFFFFFFF");
+                int color = Color.parseColor("#FF333333");
                 paint.setColor(color);
             } else {
                 int ff = Integer.parseInt("FF", 16);
                 int temp = (ff / 11) * (i - num);
                 String hex = Integer.toHexString(ff - temp);
-                int color = Color.parseColor("#" + hex + "FFFFFF");
+                int color = Color.parseColor("#" + hex + "333333");
                 paint.setColor(color);
             }
             RectF rectF = new RectF(left, top, right, bottom);
@@ -114,7 +109,28 @@ public class MediaProgressBar extends TextView {
             canvas.rotate(36, cx, cy);
         }
 
-        // delay
-        postInvalidateDelayed(120);
+//        Message message = Message.obtain();
+//        message.what = 1002;
+//        mH.removeCallbacksAndMessages(null);
+//        mH.sendMessageDelayed(message, 120);
+    }
+
+    private final Handler mH = new Handler(this);
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        if (visibility != View.VISIBLE) {
+            mH.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
+    public boolean handleMessage(@NonNull Message msg) {
+        if (msg.what == 1002) {
+            setEnabled(true);
+            invalidate();
+        }
+        return false;
     }
 }
