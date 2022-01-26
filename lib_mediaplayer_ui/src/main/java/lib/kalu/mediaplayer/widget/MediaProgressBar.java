@@ -82,7 +82,7 @@ public class MediaProgressBar extends TextView {
         float left = cx - v * 0.6f;
         float top = Math.max(cx, cy) - Math.min(cx, cy) + v * 2f;
         float right = cx + v * 0.6f;
-        float bottom = cy - v * 3f;
+        float bottom = cy - v * 4f;
         float rx = v * 0.4f;
         float ry = rx;
 
