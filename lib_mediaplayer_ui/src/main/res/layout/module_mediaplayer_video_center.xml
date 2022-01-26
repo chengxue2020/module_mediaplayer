@@ -18,13 +18,12 @@
         android:src="@drawable/module_mediaplayer_selector_lock_button"
         android:visibility="invisible" />
 
-    <ProgressBar
+    <lib.kalu.mediaplayer.widget.MediaProgressBar
         android:id="@+id/module_mediaplayer_controller_center_loading"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:background="#00000000"
-        android:indeterminateDrawable="@drawable/module_mediaplayer_shape_loading"
         android:indeterminateDuration="2000"
         android:visibility="invisible" />
 
