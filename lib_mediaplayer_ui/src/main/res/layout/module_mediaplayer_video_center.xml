@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="14dp"
@@ -25,6 +26,9 @@
         android:layout_gravity="center"
         android:background="#00000000"
         android:indeterminateDuration="2000"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        app:mpb_count="8"
+        app:mpb_radius="10dp"
+        app:mpb_rate="0.9" />
 
 </FrameLayout>

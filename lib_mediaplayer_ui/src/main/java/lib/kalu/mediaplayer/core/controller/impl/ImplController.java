@@ -39,6 +39,8 @@ import androidx.annotation.StringRes;
 
 import com.google.android.exoplayer2.text.Cue;
 
+import lib.kalu.mediaplayer.widget.MediaProgressBar;
+
 /**
  * <pre>
  *     @author yangchong
@@ -350,6 +352,39 @@ public interface ImplController {
             layoutParams.width = offset;
             layoutParams.height = offset;
             view.setLayoutParams(layoutParams);
+        } catch (Exception e) {
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    default void setComponentCenterProgressBarCount(@NonNull int count) {
+        View view = findCenterProgress();
+        if (null == view || !(view instanceof MediaProgressBar))
+            return;
+        try {
+            ((MediaProgressBar) view).setCount(count);
+        } catch (Exception e) {
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    default void setComponentCenterProgressBarRate(@NonNull float rate) {
+        View view = findCenterProgress();
+        if (null == view || !(view instanceof MediaProgressBar))
+            return;
+        try {
+            ((MediaProgressBar) view).setRate(rate);
+        } catch (Exception e) {
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    default void setComponentCenterProgressBarRadius(@DimenRes int resId) {
+        View view = findCenterProgress();
+        if (null == view || !(view instanceof MediaProgressBar))
+            return;
+        try {
+            ((MediaProgressBar) view).setRadius(resId);
         } catch (Exception e) {
         }
     }
