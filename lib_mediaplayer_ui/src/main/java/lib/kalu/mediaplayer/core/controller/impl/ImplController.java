@@ -198,24 +198,58 @@ public interface ImplController {
         }
     }
 
+
     @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
+    default void setComponentPrepareProgressBarCount(@NonNull int count) {
         View view = findPrepareProgress();
-        if (null == view || (view instanceof ProgressBar))
-            return;
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        if (null == layoutParams)
+        if (null == view || !(view instanceof MediaProgressBar))
             return;
         try {
-            Resources resources = view.getResources();
-            Drawable drawable = resources.getDrawable(resId);
-            layoutParams.width = drawable.getIntrinsicWidth();
-            layoutParams.height = drawable.getIntrinsicHeight();
-            view.setLayoutParams(layoutParams);
-            ((ProgressBar) view).setIndeterminateDrawable(drawable);
+            ((MediaProgressBar) view).setCount(count);
         } catch (Exception e) {
         }
     }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    default void setComponentPrepareProgressBarRate(@NonNull float rate) {
+        View view = findPrepareProgress();
+        if (null == view || !(view instanceof MediaProgressBar))
+            return;
+        try {
+            ((MediaProgressBar) view).setRate(rate);
+        } catch (Exception e) {
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    default void setComponentPrepareProgressBarRadius(@DimenRes int resId) {
+        View view = findPrepareProgress();
+        if (null == view || !(view instanceof MediaProgressBar))
+            return;
+        try {
+            ((MediaProgressBar) view).setRadius(resId);
+        } catch (Exception e) {
+        }
+    }
+
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
+//        View view = findPrepareProgress();
+//        if (null == view || (view instanceof ProgressBar))
+//            return;
+//        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+//        if (null == layoutParams)
+//            return;
+//        try {
+//            Resources resources = view.getResources();
+//            Drawable drawable = resources.getDrawable(resId);
+//            layoutParams.width = drawable.getIntrinsicWidth();
+//            layoutParams.height = drawable.getIntrinsicHeight();
+//            view.setLayoutParams(layoutParams);
+//            ((ProgressBar) view).setIndeterminateDrawable(drawable);
+//        } catch (Exception e) {
+//        }
+//    }
 
     default void setComponentPrepareText(@NonNull String text) {
 
