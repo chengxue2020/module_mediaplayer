@@ -103,18 +103,6 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         setGestureEnabled(true);
         //先移除多有的视图view
         removeComponentAll(false);
-        //添加视图到界面
-        addDefaultControlComponent("");
-    }
-
-
-    /**
-     * 快速添加各个组件
-     * 需要注意各个层级
-     *
-     * @param title 标题
-     */
-    public void addDefaultControlComponent(String title) {
         //添加自动完成播放界面view
         ComponentComplete completeView = new ComponentComplete(getContext());
         completeView.setVisibility(GONE);
@@ -128,7 +116,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
         //添加标题栏
         titleView = new ComponentTop(getContext());
-        titleView.setTitle(title);
+        titleView.setTitle("");
         titleView.setVisibility(VISIBLE);
         this.addComponent(titleView);
 
@@ -362,5 +350,19 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
     public View findCenterProgress() {
         View view = findViewById(R.id.module_mediaplayer_controller_center_loading);
         return view;
+    }
+
+    @Nullable
+    @Override
+    public TextView findComponentErrorText() {
+        TextView textView = findViewById(R.id.module_mediaplayer_controller_error_message);
+        return textView;
+    }
+
+    @Nullable
+    @Override
+    public ImageView findComponentErrorImage() {
+        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_error_img);
+        return imageView;
     }
 }

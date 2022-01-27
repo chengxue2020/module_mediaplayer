@@ -11,12 +11,26 @@
         android:padding="12dp"
         android:src="@drawable/module_mediaplayer_ic_player_back" />
 
+    <Space
+        android:id="@+id/module_mediaplayer_controller_error_center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/module_mediaplayer_controller_error_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/module_mediaplayer_controller_error_center"
+        android:layout_marginBottom="10dp"
+        android:scaleType="center" />
+
     <TextView
         android:id="@+id/module_mediaplayer_controller_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawablePadding="10dp"
+        android:layout_below="@id/module_mediaplayer_controller_error_center"
         android:text="@string/module_mediaplayer_string_error_message"
         android:textColor="@android:color/white"
         android:textSize="16sp" />

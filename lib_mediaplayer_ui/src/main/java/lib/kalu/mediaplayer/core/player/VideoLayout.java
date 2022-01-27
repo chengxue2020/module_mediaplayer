@@ -1178,19 +1178,19 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 设置一个播放状态监听器，播放状态发生变化时将会调用，
      * 如果你想同时设置多个监听器，推荐 {@link #addOnStateChangeListener(OnMediaStateListener)}。
      */
-    public void setOnStateChangeListener(@NonNull OnMediaStateListener listener) {
+    public void setOnMediaStateListener(@NonNull OnMediaStateListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
-        } else {
-            mOnStateChangeListeners.clear();
         }
+
+        clearOnMediaStateListener();
         mOnStateChangeListeners.add(listener);
     }
 
     /**
      * 移除所有播放状态监听
      */
-    public void clearOnStateChangeListeners() {
+    public void clearOnMediaStateListener() {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.clear();
         }

@@ -192,9 +192,16 @@ public class ControllerLive extends ControllerLayout {
 
     @Nullable
     @Override
-    public TextView findComponentError() {
+    public TextView findComponentErrorText() {
         TextView textView = findViewById(R.id.module_mediaplayer_controller_error_message);
         return textView;
+    }
+
+    @Nullable
+    @Override
+    public ImageView findComponentErrorImage() {
+        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_error_img);
+        return imageView;
     }
 
     @Nullable

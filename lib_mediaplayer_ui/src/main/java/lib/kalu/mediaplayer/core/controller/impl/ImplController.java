@@ -132,7 +132,12 @@ public interface ImplController {
     /************************/
 
     @Nullable
-    default TextView findComponentError() {
+    default TextView findComponentErrorText() {
+        return null;
+    }
+
+    @Nullable
+    default ImageView findComponentErrorImage() {
         return null;
     }
 
@@ -308,19 +313,19 @@ public interface ImplController {
 
     default void setComponentErrorImage(@DrawableRes int res) {
 
-        TextView textView = findComponentError();
-        if (null == textView)
+        ImageView imageView = findComponentErrorImage();
+        if (null == imageView)
             return;
 
         try {
-            textView.setCompoundDrawablesWithIntrinsicBounds(0, res, 0, 0);
+            imageView.setImageResource(res);
         } catch (Exception e) {
         }
     }
 
     default void setComponentErrorText(@NonNull String msg) {
 
-        TextView textView = findComponentError();
+        TextView textView = findComponentErrorText();
         if (null == textView)
             return;
 
@@ -332,7 +337,7 @@ public interface ImplController {
 
     default void setComponentErrorText(@StringRes int res) {
 
-        TextView textView = findComponentError();
+        TextView textView = findComponentErrorText();
         if (null == textView)
             return;
 
@@ -344,7 +349,7 @@ public interface ImplController {
 
     default void setComponentErrorTextSize(@DimenRes int dimen) {
 
-        TextView textView = findComponentError();
+        TextView textView = findComponentErrorText();
         if (null == textView)
             return;
 
@@ -357,7 +362,7 @@ public interface ImplController {
 
     default void setComponentErrorTextColor(@ColorRes int id) {
 
-        TextView textView = findComponentError();
+        TextView textView = findComponentErrorText();
         if (null == textView)
             return;
 
