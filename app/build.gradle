@@ -41,6 +41,9 @@ android {
             }
         }
     }
+    lint {
+        abortOnError false
+    }
 
     //jdk1.8
     compileOptions {
@@ -48,9 +51,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
-        abortOnError false
-    }
 }
 
 repositories {
@@ -61,31 +61,16 @@ repositories {
 
 dependencies {
     // implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
 
     implementation rootProject.ext.dependencies.support_appcompat
     implementation rootProject.ext.dependencies.support_annotation
     implementation rootProject.ext.dependencies.support_recyclerview
-
-    //其他库
-    implementation 'com.github.bumptech.glide:glide:4.9.0'                 //谷歌图片加载库
-    implementation 'jp.wasabeef:glide-transformations:2.0.1'
-
-    // 弹幕
-    implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
-    implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
-
-    // 自己封装的库，都有对应的案例项目【欢迎star】：https://github.com/yangchong211
-    implementation 'cn.yc:YCStatusBarLib:1.5.0'
-    implementation 'com.yc:PagerLib:1.0.4'
-    implementation 'cn.yc:YCStateLib:1.2.2'
+    implementation rootProject.ext.dependencies.support_multidex
 
     // mediaplayer
 //    api files('libs/rtmp-client-3.1.0.aar')
+    api files('libs/lib_mediaplayer_ijkplayer_release_20220211.aar')
     api files('libs/lib_mediaplayer_exoplayer_r2.16.1_release_20211219.aar')
-    api files('libs/lib_mediaplayer_ui_release_20211219.aar')
+    api files('libs/lib_mediaplayer_ui_release_20220211.aar')
 //    api project(path: ':lib_mediaplayer_ui')
 }

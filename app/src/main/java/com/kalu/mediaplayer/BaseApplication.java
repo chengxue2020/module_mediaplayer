@@ -45,8 +45,6 @@ public class BaseApplication extends MultiDexApplication {
         Log.d("Application", "onCreate");
         super.onCreate();
         instance = this;
-        ScreenDensityUtils.setup(this);
-        ScreenDensityUtils.register(this, 375.0f, ScreenDensityUtils.MATCH_BASE_WIDTH, ScreenDensityUtils.MATCH_UNIT_DP);
 
         // init
         PlayerConfig build = PlayerConfig.newBuilder()
@@ -56,10 +54,10 @@ public class BaseApplication extends MultiDexApplication {
                 .setLogEnabled(true)
                 // loading
                 //设置exo
-                .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerType.PlatformType.EXO))
+                .setPlayerFactory(PlayerFactoryUtils.getPlayer(PlayerType.PlatformType.IJK))
                 //创建SurfaceView
                 //.setRenderViewFactory(SurfaceViewFactory.create())
-                .setKeycodeImpl(new KeycodeImplSimulator())
+                .setKeycode(new KeycodeImplSimulator())
                 .build();
         PlayerConfigManager.getInstance().setConfig(build);
 

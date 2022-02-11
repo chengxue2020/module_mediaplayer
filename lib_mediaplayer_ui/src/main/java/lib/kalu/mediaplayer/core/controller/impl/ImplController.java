@@ -37,8 +37,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
-import com.google.android.exoplayer2.text.Cue;
-
 import lib.kalu.mediaplayer.widget.MediaProgressBar;
 
 /**

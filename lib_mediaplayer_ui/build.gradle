@@ -65,16 +65,13 @@ repositories {
 dependencies {
     // api fileTree(dir: 'libs', include: ['*.jar'])
     // api fileTree(dir: 'libs', include: ['*.aar'])
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
     implementation rootProject.ext.dependencies.support_appcompat
     implementation rootProject.ext.dependencies.support_annotation
     implementation rootProject.ext.dependencies.support_recyclerview
 
     // ijkplayer
-    compileOnly rootProject.ext.dependencies.support_ijkplayer_java
-    compileOnly rootProject.ext.dependencies.support_ijkplayer_armv7a
+    api project(path: ':lib_mediaplayer_core_ijkplayer')
 
     // exoplayer
     api project(path: ':lib_mediaplayer_core_exoplayer_r2.16.1')

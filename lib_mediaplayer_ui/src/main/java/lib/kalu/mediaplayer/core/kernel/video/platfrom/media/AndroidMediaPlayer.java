@@ -382,7 +382,8 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
     private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-            getVideoPlayerChangeListener().onPrepared();
+            long duration = getDuration();
+            getVideoPlayerChangeListener().onPrepared(duration);
             start();
         }
     };

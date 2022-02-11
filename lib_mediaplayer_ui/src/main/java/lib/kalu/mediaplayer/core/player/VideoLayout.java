@@ -746,13 +746,18 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
     @Override
     public void onInfo(int what, int extra) {
+        MediaLogUtil.log("onInfo => what = " + what + ", extra = " + extra);
+
         switch (what) {
+            // loading-start
             case PlayerType.MediaType.MEDIA_INFO_BUFFERING_START:
                 setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
                 break;
+            // loading-end
             case PlayerType.MediaType.MEDIA_INFO_BUFFERING_END:
-                setPlayState(PlayerType.StateType.STATE_END);
+                setPlayState(PlayerType.StateType.STATE_BUFFERING_COMPLETE);
                 break;
+            // play-begin
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
                 setPlayState(PlayerType.StateType.STATE_START);
                 if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
@@ -770,7 +775,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * 视频缓冲完毕，准备开始播放时回调
      */
     @Override
-    public void onPrepared() {
+    public void onPrepared(@NonNull long duration) {
         setPlayState(PlayerType.StateType.STATE_PREPARE_END);
         if (mCurrentPosition > 0) {
             seekTo(mCurrentPosition);

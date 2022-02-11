@@ -4,10 +4,19 @@
 ![image](https://github.com/153437803/module_mediaplayer/blob/master/exoplayer.png )
 
 #
+####  版本
+```
+exo => 2.16.1
+ijk => k0.8.8
+ffmpeg => ff3.4--ijk0.8.7--20180103--001
+```
+
+#
 ####  计划
 ```
 1. 支持TV
-2. 支持ffmpeg
+2. 支持exoplayer硬解
+3. 支持ijkplayer软解
 ```
 
 #

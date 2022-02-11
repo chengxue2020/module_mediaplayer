@@ -30,6 +30,7 @@ import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * 预加载准备播放页面视图
@@ -86,6 +87,7 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
 
     @Override
     public void onPlayStateChanged(int playState) {
+        MediaLogUtil.log("ComponentPrepare => onPlayStateChanged => playState = " + playState);
         View viewPlay = findViewById(R.id.module_mediaplayer_controller_prepare_play);
         View viewBackground = findViewById(R.id.module_mediaplayer_controller_prepare_background);
         View viewProgress = findViewById(R.id.module_mediaplayer_controller_prepare_progress);
@@ -103,9 +105,11 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
             case PlayerType.StateType.STATE_PAUSED:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_BUFFERING_COMPLETE:
             case PlayerType.StateType.STATE_END:
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
             case PlayerType.StateType.STATE_ONCE_LIVE:
+                viewProgress.setVisibility(View.GONE);
                 setVisibility(GONE);
                 break;
             case PlayerType.StateType.STATE_INIT:

@@ -10,20 +10,9 @@ include ':app'
 // r2.16.1
 include ':lib_mediaplayer_core_exoplayer_r2.16.1'
 
+// ijkplayer
+include ':lib_mediaplayer_core_ffmpeg'
+include ':lib_mediaplayer_core_ijkplayer'
+
 // mediaplayer_source
 include ':lib_mediaplayer_ui'
-
-//// 视频m3u8下载和合成
-//include ':module_mediaplayer_videom3u8'
-//// 音频
-//include ':module_mediaplayer_musickernel'
-//// 视频悬浮
-//include ':module_mediaplayer_videofloat'
-//// 视频内核
-//include ':module_mediaplayer_videokernel'
-//// 视频缓存
-//include ':module_mediaplayer_videocache'
-//// 视频缓存DB
-//include ':module_mediaplayer_videodb'
-//// 视频UI
-//include ':module_mediaplayer_videoui'

@@ -210,7 +210,8 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
         @Override
         public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
             if (getVideoPlayerChangeListener() != null && mIsPreparing) {
-                getVideoPlayerChangeListener().onPrepared();
+                long duration = getDuration();
+                getVideoPlayerChangeListener().onPrepared(duration);
             }
         }
     };

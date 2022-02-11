@@ -74,48 +74,61 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
 
     @Override
     public void setOptions() {
-        /*int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
-        int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
-        int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 
-        //设置ijkPlayer播放器的硬件解码相关参数
-        //设置播放前的最大探测时间
+        //某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+//        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+
+//        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-all-videos", 1);
+//        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-sync", 1);
+//        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
+//        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1);
+//        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);//清空
+//        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
+
+        int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
+        int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
+        int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
+
+        // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
+        mMediaPlayer.setOption(codec, "skip_loop_filter", 48);
+        // 预加载100k，画面加载更快
+//        mMediaPlayer.setOption(format, "probesize", 1024 * 400);
+        // 设置播放前的最大探测时间
+//        mMediaPlayer.setOption(format, "analyzeduration", 1000L);
+        //最大缓冲大小,单位kb
+//        mMediaPlayer.setOption(player, "max-buffer-size", 1024 * 1000);
+//
+//        //设置播放前的最大探测时间
         mMediaPlayer.setOption(format, "analyzemaxduration", 100L);
-        //设置播放前的探测时间 1,达到首屏秒开效果
-        mMediaPlayer.setOption(format, "analyzeduration", 1L);
-        //播放前的探测Size，默认是1M, 改小一点会出画面更快
-        mMediaPlayer.setOption(format, "probesize", 10240L);
-        //设置是否开启变调isModifyTone?0:1
-        mMediaPlayer.setOption(player,"soundtouch",0);
+//        //设置播放前的探测时间 1,达到首屏秒开效果
+//        mMediaPlayer.setOption(format, "analyzeduration", 1L);
+//        //设置是否开启变调isModifyTone?0:1
+//        mMediaPlayer.setOption(player, "soundtouch", 0);
         //每处理一个packet之后刷新io上下文
         mMediaPlayer.setOption(format, "flush_packets", 1L);
         //是否开启预缓冲，一般直播项目会开启，达到秒开的效果，不过带来了播放丢帧卡顿的体验
         mMediaPlayer.setOption(player, "packet-buffering", 0L);
         //播放重连次数
         mMediaPlayer.setOption(player, "reconnect", 5);
-        //最大缓冲大小,单位kb
-        mMediaPlayer.setOption(player, "max-buffer-size", 10240L);
-        //跳帧处理,放CPU处理较慢时，进行跳帧处理，保证播放流程，画面和声音同步
+//        跳帧处理,放CPU处理较慢时，进行跳帧处理，保证播放流程，画面和声音同步
         mMediaPlayer.setOption(player, "framedrop", 1L);
         //最大fps
         mMediaPlayer.setOption(player, "max-fps", 30L);
-        //SeekTo设置优化
-        mMediaPlayer.setOption(player, "enable-accurate-seek", 1L);
-        mMediaPlayer.setOption(player, "opensles", 0);
-        mMediaPlayer.setOption(player, "overlay-format",
-                IjkMediaPlayer.SDL_FCC_RV32);
-        mMediaPlayer.setOption(player, "framedrop", 1);
-        mMediaPlayer.setOption(player, "start-on-prepared", 0);
-        mMediaPlayer.setOption(format, "http-detect-range-support", 0);
-        //设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
-        mMediaPlayer.setOption(codec, "skip_loop_filter", 48);
-
-        //jkPlayer支持硬解码和软解码。
-        //软解码时不会旋转视频角度这时需要你通过onInfo的what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED去获取角度，自己旋转画面。
-        //或者开启硬解硬解码，不过硬解码容易造成黑屏无声（硬件兼容问题），下面是设置硬解码相关的代码
-        mMediaPlayer.setOption(player, "mediacodec", 0);
-        mMediaPlayer.setOption(player, "mediacodec-auto-rotate", 1);
-        mMediaPlayer.setOption(player, "mediacodec-handle-resolution-change", 1);*/
+//        //SeekTo设置优化
+//        mMediaPlayer.setOption(player, "enable-accurate-seek", 1L);
+//        mMediaPlayer.setOption(player, "opensles", 0);
+//        mMediaPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
+//        mMediaPlayer.setOption(player, "framedrop", 1);
+//        mMediaPlayer.setOption(player, "start-on-prepared", 0);
+//        mMediaPlayer.setOption(format, "http-detect-range-support", 0);
+//
+//        //jkPlayer支持硬解码和软解码。
+//        //软解码时不会旋转视频角度这时需要你通过onInfo的what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED去获取角度，自己旋转画面。
+//        //或者开启硬解硬解码，不过硬解码容易造成黑屏无声（硬件兼容问题），下面是设置硬解码相关的代码
+//        mMediaPlayer.setOption(player, "dns_cache_clear", 1);
+//        mMediaPlayer.setOption(player, "mediacodec", 0);
+//        mMediaPlayer.setOption(player, "mediacodec-auto-rotate", 1);
+//        mMediaPlayer.setOption(player, "mediacodec-handle-resolution-change", 1);
     }
 
     /**
@@ -273,8 +286,10 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     @Override
     public void seekTo(long time) {
         try {
-            mMediaPlayer.seekTo((int) time);
+            MediaLogUtil.log("IJKLOG => seekTo => time = " + time);
+            mMediaPlayer.seekTo(time);
         } catch (IllegalStateException e) {
+            MediaLogUtil.log("IJKLOG => seekTo => " + e.getMessage());
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
     }
@@ -388,7 +403,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, "监听异常" + framework_err + ", extra: " + impl_err);
-            MediaLogUtil.log("IjkVideoPlayer----listener---------onError ——> STATE_ERROR ———— what：" + framework_err + ", extra: " + impl_err);
+            MediaLogUtil.log("IJKLOG => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
             return true;
         }
     };
@@ -400,7 +415,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             getVideoPlayerChangeListener().onCompletion();
-            MediaLogUtil.log("IjkVideoPlayer----listener---------onCompletion ——> STATE_COMPLETED");
+            MediaLogUtil.log("IJKLOG => onCompletion =>");
         }
     };
 
@@ -412,7 +427,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
             getVideoPlayerChangeListener().onInfo(what, extra);
-            MediaLogUtil.log("IjkVideoPlayer----listener---------onInfo ——> ———— what：" + what + ", extra: " + extra);
+            MediaLogUtil.log("IJKLOG => onInfo => what = " + what + ", extra = " + extra);
             return true;
         }
     };
@@ -434,8 +449,12 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
-            getVideoPlayerChangeListener().onPrepared();
-            MediaLogUtil.log("IjkVideoPlayer----listener---------onPrepared ——> STATE_PREPARED");
+            long position = iMediaPlayer.getCurrentPosition();
+            long duration = iMediaPlayer.getDuration();
+            MediaLogUtil.log("IJKLOG => onPrepared => position = " + position + ", duration = " + duration);
+            if (position <= 0) {
+                getVideoPlayerChangeListener().onPrepared(duration);
+            }
         }
     };
 
@@ -444,14 +463,13 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
      */
     private IMediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new IMediaPlayer.OnVideoSizeChangedListener() {
         @Override
-        public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height,
-                                       int sar_num, int sar_den) {
+        public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
             int videoWidth = iMediaPlayer.getVideoWidth();
             int videoHeight = iMediaPlayer.getVideoHeight();
             if (videoWidth != 0 && videoHeight != 0) {
                 getVideoPlayerChangeListener().onVideoSizeChanged(videoWidth, videoHeight);
             }
-            MediaLogUtil.log("IjkVideoPlayer----listener---------onVideoSizeChanged ——> WIDTH：" + width + "， HEIGHT：" + height);
+//            MediaLogUtil.log("IjkVideoPlayer----listener---------onVideoSizeChanged ——> WIDTH：" + width + "， HEIGHT：" + height);
         }
     };
 

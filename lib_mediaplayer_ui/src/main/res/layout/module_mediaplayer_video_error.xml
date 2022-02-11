@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/module_mediaplayer_controller_error_center"
-        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
         android:scaleType="center" />
 
     <TextView
@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/module_mediaplayer_controller_error_center"
+        android:layout_centerHorizontal="true"
         android:text="@string/module_mediaplayer_string_error_message"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
