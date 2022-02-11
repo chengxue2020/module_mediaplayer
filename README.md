@@ -24,6 +24,12 @@ ffmpeg => ff3.4--ijk0.8.7--20180103--001
 ```
 ----------------------------------------
 
+2022-02-11
+
+1. 新增ijkplayer硬解
+
+----------------------------------------
+
 2021-12-19
 
 1. 解决android6.0 crash [指定版本=>'com.google.guava:guava:30.1-android']
@@ -69,8 +75,9 @@ files('libs/annotations-3.0.1.jar')
 ```
 https://github.com/google/ExoPlayer
 https://mvnrepository.com/search?q=exoplayer
-https://github.com/yangchong211/YCVideoPlayer
 https://github.com/bilibili/ijkplayer
+https://github.com/bilibili/FFmpeg/tags
+https://github.com/yangchong211/YCVideoPlayer
 ```
 
 #
