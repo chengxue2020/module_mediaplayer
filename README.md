@@ -1,7 +1,7 @@
 #
 #### 模块
 
-![image](https://github.com/153437803/module_mediaplayer/blob/master/exoplayer.png )
+![image](https://github.com/153437803/module_mediaplayer/blob/master/image/exoplayer.png )
 
 #
 ####  版本
@@ -98,3 +98,4 @@ libavdevice：输入输出设备库，编译ffplay就需要确保该模块是打
 libavfilter:音视频滤镜库，该模块包含了音频特效和视频特效的处理，在使用FFmpeg的API进行编解码的过程中，直接使用该模块为音视频数据做特效物理非常方便同时也非常高效的一种方式。
 libpostproc:音视频后期处理库，当使用libavfilter的时候需要打开该模块开关，因为Filter中会使用该库中的一些基础函数。
 ```
+![image](https://github.com/153437803/module_mediaplayer/blob/master/image/exoplayer.png )
