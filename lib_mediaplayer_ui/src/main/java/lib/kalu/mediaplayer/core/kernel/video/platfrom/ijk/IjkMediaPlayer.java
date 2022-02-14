@@ -114,8 +114,14 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         mMediaPlayer.setOption(player, "framedrop", 1L);
         //最大fps
         mMediaPlayer.setOption(player, "max-fps", 30L);
-//        //SeekTo设置优化
-//        mMediaPlayer.setOption(player, "enable-accurate-seek", 1L);
+
+        // SeekTo设置优化
+        // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+        mMediaPlayer.setOption(player, "enable-accurate-seek", 1L);
+        // 设置seekTo能够快速seek到指定位置并播放
+        // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
+        mMediaPlayer.setOption(format, "fflags", "fastseek");
+
 //        mMediaPlayer.setOption(player, "opensles", 0);
 //        mMediaPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
 //        mMediaPlayer.setOption(player, "framedrop", 1);
