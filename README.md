@@ -100,9 +100,10 @@ libpostproc:音视频后期处理库，当使用libavfilter的时候需要打开
 #
 ####  计划
 ```
-1. 支持TV => ok
-2. 支持exoplayer硬解 => ok
-3. 支持ijkplayer软解 => ok
+- [x] 支持TV
+- [x] 支持exoplayer硬解
+- [x] 支持ijkplayer软解
+- [ ] 编译更新ffmpeg4.0
 ```
 
 ![image](https://github.com/153437803/module_mediaplayer/blob/master/image/exoplayer.png )
