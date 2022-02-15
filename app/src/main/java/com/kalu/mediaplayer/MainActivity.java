@@ -49,12 +49,49 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
-        // live m3u8
-        findViewById(R.id.main_live_m3u8).setOnClickListener(new View.OnClickListener() {
+        // live m3u8 http
+        findViewById(R.id.main_live_m3u8_http).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov");
                 intent.putExtra(ExoplayerActivity.INTENT_URL, "http://115.182.96.25/gitv_live/CCTV-1-HD/CCTV-1-HD.m3u8?p=GITV&area=AH_CMCC");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
+
+        // live m3u8 https
+        findViewById(R.id.main_live_m3u8_https).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
+
+        // rtmp
+        findViewById(R.id.main_rtmp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtmp://58.200.131.2:1935/livetv/hunantv");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
+
+        // rtsp
+        findViewById(R.id.main_rtsp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);

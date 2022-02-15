@@ -8,7 +8,7 @@
 ```
 exo => 2.16.1
 ijk => k0.8.8
-ffmpeg => ff3.4--ijk0.8.7--20180103--001
+ffmpeg => ff4.0--ijk0.8.8--20210426--001
 ```
 
 #
@@ -76,6 +76,13 @@ https://github.com/yangchong211/YCVideoPlayer
 #### 记录
 ```
 1. android 6.0 crash[指定版本=>'com.google.guava:guava:30.1-android']
+
+2. ijk-ff4.0--ijk0.8.8--20210426--001 => 编译错误
+   需要修改 ffmpeg 编译配置：config/module-lite.sh
+   #export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-ffserver"
+   #export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-vda"
+   export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-bsf=eac3_core"
+   编译ffmpeg4不过时，正如debugly 所说，需要注释掉2行-disable-ffserver和--disable-vda，然后添加一行把eac3_cored配置disable掉--disable-bsf=eac3_core，然后clean掉，重新编译ffmpeg就好了
 ```
 
 #
