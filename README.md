@@ -53,30 +53,6 @@ ffmpeg => ff4.0--ijk0.8.8--20210426--001
 ```
 
 #
-#### Jar
-```
-files('libs/androidx-annotation-1.2.0.jar')
-files('libs/commons-io-2.5.jar')
-files('libs/guava-30.1-android.jar')
-files('libs/failureaccess-1.0.1.jar')
-files('libs/checker-qual-2.5.0.jar')
-files('libs/checker-compat-qual-2.5.0.jar')
-files('libs/j2objc-annotations-1.3.jar')
-files('libs/error_prone_annotations-2.10.0.jar')
-files('libs/annotations-3.0.1.jar')
-```
-
-#
-#### 资料
-```
-https://github.com/google/ExoPlayer
-https://mvnrepository.com/search?q=exoplayer
-https://github.com/bilibili/ijkplayer
-https://github.com/bilibili/FFmpeg/tags
-https://github.com/yangchong211/YCVideoPlayer
-```
-
-#
 #### 记录
 ```
 1. android 6.0 crash[指定版本=>'com.google.guava:guava:30.1-android']
@@ -142,4 +118,26 @@ libpostproc:音视频后期处理库，当使用libavfilter的时候需要打开
 
 #
 ####  exoplayer
+```
+jar：
+files('libs/androidx-annotation-1.2.0.jar')
+files('libs/commons-io-2.5.jar')
+files('libs/guava-30.1-android.jar')
+files('libs/failureaccess-1.0.1.jar')
+files('libs/checker-qual-2.5.0.jar')
+files('libs/checker-compat-qual-2.5.0.jar')
+files('libs/j2objc-annotations-1.3.jar')
+files('libs/error_prone_annotations-2.10.0.jar')
+files('libs/annotations-3.0.1.jar')
+```
 ![image](https://github.com/153437803/module_mediaplayer/blob/master/image/exoplayer.png )
+
+#
+#### 资料
+```
+https://github.com/google/ExoPlayer
+https://mvnrepository.com/search?q=exoplayer
+https://github.com/bilibili/ijkplayer
+https://github.com/bilibili/FFmpeg/tags
+https://github.com/yangchong211/YCVideoPlayer
+```
