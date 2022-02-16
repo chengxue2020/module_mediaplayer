@@ -121,6 +121,9 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
         mMediaPlayer.setOption(format, "fflags", "fastseek");
 
+        // fix IJKMEDIA: Option ijkiomanager not found.
+        mMediaPlayer.setOption(format, "dns_cache_clear", 1);
+
 //        mMediaPlayer.setOption(player, "opensles", 0);
 //        mMediaPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
 //        mMediaPlayer.setOption(player, "framedrop", 1);
