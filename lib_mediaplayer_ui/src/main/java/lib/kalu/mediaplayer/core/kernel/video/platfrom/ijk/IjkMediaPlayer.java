@@ -93,13 +93,12 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         mMediaPlayer.setOption(codec, "skip_loop_filter", 48);
         // 预加载100k，画面加载更快
 //        mMediaPlayer.setOption(format, "probesize", 1024 * 400);
-        // 设置播放前的最大探测时间
-//        mMediaPlayer.setOption(format, "analyzeduration", 1000L);
         //最大缓冲大小,单位kb
 //        mMediaPlayer.setOption(player, "max-buffer-size", 1024 * 1000);
 //
-//        //设置播放前的最大探测时间
-        mMediaPlayer.setOption(format, "analyzemaxduration", 100L);
+        //设置播放前的最大探测时间
+        mMediaPlayer.setOption(format, "analyzeduration", 1000L);
+//        mMediaPlayer.setOption(format, "analyzemaxduration", 100L);
 //        //设置播放前的探测时间 1,达到首屏秒开效果
 //        mMediaPlayer.setOption(format, "analyzeduration", 1L);
 //        //设置是否开启变调isModifyTone?0:1
