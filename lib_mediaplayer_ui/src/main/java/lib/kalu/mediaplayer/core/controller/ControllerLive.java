@@ -38,6 +38,7 @@ import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEv
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentPrepare;
 import lib.kalu.mediaplayer.util.BaseToast;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 
@@ -119,29 +120,15 @@ public class ControllerLive extends ControllerLayout {
     @Override
     protected void onPlayStateChanged(int playState) {
         super.onPlayStateChanged(playState);
-        View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
-        View viewLoading = findViewById(R.id.module_mediaplayer_controller_center_loading);
+        MediaLogUtil.log("ControllerLive => playState = " + playState);
+        View view = findViewById(R.id.module_mediaplayer_controller_center_loading);
         switch (playState) {
-            //调用release方法会回到此状态
-            case PlayerType.StateType.STATE_INIT:
-                view.setSelected(false);
-                viewLoading.setVisibility(GONE);
-                break;
-            case PlayerType.StateType.STATE_START:
-            case PlayerType.StateType.STATE_PAUSED:
-            case PlayerType.StateType.STATE_PREPARE_END:
-            case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_END:
-                viewLoading.setVisibility(GONE);
-                break;
-            case PlayerType.StateType.STATE_PREPARE_START:
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
-                viewLoading.setVisibility(VISIBLE);
-                break;
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
-                viewLoading.setVisibility(GONE);
+                view.setVisibility(VISIBLE);
+                break;
+            default:
                 view.setVisibility(GONE);
-                view.setSelected(false);
                 break;
         }
     }

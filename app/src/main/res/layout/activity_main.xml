@@ -104,6 +104,26 @@
                 android:text="rtsp" />
 
             <Button
+                android:id="@+id/main_rtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="rtp" />
+
+            <Button
+                android:id="@+id/main_mp4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="mp4" />
+
+            <Button
                 android:id="@+id/main_sound_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
