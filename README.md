@@ -1,14 +1,18 @@
 #
-#### 模块
-
-![image](https://github.com/153437803/module_mediaplayer/blob/master/image/exoplayer.png )
-
-#
 ####  版本
 ```
 exo => 2.16.1
 ijk => k0.8.8
 ffmpeg => ff4.0--ijk0.8.8--20210426--001
+```
+
+#
+####  计划
+```
+- [✓] 支持TV
+- [✓] 支持exoplayer硬解
+- [✓] 支持ijkplayer软解
+- [✓] 编译更新ffmpeg4.0
 ```
 
 #
@@ -105,12 +109,5 @@ libpostproc:音视频后期处理库，当使用libavfilter的时候需要打开
 ```
 
 #
-####  计划
-```
-- [x] 支持TV
-- [x] 支持exoplayer硬解
-- [x] 支持ijkplayer软解
-- [ ] 编译更新ffmpeg4.0
-```
-
+####  exoplayer
 ![image](https://github.com/153437803/module_mediaplayer/blob/master/image/exoplayer.png )
