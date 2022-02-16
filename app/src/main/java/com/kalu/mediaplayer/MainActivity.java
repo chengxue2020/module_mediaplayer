@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://v.mp.haue.edu.cn/hls/cctv1hd.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://115.182.96.25/gitv_live/CCTV-1-HD/CCTV-1-HD.m3u8?p=GITV&area=AH_CMCC");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtmp://58.200.131.2:1935/livetv/cctv1");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtmp://media3.scctv.net/live/scctv_800");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
