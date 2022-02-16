@@ -1,22 +1,22 @@
-apply plugin: rootProject.ext.constant.com_android_application
+apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion rootProject.ext.constant.compileSdkVersion
-    buildToolsVersion rootProject.ext.constant.buildToolsVersion
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
 
-    compileOptions.encoding = rootProject.ext.constant.compileOptionsEncoding
-    ndkPath rootProject.ext.constant.ndkPath
-    ndkVersion rootProject.ext.constant.ndkVersion
+    compileOptions.encoding = "UTF-8"
+    ndkPath "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\16.1.4479499"
+    ndkVersion "16.1.4479499"
 
     defaultConfig {
 
-        minSdkVersion rootProject.ext.constant.minSdkVersion
-        targetSdkVersion rootProject.ext.constant.targetSdkVersion
+        minSdkVersion 19
+        targetSdkVersion 31
         vectorDrawables.useSupportLibrary = false
 
         ndk {
-            abiFilters rootProject.ext.constant.abiFilters.split(",")
+            abiFilters 'armeabi-v7a'
         }
 
         //添加此行
@@ -62,10 +62,9 @@ repositories {
 dependencies {
     // implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation rootProject.ext.dependencies.support_appcompat
-    implementation rootProject.ext.dependencies.support_annotation
-    implementation rootProject.ext.dependencies.support_recyclerview
-    implementation rootProject.ext.dependencies.support_multidex
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     // mediaplayer
 //    api files('libs/rtmp-client-3.1.0.aar')

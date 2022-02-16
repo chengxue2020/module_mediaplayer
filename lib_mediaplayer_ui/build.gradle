@@ -1,22 +1,22 @@
-apply plugin: rootProject.ext.constant.com_android_library
+apply plugin: 'com.android.library'
 
 android {
 
-    compileSdkVersion rootProject.ext.constant.compileSdkVersion
-    buildToolsVersion rootProject.ext.constant.buildToolsVersion
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
 
-    compileOptions.encoding = rootProject.ext.constant.compileOptionsEncoding
-    ndkPath rootProject.ext.constant.ndkPath
-    ndkVersion rootProject.ext.constant.ndkVersion
+    compileOptions.encoding = "UTF-8"
+    ndkPath "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\16.1.4479499"
+    ndkVersion "16.1.4479499"
 
     defaultConfig {
 
-        minSdkVersion rootProject.ext.constant.minSdkVersion
-        targetSdkVersion rootProject.ext.constant.targetSdkVersion
-        vectorDrawables.useSupportLibrary = true
+        minSdkVersion 19
+        targetSdkVersion 31
+        vectorDrawables.useSupportLibrary = false
 
         ndk {
-            abiFilters rootProject.ext.constant.abiFilters.split(",")
+            abiFilters 'armeabi-v7a'
         }
 
         //添加此行
@@ -66,9 +66,9 @@ dependencies {
     // api fileTree(dir: 'libs', include: ['*.jar'])
     // api fileTree(dir: 'libs', include: ['*.aar'])
 
-    implementation rootProject.ext.dependencies.support_appcompat
-    implementation rootProject.ext.dependencies.support_annotation
-    implementation rootProject.ext.dependencies.support_recyclerview
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.annotation:annotation:1.2.0'
+//    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // ijkplayer
     api project(path: ':lib_mediaplayer_core_ijkplayer')

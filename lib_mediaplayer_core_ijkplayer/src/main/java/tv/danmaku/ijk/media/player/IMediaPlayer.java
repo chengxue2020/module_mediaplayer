@@ -35,7 +35,7 @@ public interface IMediaPlayer {
     /*
      * Do not change these values without updating their counterparts in native
      */
-    int MEDIA_INFO_UNKNOWN = 2;
+    int MEDIA_INFO_UNKNOWN = 1;
     int MEDIA_INFO_STARTED_AS_NEXT = 2;
     int MEDIA_INFO_VIDEO_RENDERING_START = 3;
     int MEDIA_INFO_VIDEO_TRACK_LAGGING = 700;

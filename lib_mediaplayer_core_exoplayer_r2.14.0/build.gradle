@@ -1,22 +1,22 @@
-apply plugin: rootProject.ext.constant.com_android_library
+apply plugin: 'com.android.library'
 
 android {
 
-    compileSdkVersion rootProject.ext.constant.compileSdkVersion
-    buildToolsVersion rootProject.ext.constant.buildToolsVersion
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
 
-    compileOptions.encoding = rootProject.ext.constant.compileOptionsEncoding
-    ndkPath rootProject.ext.constant.ndkPath
-    ndkVersion rootProject.ext.constant.ndkVersion
+    compileOptions.encoding = "UTF-8"
+    ndkPath "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\16.1.4479499"
+    ndkVersion "16.1.4479499"
 
     defaultConfig {
 
-        minSdkVersion rootProject.ext.constant.minSdkVersion
-        targetSdkVersion rootProject.ext.constant.targetSdkVersion
-        vectorDrawables.useSupportLibrary = true
+        minSdkVersion 19
+        targetSdkVersion 31
+        vectorDrawables.useSupportLibrary = false
 
         ndk {
-            abiFilters rootProject.ext.constant.abiFilters.split(",")
+            abiFilters 'armeabi-v7a'
         }
 
         //添加此行
@@ -111,23 +111,47 @@ repositories {
 }
 
 dependencies {
-    implementation rootProject.ext.dependencies.support_appcompat
-    implementation rootProject.ext.dependencies.support_annotation
-    implementation rootProject.ext.dependencies.support_recyclerview
-    implementation rootProject.ext.dependencies.support_media2_common
-    implementation rootProject.ext.dependencies.support_media2_session
-    implementation rootProject.ext.dependencies.support_media2_widget
-    implementation rootProject.ext.dependencies.support_media2_player
-
-    api files('libs/guava-27.1-android.jar')
-    api files('libs/failureaccess-1.0.1.jar')
-
-    // org.checkerframework
-    compileOnly files('libs/checker-qual-2.5.0.jar')
-    compileOnly files('libs/checker-compat-qual-2.5.0.jar')
-//    compileOnly 'org.checkerframework:checker-qual:2.5.0'
-//    compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'net.butterflytv.utils:rtmp-client:3.1.0'
+    implementation 'androidx.annotation:annotation:1.2.0'
+//    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    api(rootProject.ext.dependencies.support_media2_common) {
+        exclude group: "com.google.guava"
+    }
+    api(rootProject.ext.dependencies.support_media2_session) {
+        exclude group: "com.google.guava"
+    }
+    api(rootProject.ext.dependencies.support_media2_widget) {
+        exclude group: "com.google.guava"
+    }
+    api(rootProject.ext.dependencies.support_media2_player) {
+        exclude group: "com.google.guava"
+    }
+
+//    api(name: 'exoplayer-extractor-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-common-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-core-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-dash-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-hls-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-ui-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-rtsp-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-extension-rtmp-2.15.0', ext: 'aar')
+//    api(name: 'exoplayer-smoothstreaming-2.15.0', ext: 'aar')
+
+    // androidx-annotation
+    compileOnly files('libs/androidx-annotation-1.2.0.jar')
+
+    // tools
+    api files('libs/commons-io-2.5.jar')
+    api files('libs/guava-30.1.1-android.jar')
+    api files('libs/failureaccess-1.0.1.jar')
+
+    // checkerframework
+    api files('libs/checker-qual-2.5.0.jar')
+    api files('libs/checker-compat-qual-2.5.0.jar')
+
+    // rtmp-client-for-android
+    api(name: 'rtmp-client-3.1.0', ext: 'aar')
+//    compileOnly 'net.butterflytv.utils:rtmp-client:3.1.0'
 }
