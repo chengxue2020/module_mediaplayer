@@ -74,15 +74,6 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
 
     @Override
     public void setOptions() {
-        //某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-        //        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
-
-        //        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-all-videos", 1);
-        //        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-sync", 1);
-        //        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
-        //        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1);
-        //        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);//清空
-        //        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
 
         int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
         int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
@@ -90,26 +81,26 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
 
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
         mMediaPlayer.setOption(codec, "skip_loop_filter", 48);
-        // 预加载, 400K
-        mMediaPlayer.setOption(format, "probesize", 1024 * 800);
-        // 最大缓冲大小, 400K
-        mMediaPlayer.setOption(player, "max-buffer-size", 1024 * 800);
-        //播放前的探测时间
-        mMediaPlayer.setOption(format, "analyzeduration", 100);
-        //播放前的最大探测时间
-        mMediaPlayer.setOption(format, "analyzemaxduration", 100);
-        //是否开启变调isModifyTone?0:1
+        // 预加载1M
+        mMediaPlayer.setOption(format, "probesize", 1024 * 1024);
+        // 最大缓冲1M
+        mMediaPlayer.setOption(player, "max-buffer-size", 1024 * 1024);
+//
+        //设置播放前的最大探测时间
+//        mMediaPlayer.setOption(format, "analyzeduration", 1000L);
+//        mMediaPlayer.setOption(format, "analyzemaxduration", 100L);
+//        //设置播放前的探测时间 1,达到首屏秒开效果
+//        mMediaPlayer.setOption(format, "analyzeduration", 1L);
+//        //设置是否开启变调isModifyTone?0:1
         mMediaPlayer.setOption(player, "soundtouch", 0);
         //每处理一个packet之后刷新io上下文
         mMediaPlayer.setOption(format, "flush_packets", 1);
-        //播放器缓冲 => 0关闭1开启
-        mMediaPlayer.setOption(player, "packet-buffering", 1);
+        // 关闭播放器缓冲，这个必须关闭，否则会出现播放一段时间后，一直卡主，控制台打印 FFP_MSG_BUFFERING_START
+        mMediaPlayer.setOption(player, "packet-buffering", 0);
         //播放重连次数
-        mMediaPlayer.setOption(player, "reconnect", 0);
-        //跳帧处理,放CPU处理较慢时，进行跳帧处理，保证播放流程，画面和声音同步
+        mMediaPlayer.setOption(player, "reconnect", 1);
+        // 跳帧处理,放CPU处理较慢时，进行跳帧处理，保证播放流程，画面和声音同步
         mMediaPlayer.setOption(player, "framedrop", 5);
-        // 帧速率（fps）可以改，确认非标准帧率会导致音画不同步，所以只能设定为15或者29.97）
-        mMediaPlayer.setOption(player, "r", 15);
         //最大fps
         mMediaPlayer.setOption(player, "max-fps", 30);
 
@@ -119,25 +110,37 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         // 设置seekTo能够快速seek到指定位置并播放
         // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
         mMediaPlayer.setOption(format, "fflags", "fastseek");
+
         // http、https混合存在时
         mMediaPlayer.setOption(format, "dns_cache_clear", 1);
-        // 开启硬编码 （默认是 0 ：软解）
-        mMediaPlayer.setOption(player, "videotoolbox", 1);
-
         //超时时间，timeout参数只对http设置有效，若果你用rtmp设置timeout，ijkplayer内部会忽略timeout参数。rtmp的timeout参数含义和http的不一样。
         mMediaPlayer.setOption(format, "timeout", 30 * 1000 * 1000);
+        //软解码：1、打开，0、关闭
+        //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "videotoolbox", 0);
 
-        //        mMediaPlayer.setOption(player, "opensles", 0);
-        //        mMediaPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-        //        mMediaPlayer.setOption(player, "start-on-prepared", 0);
-        //        mMediaPlayer.setOption(format, "http-detect-range-support", 0);
-        //
-        //jkPlayer支持硬解码和软解码。
-        //软解码时不会旋转视频角度这时需要你通过onInfo的what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED去获取角度，自己旋转画面。
-        //或者开启硬解硬解码，不过硬解码容易造成黑屏无声（硬件兼容问题），下面是设置硬解码相关的代码
-//        mMediaPlayer.setOption(player, "mediacodec", 1);
-//        mMediaPlayer.setOption(player, "mediacodec-auto-rotate", 1);
-//        mMediaPlayer.setOption(player, "mediacodec-handle-resolution-change", 1);
+        //rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
+        mMediaPlayer.setOption(format, "rtsp_transport", "tcp");
+        mMediaPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
+
+        //根据媒体类型来配置
+        mMediaPlayer.setOption(format, "allowed_media_types", "video");
+        mMediaPlayer.setOption(format, "buffer_size", 1316);
+        // 无限读
+        mMediaPlayer.setOption(format, "infbuf", 1);
+
+//        mMediaPlayer.setOption(player, "opensles", 0);
+//        mMediaPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
+//        mMediaPlayer.setOption(player, "start-on-prepared", 0);
+//        mMediaPlayer.setOption(format, "http-detect-range-support", 0);
+//
+//        //jkPlayer支持硬解码和软解码。
+//        //软解码时不会旋转视频角度这时需要你通过onInfo的what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED去获取角度，自己旋转画面。
+//        //或者开启硬解硬解码，不过硬解码容易造成黑屏无声（硬件兼容问题），下面是设置硬解码相关的代码
+        mMediaPlayer.setOption(player, "videotoolbox", 0);
+        mMediaPlayer.setOption(player, "mediacodec", 0);//1为硬解 0为软解
+        mMediaPlayer.setOption(player, "mediacodec-hevc", 0);//打开h265硬解
+        mMediaPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+        mMediaPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
     }
 
     /**

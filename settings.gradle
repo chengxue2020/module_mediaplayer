@@ -11,8 +11,8 @@ include ':app'
 include ':lib_mediaplayer_core_exoplayer_r2.16.1'
 
 // ijkplayer
-include ':lib_mediaplayer_core_ffmpeg'
-include ':lib_mediaplayer_core_ijkplayer'
+include ':lib_mediaplayer_core_ijkplayer_k0.8.8_ff3.2'
+include ':lib_mediaplayer_core_ijkplayer_k0.8.8_ff4.0'
 
 // mediaplayer_source
 include ':lib_mediaplayer_ui'
