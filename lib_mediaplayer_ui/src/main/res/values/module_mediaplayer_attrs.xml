@@ -16,5 +16,8 @@
         <attr name="mpb_radius" format="dimension|reference" />
         <attr name="mpb_rate" format="float|reference" />
         <attr name="mpb_count" format="integer|reference" />
+        <attr name="mpb_color_canvas" format="color|reference" />
+        <attr name="mpb_color_background" format="color|reference" />
+        <attr name="mpb_color_round" format="color|reference" />
     </declare-styleable>
 </resources>
