@@ -6,7 +6,7 @@ ijk => k0.8.8-ff4.0
 ```
 
 #
-#### ijkplayer-linux编译源码
+####  源码
 [ijkplayer-k0.8.8-ff4.0 for linux build source](https://github.com/153437803/ijkplayer-k0.8.8-ff4.0)
 
 #
