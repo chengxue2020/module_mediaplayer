@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "file:///android_asset/test.mp4");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://i71.lanzoug.com/021900bb/2022/02/19/822a6b6ffa33b8c777b53dba9fb65e17.zip?st=f2itOCtuVUSqV3e7QtL0wQ&e=1645204709&b=Um0MfFVhU3hTfAQ7UXE_c&fi=62701757&pid=111-19-95-209&up=2&mp=0&co=1");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
@@ -126,8 +126,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://114.118.13.20:8080/movie/33/playlist.m3u8");
-//                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://www.maimic.com/realplayer/123.rmvb");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://i71.lanzoug.com/021900bb/2022/02/19/8669ddd6992f062b9bc6d583aad7eefd.zip?st=BlBavCatPoSINgcVnfwYzw&e=1645204518&b=Bi1aMwVrUS1XdwAzUXtXOwc7AC9ROAVmUm8IYlZ_aB38COQx8&fi=62701467&pid=111-19-95-209&up=2&mp=0&co=1");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
