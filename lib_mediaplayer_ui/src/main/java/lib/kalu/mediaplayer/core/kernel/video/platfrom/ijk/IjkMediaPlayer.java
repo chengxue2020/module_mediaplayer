@@ -81,10 +81,10 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
 
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
         mMediaPlayer.setOption(codec, "skip_loop_filter", 48);
-        // 预加载1M
-        mMediaPlayer.setOption(format, "probesize", 1024 * 1024);
-        // 最大缓冲1M
-        mMediaPlayer.setOption(player, "max-buffer-size", 1024 * 1024);
+        // 预加载2M
+        mMediaPlayer.setOption(format, "probesize", 1024 * 2048);
+        // 最大缓冲2M
+        mMediaPlayer.setOption(player, "max-buffer-size", 1024 * 2048);
 //
         //设置播放前的最大探测时间
 //        mMediaPlayer.setOption(format, "analyzeduration", 1000L);
@@ -100,7 +100,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         //播放重连次数
         mMediaPlayer.setOption(player, "reconnect", 1);
         // 跳帧处理,放CPU处理较慢时，进行跳帧处理，保证播放流程，画面和声音同步
-        mMediaPlayer.setOption(player, "framedrop", 5);
+        mMediaPlayer.setOption(player, "framedrop", 1);
         //最大fps
         mMediaPlayer.setOption(player, "max-fps", 30);
 
@@ -124,7 +124,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
 
         //根据媒体类型来配置
         mMediaPlayer.setOption(format, "allowed_media_types", "video");
-        mMediaPlayer.setOption(format, "buffer_size", 1316);
+        mMediaPlayer.setOption(format, "buffer_size", 1024 * 2048);
         // 无限读
         mMediaPlayer.setOption(format, "infbuf", 1);
 
