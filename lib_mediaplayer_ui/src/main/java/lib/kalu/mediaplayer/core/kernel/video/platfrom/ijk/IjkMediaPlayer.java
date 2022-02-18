@@ -87,10 +87,8 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         mMediaPlayer.setOption(player, "max-buffer-size", 1024 * 2048);
 //
         //设置播放前的最大探测时间
-//        mMediaPlayer.setOption(format, "analyzeduration", 1000L);
-//        mMediaPlayer.setOption(format, "analyzemaxduration", 100L);
-//        //设置播放前的探测时间 1,达到首屏秒开效果
-//        mMediaPlayer.setOption(format, "analyzeduration", 1L);
+        mMediaPlayer.setOption(format, "analyzeduration", 30 * 1000 * 1000);
+        mMediaPlayer.setOption(format, "analyzemaxduration", 30 * 1000 * 1000);
 //        //设置是否开启变调isModifyTone?0:1
         mMediaPlayer.setOption(player, "soundtouch", 0);
         //每处理一个packet之后刷新io上下文
@@ -115,15 +113,14 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         mMediaPlayer.setOption(format, "dns_cache_clear", 1);
         //超时时间，timeout参数只对http设置有效，若果你用rtmp设置timeout，ijkplayer内部会忽略timeout参数。rtmp的timeout参数含义和http的不一样。
         mMediaPlayer.setOption(format, "timeout", 30 * 1000 * 1000);
-        //软解码：1、打开，0、关闭
-        //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "videotoolbox", 0);
 
         //rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
         mMediaPlayer.setOption(format, "rtsp_transport", "tcp");
         mMediaPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
 
-        //根据媒体类型来配置
-        mMediaPlayer.setOption(format, "allowed_media_types", "video");
+        // 根据媒体类型来配置 => bug => resp aac音频无声音
+//         mMediaPlayer.setOption(format, "allowed_media_types", "video");
+        // 缓冲
         mMediaPlayer.setOption(format, "buffer_size", 1024 * 2048);
         // 无限读
         mMediaPlayer.setOption(format, "infbuf", 1);

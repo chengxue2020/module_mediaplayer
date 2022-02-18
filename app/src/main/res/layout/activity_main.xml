@@ -124,6 +124,16 @@
                 android:text="mp4" />
 
             <Button
+                android:id="@+id/main_rmvb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="rmvb" />
+
+            <Button
                 android:id="@+id/main_sound_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

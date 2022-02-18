@@ -121,6 +121,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // rmvb
+        findViewById(R.id.main_rmvb).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://114.118.13.20:8080/movie/33/playlist.m3u8");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://www.maimic.com/realplayer/123.rmvb");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
+                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
+
         // 无声音, audio/mpeg-L2, video/avc
         findViewById(R.id.main_sound_no).setOnClickListener(new View.OnClickListener() {
             @Override
