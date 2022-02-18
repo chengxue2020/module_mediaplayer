@@ -63,6 +63,9 @@ ffmpeg => ff4.0--ijk0.8.8--20210426--001
    #export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-vda"
    export COMMON_FF_CFG_FLAGS="$COMMON_FF_CFG_FLAGS --disable-bsf=eac3_core"
    编译ffmpeg4不过时，正如debugly 所说，需要注释掉2行-disable-ffserver和--disable-vda，然后添加一行把eac3_cored配置disable掉--disable-bsf=eac3_core，然后clean掉，重新编译ffmpeg就好了
+
+3. compile-ijk.sh 不生成ijkplayer.so、ijksdk.so
+   android/ijkplayer/xx/src/main/jin/Android.mk => 末尾新增 => include ../../../../../../ijkmedia/*.mk
 ```
 
 #
