@@ -145,5 +145,4 @@ https://github.com/google/ExoPlayer
 https://mvnrepository.com/search?q=exoplayer
 https://github.com/bilibili/ijkplayer
 https://github.com/bilibili/FFmpeg/tags
-https://github.com/yangchong211/YCVideoPlayer
 ```
