@@ -88,7 +88,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
          * IJK_AVDISCARD_ALL = 48, discard all;
          */
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
-        mMediaPlayer.setOption(codec, "skip_loop_filter", 8);
+        mMediaPlayer.setOption(codec, "skip_loop_filter", 48);
         // 预加载2M
         mMediaPlayer.setOption(format, "probesize", 1024 * 2048);
         // 最大缓冲2M
