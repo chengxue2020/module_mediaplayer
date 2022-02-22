@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://i71.lanzoug.com/021900bb/2022/02/19/822a6b6ffa33b8c777b53dba9fb65e17.zip?st=f2itOCtuVUSqV3e7QtL0wQ&e=1645204709&b=Um0MfFVhU3hTfAQ7UXE_c&fi=62701757&pid=111-19-95-209&up=2&mp=0&co=1");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://i71.lanzoug.com/021900bb/2022/02/19/822a6b6ffa33b8c777b53dba9fb65e17.zip?st=f2itOCtuVUSqV3e7QtL0wQ&e=1645204709&b=Um0MfFVhU3hTfAQ7UXE_c&fi=62701757&pid=111-19-95-209&up=2&mp=0&co=1");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
