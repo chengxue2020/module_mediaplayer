@@ -64,6 +64,16 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/main_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="手机" />
+
+            <Button
                 android:id="@+id/main_live_m3u8_http"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

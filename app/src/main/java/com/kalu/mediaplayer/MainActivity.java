@@ -49,6 +49,17 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
+        // main_mobile
+        findViewById(R.id.main_mobile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, false);
+                startActivity(intent);
+            }
+        });
+
         // live m3u8 http
         findViewById(R.id.main_live_m3u8_http).setOnClickListener(new View.OnClickListener() {
             @Override

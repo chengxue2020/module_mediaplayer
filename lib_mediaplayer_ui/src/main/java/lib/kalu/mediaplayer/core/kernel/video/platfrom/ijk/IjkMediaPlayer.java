@@ -304,6 +304,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     public void seekTo(long time) {
         try {
             MediaLogUtil.log("IJKLOG => seekTo => time = " + time);
+            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, 0);
             mMediaPlayer.seekTo(time);
         } catch (IllegalStateException e) {
             MediaLogUtil.log("IJKLOG => seekTo => " + e.getMessage());
