@@ -746,7 +746,8 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
     @Override
     public void onInfo(int what, int extra) {
-        MediaLogUtil.log("onInfo => what = " + what + ", extra = " + extra);
+        long position = getPosition();
+        MediaLogUtil.log("onInfo => what = " + what + ", extra = " + extra + ", position = " + position);
 
         switch (what) {
             // loading-start
@@ -759,9 +760,22 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
                 break;
             // play-begin
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
-                setPlayState(PlayerType.StateType.STATE_START);
-                if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
-                    pause();
+            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
+                if (position <= 10) {
+                    setPlayState(PlayerType.StateType.STATE_START);
+                    if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
+                        pause();
+                    }
+                }
+                break;
+            case PlayerType.MediaType.MEDIA_INFO_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
+            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
+
+                if (position > 0) {
+                    setPlayState(PlayerType.StateType.STATE_START);
+                    if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
+                        pause();
+                    }
                 }
                 break;
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
