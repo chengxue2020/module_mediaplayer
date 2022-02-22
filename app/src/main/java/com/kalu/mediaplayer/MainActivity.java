@@ -1,28 +1,13 @@
 package com.kalu.mediaplayer;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.ExoplayerActivity;
-import lib.kalu.mediaplayer.core.kernel.video.factory.PlayerFactory;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.exo.ExoMediaPlayer;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.exo.ExoPlayerFactory;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.ijk.IjkMediaPlayer;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.ijk.IjkPlayerFactory;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.media.AndroidMediaPlayer;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.media.MediaPlayerFactory;
-import lib.kalu.mediaplayer.config.PlayerConfig;
-import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.PlayerType;
-import lib.kalu.mediaplayer.util.PlayerUtils;
-
-import java.lang.reflect.Field;
 
 /**
  * description:
