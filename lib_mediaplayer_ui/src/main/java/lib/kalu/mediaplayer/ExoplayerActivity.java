@@ -65,7 +65,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
         controllerLayout.setEnableOrientation(false);
         int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, -1);
         if (resId != -1) {
-            controllerLayout.setComponentPrepareBackgroundColor(resId);
+            controllerLayout.setComponentPrepareBackgroundResource(resId);
         } else {
             controllerLayout.setComponentPrepareBackgroundColor(Color.BLACK);
         }

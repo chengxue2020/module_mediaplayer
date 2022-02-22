@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(ExoplayerActivity.INTENT_URL, "http://115.182.96.25/gitv_live/CCTV-1-HD/CCTV-1-HD.m3u8?p=GITV&area=AH_CMCC");
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://114.118.13.20:8080/movie/33/playlist.m3u8");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
-                intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
             }
         });
