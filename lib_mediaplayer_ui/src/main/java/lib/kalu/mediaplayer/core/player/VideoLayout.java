@@ -760,7 +760,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
                 break;
             // play-begin
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
-            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
+//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
                 if (position <= 10) {
                     setPlayState(PlayerType.StateType.STATE_START);
                     if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
@@ -769,7 +769,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
                 }
                 break;
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
-            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
+//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
 
                 if (position > 0) {
                     setPlayState(PlayerType.StateType.STATE_START);
