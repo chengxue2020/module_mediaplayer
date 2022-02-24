@@ -75,6 +75,9 @@ ijk => k0.8.8-ff4.0
 
 3. compile-ijk.sh 不生成ijkplayer.so、ijksdk.so
    android/ijkplayer/xx/src/main/jin/Android.mk => 末尾新增 => include ../../../../../../ijkmedia/*.mk
+   
+4. ffmpeg 开启neon
+   do-comfile-ffmpeg.sh 修改 FF_ASSEMBLER_SUB_DIRS="arm neon"
 ```
 
 #
