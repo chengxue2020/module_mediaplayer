@@ -79,13 +79,18 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
         int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 
+        // 音频 => 0闭音, 1开音
+        mMediaPlayer.setOption(player, "an", 1);
+        // 音频 => 区间[0-100]
+        mMediaPlayer.setOption(player, "volume", 100);
+
         /**
-         * IJK_AVDISCARD_NONE = -16, discard nothing;
-         * IJK_AVDISCARD_DEFAULT = 0, discard useless packets like 0 size packets in avi;
-         * IJK_AVDISCARD_NONREF = 8, discard all non reference;
-         * IJK_AVDISCARD_BIDIR = 16, discard all bidirectional frames;
-         * IJK_AVDISCARD_NONKEY = 32, discard all frames except keyframes;
-         * IJK_AVDISCARD_ALL = 48, discard all;
+         *  IJK_AVDISCARD_NONE    =-16, ///< discard nothing
+         *  IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，责抛弃无效的包
+         *  IJK_AVDISCARD_NONREF  =  8, ///< 抛弃非参考帧（I帧）
+         *  IJK_AVDISCARD_BIDIR   = 16, ///< 抛弃B帧
+         *  IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
+         *  IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
          */
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
         mMediaPlayer.setOption(codec, "skip_loop_filter", 48);
