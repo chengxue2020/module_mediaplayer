@@ -79,10 +79,11 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
         int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 
+//        mMediaPlayer.setVolume(0, 0);
         // 音频 => 0闭音, 1开音
-        mMediaPlayer.setOption(player, "an", 1);
+//        mMediaPlayer.setOption(player, "an", 1);
         // 音频 => 区间[0-100]
-        mMediaPlayer.setOption(player, "volume", 100);
+//        mMediaPlayer.setOption(player, "volume", 100);
 
         /**
          *  IJK_AVDISCARD_NONE    =-16, ///< discard nothing
