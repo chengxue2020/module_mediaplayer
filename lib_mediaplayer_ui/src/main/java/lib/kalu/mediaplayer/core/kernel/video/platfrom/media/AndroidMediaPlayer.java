@@ -229,7 +229,7 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
             // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getCurrentPosition(), getDuration());
             }
             return;
         }
@@ -361,11 +361,11 @@ public class AndroidMediaPlayer extends VideoPlayerCore implements PlatfromPlaye
             //解决MEDIA_INFO_VIDEO_RENDERING_START多次回调问题
             if (what == PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START) {
                 if (mIsPreparing) {
-                    getVideoPlayerChangeListener().onInfo(what, extra);
+                    getVideoPlayerChangeListener().onInfo(what, extra, getCurrentPosition(), getDuration());
                     mIsPreparing = false;
                 }
             } else {
-                getVideoPlayerChangeListener().onInfo(what, extra);
+                getVideoPlayerChangeListener().onInfo(what, extra, getCurrentPosition(), getDuration());
             }
             return true;
         }

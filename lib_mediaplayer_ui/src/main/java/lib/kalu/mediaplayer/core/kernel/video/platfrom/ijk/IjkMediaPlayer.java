@@ -79,11 +79,11 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
         int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 
-//        mMediaPlayer.setVolume(0, 0);
-        // 音频 => 0闭音, 1开音
-//        mMediaPlayer.setOption(player, "an", 1);
-        // 音频 => 区间[0-100]
-//        mMediaPlayer.setOption(player, "volume", 100);
+        //是否有声音, 1无声音、0有声音
+        mMediaPlayer.setOption(player, "an", 0);
+        mMediaPlayer.setOption(player, "volume", 100);
+        //是否有视频, 1无视频、0有视频
+        mMediaPlayer.setOption(player, "vn", 0);
 
         /**
          *  IJK_AVDISCARD_NONE    =-16, ///< discard nothing
@@ -217,7 +217,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, -1, -1);
             }
             return;
         }
@@ -310,7 +310,7 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     public void seekTo(long time) {
         try {
             MediaLogUtil.log("IJKLOG => seekTo => time = " + time);
-            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, 0);
+            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, 0, time, -1);
             mMediaPlayer.seekTo(time);
         } catch (IllegalStateException e) {
             MediaLogUtil.log("IJKLOG => seekTo => " + e.getMessage());
@@ -450,7 +450,9 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     private IMediaPlayer.OnInfoListener onInfoListener = new IMediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
-            getVideoPlayerChangeListener().onInfo(what, extra);
+            long position = getCurrentPosition();
+            long duration = getDuration();
+            getVideoPlayerChangeListener().onInfo(what, extra, position, duration);
             MediaLogUtil.log("IJKLOG => onInfo => what = " + what + ", extra = " + extra);
             return true;
         }

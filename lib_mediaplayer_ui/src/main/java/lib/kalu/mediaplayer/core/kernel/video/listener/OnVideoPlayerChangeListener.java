@@ -11,6 +11,14 @@ import lib.kalu.mediaplayer.config.PlayerType;
 public interface OnVideoPlayerChangeListener {
 
     /**
+     * 视频信息
+     *
+     * @param what  what
+     * @param extra extra
+     */
+    void onInfo(@PlayerType.MediaType.Value int what, @NonNull int extra, @NonNull long position, @NonNull long duration);
+
+    /**
      * 异常
      * 1          表示错误的链接
      * 2          表示解析异常
@@ -24,14 +32,6 @@ public interface OnVideoPlayerChangeListener {
      * 完成
      */
     void onCompletion();
-
-    /**
-     * 视频信息
-     *
-     * @param what  what
-     * @param extra extra
-     */
-    void onInfo(@PlayerType.MediaType.Value int what, int extra);
 
     /**
      * 准备

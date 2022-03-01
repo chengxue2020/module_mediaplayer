@@ -147,7 +147,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
 
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getCurrentPosition(), getDuration());
             }
             return;
         }
@@ -422,13 +422,13 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
                     break;
                 //开始缓充
                 case Player.STATE_BUFFERING:
-                    getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, getBufferedPercentage());
+                    getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, getBufferedPercentage(), getCurrentPosition(), getDuration());
                     mIsBuffering = true;
                     break;
                 //开始播放
                 case Player.STATE_READY:
                     if (mIsBuffering) {
-                        getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_END, getBufferedPercentage());
+                        getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_END, getBufferedPercentage(), getCurrentPosition(), getDuration());
                         mIsBuffering = false;
                     }
                     break;
@@ -494,7 +494,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
         if (getVideoPlayerChangeListener() != null) {
             getVideoPlayerChangeListener().onVideoSizeChanged(videoSize.width, videoSize.height);
             if (videoSize.unappliedRotationDegrees > 0) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees);
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees, getCurrentPosition(), getDuration());
             }
         }
     }
@@ -502,7 +502,7 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
     @Override
     public void onRenderedFirstFrame() {
         if (getVideoPlayerChangeListener() != null && mIsPreparing) {
-            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, 0);
+            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, 0, getCurrentPosition(), getDuration());
             mIsPreparing = false;
         }
     }

@@ -689,6 +689,57 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         return mIsMute;
     }
 
+    @Override
+    public void onInfo(int what, @NonNull int extra, @NonNull long position, @NonNull long duration) {
+        MediaLogUtil.log("onInfo => what = " + what + ", extra = " + extra + ", position = " + position);
+
+        switch (what) {
+            // loading-start
+            case PlayerType.MediaType.MEDIA_INFO_BUFFERING_START:
+                setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
+                break;
+            // loading-end
+            case PlayerType.MediaType.MEDIA_INFO_BUFFERING_END:
+                setPlayState(PlayerType.StateType.STATE_BUFFERING_COMPLETE);
+                break;
+            case PlayerType.MediaType.MEDIA_INFO_OPEN_INPUT:
+                // seekTo
+                if (position > 0) {
+                    setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
+                } else {
+                    setPlayState(PlayerType.StateType.STATE_START);
+                    if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
+                        pause();
+                    }
+                }
+                break;
+//            // play-begin
+//            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
+////            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
+//                if (position <= 10) {
+//                    setPlayState(PlayerType.StateType.STATE_START);
+//                    if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
+//                        pause();
+//                    }
+//                }
+//                break;
+            case PlayerType.MediaType.MEDIA_INFO_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
+//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
+
+//                if (position > 0) {
+                setPlayState(PlayerType.StateType.STATE_START);
+                if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
+                    pause();
+                }
+//                }
+                break;
+            case PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
+                if (mRenderView != null)
+                    mRenderView.setVideoRotation(extra);
+                break;
+        }
+    }
+
     /**
      * 视频播放出错回调
      */
@@ -741,47 +792,6 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         if (config != null && config.mBuriedPointEvent != null) {
             //视频播放完成
             config.mBuriedPointEvent.playerCompletion(mUrl);
-        }
-    }
-
-    @Override
-    public void onInfo(int what, int extra) {
-        long position = getPosition();
-        MediaLogUtil.log("onInfo => what = " + what + ", extra = " + extra + ", position = " + position);
-
-        switch (what) {
-            // loading-start
-            case PlayerType.MediaType.MEDIA_INFO_BUFFERING_START:
-                setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
-                break;
-            // loading-end
-            case PlayerType.MediaType.MEDIA_INFO_BUFFERING_END:
-                setPlayState(PlayerType.StateType.STATE_BUFFERING_COMPLETE);
-                break;
-            // play-begin
-            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
-//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
-                if (position <= 10) {
-                    setPlayState(PlayerType.StateType.STATE_START);
-                    if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
-                        pause();
-                    }
-                }
-                break;
-            case PlayerType.MediaType.MEDIA_INFO_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
-//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
-
-                if (position > 0) {
-                    setPlayState(PlayerType.StateType.STATE_START);
-                    if (mPlayerContainer.getWindowVisibility() != VISIBLE) {
-                        pause();
-                    }
-                }
-                break;
-            case PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
-                if (mRenderView != null)
-                    mRenderView.setVideoRotation(extra);
-                break;
         }
     }
 
