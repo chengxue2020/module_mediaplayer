@@ -50,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://115.182.96.25/gitv_live/CCTV-1-HD/CCTV-1-HD.m3u8?p=GITV&area=AH_CMCC");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://hkss3.phoenixtv.com/fs/pcc.stream/playlist.m3u8");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://115.182.96.25/gitv_live/CCTV-1-HD/CCTV-1-HD.m3u8?p=GITV&area=AH_CMCC");
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://114.118.13.20:8080/movie/33/playlist.m3u8");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 startActivity(intent);
