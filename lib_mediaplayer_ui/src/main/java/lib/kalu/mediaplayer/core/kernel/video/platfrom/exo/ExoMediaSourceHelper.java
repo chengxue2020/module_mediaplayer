@@ -13,8 +13,11 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
 import com.google.android.exoplayer2.ext.rtmp.RtmpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
@@ -26,9 +29,11 @@ import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import com.google.android.exoplayer2.util.MimeTypes;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -142,18 +147,71 @@ public final class ExoMediaSourceHelper {
             contentType = C.TYPE_OTHER;
         }
 
+        // 字幕
+//        MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(srtUri);
+//        subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
+//        subtitle.setLanguage("en");
+//        subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT);
+
+//        MediaLogUtil.log("SRT => srtUri = " + srtUri);
+        MediaItem.Builder builder = new MediaItem.Builder();
+        builder.setUri(Uri.parse(url));
+//        builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
+        MediaItem mediaItem = builder.build();
+//        MediaItem.Subtitle subtitle = new MediaItem.Subtitle(
+//                srtUri,
+//                MimeTypes.APPLICATION_SUBRIP,
+//                "en",
+//                C.SELECTION_FLAG_DEFAULT);
+////                C.SELECTION_FLAG_AUTOSELECT);
+
+
         switch (contentType) {
             case C.TYPE_DASH:
-                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(url));
+                MediaLogUtil.log("SRT => TYPE_DASH");
+                return new DashMediaSource.Factory(factory).createMediaSource(mediaItem);
             case C.TYPE_SS:
-                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(url));
+                MediaLogUtil.log("SRT => TYPE_SS");
+                return new SsMediaSource.Factory(factory).createMediaSource(mediaItem);
             case C.TYPE_HLS:
-                return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(url));
+                MediaLogUtil.log("SRT => TYPE_HLS");
+                return new HlsMediaSource.Factory(factory).createMediaSource(mediaItem);
             default:
+                MediaLogUtil.log("SRT => TYPE_DEFAULT");
+//                return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
                 DefaultExtractorsFactory extractors = new DefaultExtractorsFactory();
                 extractors.setConstantBitrateSeekingEnabled(true);
-                return new ProgressiveMediaSource.Factory(factory, extractors).createMediaSource(MediaItem.fromUri(url));
+                return new ProgressiveMediaSource.Factory(factory, extractors).createMediaSource(mediaItem);
         }
+
+//        // 字幕
+//        if (null != srtUri) {
+//
+//            MediaItem.Builder srtBuilder = new MediaItem.Builder().setUri(srtUri);
+//            MediaItem.Subtitle subtitle = new MediaItem.Subtitle(srtUri,
+//                    MimeTypes.TEXT_VTT,
+//                    "en",
+//                    C.SELECTION_FLAG_DEFAULT);
+//            srtBuilder.setSubtitles(Arrays.asList(subtitle));
+//
+//            MediaItem srtItem = srtBuilder.build();
+////            MediaSource srtSource = new DefaultMediaSourceFactory(factory).createMediaSource(srtItem);
+//
+////            MediaItem.SubtitleConfiguration.Builder builder = new MediaItem.SubtitleConfiguration.Builder(srtUri);
+//////            builder.setMimeType(MimeTypes.APPLICATION_SUBRIP);
+////            builder.setMimeType(MimeTypes.TEXT_VTT);
+////            builder.setLanguage("en");
+////            builder.setSelectionFlags(C.SELECTION_FLAG_DEFAULT);
+////            MediaItem.SubtitleConfiguration subtitle = builder.build();
+//            MediaSource textMediaSource = new SingleSampleMediaSource.Factory(factory).createMediaSource(subtitle, C.TIME_UNSET);
+//////            textMediaSource.getMediaItem().mediaMetadata.subtitle.toString();
+////            MediaLogUtil.log("SRT => " + subtitle);
+//            return new MergingMediaSource(mediaSource, srtSource);
+//        }
+//        // 默认
+//        else {
+//            return mediaSource;
+//        }
     }
 
     private void refreshHeaders(@NonNull HttpDataSource.Factory factory, @NonNull Map<String, String> map) {

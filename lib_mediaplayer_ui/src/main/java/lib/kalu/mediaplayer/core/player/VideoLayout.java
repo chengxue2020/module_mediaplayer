@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -294,6 +295,14 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     }
 
     /**
+     * 设置控制器，传null表示移除控制器
+     */
+    public void removeController() {
+        mPlayerContainer.removeView(mVideoController);
+        mVideoController = null;
+    }
+
+    /**
      * 开始播放，注意：调用此方法后必须调用{@link #release()}释放播放器，否则会导致内存泄漏
      */
     /**
@@ -313,11 +322,11 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      * @param url
      */
     @Override
-    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
-        if (mVideoController == null) {
-            //在调用start方法前，请先初始化视频控制器，调用setController方法
-            throw new VideoException(VideoException.CODE_NOT_SET_CONTROLLER, "Controller must not be null , please setController first");
-        }
+    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
+//        if (mVideoController == null) {
+//            //在调用start方法前，请先初始化视频控制器，调用setController方法
+//            throw new VideoException(VideoException.CODE_NOT_SET_CONTROLLER, "Controller must not be null , please setController first");
+//        }
 
 //        clearOnStateChangeListeners();
 //        setOnStateChangeListener(listener);
@@ -330,7 +339,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
         boolean isStarted = false;
         if (isInit() || isInStartAbortState()) {
-            isStarted = startPlay(seekPosition, live, url, headers);
+            isStarted = startPlay(seekPosition, live, url, subtitle, headers);
         } else if (isInPlaybackState()) {
             startInPlaybackState();
             isStarted = true;
@@ -359,7 +368,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
      *
      * @return 是否成功开始播放
      */
-    protected boolean startPlay(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
+    protected boolean startPlay(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
         //如果要显示移动网络提示则不继续播放
 
         // 中止播放
@@ -378,7 +387,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
         release();
 
         // update
-        updateUrl(live, url, headers);
+        updateUrl(live, url, subtitle, headers);
 
         initPlayer();
         initCanvas();
@@ -619,7 +628,11 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     @Override
     public long getDuration() {
         if (isInPlaybackState()) {
-            return mMediaPlayer.getDuration();
+            long duration = mMediaPlayer.getDuration();
+            if (duration < 0) {
+                duration = 0;
+            }
+            return duration;
         }
         return 0;
     }
@@ -630,8 +643,11 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
     @Override
     public long getPosition() {
         if (isInPlaybackState()) {
-            mCurrentPosition = mMediaPlayer.getCurrentPosition();
-            return mCurrentPosition;
+            long position = mMediaPlayer.getCurrentPosition();
+            if (position < 0) {
+                position = 0;
+            }
+            return position;
         }
         return 0;
     }
@@ -700,6 +716,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
                 break;
             // loading-end
             case PlayerType.MediaType.MEDIA_INFO_BUFFERING_END:
+            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START:
                 setPlayState(PlayerType.StateType.STATE_BUFFERING_COMPLETE);
                 break;
             case PlayerType.MediaType.MEDIA_INFO_OPEN_INPUT:
@@ -713,7 +730,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
                     }
                 }
                 break;
-//            // play-begin
+            //            // play-begin
 //            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
 ////            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
 //                if (position <= 10) {
@@ -1264,7 +1281,7 @@ public class VideoLayout<P extends VideoPlayerImpl> extends FrameLayout implemen
 
     /*************************/
 
-    private final void updateUrl(@NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
+    private final void updateUrl(@NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
         mAssetFileDescriptor = null;
         mUrl = url;
         mLive = live;

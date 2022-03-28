@@ -18,15 +18,12 @@ package lib.kalu.mediaplayer.core.controller;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.annotation.AttrRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,12 +31,13 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentPrepare;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
+import lib.kalu.mediaplayer.widget.subtitle.widget.SimpleSubtitleView;
 
 
 /**
@@ -56,7 +54,7 @@ public class ControllerLive extends ControllerLayout {
 
     @Override
     public int initLayout() {
-        return R.layout.module_mediaplayer_video_center;
+        return R.layout.module_mediaplayer_video_live;
     }
 
     @Override
@@ -67,14 +65,15 @@ public class ControllerLive extends ControllerLayout {
     }
 
     private void initConfig() {
-        //先移除多有的视图view
-        removeComponentAll(false);
-
+        // 移除
+        this.removeComponentAll(false);
         // 错误界面view
         this.addComponent(new ComponentError(getContext()));
-
         // 加载界面view
         this.addComponent(new ComponentPrepare(getContext()));
+
+        // 字幕
+//        this.addComponent(new ComponentSubtitle(getContext()));
     }
 
 
@@ -89,7 +88,7 @@ public class ControllerLive extends ControllerLayout {
     @Override
     protected void onPlayerStateChanged(int playerState) {
         super.onPlayerStateChanged(playerState);
-        View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
+        View view = findViewById(R.id.module_mediaplayer_controller_live_lock);
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
                 setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -121,7 +120,7 @@ public class ControllerLive extends ControllerLayout {
     protected void onPlayStateChanged(int playState) {
         super.onPlayStateChanged(playState);
         MediaLogUtil.log("ControllerLive => playState = " + playState);
-        View view = findViewById(R.id.module_mediaplayer_controller_center_loading);
+        View view = findViewById(R.id.module_mediaplayer_controller_live_loading);
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
@@ -203,6 +202,17 @@ public class ControllerLive extends ControllerLayout {
     public View findCenterProgress() {
         View view = findViewById(R.id.module_mediaplayer_controller_center_loading);
         return view;
+    }
+
+    @Nullable
+    @Override
+    public SimpleSubtitleView findSubtitle() {
+        try {
+            SimpleSubtitleView view = findViewById(R.id.module_mediaplayer_controller_subtitle);
+            return view;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

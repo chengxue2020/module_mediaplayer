@@ -3,7 +3,10 @@ package lib.kalu.mediaplayer;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 import lib.kalu.mediaplayer.core.controller.ControllerLive;
 import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.widget.subtitle.widget.SimpleSubtitleView;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -32,6 +36,8 @@ public final class ExoplayerActivity extends AppCompatActivity {
     public static final String INTENT_LIVE = "intent_live"; // 直播
     @Keep
     public static final String INTENT_URL = "intent_url"; // 视频Url
+    @Keep
+    public static final String INTENT_SRT = "intent_srt"; // 字幕Url
     @Keep
     public static final String INTENT_TIME_BROWSING = "intent_time_browsing"; // 视频浏览时长
     @Keep
@@ -70,6 +76,12 @@ public final class ExoplayerActivity extends AppCompatActivity {
             controllerLayout.setComponentPrepareBackgroundColor(Color.BLACK);
         }
 
+        String subtitle = getIntent().getStringExtra(INTENT_SRT);
+        MediaLogUtil.log("SRT => " + subtitle);
+        if (null != subtitle && subtitle.length() > 0) {
+            controllerLayout.setComponentSubtitlePath(subtitle);
+        }
+
         // 控制器
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
         videoLayout.setController(controllerLayout);
@@ -79,7 +91,7 @@ public final class ExoplayerActivity extends AppCompatActivity {
         // 全屏
         videoLayout.startFullScreen();
         // 开始播放
-        videoLayout.start(live, url);
+        videoLayout.start(live, url, subtitle);
         videoLayout.setOnMediaStateListener(new OnMediaStateListener() {
             /**
              * 播放模式
@@ -135,6 +147,14 @@ public final class ExoplayerActivity extends AppCompatActivity {
                         //播放准备中
                         break;
                     case PlayerType.StateType.STATE_PREPARE_END:
+
+                        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
+                        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
+                        ControllerLayout controller = videoLayout.getVideoController();
+                        SimpleSubtitleView subtitle = controller.findSubtitle();
+                        subtitle.bindToMediaPlayer(videoLayout);
+                        subtitle.start();
+
                         //播放准备就绪
                         break;
                     case PlayerType.StateType.STATE_ERROR:
@@ -144,6 +164,20 @@ public final class ExoplayerActivity extends AppCompatActivity {
                         //正在缓冲
                         break;
                     case PlayerType.StateType.STATE_START:
+
+//                        SimpleSubtitleView subtitleView = findViewById(R.id.module_mediaplayer_subtitle);
+                        // 绑定MediaPlayer
+//                        subtitleView.bindToMediaPlayer(mp);
+                        // 设置字幕
+//                        String subtitle = getIntent().getStringExtra(INTENT_SRT);
+//                        subtitleView.setSubtitlePath(subtitle);
+
+//                        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
+//                        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
+//                        ControllerLayout controller = videoLayout.getVideoController();
+//                        SimpleSubtitleView subtitle = controller.findSubtitle();
+//                        subtitle.start();
+
                         //正在播放
                         break;
                     case PlayerType.StateType.STATE_PAUSED:

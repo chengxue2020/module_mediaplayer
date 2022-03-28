@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.platfrom.exo;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
 import android.os.Handler;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -10,10 +11,12 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -23,11 +26,17 @@ import com.google.android.exoplayer2.source.LoadEventInfo;
 import com.google.android.exoplayer2.source.MediaLoadData;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MediaSourceEventListener;
+import com.google.android.exoplayer2.source.MergingMediaSource;
+import com.google.android.exoplayer2.source.SingleSampleMediaSource;
+import com.google.android.exoplayer2.source.TrackGroup;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
 
 import java.util.Map;
@@ -427,6 +436,26 @@ public class ExoMediaPlayer extends VideoPlayerCore implements Player.Listener {
                     break;
                 //开始播放
                 case Player.STATE_READY:
+
+                    MappingTrackSelector trackSelector = (MappingTrackSelector) mExoPlayer.getTrackSelector();
+                    MappingTrackSelector.MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
+                    if (mappedTrackInfo != null) {
+                        for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {
+                            TrackGroupArray rendererTrackGroups = mappedTrackInfo.getTrackGroups(i);
+                            if (C.TRACK_TYPE_AUDIO == mappedTrackInfo.getRendererType(i)) { //判断是否是音轨
+                                for (int groupIndex = 0; groupIndex < rendererTrackGroups.length; groupIndex++) {
+                                    TrackGroup trackGroup = rendererTrackGroups.get(groupIndex);
+                                    MediaLogUtil.log("SRT => checkAudio => " + trackGroup.getFormat(0).toString());
+                                }
+                            } else if (C.TRACK_TYPE_TEXT == mappedTrackInfo.getRendererType(i)) { //判断是否是字幕
+                                for (int groupIndex = 0; groupIndex < rendererTrackGroups.length; groupIndex++) {
+                                    TrackGroup trackGroup = rendererTrackGroups.get(groupIndex);
+                                    MediaLogUtil.log("SRT => checkSubTitle => " + trackGroup.getFormat(0).toString());
+                                }
+                            }
+                        }
+                    }
+
                     if (mIsBuffering) {
                         getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_END, getBufferedPercentage(), getCurrentPosition(), getDuration());
                         mIsBuffering = false;

@@ -38,6 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.widget.MediaProgressBar;
+import lib.kalu.mediaplayer.widget.subtitle.widget.SimpleSubtitleView;
 
 /**
  * <pre>
@@ -151,6 +152,11 @@ public interface ImplController {
 
     @Nullable
     default View findCenterProgress() {
+        return null;
+    }
+
+    @Nullable
+    default SimpleSubtitleView findSubtitle() {
         return null;
     }
 
@@ -427,4 +433,18 @@ public interface ImplController {
     }
 
     /********************  ComponentCenter  **********************/
+
+
+    /********************  ComponentCenter  **********************/
+
+    default void setComponentSubtitlePath(@NonNull String subtitlePath) {
+
+        View view = findSubtitle();
+        if (null == view || !(view instanceof SimpleSubtitleView))
+            return;
+        try {
+            ((SimpleSubtitleView) view).setSubtitlePath(subtitlePath);
+        } catch (Exception e) {
+        }
+    }
 }

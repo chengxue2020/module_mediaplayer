@@ -64,6 +64,26 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/main_m3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="m3u8" />
+
+            <Button
+                android:id="@+id/main_srt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="外挂字幕" />
+
+            <Button
                 android:id="@+id/main_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

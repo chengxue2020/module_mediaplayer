@@ -58,7 +58,11 @@ public class PlayerType {
         int STATE_ERROR_NETWORK = 2015; // 播放错误，网络异常
         int STATE_ERROR = 2016; // 播放错误
 
-        @IntDef({STATE_INIT, STATE_ERROR, STATE_CLEAN,
+
+        int STATE_SUBTITLE_START = 2017;
+
+        @IntDef({STATE_SUBTITLE_START,
+                STATE_INIT, STATE_ERROR, STATE_CLEAN,
                 STATE_START, STATE_PAUSED,
                 STATE_BUFFERING_PLAYING, STATE_BUFFERING_PAUSED, STATE_BUFFERING_COMPLETE,
                 STATE_END, STATE_START_ABORT,

@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
@@ -52,7 +53,6 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * 1.播放器状态改变: {@link #handleWindowStateChanged(int)} (int)}
- * *             2.播放状态改变: {@link #handlePlayStateChanged(int)}
  * *             3.控制视图的显示和隐藏: {@link #handleVisibilityChanged(boolean, Animation)}
  * *             4.播放进度改变: {@link #handleSetProgress(int, int)}
  * *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
@@ -609,7 +609,7 @@ public abstract class ControllerLayout extends FrameLayout implements ImplContro
 
     }
 
-    private void handlePlayStateChanged(int playState) {
+    private void handlePlayStateChanged(@NonNull int playState) {
         for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
             ImplComponent component = next.getKey();
             component.onPlayStateChanged(playState);

@@ -18,6 +18,7 @@ package lib.kalu.mediaplayer.core.controller.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -79,7 +80,7 @@ public interface ImplComponent {
      *
      * @param playState 播放状态，主要是指播放器的各种状态
      */
-    void onPlayStateChanged(int playState);
+    void onPlayStateChanged(@NonNull int playState);
 
     /**
      * 播放模式

@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
@@ -39,7 +38,7 @@ import lib.kalu.mediaplayer.core.controller.component.ComponentBottom;
 import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentGesture;
-import lib.kalu.mediaplayer.core.controller.component.ComponentLive;
+import lib.kalu.mediaplayer.core.controller.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.controller.component.ComponentOnce;
 import lib.kalu.mediaplayer.core.controller.component.ComponentPrepare;
 import lib.kalu.mediaplayer.core.controller.component.ComponentTop;
@@ -56,7 +55,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     private ComponentTop titleView;
     private ComponentBottom vodControlView;
-    private ComponentLive liveControlView;
+    private ComponentMenu liveControlView;
     private ComponentOnce customOncePlayView;
     private TextView tvLiveWaitMessage;
 
@@ -74,7 +73,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     @Override
     public int initLayout() {
-        return R.layout.module_mediaplayer_video_center;
+        return R.layout.module_mediaplayer_video_standard;
     }
 
     @Override

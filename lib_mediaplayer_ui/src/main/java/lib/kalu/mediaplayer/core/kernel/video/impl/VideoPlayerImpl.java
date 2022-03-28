@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.impl;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 

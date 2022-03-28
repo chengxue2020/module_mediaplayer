@@ -18,6 +18,7 @@ package lib.kalu.mediaplayer.core.controller.base;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -53,8 +54,8 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
-    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers) {
-        mPlayer.start(seekPosition, live, url, headers);
+    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
+        mPlayer.start(seekPosition, live, url, subtitle, headers);
     }
 
     @Override

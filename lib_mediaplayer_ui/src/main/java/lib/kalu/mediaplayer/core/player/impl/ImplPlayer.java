@@ -31,6 +31,7 @@ limitations under the License.
 package lib.kalu.mediaplayer.core.player.impl;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
@@ -50,16 +51,24 @@ import lib.kalu.mediaplayer.listener.OnMediaStateListener;
  */
 public interface ImplPlayer {
 
+    default void start(@NonNull String url, @NonNull String subtitle) {
+        start(0, false, url, subtitle, null);
+    }
+
     default void start(@NonNull String url) {
-        start(0, false, url, null);
+        start(0, false, url, null, null);
     }
 
     default void start(@NonNull long seekPosition, @NonNull String url) {
-        start(seekPosition, false, url, null);
+        start(seekPosition, false, url, null, null);
     }
 
     default void start(@NonNull boolean live, @NonNull String url) {
-        start(0, live, url, null);
+        start(0, live, url, null, null);
+    }
+
+    default void start(@NonNull boolean live, @NonNull String url, @NonNull String subtitle) {
+        start(0, live, url, subtitle, null);
     }
 
     /**
@@ -69,7 +78,7 @@ public interface ImplPlayer {
      * @param url
      * @param headers
      */
-    void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull Map<String, String> headers);
+    void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers);
 
     default void restart() {
         restart(false);

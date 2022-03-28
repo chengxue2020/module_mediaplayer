@@ -34,6 +34,34 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
+        // main_srt
+        findViewById(R.id.main_m3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "android.resource://" + getPackageName() + "/" + R.raw.test2);
+                intent.putExtra(ExoplayerActivity.INTENT_SRT, "android.resource://" + getPackageName() + "/" + R.raw.test1);
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
+//                intent.putExtra(ExoplayerActivity.INTENT_SRT, "http://145.239.255.77/gtsubtitle/127%20Hours/English.srt");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
+                startActivity(intent);
+            }
+        });
+
+        // main_srt
+        findViewById(R.id.main_srt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://i51.lanzoug.com/030317bb/2022/03/03/5f39a7dc8e5d55f3288f14a1f4cc14a2.zip?st=8qotZ42dvTIDrvn5lYRp7A&e=1646301044&b=UmRbLlQ3AG4CegQ_aUHAENAJ5WnwAaAB2&fi=63751215&pid=61-185-224-115&up=2&mp=0&co=1");
+                intent.putExtra(ExoplayerActivity.INTENT_SRT, "https://i21.lanzoug.com:446/030317bb/2022/03/03/b48a500fd06c83c2d648e11ca9d0af0a.zip?st=quSRNIR10JTOdG-IHss-1A&e=1646301085&b=AjQLflU2AipRdwcjVXECKFR7XGkHdg_c_c&fi=63751222&pid=61-185-224-115&up=2&mp=0&co=1");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
+//                intent.putExtra(ExoplayerActivity.INTENT_SRT, "http://145.239.255.77/gtsubtitle/127%20Hours/English.srt");
+                intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
+                startActivity(intent);
+            }
+        });
+
         // main_mobile
         findViewById(R.id.main_mobile).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://hkss3.phoenixtv.com/fs/pcc.stream/playlist.m3u8");
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://115.182.96.25/gitv_live/CCTV-1-HD/CCTV-1-HD.m3u8?p=GITV&area=AH_CMCC");
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "http://114.118.13.20:8080/movie/33/playlist.m3u8");
+                intent.putExtra(ExoplayerActivity.INTENT_SRT, "http://145.239.255.77/gtsubtitle/127%20Hours/English.srt");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 startActivity(intent);
             }
@@ -113,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ExoplayerActivity.class);
 //                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://i71.lanzoug.com/021900bb/2022/02/19/822a6b6ffa33b8c777b53dba9fb65e17.zip?st=f2itOCtuVUSqV3e7QtL0wQ&e=1645204709&b=Um0MfFVhU3hTfAQ7UXE_c&fi=62701757&pid=111-19-95-209&up=2&mp=0&co=1");
-                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
+//                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
+                intent.putExtra(ExoplayerActivity.INTENT_URL, "https://cdn.qupeiyin.cn/2021-02-28/1614507215953md525nwz.mp4");
                 intent.putExtra(ExoplayerActivity.INTENT_LIVE, true);
                 intent.putExtra(ExoplayerActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
