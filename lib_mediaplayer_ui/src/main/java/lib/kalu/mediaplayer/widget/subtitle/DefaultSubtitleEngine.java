@@ -25,7 +25,6 @@
 
 package lib.kalu.mediaplayer.widget.subtitle;
 
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -38,8 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import lib.kalu.mediaplayer.core.player.VideoLayout;
-import lib.kalu.mediaplayer.core.player.impl.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.impl.ImplPlayer;
 import lib.kalu.mediaplayer.widget.subtitle.cache.SubtitleCache;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 import lib.kalu.mediaplayer.widget.subtitle.model.TimedTextObject;

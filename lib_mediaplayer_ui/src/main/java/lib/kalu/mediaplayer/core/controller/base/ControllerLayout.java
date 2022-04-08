@@ -19,14 +19,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
@@ -43,8 +42,8 @@ import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponentAction;
 import lib.kalu.mediaplayer.core.controller.impl.ImplController;
 import lib.kalu.mediaplayer.core.controller.help.OrientationHelper;
-import lib.kalu.mediaplayer.core.player.impl.ImplPlayer;
-import lib.kalu.mediaplayer.core.player.VideoLayout;
+import lib.kalu.mediaplayer.core.view.impl.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.NetworkUtils;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.StatesCutoutUtils;
@@ -58,7 +57,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
  * *             6.设备方向监听: {@link #onOrientationChanged(int)}
  */
-public abstract class ControllerLayout extends FrameLayout implements ImplController, ImplComponentAction, OrientationHelper.OnOrientationChangeListener {
+public abstract class ControllerLayout extends RelativeLayout implements ImplController, ImplComponentAction, OrientationHelper.OnOrientationChangeListener {
 
     //播放器包装类，集合了MediaPlayerControl的api和IVideoController的api
     protected ControllerWrapper mControllerWrapper;

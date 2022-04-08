@@ -25,13 +25,11 @@
 
 package lib.kalu.mediaplayer.widget.subtitle;
 
-import android.media.MediaPlayer;
-
 import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.core.player.impl.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.impl.ImplPlayer;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 
 /**

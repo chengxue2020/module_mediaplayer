@@ -22,7 +22,7 @@ import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 
-import lib.kalu.mediaplayer.core.player.VideoLayout;
+import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
@@ -137,7 +137,7 @@ public class PlayerConfigManager {
         }
         VideoLayout old = get(tag);
         if (old != null) {
-            old.release();
+            old.releaseKernel();
             remove(tag);
         }
         mVideoViews.put(tag, videoView);
@@ -165,7 +165,7 @@ public class PlayerConfigManager {
     public void releaseByTag(String tag, boolean isRemove) {
         VideoLayout videoView = get(tag);
         if (videoView != null) {
-            videoView.release();
+            videoView.releaseKernel();
             if (isRemove) {
                 remove(tag);
             }

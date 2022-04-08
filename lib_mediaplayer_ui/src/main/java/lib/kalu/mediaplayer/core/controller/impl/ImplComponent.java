@@ -108,10 +108,10 @@ public interface ImplComponent {
      */
     void onLockStateChanged(boolean isLocked);
 
-    default void restart(@NonNull ControllerWrapper wrapper) {
+    default void repeat(@NonNull ControllerWrapper wrapper) {
         if (null == wrapper)
             return;
-        wrapper.restart(true);
+        wrapper.repeat();
     }
 
     default void finish(@NonNull Context context, @NonNull ControllerWrapper wrapper) {

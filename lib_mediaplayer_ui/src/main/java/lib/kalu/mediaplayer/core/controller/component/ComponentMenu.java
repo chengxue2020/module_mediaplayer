@@ -100,7 +100,7 @@ public class ComponentMenu extends FrameLayout implements ImplComponent, View.On
         } else if (id == R.id.iv_play) {
             mControllerWrapper.toggle();
         } else if (id == R.id.iv_refresh) {
-            mControllerWrapper.restart(true);
+            mControllerWrapper.repeat();
         }
     }
 

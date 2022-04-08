@@ -80,7 +80,7 @@ public class ComponentError extends LinearLayout implements ImplComponent {
             @Override
             public void onClick(View v) {
                 setVisibility(GONE);
-                mControllerWrapper.restart(true);
+                mControllerWrapper.repeat();
             }
         });
 

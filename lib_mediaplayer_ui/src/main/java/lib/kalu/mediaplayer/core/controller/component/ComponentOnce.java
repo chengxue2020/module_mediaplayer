@@ -95,7 +95,7 @@ public class ComponentOnce extends LinearLayout implements ImplComponent {
                 if (playState == PlayerType.StateType.STATE_ONCE_LIVE){
                     //即将开播
                     if (PlayerUtils.isConnected(mContext)){
-                        mControllerWrapper.restart();
+                        mControllerWrapper.repeat();
                     } else {
                         BaseToast.showRoundRectToast(v.getContext(), "请查看网络是否连接");
                     }

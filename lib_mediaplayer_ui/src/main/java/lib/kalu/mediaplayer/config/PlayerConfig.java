@@ -5,14 +5,9 @@ import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.buried.BuriedPointEvent;
-import lib.kalu.mediaplayer.core.kernel.video.factory.PlayerFactory;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.media.MediaPlayerFactory;
 import lib.kalu.mediaplayer.keycode.KeycodeImpl;
 import lib.kalu.mediaplayer.keycode.KeycodeImplTV;
 import lib.kalu.mediaplayer.listener.OnMediaProgressManager;
-import lib.kalu.mediaplayer.widget.surface.SurfaceFactory;
-import lib.kalu.mediaplayer.widget.surface.TextureViewFactory;
-
 
 /**
  * @description: 播放器全局配置
@@ -25,14 +20,25 @@ public class PlayerConfig {
     public final boolean mEnableOrientation;
     public final boolean mIsEnableLog;
     public final OnMediaProgressManager mProgressManager;
-    public final PlayerFactory mPlayerFactory;
+    @PlayerType.PlatformType
+    public final int mType;
+    @PlayerType.RenderType
+    public final int mRender;
     public final BuriedPointEvent mBuriedPointEvent;
     public final int mScreenScaleType;
-    public final SurfaceFactory mRenderViewFactory;
     public final boolean mAdaptCutout;
     public final boolean mIsShowToast;
     public final long mShowToastTime;
     public final KeycodeImpl mKeycode;
+
+//    @PlayerType.PlatformType
+//    public final int getKernel() {
+//        return mType;
+//    }
+//
+//    public final void setKernel(@PlayerType.PlatformType int type) {
+//        this.mType = type;
+//    }
 
     private PlayerConfig(Builder builder) {
         mIsEnableLog = builder.mIsEnableLog;
@@ -45,19 +51,9 @@ public class PlayerConfig {
         } else {
             mKeycode = builder.mKeycode;
         }
-        if (builder.mPlayerFactory == null) {
-            //默认为AndroidMediaPlayer
-            mPlayerFactory = MediaPlayerFactory.create();
-        } else {
-            mPlayerFactory = builder.mPlayerFactory;
-        }
+        mType = builder.mType;
+        mRender = builder.mRender;
         mBuriedPointEvent = builder.mBuriedPointEvent;
-        if (builder.mRenderViewFactory == null) {
-            //默认使用TextureView渲染视频
-            mRenderViewFactory = TextureViewFactory.create();
-        } else {
-            mRenderViewFactory = builder.mRenderViewFactory;
-        }
         mAdaptCutout = builder.mAdaptCutout;
         mIsShowToast = builder.mIsShowToast;
         mShowToastTime = builder.mShowToastTime;
@@ -89,7 +85,13 @@ public class PlayerConfig {
         /**
          * 自定义播放核心
          */
-        private PlayerFactory mPlayerFactory;
+        @PlayerType.PlatformType
+        private int mType = PlayerType.PlatformType.ANDROID;
+        /**
+         * 自定义RenderView
+         */
+        @PlayerType.RenderType
+        public int mRender = PlayerType.RenderType.TEXTURE;
         /**
          * 自定义视频全局埋点事件
          */
@@ -98,10 +100,6 @@ public class PlayerConfig {
          * 设置视频比例
          */
         private int mScreenScaleType;
-        /**
-         * 自定义RenderView
-         */
-        private SurfaceFactory mRenderViewFactory;
         /**
          * 是否适配刘海屏，默认适配
          */
@@ -161,8 +159,8 @@ public class PlayerConfig {
         /**
          * 自定义播放核心
          */
-        public Builder setPlayerFactory(PlayerFactory playerFactory) {
-            mPlayerFactory = playerFactory;
+        public Builder setKernel(@PlayerType.PlatformType int type) {
+            mType = type;
             return this;
         }
 
@@ -185,8 +183,8 @@ public class PlayerConfig {
         /**
          * 自定义RenderView
          */
-        public Builder setRenderViewFactory(SurfaceFactory renderViewFactory) {
-            mRenderViewFactory = renderViewFactory;
+        public Builder setRender(@PlayerType.RenderType int render) {
+            mRender = render;
             return this;
         }
 

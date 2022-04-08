@@ -27,7 +27,6 @@ package lib.kalu.mediaplayer.widget.subtitle.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -36,7 +35,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.core.player.impl.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.impl.ImplPlayer;
 import lib.kalu.mediaplayer.widget.subtitle.DefaultSubtitleEngine;
 import lib.kalu.mediaplayer.widget.subtitle.SubtitleEngine;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
@@ -127,7 +126,9 @@ public class SimpleSubtitleView extends TextView
 
     @Override
     public void bindToMediaPlayer(final ImplPlayer mediaPlayer) {
-        mSubtitleEngine.bindToMediaPlayer(mediaPlayer);
+        if (null != mediaPlayer) {
+            mSubtitleEngine.bindToMediaPlayer(mediaPlayer);
+        }
     }
 
     @Override

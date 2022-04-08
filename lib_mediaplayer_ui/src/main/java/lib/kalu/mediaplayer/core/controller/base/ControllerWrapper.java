@@ -18,7 +18,7 @@ package lib.kalu.mediaplayer.core.controller.base;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.view.View;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -26,8 +26,7 @@ import androidx.annotation.NonNull;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.core.controller.impl.ImplController;
-import lib.kalu.mediaplayer.core.player.impl.ImplPlayer;
-import lib.kalu.mediaplayer.listener.OnMediaStateListener;
+import lib.kalu.mediaplayer.core.view.impl.ImplPlayer;
 
 
 /**
@@ -59,13 +58,18 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
-    public void restart(@NonNull boolean reset) {
-        mPlayer.restart(reset);
+    public void pause() {
+        mPlayer.pause();
     }
 
     @Override
-    public void pause() {
-        mPlayer.pause();
+    public void resume() {
+        mPlayer.resume();
+    }
+
+    @Override
+    public void repeat() {
+        mPlayer.repeat();
     }
 
     @Override
@@ -119,8 +123,8 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
-    public void setScreenScaleType(int screenScaleType) {
-        mPlayer.setScreenScaleType(screenScaleType);
+    public void setScaleType(int scaleType) {
+        mPlayer.setScaleType(scaleType);
     }
 
     @Override
@@ -173,6 +177,36 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
         return mPlayer.isTinyScreen();
     }
 
+    @Override
+    public ControllerLayout getControlLayout() {
+        return null;
+    }
+
+    @Override
+    public View getVideoLayout() {
+        return null;
+    }
+
+    @Override
+    public void initKernel() {
+        mPlayer.initKernel();
+    }
+
+    @Override
+    public void initRender() {
+        mPlayer.initRender();
+    }
+
+    @Override
+    public void resetKernel() {
+        mPlayer.resetKernel();
+    }
+
+    @Override
+    public void releaseKernel() {
+        mPlayer.releaseKernel();
+    }
+
     /**
      * 播放和暂停
      */
@@ -180,7 +214,7 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
         if (isPlaying()) {
             pause();
         } else {
-            restart();
+            resume();
         }
     }
 

@@ -31,7 +31,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.core.kernel.video.core.VideoPlayerCore;
+import lib.kalu.mediaplayer.core.kernel.video.core.KernelCore;
 import lib.kalu.mediaplayer.core.kernel.video.platfrom.PlatfromPlayer;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
@@ -48,7 +48,7 @@ import tv.danmaku.ijk.media.player.IjkTimedText;
  * </pre>
  */
 @Keep
-public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
+public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
 
     protected tv.danmaku.ijk.media.player.IjkMediaPlayer mMediaPlayer;
     private int mBufferedPercent;
@@ -62,14 +62,61 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
         return this;
     }
 
+    @Nullable
     @Override
-    public void initPlayer(@NonNull Context context, @NonNull String url) {
-        mMediaPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
+    public String getUrl() {
+        try {
+            return mMediaPlayer.getDataSource();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void initKernel(@NonNull Context context) {
+        resetKernel();
+    }
+
+    @Override
+    public void resetKernel() {
+        if (null == mMediaPlayer) {
+            mMediaPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
+        }
+
+        mMediaPlayer.stop();
+        mMediaPlayer.reset();
         //native日志
         tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(MediaLogUtil.isIsLog() ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_SILENT);
         setOptions();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        String dataSource = mMediaPlayer.getDataSource();
         initListener();
+    }
+
+    @Override
+    public void releaseKernel() {
+        if (null == mMediaPlayer)
+            return;
+        mMediaPlayer.setOnErrorListener(null);
+        mMediaPlayer.setOnCompletionListener(null);
+        mMediaPlayer.setOnInfoListener(null);
+        mMediaPlayer.setOnBufferingUpdateListener(null);
+        mMediaPlayer.setOnPreparedListener(null);
+        mMediaPlayer.setOnVideoSizeChangedListener(null);
+        mMediaPlayer.stop();
+        mMediaPlayer.reset();
+        mMediaPlayer.release();
+        mMediaPlayer = null;
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                try {
+//                    mMediaPlayer.release();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }.start();
     }
 
     @Override
@@ -212,8 +259,9 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     }
 
     @Override
-    public void prepareAsync(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers) {
+    public void prepare(@NonNull Context context, @NonNull String url, @Nullable Map<String, String> headers) {
 
+        //2222222222222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
@@ -285,16 +333,6 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
     }
 
     /**
-     * 重置播放器
-     */
-    @Override
-    public void reset() {
-        mMediaPlayer.reset();
-        mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
-        setOptions();
-    }
-
-    /**
      * 是否正在播放
      */
     @Override
@@ -316,29 +354,6 @@ public class IjkMediaPlayer extends VideoPlayerCore implements PlatfromPlayer {
             MediaLogUtil.log("IJKLOG => seekTo => " + e.getMessage());
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
-    }
-
-    /**
-     * 释放播放器
-     */
-    @Override
-    public void release() {
-        mMediaPlayer.setOnErrorListener(null);
-        mMediaPlayer.setOnCompletionListener(null);
-        mMediaPlayer.setOnInfoListener(null);
-        mMediaPlayer.setOnBufferingUpdateListener(null);
-        mMediaPlayer.setOnPreparedListener(null);
-        mMediaPlayer.setOnVideoSizeChangedListener(null);
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    mMediaPlayer.release();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
     }
 
     /**

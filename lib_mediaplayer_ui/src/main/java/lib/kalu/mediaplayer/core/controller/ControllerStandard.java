@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
@@ -203,7 +204,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
-                setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
                 view.setVisibility(GONE);
                 break;
             case PlayerType.WindowType.FULL:
@@ -216,13 +217,13 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
             int dp24 = PlayerUtils.dp2px(getContext(), 24);
             int cutoutHeight = getCutoutHeight();
             if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                FrameLayout.LayoutParams lblp = (FrameLayout.LayoutParams) view.getLayoutParams();
+                RelativeLayout.LayoutParams lblp = (RelativeLayout.LayoutParams) view.getLayoutParams();
                 lblp.setMargins(dp24, 0, dp24, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                 layoutParams.setMargins(dp24 + cutoutHeight, 0, dp24 + cutoutHeight, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                 layoutParams.setMargins(dp24, 0, dp24, 0);
             }
         }

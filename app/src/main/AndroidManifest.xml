@@ -20,6 +20,11 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
         <activity
+            android:name=".QunActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".TestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
@@ -38,4 +43,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

@@ -133,12 +133,30 @@ public class PlayerType {
      */
     @Keep
     @Retention(RetentionPolicy.SOURCE)
+    public @interface RenderType {
+        int SURFACE = 1; // SurfaceView
+        int TEXTURE = 0; // TextureView
+
+        @IntDef({SURFACE, TEXTURE})
+        @Retention(RetentionPolicy.SOURCE)
+        @Keep
+        @interface Value {
+        }
+    }
+
+    /*****************/
+
+    /**
+     * 通过注解限定类型
+     */
+    @Keep
+    @Retention(RetentionPolicy.SOURCE)
     public @interface PlatformType {
-        int NATIVE = 5001; // MediaPlayer，基于原生自带的播放器控件
+        int ANDROID = 5001; // MediaPlayer，基于原生自带的播放器控件
         int EXO = 5002; // 基于谷歌视频播放器
         int IJK = 5003; // IjkPlayer，基于IjkPlayer封装播放器
 
-        @IntDef({IJK, NATIVE, EXO})
+        @IntDef({IJK, ANDROID, EXO})
         @Retention(RetentionPolicy.SOURCE)
         @Keep
         @interface Value {

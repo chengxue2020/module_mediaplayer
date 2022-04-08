@@ -66,7 +66,7 @@ public class ComponentPrepare extends FrameLayout implements ImplComponent {
             public void onClick(View v) {
                 findViewById(R.id.fl_net_warning).setVisibility(GONE);
                 PlayerConfigManager.instance().setPlayOnMobileNetwork(true);
-                mControllerWrapper.restart();
+                mControllerWrapper.repeat();
             }
         });
     }

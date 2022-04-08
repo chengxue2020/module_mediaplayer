@@ -66,9 +66,9 @@ public final class ExoMediaSourceHelper {
      * @param headers 视频headers
      * @return
      */
-    public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean live, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
+    public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean hasCache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
         Uri contentUri = Uri.parse(url);
-        MediaLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", live = " + live + ", url = " + url);
+        MediaLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", hasCache = " + hasCache + ", url = " + url);
         // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
             RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
@@ -93,7 +93,7 @@ public final class ExoMediaSourceHelper {
             refreshHeaders(http, headers);
 
             // 本地缓存
-            if (!live && null != context && null != config && config.getCacheType() == CacheType.DEFAULT) {
+            if (hasCache && null != context && null != config && config.getCacheType() == CacheType.DEFAULT) {
                 MediaLogUtil.log("getMediaSource => 策略, 本地缓存");
 
                 // cache

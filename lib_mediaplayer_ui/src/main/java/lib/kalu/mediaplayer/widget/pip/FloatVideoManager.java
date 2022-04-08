@@ -22,7 +22,7 @@ import android.view.View;
 import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.core.player.VideoLayout;
+import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 
@@ -73,7 +73,7 @@ public class FloatVideoManager {
             return;
         }
         PlayerUtils.removeViewFormParent(mVideoPlayerLayout);
-        mVideoPlayerLayout.setController(mFloatController);
+        mVideoPlayerLayout.setControllerLayout(mFloatController);
         mFloatController.setPlayState(mVideoPlayerLayout.getPlayState());
         mFloatController.setWindowState(mVideoPlayerLayout.getWindowState());
         mFloatView.addView(mVideoPlayerLayout);
@@ -117,8 +117,8 @@ public class FloatVideoManager {
             return;
         }
         PlayerUtils.removeViewFormParent(mVideoPlayerLayout);
-        mVideoPlayerLayout.release();
-        mVideoPlayerLayout.setController(null);
+        mVideoPlayerLayout.resetKernel();
+        mVideoPlayerLayout.clearControllerLayout();
         mPlayingPosition = -1;
         mActClass = null;
     }

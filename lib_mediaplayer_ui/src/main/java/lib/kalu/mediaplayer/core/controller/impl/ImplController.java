@@ -33,6 +33,7 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.Dimension;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -444,6 +445,22 @@ public interface ImplController {
             return;
         try {
             ((SimpleSubtitleView) view).setSubtitlePath(subtitlePath);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setImageResource(@NonNull View view, @IdRes int id, @DrawableRes int res) {
+        try {
+            ImageView temp = view.findViewById(id);
+            temp.setImageResource(res);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setBackgroundColor(@NonNull View view, @IdRes int id, @ColorInt int color) {
+        try {
+            View temp = view.findViewById(id);
+            temp.setBackgroundColor(color);
         } catch (Exception e) {
         }
     }

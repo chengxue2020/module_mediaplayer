@@ -74,7 +74,7 @@ public class ComponentComplete extends FrameLayout implements ImplComponent {
         findViewById(R.id.controller_complete_retry).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                restart(mControllerWrapper);
+                repeat(mControllerWrapper);
             }
         });
 
@@ -129,7 +129,7 @@ public class ComponentComplete extends FrameLayout implements ImplComponent {
             int orientation = activity.getRequestedOrientation();
             int cutoutHeight = mControllerWrapper.getCutoutHeight();
             View view = findViewById(R.id.controller_complete_back);
-            RelativeLayout.LayoutParams sflp = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            FrameLayout.LayoutParams sflp = (FrameLayout.LayoutParams) view.getLayoutParams();
             if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                 sflp.setMargins(0, 0, 0, 0);
             } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
