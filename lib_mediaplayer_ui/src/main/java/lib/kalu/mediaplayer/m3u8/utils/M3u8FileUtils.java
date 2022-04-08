@@ -22,19 +22,14 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : M3u8工具类
- *     revise:
- * </pre>
+ * desc  : M3u8工具类
  */
 @Keep
 public final class M3u8FileUtils {
 
     /**
      * 将Url转换为M3U8对象
+     *
      * @param url
      * @return
      * @throws IOException
@@ -99,7 +94,7 @@ public final class M3u8FileUtils {
      */
     public static void merge(List<File> fileList, String toFile) throws IOException {
         File file = new File(toFile);
-        File dir=file.getParentFile();
+        File dir = file.getParentFile();
         if (!dir.exists()) {
             dir.mkdirs();
         }

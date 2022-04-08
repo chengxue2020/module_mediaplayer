@@ -14,13 +14,7 @@ import java.util.List;
 
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/2/10
- *     desc  : 用于在内部自动申请权限
- *     revise:
- * </pre>
+ * desc  : 用于在内部自动申请权限
  */
 public class PermissionActivity extends AppCompatActivity {
 
@@ -29,7 +23,7 @@ public class PermissionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= 23){
+        if (Build.VERSION.SDK_INT >= 23) {
             requestAlertWindowPermission();
         }
     }
@@ -46,7 +40,7 @@ public class PermissionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (Build.VERSION.SDK_INT >= 23){
+        if (Build.VERSION.SDK_INT >= 23) {
             //用23以上编译即可出现canDrawOverlays
             if (WindowUtil.hasPermission(this)) {
                 mPermissionListener.onSuccess();
@@ -90,6 +84,7 @@ public class PermissionActivity extends AppCompatActivity {
          * 成功
          */
         void onSuccess();
+
         /**
          * 失败
          */

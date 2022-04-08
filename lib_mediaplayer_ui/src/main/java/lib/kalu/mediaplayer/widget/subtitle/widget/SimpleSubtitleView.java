@@ -35,7 +35,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.core.view.impl.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.ImplPlayer;
 import lib.kalu.mediaplayer.widget.subtitle.DefaultSubtitleEngine;
 import lib.kalu.mediaplayer.widget.subtitle.SubtitleEngine;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;

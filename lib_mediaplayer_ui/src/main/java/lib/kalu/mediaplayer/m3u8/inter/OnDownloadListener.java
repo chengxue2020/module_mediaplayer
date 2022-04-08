@@ -4,13 +4,7 @@ package lib.kalu.mediaplayer.m3u8.inter;
 import androidx.annotation.Keep;
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : 下载监听
- *     revise:
- * </pre>
+ * desc  : 下载监听
  */
 @Keep
 public interface OnDownloadListener extends BaseListener {

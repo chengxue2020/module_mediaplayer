@@ -27,13 +27,7 @@ import lib.kalu.mediaplayer.m3u8.manager.M3u8InfoManger;
 import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : M3U8下载管理器
- *     revise:
- * </pre>
+ * desc  : M3U8下载管理器
  */
 @Keep
 public class M3u8DownloadTask {

@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.config;
 
-
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 

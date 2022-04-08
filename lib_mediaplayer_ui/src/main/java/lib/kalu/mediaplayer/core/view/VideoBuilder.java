@@ -7,7 +7,6 @@ import androidx.annotation.Keep;
 
 /**
  * @description: 播放器设置属性builder类
- * @date:  2021-05-12 10:14
  */
 @Keep
 public class VideoBuilder {
@@ -25,12 +24,13 @@ public class VideoBuilder {
 
         /**
          * 设置视频播放器的背景色
-         * @param color                         color
-         * @return                              Builder
+         *
+         * @param color color
+         * @return Builder
          */
         public Builder setPlayerBackgroundColor(@ColorInt int color) {
             //使用注解限定福
-            if (color==0){
+            if (color == 0) {
                 this.mColor = Color.BLACK;
             } else {
                 this.mColor = color;
@@ -40,8 +40,9 @@ public class VideoBuilder {
 
         /**
          * 设置小屏的宽高
-         * @param tinyScreenSize                其中tinyScreenSize[0]是宽，tinyScreenSize[1]是高
-         * @return                              Builder
+         *
+         * @param tinyScreenSize 其中tinyScreenSize[0]是宽，tinyScreenSize[1]是高
+         * @return Builder
          */
         public Builder setTinyScreenSize(int[] tinyScreenSize) {
             this.mTinyScreenSize = tinyScreenSize;
@@ -50,8 +51,9 @@ public class VideoBuilder {
 
         /**
          * 一开始播放就seek到预先设置好的位置
-         * @param position                      位置
-         * @return                              Builder
+         *
+         * @param position 位置
+         * @return Builder
          */
         public Builder skipPositionWhenPlay(int position) {
             this.mCurrentPosition = position;

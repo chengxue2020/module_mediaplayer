@@ -15,11 +15,14 @@ public abstract class FloatView {
 
     abstract void dismiss();
 
-    void updateXY(int x, int y) {}
+    void updateXY(int x, int y) {
+    }
 
-    void updateX(int x) {}
+    void updateX(int x) {
+    }
 
-    void updateY(int y) {}
+    void updateY(int y) {
+    }
 
     int getX() {
         return 0;

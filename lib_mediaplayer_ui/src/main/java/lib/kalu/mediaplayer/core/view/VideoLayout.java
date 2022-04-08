@@ -30,7 +30,6 @@ import lib.kalu.mediaplayer.core.kernel.impl.ImplKernel;
 import lib.kalu.mediaplayer.core.kernel.video.listener.OnVideoPlayerChangeListener;
 import lib.kalu.mediaplayer.core.render.ImplRender;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
-import lib.kalu.mediaplayer.core.view.impl.ImplPlayer;
 import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 import lib.kalu.mediaplayer.config.PlayerConfig;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
@@ -43,7 +42,6 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * @description: 播放器具体实现类
- * @date: 2021-05-11 14:46
  */
 @Keep
 public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPlayerChangeListener {
@@ -163,12 +161,14 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
     private void init(AttributeSet attrs) {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_root, this, true);
+
+        initKernel();
         setBackground(null);
         setBackgroundColor(Color.TRANSPARENT);
         setClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
-        setScaleType(PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP);
+        setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
         BaseToast.init(getContext().getApplicationContext());
 
         // 全局配置

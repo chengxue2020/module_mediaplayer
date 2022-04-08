@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.music.utils;
+package lib.kalu.mediaplayer.util;
 
 import static androidx.core.app.NotificationCompat.PRIORITY_DEFAULT;
 import static androidx.core.app.NotificationCompat.VISIBILITY_SECRET;
@@ -18,15 +18,6 @@ import android.widget.RemoteViews;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://www.jianshu.com/p/514eb6193a06
- *     time  : 2018/2/10
- *     desc  : 通知栏工具类
- *     revise:
- * </pre>
- */
 public class NotificationUtils extends ContextWrapper {
 
 
@@ -69,7 +60,8 @@ public class NotificationUtils extends ContextWrapper {
 
     /**
      * 获取创建一个NotificationManager的对象
-     * @return                          NotificationManager对象
+     *
+     * @return NotificationManager对象
      */
     public NotificationManager getManager() {
         if (mManager == null) {
@@ -81,16 +73,17 @@ public class NotificationUtils extends ContextWrapper {
     /**
      * 清空所有的通知
      */
-    public void clearNotification(){
+    public void clearNotification() {
         getManager().cancelAll();
     }
 
     /**
      * 获取Notification
-     * @param title                     title
-     * @param content                   content
+     *
+     * @param title   title
+     * @param content content
      */
-    public Notification getNotification(String title, String content , int icon){
+    public Notification getNotification(String title, String content, int icon) {
         Notification build;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //android 8.0以上需要特殊处理，也就是targetSDKVersion为26以上
@@ -101,8 +94,8 @@ public class NotificationUtils extends ContextWrapper {
             NotificationCompat.Builder builder = getNotificationCompat(title, content, icon);
             build = builder.build();
         }
-        if (flags!=null && flags.length>0){
-            for (int a=0 ; a<flags.length ; a++){
+        if (flags != null && flags.length > 0) {
+            for (int a = 0; a < flags.length; a++) {
                 build.flags |= flags[a];
             }
         }
@@ -112,11 +105,12 @@ public class NotificationUtils extends ContextWrapper {
     /**
      * 建议使用这个发送通知
      * 调用该方法可以发送通知
-     * @param notifyId                  notifyId
-     * @param title                     title
-     * @param content                   content
+     *
+     * @param notifyId notifyId
+     * @param title    title
+     * @param content  content
      */
-    public void sendNotification(int notifyId, String title, String content , int icon) {
+    public void sendNotification(int notifyId, String title, String content, int icon) {
         Notification build;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //android 8.0以上需要特殊处理，也就是targetSDKVersion为26以上
@@ -127,8 +121,8 @@ public class NotificationUtils extends ContextWrapper {
             NotificationCompat.Builder builder = getNotificationCompat(title, content, icon);
             build = builder.build();
         }
-        if (flags!=null && flags.length>0){
-            for (int a=0 ; a<flags.length ; a++){
+        if (flags != null && flags.length > 0) {
+            for (int a = 0; a < flags.length; a++) {
                 build.flags |= flags[a];
             }
         }
@@ -137,15 +131,16 @@ public class NotificationUtils extends ContextWrapper {
 
     /**
      * 调用该方法可以发送通知
-     * @param notifyId                  notifyId
-     * @param title                     title
-     * @param content                   content
+     *
+     * @param notifyId notifyId
+     * @param title    title
+     * @param content  content
      */
-    public void sendNotificationCompat(int notifyId, String title, String content , int icon) {
+    public void sendNotificationCompat(int notifyId, String title, String content, int icon) {
         NotificationCompat.Builder builder = getNotificationCompat(title, content, icon);
         Notification build = builder.build();
-        if (flags!=null && flags.length>0){
-            for (int a=0 ; a<flags.length ; a++){
+        if (flags != null && flags.length > 0) {
+            for (int a = 0; a < flags.length; a++) {
                 build.flags |= flags[a];
             }
         }
@@ -168,22 +163,22 @@ public class NotificationUtils extends ContextWrapper {
         builder.setPriority(priority);
         builder.setOnlyAlertOnce(onlyAlertOnce);
         builder.setOngoing(ongoing);
-        if (remoteViews!=null){
+        if (remoteViews != null) {
             builder.setContent(remoteViews);
         }
-        if (intent!=null){
+        if (intent != null) {
             builder.setContentIntent(intent);
         }
-        if (ticker!=null && ticker.length()>0){
+        if (ticker != null && ticker.length() > 0) {
             builder.setTicker(ticker);
         }
-        if (when!=0){
+        if (when != 0) {
             builder.setWhen(when);
         }
-        if (sound!=null){
+        if (sound != null) {
             builder.setSound(sound);
         }
-        if (defaults!=0){
+        if (defaults != 0) {
             builder.setDefaults(defaults);
         }
         //点击自动删除通知
@@ -193,7 +188,7 @@ public class NotificationUtils extends ContextWrapper {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private Notification.Builder getChannelNotification(String title, String content, int icon){
+    private Notification.Builder getChannelNotification(String title, String content, int icon) {
         Notification.Builder builder = new Notification.Builder(getApplicationContext(), CHANNEL_ID);
         Notification.Builder notificationBuilder = builder
                 //设置标题
@@ -209,36 +204,35 @@ public class NotificationUtils extends ContextWrapper {
                 //是否提示一次.true - 如果Notification已经存在状态栏即使在调用notify函数也不会更新
                 .setOnlyAlertOnce(onlyAlertOnce)
                 .setAutoCancel(true);
-        if (remoteViews!=null){
+        if (remoteViews != null) {
             //设置自定义view通知栏
             notificationBuilder.setContent(remoteViews);
         }
-        if (intent!=null){
+        if (intent != null) {
             notificationBuilder.setContentIntent(intent);
         }
-        if (ticker!=null && ticker.length()>0){
+        if (ticker != null && ticker.length() > 0) {
             //设置状态栏的标题
             notificationBuilder.setTicker(ticker);
         }
-        if (when!=0){
+        if (when != 0) {
             //设置通知时间，默认为系统发出通知的时间，通常不用设置
             notificationBuilder.setWhen(when);
         }
-        if (sound!=null){
+        if (sound != null) {
             //设置sound
             notificationBuilder.setSound(sound);
         }
-        if (defaults!=0){
+        if (defaults != 0) {
             //设置默认的提示音
             notificationBuilder.setDefaults(defaults);
         }
-        if (pattern!=null){
+        if (pattern != null) {
             //自定义震动效果
             notificationBuilder.setVibrate(pattern);
         }
         return notificationBuilder;
     }
-
 
 
     private boolean ongoing = false;
@@ -254,40 +248,44 @@ public class NotificationUtils extends ContextWrapper {
 
     /**
      * 让通知左右滑的时候是否可以取消通知
-     * @param ongoing                   是否可以取消通知
+     *
+     * @param ongoing 是否可以取消通知
      * @return
      */
-    public NotificationUtils setOngoing(boolean ongoing){
+    public NotificationUtils setOngoing(boolean ongoing) {
         this.ongoing = ongoing;
         return this;
     }
 
     /**
      * 设置自定义view通知栏布局
-     * @param remoteViews               view
+     *
+     * @param remoteViews view
      * @return
      */
-    public NotificationUtils setContent(RemoteViews remoteViews){
+    public NotificationUtils setContent(RemoteViews remoteViews) {
         this.remoteViews = remoteViews;
         return this;
     }
 
     /**
      * 设置内容点击
-     * @param intent                    intent
+     *
+     * @param intent intent
      * @return
      */
-    public NotificationUtils setContentIntent(PendingIntent intent){
+    public NotificationUtils setContentIntent(PendingIntent intent) {
         this.intent = intent;
         return this;
     }
 
     /**
      * 设置状态栏的标题
-     * @param ticker                    状态栏的标题
+     *
+     * @param ticker 状态栏的标题
      * @return
      */
-    public NotificationUtils setTicker(String ticker){
+    public NotificationUtils setTicker(String ticker) {
         this.ticker = ticker;
         return this;
     }
@@ -299,40 +297,43 @@ public class NotificationUtils extends ContextWrapper {
      * Android 8.0以及上，在 NotificationChannel 的构造函数中指定，总共要五个级别；
      * Android 7.1（API 25）及以下的设备，还得调用NotificationCompat 的 setPriority方法来设置
      *
-     * @param priority                  优先级，默认是Notification.PRIORITY_DEFAULT
+     * @param priority 优先级，默认是Notification.PRIORITY_DEFAULT
      * @return
      */
-    public NotificationUtils setPriority(int priority){
+    public NotificationUtils setPriority(int priority) {
         this.priority = priority;
         return this;
     }
 
     /**
      * 是否提示一次.true - 如果Notification已经存在状态栏即使在调用notify函数也不会更新
-     * @param onlyAlertOnce             是否只提示一次，默认是false
+     *
+     * @param onlyAlertOnce 是否只提示一次，默认是false
      * @return
      */
-    public NotificationUtils setOnlyAlertOnce(boolean onlyAlertOnce){
+    public NotificationUtils setOnlyAlertOnce(boolean onlyAlertOnce) {
         this.onlyAlertOnce = onlyAlertOnce;
         return this;
     }
 
     /**
      * 设置通知时间，默认为系统发出通知的时间，通常不用设置
-     * @param when                      when
+     *
+     * @param when when
      * @return
      */
-    public NotificationUtils setWhen(long when){
+    public NotificationUtils setWhen(long when) {
         this.when = when;
         return this;
     }
 
     /**
      * 设置sound
-     * @param sound                     sound
+     *
+     * @param sound sound
      * @return
      */
-    public NotificationUtils setSound(Uri sound){
+    public NotificationUtils setSound(Uri sound) {
         this.sound = sound;
         return this;
     }
@@ -340,30 +341,33 @@ public class NotificationUtils extends ContextWrapper {
 
     /**
      * 设置默认的提示音
-     * @param defaults                  defaults
+     *
+     * @param defaults defaults
      * @return
      */
-    public NotificationUtils setDefaults(int defaults){
+    public NotificationUtils setDefaults(int defaults) {
         this.defaults = defaults;
         return this;
     }
 
     /**
      * 自定义震动效果
-     * @param pattern                  pattern
+     *
+     * @param pattern pattern
      * @return
      */
-    public NotificationUtils setVibrate(long[] pattern){
+    public NotificationUtils setVibrate(long[] pattern) {
         this.pattern = pattern;
         return this;
     }
 
     /**
      * 设置flag标签
-     * @param flags                     flags
+     *
+     * @param flags flags
      * @return
      */
-    public NotificationUtils setFlags(int... flags){
+    public NotificationUtils setFlags(int... flags) {
         this.flags = flags;
         return this;
     }

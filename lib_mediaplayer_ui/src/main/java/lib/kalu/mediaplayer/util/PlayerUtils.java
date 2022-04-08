@@ -1,18 +1,3 @@
-/*
-Copyright 2017 yangchong211（github.com/yangchong211）
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package lib.kalu.mediaplayer.util;
 
 import android.annotation.SuppressLint;
@@ -56,23 +41,14 @@ import lib.kalu.mediaplayer.config.PlayerConfig;
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2017/10/21
- *     desc  : 工具类
- *     revise:
- * </pre>
- */
 @Keep
 public final class PlayerUtils {
 
     /**
      * 通过上下文获取到activity，使用到了递归
      *
-     * @param context       上下文
-     * @return              对象的活动对象，如果它不是活动对象，则为空。
+     * @param context 上下文
+     * @return 对象的活动对象，如果它不是活动对象，则为空。
      */
     public static Activity scanForActivity(Context context) {
         if (context == null) {
@@ -88,7 +64,8 @@ public final class PlayerUtils {
 
     /**
      * 判断某Activity是否挂掉
-     * @param activity      activity
+     *
+     * @param activity activity
      * @return
      */
     public static boolean isActivityLiving(@Nullable Activity activity) {
@@ -107,7 +84,8 @@ public final class PlayerUtils {
 
     /**
      * Get AppCompatActivity from context
-     * @param context           上下文
+     *
+     * @param context 上下文
      * @return AppCompatActivity if it's not null
      */
     private static AppCompatActivity getAppCompActivity(Context context) {
@@ -287,9 +265,9 @@ public final class PlayerUtils {
     }
 
 
-
     /**
      * 将毫秒数格式化为"##:##"的时间
+     *
      * @param milliseconds 毫秒数
      * @return ##:##
      */
@@ -312,11 +290,12 @@ public final class PlayerUtils {
 
     /**
      * 保存播放位置，以便下次播放时接着上次的位置继续播放.
-     * @param context           上下文
-     * @param url               视频链接url
+     *
+     * @param context 上下文
+     * @param url     视频链接url
      */
     public static synchronized void savePlayPosition(Context context, String url, long position) {
-        if (context==null){
+        if (context == null) {
             return;
         }
         context.getSharedPreferences("VIDEO_PLAYER_PLAY_POSITION",
@@ -325,12 +304,13 @@ public final class PlayerUtils {
 
     /**
      * 取出上次保存的播放位置
-     * @param context           上下文
-     * @param url               视频链接url
+     *
+     * @param context 上下文
+     * @param url     视频链接url
      * @return 上次保存的播放位置
      */
     public static synchronized long getSavedPlayPosition(Context context, String url) {
-        if (context==null){
+        if (context == null) {
             return 0;
         }
         return context.getSharedPreferences("VIDEO_PLAYER_PLAY_POSITION",
@@ -339,10 +319,11 @@ public final class PlayerUtils {
 
     /**
      * 清楚播放位置的痕迹
-     * @param context           上下文
+     *
+     * @param context 上下文
      */
-    public static synchronized void clearPlayPosition(Context context){
-        if (context==null){
+    public static synchronized void clearPlayPosition(Context context) {
+        if (context == null) {
             return;
         }
         context.getSharedPreferences("VIDEO_PLAYER_PLAY_POSITION",
@@ -390,10 +371,11 @@ public final class PlayerUtils {
 
     /**
      * 空指针检测，不能为null，可以为""
-     * @param obj           obj对象
-     * @param message       消息
-     * @param <T>           泛型
-     * @return              obj
+     *
+     * @param obj     obj对象
+     * @param message 消息
+     * @param <T>     泛型
+     * @return obj
      */
     public static <T> T requireNonNull(T obj, String message) {
         if (obj == null) {
@@ -404,9 +386,10 @@ public final class PlayerUtils {
 
     /**
      * 空指针检测，不能为null，也不能为""
-     * @param obj           obj对象
-     * @param message       消息
-     * @return              字符串
+     *
+     * @param obj     obj对象
+     * @param message 消息
+     * @return 字符串
      */
     public static String requireNonEmpty(String obj, String message) {
         if (TextUtils.isEmpty(obj)) {
@@ -418,8 +401,9 @@ public final class PlayerUtils {
 
     /**
      * 将毫秒换成00:00:00
-     * @param time                          毫秒
-     * @return                              时间字符串
+     *
+     * @param time 毫秒
+     * @return 时间字符串
      */
     public static String getCountTimeByLong(long time) {
         //秒
@@ -460,8 +444,9 @@ public final class PlayerUtils {
 
     /**
      * 将毫秒换成 00:00 或者 00，这个根据具体时间来计算
-     * @param time                          毫秒
-     * @return                              时间字符串
+     *
+     * @param time 毫秒
+     * @return 时间字符串
      */
     public static String getCountTime(long time) {
         //秒
@@ -481,14 +466,14 @@ public final class PlayerUtils {
             second = totalTime;
         }
         StringBuilder sb = new StringBuilder();
-        if (hour>0){
+        if (hour > 0) {
             if (hour < 10) {
                 sb.append("0").append(hour).append(":");
             } else {
                 sb.append(hour).append(":");
             }
         }
-        if (minute>0){
+        if (minute > 0) {
             if (minute < 10) {
                 sb.append("0").append(minute).append(":");
             } else {

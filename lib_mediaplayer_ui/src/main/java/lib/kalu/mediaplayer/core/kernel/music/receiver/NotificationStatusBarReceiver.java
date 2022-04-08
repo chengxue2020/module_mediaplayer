@@ -27,21 +27,21 @@ public class NotificationStatusBarReceiver extends BroadcastReceiver {
         String extra = intent.getStringExtra(EXTRA);
         if (TextUtils.equals(extra, MusicPlayAction.TYPE_NEXT)) {
             PlayService.startCommand(context, MusicPlayAction.TYPE_NEXT);
-            MediaLogUtil.log("NotifiyStatusBarReceiver"+"下一首");
+            MediaLogUtil.log("NotifiyStatusBarReceiver" + "下一首");
         } else if (TextUtils.equals(extra, MusicPlayAction.TYPE_START_PAUSE)) {
-            if(BaseAppHelper.get().getPlayService()!=null){
+            if (BaseAppHelper.get().getPlayService() != null) {
                 boolean playing = BaseAppHelper.get().getPlayService().isPlaying();
-                if(playing){
-                    MediaLogUtil.log("NotifiyStatusBarReceiver"+"暂停");
-                }else {
-                    MediaLogUtil.log("NotifiyStatusBarReceiver"+"播放");
+                if (playing) {
+                    MediaLogUtil.log("NotifiyStatusBarReceiver" + "暂停");
+                } else {
+                    MediaLogUtil.log("NotifiyStatusBarReceiver" + "播放");
                 }
                 PlayService.startCommand(context, MusicPlayAction.TYPE_START_PAUSE);
             }
 
-        }else if(TextUtils.equals(extra, MusicPlayAction.TYPE_PRE)){
+        } else if (TextUtils.equals(extra, MusicPlayAction.TYPE_PRE)) {
             PlayService.startCommand(context, MusicPlayAction.TYPE_PRE);
-            MediaLogUtil.log("NotifiyStatusBarReceiver"+"上一首");
+            MediaLogUtil.log("NotifiyStatusBarReceiver" + "上一首");
         }
     }
 }

@@ -24,6 +24,7 @@
  */
 
 package lib.kalu.mediaplayer.widget.subtitle.runtime;
+
 import androidx.annotation.NonNull;
 
 import java.util.concurrent.Executor;

@@ -1,19 +1,3 @@
-/*
-Copyright 2017 yangchong211（github.com/yangchong211）
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
@@ -31,11 +15,7 @@ import lib.kalu.mediaplayer.util.MeasureHelper;
 
 /**
  * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/9/21
  *     desc  : 重写SurfaceView，适配视频的宽高和旋转
- *     revise:
  * </pre>
  */
 public class RenderSurfaceView extends SurfaceView implements ImplRender {
@@ -43,14 +23,14 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
     /**
      * 优点：可以在一个独立的线程中进行绘制，不会影响主线程；使用双缓冲机制，播放视频时画面更流畅
      * 缺点：Surface不在View hierachy中，它的显示也不受View的属性控制，所以不能进行平移，缩放等变换，
-     *      也不能放在其它ViewGroup中。SurfaceView 不能嵌套使用。
-     *
+     * 也不能放在其它ViewGroup中。SurfaceView 不能嵌套使用。
+     * <p>
      * SurfaceView双缓冲
-     *      1.SurfaceView在更新视图时用到了两张Canvas，一张frontCanvas和一张backCanvas。
-     *      2.每次实际显示的是frontCanvas，backCanvas存储的是上一次更改前的视图，当使用lockCanvas（）获取画布时，
-     *        得到的实际上是backCanvas而不是正在显示的frontCanvas，之后你在获取到的backCanvas上绘制新视图，
-     *        再unlockCanvasAndPost（canvas）此视图，那么上传的这张canvas将替换原来的frontCanvas作为新的frontCanvas，
-     *        原来的frontCanvas将切换到后台作为backCanvas。
+     * 1.SurfaceView在更新视图时用到了两张Canvas，一张frontCanvas和一张backCanvas。
+     * 2.每次实际显示的是frontCanvas，backCanvas存储的是上一次更改前的视图，当使用lockCanvas（）获取画布时，
+     * 得到的实际上是backCanvas而不是正在显示的frontCanvas，之后你在获取到的backCanvas上绘制新视图，
+     * 再unlockCanvasAndPost（canvas）此视图，那么上传的这张canvas将替换原来的frontCanvas作为新的frontCanvas，
+     * 原来的frontCanvas将切换到后台作为backCanvas。
      */
 
     private MeasureHelper mMeasureHelper;
@@ -61,7 +41,7 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (callback!=null){
+        if (callback != null) {
             getHolder().removeCallback(callback);
         }
     }
@@ -71,7 +51,7 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
         init();
     }
 
-    private void init(){
+    private void init() {
         mMeasureHelper = new MeasureHelper();
         SurfaceHolder holder = this.getHolder();
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -80,7 +60,8 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
 
     /**
      * 关联AbstractPlayer
-     * @param player                        player
+     *
+     * @param player player
      */
     @Override
     public void attachToPlayer(@NonNull ImplKernel player) {
@@ -89,8 +70,9 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
 
     /**
      * 设置视频宽高
-     * @param videoWidth                    宽
-     * @param videoHeight                   高
+     *
+     * @param videoWidth  宽
+     * @param videoHeight 高
      */
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
@@ -102,7 +84,8 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
 
     /**
      * 设置视频旋转角度
-     * @param degree                        角度值
+     *
+     * @param degree 角度值
      */
     @Override
     public void setVideoRotation(int degree) {
@@ -112,7 +95,8 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
 
     /**
      * 设置screen scale type
-     * @param scaleType                     类型
+     *
+     * @param scaleType 类型
      */
     @Override
     public void setScaleType(int scaleType) {
@@ -122,7 +106,8 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
 
     /**
      * 获取真实的RenderView
-     * @return                              view
+     *
+     * @return view
      */
     @Override
     public View getView() {
@@ -131,7 +116,8 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
 
     /**
      * 截图
-     * @return                              bitmap
+     *
+     * @return bitmap
      */
     @Override
     public Bitmap doScreenShot() {
@@ -143,7 +129,7 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
      */
     @Override
     public void release() {
-        if (callback!=null){
+        if (callback != null) {
             getHolder().removeCallback(callback);
         }
     }
@@ -157,7 +143,8 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
     /**
      * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
      * 设置视频旋转角度
-     * @param rotation                  角度
+     *
+     * @param rotation 角度
      */
     @Override
     public void setRotation(float rotation) {
@@ -168,7 +155,7 @@ public class RenderSurfaceView extends SurfaceView implements ImplRender {
     }
 
 
-    private SurfaceHolder.Callback callback = new SurfaceHolder.Callback(){
+    private SurfaceHolder.Callback callback = new SurfaceHolder.Callback() {
         /**
          * 创建的时候调用该方法
          * @param holder                        holder

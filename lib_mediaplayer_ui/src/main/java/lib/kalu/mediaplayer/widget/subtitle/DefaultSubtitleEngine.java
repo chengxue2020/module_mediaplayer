@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import lib.kalu.mediaplayer.core.view.impl.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.ImplPlayer;
 import lib.kalu.mediaplayer.widget.subtitle.cache.SubtitleCache;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 import lib.kalu.mediaplayer.widget.subtitle.model.TimedTextObject;

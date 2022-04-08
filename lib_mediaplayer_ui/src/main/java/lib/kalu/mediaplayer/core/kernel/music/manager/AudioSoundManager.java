@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.core.kernel.music.service.PlayService;
 
-public class AudioSoundManager  {
+public class AudioSoundManager {
 
 
     private AudioManager mAudioManager;
@@ -18,7 +18,8 @@ public class AudioSoundManager  {
 
     /**
      * 初始化操作
-     * @param content           playService对象
+     *
+     * @param content playService对象
      */
     public AudioSoundManager(@NonNull PlayService content) {
         mAudioManager = (AudioManager) content.getSystemService(AUDIO_SERVICE);
@@ -28,7 +29,7 @@ public class AudioSoundManager  {
     /**
      * 切换到外放
      */
-    public void changeToSpeaker(){
+    public void changeToSpeaker() {
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
         mAudioManager.setSpeakerphoneOn(true);
     }
@@ -37,7 +38,7 @@ public class AudioSoundManager  {
     /**
      * 切换到耳机模式
      */
-    public void changeToHeadset(){
+    public void changeToHeadset() {
         mAudioManager.setSpeakerphoneOn(false);
     }
 
@@ -46,9 +47,9 @@ public class AudioSoundManager  {
      * 切换到听筒
      */
     @SuppressLint("ObsoleteSdkInt")
-    public void changeToReceiver(){
+    public void changeToReceiver() {
         mAudioManager.setSpeakerphoneOn(false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         } else {
             mAudioManager.setMode(AudioManager.MODE_IN_CALL);

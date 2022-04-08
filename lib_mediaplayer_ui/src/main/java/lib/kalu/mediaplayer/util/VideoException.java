@@ -1,14 +1,5 @@
 package lib.kalu.mediaplayer.util;
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : 播放器异常
- *     revise: 抛出异常并且供开发者快捷查询异常定位代码
- * </pre>
- */
 public class VideoException extends RuntimeException {
 
     private int mCode = 0;

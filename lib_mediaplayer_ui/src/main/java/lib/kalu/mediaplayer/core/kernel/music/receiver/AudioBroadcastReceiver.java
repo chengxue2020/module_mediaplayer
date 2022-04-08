@@ -21,22 +21,22 @@ public class AudioBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
-        if(action!=null && action.length()>0){
-            switch (action){
+        if (action != null && action.length() > 0) {
+            switch (action) {
                 //锁屏时处理的逻辑
                 case MusicConstant.LOCK_SCREEN_ACTION:
                     PlayService.startCommand(context, MusicConstant.LOCK_SCREEN_ACTION);
-                    MediaLogUtil.log("AudioBroadcastReceiver"+"---LOCK_SCREEN");
+                    MediaLogUtil.log("AudioBroadcastReceiver" + "---LOCK_SCREEN");
                     break;
                 //当屏幕灭了
                 case Intent.ACTION_SCREEN_OFF:
-                    PlayService.startCommand(context,Intent.ACTION_SCREEN_OFF);
-                    MediaLogUtil.log("AudioBroadcastReceiver"+"---当屏幕灭了");
+                    PlayService.startCommand(context, Intent.ACTION_SCREEN_OFF);
+                    MediaLogUtil.log("AudioBroadcastReceiver" + "---当屏幕灭了");
                     break;
                 //当屏幕亮了
                 case Intent.ACTION_SCREEN_ON:
-                    PlayService.startCommand(context,Intent.ACTION_SCREEN_ON);
-                    MediaLogUtil.log("AudioBroadcastReceiver"+"---当屏幕亮了");
+                    PlayService.startCommand(context, Intent.ACTION_SCREEN_ON);
+                    MediaLogUtil.log("AudioBroadcastReceiver" + "---当屏幕亮了");
                     break;
                 default:
                     break;

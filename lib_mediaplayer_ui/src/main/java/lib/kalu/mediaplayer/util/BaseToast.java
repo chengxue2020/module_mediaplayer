@@ -25,12 +25,6 @@ import java.lang.reflect.Field;
 
 import lib.kalu.mediaplayer.R;
 
-
-/**
- * @description: Toast工具类，模仿易车，抖音自定义吐司
- * *     revise: 具体看GitHub开源项目：https://github.com/yangchong211/YCDialog
- * @date: 2021-05-12 14:49
- */
 @Keep
 public final class BaseToast {
 

@@ -42,10 +42,6 @@ import lib.kalu.mediaplayer.cache.CacheConfig;
 import lib.kalu.mediaplayer.cache.CacheType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-/**
- * @description: exo视频播放器帮助类
- * @date: 2021-05-12 09:36
- */
 public final class ExoMediaSourceHelper {
 
     private final WeakHashMap<String, SimpleCache> mWHM = new WeakHashMap<>();

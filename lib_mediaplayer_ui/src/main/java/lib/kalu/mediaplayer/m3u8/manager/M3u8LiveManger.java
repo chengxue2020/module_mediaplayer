@@ -26,13 +26,7 @@ import lib.kalu.mediaplayer.m3u8.inter.OnDownloadListener;
 import lib.kalu.mediaplayer.m3u8.utils.M3u8FileUtils;
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : 直播管理器
- *     revise:
- * </pre>
+ * desc  : 直播管理器
  */
 @Keep
 public class M3u8LiveManger {

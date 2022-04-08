@@ -1,18 +1,3 @@
-/*
-Copyright 2017 yangchong211（github.com/yangchong211）
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package lib.kalu.mediaplayer.core.kernel.video.platfrom.ijk;
 
 import android.content.Context;
@@ -26,15 +11,6 @@ import java.io.InputStream;
 
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : ijk视频播放器读取本地资源Source实现类
- *     revise:
- * </pre>
- */
 public class RawDataSourceProvider implements IMediaDataSource {
 
     private AssetFileDescriptor mDescriptor;
@@ -54,7 +30,7 @@ public class RawDataSourceProvider implements IMediaDataSource {
             length = size;
         } else {
             length = (int) (mMediaBytes.length - position);
-            if (length > buffer.length){
+            if (length > buffer.length) {
                 length = buffer.length;
             }
             length--;
@@ -76,7 +52,7 @@ public class RawDataSourceProvider implements IMediaDataSource {
 
     @Override
     public void close() throws IOException {
-        if (mDescriptor != null){
+        if (mDescriptor != null) {
             mDescriptor.close();
         }
         mDescriptor = null;

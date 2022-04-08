@@ -3,15 +3,6 @@ package lib.kalu.mediaplayer.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * <pre>
- *     @author yangchong
- *     email  : yangchong211@163.com
- *     time  : 2020/6/16
- *     desc  : md加密+加盐工具类
- *     revise:
- * </pre>
- */
 public final class Md5Util {
 
 

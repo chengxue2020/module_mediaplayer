@@ -5,7 +5,6 @@ import lib.kalu.mediaplayer.m3u8.bean.M3u8;
 /**
  * @deprecated v2版本过时了，请用
  * 监听器
- * Created by HDL on 2017/7/25.
  */
 
 public abstract class M3U8Listener implements DownLoadListener {

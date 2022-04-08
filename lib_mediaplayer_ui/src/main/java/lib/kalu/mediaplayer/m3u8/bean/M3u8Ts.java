@@ -3,13 +3,7 @@ package lib.kalu.mediaplayer.m3u8.bean;
 import androidx.annotation.NonNull;
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : m3u8切片类
- *     revise:
- * </pre>
+ * desc  : m3u8切片类
  */
 public class M3u8Ts implements Comparable<M3u8Ts> {
 
@@ -27,6 +21,7 @@ public class M3u8Ts implements Comparable<M3u8Ts> {
 
     /**
      * 获取文件名字，支取***.ts
+     *
      * @return
      */
     public String getFileName() {

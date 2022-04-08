@@ -22,7 +22,6 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @author J. David REQUEJO
- *
  */
 
 package lib.kalu.mediaplayer.widget.subtitle.model;

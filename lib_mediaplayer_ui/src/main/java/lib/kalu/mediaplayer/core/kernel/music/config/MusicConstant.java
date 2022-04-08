@@ -5,7 +5,7 @@ import androidx.annotation.Keep;
 @Keep
 public class MusicConstant {
 
-    public static final String SP_NAME = "yc";
+    public static final String SP_NAME = "temp";
     public static final String EXTRA_NOTIFICATION = "extra_notification";
     public static final String LOCK_SCREEN = "lock_screen";
     public static final String LOCK_SCREEN_ACTION = "cn.ycbjie.lock";

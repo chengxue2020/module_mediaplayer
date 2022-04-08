@@ -4,7 +4,7 @@ import android.content.Context;
 
 public class SurfaceFactory implements RenderFactory {
 
-    private SurfaceFactory(){
+    private SurfaceFactory() {
     }
 
     public static SurfaceFactory build() {
@@ -13,6 +13,6 @@ public class SurfaceFactory implements RenderFactory {
 
     @Override
     public ImplRender createRender(Context context) {
-        return new RenderSurfaceView( context);
+        return new RenderSurfaceView(context);
     }
 }

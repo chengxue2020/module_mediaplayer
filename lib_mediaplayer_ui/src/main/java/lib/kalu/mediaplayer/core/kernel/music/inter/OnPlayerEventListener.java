@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.core.kernel.music.inter;
 
-
 import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.core.kernel.music.model.AudioBean;

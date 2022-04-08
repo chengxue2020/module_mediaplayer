@@ -27,6 +27,7 @@ package lib.kalu.mediaplayer.widget.subtitle;
 
 import android.text.TextUtils;
 import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class SubtitleLoader {
     }
 
     private static void loadFromRemoteAsync(final String remoteSubtitlePath,
-                                           final Callback callback) {
+                                            final Callback callback) {
         AppTaskExecutor.deskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -96,7 +97,7 @@ public class SubtitleLoader {
     }
 
     private static void loadFromLocalAsync(final String localSubtitlePath,
-                                          final Callback callback) {
+                                           final Callback callback) {
         AppTaskExecutor.deskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -134,7 +135,7 @@ public class SubtitleLoader {
         try {
             if (path.startsWith("http://")
                     || path.startsWith("https://")) {
-               return loadFromRemote(path);
+                return loadFromRemote(path);
             } else {
                 return loadFromLocal(path);
             }

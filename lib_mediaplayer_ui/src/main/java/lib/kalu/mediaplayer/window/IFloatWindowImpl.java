@@ -31,7 +31,7 @@ public class IFloatWindowImpl extends IFloatWindow {
         mB = b;
         //这一步相当于创建系统级的window，通过windowManager添加view并且展示
         if (mB.mMoveType == MoveType.fixed) {
-            if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.N_MR1) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                 mFloatView = new FloatPhone(b.mApplicationContext);
             } else {
                 mFloatView = new FloatToast(b.mApplicationContext);
@@ -171,6 +171,7 @@ public class IFloatWindowImpl extends IFloatWindow {
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         float lastX, lastY, changeX, changeY;
         int newX, newY;
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {

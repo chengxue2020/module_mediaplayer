@@ -7,10 +7,6 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.BuildConfig;
 
-/**
- * description: LogUtil
- * created by kalu on 2021/9/29
- */
 public final class MediaLogUtil {
 
     private static boolean isLog = BuildConfig.DEBUG;

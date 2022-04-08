@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.music.utils;
+package lib.kalu.mediaplayer.util;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,7 +12,6 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.kernel.music.model.AudioBean;
 import lib.kalu.mediaplayer.core.kernel.music.receiver.NotificationStatusBarReceiver;
 import lib.kalu.mediaplayer.core.kernel.music.service.PlayService;
-
 
 public class NotificationHelper {
 
@@ -35,7 +34,8 @@ public class NotificationHelper {
 
     /**
      * 1.创建一个NotificationManager的引用
-     * @param playService           PlayService对象
+     *
+     * @param playService PlayService对象
      */
     public void init(PlayService playService) {
         this.playService = playService;
@@ -44,7 +44,8 @@ public class NotificationHelper {
 
     /**
      * 开始播放
-     * @param music             music
+     *
+     * @param music music
      */
     public void showPlay(AudioBean music) {
         if (music == null) {
@@ -57,7 +58,8 @@ public class NotificationHelper {
 
     /**
      * 暂停
-     * @param music             music
+     *
+     * @param music music
      */
     public void showPause(AudioBean music) {
         //这个方法是停止Notification
@@ -101,9 +103,10 @@ public class NotificationHelper {
 
     /**
      * 设置自定义通知栏布局
-     * @param context                   上下文
+     *
+     * @param context 上下文
      * @param music
-     * @return                          RemoteViews
+     * @return RemoteViews
      */
     private RemoteViews getCustomViews(Context context, AudioBean music, boolean isPlaying) {
         String title = music.getTitle();
@@ -118,10 +121,10 @@ public class NotificationHelper {
         }
         remoteViews.setTextViewText(R.id.tv_title, title);
         remoteViews.setTextViewText(R.id.tv_artist, subtitle);
-        if(isPlaying){
-            remoteViews.setImageViewResource(R.id.btn_start,R.drawable.module_mediaplayer_ic_music_notify_btn_dark_pause_normal);
-        }else {
-            remoteViews.setImageViewResource(R.id.btn_start,R.drawable.module_mediaplayer_ic_music_notify_btn_dark_play_normal);
+        if (isPlaying) {
+            remoteViews.setImageViewResource(R.id.btn_start, R.drawable.module_mediaplayer_ic_music_notify_btn_dark_pause_normal);
+        } else {
+            remoteViews.setImageViewResource(R.id.btn_start, R.drawable.module_mediaplayer_ic_music_notify_btn_dark_play_normal);
         }
 
         // 设置 点击通知栏的上一首按钮时要执行的意图
@@ -148,7 +151,7 @@ public class NotificationHelper {
     }
 
 
-    private PendingIntent getReceiverPendingIntent(Context context, String type , int code) {
+    private PendingIntent getReceiverPendingIntent(Context context, String type, int code) {
         Intent intent = new Intent(NotificationStatusBarReceiver.ACTION_STATUS_BAR);
         intent.putExtra(NotificationStatusBarReceiver.EXTRA, type);
         return PendingIntent.getBroadcast(context, code, intent, PendingIntent.FLAG_UPDATE_CURRENT);

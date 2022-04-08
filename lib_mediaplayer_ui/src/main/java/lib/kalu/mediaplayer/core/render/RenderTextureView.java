@@ -32,9 +32,6 @@ import lib.kalu.mediaplayer.util.MeasureHelper;
 
 /**
  * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/9/21
  *     desc  : 重写TextureView，适配视频的宽高和旋转
  *     revise: 1.继承View，具有view的特性，比如移动，旋转，缩放，动画等变化。支持截图
  *             8.必须在硬件加速的窗口中使用，占用内存比SurfaceView高，在5.0以前在主线程渲染，5.0以后有单独的渲染线程。
@@ -55,14 +52,15 @@ public class RenderTextureView extends TextureView implements ImplRender {
         init(context);
     }
 
-    private void init(Context context){
+    private void init(Context context) {
         mMeasureHelper = new MeasureHelper();
         setSurfaceTextureListener(listener);
     }
 
     /**
      * 关联AbstractPlayer
-     * @param player                        player
+     *
+     * @param player player
      */
     @Override
     public void attachToPlayer(@NonNull ImplKernel player) {
@@ -71,8 +69,9 @@ public class RenderTextureView extends TextureView implements ImplRender {
 
     /**
      * 设置视频宽高
-     * @param videoWidth                    宽
-     * @param videoHeight                   高
+     *
+     * @param videoWidth  宽
+     * @param videoHeight 高
      */
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
@@ -84,7 +83,8 @@ public class RenderTextureView extends TextureView implements ImplRender {
 
     /**
      * 设置视频旋转角度
-     * @param degree                        角度值
+     *
+     * @param degree 角度值
      */
     @Override
     public void setVideoRotation(int degree) {
@@ -94,7 +94,8 @@ public class RenderTextureView extends TextureView implements ImplRender {
 
     /**
      * 设置screen scale type
-     * @param scaleType                     类型
+     *
+     * @param scaleType 类型
      */
     @Override
     public void setScaleType(int scaleType) {
@@ -104,7 +105,8 @@ public class RenderTextureView extends TextureView implements ImplRender {
 
     /**
      * 获取真实的RenderView
-     * @return                              view
+     *
+     * @return view
      */
     @Override
     public View getView() {
@@ -113,7 +115,8 @@ public class RenderTextureView extends TextureView implements ImplRender {
 
     /**
      * 截图
-     * @return                              bitmap
+     *
+     * @return bitmap
      */
     @Override
     public Bitmap doScreenShot() {
@@ -125,10 +128,10 @@ public class RenderTextureView extends TextureView implements ImplRender {
      */
     @Override
     public void release() {
-        if (mSurface != null){
+        if (mSurface != null) {
             mSurface.release();
         }
-        if (mSurfaceTexture != null){
+        if (mSurfaceTexture != null) {
             mSurfaceTexture.release();
         }
 
@@ -143,7 +146,8 @@ public class RenderTextureView extends TextureView implements ImplRender {
     /**
      * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
      * 设置视频旋转角度
-     * @param rotation                  角度
+     *
+     * @param rotation 角度
      */
     @Override
     public void setRotation(float rotation) {
@@ -202,7 +206,6 @@ public class RenderTextureView extends TextureView implements ImplRender {
 
         }
     };
-
 
 
 }

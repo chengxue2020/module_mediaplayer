@@ -5,13 +5,7 @@ import androidx.annotation.Keep;
 import lib.kalu.mediaplayer.m3u8.bean.M3u8;
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : 获取M3U8信息
- *     revise:
- * </pre>
+ * desc  : 获取M3U8信息
  */
 @Keep
 public interface OnM3u8InfoListener extends BaseListener {

@@ -1,15 +1,8 @@
 package lib.kalu.mediaplayer.m3u8.inter;
 
 
-
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : 加载监听器
- *     revise:
- * </pre>
+ * desc  : 加载监听器
  */
 public interface DownLoadListener {
     /**

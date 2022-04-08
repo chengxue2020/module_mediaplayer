@@ -9,13 +9,7 @@ import java.util.List;
 
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : M3U8实体类
- *     revise:
- * </pre>
+ * desc  : M3U8实体类
  */
 @Keep
 public class M3u8 implements Serializable {
@@ -69,7 +63,7 @@ public class M3u8 implements Serializable {
      * @return
      */
     public long getStartTime() {
-        if (tsList.size()>0) {
+        if (tsList.size() > 0) {
             Collections.sort(tsList);
             startTime = tsList.get(0).getLongDate();
             return startTime;
@@ -83,7 +77,7 @@ public class M3u8 implements Serializable {
      * @return
      */
     public long getEndTime() {
-        if (tsList.size()>0) {
+        if (tsList.size() > 0) {
             M3u8Ts m3U8Ts = tsList.get(tsList.size() - 1);
             endTime = m3U8Ts.getLongDate() + (long) (m3U8Ts.getSeconds() * 1000);
             return endTime;

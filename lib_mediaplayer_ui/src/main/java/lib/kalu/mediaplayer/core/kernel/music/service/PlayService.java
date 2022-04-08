@@ -34,7 +34,7 @@ import lib.kalu.mediaplayer.core.kernel.music.receiver.AudioBroadcastReceiver;
 import lib.kalu.mediaplayer.core.kernel.music.receiver.AudioEarPhoneReceiver;
 import lib.kalu.mediaplayer.core.kernel.music.tool.BaseAppHelper;
 import lib.kalu.mediaplayer.core.kernel.music.tool.QuitTimerHelper;
-import lib.kalu.mediaplayer.core.kernel.music.utils.NotificationHelper;
+import lib.kalu.mediaplayer.util.NotificationHelper;
 
 
 /**
@@ -101,11 +101,11 @@ public class PlayService extends Service {
     private boolean mReceiverTag = false;
 
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case UPDATE_PLAY_PROGRESS_SHOW:
                     updatePlayProgressShow();
                     break;
@@ -116,12 +116,12 @@ public class PlayService extends Service {
     };
 
 
-
     /**
      * 绑定服务时才会调用
      * 必须要实现的方法
-     * @param intent        intent
-     * @return              IBinder对象
+     *
+     * @param intent intent
+     * @return IBinder对象
      */
     @Nullable
     @Override
@@ -132,8 +132,9 @@ public class PlayService extends Service {
 
     /**
      * 比如，广播，耳机声控，通知栏广播，来电或者拔下耳机广播开启服务
-     * @param context       上下文
-     * @param type          类型
+     *
+     * @param context 上下文
+     * @param type    类型
      */
     public static void startCommand(Context context, String type) {
         Intent intent = new Intent(context, PlayService.class);
@@ -172,7 +173,7 @@ public class PlayService extends Service {
     public void onDestroy() {
         super.onDestroy();
         //销毁handler
-        if(handler!=null){
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
@@ -194,11 +195,11 @@ public class PlayService extends Service {
 
     /**
      * 每次通过startService()方法启动Service时都会被回调。
-     * @param intent                intent
-     * @param flags                 flags
-     * @param startId               startId
-     * @return
-     * onStartCommand方法返回值作用：
+     *
+     * @param intent  intent
+     * @param flags   flags
+     * @param startId startId
+     * @return onStartCommand方法返回值作用：
      * START_STICKY：粘性，service进程被异常杀掉，系统重新创建进程与服务，会重新执行onCreate()、onStartCommand(Intent)
      * START_STICKY_COMPATIBILITY：START_STICKY的兼容版本，但不保证服务被kill后一定能重启。
      * START_NOT_STICKY：非粘性，Service进程被异常杀掉，系统不会自动重启该Service。
@@ -222,15 +223,15 @@ public class PlayService extends Service {
                     break;
                 //添加锁屏界面
                 case MusicConstant.LOCK_SCREEN_ACTION:
-                    MediaLogUtil.log("PlayService"+"---LOCK_SCREEN"+mIsLocked);
+                    MediaLogUtil.log("PlayService" + "---LOCK_SCREEN" + mIsLocked);
                     break;
                 //当屏幕灭了，添加锁屏页面
                 case Intent.ACTION_SCREEN_OFF:
                     startLockAudioActivity();
-                    MediaLogUtil.log("PlayService"+"---当屏幕灭了");
+                    MediaLogUtil.log("PlayService" + "---当屏幕灭了");
                     break;
                 case Intent.ACTION_SCREEN_ON:
-                    MediaLogUtil.log("PlayService"+"---当屏幕亮了");
+                    MediaLogUtil.log("PlayService" + "---当屏幕亮了");
                     break;
                 default:
                     break;
@@ -240,12 +241,11 @@ public class PlayService extends Service {
     }
 
 
-
     /**
      * 创建MediaPlayer对象
      */
     private void createMediaPlayer() {
-        if(mPlayer==null){
+        if (mPlayer == null) {
             //MediaCodec codec = new MediaCodec();
             mPlayer = new MediaPlayer();
         }
@@ -309,7 +309,6 @@ public class PlayService extends Service {
     }
 
 
-
     /**---------------------播放或暂停，上一首，下一首-----------------------------------------*/
 
     /**
@@ -359,7 +358,7 @@ public class PlayService extends Service {
             //顺序播放并且循环
             case LOOP:
             default:
-                if(mPlayingPosition != 0){
+                if (mPlayingPosition != 0) {
                     // 如果不是第一首，则还有上一首
                     mPlayingPosition--;
                 } else {
@@ -405,7 +404,7 @@ public class PlayService extends Service {
                     // 如果是最后一首，则切换回第一首
                     mPlayingPosition = 0;
                 }
-                MediaLogUtil.log("PlayService"+"----mPlayingPosition----"+ mPlayingPosition);
+                MediaLogUtil.log("PlayService" + "----mPlayingPosition----" + mPlayingPosition);
                 play(mPlayingPosition);
                 break;
         }
@@ -421,11 +420,11 @@ public class PlayService extends Service {
         if (!isPreparing() && !isPausing()) {
             return;
         }
-        if(mPlayingMusic==null){
+        if (mPlayingMusic == null) {
             return;
         }
-        if(mAudioFocusManager.requestAudioFocus()){
-            if(mPlayer!=null){
+        if (mAudioFocusManager.requestAudioFocus()) {
+            if (mPlayer != null) {
                 mPlayer.start();
                 mPlayState = MusicPlayAction.STATE_PLAYING;
                 //开始发送消息，执行进度条进度更新
@@ -436,7 +435,7 @@ public class PlayService extends Service {
                 //当点击播放按钮时(播放详情页面或者底部控制栏)，同步通知栏中播放按钮状态
                 NotificationHelper.get().showPlay(mPlayingMusic);
                 //注册监听来电/耳机拔出时暂停播放广播
-                if(!mReceiverTag){
+                if (!mReceiverTag) {
                     mReceiverTag = true;
                     registerReceiver(mNoisyReceiver, mFilter);
                 }
@@ -450,7 +449,7 @@ public class PlayService extends Service {
      * 暂停
      */
     public void pause() {
-        if(mPlayer!=null){
+        if (mPlayer != null) {
             //暂停
             mPlayer.pause();
             //切换状态
@@ -484,7 +483,7 @@ public class PlayService extends Service {
             return;
         }
         pause();
-        if(mPlayer!=null){
+        if (mPlayer != null) {
             mPlayer.reset();
             mPlayState = MusicPlayAction.STATE_IDLE;
         }
@@ -493,7 +492,8 @@ public class PlayService extends Service {
 
     /**
      * 播放索引为position的音乐
-     * @param position              索引
+     *
+     * @param position 索引
      */
     public void play(int position) {
         audioMusics = BaseAppHelper.get().getMusicList();
@@ -511,23 +511,24 @@ public class PlayService extends Service {
         mPlayingPosition = position;
         AudioBean music = audioMusics.get(mPlayingPosition);
         String id = music.getId();
-        MediaLogUtil.log("PlayService"+"----id----"+ id);
+        MediaLogUtil.log("PlayService" + "----id----" + id);
         //保存当前播放的musicId，下次进来可以记录状态
         long musicId = Long.parseLong(id);
-        SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
+        SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID, musicId);
         play(music);
     }
 
 
     /**
      * 拖动seekBar时，调节进度
-     * @param progress          进度
+     *
+     * @param progress 进度
      */
     public void seekTo(int progress) {
         //只有当播放或者暂停的时候才允许拖动bar
         if (isPlaying() || isPausing()) {
             mPlayer.seekTo(progress);
-            if(mListener!=null){
+            if (mListener != null) {
                 mListener.onUpdateProgress(progress);
             }
             mMediaSessionManager.updatePlaybackState();
@@ -536,7 +537,8 @@ public class PlayService extends Service {
 
     /**
      * 播放，这种是直接传音频实体类
-     * @param music         music
+     *
+     * @param music music
      */
     public void play(AudioBean music) {
         mPlayingMusic = music;
@@ -577,7 +579,7 @@ public class PlayService extends Service {
      */
     private void updatePlayProgressShow() {
         if (isPlaying() && mListener != null) {
-            int currentPosition =  mPlayer.getCurrentPosition();
+            int currentPosition = mPlayer.getCurrentPosition();
             mListener.onUpdateProgress(currentPosition);
         }
         MediaLogUtil.log("updatePlayProgressShow");
@@ -587,7 +589,9 @@ public class PlayService extends Service {
     }
 
 
-    /** 音频准备好的监听器 */
+    /**
+     * 音频准备好的监听器
+     */
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         /** 当音频准备好可以播放了，则这个方法会被调用  */
         @Override
@@ -599,7 +603,9 @@ public class PlayService extends Service {
     };
 
 
-    /** 当音频播放结束的时候的监听器 */
+    /**
+     * 当音频播放结束的时候的监听器
+     */
     private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
         /** 当音频播放结果的时候这个方法会被调用 */
         @Override
@@ -609,7 +615,9 @@ public class PlayService extends Service {
     };
 
 
-    /** 当音频缓冲的监听器 */
+    /**
+     * 当音频缓冲的监听器
+     */
     private MediaPlayer.OnBufferingUpdateListener mOnBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
@@ -621,7 +629,9 @@ public class PlayService extends Service {
     };
 
 
-    /** 跳转完成时的监听 */
+    /**
+     * 跳转完成时的监听
+     */
     private MediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new MediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(MediaPlayer mp) {
@@ -651,7 +661,8 @@ public class PlayService extends Service {
 
     /**
      * 是否正在播放
-     * @return          true表示正在播放
+     *
+     * @return true表示正在播放
      */
     public boolean isPlaying() {
         return mPlayState == MusicPlayAction.STATE_PLAYING;
@@ -660,7 +671,8 @@ public class PlayService extends Service {
 
     /**
      * 是否暂停
-     * @return          true表示暂停
+     *
+     * @return true表示暂停
      */
     public boolean isPausing() {
         return mPlayState == MusicPlayAction.STATE_PAUSE;
@@ -669,7 +681,8 @@ public class PlayService extends Service {
 
     /**
      * 是否正在准备中
-     * @return          true表示正在准备中
+     *
+     * @return true表示正在准备中
      */
     public boolean isPreparing() {
         return mPlayState == MusicPlayAction.STATE_PREPARING;
@@ -678,7 +691,8 @@ public class PlayService extends Service {
 
     /**
      * 是否正在准备中
-     * @return          true表示正在准备中
+     *
+     * @return true表示正在准备中
      */
     public boolean isDefault() {
         return mPlayState == MusicPlayAction.STATE_IDLE;
@@ -719,7 +733,8 @@ public class PlayService extends Service {
 
     /**
      * 获取播放的进度
-     * @return          long类型值
+     *
+     * @return long类型值
      */
     public long getCurrentPosition() {
         if (isPlaying() || isPausing()) {
@@ -731,27 +746,29 @@ public class PlayService extends Service {
 
     /**
      * 判斷是否有上一首音頻
-     * @return          true表示有
+     *
+     * @return true表示有
      */
     public boolean isHavePre() {
-        if(audioMusics !=null && audioMusics.size()>0){
-            if(mPlayingPosition != 0){
+        if (audioMusics != null && audioMusics.size() > 0) {
+            if (mPlayingPosition != 0) {
                 // 如果不是第一首，则还有上一首
                 return true;
             } else {
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }
 
     /**
      * 判斷是否有下一首音頻
-     * @return          true表示有
+     *
+     * @return true表示有
      */
     public boolean isHaveNext() {
-        if(audioMusics !=null && audioMusics.size()>0){
+        if (audioMusics != null && audioMusics.size() > 0) {
             if (mPlayingPosition != audioMusics.size() - 1) {
                 // 如果不是最后一首，则还有下一首
                 return true;
@@ -759,7 +776,7 @@ public class PlayService extends Service {
                 // 如果是最后一首，则切换回第一首
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }
@@ -807,13 +824,13 @@ public class PlayService extends Service {
      */
     public void updatePlayingPosition() {
         int position = 0;
-        long id = SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).getLong(MusicConstant.MUSIC_ID,-1);
-        if(audioMusics.isEmpty()){
+        long id = SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).getLong(MusicConstant.MUSIC_ID, -1);
+        if (audioMusics.isEmpty()) {
             return;
         }
         for (int i = 0; i < audioMusics.size(); i++) {
             String musicId = audioMusics.get(i).getId();
-            MediaLogUtil.log("PlayService"+"----musicId----"+ musicId);
+            MediaLogUtil.log("PlayService" + "----musicId----" + musicId);
             if (Long.parseLong(musicId) == id) {
                 position = i;
                 break;
@@ -821,13 +838,14 @@ public class PlayService extends Service {
         }
         mPlayingPosition = position;
         long musicId = Long.parseLong(audioMusics.get(mPlayingPosition).getId());
-        SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID,musicId);
+        SpUtil.getInstance(getBaseContext(), MusicConstant.SP_NAME).put(MusicConstant.MUSIC_ID, musicId);
     }
 
 
     /**
      * 获取播放进度监听器对象
-     * @return                  OnPlayerEventListener对象
+     *
+     * @return OnPlayerEventListener对象
      */
     public OnPlayerEventListener getOnPlayEventListener() {
         return mListener;
@@ -835,7 +853,8 @@ public class PlayService extends Service {
 
     /**
      * 设置播放进度监听器
-     * @param listener          listener
+     *
+     * @param listener listener
      */
     public void setOnPlayEventListener(OnPlayerEventListener listener) {
         mListener = listener;
@@ -851,7 +870,7 @@ public class PlayService extends Service {
      * 有些APP限制了状态，比如只有播放时才走这个逻辑
      */
     private void startLockAudioActivity() {
-        if(!mIsLocked && isPlaying()){
+        if (!mIsLocked && isPlaying()) {
 //            Intent lockScreen = new Intent(this, LockAudioActivity.class);
 //            lockScreen.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(lockScreen);
@@ -860,10 +879,7 @@ public class PlayService extends Service {
     }
 
 
-
     /**-------------------------------------播放list----------------------------------------*/
-
-
 
 
 }

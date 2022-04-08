@@ -11,13 +11,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/8/29
- *     desc  : 小窗口触摸移动
- *     revise:
- * </pre>
+ * desc  : 小窗口触摸移动
  */
 @Keep
 public class SmallWindowTouch implements View.OnTouchListener {

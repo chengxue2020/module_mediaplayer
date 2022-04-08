@@ -42,15 +42,6 @@ import lib.kalu.mediaplayer.core.kernel.video.listener.OnVideoPlayerChangeListen
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2018/11/9
- *     desc  : exo视频播放器实现类
- *     revise:
- * </pre>
- */
 @Keep
 public class ExoMediaPlayer extends KernelCore implements Player.Listener {
 

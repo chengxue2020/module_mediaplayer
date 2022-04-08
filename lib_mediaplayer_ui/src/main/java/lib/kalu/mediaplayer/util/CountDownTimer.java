@@ -7,17 +7,6 @@ import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 
-
-/**
- * <pre>
- *     @author  yangchong
- *     email  : yangchong211@163.com
- *     time  :  2020/5/26
- *     desc  :  自定义倒计时器
- *     revise:  支持开始，暂停，恢复暂停，取消等业务逻辑
- *              也可以用于多线程中
- * </pre>
- */
 public class CountDownTimer {
 
     /**
@@ -55,7 +44,7 @@ public class CountDownTimer {
      */
     private TimerListener mCountDownListener;
 
-    public CountDownTimer(){
+    public CountDownTimer() {
 
     }
 
@@ -75,7 +64,7 @@ public class CountDownTimer {
         mStopTimeInFuture = SystemClock.elapsedRealtime() + mMillisInFuture;
         mPause = false;
         mHandler.sendMessage(mHandler.obtainMessage(MSG));
-        if (mCountDownListener!=null){
+        if (mCountDownListener != null) {
             mCountDownListener.onStart();
         }
     }
@@ -114,7 +103,7 @@ public class CountDownTimer {
     /**
      * 恢复暂停，开始
      */
-    public synchronized final  void resume() {
+    public synchronized final void resume() {
         if (mMillisInFuture <= 0 && mCountdownInterval <= 0) {
             throw new RuntimeException("you must set the millisInFuture > 0 or countdownInterval >0");
         }
@@ -160,7 +149,7 @@ public class CountDownTimer {
                     // 考虑用户的onTick需要花费时间,处理用户onTick执行的时间
                     long delay = lastTickStart + mCountdownInterval - SystemClock.elapsedRealtime();
                     // 特殊情况：用户的onTick方法花费的时间比interval长，那么直接跳转到下一次interval
-                    while (delay < 0){
+                    while (delay < 0) {
                         delay += mCountdownInterval;
                     }
                     sendMessageDelayed(obtainMessage(MSG), delay);
@@ -171,7 +160,8 @@ public class CountDownTimer {
 
     /**
      * 设置倒计时总时间
-     * @param millisInFuture                    毫秒值
+     *
+     * @param millisInFuture 毫秒值
      */
     public void setMillisInFuture(long millisInFuture) {
         this.mMillisInFuture = millisInFuture;
@@ -179,7 +169,8 @@ public class CountDownTimer {
 
     /**
      * 设置倒计时间隔值
-     * @param countdownInterval                 间隔，一般设置为1000毫秒
+     *
+     * @param countdownInterval 间隔，一般设置为1000毫秒
      */
     public void setCountdownInterval(long countdownInterval) {
         this.mCountdownInterval = countdownInterval;
@@ -187,7 +178,8 @@ public class CountDownTimer {
 
     /**
      * 设置倒计时监听
-     * @param countDownListener                 listener
+     *
+     * @param countDownListener listener
      */
     public void setCountDownListener(TimerListener countDownListener) {
         this.mCountDownListener = countDownListener;

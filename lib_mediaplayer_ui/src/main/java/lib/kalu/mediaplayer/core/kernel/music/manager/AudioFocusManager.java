@@ -23,7 +23,8 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
 
     /**
      * 初始化操作
-     * @param content           playService对象
+     *
+     * @param content playService对象
      */
     public AudioFocusManager(@NonNull PlayService content) {
         mPlayService = content;
@@ -33,7 +34,8 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
 
     /**
      * 请求音频焦点，开始播放时候调用
-     * @return                  是否抢占焦点
+     *
+     * @return 是否抢占焦点
      */
     public boolean requestAudioFocus() {
         return mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
@@ -53,7 +55,8 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
      * 当音频焦点发生变化的时候调用这个方法，在这里可以处理逻辑
      * 欢迎访问我的GitHub：https://github.com/yangchong211
      * 如果可以的话，请star吧
-     * @param focusChange       焦点改变
+     *
+     * @param focusChange 焦点改变
      */
     @Override
     public void onAudioFocusChange(int focusChange) {

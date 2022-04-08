@@ -14,5 +14,6 @@ public class WindowScreen {
 
     @IntDef({WIDTH, HEIGHT})
     @Retention(RetentionPolicy.SOURCE)
-    @interface screenType {}
+    @interface screenType {
+    }
 }

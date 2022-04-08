@@ -27,13 +27,15 @@ public class QuitTimerHelper {
         private static final QuitTimerHelper QUIT_TIMER_INSTANCE = new QuitTimerHelper();
     }
 
-    private QuitTimerHelper() {}
+    private QuitTimerHelper() {
+    }
 
     /**
      * 初始化      用@NonNull注解，表示不能为null
-     * @param playService               playService
-     * @param handler                   handler
-     * @param timerCallback             timerCallback
+     *
+     * @param playService   playService
+     * @param handler       handler
+     * @param timerCallback timerCallback
      */
     public void init(@NonNull PlayService playService, @NonNull Handler handler,
                      @NonNull EventCallback<Long> timerCallback) {
@@ -43,7 +45,7 @@ public class QuitTimerHelper {
     }
 
     public void start(long milli) {
-        if(mHandler==null){
+        if (mHandler == null) {
             //ToastUtils.showShort("请先进行初始化");
             return;
         }

@@ -10,15 +10,6 @@ import java.util.List;
 import lib.kalu.mediaplayer.core.kernel.music.model.AudioBean;
 import lib.kalu.mediaplayer.core.kernel.music.service.PlayService;
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2017/03/22
- *     desc  : BaseAppHelper
- *     revise:
- * </pre>
- */
 @Keep
 public class BaseAppHelper {
 
@@ -46,7 +37,8 @@ public class BaseAppHelper {
 
     /**
      * 获取PlayService对象
-     * @return              返回PlayService对象
+     *
+     * @return 返回PlayService对象
      */
     public PlayService getPlayService() {
         return mPlayService;
@@ -61,7 +53,8 @@ public class BaseAppHelper {
 
     /**
      * 获取扫描到的音乐数据集合
-     * @return              返回list集合
+     *
+     * @return 返回list集合
      */
     public List<AudioBean> getMusicList() {
         return mMusicList;
@@ -70,7 +63,8 @@ public class BaseAppHelper {
 
     /**
      * 设置音频结合
-     * @param list              音频集合
+     *
+     * @param list 音频集合
      */
     public void setMusicList(List<AudioBean> list) {
         mMusicList.clear();
@@ -79,9 +73,10 @@ public class BaseAppHelper {
 
     /**
      * 获取到播放音乐的服务
-     * @return              PlayService对象
+     *
+     * @return PlayService对象
      */
-    public PlayService getMusicService () {
+    public PlayService getMusicService() {
         PlayService playService = BaseAppHelper.get().getPlayService();
         if (playService == null) {
             //待解决：当长期处于后台，如何保活？避免service被杀死……

@@ -4,15 +4,6 @@ import androidx.annotation.Keep;
 
 import java.io.Serializable;
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : www.pedaily.cn
- *     time  : 2018/03/22
- *     desc  : 音频单曲信息
- *     revise:
- * </pre>
- */
 @Keep
 public class AudioBean implements Serializable {
 
