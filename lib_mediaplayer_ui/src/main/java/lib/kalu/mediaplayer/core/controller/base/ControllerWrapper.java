@@ -37,6 +37,11 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
+    public void stop() {
+        mPlayer.stop();
+    }
+
+    @Override
     public void resume() {
         mPlayer.resume();
     }
@@ -47,12 +52,12 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
-    public long getDuration() {
+    public int getDuration() {
         return mPlayer.getDuration();
     }
 
     @Override
-    public long getPosition() {
+    public int getPosition() {
         return mPlayer.getPosition();
     }
 
@@ -171,10 +176,10 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
         mPlayer.initRender();
     }
 
-    @Override
-    public void resetKernel() {
-        mPlayer.resetKernel();
-    }
+//    @Override
+//    public void resetKernel() {
+//        mPlayer.resetKernel();
+//    }
 
     @Override
     public void releaseKernel() {

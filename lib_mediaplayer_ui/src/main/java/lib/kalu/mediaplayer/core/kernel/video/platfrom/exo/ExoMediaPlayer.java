@@ -45,7 +45,6 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public class ExoMediaPlayer extends KernelCore implements Player.Listener {
 
-    private String mUrl;
     protected ExoPlayer mExoPlayer;
     //    protected MediaSource mMediaSource;
 //    protected ExoMediaSourceHelper mMediaSourceHelper;
@@ -66,12 +65,6 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
     @Override
     public ExoPlayer getPlayer() {
         return mExoPlayer;
-    }
-
-    @Nullable
-    @Override
-    public String getUrl() {
-        return mUrl;
     }
 
     @Override
@@ -254,22 +247,22 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
      * 获取当前播放的位置
      */
     @Override
-    public long getCurrentPosition() {
+    public int getPosition() {
         if (mExoPlayer == null) {
             return 0;
         }
-        return mExoPlayer.getCurrentPosition();
+        return (int) mExoPlayer.getCurrentPosition();
     }
 
     /**
      * 获取视频总时长
      */
     @Override
-    public long getDuration() {
+    public int getDuration() {
         if (mExoPlayer == null) {
             return 0;
         }
-        return mExoPlayer.getDuration();
+        return (int) mExoPlayer.getDuration();
     }
 
     /**
@@ -301,13 +294,10 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
     @Override
     public void prepare(@NonNull Context context, @NonNull String url, @Nullable Map<String, String> headers) {
 
-        // 111111111111111111
-        this.mUrl = url;
-
         // 222222222222222222222222222
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getCurrentPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
             }
             return;
         }
@@ -415,7 +405,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
                     break;
                 //开始缓充
                 case Player.STATE_BUFFERING:
-                    getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, getBufferedPercentage(), getCurrentPosition(), getDuration());
+                    getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, getBufferedPercentage(), getPosition(), getDuration());
                     mIsBuffering = true;
                     break;
                 //开始播放
@@ -441,7 +431,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
                     }
 
                     if (mIsBuffering) {
-                        getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_END, getBufferedPercentage(), getCurrentPosition(), getDuration());
+                        getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_END, getBufferedPercentage(), getPosition(), getDuration());
                         mIsBuffering = false;
                     }
                     break;
@@ -507,7 +497,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
         if (getVideoPlayerChangeListener() != null) {
             getVideoPlayerChangeListener().onVideoSizeChanged(videoSize.width, videoSize.height);
             if (videoSize.unappliedRotationDegrees > 0) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees, getCurrentPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees, getPosition(), getDuration());
             }
         }
     }
@@ -515,7 +505,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
     @Override
     public void onRenderedFirstFrame() {
         if (getVideoPlayerChangeListener() != null && mIsPreparing) {
-            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, 0, getCurrentPosition(), getDuration());
+            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, 0, getPosition(), getDuration());
             mIsPreparing = false;
         }
     }

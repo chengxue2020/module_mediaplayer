@@ -96,7 +96,7 @@ public class FloatVideoManager {
             return;
         }
         PlayerUtils.removeViewFormParent(mVideoPlayerLayout);
-        mVideoPlayerLayout.resetKernel();
+//        mVideoPlayerLayout.resetKernel();
         mVideoPlayerLayout.clearControllerLayout();
         mPlayingPosition = -1;
         mActClass = null;

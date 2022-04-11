@@ -24,9 +24,6 @@ public interface ImplKernel {
 
     /*----------------------------第一部分：视频初始化实例对象方法----------------------------------*/
 
-    @Nullable
-    String getUrl();
-
     @NonNull
     <T extends Object> T getPlayer();
 
@@ -99,14 +96,14 @@ public interface ImplKernel {
      *
      * @return 获取当前播放的位置
      */
-    long getCurrentPosition();
+    int getPosition();
 
     /**
      * 获取视频总时长
      *
      * @return 获取视频总时长
      */
-    long getDuration();
+    int getDuration();
 
     /**
      * 获取缓冲百分比

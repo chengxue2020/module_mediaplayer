@@ -46,9 +46,8 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPlayerChangeListener {
 
-    /**
-     * 当前视频地址的请求头
-     */
+
+    private String mUrl ="";
     protected Map<String, String> mHeaders = null;
 
     // 解码
@@ -126,7 +125,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        initKernel();
+//        initKernel();
     }
 
     @Override
@@ -137,12 +136,12 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        super.onWindowVisibilityChanged(visibility);
         if (visibility == View.VISIBLE) {
-            resume();
+            repeat();
         } else {
-            pause();
+            stop();
         }
+        super.onWindowVisibilityChanged(visibility);
     }
 
     @Override
@@ -162,9 +161,6 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     private void init(AttributeSet attrs) {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_root, this, true);
 
-        initKernel();
-        setBackground(null);
-        setBackgroundColor(Color.TRANSPARENT);
         setClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
@@ -214,8 +210,9 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         }
         // next
         else {
+            mUrl = url;
+            releaseKernel();
             initKernel();
-            resetKernel();
             initRender();
             boolean prepare = prepare(url);
 //            mKernel.start();
@@ -249,10 +246,8 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         if (null == mKernel)
             return false;
 
-        String url = mKernel.getUrl();
-
         //播放本地数据源时不检测网络
-        if (VideoHelper.instance().isLocalDataSource(url, mAssetFileDescriptor)) {
+        if (VideoHelper.instance().isLocalDataSource(mUrl, mAssetFileDescriptor)) {
             return false;
         }
 
@@ -274,21 +269,41 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
     @Override
     public void pause() {
+        MediaLogUtil.log("onLife => pause => 1");
         if (null == mKernel)
             return;
+        MediaLogUtil.log("onLife => pause => 2");
         if (!mKernel.isPlaying())
             return;
+        MediaLogUtil.log("onLife => pause => 3");
         mKernel.pause();
         setPlayState(PlayerType.StateType.STATE_PAUSED);
         setKeepScreenOn(false);
     }
 
     @Override
-    public void resume() {
+    public void stop() {
+        MediaLogUtil.log("onLife => stop => 1");
         if (null == mKernel)
             return;
+        MediaLogUtil.log("onLife => stop => 2");
+        if (!mKernel.isPlaying())
+            return;
+        MediaLogUtil.log("onLife => stop => 3");
+        mKernel.stop();
+        setPlayState(PlayerType.StateType.STATE_PAUSED);
+        setKeepScreenOn(false);
+    }
+
+    @Override
+    public void resume() {
+        MediaLogUtil.log("onLife => resume => 1");
+        if (null == mKernel)
+            return;
+        MediaLogUtil.log("onLife => resume => 2");
         if (mKernel.isPlaying())
             return;
+        MediaLogUtil.log("onLife => resume => 3");
         mKernel.start();
         setPlayState(PlayerType.StateType.STATE_START);
         setKeepScreenOn(true);
@@ -296,12 +311,8 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
     @Override
     public void repeat() {
-        MediaLogUtil.log("repeat =>");
-        if (null == mKernel)
-            return;
-        String url = mKernel.getUrl();
-        MediaLogUtil.log("repeat => url = " + url);
-        start(0, url);
+        MediaLogUtil.log("onLife => repeat => 1");
+        start(0, mUrl);
     }
 
     /**
@@ -351,30 +362,28 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
      * 获取视频总时长
      */
     @Override
-    public long getDuration() {
-        if (isInPlaybackState()) {
-            long duration = mKernel.getDuration();
-            if (duration < 0) {
-                duration = 0;
-            }
-            return duration;
+    public int getDuration() {
+        if (null == mKernel || !isInPlaybackState())
+            return 0;
+        int duration = mKernel.getDuration();
+        if (duration < 0) {
+            duration = 0;
         }
-        return 0;
+        return duration;
     }
 
     /**
      * 获取当前播放的位置
      */
     @Override
-    public long getPosition() {
-        if (isInPlaybackState()) {
-            long position = mKernel.getCurrentPosition();
-            if (position < 0) {
-                position = 0;
-            }
-            return position;
+    public int getPosition() {
+        if (null == mKernel || !isInPlaybackState())
+            return 0;
+        int position = mKernel.getPosition();
+        if (position < 0) {
+            position = 0;
         }
-        return 0;
+        return position;
     }
 
     /**
@@ -513,20 +522,9 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         if (config != null && config.mBuriedPointEvent != null) {
             //相当于进入了视频页面
             if (PlayerUtils.isConnected(getContext().getApplicationContext())) {
-
-                String url = "";
-                try {
-                    url = mKernel.getUrl();
-                } catch (Exception e) {
-                }
-                config.mBuriedPointEvent.onError(url, false);
+                config.mBuriedPointEvent.onError(mUrl, false);
             } else {
-                String url = "";
-                try {
-                    url = mKernel.getUrl();
-                } catch (Exception e) {
-                }
-                config.mBuriedPointEvent.onError(url, true);
+                config.mBuriedPointEvent.onError(mUrl, true);
             }
         }
     }
@@ -540,23 +538,13 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 //        mCurrentPosition = 0;
         if (mProgressManager != null) {
             //播放完成，清除进度
-            String url = "";
-            try {
-                url = mKernel.getUrl();
-            } catch (Exception e) {
-            }
-            mProgressManager.saveProgress(url, 0);
+            mProgressManager.saveProgress(mUrl, 0);
         }
         setPlayState(PlayerType.StateType.STATE_END);
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         if (config != null && config.mBuriedPointEvent != null) {
             //视频播放完成
-            String url = "";
-            try {
-                url = mKernel.getUrl();
-            } catch (Exception e) {
-            }
-            config.mBuriedPointEvent.playerCompletion(url);
+            config.mBuriedPointEvent.playerCompletion(mUrl);
         }
     }
 
@@ -569,12 +557,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         if (config != null && config.mBuriedPointEvent != null) {
             //相当于进入了视频页面
-            String url = "";
-            try {
-                url = mKernel.getUrl();
-            } catch (Exception e) {
-            }
-            config.mBuriedPointEvent.playerIn(url);
+            config.mBuriedPointEvent.playerIn(mUrl);
         }
 
         setPlayState(PlayerType.StateType.STATE_PREPARE_END);
@@ -966,6 +949,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(params);
         viewGroup.addView(layout);
+        layout.setMediaPlayer(this);
     }
 
     public void clearControllerLayout() {
@@ -991,16 +975,6 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         } catch (Exception e) {
             return null;
         }
-    }
-
-    @Override
-    public void initKernel() {
-        if (null != mKernel)
-            return;
-        mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mType);
-        mKernel.setOnVideoPlayerChangeListener(this);
-        mKernel.initKernel(getContext());
-        mKernel.setLooping(mIsLooping);
     }
 
     @Override
@@ -1033,12 +1007,23 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         }
     }
 
+//    @Override
+//    public void resetKernel() {
+//        try {
+//            mKernel.resetKernel();
+//        } catch (Exception e) {
+//        }
+//    }
+
     @Override
-    public void resetKernel() {
-        try {
-            mKernel.resetKernel();
-        } catch (Exception e) {
+    public void initKernel() {
+        if (null != mKernel) {
+            releaseKernel();
         }
+        mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mType);
+        mKernel.setOnVideoPlayerChangeListener(this);
+        mKernel.initKernel(getContext());
+        mKernel.setLooping(mIsLooping);
     }
 
     @Override
@@ -1050,6 +1035,9 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         }
         try {
             clearVideoLayout();
+        } catch (Exception e) {
+        }
+        try {
             mRender.release();
             mRender = null;
         } catch (Exception e) {
@@ -1064,22 +1052,15 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
             if (!isInit()) {
                 PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
                 if (config != null && config.mBuriedPointEvent != null) {
-
-                    String url = "";
-                    try {
-                        url = mKernel.getUrl();
-                    } catch (Exception e) {
-                    }
-
                     //退出视频播放
-                    config.mBuriedPointEvent.playerDestroy(url);
+                    config.mBuriedPointEvent.playerDestroy(mUrl);
 
                     //计算退出视频时候的进度
                     long duration = getDuration();
                     long position = getPosition();
                     float progress = (position * 1.0f) / (duration * 1.0f);
-                    config.mBuriedPointEvent.playerOutProgress(url, progress);
-                    config.mBuriedPointEvent.playerOutProgress(url, duration, position);
+                    config.mBuriedPointEvent.playerOutProgress(mUrl, progress);
+                    config.mBuriedPointEvent.playerOutProgress(mUrl, duration, position);
                 }
 
                 //释放Assets资源

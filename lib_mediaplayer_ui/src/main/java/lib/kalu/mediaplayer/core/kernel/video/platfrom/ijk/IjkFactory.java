@@ -14,9 +14,9 @@ public class IjkFactory extends KernelFactory<IjkMediaPlayer> {
     private IjkFactory() {
     }
 
-    private static class Holder {
-        static final IjkMediaPlayer mP = new IjkMediaPlayer();
-    }
+//    private static class Holder {
+//        static final IjkMediaPlayer mP = new IjkMediaPlayer();
+//    }
 
     public static IjkFactory build() {
         return new IjkFactory();
@@ -24,6 +24,7 @@ public class IjkFactory extends KernelFactory<IjkMediaPlayer> {
 
     @Override
     public IjkMediaPlayer createKernel(@NonNull Context context) {
-        return Holder.mP;
+//        return Holder.mP;
+        return new IjkMediaPlayer();
     }
 }

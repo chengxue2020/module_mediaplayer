@@ -49,6 +49,8 @@ public interface ImplPlayer {
 
     void pause();
 
+    void stop();
+
     void resume();
 
     void repeat();
@@ -58,7 +60,7 @@ public interface ImplPlayer {
      *
      * @return long类型
      */
-    long getDuration();
+    int getDuration();
 
 
     /**
@@ -66,7 +68,7 @@ public interface ImplPlayer {
      *
      * @return long类型
      */
-    long getPosition();
+    int getPosition();
 
     /**
      * 获取当前缓冲百分比
@@ -125,11 +127,10 @@ public interface ImplPlayer {
 
     View getVideoLayout();
 
-    void initKernel();
-
     void initRender();
 
-    void resetKernel();
+    void initKernel();
+//    void resetKernel();
 
     void releaseKernel();
 }

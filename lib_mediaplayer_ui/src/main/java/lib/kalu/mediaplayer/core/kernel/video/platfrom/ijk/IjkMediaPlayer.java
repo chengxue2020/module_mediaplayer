@@ -38,16 +38,6 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         return this;
     }
 
-    @Nullable
-    @Override
-    public String getUrl() {
-        try {
-            return mMediaPlayer.getDataSource();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     @Override
     public void initKernel(@NonNull Context context) {
         resetKernel();
@@ -65,7 +55,6 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(MediaLogUtil.isIsLog() ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_SILENT);
         setOptions();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        String dataSource = mMediaPlayer.getDataSource();
         initListener();
     }
 
@@ -336,16 +325,24 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
      * 获取当前播放的位置
      */
     @Override
-    public long getCurrentPosition() {
-        return mMediaPlayer.getCurrentPosition();
+    public int getPosition() {
+        try {
+            return (int) mMediaPlayer.getCurrentPosition();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     /**
      * 获取视频总时长
      */
     @Override
-    public long getDuration() {
-        return mMediaPlayer.getDuration();
+    public int getDuration() {
+        try {
+            return (int) mMediaPlayer.getDuration();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     /**
@@ -441,7 +438,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     private IMediaPlayer.OnInfoListener onInfoListener = new IMediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
-            long position = getCurrentPosition();
+            long position = getPosition();
             long duration = getDuration();
             getVideoPlayerChangeListener().onInfo(what, extra, position, duration);
             MediaLogUtil.log("IJKLOG => onInfo => what = " + what + ", extra = " + extra);

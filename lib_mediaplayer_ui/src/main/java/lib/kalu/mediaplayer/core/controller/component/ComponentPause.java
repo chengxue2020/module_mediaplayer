@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -66,13 +67,13 @@ public class ComponentPause extends RelativeLayout implements ImplComponent {
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_INIT:
-            case PlayerType.StateType.STATE_START_ABORT:
-            case PlayerType.StateType.STATE_PREPARE_START:
-            case PlayerType.StateType.STATE_PREPARE_END:
-            case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
-                setVisibility(GONE);
+            case PlayerType.StateType.STATE_PAUSED:
+                setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_controller_pause_image).setVisibility(View.VISIBLE);
+                break;
+            default:
+                setVisibility(View.INVISIBLE);
+                findViewById(R.id.module_mediaplayer_controller_pause_image).setVisibility(View.INVISIBLE);
                 break;
         }
     }
@@ -87,5 +88,9 @@ public class ComponentPause extends RelativeLayout implements ImplComponent {
 
     @Override
     public void onLockStateChanged(boolean isLocked) {
+    }
+
+    public final void setPauseImageResource(@DrawableRes int res) {
+        setImageResource(this, R.id.module_mediaplayer_controller_pause_image, res);
     }
 }

@@ -13,9 +13,9 @@ public class AndroidFactory extends KernelFactory<AndroidMediaPlayer> {
     private AndroidFactory() {
     }
 
-    private static class Holder {
-        static final AndroidMediaPlayer mP = new AndroidMediaPlayer();
-    }
+//    private static class Holder {
+//        static final AndroidMediaPlayer mP = new AndroidMediaPlayer();
+//    }
 
     public static AndroidFactory build() {
         return new AndroidFactory();
@@ -23,6 +23,7 @@ public class AndroidFactory extends KernelFactory<AndroidMediaPlayer> {
 
     @Override
     public AndroidMediaPlayer createKernel(@NonNull Context context) {
-        return Holder.mP;
+        return new AndroidMediaPlayer();
+//        return Holder.mP;
     }
 }

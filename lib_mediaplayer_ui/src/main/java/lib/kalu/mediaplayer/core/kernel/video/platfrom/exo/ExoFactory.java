@@ -12,10 +12,10 @@ public class ExoFactory extends KernelFactory<ExoMediaPlayer> {
 
     private ExoFactory() {
     }
-
-    private static class Holder {
-        static final ExoMediaPlayer mP = new ExoMediaPlayer();
-    }
+//
+//    private static class Holder {
+//        static final ExoMediaPlayer mP = new ExoMediaPlayer();
+//    }
 
     public static ExoFactory build() {
         return new ExoFactory();
@@ -23,6 +23,7 @@ public class ExoFactory extends KernelFactory<ExoMediaPlayer> {
 
     @Override
     public ExoMediaPlayer createKernel(@NonNull Context context) {
-        return Holder.mP;
+        return new ExoMediaPlayer();
+//        return Holder.mP;
     }
 }

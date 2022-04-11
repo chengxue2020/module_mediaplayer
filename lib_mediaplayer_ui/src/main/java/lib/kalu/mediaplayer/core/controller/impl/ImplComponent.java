@@ -21,7 +21,11 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
+import android.widget.ImageView;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -128,4 +132,12 @@ public interface ImplComponent {
     }
 
     /*************/
+
+    default void setImageResource(@NonNull View view, @IdRes int id, @DrawableRes int res) {
+        try {
+            ImageView temp = view.findViewById(id);
+            temp.setImageResource(res);
+        } catch (Exception e) {
+        }
+    }
 }

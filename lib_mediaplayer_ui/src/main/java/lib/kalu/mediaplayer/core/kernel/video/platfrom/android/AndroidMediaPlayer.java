@@ -23,7 +23,6 @@ import lib.kalu.mediaplayer.config.PlayerType;
 @Keep
 public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
 
-    private String mUrl;
     protected MediaPlayer mMediaPlayer;
     private int mBufferedPercent;
     private boolean mIsPreparing;
@@ -35,12 +34,6 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
     @Override
     public AndroidMediaPlayer getPlayer() {
         return this;
-    }
-
-    @Nullable
-    @Override
-    public String getUrl() {
-        return mUrl;
     }
 
     @Override
@@ -172,7 +165,7 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
      * 获取当前播放的位置
      */
     @Override
-    public long getCurrentPosition() {
+    public int getPosition() {
         return mMediaPlayer.getCurrentPosition();
     }
 
@@ -180,7 +173,7 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
      * 获取视频总时长
      */
     @Override
-    public long getDuration() {
+    public int getDuration() {
         return mMediaPlayer.getDuration();
     }
 
@@ -213,14 +206,11 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
     @Override
     public void prepare(@NonNull Context context, @NonNull String url, @Nullable Map<String, String> headers) {
 
-        // 111111111111111
-        mUrl = url;
-
         //222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getCurrentPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
             }
             return;
         }
@@ -352,11 +342,11 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
             //解决MEDIA_INFO_VIDEO_RENDERING_START多次回调问题
             if (what == PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START) {
                 if (mIsPreparing) {
-                    getVideoPlayerChangeListener().onInfo(what, extra, getCurrentPosition(), getDuration());
+                    getVideoPlayerChangeListener().onInfo(what, extra, getPosition(), getDuration());
                     mIsPreparing = false;
                 }
             } else {
-                getVideoPlayerChangeListener().onInfo(what, extra, getCurrentPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(what, extra, getPosition(), getDuration());
             }
             return true;
         }
