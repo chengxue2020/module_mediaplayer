@@ -17,8 +17,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
-import lib.kalu.mediaplayer.core.controller.component.ComponentPrepare;
-import lib.kalu.mediaplayer.core.controller.component.ComponentSubtitle;
+import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
@@ -40,22 +39,14 @@ public class ControllerLive extends ControllerLayout {
     @Override
     public void init() {
         super.init();
-        setEnabled(false);
-        initConfig();
-    }
-
-    private void initConfig() {
-        // 移除
-        this.removeComponentAll(false);
         // 错误界面view
         this.addComponent(new ComponentError(getContext()));
         // 加载界面view
-        this.addComponent(new ComponentPrepare(getContext()));
+        this.addComponent(new ComponentLoading(getContext()));
 
         // 字幕
 //        this.addComponent(new ComponentSubtitle(getContext()));
     }
-
 
     @Override
     protected void onLockStateChanged(boolean isLocked) {
@@ -140,59 +131,6 @@ public class ControllerLive extends ControllerLayout {
     @Override
     protected void setProgress(int duration, int position) {
         super.setProgress(duration, position);
-    }
-
-    @Nullable
-    @Override
-    public View findPrepareProgress() {
-        View view = findViewById(R.id.module_mediaplayer_controller_prepare_progress);
-        return view;
-    }
-
-    @Nullable
-    @Override
-    public ImageView findPrepareBackground() {
-        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_prepare_background);
-        return imageView;
-    }
-
-    @Nullable
-    @Override
-    public TextView findComponentErrorText() {
-        TextView textView = findViewById(R.id.module_mediaplayer_controller_error_message);
-        return textView;
-    }
-
-    @Nullable
-    @Override
-    public ImageView findComponentErrorImage() {
-        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_error_img);
-        return imageView;
-    }
-
-    @Nullable
-    @Override
-    public TextView findPrepareTip() {
-        TextView textView = findViewById(R.id.module_mediaplayer_controller_prepare_tip);
-        return textView;
-    }
-
-    @Nullable
-    @Override
-    public View findCenterProgress() {
-        View view = findViewById(R.id.module_mediaplayer_controller_center_loading);
-        return view;
-    }
-
-    @Nullable
-    @Override
-    public SimpleSubtitleView findSubtitle() {
-        try {
-            SimpleSubtitleView view = findViewById(R.id.module_mediaplayer_controller_subtitle);
-            return view;
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     @Override

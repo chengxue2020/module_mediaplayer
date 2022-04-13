@@ -17,14 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import lib.kalu.mediaplayer.config.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.core.controller.impl.ImplControllerAction;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponentAction;
 import lib.kalu.mediaplayer.core.controller.impl.ImplController;
 import lib.kalu.mediaplayer.core.controller.help.OrientationHelper;
 import lib.kalu.mediaplayer.core.view.ImplPlayer;
@@ -42,7 +40,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
  * *             6.设备方向监听: {@link #onOrientationChanged(int)}
  */
-public abstract class ControllerLayout extends RelativeLayout implements ImplController, ImplComponentAction, OrientationHelper.OnOrientationChangeListener {
+public abstract class ControllerLayout extends RelativeLayout implements ImplController, ImplControllerAction, OrientationHelper.OnOrientationChangeListener {
 
     //播放器包装类，集合了MediaPlayerControl的api和IVideoController的api
     protected ControllerWrapper mControllerWrapper;
@@ -67,9 +65,8 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
     // 是否显示控制条
     private boolean mIsShowing;
 
-    //保存了所有的控制组件
-    //使用LinkedHashMap有序
-    protected LinkedHashMap<ImplComponent, Boolean> mControlComponents = new LinkedHashMap<>();
+    // 控制组件
+    protected ArrayList<ImplComponent> mComponents = new ArrayList<>();
 
     public ControllerLayout(@NonNull Context context) {
         super(context);
@@ -142,55 +139,59 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
     public void setMediaPlayer(ImplPlayer mediaPlayer) {
         mControllerWrapper = new ControllerWrapper(mediaPlayer, this);
         //绑定ControlComponent和Controller
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            component.attach(mControllerWrapper);
+
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                component.attach(mControllerWrapper);
+            }
         }
         //开始监听设备方向
         mOrientationHelper.setOnOrientationChangeListener(this);
     }
 
     @Override
-    public void addComponent(@NonNull ImplComponent controlView, @NonNull boolean isPrivate) {
+    public void addComponent(@NonNull ImplComponent component) {
 
-        if (isPrivate && !isEnabled())
+        if (null == component || null == component.getView())
             return;
-
-        mControlComponents.put(controlView, isPrivate);
+        if (null == mComponents)
+            return;
+        mComponents.add(component);
         if (mControllerWrapper != null) {
-            controlView.attach(mControllerWrapper);
+            component.attach(mControllerWrapper);
         }
-        View view = controlView.getView();
-        if (view != null && !isPrivate) {
-            addView(view, 0);
-        }
+        addView(component.getView());
     }
 
-    @Override
-    public void removeComponent(@NonNull ImplComponent view) {
-
-        removeView(view.getView());
-        mControlComponents.remove(view);
-    }
-
-    @Override
-    public void removeComponentAll(boolean isPrivate) {
-
-        if (isPrivate) {
-            Iterator<Map.Entry<ImplComponent, Boolean>> it = mControlComponents.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<ImplComponent, Boolean> next = it.next();
-                if (next.getValue()) {
-                    it.remove();
-                }
-            }
-        } else {
-            for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-                removeView(next.getKey().getView());
-            }
-            mControlComponents.clear();
-        }
-    }
+//    @Override
+//    public void removeComponent(@NonNull ImplComponent view) {
+//
+//        removeView(view.getView());
+//        mControlComponents.remove(view);
+//    }
+//
+//    @Override
+//    public void removeComponentAll(boolean isPrivate) {
+//
+//        if (isPrivate) {
+//            Iterator<Map.Entry<ImplComponent, Boolean>> it = mControlComponents.entrySet().iterator();
+//            while (it.hasNext()) {
+//                Map.Entry<ImplComponent, Boolean> next = it.next();
+//                if (next.getValue()) {
+//                    it.remove();
+//                }
+//            }
+//        } else {
+//            for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
+//                removeView(next.getKey().getView());
+//            }
+//            mControlComponents.clear();
+//        }
+//    }
 
     /**
      * {@link VideoLayout}调用此方法向控制器设置播放状态。
@@ -575,9 +576,14 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
     private void handleVisibilityChanged(boolean isVisible, Animation anim) {
         if (!mIsLocked) {
             //没锁住时才向ControlComponent下发此事件
-            for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-                ImplComponent component = next.getKey();
-                component.onVisibilityChanged(isVisible, anim);
+            if (null != mComponents && mComponents.size() > 0) {
+                int size = mComponents.size();
+                for (int i = 0; i < size; i++) {
+                    ImplComponent component = mComponents.get(i);
+                    if (null == component)
+                        continue;
+                    component.onVisibilityChanged(isVisible, anim);
+                }
             }
         }
         onVisibilityChanged(isVisible, anim);
@@ -594,9 +600,14 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
     }
 
     private void handlePlayStateChanged(@NonNull int playState) {
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            component.onPlayStateChanged(playState);
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                component.onPlayStateChanged(playState);
+            }
         }
         onPlayStateChanged(playState);
     }
@@ -612,7 +623,6 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
                 mOrientation = 0;
                 mIsLocked = false;
                 mIsShowing = false;
-                removeComponentAll(true);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
                 mIsLocked = false;
@@ -630,9 +640,14 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
      * @param playerState 播放器状态
      */
     private void handleWindowStateChanged(int playerState) {
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            component.onWindowStateChanged(playerState);
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                component.onWindowStateChanged(playerState);
+            }
         }
         onPlayerStateChanged(playerState);
     }
@@ -675,9 +690,14 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
     }
 
     private void handleSetProgress(int duration, int position) {
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            component.setProgress(duration, position);
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                component.setProgress(duration, position);
+            }
         }
         setProgress(duration, position);
     }
@@ -692,9 +712,14 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
     }
 
     private void handleLockStateChanged(boolean isLocked) {
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            component.onLockStateChanged(isLocked);
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                component.onLockStateChanged(isLocked);
+            }
         }
         onLockStateChanged(isLocked);
     }

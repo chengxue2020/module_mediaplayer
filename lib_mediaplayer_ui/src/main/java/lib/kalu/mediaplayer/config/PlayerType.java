@@ -42,8 +42,8 @@ public class PlayerType {
     public @interface StateType {
         int STATE_INIT = 2001; // 播放未开始，即将进行
         int STATE_CLEAN = 2002; //
-        int STATE_PREPARE_START = 2003; // 播放准备, 开始
-        int STATE_PREPARE_END = 2004; // 播放准备, 完成
+        int STATE_LOADING_START = 2003; // 播放准备, 开始
+        int STATE_LOADING_COMPLETE = 2004; // 播放准备, 完成
         int STATE_START = 2005; // 开始播放
         int STATE_END = 2006; // 播放完成
         int STATE_PAUSED = 2007; // 暂停播放
@@ -66,8 +66,8 @@ public class PlayerType {
                 STATE_START, STATE_PAUSED,
                 STATE_BUFFERING_PLAYING, STATE_BUFFERING_PAUSED, STATE_BUFFERING_COMPLETE,
                 STATE_END, STATE_START_ABORT,
-                STATE_PREPARE_START,
-                STATE_PREPARE_END,
+                STATE_LOADING_START,
+                STATE_LOADING_COMPLETE,
                 STATE_ERROR_PARSE,
                 STATE_ERROR_NETWORK,
                 STATE_ERROR_URL,

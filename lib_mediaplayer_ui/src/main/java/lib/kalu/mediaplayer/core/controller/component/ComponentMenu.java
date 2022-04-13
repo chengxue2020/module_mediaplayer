@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,7 @@ import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
-public class ComponentMenu extends FrameLayout implements ImplComponent, View.OnClickListener {
+public class ComponentMenu extends RelativeLayout implements ImplComponent, View.OnClickListener {
 
     private Context mContext;
     private ControllerWrapper mControllerWrapper;
@@ -114,8 +115,8 @@ public class ComponentMenu extends FrameLayout implements ImplComponent, View.On
         switch (playState) {
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_START_ABORT:
-            case PlayerType.StateType.STATE_PREPARE_START:
-            case PlayerType.StateType.STATE_PREPARE_END:
+            case PlayerType.StateType.STATE_LOADING_START:
+            case PlayerType.StateType.STATE_LOADING_COMPLETE:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_BUFFERING_PLAYING:
             case PlayerType.StateType.STATE_ONCE_LIVE:

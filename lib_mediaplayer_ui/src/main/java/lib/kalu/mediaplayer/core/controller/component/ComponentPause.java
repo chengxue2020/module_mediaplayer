@@ -36,8 +36,7 @@ public class ComponentPause extends RelativeLayout implements ImplComponent {
     }
 
     private void init(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_video_pause, this, true);
-        setVisibility(View.INVISIBLE);
+        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_pause, this, true);
     }
 
     @Override
@@ -62,35 +61,38 @@ public class ComponentPause extends RelativeLayout implements ImplComponent {
 
     @Override
     public void onVisibilityChanged(boolean isVisible, Animation anim) {
+
     }
 
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSED:
-                setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_controller_pause_image).setVisibility(View.VISIBLE);
+                bringToFront();
+                findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
                 break;
             default:
-                setVisibility(View.INVISIBLE);
-                findViewById(R.id.module_mediaplayer_controller_pause_image).setVisibility(View.INVISIBLE);
+                findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.INVISIBLE);
                 break;
         }
     }
 
     @Override
     public void onWindowStateChanged(int playerState) {
+
     }
 
     @Override
     public void setProgress(int duration, int position) {
+
     }
 
     @Override
     public void onLockStateChanged(boolean isLocked) {
+
     }
 
     public final void setPauseImageResource(@DrawableRes int res) {
-        setImageResource(this, R.id.module_mediaplayer_controller_pause_image, res);
+        setImageResource(this, R.id.module_mediaplayer_component_pause_img, res);
     }
 }

@@ -123,10 +123,10 @@ public final class VideoActivity extends AppCompatActivity {
                     case PlayerType.StateType.STATE_START_ABORT:
                         //开始播放中止
                         break;
-                    case PlayerType.StateType.STATE_PREPARE_START:
+                    case PlayerType.StateType.STATE_LOADING_START:
                         //播放准备中
                         break;
-                    case PlayerType.StateType.STATE_PREPARE_END:
+                    case PlayerType.StateType.STATE_LOADING_COMPLETE:
 
 //                        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
 //                        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,7 @@ import lib.kalu.mediaplayer.core.controller.impl.ImplGesture;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class ComponentGesture extends FrameLayout implements ImplGesture {
+public class ComponentGesture extends RelativeLayout implements ImplGesture {
 
     private ControllerWrapper mControllerWrapper;
 
@@ -158,8 +159,8 @@ public class ComponentGesture extends FrameLayout implements ImplGesture {
     public void onPlayStateChanged(int playState) {
         if (playState == PlayerType.StateType.STATE_INIT
                 || playState == PlayerType.StateType.STATE_START_ABORT
-                || playState == PlayerType.StateType.STATE_PREPARE_START
-                || playState == PlayerType.StateType.STATE_PREPARE_END
+                || playState == PlayerType.StateType.STATE_LOADING_START
+                || playState == PlayerType.StateType.STATE_LOADING_COMPLETE
                 || playState == PlayerType.StateType.STATE_ERROR
                 || playState == PlayerType.StateType.STATE_BUFFERING_PLAYING
                 || playState == PlayerType.StateType.STATE_ONCE_LIVE) {

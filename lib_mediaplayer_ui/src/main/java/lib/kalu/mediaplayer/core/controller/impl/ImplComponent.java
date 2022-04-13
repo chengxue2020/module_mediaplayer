@@ -1,49 +1,30 @@
-/*
-Copyright 2017 yangchong211（github.com/yangchong211）
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package lib.kalu.mediaplayer.core.controller.impl;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2017/11/9
- *     desc  : 自定义控制器接口
- *     revise: 如果需要添加自定义播放器视图，则需要继承InterControlView接口
- *             关于视频播放器播放状态和视图状态，都需要自定义视图去控制view的状态
- *             举一个例子：比如广告视图，
- * </pre>
- */
 @Keep
 public interface ImplComponent {
 
@@ -133,10 +114,55 @@ public interface ImplComponent {
 
     /*************/
 
-    default void setImageResource(@NonNull View view, @IdRes int id, @DrawableRes int res) {
+    default void setImageResource(@NonNull View layout, @IdRes int id, @DrawableRes int value) {
         try {
-            ImageView temp = view.findViewById(id);
-            temp.setImageResource(res);
+            ImageView view = layout.findViewById(id);
+            view.setImageResource(value);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setTextColor(@NonNull View layout, @IdRes int id, @ColorInt int value) {
+        try {
+            TextView view = layout.findViewById(id);
+            view.setTextColor(value);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setTextSize(@NonNull View layout, @IdRes int id, @DimenRes int value) {
+        try {
+            TextView view = layout.findViewById(id);
+            int offset = layout.getResources().getDimensionPixelOffset(value);
+            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setText(@NonNull View layout, @IdRes int id, @StringRes int value) {
+        try {
+            TextView view = layout.findViewById(id);
+            view.setText(value);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setText(@NonNull View layout, @IdRes int id, @NonNull String value) {
+        try {
+            TextView view = layout.findViewById(id);
+            view.setText(value);
+        } catch (Exception e) {
+        }
+    }
+
+    default void setDimens(@NonNull View layout, @IdRes int id, @DimenRes int value) {
+        try {
+            View view = layout.findViewById(id);
+            ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
+            int offset = layout.getResources().getDimensionPixelOffset(value);
+            layoutParams.width = offset;
+            layoutParams.height = offset;
+            view.setLayoutParams(layoutParams);
         } catch (Exception e) {
         }
     }

@@ -1,18 +1,3 @@
-/*
-Copyright 2017 yangchong211（github.com/yangchong211）
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package lib.kalu.mediaplayer.core.controller.impl;
 
 import android.annotation.SuppressLint;
@@ -41,15 +26,6 @@ import androidx.annotation.StringRes;
 import lib.kalu.mediaplayer.widget.MediaProgressBar;
 import lib.kalu.mediaplayer.widget.subtitle.widget.SimpleSubtitleView;
 
-/**
- * <pre>
- *     @author yangchong
- *     blog  : https://github.com/yangchong211
- *     time  : 2017/11/21
- *     desc  : 视频控制器接口
- *     revise: 定义一些设置视图属性接口
- * </pre>
- */
 public interface ImplController {
 
     /**
@@ -129,339 +105,339 @@ public interface ImplController {
     int getCutoutHeight();
 
 
-    /************************/
-
-    @Nullable
-    default TextView findComponentErrorText() {
-        return null;
-    }
-
-    @Nullable
-    default ImageView findComponentErrorImage() {
-        return null;
-    }
-
-    @Nullable
-    default ImageView findPrepareBackground() {
-        return null;
-    }
-
-    @Nullable
-    default View findPrepareProgress() {
-        return null;
-    }
-
-    @Nullable
-    default View findCenterProgress() {
-        return null;
-    }
-
-    @Nullable
-    default SimpleSubtitleView findSubtitle() {
-        return null;
-    }
-
-    @Nullable
-    default TextView findPrepareTip() {
-        return null;
-    }
-
-    default void setComponentPrepareBackgroundColor(@ColorInt int color) {
-        ImageView view = findPrepareBackground();
-        if (null == view)
-            return;
-        view.setImageDrawable(null);
-        view.setBackgroundColor(color);
-    }
-
-    default void setComponentPrepareBackgroundResource(@DrawableRes int resId) {
-        ImageView view = findPrepareBackground();
-        if (null == view)
-            return;
-        view.setBackgroundColor(Color.TRANSPARENT);
-        view.setImageResource(resId);
-    }
-
-    default void setComponentPrepareBackgroundDrawable(@NonNull Drawable drawable) {
-        ImageView view = findPrepareBackground();
-        if (null == view)
-            return;
-        view.setBackgroundColor(Color.TRANSPARENT);
-        view.setImageDrawable(drawable);
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentPrepareProgressBarDimens(@DimenRes int resId) {
-        View view = findPrepareProgress();
-        if (null == view)
-            return;
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        if (null == layoutParams)
-            return;
-        try {
-            Resources resources = view.getResources();
-            int offset = resources.getDimensionPixelOffset(resId);
-            layoutParams.width = offset;
-            layoutParams.height = offset;
-            view.setLayoutParams(layoutParams);
-        } catch (Exception e) {
-        }
-    }
-
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentPrepareProgressBarCount(@NonNull int count) {
-        View view = findPrepareProgress();
-        if (null == view || !(view instanceof MediaProgressBar))
-            return;
-        try {
-            ((MediaProgressBar) view).setCount(count);
-        } catch (Exception e) {
-        }
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentPrepareProgressBarRate(@NonNull float rate) {
-        View view = findPrepareProgress();
-        if (null == view || !(view instanceof MediaProgressBar))
-            return;
-        try {
-            ((MediaProgressBar) view).setRate(rate);
-        } catch (Exception e) {
-        }
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentPrepareProgressBarRadius(@DimenRes int resId) {
-        View view = findPrepareProgress();
-        if (null == view || !(view instanceof MediaProgressBar))
-            return;
-        try {
-            ((MediaProgressBar) view).setRadius(resId);
-        } catch (Exception e) {
-        }
-    }
-
+//    /************************/
+//
+//    @Nullable
+//    default TextView findComponentErrorText() {
+//        return null;
+//    }
+//
+//    @Nullable
+//    default ImageView findComponentErrorImage() {
+//        return null;
+//    }
+//
+//    @Nullable
+//    default ImageView findPrepareBackground() {
+//        return null;
+//    }
+//
+//    @Nullable
+//    default View findPrepareProgress() {
+//        return null;
+//    }
+//
+//    @Nullable
+//    default View findCenterProgress() {
+//        return null;
+//    }
+//
+//    @Nullable
+//    default SimpleSubtitleView findSubtitle() {
+//        return null;
+//    }
+//
+//    @Nullable
+//    default TextView findPrepareTip() {
+//        return null;
+//    }
+//
+//    default void setComponentPrepareBackgroundColor(@ColorInt int color) {
+//        ImageView view = findPrepareBackground();
+//        if (null == view)
+//            return;
+//        view.setImageDrawable(null);
+//        view.setBackgroundColor(color);
+//    }
+//
+//    default void setComponentPrepareBackgroundResource(@DrawableRes int resId) {
+//        ImageView view = findPrepareBackground();
+//        if (null == view)
+//            return;
+//        view.setBackgroundColor(Color.TRANSPARENT);
+//        view.setImageResource(resId);
+//    }
+//
+//    default void setComponentPrepareBackgroundDrawable(@NonNull Drawable drawable) {
+//        ImageView view = findPrepareBackground();
+//        if (null == view)
+//            return;
+//        view.setBackgroundColor(Color.TRANSPARENT);
+//        view.setImageDrawable(drawable);
+//    }
+//
 //    @SuppressLint("UseCompatLoadingForDrawables")
-//    default void setComponentPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
+//    default void setComponentPrepareProgressBarDimens(@DimenRes int resId) {
 //        View view = findPrepareProgress();
-//        if (null == view || (view instanceof ProgressBar))
+//        if (null == view)
 //            return;
 //        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
 //        if (null == layoutParams)
 //            return;
 //        try {
 //            Resources resources = view.getResources();
-//            Drawable drawable = resources.getDrawable(resId);
-//            layoutParams.width = drawable.getIntrinsicWidth();
-//            layoutParams.height = drawable.getIntrinsicHeight();
+//            int offset = resources.getDimensionPixelOffset(resId);
+//            layoutParams.width = offset;
+//            layoutParams.height = offset;
 //            view.setLayoutParams(layoutParams);
-//            ((ProgressBar) view).setIndeterminateDrawable(drawable);
 //        } catch (Exception e) {
 //        }
 //    }
-
-    default void setComponentPrepareText(@NonNull String text) {
-
-        if (null == text || text.length() <= 0)
-            return;
-
-        TextView textView = findPrepareTip();
-        if (null == textView)
-            return;
-
-        try {
-            textView.setText(text);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setComponentPrepareText(@StringRes int res) {
-
-        TextView textView = findPrepareTip();
-        if (null == textView)
-            return;
-
-        try {
-            textView.setText(res);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setComponentPrepareTextColor(@ColorRes int id) {
-
-        TextView textView = findPrepareTip();
-        if (null == textView)
-            return;
-
-        try {
-            int color = textView.getResources().getColor(id);
-            textView.setTextColor(color);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setComponentPrepareTextSize(@DimenRes int dimen) {
-
-        TextView textView = findPrepareTip();
-        if (null == textView)
-            return;
-
-        try {
-            float dimension = textView.getResources().getDimension(dimen);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
-        } catch (Exception e) {
-        }
-    }
-
-    /********************  ComponentError  **********************/
-
-    default void setComponentErrorImage(@DrawableRes int res) {
-
-        ImageView imageView = findComponentErrorImage();
-        if (null == imageView)
-            return;
-
-        try {
-            imageView.setImageResource(res);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setComponentErrorText(@NonNull String msg) {
-
-        TextView textView = findComponentErrorText();
-        if (null == textView)
-            return;
-
-        try {
-            textView.setText(msg);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setComponentErrorText(@StringRes int res) {
-
-        TextView textView = findComponentErrorText();
-        if (null == textView)
-            return;
-
-        try {
-            textView.setText(res);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setComponentErrorTextSize(@DimenRes int dimen) {
-
-        TextView textView = findComponentErrorText();
-        if (null == textView)
-            return;
-
-        try {
-            int offset = textView.getResources().getDimensionPixelOffset(dimen);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setComponentErrorTextColor(@ColorRes int id) {
-
-        TextView textView = findComponentErrorText();
-        if (null == textView)
-            return;
-
-        try {
-            int color = textView.getResources().getColor(id);
-            textView.setTextColor(color);
-        } catch (Exception e) {
-        }
-    }
-
-    /********************  ComponentError  **********************/
-
-    /********************  ComponentCenter  **********************/
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentCenterProgressBarDimens(@DimenRes int resId) {
-        View view = findCenterProgress();
-        if (null == view)
-            return;
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        if (null == layoutParams)
-            return;
-        try {
-            Resources resources = view.getResources();
-            int offset = resources.getDimensionPixelOffset(resId);
-            layoutParams.width = offset;
-            layoutParams.height = offset;
-            view.setLayoutParams(layoutParams);
-        } catch (Exception e) {
-        }
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentCenterProgressBarCount(@NonNull int count) {
-        View view = findCenterProgress();
-        if (null == view || !(view instanceof MediaProgressBar))
-            return;
-        try {
-            ((MediaProgressBar) view).setCount(count);
-        } catch (Exception e) {
-        }
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentCenterProgressBarRate(@NonNull float rate) {
-        View view = findCenterProgress();
-        if (null == view || !(view instanceof MediaProgressBar))
-            return;
-        try {
-            ((MediaProgressBar) view).setRate(rate);
-        } catch (Exception e) {
-        }
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    default void setComponentCenterProgressBarRadius(@DimenRes int resId) {
-        View view = findCenterProgress();
-        if (null == view || !(view instanceof MediaProgressBar))
-            return;
-        try {
-            ((MediaProgressBar) view).setRadius(resId);
-        } catch (Exception e) {
-        }
-    }
-
-    /********************  ComponentCenter  **********************/
-
-
-    /********************  ComponentCenter  **********************/
-
-    default void setComponentSubtitlePath(@NonNull String subtitlePath) {
-
-        View view = findSubtitle();
-        if (null == view || !(view instanceof SimpleSubtitleView))
-            return;
-        try {
-            ((SimpleSubtitleView) view).setSubtitlePath(subtitlePath);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setImageResource(@NonNull View view, @IdRes int id, @DrawableRes int res) {
-        try {
-            ImageView temp = view.findViewById(id);
-            temp.setImageResource(res);
-        } catch (Exception e) {
-        }
-    }
-
-    default void setBackgroundColor(@NonNull View view, @IdRes int id, @ColorInt int color) {
-        try {
-            View temp = view.findViewById(id);
-            temp.setBackgroundColor(color);
-        } catch (Exception e) {
-        }
-    }
+//
+//
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentPrepareProgressBarCount(@NonNull int count) {
+//        View view = findPrepareProgress();
+//        if (null == view || !(view instanceof MediaProgressBar))
+//            return;
+//        try {
+//            ((MediaProgressBar) view).setCount(count);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentPrepareProgressBarRate(@NonNull float rate) {
+//        View view = findPrepareProgress();
+//        if (null == view || !(view instanceof MediaProgressBar))
+//            return;
+//        try {
+//            ((MediaProgressBar) view).setRate(rate);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentPrepareProgressBarRadius(@DimenRes int resId) {
+//        View view = findPrepareProgress();
+//        if (null == view || !(view instanceof MediaProgressBar))
+//            return;
+//        try {
+//            ((MediaProgressBar) view).setRadius(resId);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+////    @SuppressLint("UseCompatLoadingForDrawables")
+////    default void setComponentPrepareProgressBarIndeterminateDrawable(@DrawableRes int resId) {
+////        View view = findPrepareProgress();
+////        if (null == view || (view instanceof ProgressBar))
+////            return;
+////        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+////        if (null == layoutParams)
+////            return;
+////        try {
+////            Resources resources = view.getResources();
+////            Drawable drawable = resources.getDrawable(resId);
+////            layoutParams.width = drawable.getIntrinsicWidth();
+////            layoutParams.height = drawable.getIntrinsicHeight();
+////            view.setLayoutParams(layoutParams);
+////            ((ProgressBar) view).setIndeterminateDrawable(drawable);
+////        } catch (Exception e) {
+////        }
+////    }
+//
+//    default void setComponentPrepareText(@NonNull String text) {
+//
+//        if (null == text || text.length() <= 0)
+//            return;
+//
+//        TextView textView = findPrepareTip();
+//        if (null == textView)
+//            return;
+//
+//        try {
+//            textView.setText(text);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setComponentPrepareText(@StringRes int res) {
+//
+//        TextView textView = findPrepareTip();
+//        if (null == textView)
+//            return;
+//
+//        try {
+//            textView.setText(res);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setComponentPrepareTextColor(@ColorRes int id) {
+//
+//        TextView textView = findPrepareTip();
+//        if (null == textView)
+//            return;
+//
+//        try {
+//            int color = textView.getResources().getColor(id);
+//            textView.setTextColor(color);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setComponentPrepareTextSize(@DimenRes int dimen) {
+//
+//        TextView textView = findPrepareTip();
+//        if (null == textView)
+//            return;
+//
+//        try {
+//            float dimension = textView.getResources().getDimension(dimen);
+//            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    /********************  ComponentError  **********************/
+//
+//    default void setComponentErrorImage(@DrawableRes int res) {
+//
+//        ImageView imageView = findComponentErrorImage();
+//        if (null == imageView)
+//            return;
+//
+//        try {
+//            imageView.setImageResource(res);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setComponentErrorText(@NonNull String msg) {
+//
+//        TextView textView = findComponentErrorText();
+//        if (null == textView)
+//            return;
+//
+//        try {
+//            textView.setText(msg);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setComponentErrorText(@StringRes int res) {
+//
+//        TextView textView = findComponentErrorText();
+//        if (null == textView)
+//            return;
+//
+//        try {
+//            textView.setText(res);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setComponentErrorTextSize(@DimenRes int dimen) {
+//
+//        TextView textView = findComponentErrorText();
+//        if (null == textView)
+//            return;
+//
+//        try {
+//            int offset = textView.getResources().getDimensionPixelOffset(dimen);
+//            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setComponentErrorTextColor(@ColorRes int id) {
+//
+//        TextView textView = findComponentErrorText();
+//        if (null == textView)
+//            return;
+//
+//        try {
+//            int color = textView.getResources().getColor(id);
+//            textView.setTextColor(color);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    /********************  ComponentError  **********************/
+//
+//    /********************  ComponentCenter  **********************/
+//
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentCenterProgressBarDimens(@DimenRes int resId) {
+//        View view = findCenterProgress();
+//        if (null == view)
+//            return;
+//        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+//        if (null == layoutParams)
+//            return;
+//        try {
+//            Resources resources = view.getResources();
+//            int offset = resources.getDimensionPixelOffset(resId);
+//            layoutParams.width = offset;
+//            layoutParams.height = offset;
+//            view.setLayoutParams(layoutParams);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentCenterProgressBarCount(@NonNull int count) {
+//        View view = findCenterProgress();
+//        if (null == view || !(view instanceof MediaProgressBar))
+//            return;
+//        try {
+//            ((MediaProgressBar) view).setCount(count);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentCenterProgressBarRate(@NonNull float rate) {
+//        View view = findCenterProgress();
+//        if (null == view || !(view instanceof MediaProgressBar))
+//            return;
+//        try {
+//            ((MediaProgressBar) view).setRate(rate);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    @SuppressLint("UseCompatLoadingForDrawables")
+//    default void setComponentCenterProgressBarRadius(@DimenRes int resId) {
+//        View view = findCenterProgress();
+//        if (null == view || !(view instanceof MediaProgressBar))
+//            return;
+//        try {
+//            ((MediaProgressBar) view).setRadius(resId);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    /********************  ComponentCenter  **********************/
+//
+//
+//    /********************  ComponentCenter  **********************/
+//
+//    default void setComponentSubtitlePath(@NonNull String subtitlePath) {
+//
+//        View view = findSubtitle();
+//        if (null == view || !(view instanceof SimpleSubtitleView))
+//            return;
+//        try {
+//            ((SimpleSubtitleView) view).setSubtitlePath(subtitlePath);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setImageResource(@NonNull View view, @IdRes int id, @DrawableRes int res) {
+//        try {
+//            ImageView temp = view.findViewById(id);
+//            temp.setImageResource(res);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void setBackgroundColor(@NonNull View view, @IdRes int id, @ColorInt int color) {
+//        try {
+//            View temp = view.findViewById(id);
+//            temp.setBackgroundColor(color);
+//        } catch (Exception e) {
+//        }
+//    }
 }

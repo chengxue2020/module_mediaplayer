@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,7 +24,7 @@ import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentGesture;
 import lib.kalu.mediaplayer.core.controller.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.controller.component.ComponentOnce;
-import lib.kalu.mediaplayer.core.controller.component.ComponentPrepare;
+import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentTop;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
@@ -81,8 +79,6 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         setEnableInNormal(true);
         //滑动调节亮度，音量，进度，默认开启
         setGestureEnabled(true);
-        //先移除多有的视图view
-        removeComponentAll(false);
         //添加自动完成播放界面view
         ComponentComplete completeView = new ComponentComplete(getContext());
         completeView.setVisibility(GONE);
@@ -92,7 +88,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         this.addComponent(new ComponentError(getContext()));
 
         //添加与加载视图界面view，准备播放界面
-        this.addComponent(new ComponentPrepare(getContext()));
+        this.addComponent(new ComponentLoading(getContext()));
 
         //添加标题栏
         titleView = new ComponentTop(getContext());
@@ -120,13 +116,13 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
             //是否显示底部进度条。默认显示
             vodControlView.showBottomProgress(true);
         }
-        this.removeComponent(vodControlView);
+//        this.removeComponent(vodControlView);
         this.addComponent(vodControlView);
 
         //正常视频，移除直播视图
-        if (liveControlView != null) {
-            this.removeComponent(liveControlView);
-        }
+//        if (liveControlView != null) {
+//            this.removeComponent(liveControlView);
+//        }
         if (customOncePlayView != null) {
             this.addComponent(customOncePlayView);
         }
@@ -238,12 +234,12 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_PAUSED:
-            case PlayerType.StateType.STATE_PREPARE_END:
+            case PlayerType.StateType.STATE_LOADING_COMPLETE:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_END:
                 viewLoading.setVisibility(GONE);
                 break;
-            case PlayerType.StateType.STATE_PREPARE_START:
+            case PlayerType.StateType.STATE_LOADING_START:
             case PlayerType.StateType.STATE_BUFFERING_PAUSED:
                 viewLoading.setVisibility(VISIBLE);
                 break;
@@ -302,47 +298,5 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     public TextView getTvLiveWaitMessage() {
         return tvLiveWaitMessage;
-    }
-
-    @Nullable
-    @Override
-    public View findPrepareProgress() {
-        View view = findViewById(R.id.module_mediaplayer_controller_prepare_progress);
-        return view;
-    }
-
-    @Nullable
-    @Override
-    public ImageView findPrepareBackground() {
-        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_prepare_background);
-        return imageView;
-    }
-
-    @Nullable
-    @Override
-    public TextView findPrepareTip() {
-        TextView textView = findViewById(R.id.module_mediaplayer_controller_prepare_tip);
-        return textView;
-    }
-
-    @Nullable
-    @Override
-    public View findCenterProgress() {
-        View view = findViewById(R.id.module_mediaplayer_controller_center_loading);
-        return view;
-    }
-
-    @Nullable
-    @Override
-    public TextView findComponentErrorText() {
-        TextView textView = findViewById(R.id.module_mediaplayer_controller_error_message);
-        return textView;
-    }
-
-    @Nullable
-    @Override
-    public ImageView findComponentErrorImage() {
-        ImageView imageView = findViewById(R.id.module_mediaplayer_controller_error_img);
-        return imageView;
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +19,7 @@ import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import lib.kalu.mediaplayer.widget.subtitle.widget.SimpleSubtitleView;
 
-public class ComponentSubtitle extends FrameLayout implements ImplComponent {
+public class ComponentSubtitle extends RelativeLayout implements ImplComponent {
 
     private ControllerWrapper mControllerWrapper;
 

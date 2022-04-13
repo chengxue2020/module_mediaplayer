@@ -19,7 +19,7 @@ import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
-public class ComponentComplete extends FrameLayout implements ImplComponent {
+public class ComponentComplete extends RelativeLayout implements ImplComponent {
 
     private ControllerWrapper mControllerWrapper;
 

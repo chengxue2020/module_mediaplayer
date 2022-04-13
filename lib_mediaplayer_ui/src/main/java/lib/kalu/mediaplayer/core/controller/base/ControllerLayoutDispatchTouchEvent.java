@@ -144,8 +144,8 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         return mControllerWrapper != null
                 && mCurPlayState != PlayerType.StateType.STATE_ERROR
                 && mCurPlayState != PlayerType.StateType.STATE_INIT
-                && mCurPlayState != PlayerType.StateType.STATE_PREPARE_START
-                && mCurPlayState != PlayerType.StateType.STATE_PREPARE_END
+                && mCurPlayState != PlayerType.StateType.STATE_LOADING_START
+                && mCurPlayState != PlayerType.StateType.STATE_LOADING_COMPLETE
                 && mCurPlayState != PlayerType.StateType.STATE_START_ABORT
                 && mCurPlayState != PlayerType.StateType.STATE_BUFFERING_PLAYING;
     }
@@ -250,10 +250,15 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
             }
 
             if (mChangePosition || mChangeBrightness || mChangeVolume) {
-                for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-                    ImplComponent component = next.getKey();
-                    if (component instanceof ImplGesture) {
-                        ((ImplGesture) component).onStartSlide();
+                if (null != mComponents && mComponents.size() > 0) {
+                    int size = mComponents.size();
+                    for (int i = 0; i < size; i++) {
+                        ImplComponent component = mComponents.get(i);
+                        if (null == component)
+                            continue;
+                        if (component instanceof ImplGesture) {
+                            ((ImplGesture) component).onStartSlide();
+                        }
                     }
                 }
             }
@@ -277,10 +282,15 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         int position = (int) (deltaX / width * 120000 + currentPosition);
         if (position > duration) position = duration;
         if (position < 0) position = 0;
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            if (component instanceof ImplGesture) {
-                ((ImplGesture) component).onPositionChange(position, currentPosition, duration);
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                if (component instanceof ImplGesture) {
+                    ((ImplGesture) component).onPositionChange(position, currentPosition, duration);
+                }
             }
         }
         mSeekPosition = position;
@@ -303,10 +313,15 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         int percent = (int) (brightness * 100);
         attributes.screenBrightness = brightness;
         window.setAttributes(attributes);
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            if (component instanceof ImplGesture) {
-                ((ImplGesture) component).onBrightnessChange(percent);
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                if (component instanceof ImplGesture) {
+                    ((ImplGesture) component).onBrightnessChange(percent);
+                }
             }
         }
     }
@@ -320,10 +335,15 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         if (index < 0) index = 0;
         int percent = (int) (index / streamMaxVolume * 100);
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) index, 0);
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            if (component instanceof ImplGesture) {
-                ((ImplGesture) component).onVolumeChange(percent);
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                if (component instanceof ImplGesture) {
+                    ((ImplGesture) component).onVolumeChange(percent);
+                }
             }
         }
     }
@@ -420,11 +440,16 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
     }
 
     private void stopSlide() {
-        for (Map.Entry<ImplComponent, Boolean> next : mControlComponents.entrySet()) {
-            ImplComponent component = next.getKey();
-            if (component instanceof ImplGesture) {
-                //结束滑动
-                ((ImplGesture) component).onStopSlide();
+        if (null != mComponents && mComponents.size() > 0) {
+            int size = mComponents.size();
+            for (int i = 0; i < size; i++) {
+                ImplComponent component = mComponents.get(i);
+                if (null == component)
+                    continue;
+                if (component instanceof ImplGesture) {
+                    //结束滑动
+                    ((ImplGesture) component).onStopSlide();
+                }
             }
         }
     }

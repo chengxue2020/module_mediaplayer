@@ -3,10 +3,9 @@ package lib.kalu.mediaplayer.core.controller;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.BlendMode;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.view.View;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +13,6 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.core.controller.component.ComponentPause;
-import lib.kalu.mediaplayer.core.controller.component.ComponentPrepare;
 
 @Keep
 public class ControllerEmpty extends ControllerLayout {
@@ -26,19 +23,20 @@ public class ControllerEmpty extends ControllerLayout {
 
     @Override
     public int initLayout() {
-        return R.layout.module_mediaplayer_video_empty;
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        setEnabled(false);
-        this.removeComponentAll(false);
+        return R.layout.module_mediaplayer_controller_empty;
     }
 
     @Override
     protected void onPlayStateChanged(int playState) {
         super.onPlayStateChanged(playState);
+        switch (playState) {
+            case PlayerType.StateType.STATE_START:
+                super.setBackgroundColor(Color.TRANSPARENT);
+                break;
+            default:
+                super.setBackgroundColor(Color.BLACK);
+                break;
+        }
     }
 
     @Override
@@ -46,10 +44,6 @@ public class ControllerEmpty extends ControllerLayout {
     }
 
     /***************/
-
-    @Override
-    public void setBackgroundColor(@NonNull View view, int id, int color) {
-    }
 
     @Override
     public void setBackground(Drawable background) {

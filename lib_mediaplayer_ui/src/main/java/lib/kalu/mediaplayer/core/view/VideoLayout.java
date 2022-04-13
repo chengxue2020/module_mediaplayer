@@ -47,7 +47,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPlayerChangeListener {
 
 
-    private String mUrl ="";
+    private String mUrl = "";
     protected Map<String, String> mHeaders = null;
 
     // 解码
@@ -205,7 +205,8 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
         // fail
         if (null == url || url.length() <= 0) {
-            setPlayState(PlayerType.StateType.STATE_PREPARE_START);
+//            setPlayState(PlayerType.StateType.STATE_LOADING_START);
+//            setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
             setPlayState(PlayerType.StateType.STATE_ERROR_URL);
         }
         // next
@@ -234,7 +235,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 //        }
 
         //准备开始播放
-        setPlayState(PlayerType.StateType.STATE_PREPARE_START);
+        setPlayState(PlayerType.StateType.STATE_LOADING_START);
         mKernel.prepare(getContext(), url, mHeaders);
         return true;
     }
@@ -337,7 +338,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         return mKernel != null
                 && state != PlayerType.StateType.STATE_ERROR
                 && state != PlayerType.StateType.STATE_INIT
-                && state != PlayerType.StateType.STATE_PREPARE_START
+                && state != PlayerType.StateType.STATE_LOADING_START
                 && state != PlayerType.StateType.STATE_START_ABORT
                 && state != PlayerType.StateType.STATE_BUFFERING_PLAYING;
     }
@@ -560,7 +561,12 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
             config.mBuriedPointEvent.playerIn(mUrl);
         }
 
-        setPlayState(PlayerType.StateType.STATE_PREPARE_END);
+        Object tag = getTag(R.id.module_mediaplayer_id_state_code);
+        if(null == tag){
+            tag =1;
+        }
+        MediaLogUtil.log("ComponentLoading => onPrepared => mCurrentPlayerState = " + tag.toString());
+        setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
 
         long position = getPosition();
         if (position > 0) {

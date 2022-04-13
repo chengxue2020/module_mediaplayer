@@ -525,10 +525,10 @@ public final class PlayerUtils {
             case PlayerType.StateType.STATE_INIT:
                 playStateString = "idle";
                 break;
-            case PlayerType.StateType.STATE_PREPARE_START:
+            case PlayerType.StateType.STATE_LOADING_START:
                 playStateString = "prepare_start";
                 break;
-            case PlayerType.StateType.STATE_PREPARE_END:
+            case PlayerType.StateType.STATE_LOADING_COMPLETE:
                 playStateString = "prepare_end";
                 break;
             case PlayerType.StateType.STATE_START:

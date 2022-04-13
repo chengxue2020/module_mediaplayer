@@ -13,6 +13,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  * created by kalu on 2021/11/23
  */
 @Keep
-public class ComponentBottom extends FrameLayout implements ImplComponent, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class ComponentBottom extends RelativeLayout implements ImplComponent, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     protected ControllerWrapper mControllerWrapper;
     private boolean mIsDragging;
@@ -150,8 +151,8 @@ public class ComponentBottom extends FrameLayout implements ImplComponent, View.
                 seekBar.setSecondaryProgress(0);
                 break;
             case PlayerType.StateType.STATE_START_ABORT:
-            case PlayerType.StateType.STATE_PREPARE_START:
-            case PlayerType.StateType.STATE_PREPARE_END:
+            case PlayerType.StateType.STATE_LOADING_START:
+            case PlayerType.StateType.STATE_LOADING_COMPLETE:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
