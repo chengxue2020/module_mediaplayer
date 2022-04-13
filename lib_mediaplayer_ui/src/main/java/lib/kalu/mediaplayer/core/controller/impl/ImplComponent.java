@@ -166,4 +166,12 @@ public interface ImplComponent {
         } catch (Exception e) {
         }
     }
+
+    default void setBackgroundColor(@NonNull View layout, @IdRes int id, @ColorInt int value) {
+        try {
+            View view = layout.findViewById(id);
+            view.setBackgroundColor(value);
+        } catch (Exception e) {
+        }
+    }
 }

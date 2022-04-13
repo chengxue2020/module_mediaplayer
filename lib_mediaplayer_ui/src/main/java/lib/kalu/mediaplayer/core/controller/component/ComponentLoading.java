@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.DimenRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,10 +69,12 @@ public class ComponentLoading extends RelativeLayout implements ImplComponent {
             case PlayerType.StateType.STATE_ERROR_NETWORK:
             case PlayerType.StateType.STATE_ERROR_PARSE:
             case PlayerType.StateType.STATE_LOADING_COMPLETE:
-               findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
-               findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
+                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
                 break;
@@ -100,5 +103,9 @@ public class ComponentLoading extends RelativeLayout implements ImplComponent {
 
     public final void setMessageSize(@DimenRes int value) {
         setTextSize(this, R.id.module_mediaplayer_component_loading_message, value);
+    }
+
+    public final void setBackgroundColor(@ColorInt int value) {
+        setBackgroundColor(this, R.id.module_mediaplayer_component_loading_bg, value);
     }
 }
