@@ -2,59 +2,39 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:clickable="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:longClickable="false">
 
+    <!-- 图片 -->
     <ImageView
-        android:id="@+id/module_mediaplayer_controller_error_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="12dp"
-        android:src="@drawable/module_mediaplayer_ic_player_back" />
-
-    <Space
-        android:id="@+id/module_mediaplayer_controller_error_center"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/module_mediaplayer_component_error_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="invisible" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:longClickable="false"
+        android:scaleType="center"
+        android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/module_mediaplayer_controller_error_img"
+    <!-- 提示 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_component_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/module_mediaplayer_controller_error_center"
+        android:layout_below="@id/module_mediaplayer_component_error_img"
         android:layout_centerHorizontal="true"
-        android:scaleType="center" />
-
-    <TextView
-        android:id="@+id/module_mediaplayer_controller_error_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/module_mediaplayer_controller_error_center"
-        android:layout_centerHorizontal="true"
-        android:text="@string/module_mediaplayer_string_error_message"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/module_mediaplayer_controller_error_retry"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/module_mediaplayer_controller_error_message"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/module_mediaplayer_bg_retry"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center"
-        android:paddingLeft="18dp"
-        android:paddingTop="4dp"
-        android:paddingRight="18dp"
-        android:paddingBottom="4dp"
-        android:text="@string/module_mediaplayer_string_retry"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:visibility="invisible" />
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:longClickable="false"
+        android:textColor="@color/module_mediaplayer_color_ffffff"
+        android:textSize="22sp"
+        android:visibility="gone" />
 
 </RelativeLayout>
-

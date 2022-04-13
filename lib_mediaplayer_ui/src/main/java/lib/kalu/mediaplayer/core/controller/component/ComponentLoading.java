@@ -62,6 +62,11 @@ public class ComponentLoading extends RelativeLayout implements ImplComponent {
     public void onPlayStateChanged(int playState) {
         MediaLogUtil.log("ComponentLoading => playState = " + playState);
         switch (playState) {
+            case PlayerType.StateType.STATE_ERROR_URL:
+            case PlayerType.StateType.STATE_CLEAN:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR_NETWORK:
+            case PlayerType.StateType.STATE_ERROR_PARSE:
             case PlayerType.StateType.STATE_LOADING_COMPLETE:
                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
