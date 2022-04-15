@@ -36,7 +36,7 @@ public class ComponentSubtitle extends RelativeLayout implements ImplComponent {
 
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_subtitle, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_subtitle, this, true);
         setFocusable(false);
         setFocusableInTouchMode(false);
         setVisibility(View.VISIBLE);

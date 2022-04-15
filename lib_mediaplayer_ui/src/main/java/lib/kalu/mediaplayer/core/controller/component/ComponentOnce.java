@@ -52,7 +52,7 @@ public class ComponentOnce extends RelativeLayout implements ImplComponent {
         this.mContext = context;
         setVisibility(GONE);
         View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.module_mediaplayer_video_once_live, this, true);
+                R.layout.module_mediaplayer_component_once, this, true);
         initFindViewById(view);
         initListener();
         setClickable(true);

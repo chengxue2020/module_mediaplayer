@@ -36,7 +36,7 @@ public class ComponentError extends RelativeLayout implements ImplComponent {
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_error, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_error, this, true);
     }
 
     @Override

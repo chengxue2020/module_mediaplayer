@@ -51,7 +51,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     @Override
     public int initLayout() {
-        return R.layout.module_mediaplayer_video_standard;
+        return R.layout.module_mediaplayer_controller_standard;
     }
 
     @Override

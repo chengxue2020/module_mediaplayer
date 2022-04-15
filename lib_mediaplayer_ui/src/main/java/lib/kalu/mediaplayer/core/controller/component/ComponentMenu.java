@@ -49,7 +49,7 @@ public class ComponentMenu extends RelativeLayout implements ImplComponent, View
         setFocusableInTouchMode(true);
         this.mContext = context;
         setVisibility(GONE);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_menu, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu, this, true);
         initFindViewById(view);
         initListener();
     }

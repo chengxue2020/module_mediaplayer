@@ -39,7 +39,7 @@ public class ComponentComplete extends RelativeLayout implements ImplComponent {
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_video_completed, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_complete, this, true);
         setFocusable(true);
         setFocusableInTouchMode(true);
         setClickable(true);

@@ -29,7 +29,7 @@ public class ControllerLive extends ControllerLayout {
 
     @Override
     public int initLayout() {
-        return R.layout.module_mediaplayer_video_live;
+        return R.layout.module_mediaplayer_controller_live;
     }
 
     @Override

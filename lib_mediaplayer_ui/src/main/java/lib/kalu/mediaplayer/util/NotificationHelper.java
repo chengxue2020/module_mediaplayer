@@ -113,7 +113,7 @@ public class NotificationHelper {
         String subtitle = "";
         Bitmap cover = null;
 
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.module_mediaplayer_music_notification_player);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.module_mediaplayer_widget_notification_music);
         if (cover != null) {
             remoteViews.setImageViewBitmap(R.id.iv_image, cover);
         } else {

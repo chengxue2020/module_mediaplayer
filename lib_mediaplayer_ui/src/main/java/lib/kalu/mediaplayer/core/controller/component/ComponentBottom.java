@@ -54,7 +54,7 @@ public class ComponentBottom extends RelativeLayout implements ImplComponent, Vi
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(getLayoutId(), this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_bottom, this, true);
         setFocusable(true);
         setFocusableInTouchMode(true);
         setVisibility(View.INVISIBLE);
@@ -64,10 +64,6 @@ public class ComponentBottom extends RelativeLayout implements ImplComponent, Vi
             ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
             progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
-    }
-
-    public int getLayoutId() {
-        return R.layout.module_mediaplayer_video_bottom;
     }
 
     private void initListener() {

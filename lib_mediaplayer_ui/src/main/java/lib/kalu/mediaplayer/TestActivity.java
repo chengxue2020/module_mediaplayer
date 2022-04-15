@@ -16,7 +16,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * @description: 横屏全屏视频播放器
  * @date: 2021-05-25 10:37
  */
-public final class VideoActivity extends AppCompatActivity {
+public final class TestActivity extends AppCompatActivity {
 
     @Keep
     public static final int RESULT_CODE = 31001;
@@ -39,7 +39,7 @@ public final class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.module_mediaplayer_activity_test);
+        setContentView(R.layout.module_mediaplayer_test);
 
         String url = getIntent().getStringExtra(INTENT_URL);
         if (null == url || url.length() == 0) {

@@ -41,7 +41,7 @@ public class ComponentGesture extends RelativeLayout implements ImplGesture {
     }
 
     private void init(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_video_gesture, this, true);
+        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_gesture, this, true);
         setFocusable(true);
         setFocusableInTouchMode(true);
         setVisibility(INVISIBLE);
