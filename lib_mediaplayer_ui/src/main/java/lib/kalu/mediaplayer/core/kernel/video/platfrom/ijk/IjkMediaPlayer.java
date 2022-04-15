@@ -224,7 +224,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     }
 
     @Override
-    public void prepare(@NonNull Context context, @NonNull String url, @Nullable Map<String, String> headers) {
+    public void prepare(@NonNull Context context, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
 
         //2222222222222222222222
         // 设置dataSource
@@ -236,7 +236,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         }
         try {
             //解析path
-            Uri uri = Uri.parse(url);
+            Uri uri = Uri.parse(url.toString());
             if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
                 RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
                 mMediaPlayer.setDataSource(rawDataSourceProvider);

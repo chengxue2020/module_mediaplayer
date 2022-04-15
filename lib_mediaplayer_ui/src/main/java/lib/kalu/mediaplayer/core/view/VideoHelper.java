@@ -144,11 +144,11 @@ public class VideoHelper {
      * @param assetFileDescriptor assets文件
      * @return 是否为本地数据源
      */
-    protected boolean isLocalDataSource(String url, AssetFileDescriptor assetFileDescriptor) {
+    protected boolean isLocalDataSource(CharSequence url, AssetFileDescriptor assetFileDescriptor) {
         if (assetFileDescriptor != null) {
             return true;
         } else if (!TextUtils.isEmpty(url)) {
-            Uri uri = Uri.parse(url);
+            Uri uri = Uri.parse(url.toString());
             return ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())
                     || ContentResolver.SCHEME_FILE.equals(uri.getScheme())
                     || "rawresource".equals(uri.getScheme());

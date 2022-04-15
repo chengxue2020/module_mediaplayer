@@ -45,8 +45,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPlayerChangeListener {
 
-
-    private String mUrl = "";
+    private CharSequence mUrl = null;
     protected Map<String, String> mHeaders = null;
 
     // 解码
@@ -198,29 +197,28 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
 
     @Override
-    public void start(@NonNull long seek, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
+    public void start(@NonNull long seek, @NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle, @NonNull Map<String, String> headers) {
 
         MediaLogUtil.log("start => seek = " + seek + ", live = " + live + ", url = " + url);
 
+        releaseKernel();
+        initKernel();
+        initRender();
+
         // fail
         if (null == url || url.length() <= 0) {
-//            setPlayState(PlayerType.StateType.STATE_LOADING_START);
-//            setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
+            mUrl = null;
             setPlayState(PlayerType.StateType.STATE_ERROR_URL);
         }
         // next
         else {
             mUrl = url;
-            releaseKernel();
-            initKernel();
-            initRender();
             boolean prepare = prepare(url);
-//            mKernel.start();
             setKeepScreenOn(prepare);
         }
     }
 
-    protected boolean prepare(@NonNull String url) {
+    protected boolean prepare(@NonNull CharSequence url) {
 
         //如果要显示移动网络提示则不继续播放
         boolean showNetWarning = showNetWarning();

@@ -14,7 +14,7 @@ public interface OnMediaProgressManager {
      * @param url      播放地址
      * @param progress 播放进度
      */
-    default void saveProgress(String url, long progress) {
+    default void saveProgress(CharSequence url, long progress) {
     }
 
     /**
@@ -23,5 +23,5 @@ public interface OnMediaProgressManager {
      * @param url 播放地址
      * @return 保存的播放进度
      */
-    long getSavedProgress(String url);
+    long getSavedProgress(CharSequence url);
 }

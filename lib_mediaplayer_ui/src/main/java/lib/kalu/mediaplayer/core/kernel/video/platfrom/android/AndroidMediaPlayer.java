@@ -204,7 +204,7 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
     }
 
     @Override
-    public void prepare(@NonNull Context context, @NonNull String url, @Nullable Map<String, String> headers) {
+    public void prepare(@NonNull Context context, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
 
         //222222222222
         // 设置dataSource
@@ -215,7 +215,7 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
             return;
         }
         try {
-            Uri uri = Uri.parse(url);
+            Uri uri = Uri.parse(url.toString());
             mMediaPlayer.setDataSource(context, uri, headers);
         } catch (Exception e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());

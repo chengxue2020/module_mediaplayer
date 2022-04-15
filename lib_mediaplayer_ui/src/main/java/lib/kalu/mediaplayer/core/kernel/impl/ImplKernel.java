@@ -59,7 +59,7 @@ public interface ImplKernel {
      * 准备开始播放（异步）
      * 视频播放器第四步：开始加载【异步】
      */
-    void prepare(@NonNull Context context, @NonNull String url, @Nullable Map<String, String> headers);
+    void prepare(@NonNull Context context, @NonNull CharSequence url, @Nullable Map<String, String> headers);
 
     /*----------------------------第二部分：视频播放器状态方法----------------------------------*/
 

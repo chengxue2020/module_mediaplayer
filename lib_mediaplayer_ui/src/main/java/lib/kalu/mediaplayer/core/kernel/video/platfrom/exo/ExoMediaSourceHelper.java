@@ -57,8 +57,8 @@ public final class ExoMediaSourceHelper {
      * @param headers 视频headers
      * @return
      */
-    public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean hasCache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
-        Uri contentUri = Uri.parse(url);
+    public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean hasCache, @NonNull CharSequence url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
+        Uri contentUri = Uri.parse(url.toString());
         MediaLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", hasCache = " + hasCache + ", url = " + url);
         // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
@@ -125,14 +125,14 @@ public final class ExoMediaSourceHelper {
         }
     }
 
-    private final MediaSource createMediaSource(@NonNull String url, @NonNull DataSource.Factory factory) {
+    private final MediaSource createMediaSource(@NonNull CharSequence url, @NonNull DataSource.Factory factory) {
 
         int contentType;
-        if (url.toLowerCase().contains(".mpd")) {
+        if (url.toString().toLowerCase().contains(".mpd")) {
             contentType = C.TYPE_DASH;
-        } else if (url.toLowerCase().contains(".m3u8")) {
+        } else if (url.toString().toLowerCase().contains(".m3u8")) {
             contentType = C.TYPE_HLS;
-        } else if (url.toLowerCase().matches(".*\\.ism(l)?(/manifest(\\(.+\\))?)?")) {
+        } else if (url.toString().toLowerCase().matches(".*\\.ism(l)?(/manifest(\\(.+\\))?)?")) {
             contentType = C.TYPE_SS;
         } else {
             contentType = C.TYPE_OTHER;
@@ -146,7 +146,7 @@ public final class ExoMediaSourceHelper {
 
 //        MediaLogUtil.log("SRT => srtUri = " + srtUri);
         MediaItem.Builder builder = new MediaItem.Builder();
-        builder.setUri(Uri.parse(url));
+        builder.setUri(Uri.parse(url.toString()));
 //        builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
         MediaItem mediaItem = builder.build();
 //        MediaItem.Subtitle subtitle = new MediaItem.Subtitle(

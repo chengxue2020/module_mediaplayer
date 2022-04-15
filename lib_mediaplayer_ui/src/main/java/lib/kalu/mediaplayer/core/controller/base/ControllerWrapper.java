@@ -27,7 +27,7 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
-    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
+    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle, @NonNull Map<String, String> headers) {
         mPlayer.start(seekPosition, live, url, subtitle, headers);
     }
 

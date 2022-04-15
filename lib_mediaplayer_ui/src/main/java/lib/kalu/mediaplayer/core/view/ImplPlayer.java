@@ -15,23 +15,23 @@ import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
  */
 public interface ImplPlayer {
 
-    default void start(@NonNull String url, @NonNull String subtitle) {
+    default void start(@NonNull CharSequence url, @NonNull String subtitle) {
         start(0, false, url, subtitle, null);
     }
 
-    default void start(@NonNull String url) {
+    default void start(@NonNull CharSequence url) {
         start(0, false, url, null, null);
     }
 
-    default void start(@NonNull long seekPosition, @NonNull String url) {
+    default void start(@NonNull long seekPosition, @NonNull CharSequence url) {
         start(seekPosition, false, url, null, null);
     }
 
-    default void start(@NonNull boolean live, @NonNull String url) {
+    default void start(@NonNull boolean live, @NonNull CharSequence url) {
         start(0, live, url, null, null);
     }
 
-    default void start(@NonNull boolean live, @NonNull String url, @NonNull String subtitle) {
+    default void start(@NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle) {
         start(0, live, url, subtitle, null);
     }
 
@@ -42,7 +42,7 @@ public interface ImplPlayer {
      * @param url
      * @param headers
      */
-    void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers);
+    void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle, @NonNull Map<String, String> headers);
 
     void pause();
 

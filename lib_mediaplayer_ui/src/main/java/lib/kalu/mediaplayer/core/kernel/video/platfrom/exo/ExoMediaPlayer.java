@@ -293,7 +293,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
     }
 
     @Override
-    public void prepare(@NonNull Context context, @NonNull String url, @Nullable Map<String, String> headers) {
+    public void prepare(@NonNull Context context, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
 
         // 222222222222222222222222222
         if (url == null || url.length() == 0) {
