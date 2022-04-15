@@ -11,8 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.keycode.KeycodeImpl;
-import lib.kalu.mediaplayer.config.PlayerConfig;
-import lib.kalu.mediaplayer.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.config.player.PlayerConfig;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**

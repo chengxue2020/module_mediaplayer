@@ -52,12 +52,12 @@ public class ControllerWrapper implements ImplPlayer, ImplController {
     }
 
     @Override
-    public int getDuration() {
+    public long getDuration() {
         return mPlayer.getDuration();
     }
 
     @Override
-    public int getPosition() {
+    public long getPosition() {
         return mPlayer.getPosition();
     }
 

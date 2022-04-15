@@ -96,14 +96,14 @@ public interface ImplKernel {
      *
      * @return 获取当前播放的位置
      */
-    int getPosition();
+    long getPosition();
 
     /**
      * 获取视频总时长
      *
      * @return 获取视频总时长
      */
-    int getDuration();
+    long getDuration();
 
     /**
      * 获取缓冲百分比

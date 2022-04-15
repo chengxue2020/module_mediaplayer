@@ -7,7 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.MediaLogUtil;

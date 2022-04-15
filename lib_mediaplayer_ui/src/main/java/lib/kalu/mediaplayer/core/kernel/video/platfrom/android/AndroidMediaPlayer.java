@@ -17,7 +17,7 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.core.kernel.video.core.KernelCore;
 import lib.kalu.mediaplayer.core.kernel.video.platfrom.PlatfromPlayer;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 
 
 @Keep
@@ -165,7 +165,7 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
      * 获取当前播放的位置
      */
     @Override
-    public int getPosition() {
+    public long getPosition() {
         return mMediaPlayer.getCurrentPosition();
     }
 
@@ -173,7 +173,7 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
      * 获取视频总时长
      */
     @Override
-    public int getDuration() {
+    public long getDuration() {
         return mMediaPlayer.getDuration();
     }
 
@@ -363,8 +363,9 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
     private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
+            int position = mp.getCurrentPosition();
             long duration = getDuration();
-            getVideoPlayerChangeListener().onPrepared(duration);
+            getVideoPlayerChangeListener().onPrepared(position, duration);
             start();
         }
     };
@@ -375,7 +376,7 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
             int videoWidth = mp.getVideoWidth();
             int videoHeight = mp.getVideoHeight();
             if (videoWidth != 0 && videoHeight != 0) {
-                getVideoPlayerChangeListener().onVideoSizeChanged(videoWidth, videoHeight);
+                getVideoPlayerChangeListener().onSize(videoWidth, videoHeight);
             }
         }
     };

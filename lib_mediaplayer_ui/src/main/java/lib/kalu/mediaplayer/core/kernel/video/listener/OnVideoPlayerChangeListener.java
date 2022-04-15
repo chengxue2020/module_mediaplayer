@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.listener;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 
 /**
  * @description: 播放器event监听
@@ -36,7 +36,7 @@ public interface OnVideoPlayerChangeListener {
     /**
      * 准备
      */
-    void onPrepared(@NonNull long duration);
+    void onPrepared(@NonNull long position, @NonNull long duration);
 
     /**
      * 视频size变化监听
@@ -44,7 +44,5 @@ public interface OnVideoPlayerChangeListener {
      * @param width  宽
      * @param height 高
      */
-    void onVideoSizeChanged(int width, int height);
-
-
+    void onSize(@NonNull int width, @NonNull int height);
 }

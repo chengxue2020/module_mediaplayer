@@ -35,11 +35,11 @@ import com.google.android.exoplayer2.video.VideoSize;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.cache.CacheConfig;
-import lib.kalu.mediaplayer.cache.CacheConfigManager;
+import lib.kalu.mediaplayer.config.cache.CacheConfig;
+import lib.kalu.mediaplayer.config.cache.CacheConfigManager;
 import lib.kalu.mediaplayer.core.kernel.video.core.KernelCore;
 import lib.kalu.mediaplayer.core.kernel.video.listener.OnVideoPlayerChangeListener;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 @Keep
@@ -206,8 +206,9 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
         @Override
         public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
             if (getVideoPlayerChangeListener() != null && mIsPreparing) {
+                long position = getPosition();
                 long duration = getDuration();
-                getVideoPlayerChangeListener().onPrepared(duration);
+                getVideoPlayerChangeListener().onPrepared(position, duration);
             }
         }
     };
@@ -247,22 +248,22 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
      * 获取当前播放的位置
      */
     @Override
-    public int getPosition() {
+    public long getPosition() {
         if (mExoPlayer == null) {
-            return 0;
+            return 0L;
         }
-        return (int) mExoPlayer.getCurrentPosition();
+        return mExoPlayer.getCurrentPosition();
     }
 
     /**
      * 获取视频总时长
      */
     @Override
-    public int getDuration() {
+    public long getDuration() {
         if (mExoPlayer == null) {
-            return 0;
+            return 0L;
         }
-        return (int) mExoPlayer.getDuration();
+        return  mExoPlayer.getDuration();
     }
 
     /**
@@ -495,7 +496,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
     @Override
     public void onVideoSizeChanged(VideoSize videoSize) {
         if (getVideoPlayerChangeListener() != null) {
-            getVideoPlayerChangeListener().onVideoSizeChanged(videoSize.width, videoSize.height);
+            getVideoPlayerChangeListener().onSize(videoSize.width, videoSize.height);
             if (videoSize.unappliedRotationDegrees > 0) {
                 getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees, getPosition(), getDuration());
             }

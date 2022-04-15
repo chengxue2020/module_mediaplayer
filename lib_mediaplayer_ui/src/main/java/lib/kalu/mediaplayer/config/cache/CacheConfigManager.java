@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.cache;
+package lib.kalu.mediaplayer.config.cache;
 
 import android.content.Context;
 

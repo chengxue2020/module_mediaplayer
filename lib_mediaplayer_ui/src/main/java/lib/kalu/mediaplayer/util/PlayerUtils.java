@@ -37,9 +37,9 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-import lib.kalu.mediaplayer.config.PlayerConfig;
-import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerConfig;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 
 @Keep
 public final class PlayerUtils {

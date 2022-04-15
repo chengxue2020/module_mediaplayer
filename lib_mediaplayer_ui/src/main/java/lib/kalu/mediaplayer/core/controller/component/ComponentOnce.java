@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Animation;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;

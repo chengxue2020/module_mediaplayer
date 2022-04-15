@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.cache;
+package lib.kalu.mediaplayer.config.cache;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
@@ -35,7 +35,8 @@ public class CacheConfig implements Serializable {
      * 0x0002，表示磁盘缓存
      * 0x0003，表示内存缓存+磁盘缓存
      */
-    private @CacheType
+    @CacheType.Value
+    private
     int mCacheType = CacheType.DEFAULT;
     /**
      * 是否开启日志
@@ -58,7 +59,8 @@ public class CacheConfig implements Serializable {
         return mSalt;
     }
 
-    public @CacheType
+    @CacheType.Value
+    public
     int getCacheType() {
         return mCacheType;
     }
@@ -98,6 +100,7 @@ public class CacheConfig implements Serializable {
          * 1，表示磁盘缓存
          * 2，表示内存缓存+磁盘缓存
          */
+        @CacheType.Value
         private int mCacheType = CacheType.DEFAULT;
         /**
          * 是否开启日志

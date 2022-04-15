@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.config.PlayerConfigManager;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 

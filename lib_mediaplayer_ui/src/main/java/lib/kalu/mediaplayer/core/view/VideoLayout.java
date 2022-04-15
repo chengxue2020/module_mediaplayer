@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -31,9 +30,9 @@ import lib.kalu.mediaplayer.core.kernel.video.listener.OnVideoPlayerChangeListen
 import lib.kalu.mediaplayer.core.render.ImplRender;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
 import lib.kalu.mediaplayer.listener.OnMediaStateListener;
-import lib.kalu.mediaplayer.config.PlayerConfig;
-import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerConfig;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.listener.OnMediaProgressManager;
 import lib.kalu.mediaplayer.util.BaseToast;
@@ -363,12 +362,12 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
      * 获取视频总时长
      */
     @Override
-    public int getDuration() {
+    public long getDuration() {
         if (null == mKernel || !isInPlaybackState())
-            return 0;
-        int duration = mKernel.getDuration();
+            return 0L;
+        long duration = mKernel.getDuration();
         if (duration < 0) {
-            duration = 0;
+            duration = 0L;
         }
         return duration;
     }
@@ -377,12 +376,12 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
      * 获取当前播放的位置
      */
     @Override
-    public int getPosition() {
+    public long getPosition() {
         if (null == mKernel || !isInPlaybackState())
-            return 0;
-        int position = mKernel.getPosition();
+            return 0L;
+        long position = mKernel.getPosition();
         if (position < 0) {
-            position = 0;
+            position = 0L;
         }
         return position;
     }
@@ -553,7 +552,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
      * 视频缓冲完毕，准备开始播放时回调
      */
     @Override
-    public void onPrepared(@NonNull long duration) {
+    public void onPrepared(@NonNull long position, @NonNull long duration) {
 
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         if (config != null && config.mBuriedPointEvent != null) {
@@ -562,13 +561,12 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         }
 
         Object tag = getTag(R.id.module_mediaplayer_id_state_code);
-        if(null == tag){
-            tag =1;
+        if (null == tag) {
+            tag = 1;
         }
         MediaLogUtil.log("ComponentLoading => onPrepared => mCurrentPlayerState = " + tag.toString());
         setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
 
-        long position = getPosition();
         if (position > 0) {
             seekTo(position);
         }
@@ -728,7 +726,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     }
 
     @Override
-    public void onVideoSizeChanged(int videoWidth, int videoHeight) {
+    public void onSize(int videoWidth, int videoHeight) {
         mVideoSize[0] = videoWidth;
         mVideoSize[1] = videoHeight;
         if (mRender != null) {
@@ -742,7 +740,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
      * 设置视频比例
      */
     @Override
-    public void setScaleType(int scaleType) {
+    public void setScaleType(@PlayerType.ScaleType.Value int scaleType) {
         mCurrentScreenScaleType = scaleType;
         if (mRender != null) {
             mRender.setScaleType(scaleType);

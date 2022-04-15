@@ -3,9 +3,7 @@ package lib.kalu.mediaplayer.core.controller.component;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
@@ -16,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 

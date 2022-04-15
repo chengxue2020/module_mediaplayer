@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.util;
 
 import android.view.View;
 
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 
 public class MeasureHelper {
 

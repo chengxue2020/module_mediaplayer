@@ -7,7 +7,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
@@ -19,8 +18,8 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
-import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ImplControllerAction;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.core.controller.impl.ImplController;
@@ -609,14 +608,14 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
                 component.onPlayStateChanged(playState);
             }
         }
-        onPlayStateChanged(playState);
+        onPlayerStatusChanged(playState);
     }
 
     /**
      * 子类重写此方法并在其中更新控制器在不同播放状态下的ui
      */
     @CallSuper
-    protected void onPlayStateChanged(int playState) {
+    protected void onPlayerStatusChanged(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_INIT:
                 mOrientationHelper.disable();
@@ -649,7 +648,7 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
                 component.onWindowStateChanged(playerState);
             }
         }
-        onPlayerStateChanged(playerState);
+        onWindowStatusChanged(playerState);
     }
 
     /**
@@ -660,7 +659,7 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
      * MODE_TINY_WINDOW         小屏模式
      */
     @CallSuper
-    protected void onPlayerStateChanged(@PlayerType.WindowType.Value int playerState) {
+    protected void onWindowStatusChanged(@PlayerType.WindowType.Value int playerState) {
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
                 //视频正常播放是设置监听

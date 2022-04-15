@@ -13,11 +13,8 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
 import com.google.android.exoplayer2.ext.rtmp.RtmpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
@@ -29,17 +26,15 @@ import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
-import com.google.android.exoplayer2.util.MimeTypes;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import lib.kalu.mediaplayer.cache.CacheConfig;
-import lib.kalu.mediaplayer.cache.CacheType;
+import lib.kalu.mediaplayer.config.cache.CacheConfig;
+import lib.kalu.mediaplayer.config.cache.CacheType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public final class ExoMediaSourceHelper {

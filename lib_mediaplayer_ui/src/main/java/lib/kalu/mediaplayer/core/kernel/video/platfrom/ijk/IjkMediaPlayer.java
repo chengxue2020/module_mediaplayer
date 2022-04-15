@@ -18,7 +18,7 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.core.kernel.video.core.KernelCore;
 import lib.kalu.mediaplayer.core.kernel.video.platfrom.PlatfromPlayer;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
@@ -325,11 +325,11 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
      * 获取当前播放的位置
      */
     @Override
-    public int getPosition() {
+    public long getPosition() {
         try {
             return (int) mMediaPlayer.getCurrentPosition();
         } catch (Exception e) {
-            return 0;
+            return 0L;
         }
     }
 
@@ -337,11 +337,11 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
      * 获取视频总时长
      */
     @Override
-    public int getDuration() {
+    public long getDuration() {
         try {
             return (int) mMediaPlayer.getDuration();
         } catch (Exception e) {
-            return 0;
+            return 0L;
         }
     }
 
@@ -466,9 +466,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
             long position = iMediaPlayer.getCurrentPosition();
             long duration = iMediaPlayer.getDuration();
             MediaLogUtil.log("IJKLOG => onPrepared => position = " + position + ", duration = " + duration);
-            if (position <= 0) {
-                getVideoPlayerChangeListener().onPrepared(duration);
-            }
+            getVideoPlayerChangeListener().onPrepared(position, duration);
         }
     };
 
@@ -481,7 +479,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
             int videoWidth = iMediaPlayer.getVideoWidth();
             int videoHeight = iMediaPlayer.getVideoHeight();
             if (videoWidth != 0 && videoHeight != 0) {
-                getVideoPlayerChangeListener().onVideoSizeChanged(videoWidth, videoHeight);
+                getVideoPlayerChangeListener().onSize(videoWidth, videoHeight);
             }
 //            MediaLogUtil.log("IjkVideoPlayer----listener---------onVideoSizeChanged ——> WIDTH：" + width + "， HEIGHT：" + height);
         }

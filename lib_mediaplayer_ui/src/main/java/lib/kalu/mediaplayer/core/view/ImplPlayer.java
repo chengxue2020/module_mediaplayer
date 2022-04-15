@@ -1,17 +1,14 @@
 package lib.kalu.mediaplayer.core.view;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 
 /**
  * revise: 播放器基础属性获取和设置属性接口
@@ -60,7 +57,7 @@ public interface ImplPlayer {
      *
      * @return long类型
      */
-    int getDuration();
+    long getDuration();
 
 
     /**
@@ -68,7 +65,7 @@ public interface ImplPlayer {
      *
      * @return long类型
      */
-    int getPosition();
+    long getPosition();
 
     /**
      * 获取当前缓冲百分比

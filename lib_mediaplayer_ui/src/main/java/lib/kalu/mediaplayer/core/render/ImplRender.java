@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.impl.ImplKernel;
 
 @Keep
@@ -38,7 +39,7 @@ public interface ImplRender {
      *
      * @param scaleType 类型
      */
-    void setScaleType(int scaleType);
+    void setScaleType(@PlayerType.ScaleType.Value int scaleType);
 
     /**
      * 获取真实的RenderView

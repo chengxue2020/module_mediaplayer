@@ -5,19 +5,15 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
-import lib.kalu.mediaplayer.widget.subtitle.widget.SimpleSubtitleView;
 
 public class ComponentSubtitle extends RelativeLayout implements ImplComponent {
 

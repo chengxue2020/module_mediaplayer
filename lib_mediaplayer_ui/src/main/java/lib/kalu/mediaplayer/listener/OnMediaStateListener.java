@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.listener;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 
 @Keep
 public interface OnMediaStateListener {

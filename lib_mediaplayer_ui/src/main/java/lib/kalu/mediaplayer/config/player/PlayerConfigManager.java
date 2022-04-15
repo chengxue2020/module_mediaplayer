@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.config;
+package lib.kalu.mediaplayer.config.player;
 
 import android.app.Application;
 

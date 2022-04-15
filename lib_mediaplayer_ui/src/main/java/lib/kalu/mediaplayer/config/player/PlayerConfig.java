@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.config;
+package lib.kalu.mediaplayer.config.player;
 
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
@@ -19,9 +19,9 @@ public class PlayerConfig {
     public final boolean mEnableOrientation;
     public final boolean mIsEnableLog;
     public final OnMediaProgressManager mProgressManager;
-    @PlayerType.PlatformType
+    @PlayerType.PlatformType.Value
     public final int mType;
-    @PlayerType.RenderType
+    @PlayerType.RenderType.Value
     public final int mRender;
     public final BuriedPointEvent mBuriedPointEvent;
     public final int mScreenScaleType;
@@ -84,12 +84,12 @@ public class PlayerConfig {
         /**
          * 自定义播放核心
          */
-        @PlayerType.PlatformType
+        @PlayerType.PlatformType.Value
         private int mType = PlayerType.PlatformType.ANDROID;
         /**
          * 自定义RenderView
          */
-        @PlayerType.RenderType
+        @PlayerType.RenderType.Value
         public int mRender = PlayerType.RenderType.TEXTURE;
         /**
          * 自定义视频全局埋点事件
@@ -158,7 +158,7 @@ public class PlayerConfig {
         /**
          * 自定义播放核心
          */
-        public Builder setKernel(@PlayerType.PlatformType int type) {
+        public Builder setKernel(@PlayerType.PlatformType.Value int type) {
             mType = type;
             return this;
         }
@@ -182,7 +182,7 @@ public class PlayerConfig {
         /**
          * 自定义RenderView
          */
-        public Builder setRender(@PlayerType.RenderType int render) {
+        public Builder setRender(@PlayerType.RenderType.Value int render) {
             mRender = render;
             return this;
         }

@@ -6,22 +6,18 @@ import android.content.pm.ActivityInfo;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.widget.subtitle.widget.SimpleSubtitleView;
 
 
 @Keep
@@ -57,8 +53,8 @@ public class ControllerLive extends ControllerLayout {
     }
 
     @Override
-    protected void onPlayerStateChanged(int playerState) {
-        super.onPlayerStateChanged(playerState);
+    protected void onWindowStatusChanged(int playerState) {
+        super.onWindowStatusChanged(playerState);
         View view = findViewById(R.id.module_mediaplayer_controller_live_lock);
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
@@ -88,8 +84,8 @@ public class ControllerLive extends ControllerLayout {
     }
 
     @Override
-    protected void onPlayStateChanged(int playState) {
-        super.onPlayStateChanged(playState);
+    protected void onPlayerStatusChanged(int playState) {
+        super.onPlayerStatusChanged(playState);
         MediaLogUtil.log("ControllerLive => playState = " + playState);
         View view = findViewById(R.id.module_mediaplayer_controller_live_loading);
         switch (playState) {

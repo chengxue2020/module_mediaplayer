@@ -13,9 +13,7 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.Map;
-
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.core.controller.impl.ImplGesture;
 import lib.kalu.mediaplayer.util.PlayerUtils;

@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.PlayerType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.core.controller.component.ComponentBottom;
 import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
@@ -175,8 +174,8 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
      * @param playerState 播放模式
      */
     @Override
-    protected void onPlayerStateChanged(int playerState) {
-        super.onPlayerStateChanged(playerState);
+    protected void onWindowStatusChanged(int playerState) {
+        super.onWindowStatusChanged(playerState);
         View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
         switch (playerState) {
             case PlayerType.WindowType.NORMAL:
@@ -203,27 +202,11 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
                 layoutParams.setMargins(dp24, 0, dp24, 0);
             }
         }
-
     }
 
-    /**
-     * 播放状态
-     * -1               播放错误
-     * 0                播放未开始
-     * 1                播放准备中
-     * 2                播放准备就绪
-     * 3                正在播放
-     * 4                暂停播放
-     * 5                正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-     * 6                暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-     * 7                播放完成
-     * 8                开始播放中止
-     *
-     * @param playState 播放状态，主要是指播放器的各种状态
-     */
     @Override
-    protected void onPlayStateChanged(int playState) {
-        super.onPlayStateChanged(playState);
+    protected void onPlayerStatusChanged(int playState) {
+        super.onPlayerStatusChanged(playState);
         View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
         View viewLoading = findViewById(R.id.module_mediaplayer_controller_center_loading);
         switch (playState) {
@@ -250,6 +233,23 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
                 break;
         }
     }
+
+    /**
+     * 播放状态
+     * -1               播放错误
+     * 0                播放未开始
+     * 1                播放准备中
+     * 2                播放准备就绪
+     * 3                正在播放
+     * 4                暂停播放
+     * 5                正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+     * 6                暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+     * 7                播放完成
+     * 8                开始播放中止
+     *
+     * @param playState 播放状态，主要是指播放器的各种状态
+     */
+
 
     @Override
     public boolean onBackPressed() {
