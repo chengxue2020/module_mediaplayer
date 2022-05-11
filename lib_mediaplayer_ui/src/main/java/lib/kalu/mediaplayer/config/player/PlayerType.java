@@ -79,11 +79,15 @@ public @interface PlayerType {
 
 
         int STATE_SUBTITLE_START = 2017;
+        int STATE_TIMESTAMP_LOOP = 2018; // 时间戳, 开始播放后一秒回调一次
+        int STATE_TIMESTAMP_CLEAN = 2019; // 时间戳, 清空
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({STATE_SUBTITLE_START,
+        @IntDef({STATE_TIMESTAMP_LOOP,
+                STATE_TIMESTAMP_CLEAN,
+                STATE_SUBTITLE_START,
                 STATE_INIT, STATE_ERROR, STATE_CLEAN,
                 STATE_START, STATE_PAUSED,
                 STATE_BUFFERING_PLAYING, STATE_BUFFERING_PAUSED, STATE_BUFFERING_COMPLETE,

@@ -5,6 +5,8 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -43,7 +45,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * @description: 播放器具体实现类
  */
 @Keep
-public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPlayerChangeListener {
+public class VideoLayout extends RelativeLayout implements Handler.Callback, ImplPlayer, OnVideoPlayerChangeListener {
 
     private CharSequence mUrl = null;
     protected Map<String, String> mHeaders = null;
@@ -820,6 +822,14 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     protected void setPlayState(@PlayerType.StateType.Value int state) {
         setTag(R.id.module_mediaplayer_id_state_code, state);
 
+        if (state == PlayerType.StateType.STATE_START) {
+            mHandler.sendEmptyMessageDelayed(0x2022, 0);
+        } else if (state == PlayerType.StateType.STATE_END) {
+            mHandler.sendEmptyMessageDelayed(0x2023, 0);
+        } else if (state == PlayerType.StateType.STATE_INIT) {
+            mHandler.sendEmptyMessageDelayed(0x2023, 0);
+        }
+
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
             layout.setPlayState(state);
@@ -1176,6 +1186,22 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 //            setWindowState(PlayerType.WindowType.FULL);
 //        } catch (Exception e) {
 //        }
+    }
+
+    /******************/
+
+    private final Handler mHandler = new Handler(this);
+
+    @Override
+    public boolean handleMessage(@NonNull Message msg) {
+        if (null != msg && msg.what == 0x2022) {
+            setPlayState(PlayerType.StateType.STATE_TIMESTAMP_LOOP);
+            mHandler.sendEmptyMessageDelayed(0x2022, 1000);
+        } else if (null != msg && msg.what == 0x2023) {
+            setPlayState(PlayerType.StateType.STATE_TIMESTAMP_CLEAN);
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        return false;
     }
 
     /******************/
