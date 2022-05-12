@@ -45,7 +45,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * @description: 播放器具体实现类
  */
 @Keep
-public class VideoLayout extends RelativeLayout implements Handler.Callback, ImplPlayer, OnVideoPlayerChangeListener {
+public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPlayerChangeListener {
 
     private CharSequence mUrl = null;
     protected Map<String, String> mHeaders = null;
@@ -822,13 +822,13 @@ public class VideoLayout extends RelativeLayout implements Handler.Callback, Imp
     protected void setPlayState(@PlayerType.StateType.Value int state) {
         setTag(R.id.module_mediaplayer_id_state_code, state);
 
-        if (state == PlayerType.StateType.STATE_START) {
-            mHandler.sendEmptyMessageDelayed(0x2022, 0);
-        } else if (state == PlayerType.StateType.STATE_END) {
-            mHandler.sendEmptyMessageDelayed(0x2023, 0);
-        } else if (state == PlayerType.StateType.STATE_INIT) {
-            mHandler.sendEmptyMessageDelayed(0x2023, 0);
-        }
+//        if (state == PlayerType.StateType.STATE_START) {
+//            mHandler.sendEmptyMessageDelayed(0x2022, 0);
+//        } else if (state == PlayerType.StateType.STATE_END) {
+//            mHandler.sendEmptyMessageDelayed(0x2023, 0);
+//        } else if (state == PlayerType.StateType.STATE_INIT) {
+//            mHandler.sendEmptyMessageDelayed(0x2023, 0);
+//        }
 
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
@@ -1189,20 +1189,20 @@ public class VideoLayout extends RelativeLayout implements Handler.Callback, Imp
     }
 
     /******************/
-
-    private final Handler mHandler = new Handler(this);
-
-    @Override
-    public boolean handleMessage(@NonNull Message msg) {
-        if (null != msg && msg.what == 0x2022) {
-            setPlayState(PlayerType.StateType.STATE_TIMESTAMP_LOOP);
-            mHandler.sendEmptyMessageDelayed(0x2022, 1000);
-        } else if (null != msg && msg.what == 0x2023) {
-            setPlayState(PlayerType.StateType.STATE_TIMESTAMP_CLEAN);
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        return false;
-    }
+//
+//    private final Handler mHandler = new Handler(this);
+//
+//    @Override
+//    public boolean handleMessage(@NonNull Message msg) {
+//        if (null != msg && msg.what == 0x2022) {
+//            setPlayState(PlayerType.StateType.STATE_TIMESTAMP_LOOP);
+//            mHandler.sendEmptyMessageDelayed(0x2022, 1000);
+//        } else if (null != msg && msg.what == 0x2023) {
+//            setPlayState(PlayerType.StateType.STATE_TIMESTAMP_CLEAN);
+//            mHandler.removeCallbacksAndMessages(null);
+//        }
+//        return false;
+//    }
 
     /******************/
 
