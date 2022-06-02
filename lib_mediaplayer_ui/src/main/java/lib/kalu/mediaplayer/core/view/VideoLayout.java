@@ -450,13 +450,13 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
             // seekTo 会调用
             case PlayerType.MediaType.MEDIA_INFO_OPEN_INPUT:
-                if (seek == 0) {
-                    setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
-                }
                 setPlayState(PlayerType.StateType.STATE_START);
                 View layout = getVideoLayout();
                 if (null != layout && layout.getWindowVisibility() != VISIBLE) {
                     pause();
+                }
+                if (seek == 0) {
+                    setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
                 }
                 break;
             //            // play-begin
@@ -471,23 +471,14 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 //                break;
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
-                if (seek > 0) {
-                    setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
-                }
-
                 setPlayState(PlayerType.StateType.STATE_START);
                 View layout1 = getVideoLayout();
                 if (null != layout1 && layout1.getWindowVisibility() != VISIBLE) {
                     pause();
                 }
-
-//                if (seek == 0) {
-//                    setPlayState(PlayerType.StateType.STATE_START);
-//                    View layout = getVideoLayout();
-//                    if (null != layout && layout.getWindowVisibility() != VISIBLE) {
-//                        pause();
-//                    }
-//                }
+                if (seek > 0) {
+                    setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
+                }
                 break;
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
                 if (mRender != null)
