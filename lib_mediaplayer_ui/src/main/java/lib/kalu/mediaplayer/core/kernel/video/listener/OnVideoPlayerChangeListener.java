@@ -36,7 +36,7 @@ public interface OnVideoPlayerChangeListener {
     /**
      * 准备
      */
-    void onPrepared(@NonNull long position, @NonNull long duration);
+    void onPrepared(@NonNull long seek, @NonNull long duration);
 
     /**
      * 视频size变化监听

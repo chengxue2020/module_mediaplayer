@@ -203,9 +203,11 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
         }
     }
 
-    @Override
-    public void prepare(@NonNull Context context, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
+    private long mSeek;
 
+    @Override
+    public void prepare(@NonNull Context context, @NonNull long seek, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
+        this.mSeek = seek;
         //222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
@@ -363,9 +365,9 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
     private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-            int position = mp.getCurrentPosition();
+//            int position = mp.getCurrentPosition();
             long duration = getDuration();
-            getVideoPlayerChangeListener().onPrepared(position, duration);
+            getVideoPlayerChangeListener().onPrepared(mSeek, duration);
             start();
         }
     };

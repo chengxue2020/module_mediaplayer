@@ -215,12 +215,12 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         // next
         else {
             mUrl = url;
-            boolean prepare = prepare(url);
+            boolean prepare = prepare(seek, url);
             setKeepScreenOn(prepare);
         }
     }
 
-    protected boolean prepare(@NonNull CharSequence url) {
+    protected boolean prepare(@NonNull long seek, @NonNull CharSequence url) {
 
         //如果要显示移动网络提示则不继续播放
         boolean showNetWarning = showNetWarning();
@@ -235,7 +235,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
         //准备开始播放
         setPlayState(PlayerType.StateType.STATE_LOADING_START);
-        mKernel.prepare(getContext(), url, mHeaders);
+        mKernel.prepare(getContext(), seek, url, mHeaders);
         return true;
     }
 
@@ -393,12 +393,14 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     public void seekTo(long pos) {
         long seek;
         if (pos < 0) {
-            MediaLogUtil.log("设置参数-------设置开始跳转播放位置不能小于0");
             seek = 0;
         } else {
             seek = pos;
         }
-        if (isInPlaybackState()) {
+
+        boolean state = isInPlaybackState();
+        MediaLogUtil.log("seekTo => seek = " + seek + ", state = " + state);
+        if (state) {
             mKernel.seekTo(seek);
         }
     }
@@ -552,7 +554,8 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
      * 视频缓冲完毕，准备开始播放时回调
      */
     @Override
-    public void onPrepared(@NonNull long position, @NonNull long duration) {
+    public void onPrepared(@NonNull long seek, @NonNull long duration) {
+        MediaLogUtil.log("onPrepared => seek = " + seek + ", duration = " + duration);
 
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
         if (config != null && config.mBuriedPointEvent != null) {
@@ -567,8 +570,9 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         MediaLogUtil.log("ComponentLoading => onPrepared => mCurrentPlayerState = " + tag.toString());
         setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
 
-        if (position > 0) {
-            seekTo(position);
+        // 快进
+        if (seek > 0) {
+            seekTo(seek);
         }
     }
 

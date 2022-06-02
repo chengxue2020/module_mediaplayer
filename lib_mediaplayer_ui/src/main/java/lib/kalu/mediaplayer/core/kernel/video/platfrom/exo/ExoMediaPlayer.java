@@ -206,9 +206,9 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
         @Override
         public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
             if (getVideoPlayerChangeListener() != null && mIsPreparing) {
-                long position = getPosition();
+//                long position = getPosition();
                 long duration = getDuration();
-                getVideoPlayerChangeListener().onPrepared(position, duration);
+                getVideoPlayerChangeListener().onPrepared(mSeek, duration);
             }
         }
     };
@@ -292,8 +292,10 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
         }
     }
 
+    private long mSeek;
     @Override
-    public void prepare(@NonNull Context context, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
+    public void prepare(@NonNull Context context,  @NonNull long seek,@NonNull CharSequence url, @Nullable Map<String, String> headers) {
+        this.mSeek = seek;
 
         // 222222222222222222222222222
         if (url == null || url.length() == 0) {

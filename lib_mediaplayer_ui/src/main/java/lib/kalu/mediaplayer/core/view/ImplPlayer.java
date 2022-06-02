@@ -42,7 +42,7 @@ public interface ImplPlayer {
      * @param url
      * @param headers
      */
-    void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle, @NonNull Map<String, String> headers);
+    void start(@NonNull long seek, @NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle, @NonNull Map<String, String> headers);
 
     void pause();
 

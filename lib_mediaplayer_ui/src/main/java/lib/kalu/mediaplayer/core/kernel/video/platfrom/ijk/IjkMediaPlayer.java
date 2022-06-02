@@ -223,8 +223,11 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         }
     }
 
+
+    private long mSeek;
     @Override
-    public void prepare(@NonNull Context context, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
+    public void prepare(@NonNull Context context,  @NonNull long seek,@NonNull CharSequence url, @Nullable Map<String, String> headers) {
+        this.mSeek = seek;
 
         //2222222222222222222222
         // 设置dataSource
@@ -463,10 +466,10 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
-            long position = iMediaPlayer.getCurrentPosition();
+//            long position = iMediaPlayer.getCurrentPosition();
             long duration = iMediaPlayer.getDuration();
-            MediaLogUtil.log("IJKLOG => onPrepared => position = " + position + ", duration = " + duration);
-            getVideoPlayerChangeListener().onPrepared(position, duration);
+            MediaLogUtil.log("IJKLOG => onPrepared => seek = " + mSeek + ", duration = " + duration);
+            getVideoPlayerChangeListener().onPrepared(mSeek, duration);
         }
     };
 
