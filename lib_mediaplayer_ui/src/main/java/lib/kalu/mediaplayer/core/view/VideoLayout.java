@@ -259,14 +259,6 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         }
     }
 
-//    /**
-//     * 播放状态下开始播放
-//     */
-//    protected void startInPlaybackState() {
-//        mKernel.start();
-//        setPlayState(PlayerType.StateType.STATE_START);
-//    }
-
     @Override
     public void pause() {
         MediaLogUtil.log("onLife => pause => 1");
@@ -339,7 +331,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
                 && state != PlayerType.StateType.STATE_INIT
                 && state != PlayerType.StateType.STATE_LOADING_START
                 && state != PlayerType.StateType.STATE_START_ABORT
-                && state != PlayerType.StateType.STATE_BUFFERING_PLAYING;
+                && state != PlayerType.StateType.STATE_BUFFERING_START;
     }
 
     /**
@@ -442,29 +434,30 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     }
 
     @Override
-    public void onInfo(int what, @NonNull int extra, @NonNull long position, @NonNull long duration) {
-        MediaLogUtil.log("onInfo => what = " + what + ", extra = " + extra + ", position = " + position);
+    public void onInfo(int what, @NonNull int extra, @NonNull long seek, @NonNull long duration) {
+        MediaLogUtil.log("onInfo => what = " + what + ", extra = " + extra + ", seek = " + seek);
 
         switch (what) {
             // loading-start
             case PlayerType.MediaType.MEDIA_INFO_BUFFERING_START:
-                setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
+                setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
                 break;
             // loading-end
             case PlayerType.MediaType.MEDIA_INFO_BUFFERING_END:
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START:
-                setPlayState(PlayerType.StateType.STATE_BUFFERING_COMPLETE);
+                setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
                 break;
+
+            // seekTo 会调用
             case PlayerType.MediaType.MEDIA_INFO_OPEN_INPUT:
-                // seekTo
-                if (position > 0) {
-                    setPlayState(PlayerType.StateType.STATE_BUFFERING_PAUSED);
-                } else {
-                    setPlayState(PlayerType.StateType.STATE_START);
-                    View layout = getVideoLayout();
-                    if (null != layout && layout.getWindowVisibility() != VISIBLE) {
-                        pause();
-                    }
+
+                if (seek > 0) {
+                    setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
+                }
+                setPlayState(PlayerType.StateType.STATE_START);
+                View layout = getVideoLayout();
+                if (null != layout && layout.getWindowVisibility() != VISIBLE) {
+                    pause();
                 }
                 break;
             //            // play-begin
@@ -480,12 +473,12 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
 
-//                if (position > 0) {
-                setPlayState(PlayerType.StateType.STATE_START);
-                View layout = getVideoLayout();
-                if (null != layout && layout.getWindowVisibility() != VISIBLE) {
-                    pause();
-                }
+//                if (seek == 0) {
+//                    setPlayState(PlayerType.StateType.STATE_START);
+//                    View layout = getVideoLayout();
+//                    if (null != layout && layout.getWindowVisibility() != VISIBLE) {
+//                        pause();
+//                    }
 //                }
                 break;
             case PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
@@ -563,12 +556,12 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
             config.mBuriedPointEvent.playerIn(mUrl);
         }
 
-        Object tag = getTag(R.id.module_mediaplayer_id_state_code);
-        if (null == tag) {
-            tag = 1;
-        }
-        MediaLogUtil.log("ComponentLoading => onPrepared => mCurrentPlayerState = " + tag.toString());
-        setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
+//        Object tag = getTag(R.id.module_mediaplayer_id_state_code);
+//        if (null == tag) {
+//            tag = 1;
+//        }
+//        MediaLogUtil.log("ComponentLoading => onPrepared => mCurrentPlayerState = " + tag.toString());
+//        setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
 
         // 快进
         if (seek > 0) {

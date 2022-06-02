@@ -79,7 +79,7 @@ public class ComponentComplete extends RelativeLayout implements ImplComponent {
 
     @Override
     public void onPlayStateChanged(int playState) {
-        if (playState == PlayerType.StateType.STATE_BUFFERING_PLAYING) {
+        if (playState == PlayerType.StateType.STATE_BUFFERING_START) {
             setVisibility(VISIBLE);
             View view = findViewById(R.id.controller_complete_back);
             view.setVisibility(mControllerWrapper.isFullScreen() ? VISIBLE : GONE);

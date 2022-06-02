@@ -126,7 +126,7 @@ public final class TestActivity extends AppCompatActivity {
                     case PlayerType.StateType.STATE_LOADING_START:
                         //播放准备中
                         break;
-                    case PlayerType.StateType.STATE_LOADING_COMPLETE:
+                    case PlayerType.StateType.STATE_LOADING_STOP:
 
 //                        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
 //                        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
@@ -140,7 +140,7 @@ public final class TestActivity extends AppCompatActivity {
                     case PlayerType.StateType.STATE_ERROR:
                         //播放错误
                         break;
-                    case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+                    case PlayerType.StateType.STATE_BUFFERING_START:
                         //正在缓冲
                         break;
                     case PlayerType.StateType.STATE_START:
@@ -163,7 +163,7 @@ public final class TestActivity extends AppCompatActivity {
                     case PlayerType.StateType.STATE_PAUSED:
                         //暂停播放
                         break;
-                    case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+                    case PlayerType.StateType.STATE_BUFFERING_STOP:
                         //暂停缓冲
                         break;
                     case PlayerType.StateType.STATE_END:

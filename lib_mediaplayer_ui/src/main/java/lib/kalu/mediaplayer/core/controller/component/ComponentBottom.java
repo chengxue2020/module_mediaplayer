@@ -137,7 +137,7 @@ public class ComponentBottom extends RelativeLayout implements ImplComponent, Vi
         ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
         switch (playState) {
             case PlayerType.StateType.STATE_INIT:
-            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_START:
                 setVisibility(GONE);
                 progressBar.setProgress(0);
                 progressBar.setSecondaryProgress(0);
@@ -147,7 +147,7 @@ public class ComponentBottom extends RelativeLayout implements ImplComponent, Vi
                 break;
             case PlayerType.StateType.STATE_START_ABORT:
             case PlayerType.StateType.STATE_LOADING_START:
-            case PlayerType.StateType.STATE_LOADING_COMPLETE:
+            case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
@@ -172,7 +172,7 @@ public class ComponentBottom extends RelativeLayout implements ImplComponent, Vi
             case PlayerType.StateType.STATE_PAUSED:
                 viewPlayer.setSelected(false);
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_BUFFERING_STOP:
             case PlayerType.StateType.STATE_END:
                 viewPlayer.setSelected(mControllerWrapper.isPlaying());
                 break;

@@ -159,9 +159,9 @@ public class ComponentGesture extends RelativeLayout implements ImplGesture {
         if (playState == PlayerType.StateType.STATE_INIT
                 || playState == PlayerType.StateType.STATE_START_ABORT
                 || playState == PlayerType.StateType.STATE_LOADING_START
-                || playState == PlayerType.StateType.STATE_LOADING_COMPLETE
+                || playState == PlayerType.StateType.STATE_LOADING_STOP
                 || playState == PlayerType.StateType.STATE_ERROR
-                || playState == PlayerType.StateType.STATE_BUFFERING_PLAYING
+                || playState == PlayerType.StateType.STATE_BUFFERING_START
                 || playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             setVisibility(GONE);
         } else {

@@ -217,16 +217,16 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_PAUSED:
-            case PlayerType.StateType.STATE_LOADING_COMPLETE:
+            case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_END:
                 viewLoading.setVisibility(GONE);
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
-            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_BUFFERING_STOP:
                 viewLoading.setVisibility(VISIBLE);
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_START:
                 viewLoading.setVisibility(GONE);
                 view.setVisibility(GONE);
                 view.setSelected(false);

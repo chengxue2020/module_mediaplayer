@@ -144,9 +144,9 @@ public class ComponentTop extends RelativeLayout implements ImplComponent {
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_START_ABORT:
             case PlayerType.StateType.STATE_LOADING_START:
-            case PlayerType.StateType.STATE_LOADING_COMPLETE:
+            case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_START:
                 setVisibility(GONE);
                 break;
         }

@@ -89,8 +89,8 @@ public class ControllerLive extends ControllerLayout {
         MediaLogUtil.log("ControllerLive => playState = " + playState);
         View view = findViewById(R.id.module_mediaplayer_controller_live_loading);
         switch (playState) {
-            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
-            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_STOP:
+            case PlayerType.StateType.STATE_BUFFERING_START:
                 view.setVisibility(VISIBLE);
                 break;
             default:

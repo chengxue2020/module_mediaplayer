@@ -61,21 +61,20 @@ public @interface PlayerType {
     @interface StateType {
         int STATE_INIT = 2001; // 播放未开始，即将进行
         int STATE_CLEAN = 2002; //
-        int STATE_LOADING_START = 2003; // 播放准备, 开始
-        int STATE_LOADING_COMPLETE = 2004; // 播放准备, 完成
+        int STATE_LOADING_START = 2003; // 开始转圈
+        int STATE_LOADING_STOP = 2004; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
         int STATE_START = 2005; // 开始播放
         int STATE_END = 2006; // 播放完成
         int STATE_PAUSED = 2007; // 暂停播放
-        int STATE_BUFFERING_PLAYING = 2008; // 正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int STATE_BUFFERING_PAUSED = 2009; // 暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_BUFFERING_COMPLETE = 2010; // 暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_START_ABORT = 2011; // 开始播放中止
-        int STATE_ONCE_LIVE = 2012; // 即将开播
+        int STATE_BUFFERING_START = 2008; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int STATE_BUFFERING_STOP = 2009; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_START_ABORT = 2010; // 开始播放中止
+        int STATE_ONCE_LIVE = 2011; // 即将开播
 
-        int STATE_ERROR_URL = 2013; // 视频地址错误【null】
-        int STATE_ERROR_PARSE = 2014; // 解析异常
-        int STATE_ERROR_NETWORK = 2015; // 播放错误，网络异常
-        int STATE_ERROR = 2016; // 播放错误
+        int STATE_ERROR_URL = 2012; // 视频地址错误【null】
+        int STATE_ERROR_PARSE = 2013; // 解析异常
+        int STATE_ERROR_NETWORK = 2014; // 播放错误，网络异常
+        int STATE_ERROR = 2015; // 播放错误
 
 
 //        int STATE_SUBTITLE_START = 2017;
@@ -91,10 +90,9 @@ public @interface PlayerType {
 //                STATE_SUBTITLE_START,
                 STATE_INIT, STATE_ERROR, STATE_CLEAN,
                 STATE_START, STATE_PAUSED,
-                STATE_BUFFERING_PLAYING, STATE_BUFFERING_PAUSED, STATE_BUFFERING_COMPLETE,
+                STATE_BUFFERING_START, STATE_BUFFERING_STOP, STATE_LOADING_STOP,
                 STATE_END, STATE_START_ABORT,
                 STATE_LOADING_START,
-                STATE_LOADING_COMPLETE,
                 STATE_ERROR_PARSE,
                 STATE_ERROR_NETWORK,
                 STATE_ERROR_URL,

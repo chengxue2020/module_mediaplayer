@@ -528,7 +528,7 @@ public final class PlayerUtils {
             case PlayerType.StateType.STATE_LOADING_START:
                 playStateString = "prepare_start";
                 break;
-            case PlayerType.StateType.STATE_LOADING_COMPLETE:
+            case PlayerType.StateType.STATE_LOADING_STOP:
                 playStateString = "prepare_end";
                 break;
             case PlayerType.StateType.STATE_START:
@@ -537,13 +537,13 @@ public final class PlayerUtils {
             case PlayerType.StateType.STATE_PAUSED:
                 playStateString = "pause";
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_BUFFERING_STOP:
                 playStateString = "buffering";
                 break;
             case PlayerType.StateType.STATE_END:
                 playStateString = "end";
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_START:
                 playStateString = "playback completed";
                 break;
             case PlayerType.StateType.STATE_ERROR:

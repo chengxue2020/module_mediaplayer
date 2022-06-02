@@ -225,15 +225,16 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
 
 
     private long mSeek;
+
     @Override
-    public void prepare(@NonNull Context context,  @NonNull long seek,@NonNull CharSequence url, @Nullable Map<String, String> headers) {
+    public void prepare(@NonNull Context context, @NonNull long seek, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
         this.mSeek = seek;
 
         //2222222222222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, -1, -1);
+                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, 0, 0);
             }
             return;
         }
@@ -313,11 +314,11 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
      * 调整进度
      */
     @Override
-    public void seekTo(long time) {
+    public void seekTo(long seek) {
         try {
-            MediaLogUtil.log("IJKLOG => seekTo => time = " + time);
-            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, 0, time, -1);
-            mMediaPlayer.seekTo(time);
+            MediaLogUtil.log("IJKLOG => seekTo => seek = " + seek);
+            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, 0, seek, -1);
+            mMediaPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
             MediaLogUtil.log("IJKLOG => seekTo => " + e.getMessage());
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
@@ -441,9 +442,9 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     private IMediaPlayer.OnInfoListener onInfoListener = new IMediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
-            long position = getPosition();
+//            long position = getPosition();
             long duration = getDuration();
-            getVideoPlayerChangeListener().onInfo(what, extra, position, duration);
+            getVideoPlayerChangeListener().onInfo(what, extra, mSeek, duration);
             MediaLogUtil.log("IJKLOG => onInfo => what = " + what + ", extra = " + extra);
             return true;
         }
@@ -470,6 +471,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
             long duration = iMediaPlayer.getDuration();
             MediaLogUtil.log("IJKLOG => onPrepared => seek = " + mSeek + ", duration = " + duration);
             getVideoPlayerChangeListener().onPrepared(mSeek, duration);
+//            mSeek = 0;
         }
     };
 

@@ -65,7 +65,8 @@ public class ComponentLoading extends RelativeLayout implements ImplComponent {
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_NETWORK:
             case PlayerType.StateType.STATE_ERROR_PARSE:
-            case PlayerType.StateType.STATE_LOADING_COMPLETE:
+//            case PlayerType.StateType.STATE_LOADING_COMPLETE:
+            case PlayerType.StateType.STATE_LOADING_STOP:
                 findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);

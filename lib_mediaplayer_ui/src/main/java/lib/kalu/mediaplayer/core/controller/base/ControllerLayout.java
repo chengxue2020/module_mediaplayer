@@ -623,7 +623,7 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
                 mIsLocked = false;
                 mIsShowing = false;
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_START:
                 mIsLocked = false;
                 mIsShowing = false;
                 break;

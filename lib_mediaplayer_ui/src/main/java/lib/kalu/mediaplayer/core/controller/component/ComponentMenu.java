@@ -115,9 +115,9 @@ public class ComponentMenu extends RelativeLayout implements ImplComponent, View
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_START_ABORT:
             case PlayerType.StateType.STATE_LOADING_START:
-            case PlayerType.StateType.STATE_LOADING_COMPLETE:
+            case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_BUFFERING_PLAYING:
+            case PlayerType.StateType.STATE_BUFFERING_START:
             case PlayerType.StateType.STATE_ONCE_LIVE:
                 setVisibility(GONE);
                 break;
@@ -127,7 +127,7 @@ public class ComponentMenu extends RelativeLayout implements ImplComponent, View
             case PlayerType.StateType.STATE_PAUSED:
                 mIvPlay.setSelected(false);
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_PAUSED:
+            case PlayerType.StateType.STATE_BUFFERING_STOP:
             case PlayerType.StateType.STATE_END:
                 mIvPlay.setSelected(mControllerWrapper.isPlaying());
                 break;
