@@ -1,4 +1,8 @@
 #
+####  源码
+[ijk-so编译源码](https://github.com/153437803/ijkplayer-k0.8.8-ff4.0)
+
+#
 ####  版本
 ```
 exoplayer => r2.18.0
@@ -11,19 +15,6 @@ lib_mediaplayer_core_ijkplayer_k0.8.8_ff4.0_lite
 ```
 ijkplayer全量版本 => 支持rmvb、avi => k0.8.8 => ff4.0--ijk0.8.8--20210426--001
 lib_mediaplayer_core_ijkplayer_k0.8.8_ff4.0_full
-```
-
-#
-####  源码
-[ijkplayer-k0.8.8-ff4.0 for linux build source](https://github.com/153437803/ijkplayer-k0.8.8-ff4.0)
-
-#
-####  计划
-```
-- [✓] 支持TV
-- [✓] 支持exoplayer硬解
-- [✓] 支持ijkplayer软解
-- [✓] 编译更新ffmpeg4.0
 ```
 
 #
@@ -160,6 +151,15 @@ files('libs/error_prone_annotations-2.10.0.jar')
 files('libs/annotations-3.0.1.jar')
 ```
 ![image](https://github.com/153437803/module_mediaplayer/blob/master/image/exoplayer.png )
+
+#
+####  计划
+```
+- [✓] 支持TV
+- [✓] 支持exoplayer硬解
+- [✓] 支持ijkplayer软解
+- [✓] 编译更新ffmpeg4.0
+```
 
 #
 #### 资料
