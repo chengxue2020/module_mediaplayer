@@ -8,11 +8,13 @@ include ':app'
 // r2.15.0
 //include ':lib_mediaplayer_core_exoplayer_r2.15.0'
 // r2.16.1
-include ':lib_mediaplayer_core_exoplayer_r2.16.1'
+//include ':lib_mediaplayer_core_exoplayer_r2.16.1'
+// r2.18.0
+//include ':lib_mediaplayer_core_exoplayer_r2.18.0'
 
 // ijkplayer
-//include ':lib_mediaplayer_core_ijkplayer_k0.8.8_ff3.2'
-include ':lib_mediaplayer_core_ijkplayer_k0.8.8_ff4.0'
+include ':lib_mediaplayer_core_ijkplayer_k0.8.8_ff4.0_full'
+include ':lib_mediaplayer_core_ijkplayer_k0.8.8_ff4.0_lite'
 
 // mediaplayer_source
-include ':lib_mediaplayer_ui'
+//include ':lib_mediaplayer_ui'

@@ -71,8 +71,8 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // ijkplayer
-    api project(path: ':lib_mediaplayer_core_ijkplayer_k0.8.8_ff4.0')
+    api project(path: ':lib_mediaplayer_core_ijkplayer_k0.8.8_ff4.0_full')
 
     // exoplayer
-    api project(path: ':lib_mediaplayer_core_exoplayer_r2.16.1')
+    api project(path: ':lib_mediaplayer_core_exoplayer_r2.18.0')
 }
