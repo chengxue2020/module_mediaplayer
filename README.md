@@ -1,5 +1,3 @@
-#
-####  源码
 [ijk-so编译源码](https://github.com/153437803/ijkplayer-k0.8.8-ff4.0)
 
 #
