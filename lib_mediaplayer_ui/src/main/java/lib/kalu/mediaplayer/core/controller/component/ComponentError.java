@@ -17,6 +17,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public class ComponentError extends RelativeLayout implements ImplComponent {
 
@@ -55,7 +56,7 @@ public class ComponentError extends RelativeLayout implements ImplComponent {
 
     @Override
     public void onPlayStateChanged(int playState) {
-
+        MediaLogUtil.log("ComponentError => playState = " + playState);
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR_URL:
             case PlayerType.StateType.STATE_CLEAN:

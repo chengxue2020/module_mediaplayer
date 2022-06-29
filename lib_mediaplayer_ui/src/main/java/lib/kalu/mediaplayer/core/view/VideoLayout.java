@@ -50,6 +50,9 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     private CharSequence mUrl = null;
     protected Map<String, String> mHeaders = null;
 
+    // 状态
+    @PlayerType.StateType.Value
+    private int mStateType = PlayerType.StateType.STATE_INIT;
     // 解码
     protected ImplKernel mKernel;
     // 渲染
@@ -137,9 +140,13 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         if (visibility == View.VISIBLE) {
-            repeat();
+            if (null != mUrl && mUrl.length() > 0) {
+                repeat();
+            }
         } else {
-            stop();
+            if (null != mUrl && mUrl.length() > 0) {
+                stop();
+            }
         }
         super.onWindowVisibilityChanged(visibility);
     }
@@ -304,7 +311,9 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     @Override
     public void repeat() {
         MediaLogUtil.log("onLife => repeat => 1");
-        start(0, mUrl);
+        if (null != mUrl && mUrl.length() > 0) {
+            start(0, mUrl);
+        }
     }
 
     /**
@@ -793,11 +802,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
      */
     @PlayerType.StateType.Value
     public int getPlayState() {
-        try {
-            return (int) getTag(R.id.module_mediaplayer_id_state_code);
-        } catch (Exception e) {
-            return PlayerType.StateType.STATE_INIT;
-        }
+        return mStateType;
     }
 
     /**
@@ -816,7 +821,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
      * 8                开始播放中止
      */
     protected void setPlayState(@PlayerType.StateType.Value int state) {
-        setTag(R.id.module_mediaplayer_id_state_code, state);
+        mStateType = state;
 
 //        if (state == PlayerType.StateType.STATE_START) {
 //            mHandler.sendEmptyMessageDelayed(0x2022, 0);
@@ -958,6 +963,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         layout.setLayoutParams(params);
         viewGroup.addView(layout);
         layout.setMediaPlayer(this);
+        setPlayState(mStateType);
     }
 
     public void clearControllerLayout() {

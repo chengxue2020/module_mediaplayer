@@ -36,17 +36,4 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-
-<!--    <style name="MoudleMediaplayerChangeClarity" parent="@style/Theme.AppCompat.Light.Dialog">-->
-<!--        <item name="android:windowNoTitle">true</item>-->
-<!--        <item name="android:windowFullscreen">true</item>-->
-<!--        <item name="android:backgroundDimEnabled">false</item>-->
-<!--        <item name="android:windowBackground">@color/module_mediaplayer_color_bc000000</item>-->
-<!--    </style>-->
-
-<!--    <style name="MoudleMediaplayerFloatWindowAnimation">-->
-<!--        <item name="android:windowEnterAnimation">@anim/module_mediaplayer_anim_window_enter</item>-->
-<!--        <item name="android:windowExitAnimation">@anim/module_mediaplayer_anim_window_exit</item>-->
-<!--    </style>-->
-
 </resources>

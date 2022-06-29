@@ -54,10 +54,22 @@ public final class TestActivity extends AppCompatActivity {
             return;
         }
 
+        ComponentLoading loading = new ComponentLoading(this);
+        loading.setMessage("加载中...");
+        loading.setMessageSize(20);
+
+        ComponentError error = new ComponentError(this);
+        error.setImage(R.drawable.module_mediaplayer_ic_action_refresh);
+        error.setMessage("发生错误");
+        error.setMessageSize(20);
+
+        // component
+        ControllerEmpty controller = new ControllerEmpty(this);
+        controller.addComponent(loading);
+        controller.addComponent(error);
 
         // control
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
-        ControllerStandard controller = new ControllerStandard(this);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
         videoLayout.setControllerLayout(controller);
         videoLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
 
@@ -185,7 +197,7 @@ public final class TestActivity extends AppCompatActivity {
     @Override
     public void finish() {
 
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
         long browsing = videoLayout.getPosition() / 1000;
         if (browsing < 0) {
             browsing = 0;
@@ -206,21 +218,20 @@ public final class TestActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
         videoLayout.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
         videoLayout.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         try {
             android.os.Process.killProcess(android.os.Process.myPid());
         } catch (Exception e) {
