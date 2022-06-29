@@ -1,14 +1,17 @@
 package lib.kalu.mediaplayer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.SystemClock;
 
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
+import lib.kalu.mediaplayer.core.controller.ControllerStandard;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.listener.OnMediaStateListener;
@@ -38,6 +41,7 @@ public final class TestActivity extends AppCompatActivity {
     @Keep
     public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,45 +53,18 @@ public final class TestActivity extends AppCompatActivity {
             onBackPressed();
             return;
         }
-//
-//        boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
-//
-//        ControllerLayout controllerLayout = new ControllerStandard(this);
-//        controllerLayout.setEnableOrientation(false);
-//        int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, -1);
-//        if (resId != -1) {
-//            controllerLayout.setComponentPrepareBackgroundResource(resId);
-//        } else {
-//            controllerLayout.setComponentPrepareBackgroundColor(Color.BLACK);
-//        }
-//
-//        String subtitle = getIntent().getStringExtra(INTENT_SRT);
-//        MediaLogUtil.log("SRT => " + subtitle);
-//        if (null != subtitle && subtitle.length() > 0) {
-//            controllerLayout.setComponentSubtitlePath(subtitle);
-//        }
-//
-//        // 控制器
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
-//        videoLayout.setControllerLayout(controllerLayout);
 
-        ComponentLoading loading = new ComponentLoading(getApplicationContext());
-        loading.setMessage("加载中...");
-
-        ComponentError error = new ComponentError(getApplicationContext());
-        error.setMessage("发生错误");
-
-        ControllerEmpty empty = new ControllerEmpty(getApplicationContext());
-        empty.addComponent(loading);
-        empty.addComponent(error);
 
         // control
-        videoLayout.setControllerLayout(empty);
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
+        ControllerStandard controller = new ControllerStandard(this);
+        videoLayout.setControllerLayout(controller);
+        videoLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
 
         // 设置视频播放链接地址
-        videoLayout.showNetWarning();
+//        videoLayout.showNetWarning();
         // 全屏
-        videoLayout.startFullScreen();
+//        videoLayout.startFullScreen();
         videoLayout.setOnMediaStateListener(new OnMediaStateListener() {
             /**
              * 播放模式
@@ -188,8 +165,21 @@ public final class TestActivity extends AppCompatActivity {
                 }
             }
         });
-        // 开始播放
-        videoLayout.start(url);
+
+        //
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SystemClock.sleep(2000);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 开始播放
+                        videoLayout.start(url);
+                    }
+                });
+            }
+        }).start();
     }
 
     @Override

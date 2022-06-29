@@ -38,7 +38,7 @@ android {
                 minifyEnabled false
                 zipAlignEnabled false
                 shrinkResources false
-                multiDexEnabled true
+                multiDexEnabled false
                 //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
             }
         }
