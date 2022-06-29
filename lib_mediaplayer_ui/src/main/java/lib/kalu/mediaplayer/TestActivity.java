@@ -8,6 +8,9 @@ import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
+import lib.kalu.mediaplayer.core.controller.component.ComponentError;
+import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
@@ -67,6 +70,19 @@ public final class TestActivity extends AppCompatActivity {
 //        // 控制器
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
 //        videoLayout.setControllerLayout(controllerLayout);
+
+        ComponentLoading loading = new ComponentLoading(getApplicationContext());
+        loading.setMessage("加载中...");
+
+        ComponentError error = new ComponentError(getApplicationContext());
+        error.setMessage("发生错误");
+
+        ControllerEmpty empty = new ControllerEmpty(getApplicationContext());
+        empty.addComponent(loading);
+        empty.addComponent(error);
+
+        // control
+        videoLayout.setControllerLayout(empty);
 
         // 设置视频播放链接地址
         videoLayout.showNetWarning();
