@@ -23,7 +23,7 @@
  *              Buddha bless, there will never be bug!!!
  */
 
-package lib.kalu.mediaplayer.widget.subtitle;
+package lib.kalu.mediaplayer.widget.subtitle.loader;
 
 import android.text.TextUtils;
 import android.util.Log;

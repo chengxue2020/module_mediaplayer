@@ -23,7 +23,7 @@
  *              Buddha bless, there will never be bug!!!
  */
 
-package lib.kalu.mediaplayer.widget.subtitle;
+package lib.kalu.mediaplayer.widget.subtitle.engine;
 
 import androidx.annotation.Nullable;
 

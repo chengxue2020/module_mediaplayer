@@ -23,8 +23,9 @@
  *              Buddha bless, there will never be bug!!!
  */
 
-package lib.kalu.mediaplayer.widget.subtitle;
+package lib.kalu.mediaplayer.widget.subtitle.task;
 
+import lib.kalu.mediaplayer.widget.subtitle.engine.SubtitleEngine;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 import lib.kalu.mediaplayer.widget.subtitle.runtime.AppTaskExecutor;
 

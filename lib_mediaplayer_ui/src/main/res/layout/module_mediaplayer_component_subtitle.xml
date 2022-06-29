@@ -6,7 +6,7 @@
     android:background="@android:color/transparent"
     tools:ignore="MissingDefaultResource">
 
-    <lib.kalu.mediaplayer.widget.subtitle.widget.SimpleSubtitleView
+    <lib.kalu.mediaplayer.widget.subtitle.SimpleSubtitleView
         android:id="@+id/module_mediaplayer_controller_subtitle"
         android:layout_width="match_parent"
         android:layout_height="140dp"

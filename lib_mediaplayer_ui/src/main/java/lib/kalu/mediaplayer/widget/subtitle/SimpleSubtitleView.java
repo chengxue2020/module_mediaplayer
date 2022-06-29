@@ -23,7 +23,7 @@
  *              Buddha bless, there will never be bug!!!
  */
 
-package lib.kalu.mediaplayer.widget.subtitle.widget;
+package lib.kalu.mediaplayer.widget.subtitle;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -36,8 +36,8 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import lib.kalu.mediaplayer.core.view.ImplPlayer;
-import lib.kalu.mediaplayer.widget.subtitle.DefaultSubtitleEngine;
-import lib.kalu.mediaplayer.widget.subtitle.SubtitleEngine;
+import lib.kalu.mediaplayer.widget.subtitle.engine.DefaultSubtitleEngine;
+import lib.kalu.mediaplayer.widget.subtitle.engine.SubtitleEngine;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 
 /**
