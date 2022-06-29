@@ -689,7 +689,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     /**
      * 自定义播放核心，继承{@link KernelFactory}实现自己的播放核心
      */
-    public void setKernel(@PlayerType.PlatformType.Value int type) {
+    public void setKernel(@PlayerType.KernelType.Value int type) {
 
 //        try {
 //            PlayerConfigManager.getInstance().getConfig().mType(playerFactory);
@@ -1028,7 +1028,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         if (null != mKernel) {
             releaseKernel();
         }
-        mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mType);
+        mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mKernel);
         mKernel.setOnVideoPlayerChangeListener(this);
         mKernel.initKernel(getContext());
         mKernel.setLooping(mIsLooping);

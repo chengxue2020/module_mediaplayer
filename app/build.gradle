@@ -72,8 +72,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
-    api files('libs/lib_mediaplayer_exoplayer_r2.16.1_release_20220216.aar')
+    api files('libs/lib_mediaplayer_exoplayer_r2.18.0_release_20220629.aar')
     api files('libs/lib_mediaplayer_ijkplayer-k0.8.8-ff4.0-full_release_20220628.aar')
-    api files('libs/lib_mediaplayer_ui_release_20220409.aar')
+    api files('libs/lib_mediaplayer_ui_release_20220629.aar')
    // api files('libs/rtmp-client-3.1.0.aar')
 }

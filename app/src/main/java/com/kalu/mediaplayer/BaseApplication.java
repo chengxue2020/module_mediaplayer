@@ -6,14 +6,13 @@ import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
-import lib.kalu.mediaplayer.cache.CacheConfig;
-import lib.kalu.mediaplayer.cache.CacheConfigManager;
-import lib.kalu.mediaplayer.cache.CacheType;
-import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
+import lib.kalu.mediaplayer.config.cache.CacheConfig;
+import lib.kalu.mediaplayer.config.cache.CacheConfigManager;
+import lib.kalu.mediaplayer.config.cache.CacheType;
+import lib.kalu.mediaplayer.config.player.PlayerConfig;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.keycode.KeycodeImplSimulator;
-import lib.kalu.mediaplayer.config.PlayerConfig;
-import lib.kalu.mediaplayer.config.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.PlayerType;
 
 public class BaseApplication extends MultiDexApplication {
 
@@ -52,7 +51,7 @@ public class BaseApplication extends MultiDexApplication {
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
                 .setLogEnabled(true)
-                .setKernel(PlayerType.PlatformType.IJK)
+                .setKernel(PlayerType.KernelType.IJK)
                 .setRender(PlayerType.RenderType.TEXTURE)
                 .setKeycode(new KeycodeImplSimulator())
                 .build();

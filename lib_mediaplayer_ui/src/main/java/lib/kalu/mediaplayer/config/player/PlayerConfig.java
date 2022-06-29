@@ -19,8 +19,8 @@ public class PlayerConfig {
     public final boolean mEnableOrientation;
     public final boolean mIsEnableLog;
     public final OnMediaProgressManager mProgressManager;
-    @PlayerType.PlatformType.Value
-    public final int mType;
+    @PlayerType.KernelType.Value
+    public final int mKernel;
     @PlayerType.RenderType.Value
     public final int mRender;
     public final BuriedPointEvent mBuriedPointEvent;
@@ -50,7 +50,7 @@ public class PlayerConfig {
         } else {
             mKeycode = builder.mKeycode;
         }
-        mType = builder.mType;
+        mKernel = builder.mKernel;
         mRender = builder.mRender;
         mBuriedPointEvent = builder.mBuriedPointEvent;
         mAdaptCutout = builder.mAdaptCutout;
@@ -84,8 +84,8 @@ public class PlayerConfig {
         /**
          * 自定义播放核心
          */
-        @PlayerType.PlatformType.Value
-        private int mType = PlayerType.PlatformType.ANDROID;
+        @PlayerType.KernelType.Value
+        private int mKernel = PlayerType.KernelType.ANDROID;
         /**
          * 自定义RenderView
          */
@@ -158,8 +158,8 @@ public class PlayerConfig {
         /**
          * 自定义播放核心
          */
-        public Builder setKernel(@PlayerType.PlatformType.Value int type) {
-            mType = type;
+        public Builder setKernel(@PlayerType.KernelType.Value int type) {
+            mKernel = type;
             return this;
         }
 

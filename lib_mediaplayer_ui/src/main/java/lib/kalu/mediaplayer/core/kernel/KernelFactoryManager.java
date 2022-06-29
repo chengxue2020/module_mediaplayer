@@ -18,20 +18,20 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 @Keep
 public final class KernelFactoryManager {
 
-    public static KernelFactory getFactory(@PlayerType.PlatformType int type) {
-        if (type == PlayerType.PlatformType.IJK) {
+    public static KernelFactory getFactory(@PlayerType.KernelType int type) {
+        if (type == PlayerType.KernelType.IJK) {
             return IjkFactory.build();
-        } else if (type == PlayerType.PlatformType.EXO) {
+        } else if (type == PlayerType.KernelType.EXO) {
             return ExoFactory.build();
         } else {
             return AndroidFactory.build();
         }
     }
 
-    public static ImplKernel getKernel(@NonNull Context context, @PlayerType.PlatformType.Value int type) {
-        if (type == PlayerType.PlatformType.IJK) {
+    public static ImplKernel getKernel(@NonNull Context context, @PlayerType.KernelType.Value int type) {
+        if (type == PlayerType.KernelType.IJK) {
             return IjkFactory.build().createKernel(context);
-        } else if (type == PlayerType.PlatformType.EXO) {
+        } else if (type == PlayerType.KernelType.EXO) {
             return ExoFactory.build().createKernel(context);
         } else {
             return AndroidFactory.build().createKernel(context);

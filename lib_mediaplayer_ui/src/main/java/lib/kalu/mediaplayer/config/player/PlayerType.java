@@ -187,7 +187,7 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
-    @interface PlatformType {
+    @interface KernelType {
         int ANDROID = 5001; // MediaPlayer，基于原生自带的播放器控件
         int EXO = 5002; // 基于谷歌视频播放器
         int IJK = 5003; // IjkPlayer，基于IjkPlayer封装播放器

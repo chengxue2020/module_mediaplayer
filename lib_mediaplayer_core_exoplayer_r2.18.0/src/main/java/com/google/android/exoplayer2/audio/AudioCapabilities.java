@@ -72,7 +72,7 @@ public final class AudioCapabilities {
           .put(C.ENCODING_E_AC3, 8)
           .put(C.ENCODING_DTS_HD, 8)
           .put(C.ENCODING_DOLBY_TRUEHD, 8)
-          .buildOrThrow();
+          .build();
 
   /** Global settings key for devices that can specify external surround sound. */
   private static final String EXTERNAL_SURROUND_SOUND_KEY = "external_surround_sound_enabled";

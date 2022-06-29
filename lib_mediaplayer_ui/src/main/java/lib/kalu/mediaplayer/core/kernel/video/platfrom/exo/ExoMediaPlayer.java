@@ -19,6 +19,7 @@ import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.analytics.AnalyticsCollector;
+import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.LoadEventInfo;
 import com.google.android.exoplayer2.source.MediaLoadData;
@@ -80,7 +81,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
 //                )
 //                .build();
         ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
-        builder.setAnalyticsCollector(new AnalyticsCollector(Clock.DEFAULT));
+        builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
         builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
         builder.setLoadControl(new DefaultLoadControl());
         builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));

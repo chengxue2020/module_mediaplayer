@@ -372,6 +372,6 @@ import java.util.HashMap;
       String[] parameterPair = Util.splitAtFirst(parameter, "=");
       formatParametersBuilder.put(parameterPair[0], parameterPair[1]);
     }
-    return formatParametersBuilder.buildOrThrow();
+    return formatParametersBuilder.build();
   }
 }
