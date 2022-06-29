@@ -31,6 +31,7 @@ import lib.kalu.mediaplayer.R;
 public class MediaProgressBar extends TextView {
 
     private int mLoop = 0;
+    private final TextPaint mTextPaint = getPaint();
 
     public MediaProgressBar(Context context) {
         super(context);
@@ -98,13 +99,12 @@ public class MediaProgressBar extends TextView {
         }
 
         // 画笔
-        TextPaint paint = getPaint();
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setAntiAlias(true);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(0f);
-        paint.setFakeBoldText(true);
+        mTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mTextPaint.setAntiAlias(true);
+        mTextPaint.setStrokeCap(Paint.Cap.ROUND);
+        mTextPaint.setStrokeJoin(Paint.Join.ROUND);
+        mTextPaint.setStrokeWidth(0f);
+        mTextPaint.setFakeBoldText(true);
 
         float cx = getWidth() * 0.5f;
         float cy = getHeight() * 0.2f;
@@ -119,8 +119,8 @@ public class MediaProgressBar extends TextView {
         // init
 //        paint.setColor(Color.WHITE);
         canvas.drawColor(mColorCanvas, PorterDuff.Mode.CLEAR);
-        paint.setColor(mColorBackground);
-        canvas.drawCircle(cx, cy, Math.min(cx, cy), paint);
+        mTextPaint.setColor(mColorBackground);
+        canvas.drawCircle(cx, cy, Math.min(cx, cy), mTextPaint);
 
         // 椭圆
         int length = mLoop + mCount;
@@ -132,7 +132,7 @@ public class MediaProgressBar extends TextView {
                     canvas.rotate(angle * (i % mCount), cx, cx);
                 }
 //                int color = Color.parseColor("#FFA7A7A7");
-                paint.setColor(mColorRound);
+                mTextPaint.setColor(mColorRound);
             } else {
                 try {
                     float r = ((mColorRound >> 16) & 0xff) / 255.0f;
@@ -144,7 +144,7 @@ public class MediaProgressBar extends TextView {
                             ((int) (r * 255.0f + 0.5f) << 16) |
                             ((int) (g * 255.0f + 0.5f) << 8) |
                             (int) (b * 255.0f + 0.5f);
-                    paint.setColor(color);
+                    mTextPaint.setColor(color);
                 } catch (Exception e) {
                 }
             }
@@ -152,7 +152,7 @@ public class MediaProgressBar extends TextView {
 //            canvas.drawRoundRect(rectF, rx, ry, paint);
             Log.e("MediaProgressBar", "radius = " + radius + ", mRate = " + mRate);
             radius = radius * mRate;
-            canvas.drawCircle(cx, cy, radius, paint);
+            canvas.drawCircle(cx, cy, radius, mTextPaint);
             canvas.save();
             canvas.rotate(angle, cx, cx);
         }
