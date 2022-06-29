@@ -118,7 +118,8 @@ public class MediaProgressBar extends TextView {
 
         // init
 //        paint.setColor(Color.WHITE);
-        canvas.drawColor(mColorCanvas, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(mColorCanvas);
+//        canvas.drawColor(mColorCanvas, PorterDuff.Mode.CLEAR);
         mTextPaint.setColor(mColorBackground);
         canvas.drawCircle(cx, cy, Math.min(cx, cy), mTextPaint);
 

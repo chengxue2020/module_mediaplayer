@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
@@ -19,7 +20,7 @@ import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class ComponentError extends RelativeLayout implements ImplComponent {
+public final class ComponentError extends RelativeLayout implements ImplComponent {
 
     public ComponentError(Context context) {
         super(context);
@@ -59,16 +60,20 @@ public class ComponentError extends RelativeLayout implements ImplComponent {
         MediaLogUtil.log("ComponentError => playState = " + playState);
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR_URL:
-            case PlayerType.StateType.STATE_CLEAN:
+//            case PlayerType.StateType.STATE_CLEAN:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_NETWORK:
             case PlayerType.StateType.STATE_ERROR_PARSE:
-                findViewById(R.id.module_mediaplayer_component_error_img).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
+//                setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_error).setVisibility(View.VISIBLE);
+//                findViewById(R.id.module_mediaplayer_component_error_img).setVisibility(View.VISIBLE);
+//                findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
                 break;
             default:
-                findViewById(R.id.module_mediaplayer_component_error_img).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
+//                setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_error).setVisibility(View.GONE);
+//                findViewById(R.id.module_mediaplayer_component_error_img).setVisibility(View.GONE);
+//                findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
                 break;
         }
     }

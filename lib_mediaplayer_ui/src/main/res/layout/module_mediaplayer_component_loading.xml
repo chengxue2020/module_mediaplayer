@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/module_mediaplayer_component_loading"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="false"
     android:focusable="false"
     android:focusableInTouchMode="false"
-    android:longClickable="false">
+    android:longClickable="false"
+    android:visibility="gone">
 
     <!-- 背景 -->
     <View
@@ -27,7 +29,6 @@
         android:focusableInTouchMode="false"
         android:indeterminateDuration="2000"
         android:longClickable="false"
-        android:visibility="gone"
         app:mpb_color_round="#ffa7a7a7"
         app:mpb_count="8"
         app:mpb_radius="10dp"
@@ -45,7 +46,6 @@
         android:focusableInTouchMode="false"
         android:longClickable="false"
         android:textColor="@color/module_mediaplayer_color_ffffff"
-        android:textSize="22sp"
-        android:visibility="gone" />
+        android:textSize="22sp" />
 
 </RelativeLayout>

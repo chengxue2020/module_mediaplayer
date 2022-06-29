@@ -19,7 +19,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class ComponentLoading extends RelativeLayout implements ImplComponent {
+public final class ComponentLoading extends RelativeLayout implements ImplComponent {
 
     private ControllerWrapper mControllerWrapper;
 
@@ -65,17 +65,18 @@ public class ComponentLoading extends RelativeLayout implements ImplComponent {
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_NETWORK:
             case PlayerType.StateType.STATE_ERROR_PARSE:
-//            case PlayerType.StateType.STATE_LOADING_COMPLETE:
             case PlayerType.StateType.STATE_LOADING_STOP:
-                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_loading).setVisibility(View.GONE);
+//                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
+//                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
+//                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
-            case PlayerType.StateType.STATE_INIT:
-                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
+//            case PlayerType.StateType.STATE_INIT:
+                findViewById(R.id.module_mediaplayer_component_loading).setVisibility(View.VISIBLE);
+//                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
+//                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
+//                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
                 break;
         }
     }
