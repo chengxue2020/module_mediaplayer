@@ -31,6 +31,17 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
+        // udp
+        findViewById(R.id.main_udp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@172.10.10.106:1234");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
         findViewById(R.id.qun).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,17 +253,6 @@ public class MainActivity extends AppCompatActivity {
 //            public void onClick(View v) {
 //                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://115.182.96.25/gitv_live/CCTV-1-HD/CCTV-1-HD.m3u8?p=GITV&area=AH_CMCC");
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
-//                startActivity(intent);
-//            }
-//        });
-//        // udp
-//        findViewById(R.id.main_udp).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.224:10000");
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
 //                startActivity(intent);
