@@ -18,6 +18,10 @@ lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full
 #
 #### 更新
 ```
+2022-07-20
+1.新增vlc-test
+```
+```
 2022-06-29
 1.更新exoplayer-r2.18.0
 2.编译ijk-so
