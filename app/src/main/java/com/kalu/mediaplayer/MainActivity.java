@@ -31,6 +31,14 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
+        // main_vlc
+        findViewById(R.id.main_vlc).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), VlcActivity.class);
+                startActivity(intent);
+            }
+        });
         // udp
         findViewById(R.id.main_udp).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,10 +90,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_mobile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
+                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
+//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
+//                startActivity(intent);
             }
         });
 

@@ -31,6 +31,12 @@
             android:process=":demo"
             android:screenOrientation="landscape" />
         <activity
+            android:name=".VlcActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:process=":demo"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
