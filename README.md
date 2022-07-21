@@ -3,15 +3,19 @@
 #
 ####  版本
 ```
-exoplayer => r2.18.0
+exo => r2.18.0
 lib_mediaplayer_core_exo_r2.18.0
 ```
 ```
-ijkplayer轻量版本 => k0.8.8 => ff4.0--ijk0.8.8--20210426--001
+vlc => r2.18.0
+lib_mediaplayer_core_vlc_r3.4.9
+```
+```
+ijk轻量版本 => k0.8.8 => ff4.0--ijk0.8.8--20210426--001
 lib_mediaplayer_core_ijk_k0.8.8_ff4.0_lite
 ```
 ```
-ijkplayer全量版本 => 支持rmvb、avi => k0.8.8 => ff4.0--ijk0.8.8--20210426--001
+ijk全量版本 => 支持rmvb、avi => k0.8.8 => ff4.0--ijk0.8.8--20210426--001
 lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full
 ```
 
