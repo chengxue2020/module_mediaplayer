@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import androidx.annotation.Nullable;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
+import org.videolan.libvlc.interfaces.IVLCVout;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -26,10 +29,9 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
 
+    private long mSeek;
     private LibVLC mLibVLC;
     protected MediaPlayer mMediaPlayer;
-    private int mBufferedPercent;
-    private boolean mIsPreparing;
 
     public VlcMediaPlayer() {
     }
@@ -45,8 +47,12 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         if (null != mMediaPlayer)
             return;
 
-        ArrayList<String> options = new ArrayList<>();
-        mLibVLC = new LibVLC(context, options);
+//        ArrayList args = new ArrayList<>();//VLC参数
+//        args.add("--rtsp-tcp");//强制rtsp-tcp，加快加载视频速度
+//        args.add("--aout=opensles");
+//        args.add("--audio-time-stretch");
+//        args.add("-vvv");
+        mLibVLC = new LibVLC(context);
         mMediaPlayer = new MediaPlayer(mLibVLC);
         setOptions();
         initListener();
@@ -102,7 +108,12 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         mMediaPlayer.setEventListener(new MediaPlayer.EventListener() {
             @Override
             public void onEvent(MediaPlayer.Event event) {
-                MediaLogUtil.log("VLC => event = " + event.type);
+                MediaLogUtil.log("VLCCCC => event = " + event.type);
+                // 首帧画面
+                if (event.type == MediaPlayer.Event.Vout) {
+                    long length = mMediaPlayer.getLength();
+                    getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.VLC, PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, event.type, mSeek, length);
+                }
             }
         });
     }
@@ -126,6 +137,8 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
     public void start() {
         try {
             mMediaPlayer.play();
+            mMediaPlayer.setScale(0);//这行必须加，为了让视图填满布局
+            mMediaPlayer.setVideoScale(MediaPlayer.ScaleType.SURFACE_ORIGINAL);//这行必须加，为了让视图填满布局
         } catch (IllegalStateException e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
@@ -198,36 +211,40 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
      */
     @Override
     public int getBufferedPercentage() {
-        return mBufferedPercent;
+//        return mBufferedPercent;
+        return 0;
     }
-
-    private long mSeek;
 
     @Override
     public void prepare(@NonNull Context context, @NonNull long seek, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
-        this.mSeek = seek;
+
         //222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.VLC, PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
             }
             return;
         }
         try {
-            //播放前还要调用这个方法
-//            mMediaPlayer.getVLCVout().attachViews();
             Uri uri = Uri.parse(url.toString());
             Media media = new Media(mLibVLC, uri);
+            int cache = 10;
+            media.addOption(":network-caching=" + cache);
+            media.addOption(":file-caching=" + cache);
+            media.addOption(":live-cacheing=" + cache);
+            media.addOption(":sout-mux-caching=" + cache);
+            media.addOption(":codec=mediacodec,iomx,all");
+            mMediaPlayer.setMedia(media);//
+            media.setHWDecoderEnabled(false, false);//设置后才可以录制和截屏,这行必须放在mMediaPlayer.setMedia(media)后面，因为setMedia会设置setHWDecoderEnabled为true
             media.parseAsync();
-            mMediaPlayer.setMedia(media);
+
         } catch (Exception e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
         }
         try {
-            mIsPreparing = true;
-//            mMediaPlayer.play();
-//            mMediaPlayer.getMedia().parseAsync();
+            this.mSeek = seek;
+            mMediaPlayer.play();
         } catch (IllegalStateException e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }
@@ -242,8 +259,9 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
     public void setSurface(Surface surface) {
         if (surface != null) {
             try {
-                mMediaPlayer.getVLCVout().setVideoSurface(surface, null);
-                mMediaPlayer.getVLCVout().attachViews();
+                IVLCVout vout = mMediaPlayer.getVLCVout();
+                vout.setVideoSurface(surface, null);
+                vout.attachViews();
             } catch (Exception e) {
                 getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
             }
@@ -258,8 +276,9 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
     @Override
     public void setDisplay(SurfaceHolder holder) {
         try {
-            mMediaPlayer.getVLCVout().setVideoSurface(holder.getSurface(), holder);
-            mMediaPlayer.getVLCVout().attachViews();
+            IVLCVout vout = mMediaPlayer.getVLCVout();
+            vout.setVideoSurface(holder.getSurface(), holder);
+            vout.attachViews();
         } catch (Exception e) {
             getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
         }

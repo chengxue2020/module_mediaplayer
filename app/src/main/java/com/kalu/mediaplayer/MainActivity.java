@@ -31,11 +31,14 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
-        // main_vlc
-        findViewById(R.id.main_vlc).setOnClickListener(new View.OnClickListener() {
+        // main_mp4
+        findViewById(R.id.main_mp4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), VlcActivity.class);
+                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
             }
         });
@@ -47,13 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@172.10.10.106:1234");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
-                startActivity(intent);
-            }
-        });
-        findViewById(R.id.qun).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), QunActivity.class);
                 startActivity(intent);
             }
         });
@@ -156,20 +152,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "rtp://239.111.205.131:5140");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
-                startActivity(intent);
-            }
-        });
-
-        // mp4
-        findViewById(R.id.main_mp4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://i71.lanzoug.com/021900bb/2022/02/19/822a6b6ffa33b8c777b53dba9fb65e17.zip?st=f2itOCtuVUSqV3e7QtL0wQ&e=1645204709&b=Um0MfFVhU3hTfAQ7UXE_c&fi=62701757&pid=111-19-95-209&up=2&mp=0&co=1");
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://cdn.qupeiyin.cn/2021-02-28/1614507215953md525nwz.mp4");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);

@@ -40,7 +40,6 @@ public final class KernelFactoryManager {
     }
 
     public static ImplKernel getKernel(@NonNull Context context, @PlayerType.KernelType.Value int type) {
-        Toast.makeText(context, type + "", Toast.LENGTH_SHORT).show();
         // ijk
         if (type == PlayerType.KernelType.IJK) {
             return IjkFactory.build().createKernel(context);

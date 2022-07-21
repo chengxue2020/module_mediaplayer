@@ -212,7 +212,7 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
         // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.ANDROID, PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
             }
             return;
         }
@@ -344,11 +344,11 @@ public class AndroidMediaPlayer extends KernelCore implements PlatfromPlayer {
             //解决MEDIA_INFO_VIDEO_RENDERING_START多次回调问题
             if (what == PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START) {
                 if (mIsPreparing) {
-                    getVideoPlayerChangeListener().onInfo(what, extra, getPosition(), getDuration());
+                    getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.ANDROID, what, extra, getPosition(), getDuration());
                     mIsPreparing = false;
                 }
             } else {
-                getVideoPlayerChangeListener().onInfo(what, extra, getPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.ANDROID, what, extra, getPosition(), getDuration());
             }
             return true;
         }

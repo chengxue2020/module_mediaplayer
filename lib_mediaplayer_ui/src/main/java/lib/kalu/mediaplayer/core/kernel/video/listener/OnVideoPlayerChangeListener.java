@@ -16,7 +16,7 @@ public interface OnVideoPlayerChangeListener {
      * @param what  what
      * @param extra extra
      */
-    void onInfo(@PlayerType.MediaType.Value int what, @NonNull int extra, @NonNull long position, @NonNull long duration);
+    void onInfo(@PlayerType.KernelType.Value int kernel, @PlayerType.MediaType.Value int what, @NonNull int extra, @NonNull long position, @NonNull long duration);
 
     /**
      * 异常

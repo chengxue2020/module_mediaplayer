@@ -234,7 +234,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         // 设置dataSource
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, 0, 0);
+                getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.IJK,PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, 0, 0);
             }
             return;
         }
@@ -317,7 +317,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     public void seekTo(long seek) {
         try {
             MediaLogUtil.log("IJKLOG => seekTo => seek = " + seek);
-            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, 0, seek, -1);
+            getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.IJK,PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, 0, seek, -1);
             mMediaPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
             MediaLogUtil.log("IJKLOG => seekTo => " + e.getMessage());
@@ -444,7 +444,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
 //            long position = getPosition();
             long duration = getDuration();
-            getVideoPlayerChangeListener().onInfo(what, extra, mSeek, duration);
+            getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.IJK,what, extra, mSeek, duration);
             MediaLogUtil.log("IJKLOG => onInfo => what = " + what + ", extra = " + extra);
             return true;
         }

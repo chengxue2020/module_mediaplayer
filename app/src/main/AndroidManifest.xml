@@ -20,18 +20,7 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".QunActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".TestActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:process=":demo"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".VlcActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:process=":demo"

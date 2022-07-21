@@ -443,8 +443,8 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     }
 
     @Override
-    public void onInfo(int what, @NonNull int extra, @NonNull long seek, @NonNull long duration) {
-        MediaLogUtil.log("onInfo => what = " + what + ", extra = " + extra + ", seek = " + seek);
+    public void onInfo(@PlayerType.KernelType.Value int kernel, int what, @NonNull int extra, @NonNull long seek, @NonNull long duration) {
+        MediaLogUtil.log("onInfo => kernel = " + kernel + ", what = " + what + ", extra = " + extra + ", seek = " + seek);
 
         switch (what) {
             // loading-start

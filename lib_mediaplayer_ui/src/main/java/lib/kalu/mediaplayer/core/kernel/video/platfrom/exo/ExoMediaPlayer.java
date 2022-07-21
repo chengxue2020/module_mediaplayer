@@ -301,7 +301,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
         // 222222222222222222222222222
         if (url == null || url.length() == 0) {
             if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.EXO,PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
             }
             return;
         }
@@ -409,7 +409,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
                     break;
                 //开始缓充
                 case Player.STATE_BUFFERING:
-                    getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, getBufferedPercentage(), getPosition(), getDuration());
+                    getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.EXO,PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, getBufferedPercentage(), getPosition(), getDuration());
                     mIsBuffering = true;
                     break;
                 //开始播放
@@ -435,7 +435,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
                     }
 
                     if (mIsBuffering) {
-                        getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_BUFFERING_END, getBufferedPercentage(), getPosition(), getDuration());
+                        getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.EXO,PlayerType.MediaType.MEDIA_INFO_BUFFERING_END, getBufferedPercentage(), getPosition(), getDuration());
                         mIsBuffering = false;
                     }
                     break;
@@ -501,7 +501,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
         if (getVideoPlayerChangeListener() != null) {
             getVideoPlayerChangeListener().onSize(videoSize.width, videoSize.height);
             if (videoSize.unappliedRotationDegrees > 0) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees, getPosition(), getDuration());
+                getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.EXO,PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees, getPosition(), getDuration());
             }
         }
     }
@@ -509,7 +509,7 @@ public class ExoMediaPlayer extends KernelCore implements Player.Listener {
     @Override
     public void onRenderedFirstFrame() {
         if (getVideoPlayerChangeListener() != null && mIsPreparing) {
-            getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, 0, getPosition(), getDuration());
+            getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.EXO,PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, 0, getPosition(), getDuration());
             mIsPreparing = false;
         }
     }
