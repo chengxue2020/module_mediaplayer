@@ -11,23 +11,23 @@ import androidx.annotation.NonNull;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.core.controller.impl.ImplController;
-import lib.kalu.mediaplayer.core.view.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.PlayerApi;
 
 @Keep
-public class ControllerWrapper implements ImplPlayer, ImplController {
+public class ControllerWrapper implements PlayerApi, ImplController {
 
     // 播放器
-    private ImplPlayer mPlayer;
+    private PlayerApi mPlayer;
     // 控制器
     private ImplController mController;
 
-    public ControllerWrapper(@NonNull ImplPlayer player, @NonNull ImplController controller) {
+    public ControllerWrapper(@NonNull PlayerApi player, @NonNull ImplController controller) {
         this.mPlayer = player;
         this.mController = controller;
     }
 
     @Override
-    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle, @NonNull Map<String, String> headers) {
+    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
         mPlayer.start(seekPosition, live, url, subtitle, headers);
     }
 

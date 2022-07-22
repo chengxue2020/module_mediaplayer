@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.platfrom.ijk;
+package lib.kalu.mediaplayer.core.kernel.video.ijk;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -16,20 +16,25 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.core.kernel.video.core.KernelCore;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.PlatfromPlayer;
+import lib.kalu.mediaplayer.core.kernel.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 
 @Keep
-public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
+public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
-    protected tv.danmaku.ijk.media.player.IjkMediaPlayer mMediaPlayer;
+    private long mSeek;
+    private String mUrl;
     private int mBufferedPercent;
 
-    public IjkMediaPlayer() {
+    protected tv.danmaku.ijk.media.player.IjkMediaPlayer mMediaPlayer;
+    private KernelEvent mEvent;
+
+    public IjkMediaPlayer(@NonNull KernelEvent event) {
+        this.mEvent = event;
     }
 
     @NonNull
@@ -203,7 +208,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
             mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -218,24 +223,22 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
             try {
                 mMediaPlayer.setSurface(surface);
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
         }
     }
 
-
-    private long mSeek;
-
     @Override
-    public void prepare(@NonNull Context context, @NonNull long seek, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull String url, @Nullable Map<String, String> headers) {
         this.mSeek = seek;
+        this.mUrl = url;
+        MediaLogUtil.log("K_IJK => init => seek = " + this.mSeek);
 
         //2222222222222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.IJK,PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, 0, 0);
-            }
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
         try {
@@ -255,13 +258,13 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
                 mMediaPlayer.setDataSource(context, uri, headers);
             }
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
 
         try {
             mMediaPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -273,7 +276,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
             mMediaPlayer.pause();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -285,7 +288,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
             mMediaPlayer.start();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -297,7 +300,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
             mMediaPlayer.stop();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -317,11 +320,11 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     public void seekTo(long seek) {
         try {
             MediaLogUtil.log("IJKLOG => seekTo => seek = " + seek);
-            getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.IJK,PlayerType.MediaType.MEDIA_INFO_BUFFERING_START, 0, seek, -1);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mMediaPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
             MediaLogUtil.log("IJKLOG => seekTo => " + e.getMessage());
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -405,6 +408,16 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
         return mMediaPlayer.getTcpSpeed();
     }
 
+    @Override
+    public String getUrl() {
+        return mUrl;
+    }
+
+    @Override
+    public long getSeek() {
+        return mSeek;
+    }
+
     /**
      * 设置视频错误监听器
      * int MEDIA_INFO_VIDEO_RENDERING_START = 3;//视频准备渲染
@@ -418,7 +431,8 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     private IMediaPlayer.OnErrorListener onErrorListener = new IMediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, "监听异常" + framework_err + ", extra: " + impl_err);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             MediaLogUtil.log("IJKLOG => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
             return true;
         }
@@ -430,7 +444,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     private IMediaPlayer.OnCompletionListener onCompletionListener = new IMediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
-            getVideoPlayerChangeListener().onCompletion();
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_PLAYER_END);
             MediaLogUtil.log("IJKLOG => onCompletion =>");
         }
     };
@@ -442,10 +456,23 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     private IMediaPlayer.OnInfoListener onInfoListener = new IMediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
-//            long position = getPosition();
-            long duration = getDuration();
-            getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.IJK,what, extra, mSeek, duration);
-            MediaLogUtil.log("IJKLOG => onInfo => what = " + what + ", extra = " + extra);
+
+            // loading-start
+            if (what == IMediaPlayer.MEDIA_INFO_OPEN_INPUT) {
+                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_START);
+            }
+            // 首帧画面
+            else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
+                long duration = getDuration();
+                mEvent.onEvent(PlayerType.KernelType.IJK, what);
+            } else {
+
+                //            long position = getPosition();
+                long duration = getDuration();
+                mEvent.onEvent(PlayerType.KernelType.IJK, what);
+                MediaLogUtil.log("IJKLOG => onInfo => what = " + what + ", extra = " + extra);
+            }
             return true;
         }
     };
@@ -467,11 +494,11 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
     private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
-//            long position = iMediaPlayer.getCurrentPosition();
-            long duration = iMediaPlayer.getDuration();
-            MediaLogUtil.log("IJKLOG => onPrepared => seek = " + mSeek + ", duration = " + duration);
-            getVideoPlayerChangeListener().onPrepared(mSeek, duration);
-//            mSeek = 0;
+            MediaLogUtil.log("K_IJK => onPrepared => seek = " + mSeek);
+            if (mSeek > 0) {
+                seekTo(mSeek);
+                mSeek = 0;
+            }
         }
     };
 
@@ -484,7 +511,7 @@ public class IjkMediaPlayer extends KernelCore implements PlatfromPlayer {
             int videoWidth = iMediaPlayer.getVideoWidth();
             int videoHeight = iMediaPlayer.getVideoHeight();
             if (videoWidth != 0 && videoHeight != 0) {
-                getVideoPlayerChangeListener().onSize(videoWidth, videoHeight);
+                onChanged(PlayerType.KernelType.IJK, videoWidth, videoHeight, -1);
             }
 //            MediaLogUtil.log("IjkVideoPlayer----listener---------onVideoSizeChanged ——> WIDTH：" + width + "， HEIGHT：" + height);
         }

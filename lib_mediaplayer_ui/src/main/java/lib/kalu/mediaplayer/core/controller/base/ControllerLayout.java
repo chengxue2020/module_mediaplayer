@@ -24,7 +24,7 @@ import lib.kalu.mediaplayer.core.controller.impl.ImplControllerAction;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
 import lib.kalu.mediaplayer.core.controller.impl.ImplController;
 import lib.kalu.mediaplayer.core.controller.help.OrientationHelper;
-import lib.kalu.mediaplayer.core.view.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.PlayerApi;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.NetworkUtils;
 import lib.kalu.mediaplayer.util.PlayerUtils;
@@ -135,7 +135,7 @@ public abstract class ControllerLayout extends RelativeLayout implements ImplCon
      * 重要：此方法用于将{@link VideoLayout} 和控制器绑定
      */
     @CallSuper
-    public void setMediaPlayer(ImplPlayer mediaPlayer) {
+    public void setMediaPlayer(PlayerApi mediaPlayer) {
         mControllerWrapper = new ControllerWrapper(mediaPlayer, this);
         //绑定ControlComponent和Controller
 

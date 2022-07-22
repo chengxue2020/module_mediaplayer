@@ -29,7 +29,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.core.view.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.PlayerApi;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 
 /**
@@ -80,7 +80,7 @@ public interface SubtitleEngine {
      *
      * @param mediaPlayer mediaPlayer
      */
-    void bindToMediaPlayer(ImplPlayer mediaPlayer);
+    void bindToMediaPlayer(PlayerApi mediaPlayer);
 
     /**
      * 设置字幕准备完成监接口

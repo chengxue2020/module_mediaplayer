@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.platfrom.ijk;
+package lib.kalu.mediaplayer.core.kernel.video.ijk;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;

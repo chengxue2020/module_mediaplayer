@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import lib.kalu.mediaplayer.core.view.ImplPlayer;
+import lib.kalu.mediaplayer.core.view.PlayerApi;
 import lib.kalu.mediaplayer.widget.subtitle.finder.SubtitleFinder;
 import lib.kalu.mediaplayer.widget.subtitle.loader.SubtitleLoader;
 import lib.kalu.mediaplayer.widget.subtitle.task.UIRenderTask;
@@ -61,7 +61,7 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
     @Nullable
     private List<Subtitle> mSubtitles;
     private UIRenderTask mUIRenderTask;
-    private ImplPlayer mMediaPlayer;
+    private PlayerApi mMediaPlayer;
     private SubtitleCache mCache;
     private OnSubtitlePreparedListener mOnSubtitlePreparedListener;
     private OnSubtitleChangeListener mOnSubtitleChangeListener;
@@ -72,7 +72,7 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
     }
 
     @Override
-    public void bindToMediaPlayer(final ImplPlayer mediaPlayer) {
+    public void bindToMediaPlayer(final PlayerApi mediaPlayer) {
         mMediaPlayer = mediaPlayer;
     }
 

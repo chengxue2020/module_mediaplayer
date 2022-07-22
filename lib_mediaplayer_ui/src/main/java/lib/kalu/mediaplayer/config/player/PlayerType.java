@@ -71,11 +71,8 @@ public @interface PlayerType {
         int STATE_START_ABORT = 2010; // 开始播放中止
         int STATE_ONCE_LIVE = 2011; // 即将开播
 
-        int STATE_ERROR_URL = 2012; // 视频地址错误【null】
-        int STATE_ERROR_PARSE = 2013; // 解析异常
-        int STATE_ERROR_NETWORK = 2014; // 播放错误，网络异常
-        int STATE_ERROR = 2015; // 播放错误
-
+        int STATE_ERROR = 2012;
+        int STATE_ERROR_NET = 2013;
 
 //        int STATE_SUBTITLE_START = 2017;
 //        int STATE_TIMESTAMP_LOOP = 2018; // 时间戳, 开始播放后一秒回调一次
@@ -88,15 +85,19 @@ public @interface PlayerType {
 //                STATE_TIMESTAMP_LOOP,
 //                STATE_TIMESTAMP_CLEAN,
 //                STATE_SUBTITLE_START,
-                STATE_INIT, STATE_ERROR, STATE_CLEAN,
-                STATE_START, STATE_PAUSED,
-                STATE_BUFFERING_START, STATE_BUFFERING_STOP, STATE_LOADING_STOP,
-                STATE_END, STATE_START_ABORT,
+                STATE_INIT,
+                STATE_CLEAN,
+                STATE_START,
+                STATE_PAUSED,
+                STATE_BUFFERING_START,
+                STATE_BUFFERING_STOP,
+                STATE_LOADING_STOP,
+                STATE_END,
+                STATE_START_ABORT,
                 STATE_LOADING_START,
-                STATE_ERROR_PARSE,
-                STATE_ERROR_NETWORK,
-                STATE_ERROR_URL,
-                STATE_ONCE_LIVE})
+                STATE_ONCE_LIVE,
+                STATE_ERROR,
+                STATE_ERROR_NET})
         @Keep
         @interface Value {
         }
@@ -268,48 +269,62 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
-    @interface ErrorType {
+    @interface EventType {
+        int EVENT_INIT_START = 9901;
+        int EVENT_INIT_COMPILE = 9902;
+        // 播放结束
+        int EVENT_PLAYER_END = 9903;
+        // 开始渲染视频画面
+        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
+        // 开始渲染视频画面
+        int EVENT_AUDIO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START;
+        // 开始渲染视频画面
+        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
+        // 开始渲染视频画面
+        int EVENT_VIDEO_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+        // 缓冲开始
+        int EVENT_OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
+        // 缓冲开始
+        int EVENT_BUFFERING_START = IMediaPlayer.MEDIA_INFO_BUFFERING_START;
+        // 缓冲结束
+        int EVENT_BUFFERING_END = IMediaPlayer.MEDIA_INFO_BUFFERING_END;
+        // 视频旋转信息
+//        int EVENT_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
+        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
+        int EVENT_VIDEO_DECODED_START = IMediaPlayer.MEDIA_INFO_VIDEO_DECODED_START;
+
+        int EVENT_ERROR_URL = -9001;
         //错误的链接
-        int ERROR_RETRY = 9001;
+        int EVENT_ERROR_RETRY = -9002;
         //错误的链接
-        int ERROR_SOURCE = 9002;
+        int EVENT_ERROR_SOURCE = -9003;
         //解析异常
-        int ERROR_PARSE = 9003;
+        int EVENT_ERROR_PARSE = -9004;
         //其他异常
-        int ERROR_UNEXPECTED = 9004;
+        int EVENT_ERROR_UNEXPECTED = -9005;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({ERROR_RETRY, ERROR_SOURCE, ERROR_PARSE, ERROR_UNEXPECTED})
-        @Keep
-        @interface Value {
-        }
-    }
-
-    /*****************/
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
-    @interface MediaType {
-        int MEDIA_INFO_URL_NULL = -1; // 视频传入url为空
-        int MEDIA_INFO_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START; // 开始渲染视频画面
-        int MEDIA_INFO_AUDIO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START; // 开始渲染视频画面
-        int MEDIA_INFO_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START; // 开始渲染视频画面
-        int MEDIA_INFO_VIDEO_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START; // 开始渲染视频画面
-        int MEDIA_INFO_OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT; // 缓冲开始
-        int MEDIA_INFO_BUFFERING_START = IMediaPlayer.MEDIA_INFO_BUFFERING_START; // 缓冲开始
-        int MEDIA_INFO_BUFFERING_END = IMediaPlayer.MEDIA_INFO_BUFFERING_END; // 缓冲结束
-        int MEDIA_INFO_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED; // 视频旋转信息
-        int MEDIA_INFO_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
-        int MEDIA_INFO_VIDEO_DECODED_START = IMediaPlayer.MEDIA_INFO_VIDEO_DECODED_START;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({MEDIA_INFO_OPEN_INPUT, MEDIA_INFO_VIDEO_SEEK_RENDERING_START, MEDIA_INFO_AUDIO_SEEK_RENDERING_START, MEDIA_INFO_URL_NULL, MEDIA_INFO_AUDIO_RENDERING_START, MEDIA_INFO_VIDEO_RENDERING_START, MEDIA_INFO_BUFFERING_START, MEDIA_INFO_BUFFERING_END, MEDIA_INFO_VIDEO_ROTATION_CHANGED, MEDIA_INFO_AUDIO_DECODED_START, MEDIA_INFO_VIDEO_DECODED_START})
+        @IntDef({
+                EVENT_PLAYER_END,
+                EVENT_ERROR_URL,
+                EVENT_ERROR_RETRY,
+                EVENT_ERROR_SOURCE,
+                EVENT_ERROR_PARSE,
+                EVENT_ERROR_UNEXPECTED,
+                EVENT_OPEN_INPUT,
+                EVENT_INIT_START,
+                EVENT_INIT_COMPILE,
+                EVENT_VIDEO_SEEK_RENDERING_START,
+                EVENT_AUDIO_SEEK_RENDERING_START,
+                EVENT_AUDIO_RENDERING_START,
+                EVENT_VIDEO_RENDERING_START,
+                EVENT_BUFFERING_START,
+                EVENT_BUFFERING_END,
+//                EVENT_VIDEO_ROTATION_CHANGED,
+                EVENT_AUDIO_DECODED_START,
+                EVENT_VIDEO_DECODED_START})
         @Keep
         @interface Value {
         }

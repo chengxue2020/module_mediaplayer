@@ -1,8 +1,7 @@
-package lib.kalu.mediaplayer.core.kernel.impl;
+package lib.kalu.mediaplayer.core.kernel;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.net.Uri;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -12,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.core.kernel.video.listener.OnVideoPlayerChangeListener;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 
 
 /**
@@ -20,7 +19,9 @@ import lib.kalu.mediaplayer.core.kernel.video.listener.OnVideoPlayerChangeListen
  * @date: 2021-05-12 09:40
  */
 @Keep
-public interface ImplKernel {
+public interface KernelApi extends KernelEvent {
+
+    /*---------------------------- 消息通知 ----------------------------------*/
 
     /*----------------------------第一部分：视频初始化实例对象方法----------------------------------*/
 
@@ -59,7 +60,7 @@ public interface ImplKernel {
      * 准备开始播放（异步）
      * 视频播放器第四步：开始加载【异步】
      */
-    void prepare(@NonNull Context context, @NonNull long seek, @NonNull CharSequence url, @Nullable Map<String, String> headers);
+    void init(@NonNull Context context, @NonNull long seek, @NonNull String url, @Nullable Map<String, String> headers);
 
     /*----------------------------第二部分：视频播放器状态方法----------------------------------*/
 
@@ -160,12 +161,8 @@ public interface ImplKernel {
      */
     long getTcpSpeed();
 
-    /***********************************************/
+    String getUrl();
 
-    /**
-     * 绑定VideoView，监听播放异常，完成，开始准备，视频size变化，视频信息等操作
-     */
-    @Nullable
-    void setOnVideoPlayerChangeListener(@Nullable OnVideoPlayerChangeListener onVideoPlayerChangeListener);
+    long getSeek();
 }
 

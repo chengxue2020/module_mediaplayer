@@ -1,10 +1,11 @@
-package lib.kalu.mediaplayer.core.kernel.video.platfrom.ijk;
+package lib.kalu.mediaplayer.core.kernel.video.ijk;
 
 import android.content.Context;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 
 
@@ -23,8 +24,8 @@ public class IjkFactory extends KernelFactory<IjkMediaPlayer> {
     }
 
     @Override
-    public IjkMediaPlayer createKernel(@NonNull Context context) {
+    public IjkMediaPlayer createKernel(@NonNull Context context, @NonNull KernelEvent event) {
 //        return Holder.mP;
-        return new IjkMediaPlayer();
+        return new IjkMediaPlayer(event);
     }
 }

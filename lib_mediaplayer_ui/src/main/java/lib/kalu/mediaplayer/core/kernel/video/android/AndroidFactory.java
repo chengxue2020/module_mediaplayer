@@ -1,10 +1,11 @@
-package lib.kalu.mediaplayer.core.kernel.video.platfrom.android;
+package lib.kalu.mediaplayer.core.kernel.video.android;
 
 import android.content.Context;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 
 @Keep
@@ -22,8 +23,8 @@ public class AndroidFactory extends KernelFactory<AndroidMediaPlayer> {
     }
 
     @Override
-    public AndroidMediaPlayer createKernel(@NonNull Context context) {
-        return new AndroidMediaPlayer();
+    public AndroidMediaPlayer createKernel(@NonNull Context context, @NonNull KernelEvent event) {
+        return new AndroidMediaPlayer(event);
 //        return Holder.mP;
     }
 }

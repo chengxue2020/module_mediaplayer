@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.platfrom.exo;
+package lib.kalu.mediaplayer.core.kernel.video.exo;
 
 import android.content.Context;
 import android.net.Uri;

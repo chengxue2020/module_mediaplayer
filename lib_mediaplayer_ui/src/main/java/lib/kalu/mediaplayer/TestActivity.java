@@ -29,6 +29,8 @@ public final class TestActivity extends AppCompatActivity {
     @Keep
     public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
     @Keep
+    public static final String INTENT_SEEK = "intent_seek"; // 快进
+    @Keep
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
     @Keep
     public static final String INTENT_LIVE = "intent_live"; // 直播
@@ -178,20 +180,10 @@ public final class TestActivity extends AppCompatActivity {
             }
         });
 
-        //
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SystemClock.sleep(2000);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 开始播放
-                        videoLayout.start(url);
-                    }
-                });
-            }
-        }).start();
+        // 开始播放
+        long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
+        MediaLogUtil.log("K_ => seek = " + seek + ", url = " + url);
+        videoLayout.start(seek, url);
     }
 
     @Override

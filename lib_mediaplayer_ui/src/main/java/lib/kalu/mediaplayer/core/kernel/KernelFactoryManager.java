@@ -1,17 +1,15 @@
 package lib.kalu.mediaplayer.core.kernel;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.core.kernel.impl.ImplKernel;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.exo.ExoFactory;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.ijk.IjkFactory;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.android.AndroidFactory;
+import lib.kalu.mediaplayer.core.kernel.video.exo.ExoFactory;
+import lib.kalu.mediaplayer.core.kernel.video.ijk.IjkFactory;
+import lib.kalu.mediaplayer.core.kernel.video.android.AndroidFactory;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.vlc.VlcFactory;
+import lib.kalu.mediaplayer.core.kernel.video.vlc.VlcFactory;
 
 /**
  * @description: 工具类
@@ -39,22 +37,22 @@ public final class KernelFactoryManager {
         }
     }
 
-    public static ImplKernel getKernel(@NonNull Context context, @PlayerType.KernelType.Value int type) {
+    public static KernelApi getKernel(@NonNull Context context, @PlayerType.KernelType.Value int type, @NonNull KernelEvent event) {
         // ijk
         if (type == PlayerType.KernelType.IJK) {
-            return IjkFactory.build().createKernel(context);
+            return IjkFactory.build().createKernel(context, event);
         }
         // exo
         else if (type == PlayerType.KernelType.EXO) {
-            return ExoFactory.build().createKernel(context);
+            return ExoFactory.build().createKernel(context, event);
         }
         // vlc
         else if (type == PlayerType.KernelType.VLC) {
-            return VlcFactory.build().createKernel(context);
+            return VlcFactory.build().createKernel(context, event);
         }
         // android
         else {
-            return AndroidFactory.build().createKernel(context);
+            return AndroidFactory.build().createKernel(context, event);
         }
     }
 }

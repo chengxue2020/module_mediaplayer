@@ -59,11 +59,9 @@ public final class ComponentError extends RelativeLayout implements ImplComponen
     public void onPlayStateChanged(int playState) {
         MediaLogUtil.log("ComponentError => playState = " + playState);
         switch (playState) {
-            case PlayerType.StateType.STATE_ERROR_URL:
+            case PlayerType.StateType.STATE_ERROR_NET:
 //            case PlayerType.StateType.STATE_CLEAN:
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_ERROR_NETWORK:
-            case PlayerType.StateType.STATE_ERROR_PARSE:
 //                setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_error).setVisibility(View.VISIBLE);
 //                findViewById(R.id.module_mediaplayer_component_error_img).setVisibility(View.VISIBLE);

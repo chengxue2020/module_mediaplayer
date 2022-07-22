@@ -5,8 +5,6 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -25,10 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
-import lib.kalu.mediaplayer.core.kernel.impl.ImplKernel;
-import lib.kalu.mediaplayer.core.kernel.video.listener.OnVideoPlayerChangeListener;
+import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.render.ImplRender;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
 import lib.kalu.mediaplayer.listener.OnMediaStateListener;
@@ -45,16 +43,16 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * @description: 播放器具体实现类
  */
 @Keep
-public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPlayerChangeListener {
+public class VideoLayout extends RelativeLayout implements PlayerApi {
 
-    private CharSequence mUrl = null;
+    private String mUrl = null;
     protected Map<String, String> mHeaders = null;
 
     // 状态
     @PlayerType.StateType.Value
     private int mStateType = PlayerType.StateType.STATE_INIT;
     // 解码
-    protected ImplKernel mKernel;
+    protected KernelApi mKernel;
     // 渲染
     protected ImplRender mRender;
 
@@ -206,44 +204,30 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
 
     @Override
-    public void start(@NonNull long seek, @NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle, @NonNull Map<String, String> headers) {
+    public void start(@NonNull long seek, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
 
-        MediaLogUtil.log("start => seek = " + seek + ", live = " + live + ", url = " + url);
+        MediaLogUtil.log("K_ => start => seek = " + seek + ", live = " + live + ", url = " + url);
 
-        releaseKernel();
-        initKernel();
-        initRender();
+        // loading-start
+//        setPlayState(PlayerType.StateType.STATE_LOADING_START);
 
-        // fail
-        if (null == url || url.length() <= 0) {
-            mUrl = null;
-            setPlayState(PlayerType.StateType.STATE_ERROR_URL);
+
+        try {
+            releaseKernel();
+            initKernel();
+            initRender();
+
+            //如果要显示移动网络提示则不继续播放
+            boolean showNetWarning = showNetWarning();
+            if (showNetWarning) {
+                setPlayState(PlayerType.StateType.STATE_START_ABORT);
+            }
+            if (null != mKernel) {
+                mKernel.init(getContext(), seek, url, mHeaders);
+            }
+            setKeepScreenOn(true);
+        } catch (Exception e) {
         }
-        // next
-        else {
-            mUrl = url;
-            boolean prepare = prepare(seek, url);
-            setKeepScreenOn(prepare);
-        }
-    }
-
-    protected boolean prepare(@NonNull long seek, @NonNull CharSequence url) {
-
-        //如果要显示移动网络提示则不继续播放
-        boolean showNetWarning = showNetWarning();
-        if (showNetWarning) {
-            setPlayState(PlayerType.StateType.STATE_START_ABORT);
-            return false;
-        }
-//        //读取播放进度
-//        if (mProgressManager != null) {
-//            mCurrentPosition = mProgressManager.getSavedProgress(mUrl);
-//        }
-
-        //准备开始播放
-        setPlayState(PlayerType.StateType.STATE_LOADING_START);
-        mKernel.prepare(getContext(), seek, url, mHeaders);
-        return true;
     }
 
     /**
@@ -310,7 +294,7 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
 
     @Override
     public void repeat() {
-        MediaLogUtil.log("onLife => repeat => 1");
+        MediaLogUtil.log("K_ => repeat =>");
         if (null != mUrl && mUrl.length() > 0) {
             start(0, mUrl);
         }
@@ -442,140 +426,26 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         return mIsMute;
     }
 
-    @Override
-    public void onInfo(@PlayerType.KernelType.Value int kernel, int what, @NonNull int extra, @NonNull long seek, @NonNull long duration) {
-        MediaLogUtil.log("onInfo => kernel = " + kernel + ", what = " + what + ", extra = " + extra + ", seek = " + seek);
-
-        switch (what) {
-            // loading-start
-            case PlayerType.MediaType.MEDIA_INFO_BUFFERING_START:
-                setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
-                break;
-            // loading-end
-            case PlayerType.MediaType.MEDIA_INFO_BUFFERING_END:
-            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START:
-                setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
-                break;
-
-            // seekTo 会调用
-            case PlayerType.MediaType.MEDIA_INFO_OPEN_INPUT:
-                setPlayState(PlayerType.StateType.STATE_START);
-                View layout = getVideoLayout();
-                if (null != layout && layout.getWindowVisibility() != VISIBLE) {
-                    pause();
-                }
-                if (seek == 0) {
-                    setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
-                }
-                break;
-            //            // play-begin
-//            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
-////            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
-//                if (position <= 10) {
-//                    setPlayState(PlayerType.StateType.STATE_START);
-//                    if (mVideoContainer.getWindowVisibility() != VISIBLE) {
-//                        pause();
-//                    }
-//                }
-//                break;
-            case PlayerType.MediaType.MEDIA_INFO_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
-//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
-                setPlayState(PlayerType.StateType.STATE_START);
-                View layout1 = getVideoLayout();
-                if (null != layout1 && layout1.getWindowVisibility() != VISIBLE) {
-                    pause();
-                }
-                if (seek > 0) {
-                    setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
-                }
-                break;
-            case PlayerType.MediaType.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
-                if (mRender != null)
-                    mRender.setVideoRotation(extra);
-                break;
-        }
-    }
-
-    /**
-     * 视频播放出错回调
-     */
-    @Override
-    public void onError(@PlayerType.ErrorType.Value int type, String error) {
-        MediaLogUtil.log("onError => type = " + type + ", error = " + error);
-
-        setKeepScreenOn(false);
-        boolean connected = PlayerUtils.isConnected(getContext());
-        if (!connected) {
-            setPlayState(PlayerType.StateType.STATE_ERROR_NETWORK);
-        } else if (type == PlayerType.ErrorType.ERROR_RETRY) {
-            // TODO: 2021/12/16
-//            restart(false);
-            setPlayState(PlayerType.StateType.STATE_ERROR);
-        } else if (type == PlayerType.ErrorType.ERROR_UNEXPECTED) {
-            setPlayState(PlayerType.StateType.STATE_ERROR);
-        } else if (type == PlayerType.ErrorType.ERROR_PARSE) {
-            setPlayState(PlayerType.StateType.STATE_ERROR_PARSE);
-        } else if (type == PlayerType.ErrorType.ERROR_SOURCE) {
-            setPlayState(PlayerType.StateType.STATE_ERROR);
-        } else {
-            setPlayState(PlayerType.StateType.STATE_ERROR);
-        }
-
-        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        if (config != null && config.mBuriedPointEvent != null) {
-            //相当于进入了视频页面
-            if (PlayerUtils.isConnected(getContext().getApplicationContext())) {
-                config.mBuriedPointEvent.onError(mUrl, false);
-            } else {
-                config.mBuriedPointEvent.onError(mUrl, true);
-            }
-        }
-    }
-
-    /**
-     * 视频播放完成回调
-     */
-    @Override
-    public void onCompletion() {
-        setKeepScreenOn(false);
-//        mCurrentPosition = 0;
-        if (mProgressManager != null) {
-            //播放完成，清除进度
-            mProgressManager.saveProgress(mUrl, 0);
-        }
-        setPlayState(PlayerType.StateType.STATE_END);
-        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        if (config != null && config.mBuriedPointEvent != null) {
-            //视频播放完成
-            config.mBuriedPointEvent.playerCompletion(mUrl);
-        }
-    }
-
-    /**
-     * 视频缓冲完毕，准备开始播放时回调
-     */
-    @Override
-    public void onPrepared(@NonNull long seek, @NonNull long duration) {
-        MediaLogUtil.log("onPrepared => seek = " + seek + ", duration = " + duration);
-
-        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        if (config != null && config.mBuriedPointEvent != null) {
-            //相当于进入了视频页面
-            config.mBuriedPointEvent.playerIn(mUrl);
-        }
-
-//        Object tag = getTag(R.id.module_mediaplayer_id_state_code);
-//        if (null == tag) {
-//            tag = 1;
+//    /**
+//     * 视频缓冲完毕，准备开始播放时回调
+//     */
+//    @Override
+//    public void onPrepared(@NonNull long seek, @NonNull long duration) {
+//        MediaLogUtil.log("onPrepared => seek = " + seek + ", duration = " + duration);
+//
+//
+////        Object tag = getTag(R.id.module_mediaplayer_id_state_code);
+////        if (null == tag) {
+////            tag = 1;
+////        }
+////        MediaLogUtil.log("ComponentLoading => onPrepared => mCurrentPlayerState = " + tag.toString());
+////        setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
+//
+//        // 快进
+//        if (seek > 0) {
+//            seekTo(seek);
 //        }
-//        MediaLogUtil.log("ComponentLoading => onPrepared => mCurrentPlayerState = " + tag.toString());
-//        setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
-
-        // 快进
-        if (seek > 0) {
-            seekTo(seek);
-        }
-    }
+//    }
 
     /**
      * 获取当前播放器的状态
@@ -729,17 +599,6 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
     public boolean isTinyScreen() {
         return mIsTinyScreen;
     }
-
-    @Override
-    public void onSize(int videoWidth, int videoHeight) {
-        mVideoSize[0] = videoWidth;
-        mVideoSize[1] = videoHeight;
-        if (mRender != null) {
-            mRender.setScaleType(mCurrentScreenScaleType);
-            mRender.setVideoSize(videoWidth, videoHeight);
-        }
-    }
-
 
     /**
      * 设置视频比例
@@ -1034,8 +893,132 @@ public class VideoLayout extends RelativeLayout implements ImplPlayer, OnVideoPl
         if (null != mKernel) {
             releaseKernel();
         }
-        mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mKernel);
-        mKernel.setOnVideoPlayerChangeListener(this);
+        mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mKernel, new KernelEvent() {
+            @Override
+            public void onEvent(int kernel, int event) {
+
+
+                MediaLogUtil.log("onEvent => kernel = " + kernel + ", event = " + event);
+
+                switch (event) {
+//            // loading-start
+//            case PlayerType.EventType.EVENT_BUFFERING_START:
+//                setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
+//                break;
+//            // loading-end
+//            case PlayerType.EventType.EVENT_BUFFERING_END:
+//            case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
+//                setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
+//                break;
+                    // seekTo 会调用
+                    case PlayerType.EventType.EVENT_OPEN_INPUT:
+                        setPlayState(PlayerType.StateType.STATE_START);
+                        View layout = getVideoLayout();
+                        if (null != layout && layout.getWindowVisibility() != VISIBLE) {
+                            pause();
+                        }
+//                        if (position == 0) {
+//                            setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
+//                        }
+                        break;
+                    //            // play-begin
+//            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
+////            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
+//                if (position <= 10) {
+//                    setPlayState(PlayerType.StateType.STATE_START);
+//                    if (mVideoContainer.getWindowVisibility() != VISIBLE) {
+//                        pause();
+//                    }
+//                }
+//                break;
+//                    case PlayerType.EventType.EVENT_VIDEO_ROTATION_CHANGED:
+//                        if (mRender != null) {
+//                            if (rotation != -1) {
+//                                mRender.setVideoRotation(rotation);
+//                            }
+//                        }
+//                        break;
+                    // 初始化开始 => loading start
+                    case PlayerType.EventType.EVENT_INIT_START:
+                        setPlayState(PlayerType.StateType.STATE_LOADING_START);
+                        break;
+                    // 初始化完成 => loading close
+                    case PlayerType.EventType.EVENT_INIT_COMPILE:
+                        setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
+                        break;
+                    // 播放开始
+                    case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
+//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
+                        String url = mKernel.getUrl();
+                        if (null != url) {
+                            mUrl = url;
+                        }
+
+                        setPlayState(PlayerType.StateType.STATE_START);
+                        View layout1 = getVideoLayout();
+                        if (null != layout1 && layout1.getWindowVisibility() != VISIBLE) {
+                            pause();
+                        }
+
+//                        if (position > 0) {
+//                            setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
+//                        }
+
+                        if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                            //相当于进入了视频页面
+                            PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerIn(mUrl);
+                        }
+
+                        break;
+                    // 播放结束
+                    case PlayerType.EventType.EVENT_PLAYER_END:
+                        setKeepScreenOn(false);
+                        if (mProgressManager != null) {
+                            //播放完成，清除进度
+                            mProgressManager.saveProgress(mUrl, 0);
+                        }
+                        setPlayState(PlayerType.StateType.STATE_END);
+
+                        // 埋点
+                        if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                            PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerCompletion(mUrl);
+                        }
+                        break;
+                    // 播放错误
+                    case PlayerType.EventType.EVENT_ERROR_URL:
+                    case PlayerType.EventType.EVENT_ERROR_PARSE:
+                    case PlayerType.EventType.EVENT_ERROR_RETRY:
+                    case PlayerType.EventType.EVENT_ERROR_SOURCE:
+                    case PlayerType.EventType.EVENT_ERROR_UNEXPECTED:
+
+                        boolean connected = PlayerUtils.isConnected(getContext());
+                        setKeepScreenOn(false);
+                        setPlayState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
+
+                        // 埋点
+                        if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                            PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.onError(mUrl, connected);
+                        }
+
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onChanged(int kernel, int width, int height, int rotation) {
+                mVideoSize[0] = width;
+                mVideoSize[1] = height;
+                if (mRender != null) {
+                    mRender.setScaleType(mCurrentScreenScaleType);
+                    mRender.setVideoSize(width, height);
+                }
+                if (mRender != null && rotation != -1) {
+                    mRender.setVideoRotation(rotation);
+                }
+            }
+        });
+//        mKernel.setOnVideoPlayerChangeListener(this);
         mKernel.initKernel(getContext());
         mKernel.setLooping(mIsLooping);
     }

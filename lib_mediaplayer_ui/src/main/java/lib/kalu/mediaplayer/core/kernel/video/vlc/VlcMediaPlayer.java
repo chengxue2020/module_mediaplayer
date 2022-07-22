@@ -1,13 +1,11 @@
-package lib.kalu.mediaplayer.core.kernel.video.platfrom.vlc;
+package lib.kalu.mediaplayer.core.kernel.video.vlc;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -18,22 +16,25 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.interfaces.IVLCVout;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.core.KernelCore;
-import lib.kalu.mediaplayer.core.kernel.video.platfrom.PlatfromPlayer;
+import lib.kalu.mediaplayer.core.kernel.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 @Keep
-public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
+public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
-    private long mSeek;
     private LibVLC mLibVLC;
     protected MediaPlayer mMediaPlayer;
+    private KernelEvent mEvent;
 
-    public VlcMediaPlayer() {
+    private long mSeek;
+    private String mUrl;
+
+    public VlcMediaPlayer(@NonNull KernelEvent event) {
+        this.mEvent = event;
     }
 
     @NonNull
@@ -108,11 +109,29 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         mMediaPlayer.setEventListener(new MediaPlayer.EventListener() {
             @Override
             public void onEvent(MediaPlayer.Event event) {
-                MediaLogUtil.log("VLCCCC => event = " + event.type);
+                MediaLogUtil.log("K_VLC => event = " + event.type);
                 // 首帧画面
                 if (event.type == MediaPlayer.Event.Vout) {
-                    long length = mMediaPlayer.getLength();
-                    getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.VLC, PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START, event.type, mSeek, length);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_COMPILE);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+
+                    if (mSeek > 0) {
+                        seekTo(mSeek);
+                        mSeek = 0;
+                    }
+                }
+                // 解析开始
+                else if (event.type == MediaPlayer.Event.MediaChanged) {
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_START);
+                }
+                // 播放完成
+                else if (event.type == MediaPlayer.Event.EndReached) {
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_PLAYER_END);
+                }
+                // 错误
+                else if (event.type == MediaPlayer.Event.Stopped) {
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_COMPILE);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
                 }
             }
         });
@@ -126,7 +145,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
 //            mMediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -140,7 +159,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
             mMediaPlayer.setScale(0);//这行必须加，为了让视图填满布局
             mMediaPlayer.setVideoScale(MediaPlayer.ScaleType.SURFACE_ORIGINAL);//这行必须加，为了让视图填满布局
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -152,7 +171,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
             mMediaPlayer.pause();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -164,7 +183,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
             mMediaPlayer.stop();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -184,7 +203,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
             mMediaPlayer.setPosition((int) time);
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -216,14 +235,15 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
     }
 
     @Override
-    public void prepare(@NonNull Context context, @NonNull long seek, @NonNull CharSequence url, @Nullable Map<String, String> headers) {
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull String url, @Nullable Map<String, String> headers) {
+        this.mSeek = seek;
+        this.mUrl = url;
 
         //222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            if (getVideoPlayerChangeListener() != null) {
-                getVideoPlayerChangeListener().onInfo(PlayerType.KernelType.VLC, PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0, getPosition(), getDuration());
-            }
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
         try {
@@ -240,13 +260,12 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
             media.parseAsync();
 
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_PARSE, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
         try {
-            this.mSeek = seek;
             mMediaPlayer.play();
         } catch (IllegalStateException e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -263,7 +282,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
                 vout.setVideoSurface(surface, null);
                 vout.attachViews();
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
         }
     }
@@ -280,7 +299,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
             vout.setVideoSurface(holder.getSurface(), holder);
             vout.attachViews();
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -295,7 +314,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
             mMediaPlayer.setVolume((int) Math.min(v1, v2));
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -309,7 +328,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
         try {
 //            mMediaPlayer.setLooping(isLooping);
         } catch (Exception e) {
-            getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -329,7 +348,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
             try {
                 mMediaPlayer.setRate(speed);
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
         }
     }
@@ -346,7 +365,7 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
             try {
                 return mMediaPlayer.getRate();
             } catch (Exception e) {
-                getVideoPlayerChangeListener().onError(PlayerType.ErrorType.ERROR_UNEXPECTED, e.getMessage());
+                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
         }
         return 1f;
@@ -361,5 +380,15 @@ public class VlcMediaPlayer extends KernelCore implements PlatfromPlayer {
     public long getTcpSpeed() {
         // no support
         return 0;
+    }
+
+    @Override
+    public String getUrl() {
+        return mUrl;
+    }
+
+    @Override
+    public long getSeek() {
+        return mSeek;
     }
 }

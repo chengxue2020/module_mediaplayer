@@ -60,23 +60,11 @@ public final class ComponentLoading extends RelativeLayout implements ImplCompon
     public void onPlayStateChanged(int playState) {
         MediaLogUtil.log("ComponentLoading => playState = " + playState);
         switch (playState) {
-            case PlayerType.StateType.STATE_ERROR_URL:
-            case PlayerType.StateType.STATE_CLEAN:
-            case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_ERROR_NETWORK:
-            case PlayerType.StateType.STATE_ERROR_PARSE:
             case PlayerType.StateType.STATE_LOADING_STOP:
                 findViewById(R.id.module_mediaplayer_component_loading).setVisibility(View.GONE);
-//                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
-//                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
-//                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
-//            case PlayerType.StateType.STATE_INIT:
                 findViewById(R.id.module_mediaplayer_component_loading).setVisibility(View.VISIBLE);
-//                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
-//                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
-//                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
                 break;
         }
     }

@@ -13,25 +13,25 @@ import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 /**
  * revise: 播放器基础属性获取和设置属性接口
  */
-public interface ImplPlayer {
+public interface PlayerApi {
 
-    default void start(@NonNull CharSequence url, @NonNull String subtitle) {
+    default void start(@NonNull String url, @NonNull String subtitle) {
         start(0, false, url, subtitle, null);
     }
 
-    default void start(@NonNull CharSequence url) {
+    default void start(@NonNull String url) {
         start(0, false, url, null, null);
     }
 
-    default void start(@NonNull long seekPosition, @NonNull CharSequence url) {
-        start(seekPosition, false, url, null, null);
+    default void start(@NonNull long seek, @NonNull String url) {
+        start(seek, false, url, null, null);
     }
 
-    default void start(@NonNull boolean live, @NonNull CharSequence url) {
+    default void start(@NonNull boolean live, @NonNull String url) {
         start(0, live, url, null, null);
     }
 
-    default void start(@NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle) {
+    default void start(@NonNull boolean live, @NonNull String url, @NonNull String subtitle) {
         start(0, live, url, subtitle, null);
     }
 
@@ -42,7 +42,7 @@ public interface ImplPlayer {
      * @param url
      * @param headers
      */
-    void start(@NonNull long seek, @NonNull boolean live, @NonNull CharSequence url, @NonNull CharSequence subtitle, @NonNull Map<String, String> headers);
+    void start(@NonNull long seek, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers);
 
     void pause();
 

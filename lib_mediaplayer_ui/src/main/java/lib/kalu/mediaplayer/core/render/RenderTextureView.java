@@ -26,7 +26,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.core.kernel.impl.ImplKernel;
+import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.util.MeasureHelper;
 
 
@@ -44,7 +44,7 @@ public class RenderTextureView extends TextureView implements ImplRender {
     private SurfaceTexture mSurfaceTexture;
 
     @Nullable
-    private ImplKernel mMediaPlayer;
+    private KernelApi mMediaPlayer;
     private Surface mSurface;
 
     public RenderTextureView(Context context) {
@@ -63,7 +63,7 @@ public class RenderTextureView extends TextureView implements ImplRender {
      * @param player player
      */
     @Override
-    public void attachToPlayer(@NonNull ImplKernel player) {
+    public void attachToPlayer(@NonNull KernelApi player) {
         this.mMediaPlayer = player;
     }
 

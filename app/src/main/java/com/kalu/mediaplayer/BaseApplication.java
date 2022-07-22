@@ -51,7 +51,7 @@ public class BaseApplication extends MultiDexApplication {
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
                 .setLogEnabled(true)
-                .setKernel(PlayerType.KernelType.IJK)
+                .setKernel(PlayerType.KernelType.VLC)
                 .setRender(PlayerType.RenderType.SURFACE)
                 .setKeycode(new KeycodeImplSimulator())
                 .build();

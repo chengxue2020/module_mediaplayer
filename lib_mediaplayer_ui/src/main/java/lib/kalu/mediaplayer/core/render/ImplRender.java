@@ -7,7 +7,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.impl.ImplKernel;
+import lib.kalu.mediaplayer.core.kernel.KernelApi;
 
 @Keep
 public interface ImplRender {
@@ -17,7 +17,7 @@ public interface ImplRender {
      *
      * @param player player
      */
-    void attachToPlayer(@NonNull ImplKernel player);
+    void attachToPlayer(@NonNull KernelApi player);
 
     /**
      * 设置视频宽高
