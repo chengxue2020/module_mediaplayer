@@ -140,7 +140,7 @@ dependencies {
 //    compileOnly 'net.butterflytv.utils:rtmp-client:3.1.0'
 
     // tools
-    api files('libs/lib_mediaplayer_core_exoplayer.jar')
+    api files('libs/lib_mediaplayer_core_exo.jar')
 //    api(name: 'libs/lib_mediaplayer_core_exoplayer_jar', ext: 'jar') {
 ////        exclude module: 'gson'
 //        exclude group: "androidx.google.guava"
