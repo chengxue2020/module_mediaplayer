@@ -7,7 +7,7 @@ exo => r2.18.0
 lib_mediaplayer_core_exo_r2.18.0
 ```
 ```
-vlc => r2.18.0
+vlc => r3.4.9
 lib_mediaplayer_core_vlc_r3.4.9
 ```
 ```
