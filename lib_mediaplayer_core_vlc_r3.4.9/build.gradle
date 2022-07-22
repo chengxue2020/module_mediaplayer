@@ -124,5 +124,4 @@ repositories {
 }
 
 dependencies {
-    api files('libs/vlc_3.4.9.jar')
 }

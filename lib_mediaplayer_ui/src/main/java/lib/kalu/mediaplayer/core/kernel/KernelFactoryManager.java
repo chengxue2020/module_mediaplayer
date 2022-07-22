@@ -5,11 +5,11 @@ import android.content.Context;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.core.kernel.video.exo.ExoFactory;
-import lib.kalu.mediaplayer.core.kernel.video.ijk.IjkFactory;
-import lib.kalu.mediaplayer.core.kernel.video.android.AndroidFactory;
+import lib.kalu.mediaplayer.core.kernel.exo.ExoFactory;
+import lib.kalu.mediaplayer.core.kernel.ijk.IjkFactory;
+import lib.kalu.mediaplayer.core.kernel.android.AndroidFactory;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.vlc.VlcFactory;
+import lib.kalu.mediaplayer.core.kernel.vlc.VlcFactory;
 
 /**
  * @description: 工具类
