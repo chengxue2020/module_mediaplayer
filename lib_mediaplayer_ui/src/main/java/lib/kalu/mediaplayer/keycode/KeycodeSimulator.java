@@ -9,7 +9,7 @@ import androidx.annotation.Keep;
  * created by kalu on 2021/9/27
  */
 @Keep
-public class KeycodeImplSimulator extends KeycodeImplTV {
+public class KeycodeSimulator extends KeycodeTV {
 
     @Override
     public int dpadLeft() {

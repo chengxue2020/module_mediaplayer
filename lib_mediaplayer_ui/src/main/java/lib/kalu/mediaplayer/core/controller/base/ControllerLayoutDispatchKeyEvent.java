@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import lib.kalu.mediaplayer.keycode.KeycodeImpl;
+import lib.kalu.mediaplayer.keycode.KeycodeApi;
 import lib.kalu.mediaplayer.config.player.PlayerConfig;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
@@ -54,7 +54,7 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
             return super.dispatchKeyEvent(event);
 
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        KeycodeImpl mKeycodeImpl = config.mKeycode;
+        KeycodeApi mKeycodeImpl = config.mKeycode;
         // 返回
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.back() && isShowing()) {
             MediaLogUtil.log("dispatchKeyEvent[返回] => " + event.getKeyCode());

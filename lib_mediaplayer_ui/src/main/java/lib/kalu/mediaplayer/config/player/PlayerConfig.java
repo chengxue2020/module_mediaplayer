@@ -4,8 +4,8 @@ import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.buried.BuriedPointEvent;
-import lib.kalu.mediaplayer.keycode.KeycodeImpl;
-import lib.kalu.mediaplayer.keycode.KeycodeImplTV;
+import lib.kalu.mediaplayer.keycode.KeycodeApi;
+import lib.kalu.mediaplayer.keycode.KeycodeTV;
 import lib.kalu.mediaplayer.listener.OnMediaProgressManager;
 
 /**
@@ -28,7 +28,7 @@ public class PlayerConfig {
     public final boolean mAdaptCutout;
     public final boolean mIsShowToast;
     public final long mShowToastTime;
-    public final KeycodeImpl mKeycode;
+    public final KeycodeApi mKeycode;
 
 //    @PlayerType.PlatformType
 //    public final int getKernel() {
@@ -46,7 +46,7 @@ public class PlayerConfig {
         mProgressManager = builder.mProgressManager;
         mScreenScaleType = builder.mScreenScaleType;
         if (null == builder.mKeycode) {
-            mKeycode = new KeycodeImplTV();
+            mKeycode = new KeycodeTV();
         } else {
             mKeycode = builder.mKeycode;
         }
@@ -112,13 +112,13 @@ public class PlayerConfig {
          */
         private long mShowToastTime = 5;
 
-        private KeycodeImpl mKeycode;
+        private KeycodeApi mKeycode;
 
-        public KeycodeImpl getKeycode() {
+        public KeycodeApi getKeycode() {
             return mKeycode;
         }
 
-        public Builder setKeycode(KeycodeImpl mKeycode) {
+        public Builder setKeycode(KeycodeApi mKeycode) {
             this.mKeycode = mKeycode;
             return this;
         }

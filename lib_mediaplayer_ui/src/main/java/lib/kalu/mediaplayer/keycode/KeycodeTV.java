@@ -5,7 +5,7 @@ import android.view.KeyEvent;
 import androidx.annotation.Keep;
 
 @Keep
-public class KeycodeImplTV implements KeycodeImpl {
+public class KeycodeTV implements KeycodeApi {
 
     @Override
     public int pause() {

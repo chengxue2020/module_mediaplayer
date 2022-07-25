@@ -8,7 +8,7 @@ import androidx.annotation.Keep;
  * created by kalu on 2021/9/27
  */
 @Keep
-public interface KeycodeImpl {
+public interface KeycodeApi {
 
     int pause();
 
