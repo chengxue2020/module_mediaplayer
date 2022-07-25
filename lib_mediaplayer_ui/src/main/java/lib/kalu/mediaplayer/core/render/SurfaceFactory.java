@@ -12,7 +12,7 @@ public class SurfaceFactory implements RenderFactory {
     }
 
     @Override
-    public ImplRender createRender(Context context) {
+    public RenderApi createRender(Context context) {
         return new RenderSurfaceView(context);
     }
 }

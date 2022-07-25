@@ -38,7 +38,7 @@ import lib.kalu.mediaplayer.util.MeasureHelper;
  * </pre>
  */
 @SuppressLint("ViewConstructor")
-public class RenderTextureView extends TextureView implements ImplRender {
+public class RenderTextureView extends TextureView implements RenderApi {
 
     private MeasureHelper mMeasureHelper;
     private SurfaceTexture mSurfaceTexture;

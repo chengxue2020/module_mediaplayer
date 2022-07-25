@@ -18,7 +18,7 @@ public final class RenderFactoryManager {
         }
     }
 
-    public static ImplRender getRender(@NonNull Context context, @PlayerType.RenderType int type) {
+    public static RenderApi getRender(@NonNull Context context, @PlayerType.RenderType int type) {
         if (type == PlayerType.RenderType.SURFACE) {
             return SurfaceFactory.build().createRender(context);
         } else {

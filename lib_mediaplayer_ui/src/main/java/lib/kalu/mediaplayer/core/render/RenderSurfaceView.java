@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.util.MeasureHelper;
  *     desc  : 重写SurfaceView，适配视频的宽高和旋转
  * </pre>
  */
-public class RenderSurfaceView extends SurfaceView implements ImplRender {
+public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     /**
      * 优点：可以在一个独立的线程中进行绘制，不会影响主线程；使用双缓冲机制，播放视频时画面更流畅

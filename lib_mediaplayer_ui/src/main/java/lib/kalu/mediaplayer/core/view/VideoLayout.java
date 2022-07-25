@@ -27,7 +27,7 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
-import lib.kalu.mediaplayer.core.render.ImplRender;
+import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
 import lib.kalu.mediaplayer.listener.OnMediaStateListener;
 import lib.kalu.mediaplayer.config.player.PlayerConfig;
@@ -54,7 +54,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     // 解码
     protected KernelApi mKernel;
     // 渲染
-    protected ImplRender mRender;
+    protected RenderApi mRender;
 
     protected int mCurrentScreenScaleType;
     protected int[] mVideoSize = {0, 0};

@@ -12,7 +12,7 @@ public class TextureFactory implements RenderFactory {
     }
 
     @Override
-    public ImplRender createRender(Context context) {
+    public RenderApi createRender(Context context) {
         return new RenderTextureView(context);
     }
 }

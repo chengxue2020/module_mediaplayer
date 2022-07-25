@@ -5,7 +5,7 @@
     android:layout_height="50dp"
     android:layout_gravity="bottom">
 
-    <!-- jindutiao -->
+    <!-- 进度条 -->
     <ProgressBar
         android:id="@+id/module_mediaplayer_controller_bottom_progress"
         style="?android:attr/progressBarStyleHorizontal"

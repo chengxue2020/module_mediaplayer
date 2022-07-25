@@ -10,7 +10,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 
 @Keep
-public interface ImplRender {
+public interface RenderApi {
 
     /**
      * 关联AbstractPlayer
