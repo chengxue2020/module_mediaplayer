@@ -78,6 +78,7 @@ https://github.com/google/ExoPlayer
 https://mvnrepository.com/search?q=exoplayer
 https://github.com/bilibili/ijkplayer
 https://github.com/bilibili/FFmpeg/tags
+https://code.videolan.org/videolan/vlc-android
 https://mvnrepository.com/artifact/org.videolan.android/libvlc-all
 ```
 
