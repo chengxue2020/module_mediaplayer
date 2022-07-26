@@ -99,27 +99,24 @@ public class MediaPlayer {
 //        return null;
 //    }
 
-    public void setDataSource(Context context, Uri uri)
-            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(Context context, Uri uri) {
         setDataSource(context, uri, null);
     }
 
     // FIXME, this is INCORRECT, @headers are ignored
-    public void setDataSource(Context context, Uri uri, Map<String, String> headers)
-            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(Context context, Uri uri, Map<String, String> headers) {
         mCurrentMedia = new Media(mILibVLC, uri);
         mMediaPlayer.setMedia(mCurrentMedia);
     }
 
-    public void setDataSource(String path){
+    public void setDataSource(String path) {
         mCurrentMedia = new Media(mILibVLC, Uri.parse(path));
         mMediaPlayer.setMedia(mCurrentMedia);
         mCurrentMedia.setHWDecoderEnabled(false, false);
         mCurrentMedia.parseAsync();
     }
 
-    public void setDataSource(FileDescriptor fd)
-            throws IOException, IllegalArgumentException, IllegalStateException {
+    public void setDataSource(FileDescriptor fd) {
         mCurrentMedia = new Media(mILibVLC, fd);
         mMediaPlayer.setMedia(mCurrentMedia);
         mCurrentMedia.setHWDecoderEnabled(false, false);
@@ -312,59 +309,59 @@ public class MediaPlayer {
     protected void finalize() {
     }
 
-    public interface OnPreparedListener {
-        void onPrepared(MediaPlayer mp);
-    }
-
-    public void setOnPreparedListener(OnPreparedListener listener) {
-    }
-
-    public interface OnCompletionListener {
-        void onCompletion(MediaPlayer mp);
-    }
-
-    public void setOnCompletionListener(OnCompletionListener listener) {
-    }
-
-    public interface OnBufferingUpdateListener {
-        void onBufferingUpdate(MediaPlayer mp, int percent);
-    }
-
-    public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener) {
-    }
-
-    public interface OnSeekCompleteListener {
-        public void onSeekComplete(MediaPlayer mp);
-    }
-
-    public void setOnSeekCompleteListener(OnSeekCompleteListener listener) {
-    }
-
-    public interface OnVideoSizeChangedListener {
-        public void onVideoSizeChanged(MediaPlayer mp, int width, int height);
-    }
-
-    public void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener) {
-    }
-
-    public interface OnTimedTextListener {
-        public void onTimedText(MediaPlayer mp, TimedText text);
-    }
-
-    public void setOnTimedTextListener(OnTimedTextListener listener) {
-    }
-
-    public interface OnErrorListener {
-        boolean onError(MediaPlayer mp, int what, int extra);
-    }
-
-    public void setOnErrorListener(OnErrorListener listener) {
-    }
-
-    public interface OnInfoListener {
-        boolean onInfo(MediaPlayer mp, int what, int extra);
-    }
-
-    public void setOnInfoListener(OnInfoListener listener) {
-    }
+//    public interface OnPreparedListener {
+//        void onPrepared(MediaPlayer mp);
+//    }
+//
+//    public void setOnPreparedListener(OnPreparedListener listener) {
+//    }
+//
+//    public interface OnCompletionListener {
+//        void onCompletion(MediaPlayer mp);
+//    }
+//
+//    public void setOnCompletionListener(OnCompletionListener listener) {
+//    }
+//
+//    public interface OnBufferingUpdateListener {
+//        void onBufferingUpdate(MediaPlayer mp, int percent);
+//    }
+//
+//    public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener) {
+//    }
+//
+//    public interface OnSeekCompleteListener {
+//        void onSeekComplete(MediaPlayer mp);
+//    }
+//
+//    public void setOnSeekCompleteListener(OnSeekCompleteListener listener) {
+//    }
+//
+//    public interface OnVideoSizeChangedListener {
+//        void onVideoSizeChanged(MediaPlayer mp, int width, int height);
+//    }
+//
+//    public void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener) {
+//    }
+//
+//    public interface OnTimedTextListener {
+//        void onTimedText(MediaPlayer mp, TimedText text);
+//    }
+//
+//    public void setOnTimedTextListener(OnTimedTextListener listener) {
+//    }
+//
+//    public interface OnErrorListener {
+//        boolean onError(MediaPlayer mp, int what, int extra);
+//    }
+//
+//    public void setOnErrorListener(OnErrorListener listener) {
+//    }
+//
+//    public interface OnInfoListener {
+//        boolean onInfo(MediaPlayer mp, int what, int extra);
+//    }
+//
+//    public void setOnInfoListener(OnInfoListener listener) {
+//    }
 }
