@@ -169,7 +169,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public void seekTo(long seek) {
-        update(seek);
         try {
             mMediaPlayer.seekTo(seek);
         } catch (IllegalStateException e) {

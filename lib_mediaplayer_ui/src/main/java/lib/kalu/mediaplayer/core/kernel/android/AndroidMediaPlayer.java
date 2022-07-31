@@ -148,7 +148,6 @@ public final class AndroidMediaPlayer implements KernelApi {
      */
     @Override
     public void seekTo(long time) {
-        update(time);
         try {
             mMediaPlayer.seekTo((int) time);
         } catch (IllegalStateException e) {

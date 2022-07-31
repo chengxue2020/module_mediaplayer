@@ -77,8 +77,10 @@ public interface KernelApi extends KernelEvent {
         mMaxLength[0] = maxLength;
     }
 
-    default void update(@NonNull long seek) {
+    default void update(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum) {
         mSeek[0] = seek;
+        mMaxNum[0] = maxNum;
+        mMaxLength[0] = maxLength;
     }
 
     /*----------------------------第二部分：视频播放器状态方法----------------------------------*/

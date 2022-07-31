@@ -428,18 +428,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum) {
-        if (seek <= 0)
+        if (seek < 0)
             return;
 
+        MediaLogUtil.log("onEvent => seekTo => " + seek + ", seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", force = " + force);
         // must
         if (force) {
-            MediaLogUtil.log("onEvent => seekTo = " + seek + ", seek = " + seek);
-            mKernel.seekTo(seek);
+            mKernel.update(seek, maxLength, maxNum);
+            if (seek == 0) {
+                mKernel.start();
+            } else {
+                mKernel.seekTo(seek);
+            }
         }
         // sample
         else {
             boolean state = isInPlaybackState();
-            MediaLogUtil.log("onEvent => seekTo = " + seek + ", seek = " + seek + ", state = " + state);
+            MediaLogUtil.log("onEvent => seekTo => state = " + state);
             if (state) {
                 mKernel.seekTo(seek);
             }
@@ -1120,9 +1125,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                         // 播放结束
                         case PlayerType.EventType.EVENT_PLAYER_END:
 
-                            // step1
-                            playEnd();
-
                             // step2
                             clearLoop();
 
@@ -1131,6 +1133,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                                 String url = getUrl();
                                 PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerCompletion(url);
                             }
+
+                            int maxNum = getMaxNum();
+                            // loop
+                            if (maxNum > 0) {
+                                // step1
+                                setPlayState(PlayerType.StateType.STATE_LOADING_START);
+                                goneReal();
+
+                                // step2
+                                seekTo(true, 0, 0, maxNum);
+                            }
+                            // sample
+                            else {
+                                // step1
+                                playEnd();
+                            }
+
                             break;
                         // 播放错误
                         case PlayerType.EventType.EVENT_ERROR_URL:
@@ -1299,7 +1318,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     goneReal();
 
                     // step2
-                    seekTo(true, seek);
+                    seekTo(true, seek, maxLength, maxNum);
                 }
                 // stop
                 else {

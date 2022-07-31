@@ -210,7 +210,6 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         if (mExoPlayer == null) {
             return;
         }
-        update(time);
         mExoPlayer.seekTo(time);
     }
 

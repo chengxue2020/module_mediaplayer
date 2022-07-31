@@ -304,7 +304,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void seekTo(long seek) {
         MediaLogUtil.log("IJKLOG => seekTo => seek = " + seek);
-        update(seek);
         try {
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mMediaPlayer.seekTo(seek);
