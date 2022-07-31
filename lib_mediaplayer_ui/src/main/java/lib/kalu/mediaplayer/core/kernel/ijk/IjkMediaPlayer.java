@@ -3,22 +3,17 @@ package lib.kalu.mediaplayer.core.kernel.ijk;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import java.util.Map;
-
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
@@ -26,12 +21,10 @@ import tv.danmaku.ijk.media.player.IjkTimedText;
 @Keep
 public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
-    private long mSeek;
-    private String mUrl;
     private int mBufferedPercent;
 
-    protected tv.danmaku.ijk.media.player.IjkMediaPlayer mMediaPlayer;
     private KernelEvent mEvent;
+    private tv.danmaku.ijk.media.player.IjkMediaPlayer mMediaPlayer;
 
     public IjkMediaPlayer(@NonNull KernelEvent event) {
         this.mEvent = event;
@@ -43,50 +36,31 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         return this;
     }
 
-    @Override
-    public void initKernel(@NonNull Context context) {
-        resetKernel();
-    }
+//    @Override
+//    public void createKernel(@NonNull Context context) {
+//        // not null
+//        if (null != mMediaPlayer) {
+//            resetKernel();
+//        }
+//    }
 
     @Override
-    public void resetKernel() {
+    public void createDecoder(@NonNull Context context) {
         if (null == mMediaPlayer) {
             mMediaPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
+            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(MediaLogUtil.isIsLog() ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_SILENT);
+            setOptions();
+            initListener();
         }
-
-        mMediaPlayer.stop();
-        mMediaPlayer.reset();
-        //native日志
-        tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(MediaLogUtil.isIsLog() ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_SILENT);
-        setOptions();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        initListener();
     }
 
     @Override
-    public void releaseKernel() {
-        if (null == mMediaPlayer)
-            return;
-        mMediaPlayer.setOnErrorListener(null);
-        mMediaPlayer.setOnCompletionListener(null);
-        mMediaPlayer.setOnInfoListener(null);
-        mMediaPlayer.setOnBufferingUpdateListener(null);
-        mMediaPlayer.setOnPreparedListener(null);
-        mMediaPlayer.setOnVideoSizeChangedListener(null);
-        mMediaPlayer.stop();
-        mMediaPlayer.reset();
-        mMediaPlayer.release();
-        mMediaPlayer = null;
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//                    mMediaPlayer.release();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
+    public void releaseDecoder() {
+        if (null != mMediaPlayer) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     @Override
@@ -208,6 +182,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         try {
             mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
         } catch (Exception e) {
+            e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
@@ -223,16 +198,16 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             try {
                 mMediaPlayer.setSurface(surface);
             } catch (Exception e) {
+                e.printStackTrace();
                 mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
         }
     }
 
     @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull String url, @Nullable Map<String, String> headers) {
-        this.mSeek = seek;
-        this.mUrl = url;
-        MediaLogUtil.log("K_IJK => init => seek = " + this.mSeek);
+    public void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        MediaLogUtil.log("K_LOG => init => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
+        update(seek, maxLength, maxNum, url);
 
         //2222222222222222222222
         // 设置dataSource
@@ -249,21 +224,23 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
                 mMediaPlayer.setDataSource(rawDataSourceProvider);
             } else {
                 //处理UA问题
-                if (headers != null) {
-                    String userAgent = headers.get("User-Agent");
-                    if (!TextUtils.isEmpty(userAgent)) {
-                        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
-                    }
-                }
-                mMediaPlayer.setDataSource(context, uri, headers);
+//                if (headers != null) {
+//                    String userAgent = headers.get("User-Agent");
+//                    if (!TextUtils.isEmpty(userAgent)) {
+//                        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
+//                    }
+//                }
+                mMediaPlayer.setDataSource(context, uri, null);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
 
         try {
             mMediaPlayer.prepareAsync();
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
@@ -276,6 +253,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         try {
             mMediaPlayer.pause();
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
@@ -288,6 +266,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         try {
             mMediaPlayer.start();
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
@@ -300,6 +279,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         try {
             mMediaPlayer.stop();
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
@@ -309,7 +289,12 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public boolean isPlaying() {
-        return mMediaPlayer.isPlaying();
+        try {
+            return mMediaPlayer.isPlaying();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
@@ -318,12 +303,13 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public void seekTo(long seek) {
+        MediaLogUtil.log("IJKLOG => seekTo => seek = " + seek);
+        update(seek);
         try {
-            MediaLogUtil.log("IJKLOG => seekTo => seek = " + seek);
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mMediaPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
-            MediaLogUtil.log("IJKLOG => seekTo => " + e.getMessage());
+            e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
@@ -336,6 +322,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         try {
             return (int) mMediaPlayer.getCurrentPosition();
         } catch (Exception e) {
+            e.printStackTrace();
             return 0L;
         }
     }
@@ -348,6 +335,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         try {
             return (int) mMediaPlayer.getDuration();
         } catch (Exception e) {
+            e.printStackTrace();
             return 0L;
         }
     }
@@ -406,16 +394,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public long getTcpSpeed() {
         return mMediaPlayer.getTcpSpeed();
-    }
-
-    @Override
-    public String getUrl() {
-        return mUrl;
-    }
-
-    @Override
-    public long getSeek() {
-        return mSeek;
     }
 
     /**
@@ -495,9 +473,10 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
             MediaLogUtil.log("K_IJK => onPrepared => seek = " + mSeek);
-            if (mSeek > 0) {
-                seekTo(mSeek);
-                mSeek = 0;
+            long seek = getSeek();
+            if (seek > 0) {
+                seekTo(seek);
+                setSeek(0);
             }
         }
     };

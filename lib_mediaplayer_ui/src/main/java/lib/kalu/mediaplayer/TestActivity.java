@@ -4,17 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.SystemClock;
 
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
-import lib.kalu.mediaplayer.core.controller.ControllerStandard;
+import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
-import lib.kalu.mediaplayer.listener.OnMediaStateListener;
+import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
@@ -28,6 +27,10 @@ public final class TestActivity extends AppCompatActivity {
     public static final int RESULT_CODE = 31001;
     @Keep
     public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
+    @Keep
+    public static final String INTENT_MAX_LENGTH = "intent_max_length"; // max
+    @Keep
+    public static final String INTENT_MAX_NUM = "intent_max_num"; // max
     @Keep
     public static final String INTENT_SEEK = "intent_seek"; // 快进
     @Keep
@@ -60,6 +63,10 @@ public final class TestActivity extends AppCompatActivity {
         loading.setMessage("加载中...");
         loading.setMessageSize(20);
 
+        ComponentEnd end = new ComponentEnd(this);
+//        loading.setMessage("加载中...");
+//        loading.setMessageSize(20);
+
         ComponentError error = new ComponentError(this);
         error.setImage(R.drawable.module_mediaplayer_ic_action_refresh);
         error.setMessage("发生错误");
@@ -69,6 +76,7 @@ public final class TestActivity extends AppCompatActivity {
         ControllerEmpty controller = new ControllerEmpty(this);
         controller.addComponent(loading);
         controller.addComponent(error);
+        controller.addComponent(end);
 
         // control
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
@@ -79,7 +87,7 @@ public final class TestActivity extends AppCompatActivity {
 //        videoLayout.showNetWarning();
         // 全屏
 //        videoLayout.startFullScreen();
-        videoLayout.setOnMediaStateListener(new OnMediaStateListener() {
+        videoLayout.setOnMediaStateListener(new OnChangeListener() {
             /**
              * 播放模式
              * 普通模式，小窗口模式，正常模式三种其中一种
@@ -89,7 +97,7 @@ public final class TestActivity extends AppCompatActivity {
              * @param playerState                       播放模式
              */
             @Override
-            public void onWindowStateChanged(int playerState) {
+            public void onWindow(int playerState) {
                 switch (playerState) {
                     case PlayerType.WindowType.NORMAL:
                         onBackPressed();
@@ -119,7 +127,7 @@ public final class TestActivity extends AppCompatActivity {
              * @param playState                         播放状态，主要是指播放器的各种状态
              */
             @Override
-            public void onPlayStateChanged(int playState) {
+            public void onChange(int playState) {
                 MediaLogUtil.setIsLog(true);
                 MediaLogUtil.log("onPlayStateChanged => playState = " + playState);
 
@@ -182,8 +190,10 @@ public final class TestActivity extends AppCompatActivity {
 
         // 开始播放
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
+        long maxLength = getIntent().getLongExtra(INTENT_MAX_LENGTH, 0);
+        int maxNum = getIntent().getIntExtra(INTENT_MAX_NUM, 0);
         MediaLogUtil.log("K_ => seek = " + seek + ", url = " + url);
-        videoLayout.start(seek, url);
+        videoLayout.start(seek, maxLength, maxNum, url);
     }
 
     @Override
@@ -224,10 +234,10 @@ public final class TestActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            android.os.Process.killProcess(android.os.Process.myPid());
-        } catch (Exception e) {
-            System.exit(0);
-        }
+//        try {
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//        } catch (Exception e) {
+//            System.exit(0);
+//        }
     }
 }

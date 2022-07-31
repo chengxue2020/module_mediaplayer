@@ -22,7 +22,7 @@ import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ImplControllerAction;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
-import lib.kalu.mediaplayer.core.controller.impl.ImplController;
+import lib.kalu.mediaplayer.core.controller.ControllerApi;
 import lib.kalu.mediaplayer.core.controller.help.OrientationHelper;
 import lib.kalu.mediaplayer.core.view.PlayerApi;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
@@ -39,7 +39,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
  * *             6.设备方向监听: {@link #onOrientationChanged(int)}
  */
-public abstract class ControllerLayout extends RelativeLayout implements ImplController, ImplControllerAction, OrientationHelper.OnOrientationChangeListener {
+public abstract class ControllerLayout extends RelativeLayout implements ControllerApi, ImplControllerAction, OrientationHelper.OnOrientationChangeListener {
 
     //播放器包装类，集合了MediaPlayerControl的api和IVideoController的api
     protected ControllerWrapper mControllerWrapper;

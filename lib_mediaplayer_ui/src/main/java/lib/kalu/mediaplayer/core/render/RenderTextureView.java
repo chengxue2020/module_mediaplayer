@@ -15,7 +15,6 @@ limitations under the License.
 */
 package lib.kalu.mediaplayer.core.render;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -37,14 +36,13 @@ import lib.kalu.mediaplayer.util.MeasureHelper;
  *             8.必须在硬件加速的窗口中使用，占用内存比SurfaceView高，在5.0以前在主线程渲染，5.0以后有单独的渲染线程。
  * </pre>
  */
-@SuppressLint("ViewConstructor")
 public class RenderTextureView extends TextureView implements RenderApi {
 
     private MeasureHelper mMeasureHelper;
     private SurfaceTexture mSurfaceTexture;
 
     @Nullable
-    private KernelApi mMediaPlayer;
+    private KernelApi mKernel;
     private Surface mSurface;
 
     public RenderTextureView(Context context) {
@@ -58,13 +56,38 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     /**
-     * 关联AbstractPlayer
-     *
-     * @param player player
+     * 释放资源
      */
     @Override
-    public void attachToPlayer(@NonNull KernelApi player) {
-        this.mMediaPlayer = player;
+    public void releaseReal() {
+        if (mSurface != null) {
+            mSurface.release();
+        }
+        if (mSurfaceTexture != null) {
+            mSurfaceTexture.release();
+        }
+    }
+
+    /**
+     * 获取真实的RenderView
+     *
+     * @return view
+     */
+    @Override
+    public View getReal() {
+        return this;
+    }
+
+    @Override
+    public void setKernel(@NonNull KernelApi player) {
+//        if (null != this.mKernel) {
+//            this.mKernel.setSurface(null);
+//            this.mKernel.releaseDecoder();
+//        }
+        this.mKernel = player;
+//        if (null != this.mKernel && null != mSurface) {
+//            this.mKernel.setSurface(mSurface);
+//        }
     }
 
     /**
@@ -104,16 +127,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     /**
-     * 获取真实的RenderView
-     *
-     * @return view
-     */
-    @Override
-    public View getView() {
-        return this;
-    }
-
-    /**
      * 截图
      *
      * @return bitmap
@@ -123,17 +136,8 @@ public class RenderTextureView extends TextureView implements RenderApi {
         return getBitmap();
     }
 
-    /**
-     * 释放资源
-     */
     @Override
-    public void release() {
-        if (mSurface != null) {
-            mSurface.release();
-        }
-        if (mSurfaceTexture != null) {
-            mSurfaceTexture.release();
-        }
+    public void ss() {
 
     }
 
@@ -171,8 +175,8 @@ public class RenderTextureView extends TextureView implements RenderApi {
             } else {
                 mSurfaceTexture = surfaceTexture;
                 mSurface = new Surface(surfaceTexture);
-                if (mMediaPlayer != null) {
-                    mMediaPlayer.setSurface(mSurface);
+                if (mKernel != null) {
+                    mKernel.setSurface(mSurface);
                 }
             }
         }
@@ -206,6 +210,4 @@ public class RenderTextureView extends TextureView implements RenderApi {
 
         }
     };
-
-
 }

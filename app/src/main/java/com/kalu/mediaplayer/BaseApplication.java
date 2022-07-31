@@ -12,7 +12,7 @@ import lib.kalu.mediaplayer.config.cache.CacheType;
 import lib.kalu.mediaplayer.config.player.PlayerConfig;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.keycode.KeycodeImplSimulator;
+import lib.kalu.mediaplayer.keycode.KeycodeSimulator;
 
 public class BaseApplication extends MultiDexApplication {
 
@@ -51,9 +51,9 @@ public class BaseApplication extends MultiDexApplication {
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
                 .setLogEnabled(true)
-                .setKernel(PlayerType.KernelType.EXO)
+                .setKernel(PlayerType.KernelType.IJK)
                 .setRender(PlayerType.RenderType.SURFACE)
-                .setKeycode(new KeycodeImplSimulator())
+                .setKeycode(new KeycodeSimulator())
                 .build();
         PlayerConfigManager.getInstance().setConfig(build);
 

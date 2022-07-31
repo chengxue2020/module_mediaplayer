@@ -1,6 +1,8 @@
 package lib.kalu.mediaplayer.core.controller.component;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,13 +60,15 @@ public final class ComponentLoading extends RelativeLayout implements ImplCompon
 
     @Override
     public void onPlayStateChanged(int playState) {
-        MediaLogUtil.log("ComponentLoading => playState = " + playState);
         switch (playState) {
-            case PlayerType.StateType.STATE_LOADING_STOP:
-                findViewById(R.id.module_mediaplayer_component_loading).setVisibility(View.GONE);
-                break;
             case PlayerType.StateType.STATE_LOADING_START:
-                findViewById(R.id.module_mediaplayer_component_loading).setVisibility(View.VISIBLE);
+                MediaLogUtil.log("ComponentLoading[show] => playState = " + playState);
+                bringToFront();
+                setVisibility(View.VISIBLE);
+                break;
+            case PlayerType.StateType.STATE_LOADING_STOP:
+                MediaLogUtil.log("ComponentLoading[gone] => playState = " + playState);
+                setVisibility(View.GONE);
                 break;
         }
     }
@@ -93,7 +97,11 @@ public final class ComponentLoading extends RelativeLayout implements ImplCompon
         setTextSize(this, R.id.module_mediaplayer_component_loading_message, value);
     }
 
+    public final void setMessageColor(@ColorInt int color) {
+        setTextColor(this, R.id.module_mediaplayer_component_loading_message, color);
+    }
+
     public final void setBackgroundColor(@ColorInt int value) {
-        setBackgroundColor(this, R.id.module_mediaplayer_component_loading_bg, value);
+//        setBackgroundColor(this, R.id.module_mediaplayer_component_loading_bg, value);
     }
 }

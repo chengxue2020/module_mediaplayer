@@ -15,34 +15,22 @@ import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
  */
 public interface PlayerApi {
 
-    default void start(@NonNull String url, @NonNull String subtitle) {
-        start(0, false, url, subtitle, null);
-    }
-
     default void start(@NonNull String url) {
-        start(0, false, url, null, null);
+        start(0, 0, 0, url);
     }
 
     default void start(@NonNull long seek, @NonNull String url) {
-        start(seek, false, url, null, null);
-    }
-
-    default void start(@NonNull boolean live, @NonNull String url) {
-        start(0, live, url, null, null);
-    }
-
-    default void start(@NonNull boolean live, @NonNull String url, @NonNull String subtitle) {
-        start(0, live, url, subtitle, null);
+        start(seek, 0, 0, url);
     }
 
     /**
      * 开始播放
      *
-     * @param live
+     * @param seek
+     * @param maxLength
      * @param url
-     * @param headers
      */
-    void start(@NonNull long seek, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers);
+    void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url);
 
     void pause();
 
@@ -67,6 +55,14 @@ public interface PlayerApi {
      */
     long getPosition();
 
+    long getSeek();
+
+    long getMaxLength();
+
+    int getMaxNum();
+
+    String getUrl();
+
     /**
      * 获取当前缓冲百分比
      *
@@ -74,12 +70,15 @@ public interface PlayerApi {
      */
     int getBufferedPercentage();
 
-    /**
-     * 调整播放进度
-     *
-     * @param pos 位置 毫秒 => System.currentTimeMillis(), getTime()
-     */
-    void seekTo(long pos);
+    default void seekTo(@NonNull long seek) {
+        seekTo(false, seek, 0, 0);
+    }
+
+    default void seekTo(@NonNull boolean force, @NonNull long seek) {
+        seekTo(force, seek, 0, 0);
+    }
+
+    void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum);
 
     /**
      * 是否处于播放状态
@@ -122,12 +121,28 @@ public interface PlayerApi {
 
     ControllerLayout getControlLayout();
 
-    View getVideoLayout();
+    void showReal();
 
-    void initRender();
+    void goneReal();
 
-    void initKernel();
-//    void resetKernel();
+//    View getReal();
+
+    void create();
+
+    default void release() {
+        releaseRender();
+        releaseKernel();
+    }
 
     void releaseKernel();
+
+    void releaseRender();
+
+    void startLoop();
+
+    void clearLoop();
+
+    /*********/
+
+    void playEnd();
 }

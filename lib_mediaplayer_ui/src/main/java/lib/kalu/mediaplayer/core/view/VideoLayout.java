@@ -5,6 +5,8 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +30,11 @@ import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
-import lib.kalu.mediaplayer.listener.OnMediaStateListener;
+import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.config.player.PlayerConfig;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.listener.OnMediaProgressManager;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
@@ -43,10 +43,10 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * @description: 播放器具体实现类
  */
 @Keep
-public class VideoLayout extends RelativeLayout implements PlayerApi {
+public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Callback {
 
-    private String mUrl = null;
-    protected Map<String, String> mHeaders = null;
+//    private String mUrl = null;
+//    protected Map<String, String> mHeaders = null;
 
     // 状态
     @PlayerType.StateType.Value
@@ -84,13 +84,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     /**
      * OnStateChangeListener集合，保存了所有开发者设置的监听器
      */
-    protected List<OnMediaStateListener> mOnStateChangeListeners;
-
-    /**
-     * 进度管理器，设置之后播放器会记录播放进度，以便下次播放恢复进度
-     */
-    @Nullable
-    protected OnMediaProgressManager mProgressManager;
+    protected List<OnChangeListener> mOnStateChangeListeners;
 
     /**
      * 循环播放
@@ -123,29 +117,30 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         init(attrs);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-//        initKernel();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        releaseKernel();
-    }
+//    @Override
+//    protected void onAttachedToWindow() {
+//        super.onAttachedToWindow();
+//        init();
+//    }
+//
+//    @Override
+//    protected void onDetachedFromWindow() {
+//        super.onDetachedFromWindow();
+//        release();
+//    }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        if (visibility == View.VISIBLE) {
-            if (null != mUrl && mUrl.length() > 0) {
-                repeat();
-            }
-        } else {
-            if (null != mUrl && mUrl.length() > 0) {
-                stop();
-            }
-        }
+//        String url = getUrl();
+//        if (visibility == View.VISIBLE) {
+//            if (null != url && url.length() > 0) {
+//                repeat();
+//            }
+//        } else {
+//            if (null != url && url.length() > 0) {
+//                stop();
+//            }
+//        }
         super.onWindowVisibilityChanged(visibility);
     }
 
@@ -174,7 +169,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
         // 全局配置
         PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        mProgressManager = config.mProgressManager;
         mCurrentScreenScaleType = config.mScreenScaleType;
         //设置是否打印日志
         MediaLogUtil.setIsLog(config.mIsEnableLog);
@@ -202,20 +196,17 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         return super.onSaveInstanceState();
     }
 
-
     @Override
-    public void start(@NonNull long seek, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
-
-        MediaLogUtil.log("K_ => start => seek = " + seek + ", live = " + live + ", url = " + url);
+    public void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+//        PlayerApi.super.start(seek, max, maxNum, url);
 
         // loading-start
 //        setPlayState(PlayerType.StateType.STATE_LOADING_START);
-
+        stop();
 
         try {
-            releaseKernel();
-            initKernel();
-            initRender();
+            setPlayState(PlayerType.StateType.STATE_LOADING_START);
+            create();
 
             //如果要显示移动网络提示则不继续播放
             boolean showNetWarning = showNetWarning();
@@ -223,7 +214,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                 setPlayState(PlayerType.StateType.STATE_START_ABORT);
             }
             if (null != mKernel) {
-                mKernel.init(getContext(), seek, url, mHeaders);
+                mKernel.stop();
+                mKernel.create(getContext(), seek, maxLength, maxNum, url);
             }
             setKeepScreenOn(true);
         } catch (Exception e) {
@@ -238,7 +230,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             return false;
 
         //播放本地数据源时不检测网络
-        if (VideoHelper.instance().isLocalDataSource(mUrl, mAssetFileDescriptor)) {
+        String url = getUrl();
+        if (VideoHelper.instance().isLocalDataSource(url, mAssetFileDescriptor)) {
             return false;
         }
 
@@ -280,10 +273,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void resume() {
+
         MediaLogUtil.log("onLife => resume => 1");
         if (null == mKernel)
             return;
         MediaLogUtil.log("onLife => resume => 2");
+
         if (mKernel.isPlaying())
             return;
         MediaLogUtil.log("onLife => resume => 3");
@@ -294,9 +289,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void repeat() {
-        MediaLogUtil.log("K_ => repeat =>");
-        if (null != mUrl && mUrl.length() > 0) {
-            start(0, mUrl);
+        String url = getUrl();
+        MediaLogUtil.log("K_ => repeat => url = " + url);
+        if (null != url && url.length() > 0) {
+            long seek = getSeek();
+            long maxLength = getMaxLength();
+            int maxNum = getMaxNum();
+            start(seek, maxLength, maxNum, url);
         }
     }
 
@@ -371,22 +370,43 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         return position;
     }
 
-    /**
-     * 调整播放进度
-     */
     @Override
-    public void seekTo(long pos) {
-        long seek;
-        if (pos < 0) {
-            seek = 0;
-        } else {
-            seek = pos;
+    public long getSeek() {
+        try {
+            return mKernel.getSeek();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
         }
+    }
 
-        boolean state = isInPlaybackState();
-        MediaLogUtil.log("seekTo => seek = " + seek + ", state = " + state);
-        if (state) {
-            mKernel.seekTo(seek);
+    @Override
+    public long getMaxLength() {
+        try {
+            return mKernel.getMaxLength();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    @Override
+    public int getMaxNum() {
+        try {
+            return mKernel.getMaxNum();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public String getUrl() {
+        try {
+            return mKernel.getUrl();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -404,6 +424,26 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     @Override
     public int getBufferedPercentage() {
         return mKernel != null ? mKernel.getBufferedPercentage() : 0;
+    }
+
+    @Override
+    public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum) {
+        if (seek <= 0)
+            return;
+
+        // must
+        if (force) {
+            MediaLogUtil.log("onEvent => seekTo = " + seek + ", seek = " + seek);
+            mKernel.seekTo(seek);
+        }
+        // sample
+        else {
+            boolean state = isInPlaybackState();
+            MediaLogUtil.log("onEvent => seekTo = " + seek + ", seek = " + seek + ", state = " + state);
+            if (state) {
+                mKernel.seekTo(seek);
+            }
+        }
     }
 
     /**
@@ -549,13 +589,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     /**
-     * 设置进度管理器，用于保存播放进度
-     */
-    public void setProgressManager(@Nullable OnMediaProgressManager progressManager) {
-        this.mProgressManager = progressManager;
-    }
-
-    /**
      * 循环播放， 默认不循环播放
      */
     public void setLooping(boolean looping) {
@@ -606,9 +639,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     @Override
     public void setScaleType(@PlayerType.ScaleType.Value int scaleType) {
         mCurrentScreenScaleType = scaleType;
-        if (mRender != null) {
-            mRender.setScaleType(scaleType);
-        }
+//        if (mRender != null) {
+//            mRender.setScaleType(scaleType);
+//        }
     }
 
     /**
@@ -616,9 +649,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
      */
     @Override
     public void setMirrorRotation(boolean enable) {
-        if (mRender != null) {
-            mRender.getView().setScaleX(enable ? -1 : 1);
-        }
+//        if (mRender != null) {
+//            mRender.getView().setScaleX(enable ? -1 : 1);
+//        }
     }
 
     /**
@@ -626,15 +659,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
      */
     @Override
     public Bitmap doScreenShot() {
-        if (mRender != null) {
-            return mRender.doScreenShot();
-        }
+//        if (mRender != null) {
+//            return mRender.doScreenShot();
+//        }
         return null;
     }
 
-    public View getRenderView() {
-        return mRender.getView();
-    }
+//    public View getRenderView() {
+//        return mRender.getView();
+//    }
 
     /**
      * 获取视频宽高,其中width: mVideoSize[0], height: mVideoSize[1]
@@ -651,9 +684,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
      */
     @Override
     public void setRotation(float rotation) {
-        if (mRender != null) {
-            mRender.setVideoRotation((int) rotation);
-        }
+//        if (mRender != null) {
+//            mRender.setVideoRotation((int) rotation);
+//        }
     }
 
     /**
@@ -695,9 +728,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             layout.setPlayState(state);
         }
         if (mOnStateChangeListeners != null) {
-            for (OnMediaStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
+            for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                 if (l != null) {
-                    l.onPlayStateChanged(state);
+                    l.onChange(state);
                 }
             }
         }
@@ -719,9 +752,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             layout.setWindowState(windowState);
         }
         if (mOnStateChangeListeners != null) {
-            for (OnMediaStateListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
+            for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                 if (l != null) {
-                    l.onWindowStateChanged(windowState);
+                    l.onWindow(windowState);
                 }
             }
         }
@@ -730,7 +763,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     /**
      * 添加一个播放状态监听器，播放状态发生变化时将会调用。
      */
-    public void addOnStateChangeListener(@NonNull OnMediaStateListener listener) {
+    public void addOnStateChangeListener(@NonNull OnChangeListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         }
@@ -740,7 +773,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     /**
      * 移除某个播放状态监听
      */
-    public void removeOnStateChangeListener(@NonNull OnMediaStateListener listener) {
+    public void removeOnStateChangeListener(@NonNull OnChangeListener listener) {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.remove(listener);
         }
@@ -748,9 +781,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     /**
      * 设置一个播放状态监听器，播放状态发生变化时将会调用，
-     * 如果你想同时设置多个监听器，推荐 {@link #addOnStateChangeListener(OnMediaStateListener)}。
+     * 如果你想同时设置多个监听器，推荐 {@link #addOnStateChangeListener(OnChangeListener)}。
      */
-    public void setOnMediaStateListener(@NonNull OnMediaStateListener listener) {
+    public void setOnMediaStateListener(@NonNull OnChangeListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         }
@@ -841,66 +874,158 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public View getVideoLayout() {
+    public void showReal() {
         try {
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
-            return viewGroup.getChildAt(0);
+            viewGroup.setVisibility(View.VISIBLE);
+            int count = viewGroup.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View child = viewGroup.getChildAt(i);
+                child.setVisibility(View.VISIBLE);
+            }
         } catch (Exception e) {
-            return null;
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void initRender() {
-        // 视频播放器
-        if (mRender != null) {
-            mRender.release();
-        }
-        mRender = RenderFactoryManager.getRender(getContext(), PlayerConfigManager.getInstance().getConfig().mRender);
-        mRender.attachToPlayer(mKernel);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        mRender.getView().setLayoutParams(params);
-        setVideoLayout(mRender.getView());
-    }
-
-    private final void setVideoLayout(@NonNull View view) {
-        clearVideoLayout();
+    public void goneReal() {
         try {
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
-            viewGroup.addView(view);
+            int count = viewGroup.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View child = viewGroup.getChildAt(i);
+                child.setVisibility(View.INVISIBLE);
+            }
+            viewGroup.setVisibility(View.INVISIBLE);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private final void clearVideoLayout() {
-        try {
-            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
-            viewGroup.removeAllViews();
-        } catch (Exception e) {
-        }
-    }
+    @Override
+    public void release() {
 
-//    @Override
-//    public void resetKernel() {
+        // control
+//        clearControllerLayout();
 //        try {
-//            mKernel.resetKernel();
+//            ControllerLayout layout = getControlLayout();
+//            layout.destroy();
 //        } catch (Exception e) {
 //        }
-//    }
+
+        // handler
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+//            mHandler = null;
+        }
+
+        // render
+//        clearRender();
+
+        // kernel
+        try {
+            mKernel.pause();
+            mKernel.releaseDecoder();
+            mKernel = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        if (!isInit()) {
+//            PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
+//            if (config != null && config.mBuriedPointEvent != null) {
+//                //退出视频播放
+//                config.mBuriedPointEvent.playerDestroy(mUrl);
+//
+//                //计算退出视频时候的进度
+//                long duration = getDuration();
+//                long position = getPosition();
+//                float progress = (position * 1.0f) / (duration * 1.0f);
+//                config.mBuriedPointEvent.playerOutProgress(mUrl, progress);
+//                config.mBuriedPointEvent.playerOutProgress(mUrl, duration, position);
+//            }
+//
+//            //释放Assets资源
+//            if (mAssetFileDescriptor != null) {
+//                try {
+//                    mAssetFileDescriptor.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            //关闭屏幕常亮
+//            setKeepScreenOn(false);
+//            //保存播放进度
+//            saveProgress();
+//            //重置播放进度
+////            mCurrentPosition = 0;
+//            //切换转态
+//            setPlayState(PlayerType.StateType.STATE_CLEAN);
+//            setPlayState(PlayerType.StateType.STATE_INIT);
+//        }
+    }
 
     @Override
-    public void initKernel() {
-        if (null != mKernel) {
-            releaseKernel();
+    public void releaseKernel() {
+
+    }
+
+    @Override
+    public void releaseRender() {
+        ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
+        if (null != viewGroup) {
+            viewGroup.removeAllViews();
         }
-        mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mKernel, new KernelEvent() {
-            @Override
-            public void onEvent(int kernel, int event) {
+        if (null != mRender) {
+            mRender.releaseReal();
+            mRender = null;
+        }
+    }
+
+    @Override
+    public void startLoop() {
+        MediaLogUtil.log("onEvent => startLoop = " + mHandler);
+        clearLoop();
+        if (null != mHandler) {
+            Message message = Message.obtain();
+            message.what = 0x92001;
+            long millis = System.currentTimeMillis();
+            message.obj = millis;
+            mHandler.sendMessage(message);
+        }
+    }
+
+    @Override
+    public void clearLoop() {
+        MediaLogUtil.log("onEvent => clearLoop = " + mHandler);
+        if (null != mHandler) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
+    public void playEnd() {
+        goneReal();
+        setKeepScreenOn(false);
+        setPlayState(PlayerType.StateType.STATE_END);
+    }
+
+    @Override
+    public void create() {
+
+        // 1.销毁
+        release();
+
+        // 2.创建
+        if (null == mKernel) {
+            mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mKernel, new KernelEvent() {
+                @Override
+                public void onEvent(int kernel, int event) {
 
 
-                MediaLogUtil.log("onEvent => kernel = " + kernel + ", event = " + event);
+                    MediaLogUtil.log("onEvent => kernel = " + kernel + ", event = " + event);
 
-                switch (event) {
+                    switch (event) {
 //            // loading-start
 //            case PlayerType.EventType.EVENT_BUFFERING_START:
 //                setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
@@ -910,18 +1035,22 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 //            case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
 //                setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
 //                break;
-                    // seekTo 会调用
-                    case PlayerType.EventType.EVENT_OPEN_INPUT:
-                        setPlayState(PlayerType.StateType.STATE_START);
-                        View layout = getVideoLayout();
-                        if (null != layout && layout.getWindowVisibility() != VISIBLE) {
-                            pause();
-                        }
+                        // seekTo 会调用
+                        case PlayerType.EventType.EVENT_OPEN_INPUT:
+                            setPlayState(PlayerType.StateType.STATE_START);
+
+                            // step1
+                            goneReal();
+
+//                            View layout = getVideoLayout();
+//                            if (null != layout && layout.getWindowVisibility() != VISIBLE) {
+//                                pause();
+//                            }
 //                        if (position == 0) {
 //                            setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
 //                        }
-                        break;
-                    //            // play-begin
+                            break;
+                        //            // play-begin
 //            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
 ////            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
 //                if (position <= 10) {
@@ -938,147 +1067,120 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 //                            }
 //                        }
 //                        break;
-                    // 初始化开始 => loading start
-                    case PlayerType.EventType.EVENT_INIT_START:
-                        setPlayState(PlayerType.StateType.STATE_LOADING_START);
-                        break;
-                    // 初始化完成 => loading close
-                    case PlayerType.EventType.EVENT_INIT_COMPILE:
-                        setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
-                        break;
-                    // 播放开始
-                    case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
-//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
-                        String url = mKernel.getUrl();
-                        if (null != url) {
-                            mUrl = url;
-                        }
+                        // 初始化开始 => loading start
+                        case PlayerType.EventType.EVENT_INIT_START:
+                            setPlayState(PlayerType.StateType.STATE_LOADING_START);
+                            break;
+                        // 初始化完成 => loading close
+                        case PlayerType.EventType.EVENT_INIT_COMPILE:
+                            setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
 
-                        setPlayState(PlayerType.StateType.STATE_START);
-                        View layout1 = getVideoLayout();
-                        if (null != layout1 && layout1.getWindowVisibility() != VISIBLE) {
-                            pause();
-                        }
+                            break;
+                        // 播放开始-快进
+                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE:
+
+                            // step1
+                            setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
+
+                            // step2
+                            showReal();
+
+                            // step3
+                            startLoop();
+
+                            break;
+                        // 播放开始
+                        case PlayerType.EventType.EVENT_VIDEO_START:
+//                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
+//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
+                            setPlayState(PlayerType.StateType.STATE_START);
+
+                            // step1
+                            showReal();
+
+                            // step2
+                            startLoop();
+
+//                            View layout1 = getVideoLayout();
+//                            if (null != layout1 && layout1.getWindowVisibility() != VISIBLE) {
+//                                pause();
+//                            }
 
 //                        if (position > 0) {
 //                            setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
 //                        }
 
-                        if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                            //相当于进入了视频页面
-                            PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerIn(mUrl);
-                        }
+                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                                //相当于进入了视频页面
+                                String url = getUrl();
+                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerIn(url);
+                            }
 
-                        break;
-                    // 播放结束
-                    case PlayerType.EventType.EVENT_PLAYER_END:
-                        setKeepScreenOn(false);
-                        if (mProgressManager != null) {
-                            //播放完成，清除进度
-                            mProgressManager.saveProgress(mUrl, 0);
-                        }
-                        setPlayState(PlayerType.StateType.STATE_END);
+                            break;
+                        // 播放结束
+                        case PlayerType.EventType.EVENT_PLAYER_END:
 
-                        // 埋点
-                        if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                            PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerCompletion(mUrl);
-                        }
-                        break;
-                    // 播放错误
-                    case PlayerType.EventType.EVENT_ERROR_URL:
-                    case PlayerType.EventType.EVENT_ERROR_PARSE:
-                    case PlayerType.EventType.EVENT_ERROR_RETRY:
-                    case PlayerType.EventType.EVENT_ERROR_SOURCE:
-                    case PlayerType.EventType.EVENT_ERROR_UNEXPECTED:
+                            // step1
+                            playEnd();
 
-                        boolean connected = PlayerUtils.isConnected(getContext());
-                        setKeepScreenOn(false);
-                        setPlayState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
+                            // step2
+                            clearLoop();
 
-                        // 埋点
-                        if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                            PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.onError(mUrl, connected);
-                        }
+                            // 埋点
+                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                                String url = getUrl();
+                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerCompletion(url);
+                            }
+                            break;
+                        // 播放错误
+                        case PlayerType.EventType.EVENT_ERROR_URL:
+                        case PlayerType.EventType.EVENT_ERROR_PARSE:
+                        case PlayerType.EventType.EVENT_ERROR_RETRY:
+                        case PlayerType.EventType.EVENT_ERROR_SOURCE:
+                        case PlayerType.EventType.EVENT_ERROR_UNEXPECTED:
 
-                        break;
+                            boolean connected = PlayerUtils.isConnected(getContext());
+                            setKeepScreenOn(false);
+                            setPlayState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
+
+                            // 埋点
+                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                                String url = getUrl();
+                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.onError(url, connected);
+                            }
+
+                            break;
+                    }
+
                 }
 
-            }
-
-            @Override
-            public void onChanged(int kernel, int width, int height, int rotation) {
-                mVideoSize[0] = width;
-                mVideoSize[1] = height;
-                if (mRender != null) {
-                    mRender.setScaleType(mCurrentScreenScaleType);
-                    mRender.setVideoSize(width, height);
-                }
-                if (mRender != null && rotation != -1) {
-                    mRender.setVideoRotation(rotation);
-                }
-            }
-        });
-//        mKernel.setOnVideoPlayerChangeListener(this);
-        mKernel.initKernel(getContext());
-        mKernel.setLooping(mIsLooping);
-    }
-
-    @Override
-    public void releaseKernel() {
-        try {
-            ControllerLayout layout = getControlLayout();
-            layout.destroy();
-        } catch (Exception e) {
-        }
-        try {
-            clearVideoLayout();
-        } catch (Exception e) {
-        }
-        try {
-            mRender.release();
-            mRender = null;
-        } catch (Exception e) {
-        }
-        try {
-            mKernel.releaseKernel();
-            mKernel = null;
-        } catch (Exception e) {
-        }
-
-        try {
-            if (!isInit()) {
-                PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-                if (config != null && config.mBuriedPointEvent != null) {
-                    //退出视频播放
-                    config.mBuriedPointEvent.playerDestroy(mUrl);
-
-                    //计算退出视频时候的进度
-                    long duration = getDuration();
-                    long position = getPosition();
-                    float progress = (position * 1.0f) / (duration * 1.0f);
-                    config.mBuriedPointEvent.playerOutProgress(mUrl, progress);
-                    config.mBuriedPointEvent.playerOutProgress(mUrl, duration, position);
-                }
-
-                //释放Assets资源
-                if (mAssetFileDescriptor != null) {
-                    try {
-                        mAssetFileDescriptor.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                @Override
+                public void onChanged(int kernel, int width, int height, int rotation) {
+                    mVideoSize[0] = width;
+                    mVideoSize[1] = height;
+                    if (mRender != null) {
+                        mRender.setScaleType(mCurrentScreenScaleType);
+                        mRender.setVideoSize(width, height);
+                    }
+                    if (mRender != null && rotation != -1) {
+                        mRender.setVideoRotation(rotation);
                     }
                 }
-                //关闭屏幕常亮
-                setKeepScreenOn(false);
-                //保存播放进度
-                saveProgress();
-                //重置播放进度
-//            mCurrentPosition = 0;
-                //切换转态
-                setPlayState(PlayerType.StateType.STATE_CLEAN);
-                setPlayState(PlayerType.StateType.STATE_INIT);
+            });
+            mKernel.createDecoder(getContext());
+            mKernel.setLooping(mIsLooping);
+        }
+        if (null == mRender) {
+            mRender = RenderFactoryManager.getRender(getContext(), PlayerConfigManager.getInstance().getConfig().mRender);
+            mRender.setKernel(mKernel);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            mRender.getReal().setLayoutParams(params);
+            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
+            if (null != viewGroup) {
+                viewGroup.removeAllViews();
+                viewGroup.addView(mRender.getReal(), 0);
             }
-        } catch (Exception e) {
+            mRender.ss();
         }
     }
 
@@ -1173,43 +1275,57 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 //        }
     }
 
-    /******************/
-//
-//    private final Handler mHandler = new Handler(this);
-//
-//    @Override
-//    public boolean handleMessage(@NonNull Message msg) {
-//        if (null != msg && msg.what == 0x2022) {
-//            setPlayState(PlayerType.StateType.STATE_TIMESTAMP_LOOP);
-//            mHandler.sendEmptyMessageDelayed(0x2022, 1000);
-//        } else if (null != msg && msg.what == 0x2023) {
-//            setPlayState(PlayerType.StateType.STATE_TIMESTAMP_CLEAN);
-//            mHandler.removeCallbacksAndMessages(null);
-//        }
-//        return false;
-//    }
+    private Handler mHandler = new Handler(this);
 
-    /******************/
+    @Override
+    public boolean handleMessage(@NonNull Message msg) {
+        MediaLogUtil.log("onEvent => onMessage => what = " + msg.what);
+        if (null != msg && msg.what == 0x92001) {
+            long seek = getSeek();
+            long maxLength = getMaxLength();
+            int maxNum = getMaxNum();
+            long start = (long) msg.obj;
+            long millis = System.currentTimeMillis();
+            MediaLogUtil.log("onEvent => onMessage => millis = " + millis + ", start = " + start + ", seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum);
 
-//    @Override
-//    public void addView(View child, int index, ViewGroup.LayoutParams params) {
-//    }
-//
-//    @Override
-//    public void addView(View child, int index) {
-//    }
-//
-//    @Override
-//    public void addView(View child) {
-//    }
-//
-//    @Override
-//    public void addView(View child, int width, int height) {
-//    }
-//
-//    @Override
-//    public void addView(View child, ViewGroup.LayoutParams params) {
-//    }
+            // end
+            if (maxLength > 0 && (millis - start > maxLength)) {
 
-    /******************/
+                // loop
+                if (maxNum > 0) {
+
+                    // step1
+                    setPlayState(PlayerType.StateType.STATE_LOADING_START);
+                    goneReal();
+
+                    // step2
+                    seekTo(true, seek);
+                }
+                // stop
+                else {
+                    playEnd();
+                    release();
+                }
+            }
+            // next
+            else {
+                if (null != mHandler) {
+                    Message message = Message.obtain();
+                    message.what = 0x92001;
+                    message.obj = msg.obj;
+                    mHandler.sendMessageDelayed(message, 100);
+                }
+                if (mOnStateChangeListeners != null) {
+                    long position = getPosition();
+                    long duration = getDuration();
+                    for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
+                        if (l != null) {
+                            l.onProgress(position, duration);
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }

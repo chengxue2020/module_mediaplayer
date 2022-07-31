@@ -5,7 +5,8 @@
     android:clickable="false"
     android:focusable="false"
     android:focusableInTouchMode="false"
-    android:longClickable="false">
+    android:longClickable="false"
+    android:visibility="visible">
 
     <ImageView
         android:id="@+id/module_mediaplayer_component_pause_img"

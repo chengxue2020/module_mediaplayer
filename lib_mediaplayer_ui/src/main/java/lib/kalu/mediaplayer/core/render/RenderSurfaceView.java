@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -33,10 +34,11 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      * 原来的frontCanvas将切换到后台作为backCanvas。
      */
 
-    private MeasureHelper mMeasureHelper;
+//    private MeasureHelper mMeasureHelper;
     @Nullable
-    private KernelApi mMediaPlayer;
-
+    private KernelApi mKernel;
+    @Nullable
+    private Surface mSurface;
 
     @Override
     protected void onDetachedFromWindow() {
@@ -52,20 +54,32 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     private void init() {
-        mMeasureHelper = new MeasureHelper();
+//        mMeasureHelper = new MeasureHelper();
         SurfaceHolder holder = this.getHolder();
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         holder.addCallback(callback);
     }
 
-    /**
-     * 关联AbstractPlayer
-     *
-     * @param player player
-     */
     @Override
-    public void attachToPlayer(@NonNull KernelApi player) {
-        this.mMediaPlayer = player;
+    public void releaseReal() {
+        if (null != mSurface) {
+            mSurface.release();
+        }
+        if (callback != null) {
+            getHolder().removeCallback(callback);
+        }
+    }
+
+    @Override
+    public void setKernel(@NonNull KernelApi kernel) {
+//        if (null != this.mKernel) {
+//            this.mKernel.setSurface(null);
+//            this.mKernel.releaseDecoder();
+//        }
+        this.mKernel = kernel;
+//        if (null != this.mKernel && null != mSurface) {
+//            this.mKernel.setSurface(mSurface);
+//        }
     }
 
     /**
@@ -76,10 +90,10 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      */
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-        if (videoWidth > 0 && videoHeight > 0) {
-            mMeasureHelper.setVideoSize(videoWidth, videoHeight);
-            requestLayout();
-        }
+//        if (videoWidth > 0 && videoHeight > 0) {
+//            mMeasureHelper.setVideoSize(videoWidth, videoHeight);
+//            requestLayout();
+//        }
     }
 
     /**
@@ -89,7 +103,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      */
     @Override
     public void setVideoRotation(int degree) {
-        mMeasureHelper.setVideoRotation(degree);
+//        mMeasureHelper.setVideoRotation(degree);
         setRotation(degree);
     }
 
@@ -100,7 +114,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      */
     @Override
     public void setScaleType(int scaleType) {
-        mMeasureHelper.setScreenScale(scaleType);
+//        mMeasureHelper.setScreenScale(scaleType);
         requestLayout();
     }
 
@@ -110,7 +124,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      * @return view
      */
     @Override
-    public View getView() {
+    public View getReal() {
         return this;
     }
 
@@ -124,21 +138,24 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         return getDrawingCache();
     }
 
+    @Override
+    public void ss() {
+        setZOrderOnTop(true);
+        setZOrderMediaOverlay(true);
+    }
+
     /**
      * 释放资源
      */
     @Override
-    public void release() {
-        if (callback != null) {
-            getHolder().removeCallback(callback);
-        }
-    }
-
-    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int[] measuredSize = mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(measuredSize[0], measuredSize[1]);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
+    //    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        int[] measuredSize = mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
+//        setMeasuredDimension(measuredSize[0], measuredSize[1]);
+//    }
 
     /**
      * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
@@ -162,9 +179,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
          */
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            if (mMediaPlayer != null) {
-                Surface surface = holder.getSurface();
-                mMediaPlayer.setSurface(surface);
+            if (mKernel != null) {
+                mSurface = holder.getSurface();
+                mKernel.setSurface(mSurface);
             }
         }
 
@@ -186,7 +203,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
          */
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
-
         }
     };
 }

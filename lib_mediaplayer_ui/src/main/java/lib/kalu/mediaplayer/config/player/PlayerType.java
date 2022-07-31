@@ -274,14 +274,17 @@ public @interface PlayerType {
         int EVENT_INIT_COMPILE = 9902;
         // 播放结束
         int EVENT_PLAYER_END = 9903;
+        //        // 开始渲染视频画面
+//        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
+//        // 开始渲染视频画面
+//        int EVENT_AUDIO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START;
+//        // 开始渲染视频画面
+//        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 开始渲染视频画面
-        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
-        // 开始渲染视频画面
-        int EVENT_AUDIO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START;
-        // 开始渲染视频画面
-        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
-        // 开始渲染视频画面
-        int EVENT_VIDEO_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+        int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+        int EVENT_VIDEO_SEEK_COMPLETE = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
+        //        int EVENT_VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+//        int EVENT_VIDEO_END = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
         // 缓冲开始
         int EVENT_OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
         // 缓冲开始
@@ -290,8 +293,8 @@ public @interface PlayerType {
         int EVENT_BUFFERING_END = IMediaPlayer.MEDIA_INFO_BUFFERING_END;
         // 视频旋转信息
 //        int EVENT_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
-        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
-        int EVENT_VIDEO_DECODED_START = IMediaPlayer.MEDIA_INFO_VIDEO_DECODED_START;
+//        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
+//        int EVENT_VIDEO_DECODED_START = IMediaPlayer.MEDIA_INFO_VIDEO_DECODED_START;
 
         int EVENT_ERROR_URL = -9001;
         //错误的链接
@@ -316,15 +319,18 @@ public @interface PlayerType {
                 EVENT_OPEN_INPUT,
                 EVENT_INIT_START,
                 EVENT_INIT_COMPILE,
-                EVENT_VIDEO_SEEK_RENDERING_START,
-                EVENT_AUDIO_SEEK_RENDERING_START,
-                EVENT_AUDIO_RENDERING_START,
-                EVENT_VIDEO_RENDERING_START,
+//                EVENT_VIDEO_SEEK_RENDERING_START,
+//                EVENT_AUDIO_SEEK_RENDERING_START,
+//                EVENT_AUDIO_RENDERING_START,
+                EVENT_VIDEO_START,
+//                EVENT_VIDEO_STOP,
+//                EVENT_VIDEO_END,
                 EVENT_BUFFERING_START,
                 EVENT_BUFFERING_END,
 //                EVENT_VIDEO_ROTATION_CHANGED,
-                EVENT_AUDIO_DECODED_START,
-                EVENT_VIDEO_DECODED_START})
+//                EVENT_AUDIO_DECODED_START,
+//                EVENT_VIDEO_DECODED_START
+        })
         @Keep
         @interface Value {
         }

@@ -10,25 +10,25 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 
-import lib.kalu.mediaplayer.core.controller.impl.ImplController;
+import lib.kalu.mediaplayer.core.controller.ControllerApi;
 import lib.kalu.mediaplayer.core.view.PlayerApi;
 
 @Keep
-public class ControllerWrapper implements PlayerApi, ImplController {
+public class ControllerWrapper implements PlayerApi, ControllerApi {
 
     // 播放器
     private PlayerApi mPlayer;
     // 控制器
-    private ImplController mController;
+    private ControllerApi mController;
 
-    public ControllerWrapper(@NonNull PlayerApi player, @NonNull ImplController controller) {
+    public ControllerWrapper(@NonNull PlayerApi player, @NonNull ControllerApi controller) {
         this.mPlayer = player;
         this.mController = controller;
     }
 
     @Override
-    public void start(@NonNull long seekPosition, @NonNull boolean live, @NonNull String url, @NonNull String subtitle, @NonNull Map<String, String> headers) {
-        mPlayer.start(seekPosition, live, url, subtitle, headers);
+    public void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        mPlayer.start(seek, maxLength, maxNum, url);
     }
 
     @Override
@@ -62,8 +62,23 @@ public class ControllerWrapper implements PlayerApi, ImplController {
     }
 
     @Override
-    public void seekTo(long pos) {
-        mPlayer.seekTo(pos);
+    public long getSeek() {
+        return mPlayer.getSeek();
+    }
+
+    @Override
+    public long getMaxLength() {
+        return mPlayer.getMaxLength();
+    }
+
+    @Override
+    public int getMaxNum() {
+        return mPlayer.getMaxNum();
+    }
+
+    @Override
+    public String getUrl() {
+        return mPlayer.getUrl();
     }
 
     @Override
@@ -74,6 +89,11 @@ public class ControllerWrapper implements PlayerApi, ImplController {
     @Override
     public int getBufferedPercentage() {
         return mPlayer.getBufferedPercentage();
+    }
+
+    @Override
+    public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum) {
+        mPlayer.seekTo(force, seek, maxLength, maxNum);
     }
 
     @Override
@@ -162,28 +182,43 @@ public class ControllerWrapper implements PlayerApi, ImplController {
     }
 
     @Override
-    public View getVideoLayout() {
-        return null;
+    public void showReal() {
+        mPlayer.showReal();
     }
 
     @Override
-    public void initKernel() {
-        mPlayer.initKernel();
+    public void goneReal() {
+        mPlayer.goneReal();
     }
 
     @Override
-    public void initRender() {
-        mPlayer.initRender();
+    public void create() {
+        mPlayer.create();
     }
-
-//    @Override
-//    public void resetKernel() {
-//        mPlayer.resetKernel();
-//    }
 
     @Override
     public void releaseKernel() {
         mPlayer.releaseKernel();
+    }
+
+    @Override
+    public void releaseRender() {
+        mPlayer.releaseRender();
+    }
+
+    @Override
+    public void startLoop() {
+        mPlayer.startLoop();
+    }
+
+    @Override
+    public void clearLoop() {
+        mPlayer.clearLoop();
+    }
+
+    @Override
+    public void playEnd() {
+
     }
 
     /**
@@ -301,13 +336,12 @@ public class ControllerWrapper implements PlayerApi, ImplController {
     }
 
     @Override
-    public void destroy() {
-        mController.destroy();
+    public void init() {
     }
 
     @Override
-    public void init() {
-
+    public void destroy() {
+        mController.destroy();
     }
 
     @Override

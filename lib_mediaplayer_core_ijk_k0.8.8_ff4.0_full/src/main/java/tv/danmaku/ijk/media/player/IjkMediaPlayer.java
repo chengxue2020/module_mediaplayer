@@ -187,9 +187,9 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                 if (libLoader == null)
                     libLoader = sLocalLibLoader;
 
-                libLoader.loadLibrary("avffmpeg");
-                libLoader.loadLibrary("avsdl");
-                libLoader.loadLibrary("avplayer");
+                libLoader.loadLibrary("kffmpeg");
+                libLoader.loadLibrary("ksdl");
+                libLoader.loadLibrary("kplayer");
                 mIsLibLoaded = true;
             }
         }

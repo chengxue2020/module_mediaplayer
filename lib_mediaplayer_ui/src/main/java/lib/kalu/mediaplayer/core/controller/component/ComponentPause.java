@@ -15,6 +15,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public class ComponentPause extends RelativeLayout implements ImplComponent {
 
@@ -68,11 +69,13 @@ public class ComponentPause extends RelativeLayout implements ImplComponent {
     public void onPlayStateChanged(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSED:
+                MediaLogUtil.log("ComponentPause[show] => playState = " + playState);
                 bringToFront();
                 findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
                 break;
-            default:
-                findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.INVISIBLE);
+            case PlayerType.StateType.STATE_START:
+                MediaLogUtil.log("ComponentPause[show] => playState = " + playState);
+                findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.GONE);
                 break;
         }
     }

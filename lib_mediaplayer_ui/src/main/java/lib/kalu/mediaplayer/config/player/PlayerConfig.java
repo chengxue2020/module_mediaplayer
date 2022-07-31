@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.buried.BuriedPointEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 import lib.kalu.mediaplayer.keycode.KeycodeTV;
-import lib.kalu.mediaplayer.listener.OnMediaProgressManager;
 
 /**
  * @description: 播放器全局配置
@@ -18,7 +17,6 @@ public class PlayerConfig {
     public final boolean mPlayOnMobileNetwork;
     public final boolean mEnableOrientation;
     public final boolean mIsEnableLog;
-    public final OnMediaProgressManager mProgressManager;
     @PlayerType.KernelType.Value
     public final int mKernel;
     @PlayerType.RenderType.Value
@@ -43,7 +41,6 @@ public class PlayerConfig {
         mIsEnableLog = builder.mIsEnableLog;
         mEnableOrientation = builder.mEnableOrientation;
         mPlayOnMobileNetwork = builder.mPlayOnMobileNetwork;
-        mProgressManager = builder.mProgressManager;
         mScreenScaleType = builder.mScreenScaleType;
         if (null == builder.mKeycode) {
             mKeycode = new KeycodeTV();
@@ -77,10 +74,6 @@ public class PlayerConfig {
          * 是否监听设备方向来切换全屏/半屏， 默认不开启
          */
         private boolean mEnableOrientation;
-        /**
-         * 设置进度管理器，用于保存播放进度
-         */
-        private OnMediaProgressManager mProgressManager;
         /**
          * 自定义播放核心
          */
@@ -136,14 +129,6 @@ public class PlayerConfig {
          */
         public Builder setPlayOnMobileNetwork(boolean playOnMobileNetwork) {
             mPlayOnMobileNetwork = playOnMobileNetwork;
-            return this;
-        }
-
-        /**
-         * 设置进度管理器，用于保存播放进度
-         */
-        public Builder setProgressManager(@Nullable OnMediaProgressManager progressManager) {
-            mProgressManager = progressManager;
             return this;
         }
 

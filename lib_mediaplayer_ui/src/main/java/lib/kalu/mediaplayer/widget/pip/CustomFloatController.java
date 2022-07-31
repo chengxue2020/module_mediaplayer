@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
-import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
+import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 
 /**
@@ -41,7 +41,7 @@ public class CustomFloatController extends ControllerLayoutDispatchTouchEvent {
     @Override
     public void init() {
         super.init();
-        addComponent(new ComponentComplete(getContext()));
+        addComponent(new ComponentEnd(getContext()));
         addComponent(new ComponentError(getContext()));
         addComponent(new CustomFloatView(getContext()));
     }

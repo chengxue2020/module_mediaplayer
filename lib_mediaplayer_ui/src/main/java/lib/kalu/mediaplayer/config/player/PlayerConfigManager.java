@@ -122,7 +122,7 @@ public class PlayerConfigManager {
         }
         VideoLayout old = get(tag);
         if (old != null) {
-            old.releaseKernel();
+            old.release();
             remove(tag);
         }
         mVideoViews.put(tag, videoView);
@@ -150,7 +150,7 @@ public class PlayerConfigManager {
     public void releaseByTag(String tag, boolean isRemove) {
         VideoLayout videoView = get(tag);
         if (videoView != null) {
-            videoView.releaseKernel();
+            videoView.release();
             if (isRemove) {
                 remove(tag);
             }

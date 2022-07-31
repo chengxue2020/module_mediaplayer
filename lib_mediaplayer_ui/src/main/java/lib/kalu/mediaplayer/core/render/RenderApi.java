@@ -13,11 +13,23 @@ import lib.kalu.mediaplayer.core.kernel.KernelApi;
 public interface RenderApi {
 
     /**
+     * 释放资源
+     */
+    void releaseReal();
+
+    /**
+     * 获取真实的RenderView
+     *
+     * @return view
+     */
+    View getReal();
+
+    /**
      * 关联AbstractPlayer
      *
      * @param player player
      */
-    void attachToPlayer(@NonNull KernelApi player);
+    void setKernel(@NonNull KernelApi player);
 
     /**
      * 设置视频宽高
@@ -41,12 +53,8 @@ public interface RenderApi {
      */
     void setScaleType(@PlayerType.ScaleType.Value int scaleType);
 
-    /**
-     * 获取真实的RenderView
-     *
-     * @return view
-     */
-    View getView();
+//    @PlayerType.ScaleType.Value
+//    int getScaleType();
 
     /**
      * 截图
@@ -55,8 +63,5 @@ public interface RenderApi {
      */
     Bitmap doScreenShot();
 
-    /**
-     * 释放资源
-     */
-    void release();
+    void ss();
 }

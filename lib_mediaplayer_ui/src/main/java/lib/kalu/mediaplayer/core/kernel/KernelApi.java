@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -9,9 +10,12 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.exoplayer2.util.Log;
+
 import java.util.Map;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
@@ -21,6 +25,12 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 @Keep
 public interface KernelApi extends KernelEvent {
 
+    Long[] mMaxLength = new Long[1];
+    Integer[] mMaxNum = new Integer[1];
+    Long[] mSeek = new Long[1];
+    String[] mUrl = new String[1];
+
+
     /*---------------------------- 消息通知 ----------------------------------*/
 
     /*----------------------------第一部分：视频初始化实例对象方法----------------------------------*/
@@ -28,11 +38,9 @@ public interface KernelApi extends KernelEvent {
     @NonNull
     <T extends Object> T getPlayer();
 
-    void initKernel(@NonNull Context context);
+    void createDecoder(@NonNull Context context);
 
-    void resetKernel();
-
-    void releaseKernel();
+    void releaseDecoder();
 
 //    /**
 //     * 视频播放器第二步： 设置数据
@@ -60,7 +68,18 @@ public interface KernelApi extends KernelEvent {
      * 准备开始播放（异步）
      * 视频播放器第四步：开始加载【异步】
      */
-    void init(@NonNull Context context, @NonNull long seek, @NonNull String url, @Nullable Map<String, String> headers);
+    void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url);
+
+    default void update(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        mUrl[0] = url;
+        mSeek[0] = seek;
+        mMaxNum[0] = maxNum;
+        mMaxLength[0] = maxLength;
+    }
+
+    default void update(@NonNull long seek) {
+        mSeek[0] = seek;
+    }
 
     /*----------------------------第二部分：视频播放器状态方法----------------------------------*/
 
@@ -161,8 +180,48 @@ public interface KernelApi extends KernelEvent {
      */
     long getTcpSpeed();
 
-    String getUrl();
+    default String getUrl() {
+        return mUrl[0];
+    }
 
-    long getSeek();
+    default void setUrl(String url) {
+        mUrl[0] = url;
+    }
+
+    default long getSeek() {
+        if (null == mSeek[0]) {
+            return 0;
+        } else {
+            return mSeek[0];
+        }
+    }
+
+    default void setSeek(long seek) {
+//        mSeek[0] = seek;
+    }
+
+    default long getMaxLength() {
+        if (null == mMaxLength[0]) {
+            return 0;
+        } else {
+            return mMaxLength[0];
+        }
+    }
+
+    default void setMaxLength(long max) {
+        mMaxLength[0] = max;
+    }
+
+    default int getMaxNum() {
+        if (null == mMaxNum[0]) {
+            return 0;
+        } else {
+            return mMaxNum[0];
+        }
+    }
+
+    default void setMaxNum(int num) {
+        mMaxNum[0] = num;
+    }
 }
 

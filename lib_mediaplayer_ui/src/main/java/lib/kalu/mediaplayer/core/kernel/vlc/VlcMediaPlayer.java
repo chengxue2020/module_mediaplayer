@@ -27,11 +27,8 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     //    private LibVLC mLibVLC;
-    protected org.videolan.libvlc.media.MediaPlayer mMediaPlayer;
     private KernelEvent mEvent;
-
-    private long mSeek;
-    private String mUrl;
+    private org.videolan.libvlc.media.MediaPlayer mMediaPlayer;
 
     public VlcMediaPlayer(@NonNull KernelEvent event) {
         this.mEvent = event;
@@ -44,11 +41,8 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void initKernel(@NonNull Context context) {
-        if (null != mMediaPlayer)
-            return;
-
-//        ArrayList args = new ArrayList<>();//VLC参数
+    public void createDecoder(@NonNull Context context) {
+        //        ArrayList args = new ArrayList<>();//VLC参数
 //        args.add("--rtsp-tcp");//强制rtsp-tcp，加快加载视频速度
 //        args.add("--aout=opensles");
 //        args.add("--audio-time-stretch");
@@ -60,22 +54,11 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void resetKernel() {
-        if (null == mMediaPlayer)
-            return;
-//        mMediaPlayer.setLoop(false);
-        mMediaPlayer.stop();
-//        mMediaPlayer.reset();
-//        mMediaPlayer.setSurface(null);
-//        mMediaPlayer.setDisplay(null);
-        mMediaPlayer.setVolume(1, 1);
-    }
-
-    @Override
-    public void releaseKernel() {
-        if (null == mMediaPlayer)
-            return;
-        mMediaPlayer.release();
+    public void releaseDecoder() {
+        if (null != mMediaPlayer) {
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     /**
@@ -96,11 +79,12 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
                 // 首帧画面
                 if (event.type == MediaPlayer.Event.Vout) {
                     mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_COMPILE);
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_START);
 
-                    if (mSeek > 0) {
-                        seekTo(mSeek);
-                        mSeek = 0;
+                    long seek = getSeek();
+                    if (seek > 0) {
+                        seekTo(seek);
+                        setSeek(0);
                     }
                 }
                 // 解析开始
@@ -184,9 +168,10 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
      * 调整进度
      */
     @Override
-    public void seekTo(long time) {
+    public void seekTo(long seek) {
+        update(seek);
         try {
-            mMediaPlayer.seekTo(time);
+            mMediaPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -220,9 +205,9 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull String url, @Nullable Map<String, String> headers) {
-        this.mSeek = seek;
-        this.mUrl = url;
+    public void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        MediaLogUtil.log("K_LOG => init => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
+        update(seek, maxLength, maxNum, url);
 
         //222222222222
         // 设置dataSource
@@ -351,15 +336,5 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     public long getTcpSpeed() {
         // no support
         return 0;
-    }
-
-    @Override
-    public String getUrl() {
-        return mUrl;
-    }
-
-    @Override
-    public long getSeek() {
-        return mSeek;
     }
 }

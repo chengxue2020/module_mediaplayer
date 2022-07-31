@@ -57,11 +57,8 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
 //    private RenderersFactory mRenderersFactory;
 //    private TrackSelector mTrackSelector;
 
-    protected ExoPlayer mExoPlayer;
+    private ExoPlayer mExoPlayer;
     private KernelEvent mEvent;
-
-    private long mSeek;
-    private String mUrl;
 
     public ExoMediaPlayer(@NonNull KernelEvent event) {
         this.mEvent = event;
@@ -74,17 +71,7 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
     }
 
     @Override
-    public void initKernel(@NonNull Context context) {
-        if (null != mExoPlayer)
-            return;
-        //创建exo播放器
-//        mExoPlayer = new SimpleExoPlayer.Builder(
-//                context,
-//                mRenderersFactory == null ? mRenderersFactory =  : mRenderersFactory,
-//                mTrackSelector == null ? mTrackSelector =  : mTrackSelector,
-//               ,
-//                )
-//                .build();
+    public void createDecoder(@NonNull Context context) {
         ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
         builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
         builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
@@ -103,26 +90,14 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
     }
 
     @Override
-    public void resetKernel() {
-        if (null == mExoPlayer)
-            return;
-
-        mExoPlayer.stop();
-        mExoPlayer.setVideoSurface(null);
-//        mIsPreparing = false;
-        mIsBuffering = false;
-//        mLastReportedPlaybackState = Player.STATE_IDLE;
-//        mLastReportedPlayWhenReady = false;
-    }
-
-    @Override
-    public void releaseKernel() {
-        if (null == mExoPlayer)
-            return;
-        mExoPlayer.removeListener(this);
-//            mExoPlayer.removeVideoListener(this);
-        mExoPlayer.release();
-        mExoPlayer = null;
+    public void releaseDecoder() {
+        if (null != mExoPlayer) {
+            mExoPlayer.setVideoSurface(null);
+            mExoPlayer.removeListener(this);
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
 
         // TODO: 2021-05-21  同步释放，防止卡顿
 //            new Thread() {
@@ -235,6 +210,7 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         if (mExoPlayer == null) {
             return;
         }
+        update(time);
         mExoPlayer.seekTo(time);
     }
 
@@ -285,10 +261,9 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
     }
 
     @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull String url, @Nullable Map<String, String> headers) {
-        this.mSeek = seek;
-        this.mUrl = url;
-
+    public void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        MediaLogUtil.log("K_LOG => init => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
+        update(seek, maxLength, maxNum, url);
         // loading-start
         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_START);
 
@@ -312,7 +287,7 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
 //        mIsPreparing = true;
 
             CacheConfig config = CacheConfigManager.getInstance().getCacheConfig();
-            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, headers, config);
+            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, null, config);
             mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
                 @Override
                 public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
@@ -449,16 +424,6 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
     }
 
     @Override
-    public String getUrl() {
-        return mUrl;
-    }
-
-    @Override
-    public long getSeek() {
-        return mSeek;
-    }
-
-    @Override
     public void onPlayWhenReadyChanged(boolean playWhenReady, @Player.PlayWhenReadyChangeReason int playbackState) {
         MediaLogUtil.log("onEXOWhenReadyChanged => playbackState = " + playbackState);
 //        if (getVideoPlayerChangeListener() == null) {
@@ -577,12 +542,13 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_COMPILE);
 
         // start
-        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
 
         // 快进
-        if (mSeek > 0) {
-            seekTo(mSeek);
-            mSeek = 0;
+        long seek = getSeek();
+        if (seek > 0) {
+            seekTo(seek);
+            setSeek(0);
         }
     }
 }
