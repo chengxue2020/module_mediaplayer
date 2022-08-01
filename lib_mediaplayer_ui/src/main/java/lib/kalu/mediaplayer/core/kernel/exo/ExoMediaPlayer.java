@@ -91,6 +91,7 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
 
     @Override
     public void releaseDecoder() {
+        releaseMusic();
         if (null != mExoPlayer) {
             mExoPlayer.setVideoSurface(null);
             mExoPlayer.removeListener(this);
@@ -260,9 +261,9 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
     }
 
     @Override
-    public void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        MediaLogUtil.log("K_LOG => init => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
-        update(seek, maxLength, maxNum, url);
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        KernelApi.super.init(context, seek, maxLength, maxNum, url);
+
         // loading-start
         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_START);
 

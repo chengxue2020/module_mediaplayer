@@ -198,13 +198,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-//        PlayerApi.super.start(seek, max, maxNum, url);
-
-        // loading-start
-//        setPlayState(PlayerType.StateType.STATE_LOADING_START);
-        stop();
-
         try {
+
+            stop();
             setPlayState(PlayerType.StateType.STATE_LOADING_START);
             create();
 
@@ -219,6 +215,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
             setKeepScreenOn(true);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -401,12 +398,30 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void setMaxNum(int num) {
+        try {
+            mKernel.setMaxNum(num);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public String getUrl() {
         try {
             return mKernel.getUrl();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public void toggleMusic(@NonNull Context context, @NonNull String music) {
+        try {
+            mKernel.toggleMusic(context, music);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1311,7 +1326,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             if (maxLength > 0 && (millis - start > maxLength)) {
 
                 // loop
-                if (maxNum > 0) {
+                if (maxNum == -1 || maxNum > 0) {
+
+                    if (maxNum > 0) {
+                        int news = maxNum - 1;
+                        setMaxNum(news);
+                    }
 
                     // step1
                     setPlayState(PlayerType.StateType.STATE_LOADING_START);

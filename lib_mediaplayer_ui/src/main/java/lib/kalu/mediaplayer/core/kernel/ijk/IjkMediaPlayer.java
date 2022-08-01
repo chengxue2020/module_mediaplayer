@@ -56,6 +56,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void releaseDecoder() {
+        releaseMusic();
         if (null != mMediaPlayer) {
             mMediaPlayer.stop();
             mMediaPlayer.release();
@@ -205,9 +206,8 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        MediaLogUtil.log("K_LOG => init => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
-        update(seek, maxLength, maxNum, url);
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        KernelApi.super.init(context, seek, maxLength, maxNum, url);
 
         //2222222222222222222222
         // 设置dataSource
@@ -218,7 +218,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         }
         try {
             //解析path
-            Uri uri = Uri.parse(url.toString());
+            Uri uri = Uri.parse(url);
             if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
                 RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
                 mMediaPlayer.setDataSource(rawDataSourceProvider);

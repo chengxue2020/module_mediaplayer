@@ -48,6 +48,7 @@ public final class AndroidMediaPlayer implements KernelApi {
 
     @Override
     public void releaseDecoder() {
+        releaseMusic();
         if (null != mMediaPlayer) {
             mMediaPlayer.setOnErrorListener(null);
             mMediaPlayer.setOnCompletionListener(null);
@@ -197,11 +198,9 @@ public final class AndroidMediaPlayer implements KernelApi {
         }
     }
 
-
     @Override
-    public void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        MediaLogUtil.log("K_LOG => init => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
-        update(seek, maxLength, maxNum, url);
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        KernelApi.super.init(context, seek, maxLength, maxNum, url);
 
         // loading-start
         mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_START);
@@ -214,7 +213,7 @@ public final class AndroidMediaPlayer implements KernelApi {
             return;
         }
         try {
-            Uri uri = Uri.parse(url.toString());
+            Uri uri = Uri.parse(url);
             mMediaPlayer.setDataSource(context, uri, null);
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);

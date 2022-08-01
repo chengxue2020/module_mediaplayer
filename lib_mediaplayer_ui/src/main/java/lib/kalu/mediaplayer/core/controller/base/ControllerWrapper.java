@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.controller.base;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -77,8 +78,18 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void setMaxNum(int num) {
+        mPlayer.setMaxNum(num);
+    }
+
+    @Override
     public String getUrl() {
         return mPlayer.getUrl();
+    }
+
+    @Override
+    public void toggleMusic(@NonNull Context context, @NonNull String music) {
+        mPlayer.toggleMusic(context, music);
     }
 
     @Override

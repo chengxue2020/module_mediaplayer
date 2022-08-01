@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.VideoView;
 
+import lib.kalu.mediaplayer.core.view.VideoLayout;
+
 public class TestActivity extends AppCompatActivity {
 
     @Override
@@ -15,34 +17,31 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        VideoView videoView = findViewById(R.id.video);
-        videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.test2));
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setVolume(0f, 0f);
-            }
-        });
-        MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.test1);
+        // https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4
+        open();
 
+        // 配音
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoView.pause();
-                mediaPlayer.pause();
+                String path = BaseApplication.getModelFilePath(getApplicationContext(), "test.mp3");
+                VideoLayout videoView = findViewById(R.id.video);
+                videoView.toggleMusic(getApplicationContext(), path);
             }
         });
 
+        // 原音
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoView.start();
-                mediaPlayer.start();
+                VideoLayout videoView = findViewById(R.id.video);
+                videoView.toggleMusic(getApplicationContext(), null);
             }
         });
+    }
 
-        // 播放视频
-        videoView.start();
-        mediaPlayer.start();
+    private void open() {
+        VideoLayout videoView = findViewById(R.id.video);
+        videoView.start(0, 0, 0, "https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4");
     }
 }

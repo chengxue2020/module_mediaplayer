@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.core.view;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 
@@ -23,13 +24,6 @@ public interface PlayerApi {
         start(seek, 0, 0, url);
     }
 
-    /**
-     * 开始播放
-     *
-     * @param seek
-     * @param maxLength
-     * @param url
-     */
     void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url);
 
     void pause();
@@ -61,7 +55,11 @@ public interface PlayerApi {
 
     int getMaxNum();
 
+    void setMaxNum(int num);
+
     String getUrl();
+
+    void toggleMusic(@NonNull Context context, @NonNull String music);
 
     /**
      * 获取当前缓冲百分比

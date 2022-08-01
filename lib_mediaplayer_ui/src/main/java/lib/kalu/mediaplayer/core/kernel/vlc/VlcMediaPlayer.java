@@ -55,6 +55,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void releaseDecoder() {
+        releaseMusic();
         if (null != mMediaPlayer) {
             mMediaPlayer.release();
             mMediaPlayer = null;
@@ -204,9 +205,8 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        MediaLogUtil.log("K_LOG => init => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
-        update(seek, maxLength, maxNum, url);
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        KernelApi.super.init(context, seek, maxLength, maxNum, url);
 
         //222222222222
         // 设置dataSource

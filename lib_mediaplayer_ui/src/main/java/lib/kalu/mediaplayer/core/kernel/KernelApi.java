@@ -3,6 +3,8 @@ package lib.kalu.mediaplayer.core.kernel;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -29,7 +31,7 @@ public interface KernelApi extends KernelEvent {
     Integer[] mMaxNum = new Integer[1];
     Long[] mSeek = new Long[1];
     String[] mUrl = new String[1];
-
+    MediaPlayer[] mMediaPlayer = new MediaPlayer[1];
 
     /*---------------------------- 消息通知 ----------------------------------*/
 
@@ -56,25 +58,96 @@ public interface KernelApi extends KernelEvent {
      */
     void setDataSource(AssetFileDescriptor fd);
 
-    /**
-     * 设置渲染视频的View,主要用于TextureView
-     * 视频播放器第三步：设置surface
-     *
-     * @param surface surface
-     */
     void setSurface(Surface surface);
 
-    /**
-     * 准备开始播放（异步）
-     * 视频播放器第四步：开始加载【异步】
-     */
-    void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url);
+    default void releaseMusic() {
+        stopMusic();
+        if (null != mMediaPlayer[0]) {
+            mMediaPlayer[0].release();
+            mMediaPlayer[0] = null;
+        }
+    }
 
-    default void update(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        mUrl[0] = url;
+    default void stopMusic() {
+        try {
+            if (mMediaPlayer[0].isLooping()) {
+                mMediaPlayer[0].setLooping(false);
+            }
+            if (mMediaPlayer[0].isPlaying()) {
+                mMediaPlayer[0].stop();
+            }
+            mMediaPlayer[0].reset();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    default void toggleMusic(@NonNull Context context, @NonNull String music) {
+
+        if (null == mMediaPlayer[0]) {
+            mMediaPlayer[0] = new MediaPlayer();
+        }
+
+        // 视频音源
+        if (null != music && music.length() > 0) {
+
+            // pause
+            if (mMediaPlayer[0].isPlaying()) {
+                stopMusic();
+                pause();
+                toggleMusic(context, music);
+            }
+            // next
+            else {
+                try {
+                    stopMusic();
+                    pause();
+                    mMediaPlayer[0].setDataSource(context, Uri.parse(music));
+                    mMediaPlayer[0].prepare();
+                    mMediaPlayer[0].setOnPreparedListener(null);
+                    mMediaPlayer[0].start();
+                    long position = getPosition();
+                    mMediaPlayer[0].seekTo((int) position);
+                    mMediaPlayer[0].setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            setVolume(0, 0);
+                            start();
+                        }
+                    });
+                    mMediaPlayer[0].setOnErrorListener(null);
+                    mMediaPlayer[0].setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                        @Override
+                        public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                            toggleMusic(context, null);
+                            return false;
+                        }
+                    });
+                } catch (Exception e) {
+                    toggleMusic(context, null);
+                    e.printStackTrace();
+                }
+            }
+        }
+        // 外部音源
+        else {
+            stopMusic();
+            pause();
+            setVolume(1, 1);
+            start();
+        }
+    }
+
+    default void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+        MediaLogUtil.log("K_LOG => create => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
+        init(context, seek, maxLength, maxNum, url);
+    }
+
+    default void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
         mSeek[0] = seek;
         mMaxNum[0] = maxNum;
         mMaxLength[0] = maxLength;
+        mUrl[0] = url;
     }
 
     default void update(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum) {
@@ -199,7 +272,7 @@ public interface KernelApi extends KernelEvent {
     }
 
     default void setSeek(long seek) {
-//        mSeek[0] = seek;
+        mSeek[0] = seek;
     }
 
     default long getMaxLength() {
@@ -226,4 +299,3 @@ public interface KernelApi extends KernelEvent {
         mMaxNum[0] = num;
     }
 }
-
