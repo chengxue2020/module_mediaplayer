@@ -360,6 +360,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public void setVolume(float v1, float v2) {
+        KernelApi.super.setVolume(v1, v2);
         mMediaPlayer.setVolume(v1, v2);
     }
 

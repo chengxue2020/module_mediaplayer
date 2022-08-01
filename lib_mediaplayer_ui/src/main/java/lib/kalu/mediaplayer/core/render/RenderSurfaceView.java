@@ -2,14 +2,18 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Outline;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.util.MeasureHelper;
@@ -40,14 +44,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Nullable
     private Surface mSurface;
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (callback != null) {
-            getHolder().removeCallback(callback);
-        }
-    }
-
     public RenderSurfaceView(Context context) {
         super(context);
         init();
@@ -59,6 +55,27 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         holder.addCallback(callback);
     }
+
+//    @Override
+//    protected void onDetachedFromWindow() {
+//        super.onDetachedFromWindow();
+////        if (callback != null) {
+////            getHolder().removeCallback(callback);
+////        }
+////        ViewCompat.
+//    }
+//
+//    @Override
+//    protected void onWindowVisibilityChanged(int visibility) {
+//        super.onWindowVisibilityChanged(visibility);
+//
+//        if(visibility == View.VISIBLE){
+//
+//        }
+//        else{
+//
+//        }
+//    }
 
     @Override
     public void releaseReal() {
@@ -72,14 +89,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void setKernel(@NonNull KernelApi kernel) {
-//        if (null != this.mKernel) {
-//            this.mKernel.setSurface(null);
-//            this.mKernel.releaseDecoder();
-//        }
         this.mKernel = kernel;
-//        if (null != this.mKernel && null != mSurface) {
-//            this.mKernel.setSurface(mSurface);
-//        }
     }
 
     /**

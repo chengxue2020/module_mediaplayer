@@ -266,6 +266,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public void setVolume(float v1, float v2) {
+        KernelApi.super.setVolume(v1, v2);
         try {
             mMediaPlayer.setVolume(v1, v2);
         } catch (Exception e) {

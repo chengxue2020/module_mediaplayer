@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="VideoPlayer">
-        <attr name="looping" format="boolean" />
         <attr name="screenScaleType" format="dimension">
             <enum name="type_default" value="0" />
             <enum name="type_16_9" value="1" />

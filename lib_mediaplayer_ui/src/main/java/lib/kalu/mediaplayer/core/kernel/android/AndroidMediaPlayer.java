@@ -247,6 +247,7 @@ public final class AndroidMediaPlayer implements KernelApi {
      */
     @Override
     public void setVolume(float v1, float v2) {
+        KernelApi.super.setVolume(v1, v2);
         try {
             mMediaPlayer.setVolume(v1, v2);
         } catch (Exception e) {

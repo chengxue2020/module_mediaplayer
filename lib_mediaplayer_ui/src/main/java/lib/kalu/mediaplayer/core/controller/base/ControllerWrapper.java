@@ -38,13 +38,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void stop() {
-        mPlayer.stop();
+    public void resume() {
+        mPlayer.resume();
     }
 
     @Override
-    public void resume() {
-        mPlayer.resume();
+    public void close() {
+        mPlayer.close();
     }
 
     @Override
@@ -123,11 +123,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void setMute(boolean isMute) {
-        mPlayer.setMute(isMute);
-    }
-
-    @Override
     public boolean isMute() {
         return mPlayer.isMute();
     }
@@ -203,18 +198,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void create() {
-        mPlayer.create();
+    public void create(int maxNum) {
+        mPlayer.create(maxNum);
     }
 
     @Override
-    public void releaseKernel() {
-        mPlayer.releaseKernel();
-    }
-
-    @Override
-    public void releaseRender() {
-        mPlayer.releaseRender();
+    public void release() {
+        mPlayer.release();
     }
 
     @Override
@@ -229,7 +219,7 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
 
     @Override
     public void playEnd() {
-
+        mPlayer.playEnd();
     }
 
     /**

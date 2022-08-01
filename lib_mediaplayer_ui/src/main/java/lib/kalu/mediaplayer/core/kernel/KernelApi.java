@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -10,13 +9,7 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.google.android.exoplayer2.util.Log;
-
-import java.util.Map;
-
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
@@ -27,6 +20,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public interface KernelApi extends KernelEvent {
 
+    Boolean[] mMute = new Boolean[1]; // 静音
     Long[] mMaxLength = new Long[1];
     Integer[] mMaxNum = new Integer[1];
     Long[] mSeek = new Long[1];
@@ -156,6 +150,11 @@ public interface KernelApi extends KernelEvent {
         mMaxLength[0] = maxLength;
     }
 
+    default void update(@NonNull long maxLength, @NonNull int maxNum) {
+        mMaxNum[0] = maxNum;
+        mMaxLength[0] = maxLength;
+    }
+
     /*----------------------------第二部分：视频播放器状态方法----------------------------------*/
 
     /**
@@ -220,7 +219,14 @@ public interface KernelApi extends KernelEvent {
      * @param v1 v1
      * @param v2 v2
      */
-    void setVolume(float v1, float v2);
+
+    default void setVolume(float v1, float v2) {
+        mMute[0] = (v1 <= 0 || v2 <= 0);
+    }
+
+    default boolean isMute() {
+        return null == mMute[0] ? false : mMute[0];
+    }
 
     /**
      * 设置是否循环播放

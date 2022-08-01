@@ -83,7 +83,7 @@ public class PlayerConfig {
          * 自定义RenderView
          */
         @PlayerType.RenderType.Value
-        public int mRender = PlayerType.RenderType.TEXTURE;
+        public int mRender = PlayerType.RenderType.SURFACE_VIEW;
         /**
          * 自定义视频全局埋点事件
          */

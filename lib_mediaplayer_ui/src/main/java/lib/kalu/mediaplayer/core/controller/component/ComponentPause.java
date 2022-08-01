@@ -74,6 +74,7 @@ public class ComponentPause extends RelativeLayout implements ImplComponent {
                 findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_START:
+            case PlayerType.StateType.STATE_RESUME:
                 MediaLogUtil.log("ComponentPause[show] => playState = " + playState);
                 findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.GONE);
                 break;

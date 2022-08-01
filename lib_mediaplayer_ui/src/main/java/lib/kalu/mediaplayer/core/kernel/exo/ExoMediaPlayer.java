@@ -369,9 +369,10 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
      * 设置音量
      */
     @Override
-    public void setVolume(float leftVolume, float rightVolume) {
+    public void setVolume(float v1, float v2) {
+        KernelApi.super.setVolume(v1, v2);
         if (mExoPlayer != null) {
-            mExoPlayer.setVolume((leftVolume + rightVolume) / 2);
+            mExoPlayer.setVolume((v1 + v2) / 2);
         }
     }
 

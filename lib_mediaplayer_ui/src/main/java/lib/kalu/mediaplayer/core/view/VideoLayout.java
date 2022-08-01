@@ -45,12 +45,6 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Callback {
 
-//    private String mUrl = null;
-//    protected Map<String, String> mHeaders = null;
-
-    // 状态
-    @PlayerType.StateType.Value
-    private int mStateType = PlayerType.StateType.STATE_INIT;
     // 解码
     protected KernelApi mKernel;
     // 渲染
@@ -58,10 +52,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     protected int mCurrentScreenScaleType;
     protected int[] mVideoSize = {0, 0};
-    /**
-     * 是否静音
-     */
-    protected boolean mIsMute;
     /**
      * assets文件
      */
@@ -86,16 +76,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      */
     protected List<OnChangeListener> mOnStateChangeListeners;
 
-    /**
-     * 循环播放
-     */
-    protected boolean mIsLooping;
-
-//    /**
-//     * {@link #mVideoContainer}背景色，默认黑色
-//     */
-//    private int mPlayerBackgroundColor;
-
     public VideoLayout(@NonNull Context context) {
         super(context);
         init(null);
@@ -118,12 +98,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
 //    @Override
-//    protected void onAttachedToWindow() {
-//        super.onAttachedToWindow();
-//        init();
-//    }
-//
-//    @Override
 //    protected void onDetachedFromWindow() {
 //        super.onDetachedFromWindow();
 //        release();
@@ -131,16 +105,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-//        String url = getUrl();
-//        if (visibility == View.VISIBLE) {
-//            if (null != url && url.length() > 0) {
-//                repeat();
-//            }
-//        } else {
-//            if (null != url && url.length() > 0) {
-//                stop();
-//            }
-//        }
+        // visable
+        if (visibility == View.VISIBLE) {
+            MediaLogUtil.log("onWindowVisibilityChanged => resume => this = " + this);
+            resume();
+        }
+        // not visable
+        else {
+            MediaLogUtil.log("onWindowVisibilityChanged => pause => this = " + this);
+            pause();
+        }
         super.onWindowVisibilityChanged(visibility);
     }
 
@@ -176,7 +150,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         //读取xml中的配置，并综合全局配置
         try {
             TypedArray typed = getContext().getApplicationContext().obtainStyledAttributes(attrs, R.styleable.VideoPlayer);
-            mIsLooping = typed.getBoolean(R.styleable.VideoPlayer_looping, false);
             mCurrentScreenScaleType = typed.getInt(R.styleable.VideoPlayer_screenScaleType, mCurrentScreenScaleType);
             typed.recycle();
         } catch (Exception e) {
@@ -190,9 +163,18 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      */
     @Override
     protected Parcelable onSaveInstanceState() {
-        MediaLogUtil.log("onSaveInstanceState: ");
-        //activity切到后台后可能被系统回收，故在此处进行进度保存
-        saveProgress();
+        String url = getUrl();
+        MediaLogUtil.log("onSaveInstanceState => url = " + url);
+        if (null != url && url.length() > 0) {
+            try {
+                long position = getPosition();
+                long duration = getDuration();
+                MediaLogUtil.log("onSaveInstanceState => position = " + position + ", duration = " + duration + ", url = " + url);
+                saveBundle(getContext(), url, position, duration);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return super.onSaveInstanceState();
     }
 
@@ -200,9 +182,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
         try {
 
-            stop();
             setPlayState(PlayerType.StateType.STATE_LOADING_START);
-            create();
+            close();
+            create(maxNum);
 
             //如果要显示移动网络提示则不继续播放
             boolean showNetWarning = showNetWarning();
@@ -210,7 +192,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 setPlayState(PlayerType.StateType.STATE_START_ABORT);
             }
             if (null != mKernel) {
-                mKernel.stop();
                 mKernel.create(getContext(), seek, maxLength, maxNum, url);
             }
             setKeepScreenOn(true);
@@ -242,110 +223,50 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void pause() {
-        MediaLogUtil.log("onLife => pause => 1");
-        if (null == mKernel)
+        boolean playing = isPlaying();
+        if (!playing)
             return;
-        MediaLogUtil.log("onLife => pause => 2");
-        if (!mKernel.isPlaying())
-            return;
-        MediaLogUtil.log("onLife => pause => 3");
-        mKernel.pause();
         setPlayState(PlayerType.StateType.STATE_PAUSED);
         setKeepScreenOn(false);
+        mKernel.pause();
     }
 
     @Override
-    public void stop() {
-        MediaLogUtil.log("onLife => stop => 1");
-        if (null == mKernel)
+    public void close() {
+        boolean playing = isPlaying();
+        if (!playing)
             return;
-        MediaLogUtil.log("onLife => stop => 2");
-        if (!mKernel.isPlaying())
-            return;
-        MediaLogUtil.log("onLife => stop => 3");
-        mKernel.stop();
-        setPlayState(PlayerType.StateType.STATE_PAUSED);
+        setPlayState(PlayerType.StateType.STATE_CLOSE);
         setKeepScreenOn(false);
+        mKernel.stop();
     }
 
     @Override
     public void resume() {
-
-        MediaLogUtil.log("onLife => resume => 1");
-        if (null == mKernel)
+        String url = getUrl();
+        if (null == url || url.length() <= 0)
             return;
-        MediaLogUtil.log("onLife => resume => 2");
-
-        if (mKernel.isPlaying())
-            return;
-        MediaLogUtil.log("onLife => resume => 3");
-        mKernel.start();
-        setPlayState(PlayerType.StateType.STATE_START);
+        setPlayState(PlayerType.StateType.STATE_RESUME);
         setKeepScreenOn(true);
+        mKernel.start();
     }
 
     @Override
     public void repeat() {
         String url = getUrl();
-        MediaLogUtil.log("K_ => repeat => url = " + url);
-        if (null != url && url.length() > 0) {
-            long seek = getSeek();
-            long maxLength = getMaxLength();
-            int maxNum = getMaxNum();
-            start(seek, maxLength, maxNum, url);
-        }
+        if (null == url || url.length() <= 0)
+            return;
+        long maxLength = getMaxLength();
+        int maxNum = getMaxNum();
+        seekTo(true, 0, maxLength, maxNum);
     }
 
-    /**
-     * 保存播放进度
-     */
-    protected void saveProgress() {
-//        long position = getPosition();
-//        if (mProgressManager != null && mCurrentPosition > 0) {
-//            MediaLogUtil.log("saveProgress: " + mCurrentPosition);
-//            mProgressManager.saveProgress(mUrl, mCurrentPosition);
-//        }
-    }
-
-    /**
-     * 是否处于播放状态
-     */
-    protected boolean isInPlaybackState() {
-        if (null == mKernel)
-            return false;
-
-        int state = getPlayState();
-        return mKernel != null
-                && state != PlayerType.StateType.STATE_ERROR
-                && state != PlayerType.StateType.STATE_INIT
-                && state != PlayerType.StateType.STATE_LOADING_START
-                && state != PlayerType.StateType.STATE_START_ABORT
-                && state != PlayerType.StateType.STATE_BUFFERING_START;
-    }
-
-    /**
-     * 是否处于未播放状态
-     */
-    protected boolean isInit() {
-        int state = getPlayState();
-        return state == PlayerType.StateType.STATE_INIT;
-    }
-
-    /**
-     * 播放中止状态
-     */
-    private boolean isInStartAbortState() {
-        int state = getPlayState();
-        return state == PlayerType.StateType.STATE_START_ABORT;
-    }
-
-    /**
-     * 获取视频总时长
-     */
     @Override
     public long getDuration() {
-        if (null == mKernel || !isInPlaybackState())
+        boolean playing = isPlaying();
+        if (!playing)
             return 0L;
+        String url = getUrl();
         long duration = mKernel.getDuration();
         if (duration < 0) {
             duration = 0L;
@@ -358,7 +279,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      */
     @Override
     public long getPosition() {
-        if (null == mKernel || !isInPlaybackState())
+        boolean playing = isPlaying();
+        if (!playing)
             return 0L;
         long position = mKernel.getPosition();
         if (position < 0) {
@@ -430,7 +352,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      */
     @Override
     public boolean isPlaying() {
-        return isInPlaybackState() && mKernel.isPlaying();
+        try {
+            String url = getUrl();
+            if (null == url || url.length() <= 0) {
+                return false;
+            } else {
+                return mKernel.isPlaying();
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -449,63 +380,32 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MediaLogUtil.log("onEvent => seekTo => " + seek + ", seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", force = " + force);
         // must
         if (force) {
-            mKernel.update(seek, maxLength, maxNum);
             if (seek == 0) {
                 mKernel.start();
             } else {
+                mKernel.update(seek, maxLength, maxNum);
                 mKernel.seekTo(seek);
             }
         }
         // sample
         else {
-            boolean state = isInPlaybackState();
-            MediaLogUtil.log("onEvent => seekTo => state = " + state);
-            if (state) {
+            String url = getUrl();
+            MediaLogUtil.log("onEvent => seekTo => url = " + url);
+            if (null != url && url.length() > 0) {
                 mKernel.seekTo(seek);
             }
         }
     }
 
-    /**
-     * 设置静音
-     */
-    @Override
-    public void setMute(boolean isMute) {
-        if (mKernel != null) {
-            this.mIsMute = isMute;
-            float volume = isMute ? 0.0f : 1.0f;
-            mKernel.setVolume(volume, volume);
-        }
-    }
-
-    /**
-     * 是否处于静音状态
-     */
     @Override
     public boolean isMute() {
-        return mIsMute;
+        try {
+            return mKernel.isMute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-
-//    /**
-//     * 视频缓冲完毕，准备开始播放时回调
-//     */
-//    @Override
-//    public void onPrepared(@NonNull long seek, @NonNull long duration) {
-//        MediaLogUtil.log("onPrepared => seek = " + seek + ", duration = " + duration);
-//
-//
-////        Object tag = getTag(R.id.module_mediaplayer_id_state_code);
-////        if (null == tag) {
-////            tag = 1;
-////        }
-////        MediaLogUtil.log("ComponentLoading => onPrepared => mCurrentPlayerState = " + tag.toString());
-////        setPlayState(PlayerType.StateType.STATE_LOADING_COMPLETE);
-//
-//        // 快进
-//        if (seek > 0) {
-//            seekTo(seek);
-//        }
-//    }
 
     /**
      * 获取当前播放器的状态
@@ -527,9 +427,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      */
     @Override
     public void setSpeed(float speed) {
-        if (isInPlaybackState()) {
-            mKernel.setSpeed(speed);
-        }
+        boolean playing = isPlaying();
+        if (!playing)
+            return;
+        mKernel.setSpeed(speed);
     }
 
     /**
@@ -539,55 +440,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      */
     @Override
     public float getSpeed() {
-        if (isInPlaybackState()) {
-            return mKernel.getSpeed();
-        }
-        return 1f;
+        boolean playing = isPlaying();
+        if (!playing)
+            return -1F;
+        return mKernel.getSpeed();
     }
-
-//    /**
-//     * 设置视频地址
-//     */
-//    @Override
-//    public void setUrl(@NonNull String url) {
-//        setUrl(false, url, null);
-//    }
-//
-//    /**
-//     * 设置视频地址
-//     */
-//    @Override
-//    public void setUrl(@NonNull boolean cache, @NonNull String url) {
-//        setUrl(cache, url, null);
-//    }
-//
-//    /**
-//     * 获取视频地址
-//     *
-//     * @return
-//     */
-//    @Override
-//    public String getUrl() {
-//        return this.mUrl;
-//    }
-//
-//    /**
-//     * 设置包含请求头信息的视频地址
-//     *
-//     * @param url     视频地址
-//     * @param headers 请求头
-//     */
-//    public void setUrl(@NonNull boolean cache, @NonNull String url, Map<String, String> headers) {
-//        mAssetFileDescriptor = null;
-//        mCache = cache;
-//        mUrl = url;
-//        mHeaders = headers;
-//        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-//        if (config != null && config.mBuriedPointEvent != null) {
-//            //相当于进入了视频页面
-//            config.mBuriedPointEvent.playerIn(url);
-//        }
-//    }
 
     /**
      * 用于播放assets里面的视频文件
@@ -612,7 +469,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      * 循环播放， 默认不循环播放
      */
     public void setLooping(boolean looping) {
-        mIsLooping = looping;
         if (mKernel != null) {
             mKernel.setLooping(looping);
         }
@@ -710,14 +566,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     /**
-     * 获取当前的播放状态
-     */
-    @PlayerType.StateType.Value
-    public int getPlayState() {
-        return mStateType;
-    }
-
-    /**
      * 向Controller设置播放状态，用于控制Controller的ui展示
      * 这里使用注解限定符，不要使用1，2这种直观数字，不方便知道意思
      * 播放状态，主要是指播放器的各种状态
@@ -733,15 +581,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      * 8                开始播放中止
      */
     protected void setPlayState(@PlayerType.StateType.Value int state) {
-        mStateType = state;
-
-//        if (state == PlayerType.StateType.STATE_START) {
-//            mHandler.sendEmptyMessageDelayed(0x2022, 0);
-//        } else if (state == PlayerType.StateType.STATE_END) {
-//            mHandler.sendEmptyMessageDelayed(0x2023, 0);
-//        } else if (state == PlayerType.StateType.STATE_INIT) {
-//            mHandler.sendEmptyMessageDelayed(0x2023, 0);
-//        }
 
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
@@ -829,38 +668,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         return null != layout && layout.onBackPressed();
     }
 
-
-    /*-----------------------------暴露api方法--------------------------------------**/
-    /*-----------------------------暴露api方法--------------------------------------**/
-
-
-    public void setVideoBuilder(VideoBuilder videoBuilder) {
-//        if (mVideoContainer == null || videoBuilder == null) {
-//            return;
-//        }
-//        //设置视频播放器的背景色
-//        mVideoContainer.setBackgroundColor(videoBuilder.mColor);
-//        //设置小屏的宽高
-//        if (videoBuilder.mTinyScreenSize != null && videoBuilder.mTinyScreenSize.length > 0) {
-//            mTinyScreenSize = videoBuilder.mTinyScreenSize;
-//        }
-//        //一开始播放就seek到预先设置好的位置
-//        if (videoBuilder.mCurrentPosition > 0) {
-//            this.mCurrentPosition = videoBuilder.mCurrentPosition;
-//        }
-    }
-
-//    @Override
-//    public boolean dispatchKeyEvent(KeyEvent event) {
-//        MediaLogUtil.log("dispatchKeyEvent => " + event.getKeyCode());
-//        if (null != mControlLayout) {
-//            mControlLayout.dispatchKeyEvent(event);
-//        }
-//        return super.dispatchKeyEvent(event);
-//    }
-
-    /*************************/
-
     /************************/
 
     /**
@@ -875,7 +682,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         layout.setLayoutParams(params);
         viewGroup.addView(layout);
         layout.setMediaPlayer(this);
-        setPlayState(mStateType);
+        setPlayState(PlayerType.StateType.STATE_INIT);
     }
 
     public void clearControllerLayout() {
@@ -937,11 +744,20 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // handler
         if (null != mHandler) {
             mHandler.removeCallbacksAndMessages(null);
-//            mHandler = null;
+            mHandler = null;
         }
 
         // render
-//        clearRender();
+        try {
+            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
+            if (null != viewGroup) {
+                viewGroup.removeAllViews();
+            }
+            mRender.releaseReal();
+            mRender = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // kernel
         try {
@@ -986,23 +802,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void releaseKernel() {
-
-    }
-
-    @Override
-    public void releaseRender() {
-        ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
-        if (null != viewGroup) {
-            viewGroup.removeAllViews();
-        }
-        if (null != mRender) {
-            mRender.releaseReal();
-            mRender = null;
-        }
-    }
-
-    @Override
     public void startLoop() {
         MediaLogUtil.log("onEvent => startLoop = " + mHandler);
         clearLoop();
@@ -1031,7 +830,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void create() {
+    public void create(int maxNum) {
 
         // 1.销毁
         release();
@@ -1202,7 +1001,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 }
             });
             mKernel.createDecoder(getContext());
-            mKernel.setLooping(mIsLooping);
+            mKernel.setLooping(maxNum < 0);
         }
         if (null == mRender) {
             mRender = RenderFactoryManager.getRender(getContext(), PlayerConfigManager.getInstance().getConfig().mRender);
@@ -1352,7 +1151,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     Message message = Message.obtain();
                     message.what = 0x92001;
                     message.obj = msg.obj;
-                    mHandler.sendMessageDelayed(message, 100);
+                    mHandler.sendMessageDelayed(message, 50);
                 }
                 if (mOnStateChangeListeners != null) {
                     long position = getPosition();
