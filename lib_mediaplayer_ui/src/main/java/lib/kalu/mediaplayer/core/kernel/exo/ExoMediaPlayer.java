@@ -45,17 +45,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public final class ExoMediaPlayer implements KernelApi, Player.Listener {
 
-    //    protected MediaSource mMediaSource;
-//    protected ExoMediaSourceHelper mMediaSourceHelper;
     private PlaybackParameters mSpeedPlaybackParameters;
-    //    private int mLastReportedPlaybackState = Player.STATE_IDLE;
-//    private boolean mLastReportedPlayWhenReady = false;
-//    private boolean mIsPreparing;
-    private boolean mIsBuffering;
-
-//    private LoadControl mLoadControl;
-//    private RenderersFactory mRenderersFactory;
-//    private TrackSelector mTrackSelector;
 
     private ExoPlayer mExoPlayer;
     private KernelEvent mEvent;
@@ -110,7 +100,7 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
 //            }.start();
 
 //        mIsPreparing = false;
-        mIsBuffering = false;
+//        mIsBuffering = false;
 //        mLastReportedPlaybackState = Player.STATE_IDLE;
 //        mLastReportedPlayWhenReady = false;
         mSpeedPlaybackParameters = null;
@@ -244,25 +234,29 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         return mExoPlayer == null ? 0 : mExoPlayer.getBufferedPercentage();
     }
 
-    /**
-     * 设置渲染视频的View,主要用于SurfaceView
-     */
-    @Override
-    public void setSurface(Surface surface) {
-        if (surface != null) {
-            try {
-                if (mExoPlayer != null) {
-                    mExoPlayer.setVideoSurface(surface);
-                }
-            } catch (Exception e) {
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-            }
-        }
-    }
+//    @Override
+//    public void setReal(@NonNull Surface surface, @NonNull SurfaceHolder holder) {
+//
+//        // 设置渲染视频的View,主要用于SurfaceView
+//        if (null != holder && null != mExoPlayer) {
+//            try {
+//                mExoPlayer.setVideoSurface(holder.getSurface());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        if (null != surface && null != mExoPlayer) {
+//            try {
+//                mExoPlayer.setVideoSurface(surface);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        KernelApi.super.init(context, seek, maxLength, maxNum, url);
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
 
         // loading-start
         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_START);
@@ -357,11 +351,13 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
     }
 
     @Override
-    public void setDisplay(SurfaceHolder holder) {
-        if (holder == null) {
-            setSurface(null);
-        } else {
-            setSurface(holder.getSurface());
+    public void setSurface(@NonNull Surface surface) {
+        if (null != surface && null != mExoPlayer) {
+            try {
+                mExoPlayer.setVideoSurface(surface);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -384,6 +380,11 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         if (mExoPlayer != null) {
             mExoPlayer.setRepeatMode(isLooping ? Player.REPEAT_MODE_ALL : Player.REPEAT_MODE_OFF);
         }
+    }
+
+    @Override
+    public boolean isLooping() {
+        return false;
     }
 
     @Override
@@ -549,7 +550,6 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         long seek = getSeek();
         if (seek > 0) {
             seekTo(seek);
-            setSeek(0);
         }
     }
 }

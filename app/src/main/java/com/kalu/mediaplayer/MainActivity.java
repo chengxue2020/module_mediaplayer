@@ -39,28 +39,51 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        // main_three
+        // main_three00
+        findViewById(R.id.main_three00).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
+        // main_three0
+        findViewById(R.id.main_three0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_SEEK, 10 * 1000L);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
+        // main_three1
         findViewById(R.id.main_three1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_SEEK, 10 * 1000L);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_MAX_LENGTH, 5 * 1000L);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_MAX, 10 * 1000L);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
             }
         });
-        // main_three
+        // main_three2
         findViewById(R.id.main_three2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_SEEK, 10 * 1000L);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_MAX_LENGTH, 5 * 1000L);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_MAX_NUM, 2);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_MAX, 10 * 1000L);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LOOP, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);

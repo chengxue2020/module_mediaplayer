@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -97,11 +98,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         init(attrs);
     }
 
-//    @Override
-//    protected void onDetachedFromWindow() {
-//        super.onDetachedFromWindow();
-//        release();
-//    }
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        release(true);
+    }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
@@ -178,28 +179,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         return super.onSaveInstanceState();
     }
 
-    @Override
-    public void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        try {
-
-            setPlayState(PlayerType.StateType.STATE_LOADING_START);
-            close();
-            create(maxNum);
-
-            //如果要显示移动网络提示则不继续播放
-            boolean showNetWarning = showNetWarning();
-            if (showNetWarning) {
-                setPlayState(PlayerType.StateType.STATE_START_ABORT);
-            }
-            if (null != mKernel) {
-                mKernel.create(getContext(), seek, maxLength, maxNum, url);
-            }
-            setKeepScreenOn(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 是否显示移动网络提示，可在Controller中配置
      */
@@ -218,6 +197,227 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return layout.showNetWarning();
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public void start(@NonNull long seek, @NonNull long maxLength, @NonNull boolean loop, @NonNull String url) {
+        try {
+
+            setPlayState(PlayerType.StateType.STATE_LOADING_START);
+            close();
+            create(loop);
+
+            //如果要显示移动网络提示则不继续播放
+            boolean showNetWarning = showNetWarning();
+            if (showNetWarning) {
+                setPlayState(PlayerType.StateType.STATE_START_ABORT);
+            }
+            if (null != mKernel) {
+                mKernel.create(getContext(), seek, maxLength, url);
+            }
+            setKeepScreenOn(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void create(@NonNull boolean loop) {
+
+        // step1
+        release();
+
+        // step2
+        if (null == mKernel) {
+            mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mKernel, new KernelEvent() {
+                @Override
+                public void onEvent(int kernel, int event) {
+
+                    MediaLogUtil.log("onEvent => kernel = " + kernel + ", event = " + event);
+
+                    switch (event) {
+//            // loading-start
+//            case PlayerType.EventType.EVENT_BUFFERING_START:
+//                setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
+//                break;
+//            // loading-end
+//            case PlayerType.EventType.EVENT_BUFFERING_END:
+//            case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
+//                setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
+//                break;
+                        // seekTo 会调用
+                        case PlayerType.EventType.EVENT_OPEN_INPUT:
+                            setPlayState(PlayerType.StateType.STATE_START);
+
+                            // step1
+                            goneReal();
+
+//                            View layout = getVideoLayout();
+//                            if (null != layout && layout.getWindowVisibility() != VISIBLE) {
+//                                pause();
+//                            }
+//                        if (position == 0) {
+//                            setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
+//                        }
+                            break;
+                        //            // play-begin
+//            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
+////            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
+//                if (position <= 10) {
+//                    setPlayState(PlayerType.StateType.STATE_START);
+//                    if (mVideoContainer.getWindowVisibility() != VISIBLE) {
+//                        pause();
+//                    }
+//                }
+//                break;
+//                    case PlayerType.EventType.EVENT_VIDEO_ROTATION_CHANGED:
+//                        if (mRender != null) {
+//                            if (rotation != -1) {
+//                                mRender.setVideoRotation(rotation);
+//                            }
+//                        }
+//                        break;
+                        // 初始化开始 => loading start
+                        case PlayerType.EventType.EVENT_INIT_START:
+                            setPlayState(PlayerType.StateType.STATE_LOADING_START);
+                            break;
+                        // 初始化完成 => loading close
+                        case PlayerType.EventType.EVENT_INIT_COMPILE:
+                            setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
+
+                            break;
+                        // 播放开始-快进
+                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE_A:
+                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE_B:
+
+                            // step1
+                            setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
+
+                            // step2
+                            showReal();
+
+                            // step3
+                            startLoop();
+
+                            // step4
+                            resume();
+
+                            break;
+                        // 播放开始
+                        case PlayerType.EventType.EVENT_VIDEO_START:
+//                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
+//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
+                            setPlayState(PlayerType.StateType.STATE_START);
+
+                            // step1
+                            showReal();
+
+                            // step2
+                            startLoop();
+
+//                            View layout1 = getVideoLayout();
+//                            if (null != layout1 && layout1.getWindowVisibility() != VISIBLE) {
+//                                pause();
+//                            }
+
+//                        if (position > 0) {
+//                            setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
+//                        }
+
+                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                                //相当于进入了视频页面
+                                String url = getUrl();
+                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerIn(url);
+                            }
+
+                            break;
+                        // 播放结束
+                        case PlayerType.EventType.EVENT_PLAYER_END:
+
+                            // step2
+                            clearLoop();
+
+                            // 埋点
+                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                                String url = getUrl();
+                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerCompletion(url);
+                            }
+
+                            boolean looping = isLooping();
+                            // loop
+                            if (looping) {
+
+                                // step1
+                                pause();
+
+                                // step2
+                                setPlayState(PlayerType.StateType.STATE_LOADING_START);
+                                goneReal();
+
+                                // step2
+                                long max = getMax();
+                                seekTo(true, 0, max, true);
+                            }
+                            // sample
+                            else {
+                                // step1
+                                pause();
+
+                                // step2
+                                playEnd();
+                            }
+
+                            break;
+                        // 播放错误
+                        case PlayerType.EventType.EVENT_ERROR_URL:
+                        case PlayerType.EventType.EVENT_ERROR_PARSE:
+                        case PlayerType.EventType.EVENT_ERROR_RETRY:
+                        case PlayerType.EventType.EVENT_ERROR_SOURCE:
+                        case PlayerType.EventType.EVENT_ERROR_UNEXPECTED:
+
+                            boolean connected = PlayerUtils.isConnected(getContext());
+                            setKeepScreenOn(false);
+                            setPlayState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
+
+                            // 埋点
+                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
+                                String url = getUrl();
+                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.onError(url, connected);
+                            }
+
+                            break;
+                    }
+                }
+
+                @Override
+                public void onChanged(int kernel, int width, int height, int rotation) {
+                    mVideoSize[0] = width;
+                    mVideoSize[1] = height;
+                    if (mRender != null) {
+                        mRender.setScaleType(mCurrentScreenScaleType);
+                        mRender.setVideoSize(width, height);
+                    }
+                    if (mRender != null && rotation != -1) {
+                        mRender.setVideoRotation(rotation);
+                    }
+                }
+            });
+            mKernel.createDecoder(getContext());
+        }
+        mKernel.setLooping(loop);
+
+        // step3
+        if (null == mRender) {
+            mRender = RenderFactoryManager.getRender(getContext(), PlayerConfigManager.getInstance().getConfig().mRender);
+            mRender.setKernel(mKernel);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            mRender.getReal().setLayoutParams(params);
+            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
+            if (null != viewGroup) {
+                viewGroup.removeAllViews();
+                viewGroup.addView(mRender.getReal(), 0);
+            }
         }
     }
 
@@ -244,6 +444,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public void resume() {
         String url = getUrl();
+        MediaLogUtil.log("onEvent => resume => url = " + url);
         if (null == url || url.length() <= 0)
             return;
         setPlayState(PlayerType.StateType.STATE_RESUME);
@@ -254,11 +455,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public void repeat() {
         String url = getUrl();
+        MediaLogUtil.log("onEvent => repeat => url = " + url);
         if (null == url || url.length() <= 0)
             return;
-        long maxLength = getMaxLength();
-        int maxNum = getMaxNum();
-        seekTo(true, 0, maxLength, maxNum);
+        long seek = getSeek();
+        long max = getMax();
+        boolean looping = isLooping();
+        MediaLogUtil.log("onEvent => repeat => seek = " + seek + ", max = " + max + ", loop = " + looping);
+        setPlayState(PlayerType.StateType.STATE_REPEAT);
+        seekTo(true, seek, max, looping);
     }
 
     @Override
@@ -266,12 +471,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         boolean playing = isPlaying();
         if (!playing)
             return 0L;
-        String url = getUrl();
-        long duration = mKernel.getDuration();
-        if (duration < 0) {
-            duration = 0L;
+        try {
+            long duration = mKernel.getDuration();
+            if (duration < 0) {
+                duration = 0L;
+            }
+            return duration;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
         }
-        return duration;
     }
 
     /**
@@ -290,6 +499,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public boolean isLooping() {
+        try {
+            return mKernel.isLooping();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
     public long getSeek() {
         try {
             return mKernel.getSeek();
@@ -300,31 +519,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public long getMaxLength() {
+    public long getMax() {
         try {
-            return mKernel.getMaxLength();
+            return mKernel.getMax();
         } catch (Exception e) {
             e.printStackTrace();
-            return 0L;
-        }
-    }
-
-    @Override
-    public int getMaxNum() {
-        try {
-            return mKernel.getMaxNum();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    @Override
-    public void setMaxNum(int num) {
-        try {
-            mKernel.setMaxNum(num);
-        } catch (Exception e) {
-            e.printStackTrace();
+            return -1L;
         }
     }
 
@@ -373,17 +573,17 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum) {
+    public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
         if (seek < 0)
             return;
 
-        MediaLogUtil.log("onEvent => seekTo => " + seek + ", seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", force = " + force);
+        MediaLogUtil.log("onEvent => seekTo => " + seek + ", seek = " + seek + ", max = " + max + ", loop = " + loop + ", force = " + force);
         // must
         if (force) {
-            if (seek == 0) {
+            mKernel.update(seek, max, loop);
+            if (seek <= 0) {
                 mKernel.start();
             } else {
-                mKernel.update(seek, maxLength, maxNum);
                 mKernel.seekTo(seek);
             }
         }
@@ -731,8 +931,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void release() {
-
+    public void release(@NonNull boolean onlyHandle) {
+        MediaLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mhandler = " + mHandler);
         // control
 //        clearControllerLayout();
 //        try {
@@ -741,11 +941,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //        } catch (Exception e) {
 //        }
 
-        // handler
-        if (null != mHandler) {
+        // step1
+        if (null != mHandler && null != mHandler) {
             mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
         }
+
+        // step2
+        pause();
+
+        if (onlyHandle)
+            return;
 
         // render
         try {
@@ -803,23 +1008,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void startLoop() {
-        MediaLogUtil.log("onEvent => startLoop = " + mHandler);
         clearLoop();
-        if (null != mHandler) {
-            Message message = Message.obtain();
-            message.what = 0x92001;
-            long millis = System.currentTimeMillis();
-            message.obj = millis;
-            mHandler.sendMessage(message);
-        }
+        MediaLogUtil.log("onEvent => startLoop => mhandler = " + mHandler);
+        if (null == mHandler)
+            return;
+        Message message = Message.obtain();
+        message.what = 0x92001;
+        long millis = System.currentTimeMillis();
+        message.obj = millis;
+        mHandler.sendMessage(message);
     }
 
     @Override
     public void clearLoop() {
-        MediaLogUtil.log("onEvent => clearLoop = " + mHandler);
-        if (null != mHandler) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
+        MediaLogUtil.log("onEvent => clearLoop => mHandler = " + mHandler);
+        if (null == mHandler)
+            return;
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -827,194 +1032,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         goneReal();
         setKeepScreenOn(false);
         setPlayState(PlayerType.StateType.STATE_END);
-    }
-
-    @Override
-    public void create(int maxNum) {
-
-        // 1.销毁
-        release();
-
-        // 2.创建
-        if (null == mKernel) {
-            mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mKernel, new KernelEvent() {
-                @Override
-                public void onEvent(int kernel, int event) {
-
-
-                    MediaLogUtil.log("onEvent => kernel = " + kernel + ", event = " + event);
-
-                    switch (event) {
-//            // loading-start
-//            case PlayerType.EventType.EVENT_BUFFERING_START:
-//                setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
-//                break;
-//            // loading-end
-//            case PlayerType.EventType.EVENT_BUFFERING_END:
-//            case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
-//                setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
-//                break;
-                        // seekTo 会调用
-                        case PlayerType.EventType.EVENT_OPEN_INPUT:
-                            setPlayState(PlayerType.StateType.STATE_START);
-
-                            // step1
-                            goneReal();
-
-//                            View layout = getVideoLayout();
-//                            if (null != layout && layout.getWindowVisibility() != VISIBLE) {
-//                                pause();
-//                            }
-//                        if (position == 0) {
-//                            setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
-//                        }
-                            break;
-                        //            // play-begin
-//            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
-////            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
-//                if (position <= 10) {
-//                    setPlayState(PlayerType.StateType.STATE_START);
-//                    if (mVideoContainer.getWindowVisibility() != VISIBLE) {
-//                        pause();
-//                    }
-//                }
-//                break;
-//                    case PlayerType.EventType.EVENT_VIDEO_ROTATION_CHANGED:
-//                        if (mRender != null) {
-//                            if (rotation != -1) {
-//                                mRender.setVideoRotation(rotation);
-//                            }
-//                        }
-//                        break;
-                        // 初始化开始 => loading start
-                        case PlayerType.EventType.EVENT_INIT_START:
-                            setPlayState(PlayerType.StateType.STATE_LOADING_START);
-                            break;
-                        // 初始化完成 => loading close
-                        case PlayerType.EventType.EVENT_INIT_COMPILE:
-                            setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
-
-                            break;
-                        // 播放开始-快进
-                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE:
-
-                            // step1
-                            setPlayState(PlayerType.StateType.STATE_LOADING_STOP);
-
-                            // step2
-                            showReal();
-
-                            // step3
-                            startLoop();
-
-                            break;
-                        // 播放开始
-                        case PlayerType.EventType.EVENT_VIDEO_START:
-//                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
-//            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
-                            setPlayState(PlayerType.StateType.STATE_START);
-
-                            // step1
-                            showReal();
-
-                            // step2
-                            startLoop();
-
-//                            View layout1 = getVideoLayout();
-//                            if (null != layout1 && layout1.getWindowVisibility() != VISIBLE) {
-//                                pause();
-//                            }
-
-//                        if (position > 0) {
-//                            setPlayState(PlayerType.StateType.STATE_BUFFERING_STOP);
-//                        }
-
-                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                                //相当于进入了视频页面
-                                String url = getUrl();
-                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerIn(url);
-                            }
-
-                            break;
-                        // 播放结束
-                        case PlayerType.EventType.EVENT_PLAYER_END:
-
-                            // step2
-                            clearLoop();
-
-                            // 埋点
-                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                                String url = getUrl();
-                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerCompletion(url);
-                            }
-
-                            int maxNum = getMaxNum();
-                            // loop
-                            if (maxNum > 0) {
-                                // step1
-                                setPlayState(PlayerType.StateType.STATE_LOADING_START);
-                                goneReal();
-
-                                // step2
-                                seekTo(true, 0, 0, maxNum);
-                            }
-                            // sample
-                            else {
-                                // step1
-                                playEnd();
-                            }
-
-                            break;
-                        // 播放错误
-                        case PlayerType.EventType.EVENT_ERROR_URL:
-                        case PlayerType.EventType.EVENT_ERROR_PARSE:
-                        case PlayerType.EventType.EVENT_ERROR_RETRY:
-                        case PlayerType.EventType.EVENT_ERROR_SOURCE:
-                        case PlayerType.EventType.EVENT_ERROR_UNEXPECTED:
-
-                            boolean connected = PlayerUtils.isConnected(getContext());
-                            setKeepScreenOn(false);
-                            setPlayState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
-
-                            // 埋点
-                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                                String url = getUrl();
-                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.onError(url, connected);
-                            }
-
-                            break;
-                    }
-
-                }
-
-                @Override
-                public void onChanged(int kernel, int width, int height, int rotation) {
-                    mVideoSize[0] = width;
-                    mVideoSize[1] = height;
-                    if (mRender != null) {
-                        mRender.setScaleType(mCurrentScreenScaleType);
-                        mRender.setVideoSize(width, height);
-                    }
-                    if (mRender != null && rotation != -1) {
-                        mRender.setVideoRotation(rotation);
-                    }
-                }
-            });
-            mKernel.createDecoder(getContext());
-            mKernel.setLooping(maxNum < 0);
-        }
-        if (null == mRender) {
-            mRender = RenderFactoryManager.getRender(getContext(), PlayerConfigManager.getInstance().getConfig().mRender);
-            mRender.setKernel(mKernel);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            mRender.getReal().setLayoutParams(params);
-            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
-            if (null != viewGroup) {
-                viewGroup.removeAllViews();
-                viewGroup.addView(mRender.getReal(), 0);
-            }
-            mRender.ss();
-        }
     }
 
     /**
@@ -1108,41 +1125,44 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //        }
     }
 
-    private Handler mHandler = new Handler(this);
+     private Handler mHandler = new Handler(this);
+//    private final WeakReference<Handler> mHandler = new WeakReference<>(new Handler(this));
 
     @Override
     public boolean handleMessage(@NonNull Message msg) {
         MediaLogUtil.log("onEvent => onMessage => what = " + msg.what);
         if (null != msg && msg.what == 0x92001) {
             long seek = getSeek();
-            long maxLength = getMaxLength();
-            int maxNum = getMaxNum();
+            long max = getMax();
+            boolean looping = isLooping();
             long start = (long) msg.obj;
             long millis = System.currentTimeMillis();
-            MediaLogUtil.log("onEvent => onMessage => millis = " + millis + ", start = " + start + ", seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum);
+            MediaLogUtil.log("onEvent => onMessage => millis = " + millis + ", start = " + start + ", seek = " + seek + ", max = " + max + ", loop = " + looping);
 
             // end
-            if (maxLength > 0 && (millis - start > maxLength)) {
+            if (max > 0 && ((millis - start) > max)) {
 
                 // loop
-                if (maxNum == -1 || maxNum > 0) {
-
-                    if (maxNum > 0) {
-                        int news = maxNum - 1;
-                        setMaxNum(news);
-                    }
+                if (looping) {
 
                     // step1
                     setPlayState(PlayerType.StateType.STATE_LOADING_START);
                     goneReal();
 
                     // step2
-                    seekTo(true, seek, maxLength, maxNum);
+                    pause();
+
+                    // step3
+                    seekTo(true, seek, max, true);
                 }
                 // stop
                 else {
+
+                    // step1
+                    pause();
+
+                    // step2
                     playEnd();
-                    release();
                 }
             }
             // next

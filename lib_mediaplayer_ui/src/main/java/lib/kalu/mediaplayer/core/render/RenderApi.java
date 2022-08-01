@@ -62,6 +62,4 @@ public interface RenderApi {
      * @return bitmap
      */
     Bitmap doScreenShot();
-
-    void ss();
 }

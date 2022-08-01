@@ -28,9 +28,9 @@ public final class TestActivity extends AppCompatActivity {
     @Keep
     public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
     @Keep
-    public static final String INTENT_MAX_LENGTH = "intent_max_length"; // max
+    public static final String INTENT_MAX = "intent_max"; // max
     @Keep
-    public static final String INTENT_MAX_NUM = "intent_max_num"; // max
+    public static final String INTENT_LOOP = "intent_loop"; // loop
     @Keep
     public static final String INTENT_SEEK = "intent_seek"; // 快进
     @Keep
@@ -190,10 +190,10 @@ public final class TestActivity extends AppCompatActivity {
 
         // 开始播放
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
-        long maxLength = getIntent().getLongExtra(INTENT_MAX_LENGTH, 0);
-        int maxNum = getIntent().getIntExtra(INTENT_MAX_NUM, 0);
+        long max = getIntent().getLongExtra(INTENT_MAX, 0);
+        boolean loop = getIntent().getBooleanExtra(INTENT_LOOP, false);
         MediaLogUtil.log("K_ => seek = " + seek + ", url = " + url);
-        videoLayout.start(seek, maxLength, maxNum, url);
+        videoLayout.start(seek, max, loop, url);
     }
 
     @Override

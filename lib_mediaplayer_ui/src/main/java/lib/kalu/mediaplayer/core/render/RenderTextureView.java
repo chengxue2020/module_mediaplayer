@@ -137,11 +137,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     @Override
-    public void ss() {
-
-    }
-
-    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int[] measuredSize = mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(measuredSize[0], measuredSize[1]);

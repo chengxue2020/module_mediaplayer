@@ -28,8 +28,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        mPlayer.start(seek, maxLength, maxNum, url);
+    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
+        mPlayer.start(seek, max, loop, url);
+    }
+
+    @Override
+    public void create(@NonNull boolean loop) {
+        mPlayer.create(loop);
     }
 
     @Override
@@ -63,23 +68,18 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public boolean isLooping() {
+        return false;
+    }
+
+    @Override
     public long getSeek() {
         return mPlayer.getSeek();
     }
 
     @Override
-    public long getMaxLength() {
-        return mPlayer.getMaxLength();
-    }
-
-    @Override
-    public int getMaxNum() {
-        return mPlayer.getMaxNum();
-    }
-
-    @Override
-    public void setMaxNum(int num) {
-        mPlayer.setMaxNum(num);
+    public long getMax() {
+        return mPlayer.getMax();
     }
 
     @Override
@@ -103,8 +103,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum) {
-        mPlayer.seekTo(force, seek, maxLength, maxNum);
+    public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+        mPlayer.seekTo(force, seek, max, loop);
     }
 
     @Override
@@ -198,13 +198,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void create(int maxNum) {
-        mPlayer.create(maxNum);
-    }
-
-    @Override
-    public void release() {
-        mPlayer.release();
+    public void release(@NonNull boolean onlyHandle) {
+        mPlayer.release(onlyHandle);
     }
 
     @Override

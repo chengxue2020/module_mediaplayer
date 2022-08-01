@@ -54,6 +54,8 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         SurfaceHolder holder = this.getHolder();
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         holder.addCallback(callback);
+//        setZOrderOnTop(true);
+//        setZOrderMediaOverlay(true);
     }
 
 //    @Override
@@ -146,12 +148,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Override
     public Bitmap doScreenShot() {
         return getDrawingCache();
-    }
-
-    @Override
-    public void ss() {
-        setZOrderOnTop(true);
-        setZOrderMediaOverlay(true);
     }
 
     /**

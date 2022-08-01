@@ -24,7 +24,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 public final class AndroidMediaPlayer implements KernelApi {
 
     private KernelEvent mEvent;
-    private MediaPlayer mMediaPlayer;
+    private MediaPlayer mAndroidPlayer;
 
     private int mBufferedPercent;
 
@@ -41,7 +41,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void createDecoder(@NonNull Context context) {
         releaseDecoder();
-        mMediaPlayer = new MediaPlayer();
+        mAndroidPlayer = new MediaPlayer();
         setOptions();
         initListener();
     }
@@ -49,25 +49,25 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void releaseDecoder() {
         releaseMusic();
-        if (null != mMediaPlayer) {
-            mMediaPlayer.setOnErrorListener(null);
-            mMediaPlayer.setOnCompletionListener(null);
-            mMediaPlayer.setOnInfoListener(null);
-            mMediaPlayer.setOnBufferingUpdateListener(null);
-            mMediaPlayer.setOnPreparedListener(null);
-            mMediaPlayer.setOnVideoSizeChangedListener(null);
-            mMediaPlayer.setLooping(false);
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+        if (null != mAndroidPlayer) {
+            mAndroidPlayer.setOnErrorListener(null);
+            mAndroidPlayer.setOnCompletionListener(null);
+            mAndroidPlayer.setOnInfoListener(null);
+            mAndroidPlayer.setOnBufferingUpdateListener(null);
+            mAndroidPlayer.setOnPreparedListener(null);
+            mAndroidPlayer.setOnVideoSizeChangedListener(null);
+            mAndroidPlayer.setLooping(false);
+            mAndroidPlayer.stop();
+            mAndroidPlayer.reset();
+            mAndroidPlayer.release();
+            mAndroidPlayer = null;
         }
 
 //        new Thread() {
 //            @Override
 //            public void run() {
 //                try {
-//                    mMediaPlayer.release();
+//                    mAndroidPlayer.release();
 //                } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
@@ -79,13 +79,13 @@ public final class AndroidMediaPlayer implements KernelApi {
      * MediaPlayer视频播放器监听listener
      */
     private void initListener() {
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setOnErrorListener(onErrorListener);
-        mMediaPlayer.setOnCompletionListener(onCompletionListener);
-        mMediaPlayer.setOnInfoListener(onInfoListener);
-        mMediaPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-        mMediaPlayer.setOnPreparedListener(onPreparedListener);
-        mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+        mAndroidPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mAndroidPlayer.setOnErrorListener(onErrorListener);
+        mAndroidPlayer.setOnCompletionListener(onCompletionListener);
+        mAndroidPlayer.setOnInfoListener(onInfoListener);
+        mAndroidPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+        mAndroidPlayer.setOnPreparedListener(onPreparedListener);
+        mAndroidPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
     }
 
     /**
@@ -94,7 +94,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void setDataSource(AssetFileDescriptor fd) {
         try {
-            mMediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
+            mAndroidPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -106,7 +106,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void start() {
         try {
-            mMediaPlayer.start();
+            mAndroidPlayer.start();
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -118,7 +118,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void pause() {
         try {
-            mMediaPlayer.pause();
+            mAndroidPlayer.pause();
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -130,7 +130,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void stop() {
         try {
-            mMediaPlayer.stop();
+            mAndroidPlayer.stop();
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -141,7 +141,7 @@ public final class AndroidMediaPlayer implements KernelApi {
      */
     @Override
     public boolean isPlaying() {
-        return mMediaPlayer.isPlaying();
+        return mAndroidPlayer.isPlaying();
     }
 
     /**
@@ -150,7 +150,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void seekTo(long time) {
         try {
-            mMediaPlayer.seekTo((int) time);
+            mAndroidPlayer.seekTo((int) time);
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -161,7 +161,7 @@ public final class AndroidMediaPlayer implements KernelApi {
      */
     @Override
     public long getPosition() {
-        return mMediaPlayer.getCurrentPosition();
+        return mAndroidPlayer.getCurrentPosition();
     }
 
     /**
@@ -169,7 +169,7 @@ public final class AndroidMediaPlayer implements KernelApi {
      */
     @Override
     public long getDuration() {
-        return mMediaPlayer.getDuration();
+        return mAndroidPlayer.getDuration();
     }
 
     /**
@@ -182,25 +182,8 @@ public final class AndroidMediaPlayer implements KernelApi {
         return mBufferedPercent;
     }
 
-    /**
-     * 设置渲染视频的View,主要用于TextureView
-     *
-     * @param surface surface
-     */
     @Override
-    public void setSurface(Surface surface) {
-        if (surface != null) {
-            try {
-                mMediaPlayer.setSurface(surface);
-            } catch (Exception e) {
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-            }
-        }
-    }
-
-    @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        KernelApi.super.init(context, seek, maxLength, maxNum, url);
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
 
         // loading-start
         mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_START);
@@ -214,30 +197,48 @@ public final class AndroidMediaPlayer implements KernelApi {
         }
         try {
             Uri uri = Uri.parse(url);
-            mMediaPlayer.setDataSource(context, uri, null);
+            mAndroidPlayer.setDataSource(context, uri, null);
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
         try {
-            mMediaPlayer.prepareAsync();
+            mAndroidPlayer.prepareAsync();
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
-    /**
-     * 设置渲染视频的View,主要用于SurfaceView
-     *
-     * @param holder holder
-     */
     @Override
-    public void setDisplay(SurfaceHolder holder) {
-        try {
-            mMediaPlayer.setDisplay(holder);
-        } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+    public void setSurface(@NonNull Surface surface) {
+        if (null != surface && null != mAndroidPlayer) {
+            try {
+                mAndroidPlayer.setSurface(surface);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
+
+//    @Override
+//    public void setReal(@NonNull Surface surface, @NonNull SurfaceHolder holder) {
+//
+//        // 设置渲染视频的View,主要用于SurfaceView
+//        if (null != holder && null != mAndroidPlayer) {
+//            try {
+//                mAndroidPlayer.setDisplay(holder);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        if (null != surface && null != mAndroidPlayer) {
+//            try {
+//                mAndroidPlayer.setSurface(surface);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     /**
      * 设置音量
@@ -249,7 +250,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     public void setVolume(float v1, float v2) {
         KernelApi.super.setVolume(v1, v2);
         try {
-            mMediaPlayer.setVolume(v1, v2);
+            mAndroidPlayer.setVolume(v1, v2);
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -263,10 +264,15 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void setLooping(boolean isLooping) {
         try {
-            mMediaPlayer.setLooping(isLooping);
+            mAndroidPlayer.setLooping(isLooping);
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
+    }
+
+    @Override
+    public boolean isLooping() {
+        return false;
     }
 
     @Override
@@ -283,7 +289,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         // only support above Android M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(speed));
+                mAndroidPlayer.setPlaybackParams(mAndroidPlayer.getPlaybackParams().setSpeed(speed));
             } catch (Exception e) {
                 mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
@@ -300,7 +306,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         // only support above Android M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                return mMediaPlayer.getPlaybackParams().getSpeed();
+                return mAndroidPlayer.getPlaybackParams().getSpeed();
             } catch (Exception e) {
                 mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
@@ -390,7 +396,6 @@ public final class AndroidMediaPlayer implements KernelApi {
             long seek = getSeek();
             if (seek > 0) {
                 seekTo(seek);
-                setSeek(0);
             }
 
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);

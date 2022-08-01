@@ -24,7 +24,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private int mBufferedPercent;
 
     private KernelEvent mEvent;
-    private tv.danmaku.ijk.media.player.IjkMediaPlayer mMediaPlayer;
+    private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer;
 
     public IjkMediaPlayer(@NonNull KernelEvent event) {
         this.mEvent = event;
@@ -39,15 +39,15 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 //    @Override
 //    public void createKernel(@NonNull Context context) {
 //        // not null
-//        if (null != mMediaPlayer) {
+//        if (null != mIjkPlayer) {
 //            resetKernel();
 //        }
 //    }
 
     @Override
     public void createDecoder(@NonNull Context context) {
-        if (null == mMediaPlayer) {
-            mMediaPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
+        if (null == mIjkPlayer) {
+            mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(MediaLogUtil.isIsLog() ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_SILENT);
             setOptions();
             initListener();
@@ -57,10 +57,10 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void releaseDecoder() {
         releaseMusic();
-        if (null != mMediaPlayer) {
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+        if (null != mIjkPlayer) {
+            mIjkPlayer.stop();
+            mIjkPlayer.release();
+            mIjkPlayer = null;
         }
     }
 
@@ -72,10 +72,10 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 
         //是否有声音, 1无声音、0有声音
-        mMediaPlayer.setOption(player, "an", 0);
-        mMediaPlayer.setOption(player, "volume", 100);
+        mIjkPlayer.setOption(player, "an", 0);
+        mIjkPlayer.setOption(player, "volume", 100);
         //是否有视频, 1无视频、0有视频
-        mMediaPlayer.setOption(player, "vn", 0);
+        mIjkPlayer.setOption(player, "vn", 0);
 
         /**
          *  IJK_AVDISCARD_NONE    =-16, ///< discard nothing
@@ -86,64 +86,64 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
          *  IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
          */
         // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
-        mMediaPlayer.setOption(codec, "skip_loop_filter", 48);
+        mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
         // 预加载800K
-        mMediaPlayer.setOption(format, "probesize", 1024 * 800);
+        mIjkPlayer.setOption(format, "probesize", 1024 * 800);
         // 最大缓冲800K
-        mMediaPlayer.setOption(player, "max-buffer-size", 1024 * 800);
+        mIjkPlayer.setOption(player, "max-buffer-size", 1024 * 800);
 //
         //设置播放前的最大探测时间
-        mMediaPlayer.setOption(format, "analyzeduration", 30 * 1000 * 1000);
-        mMediaPlayer.setOption(format, "analyzemaxduration", 30 * 1000 * 1000);
+        mIjkPlayer.setOption(format, "analyzeduration", 30 * 1000 * 1000);
+        mIjkPlayer.setOption(format, "analyzemaxduration", 30 * 1000 * 1000);
 //        //设置是否开启变调isModifyTone?0:1
-        mMediaPlayer.setOption(player, "soundtouch", 0);
+        mIjkPlayer.setOption(player, "soundtouch", 0);
         //每处理一个packet之后刷新io上下文
-        mMediaPlayer.setOption(format, "flush_packets", 1);
+        mIjkPlayer.setOption(format, "flush_packets", 1);
         // 关闭播放器缓冲，这个必须关闭，否则会出现播放一段时间后，一直卡主，控制台打印 FFP_MSG_BUFFERING_START
-        mMediaPlayer.setOption(player, "packet-buffering", 0);
+        mIjkPlayer.setOption(player, "packet-buffering", 0);
         //播放重连次数
-        mMediaPlayer.setOption(player, "reconnect", 1);
+        mIjkPlayer.setOption(player, "reconnect", 1);
         // 跳帧处理,放CPU处理较慢时，进行跳帧处理，保证播放流程，画面和声音同步
-        mMediaPlayer.setOption(player, "framedrop", 1);
+        mIjkPlayer.setOption(player, "framedrop", 1);
         //最大fps
-        mMediaPlayer.setOption(player, "max-fps", 30);
+        mIjkPlayer.setOption(player, "max-fps", 30);
 
         // SeekTo设置优化
         // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-        mMediaPlayer.setOption(player, "enable-accurate-seek", 1);
+        mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
         // 设置seekTo能够快速seek到指定位置并播放
         // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
-        mMediaPlayer.setOption(format, "fflags", "fastseek");
+        mIjkPlayer.setOption(format, "fflags", "fastseek");
 
         // http、https混合存在时
-        mMediaPlayer.setOption(format, "dns_cache_clear", 1);
+        mIjkPlayer.setOption(format, "dns_cache_clear", 1);
         //超时时间，timeout参数只对http设置有效，若果你用rtmp设置timeout，ijkplayer内部会忽略timeout参数。rtmp的timeout参数含义和http的不一样。
-        mMediaPlayer.setOption(format, "timeout", 30 * 1000 * 1000);
+        mIjkPlayer.setOption(format, "timeout", 30 * 1000 * 1000);
 
         //rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
-        mMediaPlayer.setOption(format, "rtsp_transport", "tcp");
-        mMediaPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
+        mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
+        mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
 
         // 根据媒体类型来配置 => bug => resp aac音频无声音
-//         mMediaPlayer.setOption(format, "allowed_media_types", "video");
+//         mIjkPlayer.setOption(format, "allowed_media_types", "video");
         // 缓冲800K
-        mMediaPlayer.setOption(format, "buffer_size", 1024 * 800);
+        mIjkPlayer.setOption(format, "buffer_size", 1024 * 800);
         // 无限读
-        mMediaPlayer.setOption(format, "infbuf", 1);
+        mIjkPlayer.setOption(format, "infbuf", 1);
 
-//        mMediaPlayer.setOption(player, "opensles", 0);
-//        mMediaPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-//        mMediaPlayer.setOption(player, "start-on-prepared", 0);
-//        mMediaPlayer.setOption(format, "http-detect-range-support", 0);
+//        mIjkPlayer.setOption(player, "opensles", 0);
+//        mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
+//        mIjkPlayer.setOption(player, "start-on-prepared", 0);
+//        mIjkPlayer.setOption(format, "http-detect-range-support", 0);
 //
 //        //jkPlayer支持硬解码和软解码。
 //        //软解码时不会旋转视频角度这时需要你通过onInfo的what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED去获取角度，自己旋转画面。
 //        //或者开启硬解硬解码，不过硬解码容易造成黑屏无声（硬件兼容问题），下面是设置硬解码相关的代码
-        mMediaPlayer.setOption(player, "videotoolbox", 0);
-        mMediaPlayer.setOption(player, "mediacodec", 0);//1为硬解 0为软解
-        mMediaPlayer.setOption(player, "mediacodec-hevc", 0);//打开h265硬解
-        mMediaPlayer.setOption(player, "mediacodec-auto-rotate", 0);
-        mMediaPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
+        mIjkPlayer.setOption(player, "videotoolbox", 0);
+        mIjkPlayer.setOption(player, "mediacodec", 0);//1为硬解 0为软解
+        mIjkPlayer.setOption(player, "mediacodec-hevc", 0);//打开h265硬解
+        mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+        mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
     }
 
     /**
@@ -152,22 +152,22 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private void initListener() {
         // 设置监听，可以查看ijk中的IMediaPlayer源码监听事件
         // 设置视频错误监听器
-        mMediaPlayer.setOnErrorListener(onErrorListener);
+        mIjkPlayer.setOnErrorListener(onErrorListener);
         // 设置视频播放完成监听事件
-        mMediaPlayer.setOnCompletionListener(onCompletionListener);
+        mIjkPlayer.setOnCompletionListener(onCompletionListener);
         // 设置视频信息监听器
-        mMediaPlayer.setOnInfoListener(onInfoListener);
+        mIjkPlayer.setOnInfoListener(onInfoListener);
         // 设置视频缓冲更新监听事件
-        mMediaPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+        mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
         // 设置准备视频播放监听事件
-        mMediaPlayer.setOnPreparedListener(onPreparedListener);
+        mIjkPlayer.setOnPreparedListener(onPreparedListener);
         // 设置视频大小更改监听器
-        mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+        mIjkPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
         // 设置视频seek完成监听事件
-        mMediaPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
+        mIjkPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
         // 设置时间文本监听器
-        mMediaPlayer.setOnTimedTextListener(onTimedTextListener);
-        mMediaPlayer.setOnNativeInvokeListener(new tv.danmaku.ijk.media.player.IjkMediaPlayer.OnNativeInvokeListener() {
+        mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
+        mIjkPlayer.setOnNativeInvokeListener(new tv.danmaku.ijk.media.player.IjkMediaPlayer.OnNativeInvokeListener() {
             @Override
             public boolean onNativeInvoke(int i, Bundle bundle) {
                 return true;
@@ -181,35 +181,16 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setDataSource(AssetFileDescriptor fd) {
         try {
-            mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
+            mIjkPlayer.setDataSource(new RawDataSourceProvider(fd));
         } catch (Exception e) {
             e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
-    /**
-     * 设置渲染视频的View,主要用于TextureView
-     *
-     * @param surface surface
-     */
     @Override
-    public void setSurface(Surface surface) {
-        if (surface != null) {
-            try {
-                mMediaPlayer.setSurface(surface);
-            } catch (Exception e) {
-                e.printStackTrace();
-                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-            }
-        }
-    }
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
 
-    @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        KernelApi.super.init(context, seek, maxLength, maxNum, url);
-
-        //2222222222222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
@@ -221,16 +202,16 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             Uri uri = Uri.parse(url);
             if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
                 RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
-                mMediaPlayer.setDataSource(rawDataSourceProvider);
+                mIjkPlayer.setDataSource(rawDataSourceProvider);
             } else {
                 //处理UA问题
 //                if (headers != null) {
 //                    String userAgent = headers.get("User-Agent");
 //                    if (!TextUtils.isEmpty(userAgent)) {
-//                        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
+//                        mIjkPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
 //                    }
 //                }
-                mMediaPlayer.setDataSource(context, uri, null);
+                mIjkPlayer.setDataSource(context, uri, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -238,7 +219,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         }
 
         try {
-            mMediaPlayer.prepareAsync();
+            mIjkPlayer.prepareAsync();
         } catch (IllegalStateException e) {
             e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
@@ -251,7 +232,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void pause() {
         try {
-            mMediaPlayer.pause();
+            mIjkPlayer.pause();
         } catch (IllegalStateException e) {
             e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
@@ -264,7 +245,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void start() {
         try {
-            mMediaPlayer.start();
+            mIjkPlayer.start();
         } catch (IllegalStateException e) {
             e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
@@ -277,7 +258,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void stop() {
         try {
-            mMediaPlayer.stop();
+            mIjkPlayer.stop();
         } catch (IllegalStateException e) {
             e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
@@ -290,7 +271,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public boolean isPlaying() {
         try {
-            return mMediaPlayer.isPlaying();
+            return mIjkPlayer.isPlaying();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -306,7 +287,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         MediaLogUtil.log("IJKLOG => seekTo => seek = " + seek);
         try {
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
-            mMediaPlayer.seekTo(seek);
+            mIjkPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
             e.printStackTrace();
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
@@ -319,7 +300,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public long getPosition() {
         try {
-            return (int) mMediaPlayer.getCurrentPosition();
+            return (int) mIjkPlayer.getCurrentPosition();
         } catch (Exception e) {
             e.printStackTrace();
             return 0L;
@@ -332,7 +313,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public long getDuration() {
         try {
-            return (int) mMediaPlayer.getDuration();
+            return (int) mIjkPlayer.getDuration();
         } catch (Exception e) {
             e.printStackTrace();
             return 0L;
@@ -347,13 +328,37 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         return mBufferedPercent;
     }
 
-    /**
-     * 设置渲染视频的View,主要用于SurfaceView
-     */
     @Override
-    public void setDisplay(SurfaceHolder holder) {
-        mMediaPlayer.setDisplay(holder);
+    public void setSurface(@NonNull Surface surface) {
+        if (null != surface && null != mIjkPlayer) {
+            try {
+                mIjkPlayer.setSurface(surface);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+//    @Override
+//    public void setReal(@NonNull Surface surface, @NonNull SurfaceHolder holder) {
+//
+//        // 设置渲染视频的View,主要用于SurfaceView
+//        if (null != holder && null != mIjkPlayer) {
+//            try {
+//                mIjkPlayer.setDisplay(holder);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        if (null != surface && null != mIjkPlayer) {
+//            try {
+//                mIjkPlayer.setSurface(surface);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     /**
      * 设置音量
@@ -361,15 +366,29 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setVolume(float v1, float v2) {
         KernelApi.super.setVolume(v1, v2);
-        mMediaPlayer.setVolume(v1, v2);
+        mIjkPlayer.setVolume(v1, v2);
     }
 
     /**
      * 设置是否循环播放
      */
     @Override
-    public void setLooping(boolean isLooping) {
-        mMediaPlayer.setLooping(isLooping);
+    public void setLooping(boolean loop) {
+        try {
+            mIjkPlayer.setLooping(loop);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean isLooping() {
+        try {
+            return mIjkPlayer.isLooping();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -377,7 +396,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public void setSpeed(float speed) {
-        mMediaPlayer.setSpeed(speed);
+        mIjkPlayer.setSpeed(speed);
     }
 
     /**
@@ -385,7 +404,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public float getSpeed() {
-        return mMediaPlayer.getSpeed(0);
+        return mIjkPlayer.getSpeed(0);
     }
 
     /**
@@ -393,7 +412,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public long getTcpSpeed() {
-        return mMediaPlayer.getTcpSpeed();
+        return mIjkPlayer.getTcpSpeed();
     }
 
     /**
@@ -476,7 +495,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             long seek = getSeek();
             if (seek > 0) {
                 seekTo(seek);
-                setSeek(0);
             }
         }
     };

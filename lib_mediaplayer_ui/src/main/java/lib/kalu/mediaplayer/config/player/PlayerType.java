@@ -67,14 +67,15 @@ public @interface PlayerType {
         int STATE_END = 2006; // 播放完成
         int STATE_PAUSED = 2007; // 暂停播放
         int STATE_RESUME = 2008; // 暂停播放
-        int STATE_CLOSE = 2009; // 暂停播放
-        int STATE_BUFFERING_START = 2010; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int STATE_BUFFERING_STOP = 2011; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_START_ABORT = 2012; // 开始播放中止
-        int STATE_ONCE_LIVE = 2013; // 即将开播
+        int STATE_REPEAT = 2009; // 重播一次
+        int STATE_CLOSE = 2010; // 暂停播放
+        int STATE_BUFFERING_START = 2011; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int STATE_BUFFERING_STOP = 2012; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_START_ABORT = 2013; // 开始播放中止
+        int STATE_ONCE_LIVE = 2014; // 即将开播
 
-        int STATE_ERROR = 2014;
-        int STATE_ERROR_NET = 2015;
+        int STATE_ERROR = 2015;
+        int STATE_ERROR_NET = 2016;
 
 //        int STATE_SUBTITLE_START = 2017;
 //        int STATE_TIMESTAMP_LOOP = 2018; // 时间戳, 开始播放后一秒回调一次
@@ -92,6 +93,7 @@ public @interface PlayerType {
                 STATE_START,
                 STATE_PAUSED,
                 STATE_RESUME,
+                STATE_REPEAT,
                 STATE_CLOSE,
                 STATE_BUFFERING_START,
                 STATE_BUFFERING_STOP,
@@ -286,7 +288,8 @@ public @interface PlayerType {
 //        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 开始渲染视频画面
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
-        int EVENT_VIDEO_SEEK_COMPLETE = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
+        int EVENT_VIDEO_SEEK_COMPLETE_A = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
+        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
 //        int EVENT_VIDEO_END = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
         // 缓冲开始

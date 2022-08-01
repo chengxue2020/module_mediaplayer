@@ -42,14 +42,16 @@ public interface PlayerApi {
     }
 
     default void start(@NonNull String url) {
-        start(0, 0, 0, url);
+        start(0, 0, false, url);
     }
 
     default void start(@NonNull long seek, @NonNull String url) {
-        start(seek, 0, 0, url);
+        start(seek, 0, false, url);
     }
 
-    void start(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url);
+    void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url);
+
+    void create(@NonNull boolean loop);
 
     void pause();
 
@@ -59,28 +61,15 @@ public interface PlayerApi {
 
     void repeat();
 
-    /**
-     * 获取视频总时长
-     *
-     * @return long类型
-     */
     long getDuration();
 
-
-    /**
-     * 获取当前播放的位置
-     *
-     * @return long类型
-     */
     long getPosition();
+
+    boolean isLooping();
 
     long getSeek();
 
-    long getMaxLength();
-
-    int getMaxNum();
-
-    void setMaxNum(int num);
+    long getMax();
 
     String getUrl();
 
@@ -94,14 +83,14 @@ public interface PlayerApi {
     int getBufferedPercentage();
 
     default void seekTo(@NonNull long seek) {
-        seekTo(false, seek, 0, 0);
+        seekTo(false, seek, 0, false);
     }
 
     default void seekTo(@NonNull boolean force, @NonNull long seek) {
-        seekTo(force, seek, 0, 0);
+        seekTo(force, seek, 0, false);
     }
 
-    void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum);
+    void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop);
 
     /**
      * 是否处于播放状态
@@ -146,13 +135,11 @@ public interface PlayerApi {
 
     void goneReal();
 
-    void create(int maxNum);
+    default void release() {
+        release(false);
+    }
 
-    void release();
-
-//    void releaseKernel();
-
-//    void releaseRender();
+    void release(@NonNull boolean onlyHandle);
 
     void startLoop();
 

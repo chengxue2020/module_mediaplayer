@@ -21,11 +21,10 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 public interface KernelApi extends KernelEvent {
 
     Boolean[] mMute = new Boolean[1]; // 静音
-    Long[] mMaxLength = new Long[1];
-    Integer[] mMaxNum = new Integer[1];
-    Long[] mSeek = new Long[1];
-    String[] mUrl = new String[1];
-    MediaPlayer[] mMediaPlayer = new MediaPlayer[1];
+    Long[] mMax = new Long[1]; // 试播时常
+    Long[] mSeek = new Long[1]; // 快进
+    String[] mUrl = new String[1]; // 视频串
+    MediaPlayer[] mMusicPlayer = new MediaPlayer[1]; // 配音音频
 
     /*---------------------------- 消息通知 ----------------------------------*/
 
@@ -52,25 +51,23 @@ public interface KernelApi extends KernelEvent {
      */
     void setDataSource(AssetFileDescriptor fd);
 
-    void setSurface(Surface surface);
-
     default void releaseMusic() {
         stopMusic();
-        if (null != mMediaPlayer[0]) {
-            mMediaPlayer[0].release();
-            mMediaPlayer[0] = null;
+        if (null != mMusicPlayer[0]) {
+            mMusicPlayer[0].release();
+            mMusicPlayer[0] = null;
         }
     }
 
     default void stopMusic() {
         try {
-            if (mMediaPlayer[0].isLooping()) {
-                mMediaPlayer[0].setLooping(false);
+            if (mMusicPlayer[0].isLooping()) {
+                mMusicPlayer[0].setLooping(false);
             }
-            if (mMediaPlayer[0].isPlaying()) {
-                mMediaPlayer[0].stop();
+            if (mMusicPlayer[0].isPlaying()) {
+                mMusicPlayer[0].stop();
             }
-            mMediaPlayer[0].reset();
+            mMusicPlayer[0].reset();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,15 +75,15 @@ public interface KernelApi extends KernelEvent {
 
     default void toggleMusic(@NonNull Context context, @NonNull String music) {
 
-        if (null == mMediaPlayer[0]) {
-            mMediaPlayer[0] = new MediaPlayer();
+        if (null == mMusicPlayer[0]) {
+            mMusicPlayer[0] = new MediaPlayer();
         }
 
         // 视频音源
         if (null != music && music.length() > 0) {
 
             // pause
-            if (mMediaPlayer[0].isPlaying()) {
+            if (mMusicPlayer[0].isPlaying()) {
                 stopMusic();
                 pause();
                 toggleMusic(context, music);
@@ -96,21 +93,21 @@ public interface KernelApi extends KernelEvent {
                 try {
                     stopMusic();
                     pause();
-                    mMediaPlayer[0].setDataSource(context, Uri.parse(music));
-                    mMediaPlayer[0].prepare();
-                    mMediaPlayer[0].setOnPreparedListener(null);
-                    mMediaPlayer[0].start();
+                    mMusicPlayer[0].setDataSource(context, Uri.parse(music));
+                    mMusicPlayer[0].prepare();
+                    mMusicPlayer[0].start();
                     long position = getPosition();
-                    mMediaPlayer[0].seekTo((int) position);
-                    mMediaPlayer[0].setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    mMusicPlayer[0].seekTo((int) position);
+                    mMusicPlayer[0].setOnPreparedListener(null);
+                    mMusicPlayer[0].setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             setVolume(0, 0);
                             start();
                         }
                     });
-                    mMediaPlayer[0].setOnErrorListener(null);
-                    mMediaPlayer[0].setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                    mMusicPlayer[0].setOnErrorListener(null);
+                    mMusicPlayer[0].setOnErrorListener(new MediaPlayer.OnErrorListener() {
                         @Override
                         public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
                             toggleMusic(context, null);
@@ -132,30 +129,23 @@ public interface KernelApi extends KernelEvent {
         }
     }
 
-    default void create(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        MediaLogUtil.log("K_LOG => create => seek = " + seek + ", maxLength = " + maxLength + ", maxNum = " + maxNum + ", url = " + url);
-        init(context, seek, maxLength, maxNum, url);
-    }
+    void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url);
 
-    default void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
+    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
+        MediaLogUtil.log("K_LOG => create => seek = " + seek + ", max = " + max + ", url = " + url);
         mSeek[0] = seek;
-        mMaxNum[0] = maxNum;
-        mMaxLength[0] = maxLength;
+        mMax[0] = max;
         mUrl[0] = url;
+        init(context, seek, max, url);
     }
 
-    default void update(@NonNull long seek, @NonNull long maxLength, @NonNull int maxNum) {
+    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+        setLooping(loop);
         mSeek[0] = seek;
-        mMaxNum[0] = maxNum;
-        mMaxLength[0] = maxLength;
+        mMax[0] = max;
     }
 
-    default void update(@NonNull long maxLength, @NonNull int maxNum) {
-        mMaxNum[0] = maxNum;
-        mMaxLength[0] = maxLength;
-    }
-
-    /*----------------------------第二部分：视频播放器状态方法----------------------------------*/
+    void setSurface(@NonNull Surface surface);
 
     /**
      * 播放
@@ -207,13 +197,6 @@ public interface KernelApi extends KernelEvent {
     int getBufferedPercentage();
 
     /**
-     * 设置渲染视频的View,主要用于SurfaceView
-     *
-     * @param holder holder
-     */
-    void setDisplay(SurfaceHolder holder);
-
-    /**
      * 设置音量
      *
      * @param v1 v1
@@ -228,12 +211,10 @@ public interface KernelApi extends KernelEvent {
         return null == mMute[0] ? false : mMute[0];
     }
 
-    /**
-     * 设置是否循环播放
-     *
-     * @param isLooping 布尔值
-     */
-    void setLooping(boolean isLooping);
+    void setLooping(boolean loop);
+
+
+    boolean isLooping();
 
     /**
      * 设置其他播放配置
@@ -270,38 +251,33 @@ public interface KernelApi extends KernelEvent {
     }
 
     default long getSeek() {
-        if (null == mSeek[0]) {
-            return 0;
+        MediaLogUtil.log("KernelApi => getSeek => seek = " + mSeek[0]);
+        if (null == mSeek[0] || mSeek[0] < 0) {
+            return 0L;
         } else {
             return mSeek[0];
         }
     }
 
-    default void setSeek(long seek) {
-        mSeek[0] = seek;
-    }
+//    default void setSeek(long seek) {
+//        if (seek < 0) {
+//            seek = 0;
+//        }
+//        mSeek[0] = seek;
+//    }
 
-    default long getMaxLength() {
-        if (null == mMaxLength[0]) {
-            return 0;
+    default long getMax() {
+        MediaLogUtil.log("KernelApi => getMax => max = " + mMax[0]);
+        if (null == mMax[0] || mMax[0] < 0) {
+            return 0L;
         } else {
-            return mMaxLength[0];
+            return mMax[0];
         }
     }
 
-    default void setMaxLength(long max) {
-        mMaxLength[0] = max;
-    }
-
-    default int getMaxNum() {
-        if (null == mMaxNum[0]) {
-            return 0;
-        } else {
-            return mMaxNum[0];
-        }
-    }
-
-    default void setMaxNum(int num) {
-        mMaxNum[0] = num;
-    }
+//    default void setMax(long max) {
+//        if (max > 0) {
+//            mMax[0] = max;
+//        }
+//    }
 }

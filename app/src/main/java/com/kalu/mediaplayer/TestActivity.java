@@ -42,6 +42,6 @@ public class TestActivity extends AppCompatActivity {
 
     private void open() {
         VideoLayout videoView = findViewById(R.id.video);
-        videoView.start(0, 0, 0, "https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4");
+        videoView.start("https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4");
     }
 }

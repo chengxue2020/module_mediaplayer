@@ -58,7 +58,7 @@ public class BaseApplication extends MultiDexApplication {
                 //调试的时候请打开日志，方便排错
                 .setLogEnabled(true)
                 .setKernel(PlayerType.KernelType.IJK)
-                .setRender(PlayerType.RenderType.SURFACE)
+                .setRender(PlayerType.RenderType.SURFACE_VIEW)
                 .setKeycode(new KeycodeSimulator())
                 .build();
         PlayerConfigManager.getInstance().setConfig(build);

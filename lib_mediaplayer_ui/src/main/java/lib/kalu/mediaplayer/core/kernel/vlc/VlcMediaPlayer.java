@@ -28,7 +28,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     //    private LibVLC mLibVLC;
     private KernelEvent mEvent;
-    private org.videolan.libvlc.media.MediaPlayer mMediaPlayer;
+    private org.videolan.libvlc.media.MediaPlayer mVlcPlayer;
 
     public VlcMediaPlayer(@NonNull KernelEvent event) {
         this.mEvent = event;
@@ -48,7 +48,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //        args.add("--audio-time-stretch");
 //        args.add("-vvv");
 //        mLibVLC = new LibVLC(context);
-        mMediaPlayer = new org.videolan.libvlc.media.MediaPlayer(context);
+        mVlcPlayer = new org.videolan.libvlc.media.MediaPlayer(context);
         setOptions();
         initListener();
     }
@@ -56,9 +56,9 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void releaseDecoder() {
         releaseMusic();
-        if (null != mMediaPlayer) {
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+        if (null != mVlcPlayer) {
+            mVlcPlayer.release();
+            mVlcPlayer = null;
         }
     }
 
@@ -66,14 +66,14 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
      * MediaPlayer视频播放器监听listener
      */
     private void initListener() {
-//        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        mMediaPlayer.setOnErrorListener(onErrorListener);
-//        mMediaPlayer.setOnCompletionListener(onCompletionListener);
-//        mMediaPlayer.setOnInfoListener(onInfoListener);
-//        mMediaPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-//        mMediaPlayer.setOnPreparedListener(onPreparedListener);
-//        mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
-        mMediaPlayer.getVLC().setEventListener(new MediaPlayer.EventListener() {
+//        mVlcPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        mVlcPlayer.setOnErrorListener(onErrorListener);
+//        mVlcPlayer.setOnCompletionListener(onCompletionListener);
+//        mVlcPlayer.setOnInfoListener(onInfoListener);
+//        mVlcPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+//        mVlcPlayer.setOnPreparedListener(onPreparedListener);
+//        mVlcPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+        mVlcPlayer.getVLC().setEventListener(new MediaPlayer.EventListener() {
             @Override
             public void onEvent(MediaPlayer.Event event) {
                 MediaLogUtil.log("K_VLC => event = " + event.type);
@@ -85,7 +85,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
                     long seek = getSeek();
                     if (seek > 0) {
                         seekTo(seek);
-                        setSeek(0);
                     }
                 }
                 // 解析开始
@@ -111,7 +110,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setDataSource(AssetFileDescriptor fd) {
         try {
-            mMediaPlayer.setDataSource(fd.getFileDescriptor());
+            mVlcPlayer.setDataSource(fd.getFileDescriptor());
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -123,7 +122,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void start() {
         try {
-            mMediaPlayer.start();
+            mVlcPlayer.start();
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -135,7 +134,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void pause() {
         try {
-            mMediaPlayer.pause();
+            mVlcPlayer.pause();
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -147,7 +146,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void stop() {
         try {
-            mMediaPlayer.stop();
+            mVlcPlayer.stop();
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -159,7 +158,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public boolean isPlaying() {
         try {
-            return mMediaPlayer.isPlaying();
+            return mVlcPlayer.isPlaying();
         } catch (Exception e) {
             return false;
         }
@@ -171,7 +170,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void seekTo(long seek) {
         try {
-            mMediaPlayer.seekTo(seek);
+            mVlcPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -182,7 +181,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public long getPosition() {
-        return mMediaPlayer.getCurrentPosition();
+        return mVlcPlayer.getCurrentPosition();
     }
 
     /**
@@ -190,7 +189,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public long getDuration() {
-        return mMediaPlayer.getDuration();
+        return mVlcPlayer.getDuration();
     }
 
     /**
@@ -205,10 +204,8 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull long maxLength, @NonNull int maxNum, @NonNull String url) {
-        KernelApi.super.init(context, seek, maxLength, maxNum, url);
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
 
-        //222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_COMPILE);
@@ -216,7 +213,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
             return;
         }
         try {
-            mMediaPlayer.setDataSource(url);//
+            mVlcPlayer.setDataSource(url);//
 
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
@@ -228,35 +225,31 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         }
     }
 
-    /**
-     * 设置渲染视频的View,主要用于TextureView
-     *
-     * @param surface surface
-     */
     @Override
-    public void setSurface(Surface surface) {
-        if (surface != null) {
+    public void setSurface(@NonNull Surface surface) {
+        if (null != surface && null != mVlcPlayer) {
             try {
-                mMediaPlayer.setSurface(surface);
+                mVlcPlayer.setSurface(surface);
             } catch (Exception e) {
-                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+                e.printStackTrace();
             }
         }
     }
 
-    /**
-     * 设置渲染视频的View,主要用于SurfaceView
-     *
-     * @param holder holder
-     */
-    @Override
-    public void setDisplay(SurfaceHolder holder) {
-        try {
-            mMediaPlayer.setDisplay(holder);
-        } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-        }
-    }
+//    @Override
+//    public void setReal(@NonNull Surface surface, @NonNull SurfaceHolder holder) {
+//
+//        // 设置渲染视频的View,主要用于SurfaceView
+//        if (null != holder && null != mVlcPlayer) {
+//            try {
+//                mVlcPlayer.setDisplay(holder);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//
+//    }
 
     /**
      * 设置音量
@@ -268,7 +261,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     public void setVolume(float v1, float v2) {
         KernelApi.super.setVolume(v1, v2);
         try {
-            mMediaPlayer.setVolume(v1, v2);
+            mVlcPlayer.setVolume(v1, v2);
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
@@ -282,9 +275,19 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setLooping(boolean isLooping) {
         try {
-            mMediaPlayer.setLooping(isLooping);
+            mVlcPlayer.setLooping(isLooping);
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+        }
+    }
+
+    @Override
+    public boolean isLooping() {
+        try {
+            return mVlcPlayer.isLooping();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -302,7 +305,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         // only support above Android M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                mMediaPlayer.setSpeed(speed);
+                mVlcPlayer.setSpeed(speed);
             } catch (Exception e) {
                 mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
@@ -319,7 +322,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         // only support above Android M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                return mMediaPlayer.getSpeed();
+                return mVlcPlayer.getSpeed();
             } catch (Exception e) {
                 mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }

@@ -50,7 +50,7 @@ public class ComponentEnd extends RelativeLayout implements ImplComponent {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "点击", Toast.LENGTH_SHORT).show();
-//                repeat(mControllerWrapper);
+                repeat(mControllerWrapper);
             }
         });
     }
@@ -79,7 +79,9 @@ public class ComponentEnd extends RelativeLayout implements ImplComponent {
                 bringToFront();
                 setVisibility(View.VISIBLE);
                 break;
-            default:
+            case PlayerType.StateType.STATE_START:
+            case PlayerType.StateType.STATE_RESUME:
+            case PlayerType.StateType.STATE_REPEAT:
                 MediaLogUtil.log("ComponentEnd[gone] => playState = " + playState);
                 setVisibility(View.GONE);
                 break;

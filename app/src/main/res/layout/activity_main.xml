@@ -110,6 +110,26 @@
                 android:text="toggle_music" />
 
             <Button
+                android:id="@+id/main_three00"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="不循环, 正常结束" />
+
+            <Button
+                android:id="@+id/main_three0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="快进10s, 不循环, 正常结束" />
+
+            <Button
                 android:id="@+id/main_three1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -117,7 +137,7 @@
                 android:background="@color/colorAccent"
                 android:focusable="true"
                 android:padding="10dp"
-                android:text="3分钟" />
+                android:text="快进10s, 不循环, 10s结束" />
 
             <Button
                 android:id="@+id/main_three2"
@@ -127,7 +147,7 @@
                 android:background="@color/colorAccent"
                 android:focusable="true"
                 android:padding="10dp"
-                android:text="3分钟-xunhuan" />
+                android:text="快进10s, 循环, 10s结束" />
 
             <Button
                 android:id="@+id/main_mp4"
