@@ -42,6 +42,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     public void createDecoder(@NonNull Context context) {
         releaseDecoder();
         mAndroidPlayer = new MediaPlayer();
+        mAndroidPlayer.setLooping(false);
         setOptions();
         initListener();
     }
@@ -254,25 +255,6 @@ public final class AndroidMediaPlayer implements KernelApi {
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
-    }
-
-    /**
-     * 设置是否循环播放
-     *
-     * @param isLooping 布尔值
-     */
-    @Override
-    public void setLooping(boolean isLooping) {
-        try {
-            mAndroidPlayer.setLooping(isLooping);
-        } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-        }
-    }
-
-    @Override
-    public boolean isLooping() {
-        return false;
     }
 
     @Override

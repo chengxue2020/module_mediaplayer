@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.impl.ImplControllerAction;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi2;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.core.controller.ControllerApi;
 import lib.kalu.mediaplayer.core.controller.help.OrientationHelper;
 import lib.kalu.mediaplayer.core.view.PlayerApi;
@@ -39,7 +39,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  * *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
  * *             6.设备方向监听: {@link #onOrientationChanged(int)}
  */
-public abstract class ControllerLayout extends RelativeLayout implements ControllerApi, ImplControllerAction, OrientationHelper.OnOrientationChangeListener {
+public abstract class ControllerLayout extends RelativeLayout implements ControllerApi, ComponentApi2, OrientationHelper.OnOrientationChangeListener {
 
     //播放器包装类，集合了MediaPlayerControl的api和IVideoController的api
     protected ControllerWrapper mControllerWrapper;
@@ -65,7 +65,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
     private boolean mIsShowing;
 
     // 控制组件
-    protected ArrayList<ImplComponent> mComponents = new ArrayList<>();
+    protected ArrayList<ComponentApi> mComponents = new ArrayList<>();
 
     public ControllerLayout(@NonNull Context context) {
         super(context);
@@ -142,7 +142,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
                 component.attach(mControllerWrapper);
@@ -153,7 +153,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
     }
 
     @Override
-    public void addComponent(@NonNull ImplComponent component) {
+    public void addComponent(@NonNull ComponentApi component) {
 
         if (null == component || null == component.getView())
             return;
@@ -578,7 +578,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
             if (null != mComponents && mComponents.size() > 0) {
                 int size = mComponents.size();
                 for (int i = 0; i < size; i++) {
-                    ImplComponent component = mComponents.get(i);
+                    ComponentApi component = mComponents.get(i);
                     if (null == component)
                         continue;
                     component.onVisibilityChanged(isVisible, anim);
@@ -602,7 +602,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
                 component.onPlayStateChanged(playState);
@@ -642,7 +642,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
                 component.onWindowStateChanged(playerState);
@@ -692,7 +692,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
                 component.setProgress(duration, position);
@@ -714,7 +714,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
                 component.onLockStateChanged(isLocked);

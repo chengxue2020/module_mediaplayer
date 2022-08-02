@@ -175,7 +175,7 @@ public final class TestActivity extends AppCompatActivity {
 
                         //正在播放
                         break;
-                    case PlayerType.StateType.STATE_PAUSED:
+                    case PlayerType.StateType.STATE_PAUSE:
                         //暂停播放
                         break;
                     case PlayerType.StateType.STATE_BUFFERING_STOP:

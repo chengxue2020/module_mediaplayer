@@ -2,21 +2,17 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Outline;
-import android.graphics.Rect;
-import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.util.MeasureHelper;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * <pre>
@@ -38,7 +34,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      * 原来的frontCanvas将切换到后台作为backCanvas。
      */
 
-//    private MeasureHelper mMeasureHelper;
+    private MeasureHelper mMeasureHelper;
     @Nullable
     private KernelApi mKernel;
     @Nullable
@@ -50,43 +46,24 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     private void init() {
-//        mMeasureHelper = new MeasureHelper();
+        mMeasureHelper = new MeasureHelper();
         SurfaceHolder holder = this.getHolder();
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        //类型必须设置成SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS
+//        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         holder.addCallback(callback);
 //        setZOrderOnTop(true);
 //        setZOrderMediaOverlay(true);
     }
 
-//    @Override
-//    protected void onDetachedFromWindow() {
-//        super.onDetachedFromWindow();
-////        if (callback != null) {
-////            getHolder().removeCallback(callback);
-////        }
-////        ViewCompat.
-//    }
-//
-//    @Override
-//    protected void onWindowVisibilityChanged(int visibility) {
-//        super.onWindowVisibilityChanged(visibility);
-//
-//        if(visibility == View.VISIBLE){
-//
-//        }
-//        else{
-//
-//        }
-//    }
-
     @Override
     public void releaseReal() {
-        if (null != mSurface) {
-            mSurface.release();
-        }
-        if (callback != null) {
-            getHolder().removeCallback(callback);
-        }
+//        if (null != mSurface) {
+//            mSurface.release();
+//        }
+//        if (callback != null) {
+//            getHolder().removeCallback(callback);
+//        }
     }
 
     @Override
@@ -94,57 +71,26 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         this.mKernel = kernel;
     }
 
-    /**
-     * 设置视频宽高
-     *
-     * @param videoWidth  宽
-     * @param videoHeight 高
-     */
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-//        if (videoWidth > 0 && videoHeight > 0) {
-//            mMeasureHelper.setVideoSize(videoWidth, videoHeight);
-//            requestLayout();
-//        }
+
     }
 
-    /**
-     * 设置视频旋转角度
-     *
-     * @param degree 角度值
-     */
     @Override
     public void setVideoRotation(int degree) {
-//        mMeasureHelper.setVideoRotation(degree);
-        setRotation(degree);
+
     }
 
-    /**
-     * 设置screen scale type
-     *
-     * @param scaleType 类型
-     */
     @Override
     public void setScaleType(int scaleType) {
-//        mMeasureHelper.setScreenScale(scaleType);
-        requestLayout();
+
     }
 
-    /**
-     * 获取真实的RenderView
-     *
-     * @return view
-     */
     @Override
     public View getReal() {
         return this;
     }
 
-    /**
-     * 截图
-     *
-     * @return bitmap
-     */
     @Override
     public Bitmap doScreenShot() {
         return getDrawingCache();
@@ -185,6 +131,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
          */
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
+            MediaLogUtil.log("RenderApi => surfaceCreated => " + this);
             if (mKernel != null) {
                 mSurface = holder.getSurface();
                 mKernel.setSurface(mSurface);
@@ -200,7 +147,11 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
          */
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+            MediaLogUtil.log("RenderApi => surfaceChanged => " + this);
+//            if (mKernel != null) {
+//                mSurface = holder.getSurface();
+//                mKernel.setSurface(mSurface);
+//            }
         }
 
         /**

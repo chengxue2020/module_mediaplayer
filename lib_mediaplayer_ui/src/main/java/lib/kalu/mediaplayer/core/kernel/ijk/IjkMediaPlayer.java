@@ -48,6 +48,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     public void createDecoder(@NonNull Context context) {
         if (null == mIjkPlayer) {
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
+            mIjkPlayer.setLooping(false);
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(MediaLogUtil.isIsLog() ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_SILENT);
             setOptions();
             initListener();
@@ -284,7 +285,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public void seekTo(long seek) {
-        MediaLogUtil.log("IJKLOG => seekTo => seek = " + seek);
+        MediaLogUtil.log("IjkMediaPlayer => seekTo => seek = " + seek);
         try {
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mIjkPlayer.seekTo(seek);
@@ -370,28 +371,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     }
 
     /**
-     * 设置是否循环播放
-     */
-    @Override
-    public void setLooping(boolean loop) {
-        try {
-            mIjkPlayer.setLooping(loop);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public boolean isLooping() {
-        try {
-            return mIjkPlayer.isLooping();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
      * 设置播放速度
      */
     @Override
@@ -428,9 +407,9 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private IMediaPlayer.OnErrorListener onErrorListener = new IMediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
+            MediaLogUtil.log("IjkMediaPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-            MediaLogUtil.log("IJKLOG => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
             return true;
         }
     };
@@ -441,8 +420,8 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private IMediaPlayer.OnCompletionListener onCompletionListener = new IMediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
+            MediaLogUtil.log("IjkMediaPlayer => onCompletion =>");
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_PLAYER_END);
-            MediaLogUtil.log("IJKLOG => onCompletion =>");
         }
     };
 
@@ -453,7 +432,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private IMediaPlayer.OnInfoListener onInfoListener = new IMediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
-
+            MediaLogUtil.log("IjkMediaPlayer => onInfo => what = " + what + ", extra = " + extra);
             // loading-start
             if (what == IMediaPlayer.MEDIA_INFO_OPEN_INPUT) {
                 mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_START);
@@ -461,14 +440,11 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             // 首帧画面
             else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
-                long duration = getDuration();
                 mEvent.onEvent(PlayerType.KernelType.IJK, what);
-            } else {
-
-                //            long position = getPosition();
-                long duration = getDuration();
+            }
+            // 事件通知
+            else {
                 mEvent.onEvent(PlayerType.KernelType.IJK, what);
-                MediaLogUtil.log("IJKLOG => onInfo => what = " + what + ", extra = " + extra);
             }
             return true;
         }
@@ -480,6 +456,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
         @Override
         public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
+            MediaLogUtil.log("IjkMediaPlayer => onBufferingUpdate => percent = "+percent);
             mBufferedPercent = percent;
         }
     };
@@ -491,7 +468,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
-            MediaLogUtil.log("K_IJK => onPrepared => seek = " + mSeek);
+            MediaLogUtil.log("IjkMediaPlayer => onPrepared => seek = " + mSeek);
             long seek = getSeek();
             if (seek > 0) {
                 seekTo(seek);
@@ -505,12 +482,12 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private IMediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new IMediaPlayer.OnVideoSizeChangedListener() {
         @Override
         public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
+            MediaLogUtil.log("IjkMediaPlayer => onVideoSizeChanged => width = " + width+", height = "+height);
             int videoWidth = iMediaPlayer.getVideoWidth();
             int videoHeight = iMediaPlayer.getVideoHeight();
             if (videoWidth != 0 && videoHeight != 0) {
                 onChanged(PlayerType.KernelType.IJK, videoWidth, videoHeight, -1);
             }
-//            MediaLogUtil.log("IjkVideoPlayer----listener---------onVideoSizeChanged ——> WIDTH：" + width + "， HEIGHT：" + height);
         }
     };
 
@@ -520,7 +497,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private IMediaPlayer.OnTimedTextListener onTimedTextListener = new IMediaPlayer.OnTimedTextListener() {
         @Override
         public void onTimedText(IMediaPlayer iMediaPlayer, IjkTimedText ijkTimedText) {
-
+            MediaLogUtil.log("IjkMediaPlayer => onTimedText => text = " + ijkTimedText.getText());
         }
     };
 
@@ -530,7 +507,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private IMediaPlayer.OnSeekCompleteListener onSeekCompleteListener = new IMediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
-
+            MediaLogUtil.log("IjkMediaPlayer => onSeekComplete => ");
         }
     };
 }

@@ -70,6 +70,7 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         builder.setTrackSelector(new DefaultTrackSelector(context));
         builder.setRenderersFactory(new DefaultRenderersFactory(context));
         mExoPlayer = builder.build();
+        mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
         setOptions();
         //播放器日志
         if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
@@ -370,21 +371,6 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         if (mExoPlayer != null) {
             mExoPlayer.setVolume((v1 + v2) / 2);
         }
-    }
-
-    /**
-     * 设置是否循环播放
-     */
-    @Override
-    public void setLooping(boolean isLooping) {
-        if (mExoPlayer != null) {
-            mExoPlayer.setRepeatMode(isLooping ? Player.REPEAT_MODE_ALL : Player.REPEAT_MODE_OFF);
-        }
-    }
-
-    @Override
-    public boolean isLooping() {
-        return false;
     }
 
     @Override

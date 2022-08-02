@@ -19,12 +19,12 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 
 /**
  * desc  : 悬浮窗视图
  */
-public class CustomFloatView extends FrameLayout implements ImplComponent, View.OnClickListener {
+public class CustomFloatView extends FrameLayout implements ComponentApi, View.OnClickListener {
 
     private ControllerWrapper mControllerWrapper;
     private Context mContext;
@@ -153,7 +153,7 @@ public class CustomFloatView extends FrameLayout implements ImplComponent, View.
                 //开始刷新进度
                 mControllerWrapper.startProgress();
                 break;
-            case PlayerType.StateType.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSE:
                 mIvStartPlay.setSelected(false);
                 mIvStartPlay.setVisibility(VISIBLE);
                 mPbLoading.setVisibility(GONE);

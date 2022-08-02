@@ -27,7 +27,6 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.util.MeasureHelper;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
 /**
@@ -37,19 +36,22 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
  *             8.必须在硬件加速的窗口中使用，占用内存比SurfaceView高，在5.0以前在主线程渲染，5.0以后有单独的渲染线程。
  * </pre>
  */
-public class RenderTextureView extends TextureView implements RenderApi {
+public class RenderTextureView1 extends TextureView implements RenderApi {
 
+    private MeasureHelper mMeasureHelper;
     private SurfaceTexture mSurfaceTexture;
+
     @Nullable
     private KernelApi mKernel;
     private Surface mSurface;
 
-    public RenderTextureView(Context context) {
+    public RenderTextureView1(Context context) {
         super(context);
         init(context);
     }
 
     private void init(Context context) {
+        mMeasureHelper = new MeasureHelper();
         setSurfaceTextureListener(listener);
     }
 
@@ -78,34 +80,67 @@ public class RenderTextureView extends TextureView implements RenderApi {
 
     @Override
     public void setKernel(@NonNull KernelApi player) {
+//        if (null != this.mKernel) {
+//            this.mKernel.setSurface(null);
+//            this.mKernel.releaseDecoder();
+//        }
         this.mKernel = player;
+//        if (null != this.mKernel && null != mSurface) {
+//            this.mKernel.setSurface(mSurface);
+//        }
     }
 
+    /**
+     * 设置视频宽高
+     *
+     * @param videoWidth  宽
+     * @param videoHeight 高
+     */
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-
+        if (videoWidth > 0 && videoHeight > 0) {
+            mMeasureHelper.setVideoSize(videoWidth, videoHeight);
+            requestLayout();
+        }
     }
 
+    /**
+     * 设置视频旋转角度
+     *
+     * @param degree 角度值
+     */
     @Override
     public void setVideoRotation(int degree) {
-
+        mMeasureHelper.setVideoRotation(degree);
+        setRotation(degree);
     }
 
+    /**
+     * 设置screen scale type
+     *
+     * @param scaleType 类型
+     */
     @Override
     public void setScaleType(int scaleType) {
-
+        mMeasureHelper.setScreenScale(scaleType);
+        requestLayout();
     }
 
+    /**
+     * 截图
+     *
+     * @return bitmap
+     */
     @Override
     public Bitmap doScreenShot() {
         return getBitmap();
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int[] measuredSize = mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
-//        setMeasuredDimension(measuredSize[0], measuredSize[1]);
-//    }
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int[] measuredSize = mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(measuredSize[0], measuredSize[1]);
+    }
 
     /**
      * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
@@ -130,7 +165,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
          */
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-            MediaLogUtil.log("RenderApi => onSurfaceTextureAvailable => " + this);
             if (mSurfaceTexture != null) {
                 setSurfaceTexture(mSurfaceTexture);
             } else {
@@ -150,7 +184,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
          */
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-            MediaLogUtil.log("RenderApi => onSurfaceTextureSizeChanged => " + this);
+
         }
 
         /**
@@ -168,7 +202,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
          */
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            MediaLogUtil.log("RenderApi => onSurfaceTextureUpdated => " + this);
+
         }
     };
 }

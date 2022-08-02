@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
-import lib.kalu.mediaplayer.core.controller.impl.ImplGesture;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
+import lib.kalu.mediaplayer.core.controller.impl.GestureApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
@@ -251,11 +251,11 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
                 if (null != mComponents && mComponents.size() > 0) {
                     int size = mComponents.size();
                     for (int i = 0; i < size; i++) {
-                        ImplComponent component = mComponents.get(i);
+                        ComponentApi component = mComponents.get(i);
                         if (null == component)
                             continue;
-                        if (component instanceof ImplGesture) {
-                            ((ImplGesture) component).onStartSlide();
+                        if (component instanceof GestureApi) {
+                            ((GestureApi) component).onStartSlide();
                         }
                     }
                 }
@@ -283,11 +283,11 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
-                if (component instanceof ImplGesture) {
-                    ((ImplGesture) component).onPositionChange(position, currentPosition, duration);
+                if (component instanceof GestureApi) {
+                    ((GestureApi) component).onPositionChange(position, currentPosition, duration);
                 }
             }
         }
@@ -314,11 +314,11 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
-                if (component instanceof ImplGesture) {
-                    ((ImplGesture) component).onBrightnessChange(percent);
+                if (component instanceof GestureApi) {
+                    ((GestureApi) component).onBrightnessChange(percent);
                 }
             }
         }
@@ -336,11 +336,11 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
-                if (component instanceof ImplGesture) {
-                    ((ImplGesture) component).onVolumeChange(percent);
+                if (component instanceof GestureApi) {
+                    ((GestureApi) component).onVolumeChange(percent);
                 }
             }
         }
@@ -441,12 +441,12 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         if (null != mComponents && mComponents.size() > 0) {
             int size = mComponents.size();
             for (int i = 0; i < size; i++) {
-                ImplComponent component = mComponents.get(i);
+                ComponentApi component = mComponents.get(i);
                 if (null == component)
                     continue;
-                if (component instanceof ImplGesture) {
+                if (component instanceof GestureApi) {
                     //结束滑动
-                    ((ImplGesture) component).onStopSlide();
+                    ((GestureApi) component).onStopSlide();
                 }
             }
         }

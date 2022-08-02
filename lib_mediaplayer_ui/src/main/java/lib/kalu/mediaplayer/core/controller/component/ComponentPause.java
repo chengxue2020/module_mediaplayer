@@ -14,10 +14,10 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class ComponentPause extends RelativeLayout implements ImplComponent {
+public class ComponentPause extends RelativeLayout implements ComponentApi {
 
     private ControllerWrapper mControllerWrapper;
 
@@ -68,15 +68,16 @@ public class ComponentPause extends RelativeLayout implements ImplComponent {
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSE:
                 MediaLogUtil.log("ComponentPause[show] => playState = " + playState);
                 bringToFront();
-                findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
+                setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_RESUME:
+            case PlayerType.StateType.STATE_REPEAT:
                 MediaLogUtil.log("ComponentPause[show] => playState = " + playState);
-                findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.GONE);
+                setVisibility(View.GONE);
                 break;
         }
     }

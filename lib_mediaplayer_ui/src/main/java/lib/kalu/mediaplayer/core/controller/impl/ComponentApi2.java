@@ -4,15 +4,15 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 @Keep
-public interface ImplControllerAction {
+public interface ComponentApi2 {
 
-    default void addComponent(@NonNull ImplComponent... components) {
+    default void addComponent(@NonNull ComponentApi... components) {
         if (null == components)
             return;
-        for (ImplComponent component : components) {
+        for (ComponentApi component : components) {
             addComponent(component);
         }
     }
 
-    void addComponent(@NonNull ImplComponent component);
+    void addComponent(@NonNull ComponentApi component);
 }

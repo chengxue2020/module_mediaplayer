@@ -5,8 +5,7 @@
     android:clickable="false"
     android:focusable="false"
     android:focusableInTouchMode="false"
-    android:longClickable="false"
-    android:visibility="visible">
+    android:longClickable="false">
 
     <ImageView
         android:id="@+id/module_mediaplayer_component_pause_img"
@@ -14,7 +13,6 @@
         android:layout_height="40dp"
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone" />
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

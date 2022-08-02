@@ -20,10 +20,10 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
-public class ComponentTop extends RelativeLayout implements ImplComponent {
+public class ComponentTop extends RelativeLayout implements ComponentApi {
 
     private ControllerWrapper mControllerWrapper;
 

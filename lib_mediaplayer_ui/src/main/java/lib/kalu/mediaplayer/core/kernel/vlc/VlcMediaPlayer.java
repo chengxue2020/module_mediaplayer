@@ -49,6 +49,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //        args.add("-vvv");
 //        mLibVLC = new LibVLC(context);
         mVlcPlayer = new org.videolan.libvlc.media.MediaPlayer(context);
+        mVlcPlayer.setLooping(false);
         setOptions();
         initListener();
     }
@@ -264,30 +265,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
             mVlcPlayer.setVolume(v1, v2);
         } catch (Exception e) {
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-        }
-    }
-
-    /**
-     * 设置是否循环播放
-     *
-     * @param isLooping 布尔值
-     */
-    @Override
-    public void setLooping(boolean isLooping) {
-        try {
-            mVlcPlayer.setLooping(isLooping);
-        } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-        }
-    }
-
-    @Override
-    public boolean isLooping() {
-        try {
-            return mVlcPlayer.isLooping();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
     }
 

@@ -1,14 +1,10 @@
 package lib.kalu.mediaplayer.core.controller.component;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -18,11 +14,10 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
-import lib.kalu.mediaplayer.util.PlayerUtils;
 
-public class ComponentEnd extends RelativeLayout implements ImplComponent {
+public class ComponentEnd extends RelativeLayout implements ComponentApi {
 
     private ControllerWrapper mControllerWrapper;
 

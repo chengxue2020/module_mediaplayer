@@ -17,11 +17,11 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.impl.ImplGesture;
+import lib.kalu.mediaplayer.core.controller.impl.GestureApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-public class ComponentGesture extends RelativeLayout implements ImplGesture {
+public class ComponentGesture extends RelativeLayout implements GestureApi {
 
     private ControllerWrapper mControllerWrapper;
 

@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.core.controller.impl;
 
-public interface ImplGesture extends ImplComponent {
+public interface GestureApi extends ComponentApi {
 
     /**
      * 开始滑动

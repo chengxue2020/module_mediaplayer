@@ -33,13 +33,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void create(@NonNull boolean loop) {
-        mPlayer.create(loop);
+    public void create() {
+        mPlayer.create();
     }
 
     @Override
-    public void pause() {
-        mPlayer.pause();
+    public void pause(boolean auto) {
+        mPlayer.pause(auto);
     }
 
     @Override
@@ -215,6 +215,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     @Override
     public void playEnd() {
         mPlayer.playEnd();
+    }
+
+    @Override
+    public void callState(int state) {
+        mPlayer.callState(state);
     }
 
     /**

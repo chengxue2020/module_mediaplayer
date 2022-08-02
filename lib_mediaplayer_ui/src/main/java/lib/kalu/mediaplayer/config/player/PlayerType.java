@@ -65,7 +65,7 @@ public @interface PlayerType {
         int STATE_LOADING_STOP = 2004; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
         int STATE_START = 2005; // 开始播放
         int STATE_END = 2006; // 播放完成
-        int STATE_PAUSED = 2007; // 暂停播放
+        int STATE_PAUSE = 2007; // 暂停播放
         int STATE_RESUME = 2008; // 暂停播放
         int STATE_REPEAT = 2009; // 重播一次
         int STATE_CLOSE = 2010; // 暂停播放
@@ -74,12 +74,8 @@ public @interface PlayerType {
         int STATE_START_ABORT = 2013; // 开始播放中止
         int STATE_ONCE_LIVE = 2014; // 即将开播
 
-        int STATE_ERROR = 2015;
-        int STATE_ERROR_NET = 2016;
-
-//        int STATE_SUBTITLE_START = 2017;
-//        int STATE_TIMESTAMP_LOOP = 2018; // 时间戳, 开始播放后一秒回调一次
-//        int STATE_TIMESTAMP_CLEAN = 2019; // 时间戳, 清空
+        int STATE_ERROR = 2015; // 错误1
+        int STATE_ERROR_NET = 2016; // 错误2
 
         @Documented
         @Retention(CLASS)
@@ -91,7 +87,7 @@ public @interface PlayerType {
                 STATE_INIT,
                 STATE_CLEAN,
                 STATE_START,
-                STATE_PAUSED,
+                STATE_PAUSE,
                 STATE_RESUME,
                 STATE_REPEAT,
                 STATE_CLOSE,

@@ -10,12 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 
 /**
  * desc  : 试看
  */
-public class CustomTrailersView extends FrameLayout implements ImplComponent, View.OnClickListener {
+public class CustomTrailersView extends FrameLayout implements ComponentApi, View.OnClickListener {
 
     public CustomTrailersView(@NonNull Context context) {
         super(context);

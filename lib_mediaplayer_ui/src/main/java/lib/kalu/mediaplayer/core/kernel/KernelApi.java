@@ -20,6 +20,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public interface KernelApi extends KernelEvent {
 
+    Boolean[] mLoop = new Boolean[1]; // 循环播放
     Boolean[] mMute = new Boolean[1]; // 静音
     Long[] mMax = new Long[1]; // 试播时常
     Long[] mSeek = new Long[1]; // 快进
@@ -131,18 +132,23 @@ public interface KernelApi extends KernelEvent {
 
     void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url);
 
-    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
-        MediaLogUtil.log("K_LOG => create => seek = " + seek + ", max = " + max + ", url = " + url);
-        mSeek[0] = seek;
-        mMax[0] = max;
-        mUrl[0] = url;
+    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
+        MediaLogUtil.log("K_LOG => create => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url);
+        update(seek, max, loop, url);
         init(context, seek, max, url);
     }
 
     default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+        update(seek, max, loop, null);
+    }
+
+    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
         setLooping(loop);
         mSeek[0] = seek;
         mMax[0] = max;
+        if (null != url && url.length() > 0) {
+            mUrl[0] = url;
+        }
     }
 
     void setSurface(@NonNull Surface surface);
@@ -211,11 +217,6 @@ public interface KernelApi extends KernelEvent {
         return null == mMute[0] ? false : mMute[0];
     }
 
-    void setLooping(boolean loop);
-
-
-    boolean isLooping();
-
     /**
      * 设置其他播放配置
      */
@@ -251,7 +252,7 @@ public interface KernelApi extends KernelEvent {
     }
 
     default long getSeek() {
-        MediaLogUtil.log("KernelApi => getSeek => seek = " + mSeek[0]);
+//        MediaLogUtil.log("KernelApi => getSeek => seek = " + mSeek[0]);
         if (null == mSeek[0] || mSeek[0] < 0) {
             return 0L;
         } else {
@@ -267,7 +268,7 @@ public interface KernelApi extends KernelEvent {
 //    }
 
     default long getMax() {
-        MediaLogUtil.log("KernelApi => getMax => max = " + mMax[0]);
+//        MediaLogUtil.log("KernelApi => getMax => max = " + mMax[0]);
         if (null == mMax[0] || mMax[0] < 0) {
             return 0L;
         } else {
@@ -280,4 +281,18 @@ public interface KernelApi extends KernelEvent {
 //            mMax[0] = max;
 //        }
 //    }
+
+    default void setLooping(boolean loop) {
+//        MediaLogUtil.log("KernelApi => setLooping => loop = " + loop);
+        mLoop[0] = loop;
+    }
+
+    default boolean isLooping() {
+//        MediaLogUtil.log("KernelApi => isLooping => loop = " + loop);
+        if (null == mLoop[0]) {
+            return false;
+        } else {
+            return mLoop[0];
+        }
+    }
 }

@@ -24,7 +24,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerConfig;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.impl.ImplComponent;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 /**
@@ -32,7 +32,7 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
  * created by kalu on 2021/11/23
  */
 @Keep
-public class ComponentBottom extends RelativeLayout implements ImplComponent, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class ComponentBottom extends RelativeLayout implements ComponentApi, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     protected ControllerWrapper mControllerWrapper;
     private boolean mIsDragging;
@@ -169,7 +169,7 @@ public class ComponentBottom extends RelativeLayout implements ImplComponent, Vi
                 //开始刷新进度
                 mControllerWrapper.startProgress();
                 break;
-            case PlayerType.StateType.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSE:
                 viewPlayer.setSelected(false);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_STOP:

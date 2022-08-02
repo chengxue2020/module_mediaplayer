@@ -534,7 +534,7 @@ public final class PlayerUtils {
             case PlayerType.StateType.STATE_START:
                 playStateString = "start";
                 break;
-            case PlayerType.StateType.STATE_PAUSED:
+            case PlayerType.StateType.STATE_PAUSE:
                 playStateString = "pause";
                 break;
             case PlayerType.StateType.STATE_BUFFERING_STOP:

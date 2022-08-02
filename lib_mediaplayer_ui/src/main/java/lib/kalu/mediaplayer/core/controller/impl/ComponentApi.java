@@ -26,7 +26,7 @@ import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 
 
 @Keep
-public interface ImplComponent {
+public interface ComponentApi {
 
     /**
      * 这个是绑定视图操作
