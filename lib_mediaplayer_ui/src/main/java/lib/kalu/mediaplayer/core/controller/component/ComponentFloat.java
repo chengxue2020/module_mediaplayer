@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.widget.pip;
+package lib.kalu.mediaplayer.core.controller.component;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,11 +20,12 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
+import lib.kalu.mediaplayer.widget.pip.FloatVideoManager;
 
 /**
  * desc  : 悬浮窗视图
  */
-public class CustomFloatView extends FrameLayout implements ComponentApi, View.OnClickListener {
+public class ComponentFloat extends FrameLayout implements ComponentApi, View.OnClickListener {
 
     private ControllerWrapper mControllerWrapper;
     private Context mContext;
@@ -35,17 +36,17 @@ public class CustomFloatView extends FrameLayout implements ComponentApi, View.O
     private ProgressBar mPbBottomProgress;
     private boolean mIsShowBottomProgress = true;
 
-    public CustomFloatView(@NonNull Context context) {
+    public ComponentFloat(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public CustomFloatView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentFloat(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public CustomFloatView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentFloat(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -150,8 +151,6 @@ public class CustomFloatView extends FrameLayout implements ComponentApi, View.O
                         mPbBottomProgress.setVisibility(VISIBLE);
                     }
                 }
-                //开始刷新进度
-                mControllerWrapper.startProgress();
                 break;
             case PlayerType.StateType.STATE_PAUSE:
                 mIvStartPlay.setSelected(false);
@@ -193,21 +192,20 @@ public class CustomFloatView extends FrameLayout implements ComponentApi, View.O
 
     }
 
-    @Override
-    public void setProgress(int duration, int position) {
-        if (duration > 0) {
-            int pos = (int) (position * 1.0 / duration * mPbBottomProgress.getMax());
-            mPbBottomProgress.setProgress(pos);
-        }
-        int percent = mControllerWrapper.getBufferedPercentage();
-        if (percent >= 95) {
-            //解决缓冲进度不能100%问题
-            mPbBottomProgress.setSecondaryProgress(mPbBottomProgress.getMax());
-        } else {
-            mPbBottomProgress.setSecondaryProgress(percent * 10);
-        }
-    }
-
+//    @Override
+//    public void setProgress(int duration, int position) {
+//        if (duration > 0) {
+//            int pos = (int) (position * 1.0 / duration * mPbBottomProgress.getMax());
+//            mPbBottomProgress.setProgress(pos);
+//        }
+//        int percent = mControllerWrapper.getBufferedPercentage();
+//        if (percent >= 95) {
+//            //解决缓冲进度不能100%问题
+//            mPbBottomProgress.setSecondaryProgress(mPbBottomProgress.getMax());
+//        } else {
+//            mPbBottomProgress.setSecondaryProgress(percent * 10);
+//        }
+//    }
 
     @Override
     public void onLockStateChanged(boolean isLocked) {

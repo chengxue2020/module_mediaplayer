@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.core.controller;
 
+import androidx.annotation.NonNull;
+
 public interface ControllerApi {
 
     /**
@@ -59,16 +61,6 @@ public interface ControllerApi {
     boolean isLocked();
 
     /**
-     * 开始刷新进度
-     */
-    void startProgress();
-
-    /**
-     * 停止刷新进度
-     */
-    void stopProgress();
-
-    /**
      * 是否需要适配刘海
      */
     boolean hasCutout();
@@ -77,4 +69,6 @@ public interface ControllerApi {
      * 获取刘海的高度
      */
     int getCutoutHeight();
+
+    void updateProgress(@NonNull long position, @NonNull long duration);
 }

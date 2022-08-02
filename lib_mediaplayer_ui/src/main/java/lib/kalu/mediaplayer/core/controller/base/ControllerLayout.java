@@ -31,13 +31,8 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.StatesCutoutUtils;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
-
 /**
- * 1.播放器状态改变: {@link #handleWindowStateChanged(int)} (int)}
- * *             3.控制视图的显示和隐藏: {@link #handleVisibilityChanged(boolean, Animation)}
- * *             4.播放进度改变: {@link #handleSetProgress(int, int)}
- * *             5.锁定状态改变: {@link #handleLockStateChanged(boolean)}
- * *             6.设备方向监听: {@link #onOrientationChanged(int)}
+ * 播放器控制容器
  */
 public abstract class ControllerLayout extends RelativeLayout implements ControllerApi, ComponentApi2, OrientationHelper.OnOrientationChangeListener {
 
@@ -59,8 +54,6 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
     private Boolean mHasCutout;
     //刘海的高度
     private int mCutoutHeight;
-    //是否开始刷新进度
-    private boolean mIsStartProgress;
     // 是否显示控制条
     private boolean mIsShowing;
 
@@ -327,52 +320,20 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         return mIsLocked;
     }
 
-    /**
-     * 开始刷新进度，注意：需在STATE_PLAYING时调用才会开始刷新进度
-     */
     @Override
-    public void startProgress() {
-        if (mIsStartProgress) {
+    public void updateProgress(@NonNull long position, @NonNull long duration) {
+//        MediaLogUtil.log("ControllerLayout => updateProgress => position = " + position + ", duration = " + duration + ", mComponents = " + mComponents);
+        if (null == mComponents)
             return;
-        }
-        post(mShowProgress);
-        mIsStartProgress = true;
-    }
-
-    /**
-     * 停止刷新进度
-     */
-    @Override
-    public void stopProgress() {
-        if (!mIsStartProgress) {
+        int size = mComponents.size();
+        if (size <= 0)
             return;
+        for (int i = 0; i < size; i++) {
+            ComponentApi component = mComponents.get(i);
+            if (null == component)
+                continue;
+            component.setProgress(position, duration);
         }
-        removeCallbacks(mShowProgress);
-        mIsStartProgress = false;
-    }
-
-    /**
-     * 刷新进度Runnable
-     */
-    protected Runnable mShowProgress = new Runnable() {
-        @Override
-        public void run() {
-            int pos = setProgress();
-            if (mControllerWrapper.isPlaying()) {
-                float speed = mControllerWrapper.getSpeed();
-                //postDelayed(this, 1000);
-                postDelayed(this, (long) ((1000 - pos % 1000) / speed));
-            } else {
-                mIsStartProgress = false;
-            }
-        }
-    };
-
-    private int setProgress() {
-        int position = (int) mControllerWrapper.getPosition();
-        int duration = (int) mControllerWrapper.getDuration();
-        handleSetProgress(duration, position);
-        return position;
     }
 
     /**
@@ -686,28 +647,6 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
                 mOrientationHelper.disable();
                 break;
         }
-    }
-
-    private void handleSetProgress(int duration, int position) {
-        if (null != mComponents && mComponents.size() > 0) {
-            int size = mComponents.size();
-            for (int i = 0; i < size; i++) {
-                ComponentApi component = mComponents.get(i);
-                if (null == component)
-                    continue;
-                component.setProgress(duration, position);
-            }
-        }
-        setProgress(duration, position);
-    }
-
-    /**
-     * 刷新进度回调，子类可在此方法监听进度刷新，然后更新ui
-     *
-     * @param duration 视频总时长
-     * @param position 视频当前时长
-     */
-    protected void setProgress(int duration, int position) {
     }
 
     private void handleLockStateChanged(boolean isLocked) {

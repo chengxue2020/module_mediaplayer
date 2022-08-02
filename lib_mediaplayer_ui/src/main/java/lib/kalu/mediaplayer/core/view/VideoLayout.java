@@ -1163,9 +1163,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     message.obj = msg.obj;
                     mHandler.sendMessageDelayed(message, 50);
                 }
+
+                long position = getPosition();
+                long duration = getDuration();
+                ControllerLayout controlLayout = getControlLayout();
+                if(null != controlLayout){
+                    controlLayout.updateProgress(position, duration);
+                }
+
                 if (mOnStateChangeListeners != null) {
-                    long position = getPosition();
-                    long duration = getDuration();
                     for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                         if (l != null) {
                             l.onProgress(position, duration);

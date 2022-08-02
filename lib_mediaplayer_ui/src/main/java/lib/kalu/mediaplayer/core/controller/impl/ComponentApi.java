@@ -78,13 +78,8 @@ public interface ComponentApi {
      */
     void onWindowStateChanged(int playerState);
 
-    /**
-     * 设置进度操作
-     *
-     * @param duration 时间
-     * @param position 进度position
-     */
-    void setProgress(int duration, int position);
+    default void setProgress(@NonNull long position, @NonNull long duration) {
+    }
 
     /**
      * 锁屏状态监听

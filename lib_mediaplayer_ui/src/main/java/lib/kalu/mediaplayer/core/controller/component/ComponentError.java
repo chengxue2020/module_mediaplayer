@@ -56,31 +56,24 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
 
     @Override
     public void onPlayStateChanged(int playState) {
-        MediaLogUtil.log("ComponentError => playState = " + playState);
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR_NET:
-//            case PlayerType.StateType.STATE_CLEAN:
             case PlayerType.StateType.STATE_ERROR:
-//                setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_error).setVisibility(View.VISIBLE);
-//                findViewById(R.id.module_mediaplayer_component_error_img).setVisibility(View.VISIBLE);
-//                findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
+                MediaLogUtil.log("ComponentError[show] => playState = " + playState);
+                bringToFront();
+                setVisibility(View.VISIBLE);
                 break;
-            default:
-//                setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_error).setVisibility(View.GONE);
-//                findViewById(R.id.module_mediaplayer_component_error_img).setVisibility(View.GONE);
-//                findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
+            case PlayerType.StateType.STATE_START:
+            case PlayerType.StateType.STATE_RESUME:
+            case PlayerType.StateType.STATE_REPEAT:
+                MediaLogUtil.log("ComponentError[gone] => playState = " + playState);
+                setVisibility(View.GONE);
                 break;
         }
     }
 
     @Override
     public void onWindowStateChanged(int playerState) {
-    }
-
-    @Override
-    public void setProgress(int duration, int position) {
     }
 
     @Override
@@ -108,19 +101,15 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
 //        return super.dispatchTouchEvent(ev);
 //    }
 
-    public final void setImage(@DrawableRes int value) {
-        this.setImageResource(this, R.id.module_mediaplayer_component_error_img, value);
-    }
-
-    public final void setMessage(@NonNull String value) {
+    public void setMessage(@NonNull String value) {
         this.setText(this, R.id.module_mediaplayer_component_error_message, value);
     }
 
-    public final void setMessage(@StringRes int value) {
+    public void setMessage(@StringRes int value) {
         this.setText(this, R.id.module_mediaplayer_component_error_message, value);
     }
 
-    public final void setMessageSize(@DimenRes int value) {
+    public void setMessageSize(@DimenRes int value) {
         this.setTextSize(this, R.id.module_mediaplayer_component_error_message, value);
     }
 }

@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/module_mediaplayer_controller_top_root"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@drawable/module_mediaplayer_shape_shadow_top">
+    android:layout_height="50dp">
 
     <!-- 电量 -->
     <TextView
@@ -13,7 +12,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="14dp"
-        android:background="@drawable/module_mediaplayer_shape_battery_background"
         android:gravity="center_vertical|right"
         android:maxEms="2"
         android:minEms="2"
@@ -43,12 +41,10 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="14dp"
-        android:background="@drawable/module_mediaplayer_selector_background"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:padding="4dp"
-        android:src="@drawable/module_mediaplayer_ic_player_back" />
+        android:padding="4dp" />
 
     <!-- 标题 -->
     <TextView

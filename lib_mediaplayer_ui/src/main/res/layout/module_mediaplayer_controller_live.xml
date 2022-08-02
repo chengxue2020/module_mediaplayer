@@ -12,12 +12,10 @@
         android:layout_height="24dp"
         android:layout_centerInParent="true"
         android:layout_gravity="center|left"
-        android:background="@drawable/module_mediaplayer_selector_background"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:padding="4dp"
-        android:src="@drawable/module_mediaplayer_selector_lock_button"
         android:visibility="invisible" />
 
     <lib.kalu.mediaplayer.widget.MediaProgressBar

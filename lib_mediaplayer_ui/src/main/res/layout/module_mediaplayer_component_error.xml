@@ -1,42 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:id="@+id/module_mediaplayer_component_error"
+    android:id="@+id/module_mediaplayer_component_error"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="false"
     android:focusable="false"
     android:focusableInTouchMode="false"
-    android:longClickable="false"
-    android:visibility="gone">
-
-    <!-- 图片 -->
-    <ImageView
-        android:id="@+id/module_mediaplayer_component_error_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:clickable="false"
-        android:focusable="false"
-        android:layout_gravity="center"
-        android:focusableInTouchMode="false"
-        android:longClickable="false"
-        android:scaleType="center" />
+    android:longClickable="false">
 
     <!-- 提示 -->
-    <TextView
+    <Button
         android:id="@+id/module_mediaplayer_component_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/module_mediaplayer_component_error_img"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:clickable="false"
-        android:layout_gravity="center"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:longClickable="false"
-        android:textColor="@color/module_mediaplayer_color_ffffff"
-        android:textSize="22sp" />
+        android:text="@string/module_mediaplayer_string_error_message"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
 
 </RelativeLayout>

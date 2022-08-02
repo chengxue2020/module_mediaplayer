@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
+import lib.kalu.mediaplayer.core.controller.component.ComponentBottom;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
@@ -68,15 +69,17 @@ public final class TestActivity extends AppCompatActivity {
 //        loading.setMessageSize(20);
 
         ComponentError error = new ComponentError(this);
-        error.setImage(R.drawable.module_mediaplayer_ic_action_refresh);
         error.setMessage("发生错误");
         error.setMessageSize(20);
+
+        ComponentBottom bottom = new ComponentBottom(this);
 
         // component
         ControllerEmpty controller = new ControllerEmpty(this);
         controller.addComponent(loading);
         controller.addComponent(error);
         controller.addComponent(end);
+        controller.addComponent(bottom);
 
         // control
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);

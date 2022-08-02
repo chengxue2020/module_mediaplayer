@@ -118,17 +118,6 @@ public class ControllerLive extends ControllerLayout {
         return super.onBackPressed();
     }
 
-    /**
-     * 刷新进度回调，子类可在此方法监听进度刷新，然后更新ui
-     *
-     * @param duration 视频总时长
-     * @param position 视频当前时长
-     */
-    @Override
-    protected void setProgress(int duration, int position) {
-        super.setProgress(duration, position);
-    }
-
     @Override
     public void destroy() {
     }

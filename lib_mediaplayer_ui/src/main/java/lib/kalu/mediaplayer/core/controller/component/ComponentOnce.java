@@ -113,11 +113,6 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setProgress(int duration, int position) {
-
-    }
-
-    @Override
     public void onLockStateChanged(boolean isLock) {
 
     }

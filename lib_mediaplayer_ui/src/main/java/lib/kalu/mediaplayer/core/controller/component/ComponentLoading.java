@@ -76,10 +76,6 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void setProgress(int duration, int position) {
-    }
-
-    @Override
     public void onLockStateChanged(boolean isLocked) {
     }
 

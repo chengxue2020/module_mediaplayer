@@ -170,11 +170,6 @@ public class ComponentGesture extends RelativeLayout implements GestureApi {
     }
 
     @Override
-    public void setProgress(int duration, int position) {
-
-    }
-
-    @Override
     public void onLockStateChanged(boolean isLock) {
 
     }

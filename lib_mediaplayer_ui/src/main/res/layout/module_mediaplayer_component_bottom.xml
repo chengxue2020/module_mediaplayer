@@ -1,13 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_gravity="bottom">
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <!-- 返回 -->
+    <Button
+        android:id="@+id/module_mediaplayer_component_bottom_back"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:text="@string/module_mediaplayer_string_back"
+        android:textSize="14sp" />
+
+    <!-- 播放/暂停 -->
+    <Button
+        android:id="@+id/module_mediaplayer_component_bottom_play"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:text="@string/module_mediaplayer_string_pause"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <!-- 时长 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_component_bottom_time"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
+        android:text="-/-"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <!-- 进度条 -->
+    <SeekBar
+        android:id="@+id/module_mediaplayer_component_bottom_sb"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="25dp"
+        android:layout_toLeftOf="@id/module_mediaplayer_component_bottom_time"
+        android:layout_toRightOf="@id/module_mediaplayer_component_bottom_play"
+        android:background="@android:color/transparent"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:maxHeight="4dp"
+        android:minHeight="4dp"
+        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
+        android:thumb="@drawable/module_mediaplayer_shape_seek_thumb" />
 
     <!-- 进度条 -->
     <ProgressBar
-        android:id="@+id/module_mediaplayer_controller_bottom_progress"
+        android:id="@+id/module_mediaplayer_component_bottom_pb"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -15,100 +87,6 @@
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:max="1000"
-        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_round"
-        android:visibility="invisible" />
-
-    <LinearLayout
-        android:id="@+id/module_mediaplayer_controller_bottom_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
-        android:background="@drawable/module_mediaplayer_shape_shadow_bottom"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="invisible">
-
-        <ImageView
-            android:id="@+id/module_mediaplayer_controller_bottom_play"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center|start"
-            android:background="@drawable/module_mediaplayer_selector_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:padding="4dp"
-            android:src="@drawable/module_mediaplayer_selector_bot_play_button"
-            android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/module_mediaplayer_controller_bottom_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:gravity="center"
-            android:maxEms="3"
-            android:minEms="3"
-            android:textColor="@android:color/white"
-            android:textSize="8sp"
-            android:visibility="visible"
-            tools:text="00:00" />
-
-        <SeekBar
-            android:id="@+id/module_mediaplayer_controller_bottom_seek"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:max="1000"
-            android:maxHeight="2dp"
-            android:minHeight="2dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
-            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
-            android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/module_mediaplayer_controller_bottom_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:gravity="center"
-            android:maxEms="3"
-            android:minEms="3"
-            android:textColor="@android:color/white"
-            android:textSize="8sp"
-            android:visibility="visible"
-            tools:text="00:00" />
-
-        <ImageView
-            android:id="@+id/module_mediaplayer_controller_bottom_full"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center|start"
-            android:background="@drawable/module_mediaplayer_selector_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:padding="4dp"
-            android:src="@drawable/module_mediaplayer_selector_full_screen_button"
-            android:visibility="visible" />
-
-    </LinearLayout>
+        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_round" />
 
 </RelativeLayout>

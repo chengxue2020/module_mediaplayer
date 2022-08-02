@@ -21,7 +21,6 @@ import lib.kalu.mediaplayer.core.controller.component.ComponentBottom;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentGesture;
-import lib.kalu.mediaplayer.core.controller.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.controller.component.ComponentOnce;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentTop;
@@ -33,9 +32,6 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     private ComponentTop titleView;
     private ComponentBottom vodControlView;
-    private ComponentMenu liveControlView;
-    private ComponentOnce customOncePlayView;
-    private TextView tvLiveWaitMessage;
 
     public ControllerStandard(@NonNull Context context) {
         this(context, null);
@@ -122,10 +118,6 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 //        if (liveControlView != null) {
 //            this.removeComponent(liveControlView);
 //        }
-        if (customOncePlayView != null) {
-            this.addComponent(customOncePlayView);
-        }
-
         setCanChangePosition(!isEnabled());
     }
 
@@ -234,23 +226,6 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         }
     }
 
-    /**
-     * 播放状态
-     * -1               播放错误
-     * 0                播放未开始
-     * 1                播放准备中
-     * 2                播放准备就绪
-     * 3                正在播放
-     * 4                暂停播放
-     * 5                正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-     * 6                暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-     * 7                播放完成
-     * 8                开始播放中止
-     *
-     * @param playState 播放状态，主要是指播放器的各种状态
-     */
-
-
     @Override
     public boolean onBackPressed() {
         if (isLocked()) {
@@ -270,17 +245,6 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         return super.onBackPressed();
     }
 
-    /**
-     * 刷新进度回调，子类可在此方法监听进度刷新，然后更新ui
-     *
-     * @param duration 视频总时长
-     * @param position 视频当前时长
-     */
-    @Override
-    protected void setProgress(int duration, int position) {
-        super.setProgress(duration, position);
-    }
-
     @Override
     public void destroy() {
 
@@ -290,13 +254,5 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         if (titleView != null) {
             titleView.setTitle(title);
         }
-    }
-
-    public ComponentBottom getBottomView() {
-        return vodControlView;
-    }
-
-    public TextView getTvLiveWaitMessage() {
-        return tvLiveWaitMessage;
     }
 }

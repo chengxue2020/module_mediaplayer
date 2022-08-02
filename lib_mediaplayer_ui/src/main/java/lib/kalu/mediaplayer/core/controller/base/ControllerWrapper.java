@@ -307,16 +307,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void startProgress() {
-        mController.startProgress();
-    }
-
-    @Override
-    public void stopProgress() {
-        mController.stopProgress();
-    }
-
-    @Override
     public void hide() {
         mController.hide();
     }
@@ -334,6 +324,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     @Override
     public int getCutoutHeight() {
         return mController.getCutoutHeight();
+    }
+
+    @Override
+    public void updateProgress(@NonNull long position, @NonNull long duration) {
+        mController.updateProgress(position, duration);
     }
 
     @Override

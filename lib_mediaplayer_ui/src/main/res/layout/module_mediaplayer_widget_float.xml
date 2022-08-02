@@ -12,15 +12,13 @@
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:padding="10dp"
-        android:src="@drawable/module_mediaplayer_selector_play_button" />
+        android:padding="10dp" />
 
     <ProgressBar
         android:id="@+id/pb_loading"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/module_mediaplayer_shape_loading"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -32,8 +30,7 @@
         android:layout_margin="4dp"
         android:clickable="true"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:src="@drawable/module_mediaplayer_ic_back_close" />
+        android:focusableInTouchMode="true" />
 
     <ImageView
         android:id="@+id/iv_skip"
@@ -42,8 +39,7 @@
         android:layout_margin="4dp"
         android:clickable="true"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:src="@drawable/module_mediaplayer_ic_player_open" />
+        android:focusableInTouchMode="true" />
 
     <ProgressBar
         android:id="@+id/pb_bottom_progress"
