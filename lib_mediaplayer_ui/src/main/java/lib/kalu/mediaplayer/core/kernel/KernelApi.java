@@ -52,84 +52,6 @@ public interface KernelApi extends KernelEvent {
      */
     void setDataSource(AssetFileDescriptor fd);
 
-    default void releaseMusic() {
-        stopMusic();
-        if (null != mMusicPlayer[0]) {
-            mMusicPlayer[0].release();
-            mMusicPlayer[0] = null;
-        }
-    }
-
-    default void stopMusic() {
-        try {
-            if (mMusicPlayer[0].isLooping()) {
-                mMusicPlayer[0].setLooping(false);
-            }
-            if (mMusicPlayer[0].isPlaying()) {
-                mMusicPlayer[0].stop();
-            }
-            mMusicPlayer[0].reset();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    default void toggleMusic(@NonNull Context context, @NonNull String music) {
-
-        if (null == mMusicPlayer[0]) {
-            mMusicPlayer[0] = new MediaPlayer();
-        }
-
-        // 视频音源
-        if (null != music && music.length() > 0) {
-
-            // pause
-            if (mMusicPlayer[0].isPlaying()) {
-                stopMusic();
-                pause();
-                toggleMusic(context, music);
-            }
-            // next
-            else {
-                try {
-                    stopMusic();
-                    pause();
-                    mMusicPlayer[0].setDataSource(context, Uri.parse(music));
-                    mMusicPlayer[0].prepare();
-                    mMusicPlayer[0].start();
-                    long position = getPosition();
-                    mMusicPlayer[0].seekTo((int) position);
-                    mMusicPlayer[0].setOnPreparedListener(null);
-                    mMusicPlayer[0].setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mediaPlayer) {
-                            setVolume(0, 0);
-                            start();
-                        }
-                    });
-                    mMusicPlayer[0].setOnErrorListener(null);
-                    mMusicPlayer[0].setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                        @Override
-                        public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                            toggleMusic(context, null);
-                            return false;
-                        }
-                    });
-                } catch (Exception e) {
-                    toggleMusic(context, null);
-                    e.printStackTrace();
-                }
-            }
-        }
-        // 外部音源
-        else {
-            stopMusic();
-            pause();
-            setVolume(1, 1);
-            start();
-        }
-    }
-
     void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url);
 
     default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
@@ -295,4 +217,83 @@ public interface KernelApi extends KernelEvent {
             return mLoop[0];
         }
     }
+
+    default void releaseMusic() {
+        stopMusic();
+        if (null != mMusicPlayer[0]) {
+            mMusicPlayer[0].release();
+            mMusicPlayer[0] = null;
+        }
+    }
+
+    default void stopMusic() {
+        try {
+            if (mMusicPlayer[0].isLooping()) {
+                mMusicPlayer[0].setLooping(false);
+            }
+            if (mMusicPlayer[0].isPlaying()) {
+                mMusicPlayer[0].stop();
+            }
+            mMusicPlayer[0].reset();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    default void toggleMusic(@NonNull Context context, @NonNull String music) {
+
+        if (null == mMusicPlayer[0]) {
+            mMusicPlayer[0] = new MediaPlayer();
+        }
+
+        // 视频音源
+        if (null != music && music.length() > 0) {
+
+            // pause
+            if (mMusicPlayer[0].isPlaying()) {
+                stopMusic();
+                pause();
+                toggleMusic(context, music);
+            }
+            // next
+            else {
+                try {
+                    stopMusic();
+                    pause();
+                    mMusicPlayer[0].setDataSource(context, Uri.parse(music));
+                    mMusicPlayer[0].prepare();
+                    mMusicPlayer[0].start();
+                    long position = getPosition();
+                    mMusicPlayer[0].seekTo((int) position);
+                    mMusicPlayer[0].setOnPreparedListener(null);
+                    mMusicPlayer[0].setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            setVolume(0, 0);
+                            start();
+                        }
+                    });
+                    mMusicPlayer[0].setOnErrorListener(null);
+                    mMusicPlayer[0].setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                        @Override
+                        public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                            toggleMusic(context, null);
+                            return false;
+                        }
+                    });
+                } catch (Exception e) {
+                    toggleMusic(context, null);
+                    e.printStackTrace();
+                }
+            }
+        }
+        // 外部音源
+        else {
+            stopMusic();
+            pause();
+            setVolume(1, 1);
+            start();
+        }
+    }
+
 }

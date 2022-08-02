@@ -99,13 +99,21 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        MediaLogUtil.log("onLife => onAttachedToWindow => this = " + this);
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        release(true);
+        MediaLogUtil.log("onLife => onDetachedFromWindow => this = " + this);
+        release();
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
+        MediaLogUtil.log("onLife => onWindowVisibilityChanged => visibility = " + visibility + ", this = " + this);
         // visable
         if (visibility == View.VISIBLE) {
             MediaLogUtil.log("onWindowVisibilityChanged => resume => this = " + this);
@@ -204,18 +212,24 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
         try {
 
+            // step1
             callState(PlayerType.StateType.STATE_LOADING_START);
-            close();
-            create();
 
-            //如果要显示移动网络提示则不继续播放
+            // step2
+            if (null == mKernel) {
+                create();
+            } else {
+                pause(true);
+            }
+
+            // step3
             boolean showNetWarning = showNetWarning();
             if (showNetWarning) {
                 callState(PlayerType.StateType.STATE_START_ABORT);
             }
-            if (null != mKernel) {
-                mKernel.create(getContext(), seek, max, loop, url);
-            }
+
+            // step4
+            mKernel.create(getContext(), seek, max, loop, url);
             setKeepScreenOn(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -226,7 +240,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public void create() {
 
         // step1
-        release();
+        release(true);
 
         // step2
         if (null == mKernel) {
@@ -288,8 +302,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             break;
                         // 播放开始-快进
-                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE_A:
-                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE_B:
+                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START:
 
                             // step1
                             callState(PlayerType.StateType.STATE_LOADING_STOP);
@@ -302,6 +315,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             // step4
                             resume();
+
+                            break;
+                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE:
+//                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE_B:
+
 
                             break;
                         // 播放开始
@@ -924,24 +942,22 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // step2
         pause(true);
 
+        // step3
         if (onlyHandle)
             return;
 
-        // render
+        // step5
         try {
-            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
-            if (null != viewGroup) {
-                viewGroup.removeAllViews();
-            }
             mRender.releaseReal();
             mRender = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // kernel
+        // step7
         try {
             mKernel.pause();
+            mKernel.stop();
             mKernel.releaseDecoder();
             mKernel = null;
         } catch (Exception e) {
@@ -1167,7 +1183,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 long position = getPosition();
                 long duration = getDuration();
                 ControllerLayout controlLayout = getControlLayout();
-                if(null != controlLayout){
+                if (null != controlLayout) {
                     controlLayout.updateProgress(position, duration);
                 }
 

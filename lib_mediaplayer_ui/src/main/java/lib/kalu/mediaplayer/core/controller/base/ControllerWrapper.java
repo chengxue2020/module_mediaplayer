@@ -69,7 +69,7 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
 
     @Override
     public boolean isLooping() {
-        return false;
+        return mPlayer.isLooping();
     }
 
     @Override
