@@ -23,6 +23,13 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public final class AndroidMediaPlayer implements KernelApi {
 
+    private long mSeek = 0L; // 快进
+    private long mMax = 0L; // 试播时常
+    private boolean mLoop = false; // 循环播放
+    private boolean mMute = false; // 静音
+    private String mUrl = null; // 视频串
+    private android.media.MediaPlayer mMusicPlayer = null; // 配音音频
+
     private KernelEvent mEvent;
     private MediaPlayer mAndroidPlayer;
 
@@ -97,7 +104,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
         } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -109,7 +116,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.start();
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -121,7 +128,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.pause();
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -133,7 +140,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.stop();
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -153,7 +160,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.seekTo((int) time);
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -189,7 +196,6 @@ public final class AndroidMediaPlayer implements KernelApi {
         // loading-start
         mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_START);
 
-        //222222222222
         // 设置dataSource
         if (url == null || url.length() == 0) {
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_COMPILE);
@@ -205,7 +211,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -217,43 +223,6 @@ public final class AndroidMediaPlayer implements KernelApi {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-//    @Override
-//    public void setReal(@NonNull Surface surface, @NonNull SurfaceHolder holder) {
-//
-//        // 设置渲染视频的View,主要用于SurfaceView
-//        if (null != holder && null != mAndroidPlayer) {
-//            try {
-//                mAndroidPlayer.setDisplay(holder);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        if (null != surface && null != mAndroidPlayer) {
-//            try {
-//                mAndroidPlayer.setSurface(surface);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
-    /**
-     * 设置音量
-     *
-     * @param v1 v1
-     * @param v2 v2
-     */
-    @Override
-    public void setVolume(float v1, float v2) {
-        KernelApi.super.setVolume(v1, v2);
-        try {
-            mAndroidPlayer.setVolume(v1, v2);
-        } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
         }
     }
 
@@ -273,7 +242,7 @@ public final class AndroidMediaPlayer implements KernelApi {
             try {
                 mAndroidPlayer.setPlaybackParams(mAndroidPlayer.getPlaybackParams().setSpeed(speed));
             } catch (Exception e) {
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+                e.printStackTrace();
             }
         }
     }
@@ -290,7 +259,7 @@ public final class AndroidMediaPlayer implements KernelApi {
             try {
                 return mAndroidPlayer.getPlaybackParams().getSpeed();
             } catch (Exception e) {
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+                e.printStackTrace();
             }
         }
         return 1f;
@@ -325,7 +294,6 @@ public final class AndroidMediaPlayer implements KernelApi {
             else {
 //                resetKernel();
                 mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_COMPILE);
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
             }
             return true;
         }
@@ -394,4 +362,77 @@ public final class AndroidMediaPlayer implements KernelApi {
             }
         }
     };
+
+    /****************/
+
+    @Override
+    public void setVolume(float v1, float v2) {
+        mMute = (v1 <= 0 || v2 <= 0);
+        try {
+            mAndroidPlayer.setVolume(v1, v2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean isMute() {
+        return mMute;
+    }
+
+    @Override
+    public void setMusicPlayer(@NonNull android.media.MediaPlayer player) {
+        this.mMusicPlayer = player;
+    }
+
+    @Override
+    public android.media.MediaPlayer getMusicPlayer() {
+        return mMusicPlayer;
+    }
+
+    @Override
+    public String getUrl() {
+        return mUrl;
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.mUrl = url;
+    }
+
+    @Override
+    public long getSeek() {
+        return mSeek;
+    }
+
+    @Override
+    public void setSeek(long seek) {
+        if (seek < 0)
+            return;
+        mSeek = seek;
+    }
+
+    @Override
+    public long getMax() {
+        return mMax;
+    }
+
+    @Override
+    public void setMax(long max) {
+        if (max < 0)
+            return;
+        mMax = max;
+    }
+
+    @Override
+    public void setLooping(boolean loop) {
+        this.mLoop = loop;
+    }
+
+    @Override
+    public boolean isLooping() {
+        return mLoop;
+    }
+
+    /****************/
 }

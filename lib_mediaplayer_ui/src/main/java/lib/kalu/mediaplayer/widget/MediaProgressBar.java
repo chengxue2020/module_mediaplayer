@@ -1,23 +1,15 @@
 package lib.kalu.mediaplayer.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorSpace;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.RectF;
 import android.os.Build;
-import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -27,11 +19,10 @@ import androidx.annotation.RequiresApi;
 import lib.kalu.mediaplayer.R;
 
 @Keep
-@SuppressLint("AppCompatCustomView")
-public class MediaProgressBar extends TextView {
+public class MediaProgressBar extends View {
 
     private int mLoop = 0;
-    private final TextPaint mTextPaint = getPaint();
+    private final Paint mPaint = new Paint();
 
     public MediaProgressBar(Context context) {
         super(context);
@@ -99,12 +90,12 @@ public class MediaProgressBar extends TextView {
         }
 
         // 画笔
-        mTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setStrokeCap(Paint.Cap.ROUND);
-        mTextPaint.setStrokeJoin(Paint.Join.ROUND);
-        mTextPaint.setStrokeWidth(0f);
-        mTextPaint.setFakeBoldText(true);
+        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mPaint.setAntiAlias(true);
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
+        mPaint.setStrokeJoin(Paint.Join.ROUND);
+        mPaint.setStrokeWidth(0f);
+        mPaint.setFakeBoldText(true);
 
         float cx = getWidth() * 0.5f;
         float cy = getHeight() * 0.2f;
@@ -120,20 +111,20 @@ public class MediaProgressBar extends TextView {
 //        paint.setColor(Color.WHITE);
         canvas.drawColor(mColorCanvas);
 //        canvas.drawColor(mColorCanvas, PorterDuff.Mode.CLEAR);
-        mTextPaint.setColor(mColorBackground);
-        canvas.drawCircle(cx, cy, Math.min(cx, cy), mTextPaint);
+        mPaint.setColor(mColorBackground);
+        canvas.drawCircle(cx, cy, Math.min(cx, cy), mPaint);
 
         // 椭圆
         int length = mLoop + mCount;
         for (int i = mLoop; i < length; i++) {
-            Log.e("MediaProgressBar", "i = " + i + ", mLoop = " + mLoop + ", mCount = " + mCount);
+//            MediaLogUtil.log("MediaProgressBar => onDraw => i = " + i + ", mLoop = " + mLoop + ", mCount = " + mCount);
             if (i == mLoop) {
                 if (mLoop != 0) {
                     canvas.save();
                     canvas.rotate(angle * (i % mCount), cx, cx);
                 }
 //                int color = Color.parseColor("#FFA7A7A7");
-                mTextPaint.setColor(mColorRound);
+                mPaint.setColor(mColorRound);
             } else {
                 try {
                     float r = ((mColorRound >> 16) & 0xff) / 255.0f;
@@ -145,15 +136,15 @@ public class MediaProgressBar extends TextView {
                             ((int) (r * 255.0f + 0.5f) << 16) |
                             ((int) (g * 255.0f + 0.5f) << 8) |
                             (int) (b * 255.0f + 0.5f);
-                    mTextPaint.setColor(color);
+                    mPaint.setColor(color);
                 } catch (Exception e) {
                 }
             }
 //            RectF rectF = new RectF(left, top, right, bottom);
 //            canvas.drawRoundRect(rectF, rx, ry, paint);
-            Log.e("MediaProgressBar", "radius = " + radius + ", mRate = " + mRate);
+//            MediaLogUtil.log("MediaProgressBar => onDraw => radius = " + radius + ", mRate = " + mRate);
             radius = radius * mRate;
-            canvas.drawCircle(cx, cy, radius, mTextPaint);
+            canvas.drawCircle(cx, cy, radius, mPaint);
             canvas.save();
             canvas.rotate(angle, cx, cx);
         }

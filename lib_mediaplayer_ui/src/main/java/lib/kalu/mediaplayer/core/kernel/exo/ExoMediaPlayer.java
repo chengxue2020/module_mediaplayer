@@ -45,6 +45,13 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public final class ExoMediaPlayer implements KernelApi, Player.Listener {
 
+    private long mSeek = 0L; // 快进
+    private long mMax = 0L; // 试播时常
+    private boolean mLoop = false; // 循环播放
+    private boolean mMute = false; // 静音
+    private String mUrl = null; // 视频串
+    private android.media.MediaPlayer mMusicPlayer = null; // 配音音频
+
     private PlaybackParameters mSpeedPlaybackParameters;
 
     private ExoPlayer mExoPlayer;
@@ -362,17 +369,6 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         }
     }
 
-    /**
-     * 设置音量
-     */
-    @Override
-    public void setVolume(float v1, float v2) {
-        KernelApi.super.setVolume(v1, v2);
-        if (mExoPlayer != null) {
-            mExoPlayer.setVolume((v1 + v2) / 2);
-        }
-    }
-
     @Override
     public void setOptions() {
         //准备好就开始播放
@@ -493,7 +489,6 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
             case ExoPlaybackException.TYPE_REMOTE:
 //            case ExoPlaybackException.TYPE_SOURCE:
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_COMPILE);
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
                 break;
             default:
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_COMPILE);
@@ -538,4 +533,75 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
             seekTo(seek);
         }
     }
+
+    /****************/
+
+    @Override
+    public void setVolume(float v1, float v2) {
+        mMute = (v1 <= 0 || v2 <= 0);
+        if (mExoPlayer != null) {
+            mExoPlayer.setVolume((v1 + v2) / 2);
+        }
+    }
+
+    @Override
+    public boolean isMute() {
+        return mMute;
+    }
+
+    @Override
+    public void setMusicPlayer(@NonNull android.media.MediaPlayer player) {
+        this.mMusicPlayer = player;
+    }
+
+    @Override
+    public android.media.MediaPlayer getMusicPlayer() {
+        return mMusicPlayer;
+    }
+
+    @Override
+    public String getUrl() {
+        return mUrl;
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.mUrl = url;
+    }
+
+    @Override
+    public long getSeek() {
+        return mSeek;
+    }
+
+    @Override
+    public void setSeek(long seek) {
+        if (seek < 0)
+            return;
+        mSeek = seek;
+    }
+
+    @Override
+    public long getMax() {
+        return mMax;
+    }
+
+    @Override
+    public void setMax(long max) {
+        if (max < 0)
+            return;
+        mMax = max;
+    }
+
+    @Override
+    public void setLooping(boolean loop) {
+        this.mLoop = loop;
+    }
+
+    @Override
+    public boolean isLooping() {
+        return mLoop;
+    }
+
+    /****************/
 }

@@ -26,6 +26,13 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
+    private long mSeek = 0L; // 快进
+    private long mMax = 0L; // 试播时常
+    private boolean mLoop = false; // 循环播放
+    private boolean mMute = false; // 静音
+    private String mUrl = null; // 视频串
+    private android.media.MediaPlayer mMusicPlayer = null; // 配音音频
+
     //    private LibVLC mLibVLC;
     private KernelEvent mEvent;
     private org.videolan.libvlc.media.MediaPlayer mVlcPlayer;
@@ -113,7 +120,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.setDataSource(fd.getFileDescriptor());
         } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -125,7 +132,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.start();
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -137,7 +144,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.pause();
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -149,7 +156,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.stop();
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -173,7 +180,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -222,7 +229,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             start();
         } catch (IllegalStateException e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+            e.printStackTrace();
         }
     }
 
@@ -252,22 +259,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //
 //    }
 
-    /**
-     * 设置音量
-     *
-     * @param v1 v1
-     * @param v2 v2
-     */
-    @Override
-    public void setVolume(float v1, float v2) {
-        KernelApi.super.setVolume(v1, v2);
-        try {
-            mVlcPlayer.setVolume(v1, v2);
-        } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
-        }
-    }
-
     @Override
     public void setOptions() {
     }
@@ -284,7 +275,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
             try {
                 mVlcPlayer.setSpeed(speed);
             } catch (Exception e) {
-                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+                e.printStackTrace();
             }
         }
     }
@@ -301,7 +292,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
             try {
                 return mVlcPlayer.getSpeed();
             } catch (Exception e) {
-                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_UNEXPECTED);
+                e.printStackTrace();
             }
         }
         return 1f;
@@ -317,4 +308,73 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         // no support
         return 0;
     }
+
+    /****************/
+
+    @Override
+    public void setVolume(float v1, float v2) {
+        mMute = (v1 <= 0 || v2 <= 0);
+        mVlcPlayer.setVolume(v1, v2);
+    }
+
+    @Override
+    public boolean isMute() {
+        return mMute;
+    }
+
+    @Override
+    public void setMusicPlayer(@NonNull android.media.MediaPlayer player) {
+        this.mMusicPlayer = player;
+    }
+
+    @Override
+    public android.media.MediaPlayer getMusicPlayer() {
+        return mMusicPlayer;
+    }
+
+    @Override
+    public String getUrl() {
+        return mUrl;
+    }
+
+    @Override
+    public void setUrl(String url) {
+        this.mUrl = url;
+    }
+
+    @Override
+    public long getSeek() {
+        return mSeek;
+    }
+
+    @Override
+    public void setSeek(long seek) {
+        if (seek < 0)
+            return;
+        mSeek = seek;
+    }
+
+    @Override
+    public long getMax() {
+        return mMax;
+    }
+
+    @Override
+    public void setMax(long max) {
+        if (max < 0)
+            return;
+        mMax = max;
+    }
+
+    @Override
+    public void setLooping(boolean loop) {
+        this.mLoop = loop;
+    }
+
+    @Override
+    public boolean isLooping() {
+        return mLoop;
+    }
+
+    /****************/
 }

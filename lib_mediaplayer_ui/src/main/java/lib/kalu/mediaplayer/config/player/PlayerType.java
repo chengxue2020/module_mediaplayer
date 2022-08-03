@@ -307,8 +307,6 @@ public @interface PlayerType {
         int EVENT_ERROR_SOURCE = -9003;
         //解析异常
         int EVENT_ERROR_PARSE = -9004;
-        //其他异常
-        int EVENT_ERROR_UNEXPECTED = -9005;
 
         @Documented
         @Retention(CLASS)
@@ -319,7 +317,6 @@ public @interface PlayerType {
                 EVENT_ERROR_RETRY,
                 EVENT_ERROR_SOURCE,
                 EVENT_ERROR_PARSE,
-                EVENT_ERROR_UNEXPECTED,
                 EVENT_OPEN_INPUT,
                 EVENT_INIT_START,
                 EVENT_INIT_COMPILE,

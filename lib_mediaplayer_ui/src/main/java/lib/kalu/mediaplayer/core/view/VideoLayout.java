@@ -117,11 +117,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // visable
         if (visibility == View.VISIBLE) {
             MediaLogUtil.log("onWindowVisibilityChanged => resume => this = " + this);
+            startLoop();
             resume();
         }
         // not visable
         else {
             MediaLogUtil.log("onWindowVisibilityChanged => pause => this = " + this);
+            clearLoop();
             pause(true);
         }
         super.onWindowVisibilityChanged(visibility);
@@ -210,6 +212,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
+
+        MediaLogUtil.log("VideoLayout => start => start = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url);
         try {
 
             // step1
@@ -248,50 +252,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 @Override
                 public void onEvent(int kernel, int event) {
 
-                    MediaLogUtil.log("onEvent => kernel = " + kernel + ", event = " + event);
+                    MediaLogUtil.log("onEvent => onKernel = " + kernel + ", event = " + event);
 
                     switch (event) {
-//            // loading-start
-//            case PlayerType.EventType.EVENT_BUFFERING_START:
-//                callState(PlayerType.StateType.STATE_BUFFERING_STOP);
-//                break;
-//            // loading-end
-//            case PlayerType.EventType.EVENT_BUFFERING_END:
-//            case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
-//                callState(PlayerType.StateType.STATE_LOADING_STOP);
-//                break;
-                        // seekTo 会调用
+                        // 网络拉流开始
                         case PlayerType.EventType.EVENT_OPEN_INPUT:
-                            callState(PlayerType.StateType.STATE_START);
-
                             // step1
+                            callState(PlayerType.StateType.STATE_START);
+                            // step2
                             goneReal();
-
-//                            View layout = getVideoLayout();
-//                            if (null != layout && layout.getWindowVisibility() != VISIBLE) {
-//                                pause();
-//                            }
-//                        if (position == 0) {
-//                            callState(PlayerType.StateType.STATE_BUFFERING_STOP);
-//                        }
                             break;
-                        //            // play-begin
-//            case PlayerType.MediaType.MEDIA_INFO_VIDEO_RENDERING_START: // 视频开始渲染
-////            case PlayerType.MediaType.MEDIA_INFO_AUDIO_RENDERING_START: // 视频开始渲染
-//                if (position <= 10) {
-//                    callState(PlayerType.StateType.STATE_START);
-//                    if (mVideoContainer.getWindowVisibility() != VISIBLE) {
-//                        pause();
-//                    }
-//                }
-//                break;
-//                    case PlayerType.EventType.EVENT_VIDEO_ROTATION_CHANGED:
-//                        if (mRender != null) {
-//                            if (rotation != -1) {
-//                                mRender.setVideoRotation(rotation);
-//                            }
-//                        }
-//                        break;
                         // 初始化开始 => loading start
                         case PlayerType.EventType.EVENT_INIT_START:
                             callState(PlayerType.StateType.STATE_LOADING_START);
@@ -306,13 +276,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             // step1
                             callState(PlayerType.StateType.STATE_LOADING_STOP);
-
                             // step2
                             showReal();
-
                             // step3
                             startLoop();
-
                             // step4
                             resume();
 
@@ -393,7 +360,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                         case PlayerType.EventType.EVENT_ERROR_PARSE:
                         case PlayerType.EventType.EVENT_ERROR_RETRY:
                         case PlayerType.EventType.EVENT_ERROR_SOURCE:
-                        case PlayerType.EventType.EVENT_ERROR_UNEXPECTED:
 
                             boolean connected = PlayerUtils.isConnected(getContext());
                             setKeepScreenOn(false);
@@ -599,25 +565,26 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+
         if (seek < 0)
             return;
 
-        MediaLogUtil.log("onEvent => seekTo => " + seek + ", seek = " + seek + ", max = " + max + ", loop = " + loop + ", force = " + force);
-        // must
+        String url = getUrl();
+        MediaLogUtil.log("onEvent => seekTo => seek = " + seek + ", max = " + max + ", loop = " + loop + ", force = " + force + ", url = " + url + ", mKernel = " + mKernel);
+        if (null == url || url.length() < 0)
+            return;
+
+        // step1
+        callState(PlayerType.StateType.STATE_LOADING_START);
+        // step2
+        clearLoop();
+        // step3
         if (force) {
             mKernel.update(seek, max, loop);
             pause(true);
-            mKernel.seekTo(seek);
-//            resume();
         }
-        // sample
-        else {
-            String url = getUrl();
-            MediaLogUtil.log("onEvent => seekTo => url = " + url);
-            if (null != url && url.length() > 0) {
-                mKernel.seekTo(seek);
-            }
-        }
+        // step4
+        mKernel.seekTo(seek);
     }
 
     @Override
@@ -1143,7 +1110,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             boolean looping = isLooping();
             long start = (long) msg.obj;
             long millis = System.currentTimeMillis();
-//            MediaLogUtil.log("onEvent => onMessage => millis = " + millis + ", start = " + start + ", seek = " + seek + ", max = " + max + ", loop = " + looping);
+            MediaLogUtil.log("onEvent => onMessage => millis = " + millis + ", start = " + start + ", seek = " + seek + ", max = " + max + ", loop = " + looping + ", mKernel = " + mKernel);
 
             // end
             if (max > 0 && ((millis - start) > max)) {
@@ -1152,7 +1119,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 if (looping) {
 
                     // step1
-                    callState(PlayerType.StateType.STATE_LOADING_START);
                     goneReal();
 
                     // step2
