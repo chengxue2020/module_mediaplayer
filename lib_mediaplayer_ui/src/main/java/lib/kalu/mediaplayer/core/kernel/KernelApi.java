@@ -35,21 +35,24 @@ public interface KernelApi extends KernelEvent {
 
     void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url);
 
-    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
-        MediaLogUtil.log("KernelApi => create => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url);
-        update(seek, max, loop, url);
+    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
+        MediaLogUtil.log("KernelApi => create => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url + ", autoRelease = " + autoRelease);
+        update(seek, max, loop, autoRelease, url);
         init(context, seek, max, url);
     }
 
     default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
-        update(seek, max, loop, null);
+        boolean autoRelease = isAutoRelease();
+        String url = getUrl();
+        update(seek, max, loop, autoRelease, url);
     }
 
-    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
-        MediaLogUtil.log("KernelApi => update => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url + ", mKernel = " + this);
+    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
+        MediaLogUtil.log("KernelApi => update => seek = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url + ", mKernel = " + this);
         setSeek(seek);
         setMax(max);
         setLooping(loop);
+        setAutoRelease(autoRelease);
         if (null != url && url.length() > 0) {
             setUrl(url);
         }
@@ -149,6 +152,10 @@ public interface KernelApi extends KernelEvent {
     void setLooping(boolean loop);
 
     boolean isLooping();
+
+    void setAutoRelease(boolean release);
+
+    boolean isAutoRelease();
 
     void setVolume(float left, float right);
 

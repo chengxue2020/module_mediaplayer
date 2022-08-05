@@ -107,8 +107,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        MediaLogUtil.log("onLife => onDetachedFromWindow => this = " + this);
-        release();
+        boolean autoRelease = isAutoRelease();
+        MediaLogUtil.log("onLife => onDetachedFromWindow => autoRelease = " + autoRelease + ", this = " + this);
+        release(!autoRelease);
     }
 
     @Override
@@ -211,9 +212,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
-
-        MediaLogUtil.log("VideoLayout => start => start = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url);
+    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
+        MediaLogUtil.log("VideoLayout => start => start = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url);
         try {
 
             // step1
@@ -233,7 +233,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
 
             // step4
-            mKernel.create(getContext(), seek, max, loop, url);
+            mKernel.create(getContext(), seek, max, loop, autoRelease, url);
             setKeepScreenOn(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -493,6 +493,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public boolean isLooping() {
         try {
             return mKernel.isLooping();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isAutoRelease() {
+        try {
+            return mKernel.isAutoRelease();
         } catch (Exception e) {
             e.printStackTrace();
             return false;

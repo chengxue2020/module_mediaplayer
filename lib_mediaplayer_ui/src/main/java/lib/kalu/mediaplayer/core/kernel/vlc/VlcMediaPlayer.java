@@ -28,6 +28,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
+    private boolean mAutoRelease = false;
     private boolean mLoop = false; // 循环播放
     private boolean mMute = false; // 静音
     private String mUrl = null; // 视频串
@@ -374,6 +375,16 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public boolean isLooping() {
         return mLoop;
+    }
+
+    @Override
+    public void setAutoRelease(boolean release) {
+        this.mAutoRelease = release;
+    }
+
+    @Override
+    public boolean isAutoRelease() {
+        return this.mAutoRelease;
     }
 
     /****************/

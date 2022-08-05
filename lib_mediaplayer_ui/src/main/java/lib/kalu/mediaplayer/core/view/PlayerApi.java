@@ -42,14 +42,18 @@ public interface PlayerApi {
     }
 
     default void start(@NonNull String url) {
-        start(0, 0, false, url);
+        start(0, 0, false, true, url);
     }
 
     default void start(@NonNull long seek, @NonNull String url) {
-        start(seek, 0, false, url);
+        start(seek, 0, false, true, url);
     }
 
-    void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url);
+    default void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
+        start(seek, 0, loop, true, url);
+    }
+
+    void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url);
 
     void create();
 
@@ -70,6 +74,8 @@ public interface PlayerApi {
     long getPosition();
 
     boolean isLooping();
+
+    boolean isAutoRelease();
 
     long getSeek();
 
