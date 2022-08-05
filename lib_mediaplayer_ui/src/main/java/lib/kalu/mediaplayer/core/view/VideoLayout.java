@@ -406,6 +406,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void toogle() {
+        boolean playing = isPlaying();
+        if (playing) {
+            pause(false);
+        } else {
+            resume();
+        }
+    }
+
+    @Override
     public void pause(boolean auto) {
         boolean playing = isPlaying();
         if (!playing)

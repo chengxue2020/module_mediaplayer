@@ -61,6 +61,8 @@ public interface PlayerApi {
         pause(false);
     }
 
+    void toogle();
+
     void pause(boolean auto);
 
     void resume();

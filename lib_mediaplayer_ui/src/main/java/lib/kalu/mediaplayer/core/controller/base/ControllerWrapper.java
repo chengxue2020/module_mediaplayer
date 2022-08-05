@@ -38,6 +38,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void toogle() {
+        mPlayer.toogle();
+    }
+
+    @Override
     public void pause(boolean auto) {
         mPlayer.pause(auto);
     }
