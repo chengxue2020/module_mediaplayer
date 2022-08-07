@@ -64,6 +64,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
                 bringToFront();
                 setVisibility(View.VISIBLE);
                 break;
+            case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_LOADING_STOP:
                 MediaLogUtil.log("ComponentLoading[gone] => playState = " + playState);
                 setVisibility(View.GONE);
