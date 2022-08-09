@@ -50,7 +50,7 @@ public interface PlayerApi {
     }
 
     default void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
-        start(seek, 0, loop, true, url);
+        start(seek, max, loop, true, url);
     }
 
     void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url);

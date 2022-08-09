@@ -195,7 +195,7 @@ public final class TestActivity extends AppCompatActivity {
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
         long max = getIntent().getLongExtra(INTENT_MAX, 0);
         boolean loop = getIntent().getBooleanExtra(INTENT_LOOP, false);
-        MediaLogUtil.log("K_ => seek = " + seek + ", url = " + url);
+        MediaLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", url = " + url);
         videoLayout.start(seek, max, loop, url);
     }
 

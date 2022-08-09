@@ -60,45 +60,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_test_prepare" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent" />
-
-                <androidx.leanback.widget.round.RoundRelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    app:rl_radius="10dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_img" />
-
-                </androidx.leanback.widget.round.RoundRelativeLayout>
-
-            </LinearLayout>
-
             <Button
                 android:id="@+id/main_toggle"
                 android:layout_width="match_parent"

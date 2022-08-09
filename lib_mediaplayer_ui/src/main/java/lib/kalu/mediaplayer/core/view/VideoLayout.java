@@ -990,6 +990,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MediaLogUtil.log("onEvent => startLoop => mhandler = " + mHandler);
         if (null == mHandler)
             return;
+        String url = getUrl();
+        if (null == url || url.length() <= 0)
+            return;
         Message message = Message.obtain();
         message.what = 0x92001;
         long millis = System.currentTimeMillis();

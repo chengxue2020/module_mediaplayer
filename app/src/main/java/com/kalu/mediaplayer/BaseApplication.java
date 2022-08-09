@@ -19,6 +19,7 @@ import lib.kalu.mediaplayer.config.player.PlayerConfig;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.keycode.KeycodeSimulator;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public class BaseApplication extends MultiDexApplication {
 
@@ -51,6 +52,7 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
 
+        MediaLogUtil.setIsLog(true);
         // init
         PlayerConfig build = PlayerConfig.newBuilder()
                 //设置视频全局埋点事件
