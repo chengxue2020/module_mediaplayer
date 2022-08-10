@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -100,6 +101,10 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
 //        }
 //        return super.dispatchTouchEvent(ev);
 //    }
+
+    public void setImage(@DrawableRes int res) {
+        this.setCompoundDrawablesWithIntrinsicBounds(this, R.id.module_mediaplayer_component_error_message, 0, res, 0, 0);
+    }
 
     public void setMessage(@NonNull String value) {
         this.setText(this, R.id.module_mediaplayer_component_error_message, value);

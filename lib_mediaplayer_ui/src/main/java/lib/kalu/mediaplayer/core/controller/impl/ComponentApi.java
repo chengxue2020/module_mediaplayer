@@ -114,6 +114,7 @@ public interface ComponentApi {
             ImageView view = layout.findViewById(id);
             view.setImageResource(value);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -122,6 +123,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setTextColor(value);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -131,6 +133,7 @@ public interface ComponentApi {
             int offset = layout.getResources().getDimensionPixelOffset(value);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -139,6 +142,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setText(value);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -147,6 +151,16 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setText(value);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    default void setCompoundDrawablesWithIntrinsicBounds(@NonNull View layout, @IdRes int id, @DrawableRes int left, @DrawableRes int top, @DrawableRes int right, @DrawableRes int bottom) {
+        try {
+            TextView view = layout.findViewById(id);
+            view.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -159,6 +173,7 @@ public interface ComponentApi {
             layoutParams.height = offset;
             view.setLayoutParams(layoutParams);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -167,6 +182,7 @@ public interface ComponentApi {
             View view = layout.findViewById(id);
             view.setBackgroundColor(value);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
