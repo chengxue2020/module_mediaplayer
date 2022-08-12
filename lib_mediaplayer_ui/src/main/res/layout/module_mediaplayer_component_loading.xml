@@ -26,7 +26,7 @@
         android:focusableInTouchMode="false"
         android:indeterminateDuration="2000"
         android:longClickable="false"
-        app:mpb_color_round="#ffa7a7a7"
+        app:mpb_color_round="#ffffff"
         app:mpb_count="8"
         app:mpb_radius="10dp"
         app:mpb_rate="0.9" />
