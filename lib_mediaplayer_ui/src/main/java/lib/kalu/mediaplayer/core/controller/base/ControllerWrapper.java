@@ -208,6 +208,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void checkReal() {
+        mPlayer.checkReal();
+    }
+
+    @Override
     public void release(@NonNull boolean onlyHandle) {
         mPlayer.release(onlyHandle);
     }

@@ -90,7 +90,7 @@ public final class TestActivity extends AppCompatActivity {
 //        videoLayout.showNetWarning();
         // 全屏
 //        videoLayout.startFullScreen();
-        videoLayout.setOnMediaStateListener(new OnChangeListener() {
+        videoLayout.setOnChangeListener(new OnChangeListener() {
             /**
              * 播放模式
              * 普通模式，小窗口模式，正常模式三种其中一种

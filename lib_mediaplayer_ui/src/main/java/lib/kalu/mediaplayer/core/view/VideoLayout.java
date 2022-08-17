@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -51,6 +52,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     // 渲染
     protected RenderApi mRender;
 
+    private boolean mFlag = false;
     protected int mCurrentScreenScaleType;
     protected int[] mVideoSize = {0, 0};
     /**
@@ -70,7 +72,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      * 是否处于小屏状态
      */
     protected boolean mIsTinyScreen;
-    protected int[] mTinyScreenSize = {0, 0};
 
     /**
      * OnStateChangeListener集合，保存了所有开发者设置的监听器
@@ -293,6 +294,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                         case PlayerType.EventType.EVENT_VIDEO_START:
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
+
                             callState(PlayerType.StateType.STATE_START);
 
                             // step1
@@ -301,14 +303,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             // step2
                             startLoop();
 
-//                            View layout1 = getVideoLayout();
-//                            if (null != layout1 && layout1.getWindowVisibility() != VISIBLE) {
-//                                pause();
-//                            }
-
-//                        if (position > 0) {
-//                            callState(PlayerType.StateType.STATE_BUFFERING_STOP);
-//                        }
+                            // step3
+                            checkReal();
 
                             if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
                                 //相当于进入了视频页面
@@ -802,7 +798,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     /**
      * 添加一个播放状态监听器，播放状态发生变化时将会调用。
      */
-    public void addOnStateChangeListener(@NonNull OnChangeListener listener) {
+    public void addOnChangeListener(@NonNull OnChangeListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         }
@@ -812,7 +808,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     /**
      * 移除某个播放状态监听
      */
-    public void removeOnStateChangeListener(@NonNull OnChangeListener listener) {
+    public void removeOnChangeListener(@NonNull OnChangeListener listener) {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.remove(listener);
         }
@@ -820,21 +816,21 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     /**
      * 设置一个播放状态监听器，播放状态发生变化时将会调用，
-     * 如果你想同时设置多个监听器，推荐 {@link #addOnStateChangeListener(OnChangeListener)}。
+     * 如果你想同时设置多个监听器，推荐 {@link #addOnChangeListener(OnChangeListener)}。
      */
-    public void setOnMediaStateListener(@NonNull OnChangeListener listener) {
+    public void setOnChangeListener(@NonNull OnChangeListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         }
 
-        clearOnMediaStateListener();
+        clearListener();
         mOnStateChangeListeners.add(listener);
     }
 
     /**
      * 移除所有播放状态监听
      */
-    public void clearOnMediaStateListener() {
+    private final void clearListener() {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.clear();
         }
@@ -908,6 +904,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void checkReal() {
+        int visibility = getWindowVisibility();
+        MediaLogUtil.log("onLife => checkReal => visibility = " + visibility);
+        if (visibility == View.VISIBLE)
+            return;
+        clearLoop();
+        pause();
     }
 
     @Override

@@ -77,7 +77,6 @@ public interface KernelApi extends KernelEvent {
      */
     void stop();
 
-
     /**
      * 是否正在播放
      *

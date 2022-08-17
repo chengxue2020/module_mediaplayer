@@ -5,11 +5,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.BuildConfig;
-
 public final class MediaLogUtil {
 
-    private static boolean isLog = BuildConfig.DEBUG;
+    private static boolean isLog = false;
 
     public static void setIsLog(boolean isLog) {
         MediaLogUtil.isLog = isLog;

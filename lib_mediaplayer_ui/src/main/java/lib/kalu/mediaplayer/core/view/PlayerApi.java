@@ -147,6 +147,8 @@ public interface PlayerApi {
 
     void goneReal();
 
+    void checkReal();
+
     default void release() {
         release(false);
     }
