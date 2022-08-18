@@ -29,6 +29,9 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private boolean mLoop = false; // 循环播放
     private boolean mMute = false; // 静音
     private String mUrl = null; // 视频串
+
+    private String mMusicPath = null;
+    private boolean mMusicPrepare = false;
     private android.media.MediaPlayer mMusicPlayer = null; // 配音音频
 
     private KernelEvent mEvent;
@@ -292,6 +295,13 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         try {
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mIjkPlayer.seekTo(seek);
+
+            boolean musicPrepare = isMusicPrepare();
+            String musicPath = getMusicPath();
+            if (null != musicPath && musicPath.length() > 0 && musicPrepare) {
+                toggleMusicExtra();
+            }
+
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
@@ -380,12 +390,30 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void setMusicPlayer(@NonNull MediaPlayer player) {
-        this.mMusicPlayer = player;
+    public boolean isMusicPrepare() {
+        return mMusicPrepare;
+    }
+
+    @Override
+    public void setMusicPrepare(boolean prepare) {
+        this.mMusicPrepare = prepare;
+    }
+
+    @Override
+    public void setMusicPath(@NonNull String musicPath) {
+        this.mMusicPath = musicPath;
+    }
+
+    @Override
+    public String getMusicPath() {
+        return this.mMusicPath;
     }
 
     @Override
     public MediaPlayer getMusicPlayer() {
+        if (null == mMusicPlayer) {
+            mMusicPlayer = new MediaPlayer();
+        }
         return mMusicPlayer;
     }
 

@@ -28,8 +28,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        mPlayer.start(seek, max, loop, autoRelease, url);
+    public void start(@NonNull boolean release, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
+        mPlayer.start(release, seek, max, loop, autoRelease, url);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void toogle() {
-        mPlayer.toogle();
+    public void toggle() {
+        mPlayer.toggle();
     }
 
     @Override
@@ -98,8 +98,28 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void toggleMusic(@NonNull Context context, @NonNull String music) {
-        mPlayer.toggleMusic(context, music);
+    public void stopMusic() {
+        mPlayer.stopMusic();
+    }
+
+    @Override
+    public void toggleMusicExtra() {
+        mPlayer.toggleMusicExtra();
+    }
+
+    @Override
+    public void toggleMusicDefault() {
+        mPlayer.toggleMusicDefault();
+    }
+
+    @Override
+    public void toggleMusic() {
+        mPlayer.toggleMusic();
+    }
+
+    @Override
+    public void updateMusic(@NonNull String music, @NonNull boolean playMusic) {
+        mPlayer.updateMusic(music, playMusic);
     }
 
     @Override
@@ -235,17 +255,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     @Override
     public void callState(int state) {
         mPlayer.callState(state);
-    }
-
-    /**
-     * 播放和暂停
-     */
-    public void toggle() {
-        if (isPlaying()) {
-            pause();
-        } else {
-            resume();
-        }
     }
 
     /**

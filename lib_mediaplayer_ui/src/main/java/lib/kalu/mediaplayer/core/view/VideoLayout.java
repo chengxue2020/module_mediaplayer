@@ -213,21 +213,26 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        MediaLogUtil.log("VideoLayout => start => start = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url);
+    public void start(@NonNull boolean release, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
+        MediaLogUtil.log("VideoLayout => start => release = " + release + ", seek = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url);
         try {
 
             // step1
             callState(PlayerType.StateType.STATE_LOADING_START);
 
             // step2
+            if (release) {
+                release();
+            }
+
+            // step3
             if (null == mKernel) {
                 create();
             } else {
                 pause(true);
             }
 
-            // step3
+            // step4
             boolean showNetWarning = showNetWarning();
             if (showNetWarning) {
                 callState(PlayerType.StateType.STATE_START_ABORT);
@@ -402,7 +407,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void toogle() {
+    public void toggle() {
         boolean playing = isPlaying();
         if (playing) {
             pause(false);
@@ -546,9 +551,45 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void toggleMusic(@NonNull Context context, @NonNull String music) {
+    public void stopMusic() {
         try {
-            mKernel.toggleMusic(context, music);
+            mKernel.stopMusic();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void toggleMusicExtra() {
+        try {
+            mKernel.toggleMusicExtra();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void toggleMusicDefault() {
+        try {
+            mKernel.toggleMusicDafault();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void toggleMusic() {
+        try {
+            mKernel.toggleMusic();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateMusic(@NonNull String music, @NonNull boolean playMusic) {
+        try {
+            mKernel.updateMusic(music, playMusic);
         } catch (Exception e) {
             e.printStackTrace();
         }

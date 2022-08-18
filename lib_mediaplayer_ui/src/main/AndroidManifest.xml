@@ -38,31 +38,31 @@
         <!--            </intent-filter>-->
         <!--        </receiver>-->
 
-        <service android:name=".core.kernel.music.service.PlayService" />
+<!--        <service android:name=".core.kernel.music.service.PlayService" />-->
 
-        <receiver
-            android:name=".core.kernel.music.receiver.NotificationStatusBarReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="lib.kalu.status_bar" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver-->
+<!--            android:name=".core.kernel.music.receiver.NotificationStatusBarReceiver"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="lib.kalu.status_bar" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
-        <receiver
-            android:name=".core.kernel.music.receiver.EarphoneControlReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver-->
+<!--            android:name=".core.kernel.music.receiver.EarphoneControlReceiver"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MEDIA_BUTTON" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
-        <receiver
-            android:name=".core.kernel.music.receiver.AudioBroadcastReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="lib.kalu.lock" />
-            </intent-filter>
-        </receiver>
+<!--        <receiver-->
+<!--            android:name=".core.kernel.music.receiver.AudioBroadcastReceiver"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="lib.kalu.lock" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
         <activity
             android:name="lib.kalu.mediaplayer.TestActivity"
