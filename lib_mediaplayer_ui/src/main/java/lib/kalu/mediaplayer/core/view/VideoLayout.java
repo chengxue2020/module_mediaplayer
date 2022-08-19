@@ -213,16 +213,21 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void start(@NonNull boolean release, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        MediaLogUtil.log("VideoLayout => start => release = " + release + ", seek = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url);
+    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
+        MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url);
         try {
 
             // step1
             callState(PlayerType.StateType.STATE_LOADING_START);
 
             // step2
-            if (release) {
-                release();
+            String temp = getUrl();
+            if(null != temp && temp.length()>0){
+                PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
+                if (null != config && config.mKernel == PlayerType.KernelType.IJK) {
+//                    Toast.makeText(getContext(), "release", Toast.LENGTH_SHORT).show();
+                    release();
+                }
             }
 
             // step3
@@ -269,16 +274,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             goneReal();
                             break;
                         // 初始化开始 => loading start
-                        case PlayerType.EventType.EVENT_INIT_START:
+                        case PlayerType.EventType.EVENT_LOADING_START:
                             callState(PlayerType.StateType.STATE_LOADING_START);
                             break;
-                        // 初始化完成 => loading close
-                        case PlayerType.EventType.EVENT_INIT_COMPILE:
+                        // 初始化完成 => loading stop
+                        case PlayerType.EventType.EVENT_LOADING_STOP:
                             callState(PlayerType.StateType.STATE_LOADING_STOP);
-
                             break;
                         // 播放开始-快进
-                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START:
+                        case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
 
                             // step1
                             callState(PlayerType.StateType.STATE_LOADING_STOP);
@@ -295,11 +299,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             } else {
                                 toggleMusicDefault(true);
                             }
-
-                            break;
-                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE:
-//                        case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE_B:
-
 
                             break;
                         // 播放开始
@@ -334,7 +333,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             break;
                         // 播放结束
-                        case PlayerType.EventType.EVENT_PLAYER_END:
+                        case PlayerType.EventType.EVENT_VIDEO_END:
 
                             // step2
                             clearLoop();
@@ -562,15 +561,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    @Override
-    public void stopMusic() {
-        try {
-            mKernel.stopMusic();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -1218,7 +1208,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             boolean looping = isLooping();
             long start = (long) msg.obj;
             long millis = System.currentTimeMillis();
-            MediaLogUtil.log("onEvent => onMessage => millis = " + millis + ", start = " + start + ", seek = " + seek + ", max = " + max + ", loop = " + looping + ", mKernel = " + mKernel);
+//            MediaLogUtil.log("onEvent => onMessage => millis = " + millis + ", start = " + start + ", seek = " + seek + ", max = " + max + ", loop = " + looping + ", mKernel = " + mKernel);
 
             // end
             if (max > 0 && ((millis - start) > max)) {

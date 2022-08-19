@@ -207,7 +207,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
@@ -426,6 +426,12 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
+    public void releaseMusic() {
+        KernelApi.super.releaseMusic();
+        mMusicPlayer = null;
+    }
+
+    @Override
     public MediaPlayer getMusicPlayer() {
         if (null == mMusicPlayer) {
             mMusicPlayer = new MediaPlayer();
@@ -503,7 +509,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             MediaLogUtil.log("IjkMediaPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
             return true;
         }
@@ -516,7 +522,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             MediaLogUtil.log("IjkMediaPlayer => onCompletion =>");
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_PLAYER_END);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -530,11 +536,11 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             MediaLogUtil.log("IjkMediaPlayer => onInfo => what = " + what + ", extra = " + extra);
             // loading-start
             if (what == IMediaPlayer.MEDIA_INFO_OPEN_INPUT) {
-                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_START);
+                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             }
             // 首帧画面
             else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_INIT_COMPILE);
+                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                 mEvent.onEvent(PlayerType.KernelType.IJK, what);
             }
             // 事件通知

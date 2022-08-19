@@ -200,11 +200,11 @@ public final class AndroidMediaPlayer implements KernelApi {
     public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
 
         // loading-start
-        mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_START);
+        mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
@@ -293,13 +293,13 @@ public final class AndroidMediaPlayer implements KernelApi {
             // ignore 1
             else if (what == 1) {
 //                resetKernel();
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_COMPILE);
+                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
                 mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
             }
             // next
             else {
 //                resetKernel();
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_COMPILE);
+                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             }
             return true;
         }
@@ -308,8 +308,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            MediaLogUtil.log("K_ANDROID => onCompletion => ");
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_PLAYER_END);
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -343,7 +342,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         public void onPrepared(MediaPlayer mp) {
             MediaLogUtil.log("K_ANDROID => onPrepared => ");
 
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
 //            int position = mp.getCurrentPosition();
 //            long duration = getDuration();
 //            getVideoPlayerChangeListener().onPrepared(mSeek, duration);
@@ -424,6 +423,12 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public String getMusicPath() {
         return this.mMusicPath;
+    }
+
+    @Override
+    public void releaseMusic() {
+        KernelApi.super.releaseMusic();
+        mMusicPlayer = null;
     }
 
     @Override

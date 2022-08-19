@@ -52,14 +52,12 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
 
-        MediaLogUtil.setIsLog(true);
-        // init
         PlayerConfig build = PlayerConfig.newBuilder()
                 //设置视频全局埋点事件
                 .setBuriedPointEvent(new BuriedPointEventImpl())
                 //调试的时候请打开日志，方便排错
                 .setLogEnabled(true)
-                .setKernel(PlayerType.KernelType.IJK)
+                .setKernel(PlayerType.KernelType.EXO)
                 .setRender(PlayerType.RenderType.SURFACE_VIEW)
                 .setKeycode(new KeycodeSimulator())
                 .build();

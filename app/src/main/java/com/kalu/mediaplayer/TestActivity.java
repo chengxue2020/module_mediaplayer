@@ -26,7 +26,7 @@ public class TestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String path = BaseApplication.getModelFilePath(getApplicationContext(), "test.mp3");
                 VideoLayout videoView = findViewById(R.id.video);
-                videoView.toggleMusic(getApplicationContext(), path);
+                videoView.updateMusic(path, true, true, true);
             }
         });
 
@@ -35,7 +35,7 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 VideoLayout videoView = findViewById(R.id.video);
-                videoView.toggleMusic(getApplicationContext(), null);
+                videoView.toggleMusic();
             }
         });
 

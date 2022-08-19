@@ -28,8 +28,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void start(@NonNull boolean release, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        mPlayer.start(release, seek, max, loop, autoRelease, url);
+    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
+        mPlayer.start(seek, max, loop, autoRelease, url);
     }
 
     @Override
@@ -95,11 +95,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     @Override
     public String getUrl() {
         return mPlayer.getUrl();
-    }
-
-    @Override
-    public void stopMusic() {
-        mPlayer.stopMusic();
     }
 
     @Override

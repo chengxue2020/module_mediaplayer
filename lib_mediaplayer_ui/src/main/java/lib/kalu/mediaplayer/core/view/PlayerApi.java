@@ -43,26 +43,18 @@ public interface PlayerApi {
     }
 
     default void start(@NonNull String url) {
-        start(false, 0, 0, false, true, url);
-    }
-
-    default void start(@NonNull boolean release, @NonNull String url) {
-        start(release, 0, 0, false, true, url);
+        start(0, 0, false, true, url);
     }
 
     default void start(@NonNull long seek, @NonNull String url) {
-        start(false, seek, 0, false, true, url);
+        start(seek, 0, false, true, url);
     }
 
     default void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
-        start(false, seek, max, loop, true, url);
+        start(seek, max, loop, true, url);
     }
 
-    default void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        start(false, seek, max, loop, autoRelease, url);
-    }
-
-    void start(@NonNull boolean release, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url);
+    void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url);
 
     void create();
 
@@ -93,8 +85,6 @@ public interface PlayerApi {
     long getMax();
 
     String getUrl();
-
-    void stopMusic();
 
     default void toggleMusicExtra() {
         toggleMusicExtra(false);

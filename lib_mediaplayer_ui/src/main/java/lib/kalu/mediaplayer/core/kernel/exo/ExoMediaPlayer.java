@@ -44,7 +44,7 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 @Keep
-public final class ExoMediaPlayer implements KernelApi, Player.Listener {
+public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -85,21 +85,20 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         builder.setRenderersFactory(new DefaultRenderersFactory(context));
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
+        mExoPlayer.addAnalyticsListener(this);
         setOptions();
         //播放器日志
         if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
             mExoPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mExoPlayer.getTrackSelector(), "ExoPlayer"));
         }
-        // exo视频播放器监听listener
-        mExoPlayer.addListener(this);
     }
 
     @Override
     public void releaseDecoder() {
         releaseMusic();
         if (null != mExoPlayer) {
+            mExoPlayer.addAnalyticsListener(null);
             mExoPlayer.setVideoSurface(null);
-            mExoPlayer.removeListener(this);
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
@@ -274,11 +273,11 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
     public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
 
         // loading-start
-        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_START);
+        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
 
         // fail
         if (null == url || url.length() <= 0) {
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_URL);
         }
         // next
@@ -297,71 +296,21 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
 
             CacheConfig config = CacheConfigManager.getInstance().getCacheConfig();
             MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, null, config);
-            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
-                @Override
-                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-                    MediaLogUtil.log("onEXOLoadStarted => ");
-                }
-
-                @Override
-                public void onLoadCompleted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-                    MediaLogUtil.log("onEXOLoadCompleted => ");
-                }
-            });
+//            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
+//                @Override
+//                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+//                    MediaLogUtil.log("onEXOLoadStarted => ");
+//                }
+//
+//                @Override
+//                public void onLoadCompleted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+//                    MediaLogUtil.log("onEXOLoadCompleted => ");
+//                }
+//            });
 
             //准备播放
             mExoPlayer.setMediaSource(mediaSource);
             mExoPlayer.prepare();
-            mExoPlayer.addAnalyticsListener(new AnalyticsListener() {
-                @Override
-                public void onPlayWhenReadyChanged(EventTime eventTime, boolean playWhenReady, int reason) {
-                    MediaLogUtil.log("ononPlayWhenReadyChanged => ");
-                }
-
-                @Override
-                public void onRenderedFirstFrame(EventTime eventTime, Object output, long renderTimeMs) {
-                    MediaLogUtil.log("ononRenderedFirstFrame => ");
-                }
-
-                @Override
-                public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
-                    MediaLogUtil.log("ononIsPlayingChanged => isPlaying = " + isPlaying);
-                }
-
-                @Override
-                public void onPlaybackStateChanged(EventTime eventTime, int state) {
-                    MediaLogUtil.log("ononPlaybackStateChanged => state = " + state);
-
-                    // 播放结束
-                    if (state == Player.STATE_ENDED) {
-                        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_PLAYER_END);
-                    }
-                }
-
-                @Override
-                public void onPlayerError(EventTime eventTime, PlaybackException error) {
-                }
-
-                @Override
-                public void onTimelineChanged(EventTime eventTime, int reason) {
-                    MediaLogUtil.log("ononTimelineChanged => reason = " + reason);
-                }
-
-                @Override
-                public void onEvents(Player player, Events events) {
-                    MediaLogUtil.log("onmEvent.onEvent => events = " + events);
-                }
-
-                @Override
-                public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-                    MediaLogUtil.log("ononVideoInputFormatChanged => ");
-                }
-
-                @Override
-                public void onAudioInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-                    MediaLogUtil.log("ononAudioInputFormatChanged => ");
-                }
-            });
         }
     }
 
@@ -414,131 +363,116 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
         return 0;
     }
 
-    @Override
-    public void onPlayWhenReadyChanged(boolean playWhenReady, @Player.PlayWhenReadyChangeReason int playbackState) {
-        MediaLogUtil.log("onEXOWhenReadyChanged => playbackState = " + playbackState);
-//        if (getVideoPlayerChangeListener() == null) {
-//            return;
-//        }
-//        if (mIsPreparing) {
-//            return;
-//        }
-//        if (mLastReportedPlayWhenReady != playWhenReady || mLastReportedPlaybackState != playbackState) {
-//            switch (playbackState) {
-//                //最开始调用的状态
-//                case Player.STATE_IDLE:
-//                    mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_START);
-//                    break;
-//                //开始缓充
-//                case Player.STATE_BUFFERING:
-//                    mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_START);
-//                    mIsBuffering = true;
-//                    break;
-//                //开始播放
-//                case Player.STATE_READY:
-//
-//                    MappingTrackSelector trackSelector = (MappingTrackSelector) mExoPlayer.getTrackSelector();
-//                    MappingTrackSelector.MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
-//                    if (mappedTrackInfo != null) {
-//                        for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {
-//                            TrackGroupArray rendererTrackGroups = mappedTrackInfo.getTrackGroups(i);
-//                            if (C.TRACK_TYPE_AUDIO == mappedTrackInfo.getRendererType(i)) { //判断是否是音轨
-//                                for (int groupIndex = 0; groupIndex < rendererTrackGroups.length; groupIndex++) {
-//                                    TrackGroup trackGroup = rendererTrackGroups.get(groupIndex);
-//                                    MediaLogUtil.log("SRT => checkAudio => " + trackGroup.getFormat(0).toString());
-//                                }
-//                            } else if (C.TRACK_TYPE_TEXT == mappedTrackInfo.getRendererType(i)) { //判断是否是字幕
-//                                for (int groupIndex = 0; groupIndex < rendererTrackGroups.length; groupIndex++) {
-//                                    TrackGroup trackGroup = rendererTrackGroups.get(groupIndex);
-//                                    MediaLogUtil.log("SRT => checkSubTitle => " + trackGroup.getFormat(0).toString());
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    if (mIsBuffering) {
-//                        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_END);
-//                        mIsBuffering = false;
-//                    }
-//                    break;
-//                //播放器已经播放完了媒体
-//                case Player.STATE_ENDED:
-//                    getVideoPlayerChangeListener().onCompletion();
-//                    break;
-//                default:
-//                    break;
-//            }
-//            mLastReportedPlaybackState = playbackState;
-//            mLastReportedPlayWhenReady = playWhenReady;
-//        }
-    }
-
 //    @Override
-//    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+//    public void onPlayerError(PlaybackException error) {
 //
+//        if (null == error)
+//            return;
+//        if (!(error instanceof ExoPlaybackException))
+//            return;
+//
+//        long seek = getSeek();
+//        MediaLogUtil.log("ExoMediaPlayer => onPlayerError => seek = " + seek + ", type = " + ((ExoPlaybackException) error).type + ", error = " + error);
+//
+//        switch (((ExoPlaybackException) error).type) {
+//            case PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW:
+//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
+//                break;
+//            case ExoPlaybackException.TYPE_RENDERER:
+//            case ExoPlaybackException.TYPE_UNEXPECTED:
+//            case ExoPlaybackException.TYPE_REMOTE:
+////            case ExoPlaybackException.TYPE_SOURCE:
+//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+//                break;
+//            default:
+//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_RETRY);
+//                break;
+//        }
 //    }
 
+    /*****************/
+
     @Override
-    public void onPlayerError(PlaybackException error) {
-        MediaLogUtil.log("onEXOPlayerError => " + error);
-
-        if (null == error || !(error instanceof ExoPlaybackException))
-            return;
-
-        MediaLogUtil.log("onPlayerError => type = " + ((ExoPlaybackException) error).type + ", error = " + error);
-        switch (((ExoPlaybackException) error).type) {
-            case PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW:
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_COMPILE);
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
-                break;
-            case ExoPlaybackException.TYPE_RENDERER:
-            case ExoPlaybackException.TYPE_UNEXPECTED:
-            case ExoPlaybackException.TYPE_REMOTE:
-//            case ExoPlaybackException.TYPE_SOURCE:
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_COMPILE);
-                break;
-            default:
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_COMPILE);
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_RETRY);
-                break;
-        }
+    public void onPlayWhenReadyChanged(EventTime eventTime, boolean playWhenReady, int reason) {
+        MediaLogUtil.log("ExoMediaPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
     }
 
     @Override
-    public void onPlayerErrorChanged(@Nullable PlaybackException error) {
-        MediaLogUtil.log("onEXOPlayerErrorChanged => " + error);
-
-//        String errorCodeName = error.getErrorCodeName();
-//        MediaLogUtil.log("onPlayerErrorChanged => errorCodeName = " + errorCodeName);
+    public void onPlayerError(EventTime eventTime, PlaybackException error) {
+        MediaLogUtil.log("ExoMediaPlayer => onPlayerError => error = " + error.getMessage());
     }
 
-    //    public void onPlayerError(PlaybackException error) {
-//
-//        String errorCodeName = error.getErrorCodeName();
-//        MediaLogUtil.log("onPlayerError => errorCodeName = " + errorCodeName);
-//
-//    }
+    @Override
+    public void onTimelineChanged(EventTime eventTime, int reason) {
+        MediaLogUtil.log("ExoMediaPlayer => onTimelineChanged => reason = " + reason);
+    }
 
     @Override
-    public void onVideoSizeChanged(VideoSize videoSize) {
-        MediaLogUtil.log("onEXOVideoSizeChanged => ");
+    public void onEvents(Player player, Events events) {
+//                    MediaLogUtil.log("ExoMediaPlayer => onEvents => isPlaying = " + player.isPlaying());
+    }
+
+    @Override
+    public void onVideoSizeChanged(EventTime eventTime, VideoSize videoSize) {
         onChanged(PlayerType.KernelType.EXO, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : -1);
     }
 
     @Override
-    public void onRenderedFirstFrame() {
-        MediaLogUtil.log("onEXORenderedFirstFrame => ");
-        // loading-close
-        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_INIT_COMPILE);
+    public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
+        MediaLogUtil.log("ExoMediaPlayer => onIsPlayingChanged => isPlaying = " + isPlaying);
+    }
 
-        // start
-        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
+    @Override
+    public void onPlaybackStateChanged(EventTime eventTime, int state) {
+        MediaLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => state = " + state);
 
-        // 快进
+        // 播放结束
+        if (state == Player.STATE_ENDED) {
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_END);
+        }
+        // 准备完成
+        else if (state == Player.STATE_READY) {
+
+//                        long seek = getSeek();
+//                        long position = getPosition();
+//
+//                        // 快进 => begin
+//                        if (seek >0 && seek != position) {
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
+//                        }
+        }
+    }
+
+    @Override
+    public void onRenderedFirstFrame(EventTime eventTime, Object output, long renderTimeMs) {
+
+//                    long seek = getSeek();
+//                    long position = getPosition();
+//                    MediaLogUtil.log("ExoMediaPlayer => onRenderedFirstFrame => seek = " + seek + ", position = " + position);
+//                    if (seek > 0 && seek == position) {
+//                        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+//                        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
+//                    }
+    }
+
+    @Override
+    public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+
         long seek = getSeek();
-        if (seek > 0) {
+        long position = getPosition();
+        MediaLogUtil.log("ExoMediaPlayer => onVideoInputFormatChanged => seek = " + seek + ", position = " + position);
+        // 快进 => begin
+        if (seek > 0 && seek != position) {
             seekTo(seek);
         }
+    }
+
+    @Override
+    public void onAudioInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+        MediaLogUtil.log("ExoMediaPlayer => onAudioInputFormatChanged =>");
     }
 
     /****************/
@@ -594,6 +528,12 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
     @Override
     public String getMusicPath() {
         return this.mMusicPath;
+    }
+
+    @Override
+    public void releaseMusic() {
+        KernelApi.super.releaseMusic();
+        mMusicPlayer = null;
     }
 
     @Override

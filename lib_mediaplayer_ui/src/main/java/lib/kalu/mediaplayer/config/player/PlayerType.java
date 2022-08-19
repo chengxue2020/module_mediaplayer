@@ -272,10 +272,9 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface EventType {
-        int EVENT_INIT_START = 9901;
-        int EVENT_INIT_COMPILE = 9902;
+        int EVENT_LOADING_START = 9901; // 开始转圈
+        int EVENT_LOADING_STOP = 9902; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
         // 播放结束
-        int EVENT_PLAYER_END = 9903;
         //        // 开始渲染视频画面
 //        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
 //        // 开始渲染视频画面
@@ -283,10 +282,10 @@ public @interface PlayerType {
 //        // 开始渲染视频画面
 //        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 开始渲染视频画面
+        int EVENT_VIDEO_END = 9903;
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
-        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
-        int EVENT_VIDEO_SEEK_COMPLETE = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
-//        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
+        int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
+        //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
 //        int EVENT_VIDEO_END = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
         // 缓冲开始
@@ -312,20 +311,19 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
-                EVENT_PLAYER_END,
                 EVENT_ERROR_URL,
                 EVENT_ERROR_RETRY,
                 EVENT_ERROR_SOURCE,
                 EVENT_ERROR_PARSE,
                 EVENT_OPEN_INPUT,
-                EVENT_INIT_START,
-                EVENT_INIT_COMPILE,
+                EVENT_LOADING_START,
+                EVENT_LOADING_STOP,
 //                EVENT_VIDEO_SEEK_RENDERING_START,
 //                EVENT_AUDIO_SEEK_RENDERING_START,
 //                EVENT_AUDIO_RENDERING_START,
                 EVENT_VIDEO_START,
-                EVENT_VIDEO_SEEK_RENDERING_START,
-                EVENT_VIDEO_SEEK_COMPLETE,
+                EVENT_VIDEO_START_SEEK,
+                EVENT_VIDEO_END,
 //                EVENT_VIDEO_STOP,
 //                EVENT_VIDEO_END,
                 EVENT_BUFFERING_START,

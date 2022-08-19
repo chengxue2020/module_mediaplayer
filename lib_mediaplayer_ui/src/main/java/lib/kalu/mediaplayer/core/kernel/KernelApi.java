@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.Surface;
+
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -129,17 +130,9 @@ public interface KernelApi extends KernelEvent {
     android.media.MediaPlayer getMusicPlayer();
 
     default void releaseMusic() {
-        stopMusic();
-        MediaPlayer musicPlayer = getMusicPlayer();
-        if (null != musicPlayer) {
-            musicPlayer.release();
-            musicPlayer = null;
-        }
-    }
-
-    default void stopMusic() {
 
         String musicPath = getMusicPath();
+        MediaLogUtil.log("KernelApiMusic => releaseMusic => musicPath = " + musicPath);
         if (null == musicPath || musicPath.length() <= 0)
             return;
 
@@ -155,6 +148,7 @@ public interface KernelApi extends KernelEvent {
             musicPlayer.stop();
         }
         musicPlayer.reset();
+        musicPlayer.release();
     }
 
     default void resumeMusic() {
@@ -183,29 +177,34 @@ public interface KernelApi extends KernelEvent {
             long position = getPosition();
             musicPlayer.seekTo((int) position);
         }
-        musicPlayer.setOnInfoListener(null);
-        musicPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                    boolean playing = isPlaying();
-                    MediaLogUtil.log("KernelApiMusic => onInfo => what = " + what + ", extra = " + extra + ", playing = " + playing);
-                    if (!playing) {
-                        setMusicPrepare(true);
-                        start();
-                    }
-                }
-                return false;
-            }
-        });
-//        musicPlayer.setOnPreparedListener(null);
-//        musicPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//        musicPlayer.setOnInfoListener(null);
+//        musicPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
 //            @Override
-//            public void onPrepared(MediaPlayer mediaPlayer) {
-//                MediaLogUtil.log("KernelApiMusic => resumeMusic => onPrepared = " + true);
-//
+//            public boolean onInfo(MediaPlayer mp, int what, int extra) {
+//                MediaLogUtil.log("KernelApiMusic => onInfo => what = " + what + ", extra = " + extra);
+//                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+//                    boolean playing = isPlaying();
+//                    MediaLogUtil.log("KernelApiMusic => onInfo => what = " + what + ", extra = " + extra + ", playing = " + playing);
+//                    if (!playing) {
+//                        setMusicPrepare(true);
+//                        start();
+//                    }
+//                }
+//                return false;
 //            }
 //        });
+        musicPlayer.setOnPreparedListener(null);
+        musicPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                boolean playing = isPlaying();
+                MediaLogUtil.log("KernelApiMusic => onPrepared => playing = " + playing);
+                if (!playing) {
+                    setMusicPrepare(true);
+                    start();
+                }
+            }
+        });
     }
 
     default void startMusic() {
@@ -238,7 +237,7 @@ public interface KernelApi extends KernelEvent {
         setMusicSeek(musicSeek);
 
         // step2
-        stopMusic();
+        releaseMusic();
 
         // step3
         if (musicPlay) {
@@ -277,10 +276,12 @@ public interface KernelApi extends KernelEvent {
         if (null == musicPath || musicPath.length() <= 0)
             return;
 
+        if (auto) {
+            releaseMusic();
+        }
+
         // 视频音源
         boolean musicPrepare = isMusicPrepare();
-        MediaLogUtil.log("KernelApiMusic => toggleMusicExtra => musicPrepare = " + musicPrepare);
-
         if (!auto && null != musicPath && musicPath.length() > 0 && musicPrepare)
             return;
 
@@ -307,7 +308,7 @@ public interface KernelApi extends KernelEvent {
             return;
 
         // 切换原声
-        stopMusic();
+        releaseMusic();
         pause();
         setVolume(1, 1);
         start();

@@ -93,7 +93,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
                 MediaLogUtil.log("K_VLC => event = " + event.type);
                 // 首帧画面
                 if (event.type == MediaPlayer.Event.Vout) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_COMPILE);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
                     mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_START);
 
                     long seek = getSeek();
@@ -103,15 +103,15 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
                 }
                 // 解析开始
                 else if (event.type == MediaPlayer.Event.MediaChanged) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_START);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
                 }
                 // 播放完成
                 else if (event.type == MediaPlayer.Event.EndReached) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_PLAYER_END);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_END);
                 }
                 // 错误
                 else if (event.type == MediaPlayer.Event.Stopped) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_COMPILE);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
                     mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
                 }
             }
@@ -222,7 +222,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_INIT_COMPILE);
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
             mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
@@ -366,6 +366,12 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public String getMusicPath() {
         return this.mMusicPath;
+    }
+
+    @Override
+    public void releaseMusic() {
+        KernelApi.super.releaseMusic();
+        mMusicPlayer = null;
     }
 
     @Override
