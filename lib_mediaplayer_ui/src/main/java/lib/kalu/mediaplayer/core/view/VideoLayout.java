@@ -291,7 +291,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             // step5
                             boolean hasMusicExtra = hasMusicExtra();
                             if (hasMusicExtra) {
-                                toggleMusicExtra();
+                                toggleMusicExtra(true);
                             } else {
                                 toggleMusicDefault(true);
                             }
@@ -321,7 +321,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             // step4
                             boolean has = hasMusicExtra();
                             if (has) {
-                                toggleMusicExtra();
+                                toggleMusicExtra(true);
                             } else {
                                 toggleMusicDefault(true);
                             }
@@ -575,9 +575,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void toggleMusicExtra() {
+    public void toggleMusicExtra(boolean auto) {
         try {
-            mKernel.toggleMusicExtra();
+            mKernel.toggleMusicExtra(auto);
         } catch (Exception e) {
             e.printStackTrace();
         }

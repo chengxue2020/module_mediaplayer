@@ -165,14 +165,6 @@ public final class AndroidMediaPlayer implements KernelApi {
     public void seekTo(long time) {
         try {
             mAndroidPlayer.seekTo((int) time);
-            boolean musicPrepare = isMusicPrepare();
-            boolean musicLoop = isMusicLoop();
-            String musicPath = getMusicPath();
-            if (null != musicPath && musicPath.length() > 0 && musicPrepare && musicLoop) {
-                toggleMusicExtra();
-            } else {
-                toggleMusicDafault(true);
-            }
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }

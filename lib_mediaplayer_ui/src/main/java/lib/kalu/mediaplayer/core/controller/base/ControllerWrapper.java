@@ -103,8 +103,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void toggleMusicExtra() {
-        mPlayer.toggleMusicExtra();
+    public void toggleMusicExtra(boolean auto) {
+        mPlayer.toggleMusicExtra(auto);
     }
 
     @Override

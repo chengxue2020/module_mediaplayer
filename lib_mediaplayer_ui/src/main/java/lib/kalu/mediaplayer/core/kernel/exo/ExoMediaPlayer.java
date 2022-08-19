@@ -217,14 +217,6 @@ public final class ExoMediaPlayer implements KernelApi, Player.Listener {
             return;
         }
         mExoPlayer.seekTo(time);
-        boolean musicPrepare = isMusicPrepare();
-        boolean musicLoop = isMusicLoop();
-        String musicPath = getMusicPath();
-        if (null != musicPath && musicPath.length() > 0 && musicPrepare && musicLoop) {
-            toggleMusicExtra();
-        }else {
-            toggleMusicDafault(true);
-        }
     }
 
     /**

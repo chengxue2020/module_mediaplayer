@@ -185,14 +185,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     public void seekTo(long seek) {
         try {
             mVlcPlayer.seekTo(seek);
-            boolean musicPrepare = isMusicPrepare();
-            boolean musicLoop = isMusicLoop();
-            String musicPath = getMusicPath();
-            if (null != musicPath && musicPath.length() > 0 && musicPrepare && musicLoop) {
-                toggleMusicExtra();
-            }else {
-                toggleMusicDafault(true);
-            }
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }

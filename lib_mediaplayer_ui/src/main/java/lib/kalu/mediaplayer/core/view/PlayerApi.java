@@ -96,7 +96,11 @@ public interface PlayerApi {
 
     void stopMusic();
 
-    void toggleMusicExtra();
+    default void toggleMusicExtra() {
+        toggleMusicExtra(false);
+    }
+
+    void toggleMusicExtra(boolean auto);
 
     void toggleMusicDefault();
 
