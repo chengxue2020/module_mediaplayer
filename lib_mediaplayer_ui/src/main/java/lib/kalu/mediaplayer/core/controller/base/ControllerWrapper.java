@@ -113,13 +113,23 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void toggleMusicDefault(boolean musicPrepare) {
+        mPlayer.toggleMusicDefault(musicPrepare);
+    }
+
+    @Override
     public void toggleMusic() {
         mPlayer.toggleMusic();
     }
 
     @Override
-    public void updateMusic(@NonNull String music, @NonNull boolean playMusic) {
-        mPlayer.updateMusic(music, playMusic);
+    public boolean hasMusicExtra() {
+        return false;
+    }
+
+    @Override
+    public void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek) {
+        mPlayer.updateMusic(musicPath, musicPlay, musicLoop, musicSeek);
     }
 
     @Override

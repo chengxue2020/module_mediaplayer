@@ -100,9 +100,13 @@ public interface PlayerApi {
 
     void toggleMusicDefault();
 
+    void toggleMusicDefault(boolean musicPrepare);
+
     void toggleMusic();
 
-    void updateMusic(@NonNull String music, @NonNull boolean playMusic);
+    boolean hasMusicExtra();
+
+    void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek);
 
     /**
      * 获取当前缓冲百分比

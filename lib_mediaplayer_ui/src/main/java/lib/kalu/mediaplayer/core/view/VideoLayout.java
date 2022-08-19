@@ -288,6 +288,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             startLoop();
                             // step4
                             resume();
+                            // step5
+                            boolean hasMusicExtra = hasMusicExtra();
+                            if (hasMusicExtra) {
+                                toggleMusicExtra();
+                            } else {
+                                toggleMusicDefault(true);
+                            }
 
                             break;
                         case PlayerType.EventType.EVENT_VIDEO_SEEK_COMPLETE:
@@ -310,6 +317,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             // step3
                             checkReal();
+
+                            // step4
+                            boolean has = hasMusicExtra();
+                            if (has) {
+                                toggleMusicExtra();
+                            } else {
+                                toggleMusicDefault(true);
+                            }
 
                             if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
                                 //相当于进入了视频页面
@@ -569,6 +584,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void toggleMusicDefault(boolean musicPrepare) {
+        try {
+            mKernel.toggleMusicDafault(musicPrepare);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void toggleMusicDefault() {
         try {
             mKernel.toggleMusicDafault();
@@ -587,9 +611,19 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void updateMusic(@NonNull String music, @NonNull boolean playMusic) {
+    public boolean hasMusicExtra() {
         try {
-            mKernel.updateMusic(music, playMusic);
+            return mKernel.hasMusicExtra();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek) {
+        try {
+            mKernel.updateMusic(musicPath, musicPlay, musicLoop, musicSeek);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -625,6 +659,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
         if (seek < 0)
             return;
+
+        if (seek == 0) {
+            seek = 1;
+        }
 
         String url = getUrl();
         MediaLogUtil.log("onEvent => seekTo => seek = " + seek + ", max = " + max + ", loop = " + loop + ", force = " + force + ", url = " + url + ", mKernel = " + mKernel);

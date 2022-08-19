@@ -35,6 +35,8 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     private String mMusicPath = null;
     private boolean mMusicPrepare = false;
+    private boolean mMusicLoop = false;
+    private boolean mMusicSeek = false;
     private android.media.MediaPlayer mMusicPlayer = null; // 配音音频
 
     //    private LibVLC mLibVLC;
@@ -183,6 +185,14 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     public void seekTo(long seek) {
         try {
             mVlcPlayer.seekTo(seek);
+            boolean musicPrepare = isMusicPrepare();
+            boolean musicLoop = isMusicLoop();
+            String musicPath = getMusicPath();
+            if (null != musicPath && musicPath.length() > 0 && musicPrepare && musicLoop) {
+                toggleMusicExtra();
+            }else {
+                toggleMusicDafault(true);
+            }
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
@@ -334,6 +344,26 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setMusicPrepare(boolean prepare) {
         this.mMusicPrepare = prepare;
+    }
+
+    @Override
+    public boolean isMusicLoop() {
+        return mMusicLoop;
+    }
+
+    @Override
+    public void setMusicLoop(boolean loop) {
+        this.mMusicLoop = loop;
+    }
+
+    @Override
+    public boolean isMusicSeek() {
+        return mMusicSeek;
+    }
+
+    @Override
+    public void setMusicSeek(boolean seek) {
+        this.mMusicSeek = seek;
     }
 
     @Override

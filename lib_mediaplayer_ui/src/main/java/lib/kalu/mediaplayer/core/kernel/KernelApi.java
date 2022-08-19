@@ -116,6 +116,14 @@ public interface KernelApi extends KernelEvent {
 
     void setMusicPrepare(boolean prepare);
 
+    boolean isMusicLoop();
+
+    void setMusicLoop(boolean loop);
+
+    boolean isMusicSeek();
+
+    void setMusicSeek(boolean seek);
+
     void setMusicPath(@NonNull String musicPath);
 
     String getMusicPath();
@@ -167,29 +175,35 @@ public interface KernelApi extends KernelEvent {
         } catch (Exception e) {
         }
         musicPlayer.start();
-        long position = getPosition();
-        musicPlayer.seekTo((int) position);
-        musicPlayer.setOnPreparedListener(null);
-        musicPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        boolean musicSeek = isMusicSeek();
+        if (musicSeek) {
+            long position = getPosition();
+            musicPlayer.seekTo((int) position);
+        }
+        musicPlayer.setOnInfoListener(null);
+        musicPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                MediaLogUtil.log("KernelApiMusic => resumeMusic => onPrepared = " + true);
-                setMusicPrepare(true);
-                setVolume(0, 0);
-                start();
-            }
-        });
-        musicPlayer.setOnErrorListener(null);
-        musicPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                MediaLogUtil.log("KernelApiMusic => resumeMusic => onError = " + i + ">" + i1);
+            public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                    MediaLogUtil.log("KernelApiMusic => onInfo => what = " + what + ", extra = " + extra);
+                    setMusicPrepare(true);
+                    setVolume(0, 0);
+                    start();
+                }
                 return false;
             }
         });
+//        musicPlayer.setOnPreparedListener(null);
+//        musicPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mediaPlayer) {
+//                MediaLogUtil.log("KernelApiMusic => resumeMusic => onPrepared = " + true);
+//
+//            }
+//        });
     }
 
-    default void startMusic(@NonNull String music) {
+    default void startMusic() {
 
         // 1
         String musicPath = getMusicPath();
@@ -200,7 +214,7 @@ public interface KernelApi extends KernelEvent {
         // 2
         MediaPlayer musicPlayer = getMusicPlayer();
         try {
-            musicPlayer.setDataSource(Uri.parse(music).toString());
+            musicPlayer.setDataSource(Uri.parse(musicPath).toString());
             MediaLogUtil.log("KernelApiMusic => startMusic => setDataSource = " + true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,14 +224,20 @@ public interface KernelApi extends KernelEvent {
         resumeMusic();
     }
 
-    default void updateMusic(@NonNull String music, @NonNull boolean playMusic) {
+
+    default void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek) {
 
         // 1
-        setMusicPath(music);
+        setMusicPath(musicPath);
+        setMusicLoop(musicLoop);
+        setMusicSeek(musicSeek);
 
         // 2
-        if (playMusic) {
-            startMusic(music);
+        stopMusic();
+
+        // 2
+        if (musicPlay) {
+            startMusic();
         }
     }
 
@@ -264,20 +284,20 @@ public interface KernelApi extends KernelEvent {
         // 切换配音2
         else {
             pause();
-            startMusic(musicPath);
+            startMusic();
         }
     }
 
     default void toggleMusicDafault() {
+        boolean musicPrepare = isMusicPrepare();
+        toggleMusicDafault(musicPrepare);
+    }
+
+    default void toggleMusicDafault(boolean musicPrepare) {
 
         String musicPath = getMusicPath();
-        MediaLogUtil.log("KernelApiMusic => toggleMusicDafault => musicPath = " + musicPath);
-        if (null == musicPath || musicPath.length() <= 0)
-            return;
-
-        boolean musicPrepare = isMusicPrepare();
-        MediaLogUtil.log("KernelApiMusic => toggleMusicDafault => musicPrepare = " + musicPrepare);
-        if (!musicPrepare)
+        MediaLogUtil.log("KernelApiMusic => toggleMusicDafault => musicPrepare = " + musicPrepare + ", musicPath = " + musicPath);
+        if (!musicPrepare && (null == musicPath || musicPath.length() <= 0))
             return;
 
         // 切换原声
@@ -285,5 +305,12 @@ public interface KernelApi extends KernelEvent {
         pause();
         setVolume(1, 1);
         start();
+    }
+
+    default boolean hasMusicExtra() {
+        boolean musicPrepare = isMusicPrepare();
+        boolean musicLoop = isMusicLoop();
+        String musicPath = getMusicPath();
+        return (null != musicPath && musicPath.length() > 0 && musicPrepare && musicLoop);
     }
 }
