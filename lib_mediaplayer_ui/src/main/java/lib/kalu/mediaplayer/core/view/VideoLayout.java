@@ -118,24 +118,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MediaLogUtil.log("onLife => onWindowVisibilityChanged => visibility = " + visibility + ", this = " + this);
         // visable
         if (visibility == View.VISIBLE) {
-            try {
-                long seek = getSeek();
-                String url = getUrl();
-                long max = getMax();
-                boolean looping = isLooping();
-                boolean release = isAutoRelease();
-                start(seek, max, looping, release, url);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//            startLoop();
-//            resume();
+            startLoop();
+            resume();
         }
         // not visable
         else {
-            release();
-//            clearLoop();
-//            pause(true);
+            clearLoop();
+            pause(true);
         }
         super.onWindowVisibilityChanged(visibility);
     }

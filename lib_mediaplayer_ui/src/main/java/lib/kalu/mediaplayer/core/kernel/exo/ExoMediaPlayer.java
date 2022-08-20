@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -160,9 +161,10 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     @Override
     public void start() {
         try {
+            mExoPlayer.prepare();
             mExoPlayer.play();
-            mExoPlayer.setPlayWhenReady(true);
-        }catch (Exception e){
+//            mExoPlayer.setPlayWhenReady(true);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -175,7 +177,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         try {
             mExoPlayer.pause();
 //            mExoPlayer.setPlayWhenReady(false);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -187,7 +189,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     public void stop() {
         try {
             mExoPlayer.stop();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

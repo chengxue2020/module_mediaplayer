@@ -84,7 +84,7 @@ public final class ExoMediaSourceHelper {
             refreshHeaders(http, headers);
 
             // 本地缓存
-            if (hasCache && null != context && null != config && config.getCacheType() == CacheType.DEFAULT) {
+            if (hasCache && null != config && config.getCacheType() == CacheType.DEFAULT) {
                 MediaLogUtil.log("getMediaSource => 策略, 本地缓存");
 
                 // cache
@@ -125,17 +125,17 @@ public final class ExoMediaSourceHelper {
         }
     }
 
-    private final MediaSource createMediaSource(@NonNull CharSequence url, @NonNull DataSource.Factory factory) {
+    private MediaSource createMediaSource(@NonNull CharSequence url, @NonNull DataSource.Factory factory) {
 
         int contentType;
         if (url.toString().toLowerCase().contains(".mpd")) {
-            contentType = C.TYPE_DASH;
+            contentType = C.CONTENT_TYPE_DASH;
         } else if (url.toString().toLowerCase().contains(".m3u8")) {
-            contentType = C.TYPE_HLS;
+            contentType = C.CONTENT_TYPE_HLS;
         } else if (url.toString().toLowerCase().matches(".*\\.ism(l)?(/manifest(\\(.+\\))?)?")) {
-            contentType = C.TYPE_SS;
+            contentType = C.CONTENT_TYPE_SS;
         } else {
-            contentType = C.TYPE_OTHER;
+            contentType = C.CONTENT_TYPE_OTHER;
         }
 
         // 字幕
@@ -158,13 +158,13 @@ public final class ExoMediaSourceHelper {
 
 
         switch (contentType) {
-            case C.TYPE_DASH:
+            case C.CONTENT_TYPE_DASH:
                 MediaLogUtil.log("SRT => TYPE_DASH");
                 return new DashMediaSource.Factory(factory).createMediaSource(mediaItem);
-            case C.TYPE_SS:
+            case C.CONTENT_TYPE_SS:
                 MediaLogUtil.log("SRT => TYPE_SS");
                 return new SsMediaSource.Factory(factory).createMediaSource(mediaItem);
-            case C.TYPE_HLS:
+            case C.CONTENT_TYPE_HLS:
                 MediaLogUtil.log("SRT => TYPE_HLS");
                 return new HlsMediaSource.Factory(factory).createMediaSource(mediaItem);
             default:
