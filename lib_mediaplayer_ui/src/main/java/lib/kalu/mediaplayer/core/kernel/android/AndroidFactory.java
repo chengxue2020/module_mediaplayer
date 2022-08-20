@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 
 @Keep
-public class AndroidFactory extends KernelFactory<AndroidMediaPlayer> {
+public class AndroidFactory implements KernelFactory<AndroidMediaPlayer> {
 
     private AndroidFactory() {
     }

@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 
 @Keep
-public class ExoFactory extends KernelFactory<ExoMediaPlayer> {
+public class ExoFactory implements KernelFactory<ExoMediaPlayer> {
 
     private ExoFactory() {
     }
@@ -25,6 +25,5 @@ public class ExoFactory extends KernelFactory<ExoMediaPlayer> {
     @Override
     public ExoMediaPlayer createKernel(@NonNull Context context, @NonNull KernelEvent event) {
         return new ExoMediaPlayer(event);
-//        return Holder.mP;
     }
 }

@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
  * @date: 2021-05-12 14:42
  */
 @Keep
-public abstract class KernelFactory<T extends KernelApi> {
-
-    public abstract T createKernel(@NonNull Context context, @NonNull KernelEvent event);
+public interface KernelFactory<T extends KernelApi> {
+    T createKernel(@NonNull Context context, @NonNull KernelEvent event);
 }

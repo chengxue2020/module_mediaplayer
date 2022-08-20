@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 
 @Keep
-public class VlcFactory extends KernelFactory<VlcMediaPlayer> {
+public class VlcFactory implements KernelFactory<VlcMediaPlayer> {
 
     private VlcFactory() {
     }

@@ -10,7 +10,7 @@ import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 
 
 @Keep
-public class IjkFactory extends KernelFactory<IjkMediaPlayer> {
+public class IjkFactory implements KernelFactory<IjkMediaPlayer> {
 
     private IjkFactory() {
     }

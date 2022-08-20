@@ -118,15 +118,24 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MediaLogUtil.log("onLife => onWindowVisibilityChanged => visibility = " + visibility + ", this = " + this);
         // visable
         if (visibility == View.VISIBLE) {
-            MediaLogUtil.log("onWindowVisibilityChanged => resume => this = " + this);
-            startLoop();
-            resume();
+            try {
+                long seek = getSeek();
+                String url = getUrl();
+                long max = getMax();
+                boolean looping = isLooping();
+                boolean release = isAutoRelease();
+                start(seek, max, looping, release, url);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            startLoop();
+//            resume();
         }
         // not visable
         else {
-            MediaLogUtil.log("onWindowVisibilityChanged => pause => this = " + this);
-            clearLoop();
-            pause(true);
+            release();
+//            clearLoop();
+//            pause(true);
         }
         super.onWindowVisibilityChanged(visibility);
     }
@@ -222,12 +231,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
             // step2
             String temp = getUrl();
-            if(null != temp && temp.length()>0){
-                PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-                if (null != config && config.mKernel == PlayerType.KernelType.IJK) {
-//                    Toast.makeText(getContext(), "release", Toast.LENGTH_SHORT).show();
-                    release();
-                }
+            if (null != temp && temp.length() > 0) {
+                release();
             }
 
             // step3
@@ -460,7 +465,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public void resume() {
         String url = getUrl();
-        MediaLogUtil.log("onEvent => resume => url = " + url);
+        MediaLogUtil.log("onEvent => resume => url = " + url + ", mHanlder = " + mHandler + ", mKernel = " + mKernel);
         if (null == url || url.length() <= 0)
             return;
         callState(PlayerType.StateType.STATE_RESUME);
@@ -987,7 +992,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void release(@NonNull boolean onlyHandle) {
-        MediaLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mhandler = " + mHandler);
+        MediaLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mHandler = " + mHandler + ", mKernel = " + mKernel);
         // control
 //        clearControllerLayout();
 //        try {

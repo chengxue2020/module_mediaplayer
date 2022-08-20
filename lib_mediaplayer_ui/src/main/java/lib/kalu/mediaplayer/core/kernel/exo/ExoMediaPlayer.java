@@ -159,10 +159,12 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
      */
     @Override
     public void start() {
-        if (mExoPlayer == null) {
-            return;
+        try {
+            mExoPlayer.play();
+            mExoPlayer.setPlayWhenReady(true);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        mExoPlayer.setPlayWhenReady(true);
     }
 
     /**
@@ -170,10 +172,12 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
      */
     @Override
     public void pause() {
-        if (mExoPlayer == null) {
-            return;
+        try {
+            mExoPlayer.pause();
+//            mExoPlayer.setPlayWhenReady(false);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        mExoPlayer.setPlayWhenReady(false);
     }
 
     /**
@@ -181,10 +185,11 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
      */
     @Override
     public void stop() {
-        if (mExoPlayer == null) {
-            return;
+        try {
+            mExoPlayer.stop();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        mExoPlayer.stop();
     }
 
     /**
