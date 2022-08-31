@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.core.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
@@ -9,9 +10,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -20,12 +24,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.google.android.exoplayer2.util.Log;
+
+import org.checkerframework.checker.units.qual.A;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
@@ -37,6 +46,7 @@ import lib.kalu.mediaplayer.config.player.PlayerConfig;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
@@ -52,7 +62,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     // 渲染
     protected RenderApi mRender;
 
-    private boolean mFlag = false;
     protected int mCurrentScreenScaleType;
     protected int[] mVideoSize = {0, 0};
     /**
@@ -64,14 +73,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      * 存在局限性：比如小窗口下的正在播放模式，那么mCurrentMode就是STATE_PLAYING，而不是MODE_TINY_WINDOW并存
      **/
     protected int mCurrentPlayerState = PlayerType.WindowType.NORMAL;
-    /**
-     * 是否处于全屏状态
-     */
-    protected boolean mIsFullScreen;
-    /**
-     * 是否处于小屏状态
-     */
-    protected boolean mIsTinyScreen;
 
     /**
      * OnStateChangeListener集合，保存了所有开发者设置的监听器
@@ -132,15 +133,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        if (hasWindowFocus && mIsFullScreen) {
-
-            //重新获得焦点时保持全屏状态
-            ControllerLayout layout = getControlLayout();
-            if (null != layout) {
-                ViewGroup decorView = VideoHelper.instance().getDecorView(getContext().getApplicationContext(), layout);
-                VideoHelper.instance().hideSysBar(decorView, getContext().getApplicationContext(), layout);
-            }
-        }
+//        if (hasWindowFocus && isFull()) {
+//
+//            //重新获得焦点时保持全屏状态
+//            ControllerLayout layout = getControlLayout();
+//            if (null != layout) {
+//                ViewGroup decorView = VideoHelper.instance().getDecorView(getContext().getApplicationContext(), layout);
+//                VideoHelper.instance().hideSysBar(decorView, getContext().getApplicationContext(), layout);
+//            }
+//        }
     }
 
     private void init(AttributeSet attrs) {
@@ -667,6 +668,22 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void seekForward(@NonNull boolean callback) {
+        ControllerLayout layout = getControlLayout();
+        if (null == layout)
+            return;
+        layout.seekForward(callback);
+    }
+
+    @Override
+    public void seekRewind(boolean callback) {
+        ControllerLayout layout = getControlLayout();
+        if (null == layout)
+            return;
+        layout.seekRewind(callback);
+    }
+
+    @Override
     public boolean isMute() {
         try {
             return mKernel.isMute();
@@ -759,23 +776,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //            throw new VideoException(VideoException.CODE_NOT_RENDER_FACTORY, "RenderViewFactory can not be null!");
 //        }
 //        mRenderFactory = renderViewFactory;
-    }
-
-    /**
-     * 判断是否处于全屏状态
-     */
-    @Override
-    public boolean isFullScreen() {
-        return mIsFullScreen;
-    }
-
-    /**
-     * 是否是小窗口模式
-     *
-     * @return 是否是小窗口模式
-     */
-    public boolean isTinyScreen() {
-        return mIsTinyScreen;
     }
 
     /**
@@ -931,8 +931,21 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public ControllerLayout getControlLayout() {
+
+        View parent;
+        boolean full = isFull();
+        if (full) {
+            Context context = getContext();
+            Activity activity = ActivityUtils.getActivity(context);
+            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            int index = decorView.getChildCount();
+            parent = decorView.getChildAt(index - 1);
+        } else {
+            parent = this;
+        }
+
         try {
-            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_control);
+            ViewGroup viewGroup = parent.findViewById(R.id.module_mediaplayer_control);
             return (ControllerLayout) viewGroup.getChildAt(0);
         } catch (Exception e) {
             return null;
@@ -1099,10 +1112,74 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
     }
 
-    /**
-     * 开启小屏
-     */
-    public void startTinyScreen() {
+    @Override
+    public boolean isFull() {
+        int count = getChildCount();
+        return count <= 0;
+    }
+
+    @Override
+    public void startFull() {
+
+        Context context = getContext();
+        Activity activity = ActivityUtils.getActivity(context);
+        if (null == activity)
+            return;
+
+        int count = getChildCount();
+        if (count <= 0)
+            return;
+
+        boolean playing = isPlaying();
+        if (!playing)
+            return;
+
+        try {
+            // 1
+            View real = getChildAt(0);
+            removeAllViews();
+            // 2
+            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            int index = decorView.getChildCount();
+            decorView.addView(real, index);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stopFull() {
+
+        Context context = getContext();
+        Activity activity = ActivityUtils.getActivity(context);
+        if (null == activity)
+            return;
+
+        int count = getChildCount();
+        if (count > 0)
+            return;
+
+        try {
+            // 1
+            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            int index = decorView.getChildCount();
+            View real = decorView.getChildAt(index - 1);
+            decorView.removeView(real);
+            // 2
+            removeAllViews();
+            addView(real, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean isFloat() {
+        return false;
+    }
+
+    @Override
+    public void startFloat() {
 //        if (mIsTinyScreen) {
 //            return;
 //        }
@@ -1126,10 +1203,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //        setWindowState(PlayerType.WindowType.TINY);
     }
 
-    /**
-     * 退出小屏
-     */
-    public void stopTinyScreen() {
+    @Override
+    public void stopFloat() {
 //        if (!mIsTinyScreen) {
 //            return;
 //        }
@@ -1142,52 +1217,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //        this.addView(mVideoContainer, params);
 //        mIsTinyScreen = false;
 //        setWindowState(PlayerType.WindowType.NORMAL);
-    }
-
-    /**
-     * 退出全屏
-     */
-    @Override
-    public void stopFullScreen() {
-//        if (!mIsFullScreen) {
-//            return;
-//        }
-//        ViewGroup decorView = VideoHelper.instance().getDecorView(getContext().getApplicationContext(), mControlLayout);
-//        if (decorView == null) {
-//            return;
-//        }
-//        mIsFullScreen = false;
-//        //显示NavigationBar和StatusBar
-//        VideoHelper.instance().showSysBar(decorView, getContext().getApplicationContext(), mControlLayout);
-//
-//        //把播放器视图从DecorView中移除并添加到当前FrameLayout中即退出了全屏
-//        decorView.removeView(mVideoContainer);
-//        this.addView(mVideoContainer);
-//        setWindowState(PlayerType.WindowType.NORMAL);
-    }
-
-    /**
-     * 进入全屏
-     */
-    @Override
-    public void startFullScreen() {
-//        if (mIsFullScreen) {
-//            return;
-//        }
-//
-//        try {
-//            ControllerLayout layout = findViewById(R.id.module_mediaplayer_id_control_layout);
-//            ViewGroup decorView = VideoHelper.instance().getDecorView(getContext().getApplicationContext(), layout);
-//            mIsFullScreen = true;
-//            //隐藏NavigationBar和StatusBar
-//            VideoHelper.instance().hideSysBar(decorView, getContext().getApplicationContext(), layout);
-//            //从当前FrameLayout中移除播放器视图
-//            this.removeView(mVideoContainer);
-//            //将播放器视图添加到DecorView中即实现了全屏
-//            decorView.addView(mVideoContainer);
-//            setWindowState(PlayerType.WindowType.FULL);
-//        } catch (Exception e) {
-//        }
     }
 
     private Handler mHandler = new Handler(this);
@@ -1242,7 +1271,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 long duration = getDuration();
                 ControllerLayout controlLayout = getControlLayout();
                 if (null != controlLayout) {
-                    controlLayout.updateProgress(position, duration);
+                    controlLayout.seekProgress(false, position, duration);
                 }
 
                 if (mOnStateChangeListeners != null) {
@@ -1255,5 +1284,52 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        // seekForward
+        if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            int count = event.getRepeatCount();
+            MediaLogUtil.log("seekForward[false] => count = " + count);
+            if (count > 0) {
+                clearLoop();
+                seekForward(false);
+            }
+            return true;
+        }
+        // seekForward
+        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            int count = event.getRepeatCount();
+            MediaLogUtil.log("seekForward[true] => count = " + count);
+            startLoop();
+            seekForward(true);
+            return true;
+        }
+        // seekRewind
+        else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            int count = event.getRepeatCount();
+            MediaLogUtil.log("seekRewind[false] => count = " + count);
+            if (count > 0) {
+                clearLoop();
+                seekRewind(false);
+            }
+            return true;
+        }
+        // seekRewind
+        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            int count = event.getRepeatCount();
+            MediaLogUtil.log("seekRewind[true] => count = " + count);
+            startLoop();
+            seekRewind(true);
+            return true;
+        }
+        // stopFull
+        else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            stopFull();
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
     }
 }

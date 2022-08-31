@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.Keep;
@@ -17,11 +16,10 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
-import lib.kalu.mediaplayer.core.controller.component.ComponentBottom;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentGesture;
-import lib.kalu.mediaplayer.core.controller.component.ComponentOnce;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentTop;
 import lib.kalu.mediaplayer.util.BaseToast;
@@ -31,7 +29,7 @@ import lib.kalu.mediaplayer.util.PlayerUtils;
 public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     private ComponentTop titleView;
-    private ComponentBottom vodControlView;
+    private ComponentSeek vodControlView;
 
     public ControllerStandard(@NonNull Context context) {
         this(context, null);
@@ -107,7 +105,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
         //添加底部播放控制条
         if (vodControlView == null) {
-            vodControlView = new ComponentBottom(getContext());
+            vodControlView = new ComponentSeek(getContext());
             //是否显示底部进度条。默认显示
             vodControlView.showBottomProgress(true);
         }
@@ -132,28 +130,28 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     @Override
     protected void onVisibilityChanged(boolean isVisible, Animation anim) {
-        if (mControllerWrapper.isFullScreen()) {
-            View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
-            if (isVisible) {
-                if (view.getVisibility() == GONE) {
-                    view.setVisibility(VISIBLE);
-                    if (anim != null) {
-                        view.startAnimation(anim);
-                    }
-                }
-            } else {
-                view.setVisibility(GONE);
-                if (anim != null) {
-                    view.startAnimation(anim);
-                }
-            }
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    view.requestFocus();
-                }
-            }, 400);
-        }
+//        if (mControllerWrapper.isFullScreen()) {
+//            View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
+//            if (isVisible) {
+//                if (view.getVisibility() == GONE) {
+//                    view.setVisibility(VISIBLE);
+//                    if (anim != null) {
+//                        view.startAnimation(anim);
+//                    }
+//                }
+//            } else {
+//                view.setVisibility(GONE);
+//                if (anim != null) {
+//                    view.startAnimation(anim);
+//                }
+//            }
+//            postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    view.requestFocus();
+//                }
+//            }, 400);
+//        }
     }
 
     /**
@@ -228,20 +226,20 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     @Override
     public boolean onBackPressed() {
-        if (isLocked()) {
-            show();
-            String string = getContext().getResources().getString(R.string.module_mediaplayer_string_lock_tip);
-            BaseToast.showRoundRectToast(getContext(), string);
-            return true;
-        }
-        if (mControllerWrapper.isFullScreen()) {
-            return stopFullScreen();
-        }
-        Activity activity = PlayerUtils.scanForActivity(getContext());
-        //如果不是全屏模式，则直接关闭页面activity
-        if (PlayerUtils.isActivityLiving(activity)) {
-            activity.finish();
-        }
+//        if (isLocked()) {
+//            show();
+//            String string = getContext().getResources().getString(R.string.module_mediaplayer_string_lock_tip);
+//            BaseToast.showRoundRectToast(getContext(), string);
+//            return true;
+//        }
+//        if (mControllerWrapper.isFullScreen()) {
+//            return stopFullScreen();
+//        }
+//        Activity activity = PlayerUtils.scanForActivity(getContext());
+//        //如果不是全屏模式，则直接关闭页面activity
+//        if (PlayerUtils.isActivityLiving(activity)) {
+//            activity.finish();
+//        }
         return super.onBackPressed();
     }
 

@@ -81,44 +81,25 @@ public final class PlayerUtils {
         return true;
     }
 
-
-    /**
-     * Get AppCompatActivity from context
-     *
-     * @param context 上下文
-     * @return AppCompatActivity if it's not null
-     */
-    private static AppCompatActivity getAppCompActivity(Context context) {
-        if (context == null) {
-            return null;
-        }
-        if (context instanceof AppCompatActivity) {
-            return (AppCompatActivity) context;
-        } else if (context instanceof ContextThemeWrapper) {
-            return getAppCompActivity(((ContextThemeWrapper) context).getBaseContext());
-        }
-        return null;
-    }
-
     @SuppressLint("RestrictedApi")
     public static void showActionBar(Context context) {
-        ActionBar ab = getAppCompActivity(context).getSupportActionBar();
-        if (ab != null) {
-            ab.setShowHideAnimationEnabled(false);
-            ab.show();
-        }
-        scanForActivity(context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        ActionBar ab = getAppCompActivity(context).getSupportActionBar();
+//        if (ab != null) {
+//            ab.setShowHideAnimationEnabled(false);
+//            ab.show();
+//        }
+//        scanForActivity(context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @SuppressLint("RestrictedApi")
     public static void hideActionBar(Context context) {
-        ActionBar ab = getAppCompActivity(context).getSupportActionBar();
-        if (ab != null) {
-            ab.setShowHideAnimationEnabled(false);
-            ab.hide();
-        }
-        scanForActivity(context).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        ActionBar ab = getAppCompActivity(context).getSupportActionBar();
+//        if (ab != null) {
+//            ab.setShowHideAnimationEnabled(false);
+//            ab.hide();
+//        }
+//        scanForActivity(context).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     /**

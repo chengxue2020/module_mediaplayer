@@ -56,16 +56,16 @@ public class ComponentTop extends RelativeLayout implements ComponentApi {
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //点击返回键
-                Activity activity = PlayerUtils.scanForActivity(getContext());
-                if (activity != null && mControllerWrapper.isFullScreen()) {
-                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    mControllerWrapper.stopFullScreen();
-                }
-                //如果不是全屏模式，则直接关闭页面activity
-                else if (PlayerUtils.isActivityLiving(activity)) {
-                    activity.finish();
-                }
+//                //点击返回键
+//                Activity activity = PlayerUtils.scanForActivity(getContext());
+//                if (activity != null && mControllerWrapper.isFull()) {
+//                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                    mControllerWrapper.stopFullScreen();
+//                }
+//                //如果不是全屏模式，则直接关闭页面activity
+//                else if (PlayerUtils.isActivityLiving(activity)) {
+//                    activity.finish();
+//                }
             }
         });
     }
@@ -122,19 +122,19 @@ public class ComponentTop extends RelativeLayout implements ComponentApi {
             }
         }
         if (getVisibility() == VISIBLE) {
-            if (mControllerWrapper.isFullScreen()) {
-                // 显示电量
-                TextView viewBattery = findViewById(R.id.module_mediaplayer_controller_top_battery);
-                viewBattery.setVisibility(VISIBLE);
-                TextView viewTime = findViewById(R.id.module_mediaplayer_controller_top_title);
-                viewTime.setVisibility(VISIBLE);
-            } else {
-                // 不显示电量
-                TextView viewBattery = findViewById(R.id.module_mediaplayer_controller_top_battery);
-                viewBattery.setVisibility(GONE);
-                TextView viewTime = findViewById(R.id.module_mediaplayer_controller_top_title);
-                viewTime.setVisibility(GONE);
-            }
+//            if (mControllerWrapper.isFullScreen()) {
+//                // 显示电量
+//                TextView viewBattery = findViewById(R.id.module_mediaplayer_controller_top_battery);
+//                viewBattery.setVisibility(VISIBLE);
+//                TextView viewTime = findViewById(R.id.module_mediaplayer_controller_top_title);
+//                viewTime.setVisibility(VISIBLE);
+//            } else {
+//                // 不显示电量
+//                TextView viewBattery = findViewById(R.id.module_mediaplayer_controller_top_battery);
+//                viewBattery.setVisibility(GONE);
+//                TextView viewTime = findViewById(R.id.module_mediaplayer_controller_top_title);
+//                viewTime.setVisibility(GONE);
+//            }
         }
     }
 

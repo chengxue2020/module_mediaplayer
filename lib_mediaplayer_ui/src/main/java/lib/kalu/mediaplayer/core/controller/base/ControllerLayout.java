@@ -7,6 +7,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi2;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.core.controller.ControllerApi;
@@ -108,7 +110,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        if (mControllerWrapper.isPlaying() && (mEnableOrientation || mControllerWrapper.isFullScreen())) {
+        if (mControllerWrapper.isPlaying() && (mEnableOrientation || mControllerWrapper.isFull())) {
             if (hasWindowFocus) {
                 postDelayed(new Runnable() {
                     @Override
@@ -320,21 +322,50 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         return mIsLocked;
     }
 
+    /**********************/
+
     @Override
-    public void updateProgress(@NonNull long position, @NonNull long duration) {
-//        MediaLogUtil.log("ControllerLayout => updateProgress => position = " + position + ", duration = " + duration + ", mComponents = " + mComponents);
+    public void seekForward(boolean callback) {
+        if (null == mComponents)
+            return;
+        int size = mComponents.size();
+        for (int i = 0; i < size; i++) {
+            ComponentApi api = mComponents.get(i);
+            if (null == api)
+                continue;
+            api.seekForward(callback);
+        }
+    }
+
+    @Override
+    public void seekRewind(boolean callback) {
+        if (null == mComponents)
+            return;
+        int size = mComponents.size();
+        for (int i = 0; i < size; i++) {
+            ComponentApi api = mComponents.get(i);
+            if (null == api)
+                continue;
+            api.seekRewind(callback);
+        }
+    }
+
+    @Override
+    public void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
         if (null == mComponents)
             return;
         int size = mComponents.size();
         if (size <= 0)
             return;
         for (int i = 0; i < size; i++) {
-            ComponentApi component = mComponents.get(i);
-            if (null == component)
+            ComponentApi api = mComponents.get(i);
+            if (null == api)
                 continue;
-            component.setProgress(position, duration);
+            api.seekProgress(fromUser, position, duration);
         }
     }
+
+    /**********************/
 
     /**
      * 设置是否适配刘海屏
@@ -398,42 +429,42 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         mControllerWrapper.toggle();
     }
 
-    /**
-     * 横竖屏切换
-     */
-    protected void toggleFullScreen() {
-        if (PlayerUtils.isActivityLiving(mActivity)) {
-            mControllerWrapper.toggleFullScreen(mActivity);
-        }
-    }
+//    /**
+//     * 横竖屏切换
+//     */
+//    protected void toggleFullScreen() {
+//        if (PlayerUtils.isActivityLiving(mActivity)) {
+//            mControllerWrapper.toggleFullScreen(mActivity);
+//        }
+//    }
 
-    /**
-     * 子类中请使用此方法来进入全屏
-     *
-     * @return 是否成功进入全屏
-     */
-    protected boolean startFullScreen() {
-        if (!PlayerUtils.isActivityLiving(mActivity)) {
-            return false;
-        }
-        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        mControllerWrapper.startFullScreen();
-        return true;
-    }
+//    /**
+//     * 子类中请使用此方法来进入全屏
+//     *
+//     * @return 是否成功进入全屏
+//     */
+//    protected boolean startFullScreen() {
+//        if (!PlayerUtils.isActivityLiving(mActivity)) {
+//            return false;
+//        }
+//        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        mControllerWrapper.startFullScreen();
+//        return true;
+//    }
 
-    /**
-     * 子类中请使用此方法来退出全屏
-     *
-     * @return 是否成功退出全屏
-     */
-    protected boolean stopFullScreen() {
-        if (!PlayerUtils.isActivityLiving(mActivity)) {
-            return false;
-        }
-        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        mControllerWrapper.stopFullScreen();
-        return true;
-    }
+//    /**
+//     * 子类中请使用此方法来退出全屏
+//     *
+//     * @return 是否成功退出全屏
+//     */
+//    protected boolean stopFullScreen() {
+//        if (!PlayerUtils.isActivityLiving(mActivity)) {
+//            return false;
+//        }
+//        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        mControllerWrapper.stopFullScreen();
+//        return true;
+//    }
 
     /**
      * 改变返回键逻辑，用于activity
@@ -454,82 +485,82 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
     @CallSuper
     @Override
     public void onOrientationChanged(int orientation) {
-        if (mActivity == null || mActivity.isFinishing()) return;
-
-        //记录用户手机上一次放置的位置
-        int lastOrientation = mOrientation;
-
-        if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
-            //手机平放时，检测不到有效的角度
-            //重置为原始位置 -1
-            mOrientation = -1;
-            return;
-        }
-
-        if (orientation > 350 || orientation < 10) {
-            int o = mActivity.getRequestedOrientation();
-            //手动切换横竖屏
-            if (o == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE && lastOrientation == 0) return;
-            if (mOrientation == 0) return;
-            //0度，用户竖直拿着手机
-            mOrientation = 0;
-            onOrientationPortrait(mActivity);
-        } else if (orientation > 80 && orientation < 100) {
-
-            int o = mActivity.getRequestedOrientation();
-            //手动切换横竖屏
-            if (o == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT && lastOrientation == 90) return;
-            if (mOrientation == 90) return;
-            //90度，用户右侧横屏拿着手机
-            mOrientation = 90;
-            onOrientationReverseLandscape(mActivity);
-        } else if (orientation > 260 && orientation < 280) {
-            int o = mActivity.getRequestedOrientation();
-            //手动切换横竖屏
-            if (o == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT && lastOrientation == 270) return;
-            if (mOrientation == 270) return;
-            //270度，用户左侧横屏拿着手机
-            mOrientation = 270;
-            onOrientationLandscape(mActivity);
-        }
+//        if (mActivity == null || mActivity.isFinishing()) return;
+//
+//        //记录用户手机上一次放置的位置
+//        int lastOrientation = mOrientation;
+//
+//        if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
+//            //手机平放时，检测不到有效的角度
+//            //重置为原始位置 -1
+//            mOrientation = -1;
+//            return;
+//        }
+//
+//        if (orientation > 350 || orientation < 10) {
+//            int o = mActivity.getRequestedOrientation();
+//            //手动切换横竖屏
+//            if (o == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE && lastOrientation == 0) return;
+//            if (mOrientation == 0) return;
+//            //0度，用户竖直拿着手机
+//            mOrientation = 0;
+//            onOrientationPortrait(mActivity);
+//        } else if (orientation > 80 && orientation < 100) {
+//
+//            int o = mActivity.getRequestedOrientation();
+//            //手动切换横竖屏
+//            if (o == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT && lastOrientation == 90) return;
+//            if (mOrientation == 90) return;
+//            //90度，用户右侧横屏拿着手机
+//            mOrientation = 90;
+//            onOrientationReverseLandscape(mActivity);
+//        } else if (orientation > 260 && orientation < 280) {
+//            int o = mActivity.getRequestedOrientation();
+//            //手动切换横竖屏
+//            if (o == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT && lastOrientation == 270) return;
+//            if (mOrientation == 270) return;
+//            //270度，用户左侧横屏拿着手机
+//            mOrientation = 270;
+//            onOrientationLandscape(mActivity);
+//        }
     }
 
-    /**
-     * 竖屏
-     */
-    protected void onOrientationPortrait(Activity activity) {
-        //屏幕锁定的情况
-        if (mIsLocked) return;
-        //没有开启设备方向监听的情况
-        if (!mEnableOrientation) return;
+//    /**
+//     * 竖屏
+//     */
+//    protected void onOrientationPortrait(Activity activity) {
+//        //屏幕锁定的情况
+//        if (mIsLocked) return;
+//        //没有开启设备方向监听的情况
+//        if (!mEnableOrientation) return;
+//
+//        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        mControllerWrapper.stopFullScreen();
+//    }
 
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        mControllerWrapper.stopFullScreen();
-    }
+//    /**
+//     * 横屏
+//     */
+//    protected void onOrientationLandscape(Activity activity) {
+//        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        if (mControllerWrapper.isFullScreen()) {
+//            handleWindowStateChanged(PlayerType.WindowType.FULL);
+//        } else {
+//            mControllerWrapper.startFullScreen();
+//        }
+//    }
 
-    /**
-     * 横屏
-     */
-    protected void onOrientationLandscape(Activity activity) {
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        if (mControllerWrapper.isFullScreen()) {
-            handleWindowStateChanged(PlayerType.WindowType.FULL);
-        } else {
-            mControllerWrapper.startFullScreen();
-        }
-    }
-
-    /**
-     * 反向横屏
-     */
-    protected void onOrientationReverseLandscape(Activity activity) {
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-        if (mControllerWrapper.isFullScreen()) {
-            handleWindowStateChanged(PlayerType.WindowType.FULL);
-        } else {
-            mControllerWrapper.startFullScreen();
-        }
-    }
+//    /**
+//     * 反向横屏
+//     */
+//    protected void onOrientationReverseLandscape(Activity activity) {
+//        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+//        if (mControllerWrapper.isFullScreen()) {
+//            handleWindowStateChanged(PlayerType.WindowType.FULL);
+//        } else {
+//            mControllerWrapper.startFullScreen();
+//        }
+//    }
 
     //------------------------ start handle event change ------------------------//
 

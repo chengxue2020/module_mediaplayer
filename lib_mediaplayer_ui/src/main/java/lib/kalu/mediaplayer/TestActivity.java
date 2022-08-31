@@ -1,21 +1,23 @@
 package lib.kalu.mediaplayer;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.exoplayer2.util.Log;
+
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
-import lib.kalu.mediaplayer.core.controller.component.ComponentBottom;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
-import lib.kalu.mediaplayer.listener.OnChangeListener;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
+import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
@@ -47,7 +49,6 @@ public final class TestActivity extends AppCompatActivity {
     @Keep
     public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
 
-    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +73,7 @@ public final class TestActivity extends AppCompatActivity {
         error.setMessage("发生错误");
         error.setMessageSize(20);
 
-        ComponentBottom bottom = new ComponentBottom(this);
+        ComponentSeek bottom = new ComponentSeek(this);
 
         // component
         ControllerEmpty controller = new ControllerEmpty(this);

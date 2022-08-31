@@ -133,6 +133,36 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public boolean isFull() {
+        return mPlayer.isFull();
+    }
+
+    @Override
+    public void startFull() {
+        mPlayer.startFull();
+    }
+
+    @Override
+    public void stopFull() {
+        mPlayer.stopFull();
+    }
+
+    @Override
+    public boolean isFloat() {
+        return mPlayer.isFloat();
+    }
+
+    @Override
+    public void startFloat() {
+        mPlayer.startFloat();
+    }
+
+    @Override
+    public void stopFloat() {
+        mPlayer.stopFloat();
+    }
+
+    @Override
     public int getBufferedPercentage() {
         return mPlayer.getBufferedPercentage();
     }
@@ -143,18 +173,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void startFullScreen() {
-        mPlayer.startFullScreen();
+    public void seekForward(@NonNull boolean callback) {
+        mPlayer.seekForward(callback);
     }
 
     @Override
-    public void stopFullScreen() {
-        mPlayer.stopFullScreen();
-    }
-
-    @Override
-    public boolean isFullScreen() {
-        return mPlayer.isFullScreen();
+    public void seekRewind(boolean callback) {
+        mPlayer.seekRewind(callback);
     }
 
     @Override
@@ -203,21 +228,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void startTinyScreen() {
-        mPlayer.startTinyScreen();
-    }
-
-    @Override
-    public void stopTinyScreen() {
-        mPlayer.stopTinyScreen();
-    }
-
-    @Override
-    public boolean isTinyScreen() {
-        return mPlayer.isTinyScreen();
-    }
-
-    @Override
     public ControllerLayout getControlLayout() {
         return null;
     }
@@ -262,53 +272,53 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
         mPlayer.callState(state);
     }
 
-    /**
-     * 横竖屏切换，会旋转屏幕
-     */
-    public void toggleFullScreen(Activity activity) {
-        if (activity == null || activity.isFinishing())
-            return;
-        if (isFullScreen()) {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            stopFullScreen();
-        } else {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            startFullScreen();
-        }
-    }
+//    /**
+//     * 横竖屏切换，会旋转屏幕
+//     */
+//    public void toggleFullScreen(Activity activity) {
+//        if (activity == null || activity.isFinishing())
+//            return;
+//        if (isFullScreen()) {
+//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            stopFullScreen();
+//        } else {
+//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//            startFullScreen();
+//        }
+//    }
+//
+//    /**
+//     * 横竖屏切换，不会旋转屏幕
+//     */
+//    public void toggleFullScreen() {
+//        if (isFullScreen()) {
+//            stopFullScreen();
+//        } else {
+//            startFullScreen();
+//        }
+//    }
 
-    /**
-     * 横竖屏切换，不会旋转屏幕
-     */
-    public void toggleFullScreen() {
-        if (isFullScreen()) {
-            stopFullScreen();
-        } else {
-            startFullScreen();
-        }
-    }
-
-    /**
-     * 横竖屏切换，根据适配宽高决定是否旋转屏幕
-     */
-    public void toggleFullScreenByVideoSize(Activity activity) {
-        if (activity == null || activity.isFinishing())
-            return;
-        int[] size = getVideoSize();
-        int width = size[0];
-        int height = size[1];
-        if (isFullScreen()) {
-            stopFullScreen();
-            if (width > height) {
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-        } else {
-            startFullScreen();
-            if (width > height) {
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-        }
-    }
+//    /**
+//     * 横竖屏切换，根据适配宽高决定是否旋转屏幕
+//     */
+//    public void toggleFullScreenByVideoSize(Activity activity) {
+//        if (activity == null || activity.isFinishing())
+//            return;
+//        int[] size = getVideoSize();
+//        int width = size[0];
+//        int height = size[1];
+//        if (isFullScreen()) {
+//            stopFullScreen();
+//            if (width > height) {
+//                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            }
+//        } else {
+//            startFullScreen();
+//            if (width > height) {
+//                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//            }
+//        }
+//    }
 
     @Override
     public void startFadeOut() {
@@ -356,8 +366,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void updateProgress(@NonNull long position, @NonNull long duration) {
-        mController.updateProgress(position, duration);
+    public void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
+        mController.seekProgress(fromUser, position, duration);
     }
 
     @Override

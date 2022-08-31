@@ -78,9 +78,6 @@ public interface ComponentApi {
      */
     void onWindowStateChanged(int playerState);
 
-    default void setProgress(@NonNull long position, @NonNull long duration) {
-    }
-
     /**
      * 锁屏状态监听
      *
@@ -94,18 +91,18 @@ public interface ComponentApi {
         wrapper.repeat();
     }
 
-    default void finish(@NonNull Context context, @NonNull ControllerWrapper wrapper) {
-        if (null == wrapper)
-            return;
-        boolean full = wrapper.isFullScreen();
-        if (!full)
-            return;
-        Activity activity = PlayerUtils.scanForActivity(context);
-        if (null == activity || activity.isFinishing())
-            return;
-        wrapper.stopFullScreen();
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
+//    default void finish(@NonNull Context context, @NonNull ControllerWrapper wrapper) {
+//        if (null == wrapper)
+//            return;
+//        boolean full = wrapper.isFullScreen();
+//        if (!full)
+//            return;
+//        Activity activity = PlayerUtils.scanForActivity(context);
+//        if (null == activity || activity.isFinishing())
+//            return;
+//        wrapper.stopFullScreen();
+//        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//    }
 
     /*************/
 
@@ -184,5 +181,18 @@ public interface ComponentApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /******************/
+
+    default void seekForward(boolean callback) {
+
+    }
+
+    default void seekRewind(boolean callback) {
+
+    }
+
+    default void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
     }
 }

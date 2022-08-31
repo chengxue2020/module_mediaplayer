@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.core.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -119,6 +120,10 @@ public interface PlayerApi {
 
     void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop);
 
+    void seekForward(@NonNull boolean callback);
+
+    void seekRewind(boolean callback);
+
     /**
      * 是否处于播放状态
      *
@@ -126,11 +131,17 @@ public interface PlayerApi {
      */
     boolean isPlaying();
 
-    void startFullScreen();
+    boolean isFull();
 
-    void stopFullScreen();
+    void startFull();
 
-    boolean isFullScreen();
+    void stopFull();
+
+    boolean isFloat();
+
+    void startFloat();
+
+    void stopFloat();
 
     boolean isMute();
 
@@ -149,12 +160,6 @@ public interface PlayerApi {
     int[] getVideoSize();
 
     void setRotation(float rotation);
-
-    void startTinyScreen();
-
-    void stopTinyScreen();
-
-    boolean isTinyScreen();
 
     ControllerLayout getControlLayout();
 

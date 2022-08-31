@@ -1,15 +1,13 @@
 package lib.kalu.mediaplayer.core.controller.component;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -22,49 +20,47 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.config.player.PlayerConfig;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
-import lib.kalu.mediaplayer.util.PlayerUtils;
 
 /**
  * description: 底部控制栏视图
  * created by kalu on 2021/11/23
  */
 @Keep
-public class ComponentBottom extends RelativeLayout implements ComponentApi {
+public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     protected ControllerWrapper mControllerWrapper;
 
-    public ComponentBottom(@NonNull Context context) {
+    public ComponentSeek(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public ComponentBottom(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentSeek(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public ComponentBottom(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentSeek(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     private void init() {
         // step1
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_bottom, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
 
         // step2, 5.1以下系统SeekBar高度需要设置成WRAP_CONTENT
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_bottom_pb);
+            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek_pb);
             progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
 
         // step3
-        View play = findViewById(R.id.module_mediaplayer_component_bottom_play);
+        View play = findViewById(R.id.module_mediaplayer_component_seek_play);
         if (null != play) {
             play.setOnClickListener(new OnClickListener() {
                 @Override
@@ -82,7 +78,7 @@ public class ComponentBottom extends RelativeLayout implements ComponentApi {
         }
 
         // step4
-        View back = findViewById(R.id.module_mediaplayer_component_bottom_back);
+        View back = findViewById(R.id.module_mediaplayer_component_seek_back);
         if (null != back) {
             back.setOnClickListener(new OnClickListener() {
                 @Override
@@ -93,19 +89,19 @@ public class ComponentBottom extends RelativeLayout implements ComponentApi {
         }
 
         // step5
-        SeekBar sb = findViewById(R.id.module_mediaplayer_component_bottom_sb);
+        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
         if (null != sb) {
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    MediaLogUtil.log("ComponentBottom => onStartTrackingTouch => mControllerWrapper = " + mControllerWrapper);
+                    MediaLogUtil.log("ComponentSeek => onStartTrackingTouch => mControllerWrapper = " + mControllerWrapper);
 //        // sb开始拖动
-//        SeekBar sb = findViewById(R.id.module_mediaplayer_component_bottom_sb);
+//        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
 //        if (null != sb) {
 //            sb.setTag(1);
 //        }
 //        // pb
-//        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_bottom_pb);
+//        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
 //        if (null != pb) {
 //            pb.setTag(1);
 //        }
@@ -117,14 +113,14 @@ public class ComponentBottom extends RelativeLayout implements ComponentApi {
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    MediaLogUtil.log("ComponentBottom => onStopTrackingTouch => mControllerWrapper = " + mControllerWrapper);
+                    MediaLogUtil.log("ComponentSeek => onStopTrackingTouch => mControllerWrapper = " + mControllerWrapper);
 //        // sb结束拖动
-//        SeekBar sb = findViewById(R.id.module_mediaplayer_component_bottom_sb);
+//        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
 //        if (null != sb) {
 //            sb.setTag(null);
 //        }
 //        // pb
-//        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_bottom_pb);
+//        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
 //        if (null != pb) {
 //            pb.setTag(null);
 //        }
@@ -135,14 +131,8 @@ public class ComponentBottom extends RelativeLayout implements ComponentApi {
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    MediaLogUtil.log("ComponentBottom => onProgressChanged => progress = " + progress + ", fromUser = " + fromUser + ", mControllerWrapper = " + mControllerWrapper);
-                    if (!fromUser)
-                        return;
-                    if (null == mControllerWrapper)
-                        return;
-                    long max = mControllerWrapper.getMax();
-                    boolean looping = mControllerWrapper.isLooping();
-                    mControllerWrapper.seekTo(true, progress, max, looping);
+                    MediaLogUtil.log("ComponentSeek => onProgressChanged => progress = " + progress + ", fromUser = " + fromUser + ", mControllerWrapper = " + mControllerWrapper);
+                    onSeekChanged(progress, fromUser);
                 }
             });
         }
@@ -156,7 +146,7 @@ public class ComponentBottom extends RelativeLayout implements ComponentApi {
      * 是否显示底部进度条，默认显示
      */
     public void showBottomProgress(boolean show) {
-        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_bottom_pb);
+        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
         if (null == pb)
             return;
         pb.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -202,12 +192,12 @@ public class ComponentBottom extends RelativeLayout implements ComponentApi {
     public void onPlayStateChanged(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_STOP:
-                MediaLogUtil.log("ComponentBottom[show] => playState = " + playState);
+                MediaLogUtil.log("ComponentSeek[show] => playState = " + playState);
                 bringToFront();
                 setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
-                MediaLogUtil.log("ComponentBottom[gone] => playState = " + playState);
+                MediaLogUtil.log("ComponentSeek[gone] => playState = " + playState);
                 setVisibility(View.GONE);
                 break;
         }
@@ -291,79 +281,178 @@ public class ComponentBottom extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setProgress(@NonNull long position, @NonNull long duration) {
-
-        int visibility = getVisibility();
-//        MediaLogUtil.log("ComponentBottom => setProgress => duration = " + duration + ", position = " + position + ", visibility = " + visibility);
-        if (visibility != View.VISIBLE)
-            return;
-
-        // pb
-        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_bottom_pb);
-        if (null != pb && pb.getVisibility() == View.VISIBLE) {
-            pb.setMax((int) duration);
-            pb.setProgress((int) position);
-            pb.setSecondaryProgress((int) position);
-        }
-
-        // sb
-        SeekBar sb = findViewById(R.id.module_mediaplayer_component_bottom_sb);
-        if (null != sb && sb.getVisibility() == View.VISIBLE) {
-            sb.setMax((int) duration);
-            sb.setProgress((int) position);
-            sb.setSecondaryProgress((int) position);
-        }
-
-        // time
-        TextView time = findViewById(R.id.module_mediaplayer_component_bottom_time);
-        if (null != time) {
-
-            // 1
-            // ms => s
-            long c = position / 1000;
-            long c1 = c / 60;
-            long c2 = c % 60;
-            StringBuilder stringBuilder = new StringBuilder();
-            if (c1 < 10) {
-                stringBuilder.append("0");
-            }
-            stringBuilder.append(c1);
-            stringBuilder.append(":");
-            if (c2 < 10) {
-                stringBuilder.append("0");
-            }
-            stringBuilder.append(c2);
-            stringBuilder.append("/");
-
-            // 2
-            // ms => s
-            long d = duration / 1000;
-            long d1 = d / 60;
-            long d2 = d % 60;
-            if (d1 < 10) {
-                stringBuilder.append("0");
-            }
-            stringBuilder.append(d1);
-            stringBuilder.append(":");
-            if (d2 < 10) {
-                stringBuilder.append("0");
-            }
-            stringBuilder.append(d2);
-            String s = stringBuilder.toString();
-            time.setText(s);
-        }
-    }
-
-    @Override
     public void onLockStateChanged(boolean isLocked) {
         onVisibilityChanged(!isLocked, null);
     }
 
-    /**
-     * 横竖屏切换
-     */
-    private void toggleFullScreen() {
-        Activity activity = PlayerUtils.scanForActivity(getContext());
-        mControllerWrapper.toggleFullScreen(activity);
+
+    /****************************************/
+
+    @Override
+    public void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
+
+        MediaLogUtil.log("ComponentSeek => seekProgress => duration = " + duration + ", position = " + position);
+        if (position <= 0 && duration <= 0)
+            return;
+
+        int visibility = getVisibility();
+        if (visibility != View.VISIBLE)
+            return;
+
+        // pb
+        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
+        if (null != pb && pb.getVisibility() == View.VISIBLE) {
+            refreshProgress((int) position, (int) duration);
+        }
+
+        // sb
+        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
+        if (null != sb && sb.getVisibility() == View.VISIBLE) {
+            refreshSeek((int) position, (int) duration);
+        }
+
+        // time
+        TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
+        TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
+        // 1
+        // ms => s
+        long c = position / 1000;
+        long c1 = c / 60;
+        long c2 = c % 60;
+        StringBuilder builder1 = new StringBuilder();
+        if (c1 < 10) {
+            builder1.append("0");
+        }
+        builder1.append(c1);
+        builder1.append(":");
+        if (c2 < 10) {
+            builder1.append("0");
+        }
+        builder1.append(c2);
+        String s1 = builder1.toString();
+        viewPosition.setText(s1);
+
+        // 2
+        // ms => s
+        StringBuilder builder2 = new StringBuilder();
+        long d = duration / 1000;
+        long d1 = d / 60;
+        long d2 = d % 60;
+        if (d1 < 10) {
+            builder2.append("0");
+        }
+        builder2.append(d1);
+        builder2.append(":");
+        if (d2 < 10) {
+            builder2.append("0");
+        }
+        builder2.append(d2);
+        String s2 = builder2.toString();
+        viewMax.setText(s2);
+        MediaLogUtil.log("ComponentSeek => seekProgress => s1 = " + s1 + ", s2 = " + s2);
+    }
+
+    @Override
+    public void seekForward(boolean callback) {
+        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
+        if (null != sb && sb.getVisibility() == View.VISIBLE) {
+            int max = sb.getMax();
+            int progress = sb.getProgress();
+            if (progress < max) {
+                int next = progress + Math.abs(max) / 200;
+//                MediaLogUtil.log("ComponentSeek => seekForward =>  callback = " + callback + ", progress = " + progress + ", next = " + next + ", max = " + max);
+                if (next > max) {
+                    next = max;
+                }
+                refreshSeek(next, 0);
+                if (callback) {
+                    onSeekChanged(progress, true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void seekRewind(boolean callback) {
+        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
+//        MediaLogUtil.log("ComponentSeek => seekRewind => callback = " + callback);
+        if (null != sb && sb.getVisibility() == View.VISIBLE) {
+            int progress = sb.getProgress();
+            if (progress > 0) {
+                int max = sb.getMax();
+                int next = progress - Math.abs(max) / 200;
+                if (next < 0) {
+                    next = 0;
+                }
+                refreshSeek(next, 0);
+                if (callback) {
+                    onSeekChanged(progress, true);
+                }
+            }
+        }
+    }
+
+    /****************************************/
+
+//    private final Handler mHandler = new Handler(this);
+
+//    @Override
+//    public boolean handleMessage(@NonNull Message msg) {
+//        if (msg.what == 0x123456) {
+//            setVisibility(View.GONE);
+//        }
+//        return false;
+//    }
+
+    private boolean isOK = true;
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+    }
+
+    private void autoGone() {
+//        mHandler.removeCallbacksAndMessages(null);
+//        mHandler.sendEmptyMessageDelayed(0x123456, 10000);
+//        postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (isOK) {
+//                    setVisibility(View.GONE);
+//                }
+//            }
+//        }, 10000);
+    }
+
+    private void onSeekChanged(int progress, boolean fromUser) {
+        if (!fromUser)
+            return;
+        if (null == mControllerWrapper)
+            return;
+        long max = mControllerWrapper.getMax();
+        boolean looping = mControllerWrapper.isLooping();
+        mControllerWrapper.seekTo(true, progress, max, looping);
+    }
+
+    private void refreshSeek(int progress, int max) {
+        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
+        if (null == sb)
+            return;
+        sb.setProgress(progress);
+        sb.setSecondaryProgress(progress);
+        if (max > 0) {
+            sb.setMax(max);
+        }
+    }
+
+    private void refreshProgress(int progress, int max) {
+        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
+        if (null == pb)
+            return;
+        pb.setProgress(progress);
+        pb.setSecondaryProgress(progress);
+        if (max > 0) {
+            pb.setMax(max);
+        }
     }
 }

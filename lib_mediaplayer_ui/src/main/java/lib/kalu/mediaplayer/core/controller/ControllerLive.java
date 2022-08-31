@@ -101,20 +101,20 @@ public class ControllerLive extends ControllerLayout {
 
     @Override
     public boolean onBackPressed() {
-        if (isLocked()) {
-            show();
-            String string = getContext().getResources().getString(R.string.module_mediaplayer_string_lock_tip);
-            BaseToast.showRoundRectToast(getContext(), string);
-            return true;
-        }
-        if (mControllerWrapper.isFullScreen()) {
-            return stopFullScreen();
-        }
-        Activity activity = PlayerUtils.scanForActivity(getContext());
-        //如果不是全屏模式，则直接关闭页面activity
-        if (PlayerUtils.isActivityLiving(activity)) {
-            activity.finish();
-        }
+//        if (isLocked()) {
+//            show();
+//            String string = getContext().getResources().getString(R.string.module_mediaplayer_string_lock_tip);
+//            BaseToast.showRoundRectToast(getContext(), string);
+//            return true;
+//        }
+//        if (mControllerWrapper.isFullScreen()) {
+//            return stopFullScreen();
+//        }
+//        Activity activity = PlayerUtils.scanForActivity(getContext());
+//        //如果不是全屏模式，则直接关闭页面activity
+//        if (PlayerUtils.isActivityLiving(activity)) {
+//            activity.finish();
+//        }
         return super.onBackPressed();
     }
 
