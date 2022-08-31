@@ -46,6 +46,7 @@ import lib.kalu.mediaplayer.config.player.PlayerConfig;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.listener.OnFullChangeListener;
 import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
@@ -1112,6 +1113,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
     }
 
+    /*****************************/
+
+    private OnFullChangeListener mOnFullChangeListener;
+
+    public void setOnFullChangeListener(@NonNull OnFullChangeListener listener) {
+        this.mOnFullChangeListener = listener;
+    }
+
     @Override
     public boolean isFull() {
         int count = getChildCount();
@@ -1142,6 +1151,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             int index = decorView.getChildCount();
             decorView.addView(real, index);
+            // 3
+            if (null != mOnFullChangeListener) {
+                mOnFullChangeListener.onFull();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1168,10 +1181,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // 2
             removeAllViews();
             addView(real, 0);
+            // 3
+            if (null != mOnFullChangeListener) {
+                mOnFullChangeListener.onNormal();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /*****************************/
 
     @Override
     public boolean isFloat() {
