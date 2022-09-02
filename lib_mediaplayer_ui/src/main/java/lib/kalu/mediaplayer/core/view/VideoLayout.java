@@ -1108,8 +1108,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void startFull() {
-
+    public void startFull(@NonNull boolean requestFocus) {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
         if (null == activity)
@@ -1132,8 +1131,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             int index = decorView.getChildCount();
             decorView.addView(real, index);
             // 3
-            setFocusable(true);
-            requestFocus();
+            if (requestFocus) {
+                setFocusable(true);
+                requestFocus();
+            }
             // 4
             setWindowState(PlayerType.WindowType.FULL);
             // 5
@@ -1142,17 +1143,17 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
         } catch (Exception e) {
             e.printStackTrace();
-            setFocusable(false);
-            clearFocus();
+            if (requestFocus) {
+                setFocusable(false);
+                clearFocus();
+            }
         }
     }
 
     @Override
-    public void stopFull() {
-
+    public void stopFull(@NonNull boolean cleanFocus) {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
-        Log.e("UIUIIUUIU", "stopFull => activity = " + activity);
         if (null == activity)
             return;
 
@@ -1170,8 +1171,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             removeAllViews();
             addView(real, 0);
             // 3
-            setFocusable(false);
-            clearFocus();
+            if (cleanFocus) {
+                setFocusable(false);
+                clearFocus();
+            }
             // 4
             setWindowState(PlayerType.WindowType.NORMAL);
             // 5
@@ -1180,8 +1183,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
         } catch (Exception e) {
             e.printStackTrace();
-            setFocusable(false);
-            clearFocus();
+            if (cleanFocus) {
+                setFocusable(false);
+                clearFocus();
+            }
         }
     }
 
@@ -1201,7 +1206,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void startFloat() {
+    public void startFloat(@NonNull boolean requestFocus) {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
         if (null == activity)
@@ -1233,19 +1238,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             int index = decorView.getChildCount();
             decorView.addView(real, index);
             // 4
-            setFocusable(true);
-            requestFocus();
+            if (requestFocus) {
+                setFocusable(true);
+                requestFocus();
+            }
             // 5
             setWindowState(PlayerType.WindowType.FLOAT);
         } catch (Exception e) {
             e.printStackTrace();
-            clearFocus();
-            setFocusable(false);
+            if (requestFocus) {
+                clearFocus();
+                setFocusable(false);
+            }
         }
     }
 
     @Override
-    public void stopFloat() {
+    public void stopFloat(@NonNull boolean cleanFocus) {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
         if (null == activity)
@@ -1270,14 +1279,18 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             removeAllViews();
             addView(real, 0);
             // 3
-            clearFocus();
-            setFocusable(false);
+            if (cleanFocus) {
+                clearFocus();
+                setFocusable(false);
+            }
             // 4
             setWindowState(PlayerType.WindowType.NORMAL);
         } catch (Exception e) {
             e.printStackTrace();
-            clearFocus();
-            setFocusable(false);
+            if (cleanFocus) {
+                clearFocus();
+                setFocusable(false);
+            }
         }
     }
 

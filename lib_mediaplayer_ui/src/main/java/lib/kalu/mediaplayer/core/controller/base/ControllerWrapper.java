@@ -137,14 +137,15 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
         return mPlayer.isFull();
     }
 
+
     @Override
-    public void startFull() {
-        mPlayer.startFull();
+    public void startFull(@NonNull boolean requestFocus) {
+        mPlayer.startFull(requestFocus);
     }
 
     @Override
-    public void stopFull() {
-        mPlayer.stopFull();
+    public void stopFull(@NonNull boolean cleanFocus) {
+        mPlayer.stopFull(cleanFocus);
     }
 
     @Override
@@ -153,13 +154,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void startFloat() {
-        mPlayer.startFloat();
+    public void startFloat(@NonNull boolean requestFocus) {
+        mPlayer.startFloat(requestFocus);
     }
 
     @Override
-    public void stopFloat() {
-        mPlayer.stopFloat();
+    public void stopFloat(@NonNull boolean cleanFocus) {
+        mPlayer.stopFloat(cleanFocus);
     }
 
     @Override

@@ -133,15 +133,31 @@ public interface PlayerApi {
 
     boolean isFull();
 
-    void startFull();
+    default void startFull() {
+        startFull(false);
+    }
 
-    void stopFull();
+    default void stopFull() {
+        stopFull(false);
+    }
+
+    void startFull(@NonNull boolean requestFocus);
+
+    void stopFull(@NonNull boolean cleanFocus);
 
     boolean isFloat();
 
-    void startFloat();
+    default void startFloat() {
+        startFloat(false);
+    }
 
-    void stopFloat();
+    default void stopFloat() {
+        startFloat(false);
+    }
+
+    void startFloat(@NonNull boolean requestFocus);
+
+    void stopFloat(@NonNull boolean cleanFocus);
 
     boolean isMute();
 
