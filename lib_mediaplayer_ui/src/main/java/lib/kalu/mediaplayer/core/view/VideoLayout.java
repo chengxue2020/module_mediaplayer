@@ -1372,7 +1372,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // seekForward
         if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             int count = event.getRepeatCount();
-            MediaLogUtil.log("seekForward[false] => count = " + count);
+            MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count);
             if (count > 0) {
                 clearLoop();
                 seekForward(false);
@@ -1382,7 +1382,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // seekForward
         else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             int count = event.getRepeatCount();
-            MediaLogUtil.log("seekForward[true] => count = " + count);
+            MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count);
             startLoop();
             seekForward(true);
             return true;
@@ -1390,7 +1390,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // seekRewind
         else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             int count = event.getRepeatCount();
-            MediaLogUtil.log("seekRewind[false] => count = " + count);
+            MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count);
             if (count > 0) {
                 clearLoop();
                 seekRewind(false);
@@ -1400,19 +1400,21 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // seekRewind
         else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             int count = event.getRepeatCount();
-            MediaLogUtil.log("seekRewind[true] => count = " + count);
+            MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count);
             startLoop();
             seekRewind(true);
             return true;
         }
         // stopFloat
         else if (isFocusable() && isFloat() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            stopFloat();
+            MediaLogUtil.log("dispatchKeyEvent => stopFloat => cleanRequest = true");
+            stopFloat(true);
             return true;
         }
         // stopFull
         else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            stopFull();
+            MediaLogUtil.log("dispatchKeyEvent => stopFull => cleanRequest = true");
+            stopFull(true);
             return true;
         }
         return super.dispatchKeyEvent(event);
