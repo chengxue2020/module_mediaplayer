@@ -94,7 +94,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    MediaLogUtil.log("ComponentSeek => onStartTrackingTouch => mControllerWrapper = " + mControllerWrapper);
+                    //  MediaLogUtil.log("ComponentSeek => onStartTrackingTouch => mControllerWrapper = " + mControllerWrapper);
 //        // sb开始拖动
 //        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
 //        if (null != sb) {
@@ -113,7 +113,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    MediaLogUtil.log("ComponentSeek => onStopTrackingTouch => mControllerWrapper = " + mControllerWrapper);
+                    //   MediaLogUtil.log("ComponentSeek => onStopTrackingTouch => mControllerWrapper = " + mControllerWrapper);
 //        // sb结束拖动
 //        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
 //        if (null != sb) {
@@ -131,7 +131,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    MediaLogUtil.log("ComponentSeek => onProgressChanged => progress = " + progress + ", fromUser = " + fromUser + ", mControllerWrapper = " + mControllerWrapper);
+                    //  MediaLogUtil.log("ComponentSeek => onProgressChanged => progress = " + progress + ", fromUser = " + fromUser + ", mControllerWrapper = " + mControllerWrapper);
                     onSeekChanged(progress, fromUser);
                 }
             });
@@ -190,14 +190,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onPlayStateChanged(int playState) {
+        boolean isFull = mControllerWrapper.isFull();
+        if (!isFull)
+            return;
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_STOP:
                 MediaLogUtil.log("ComponentSeek[show] => playState = " + playState);
+                refreshTimestamp(false);
                 bringToFront();
                 setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
                 MediaLogUtil.log("ComponentSeek[gone] => playState = " + playState);
+                refreshTimestamp(true);
                 setVisibility(View.GONE);
                 break;
         }
@@ -205,17 +210,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onWindowStateChanged(int windowState) {
-//        switch (windowState) {
-//            case PlayerType.WindowType.FULL:
-//                MediaLogUtil.log("ComponentSeek[show] => onWindowStateChanged => windowState = " + windowState);
-//                bringToFront();
-//                setVisibility(View.VISIBLE);
-//                break;
-//            default:
-//                MediaLogUtil.log("ComponentSeek[gone] => onWindowStateChanged => windowState = " + windowState);
-//                setVisibility(View.GONE);
-//                break;
-//        }
+        switch (windowState) {
+            case PlayerType.WindowType.FULL:
+                MediaLogUtil.log("ComponentSeek[show] => onWindowStateChanged => windowState = " + windowState);
+                refreshTimestamp(false);
+                bringToFront();
+                setVisibility(View.VISIBLE);
+                break;
+            default:
+                MediaLogUtil.log("ComponentSeek[gone] => onWindowStateChanged => windowState = " + windowState);
+                refreshTimestamp(true);
+                setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override
@@ -223,6 +230,22 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         onVisibilityChanged(!isLocked, null);
     }
 
+    private void refreshTimestamp(boolean clean) {
+        TextView textView = findViewById(R.id.module_mediaplayer_component_seek_timestamp);
+        long millis = System.currentTimeMillis();
+        textView.setText(clean ? "" : String.valueOf(millis));
+    }
+
+    private long getTimestamp() {
+        try {
+            TextView textView = findViewById(R.id.module_mediaplayer_component_seek_timestamp);
+            CharSequence text = textView.getText();
+            return Long.parseLong(String.valueOf(text));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
     /****************************************/
 
@@ -363,13 +386,23 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     private void onSeekChanged(int progress, boolean fromUser) {
-        if (!fromUser)
-            return;
-        if (null == mControllerWrapper)
-            return;
-        long max = mControllerWrapper.getMax();
-        boolean looping = mControllerWrapper.isLooping();
-        mControllerWrapper.seekTo(true, progress, max, looping);
+
+        if (fromUser) {
+            refreshTimestamp(false);
+            if (null != mControllerWrapper) {
+                long max = mControllerWrapper.getMax();
+                boolean looping = mControllerWrapper.isLooping();
+                mControllerWrapper.seekTo(true, progress, max, looping);
+            }
+        } else {
+            long timestamp = getTimestamp();
+            long millis = System.currentTimeMillis();
+            MediaLogUtil.log("ComponentSeek => onSeekChanged => timestamp = " + timestamp + ", millis = " + millis);
+            if (millis - timestamp > 10000) {
+                refreshTimestamp(true);
+                setVisibility(View.GONE);
+            }
+        }
     }
 
     private void refreshSeek(int progress, int max) {

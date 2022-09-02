@@ -204,8 +204,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url);
         try {
 
+            // step0
+            callWindowState(PlayerType.WindowType.NORMAL);
+            callPlayerState(PlayerType.StateType.STATE_INIT);
+
             // step1
-            callState(PlayerType.StateType.STATE_LOADING_START);
+            callPlayerState(PlayerType.StateType.STATE_LOADING_START);
 
             // step2
             String temp = getUrl();
@@ -223,7 +227,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // step4
             boolean showNetWarning = showNetWarning();
             if (showNetWarning) {
-                callState(PlayerType.StateType.STATE_START_ABORT);
+                callPlayerState(PlayerType.StateType.STATE_START_ABORT);
             }
 
             // step4
@@ -252,23 +256,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                         // 网络拉流开始
                         case PlayerType.EventType.EVENT_OPEN_INPUT:
                             // step1
-                            callState(PlayerType.StateType.STATE_START);
+                            callPlayerState(PlayerType.StateType.STATE_START);
                             // step2
                             goneReal();
                             break;
                         // 初始化开始 => loading start
                         case PlayerType.EventType.EVENT_LOADING_START:
-                            callState(PlayerType.StateType.STATE_LOADING_START);
+                            callPlayerState(PlayerType.StateType.STATE_LOADING_START);
                             break;
                         // 初始化完成 => loading stop
                         case PlayerType.EventType.EVENT_LOADING_STOP:
-                            callState(PlayerType.StateType.STATE_LOADING_STOP);
+                            callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
                             break;
                         // 播放开始-快进
                         case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
 
                             // step1
-                            callState(PlayerType.StateType.STATE_LOADING_STOP);
+                            callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
                             // step2
                             showReal();
                             // step3
@@ -289,7 +293,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
 
-                            callState(PlayerType.StateType.STATE_START);
+                            callPlayerState(PlayerType.StateType.STATE_START);
 
                             // step1
                             showReal();
@@ -332,7 +336,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             if (looping) {
 
                                 // step1
-                                callState(PlayerType.StateType.STATE_LOADING_START);
+                                callPlayerState(PlayerType.StateType.STATE_LOADING_START);
                                 goneReal();
 
                                 // step2
@@ -361,7 +365,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             boolean connected = PlayerUtils.isConnected(getContext());
                             setKeepScreenOn(false);
-                            callState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
+                            callPlayerState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
 
                             // 埋点
                             if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
@@ -424,7 +428,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
         // 用户手动，需要显示暂停图标
         else {
-            callState(PlayerType.StateType.STATE_PAUSE);
+            callPlayerState(PlayerType.StateType.STATE_PAUSE);
         }
         setKeepScreenOn(false);
         mKernel.pause();
@@ -435,7 +439,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         boolean playing = isPlaying();
         if (!playing)
             return;
-        callState(PlayerType.StateType.STATE_CLOSE);
+        callPlayerState(PlayerType.StateType.STATE_CLOSE);
         setKeepScreenOn(false);
         mKernel.stop();
     }
@@ -446,7 +450,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MediaLogUtil.log("onEvent => resume => url = " + url + ", mHanlder = " + mHandler + ", mKernel = " + mKernel);
         if (null == url || url.length() <= 0)
             return;
-        callState(PlayerType.StateType.STATE_RESUME);
+        callPlayerState(PlayerType.StateType.STATE_RESUME);
         setKeepScreenOn(true);
         mKernel.start();
     }
@@ -461,7 +465,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         long max = getMax();
         boolean looping = isLooping();
         MediaLogUtil.log("onEvent => repeat => seek = " + seek + ", max = " + max + ", loop = " + looping);
-        callState(PlayerType.StateType.STATE_REPEAT);
+        callPlayerState(PlayerType.StateType.STATE_REPEAT);
         seekTo(true, seek, max, looping);
     }
 
@@ -643,7 +647,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return;
 
         // step1
-        callState(PlayerType.StateType.STATE_LOADING_START);
+        callPlayerState(PlayerType.StateType.STATE_LOADING_START);
         // step2
         clearLoop();
         // step3
@@ -816,29 +820,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     /**
-     * 向Controller设置播放器状态，包含全屏状态和非全屏状态
-     * 播放模式
-     * 普通模式，小窗口模式，正常模式三种其中一种
-     * MODE_NORMAL              普通模式
-     * MODE_FULL_SCREEN         全屏模式
-     * MODE_TINY_WINDOW         小屏模式
-     */
-    protected void setWindowState(@PlayerType.WindowType.Value int windowState) {
-
-        ControllerLayout layout = getControlLayout();
-        if (null != layout) {
-            layout.setWindowState(windowState);
-        }
-        if (mOnStateChangeListeners != null) {
-            for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
-                if (l != null) {
-                    l.onWindow(windowState);
-                }
-            }
-        }
-    }
-
-    /**
      * 添加一个播放状态监听器，播放状态发生变化时将会调用。
      */
     public void addOnChangeListener(@NonNull OnChangeListener listener) {
@@ -901,7 +882,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         layout.setLayoutParams(params);
         viewGroup.addView(layout);
         layout.setMediaPlayer(this);
-        callState(PlayerType.StateType.STATE_INIT);
     }
 
     public void clearControllerLayout() {
@@ -1074,19 +1054,34 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public void playEnd() {
         goneReal();
         setKeepScreenOn(false);
-        callState(PlayerType.StateType.STATE_END);
+        callPlayerState(PlayerType.StateType.STATE_END);
     }
 
     @Override
-    public void callState(int state) {
+    public void callPlayerState(int playerState) {
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
-            layout.setPlayState(state);
+            layout.setPlayState(playerState);
         }
         if (mOnStateChangeListeners != null) {
             for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
                 if (l != null) {
-                    l.onChange(state);
+                    l.onChange(playerState);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void callWindowState(int windowState) {
+        ControllerLayout layout = getControlLayout();
+        if (null != layout) {
+            layout.setWindowState(windowState);
+        }
+        if (mOnStateChangeListeners != null) {
+            for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
+                if (l != null) {
+                    l.onWindow(windowState);
                 }
             }
         }
@@ -1141,7 +1136,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //                }
 //            });
             // 4
-            setWindowState(PlayerType.WindowType.FULL);
+            callWindowState(PlayerType.WindowType.FULL);
             // 5
             if (null != mOnFullChangeListener) {
                 mOnFullChangeListener.onFull();
@@ -1177,7 +1172,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             removeAllViews();
             addView(real, 0);
             // 4
-            setWindowState(PlayerType.WindowType.NORMAL);
+            callWindowState(PlayerType.WindowType.NORMAL);
             // 5
             if (null != mOnFullChangeListener) {
                 mOnFullChangeListener.onNormal();
@@ -1197,7 +1192,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 Activity activity = ActivityUtils.getActivity(getContext());
                 View decorView = activity.getWindow().getDecorView();
                 View v = decorView.findViewById(R.id.module_mediaplayer_root);
-                return null != v;
+                if (null != v) {
+                    ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
+                    return !(layoutParams.width == ViewGroup.LayoutParams.MATCH_PARENT && layoutParams.height == ViewGroup.LayoutParams.MATCH_PARENT);
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
@@ -1240,7 +1240,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             int index = decorView.getChildCount();
             decorView.addView(real, index);
             // 5
-            setWindowState(PlayerType.WindowType.FLOAT);
+            callWindowState(PlayerType.WindowType.FLOAT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1272,7 +1272,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             removeAllViews();
             addView(real, 0);
             // 4
-            setWindowState(PlayerType.WindowType.NORMAL);
+            callWindowState(PlayerType.WindowType.NORMAL);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1347,52 +1347,72 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        // seekForward
-        if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            int count = event.getRepeatCount();
-            MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count);
-            if (count > 0) {
-                clearLoop();
-                seekForward(false);
+
+        boolean isFull = isFull();
+        boolean isFloat = isFloat();
+        if (isFloat) {
+            // stopFloat
+            if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                MediaLogUtil.log("dispatchKeyEvent => stopFloat =>");
+                stopFloat();
             }
             return true;
-        }
-        // seekForward
-        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            int count = event.getRepeatCount();
-            MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count);
-            startLoop();
-            seekForward(true);
-            return true;
-        }
-        // seekRewind
-        else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            int count = event.getRepeatCount();
-            MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count);
-            if (count > 0) {
-                clearLoop();
-                seekRewind(false);
+        } else if (isFull) {
+            // seekForward
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                int count = event.getRepeatCount();
+                MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count);
+                if (count > 0) {
+                    boolean playing = isPlaying();
+                    if (playing) {
+                        pause(true);
+                    }
+                    clearLoop();
+                    seekForward(false);
+                } else {
+                    callWindowState(PlayerType.WindowType.FULL);
+                }
             }
-            return true;
-        }
-        // seekRewind
-        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            int count = event.getRepeatCount();
-            MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count);
-            startLoop();
-            seekRewind(true);
-            return true;
-        }
-        // stopFloat
-        else if (isFloat() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            MediaLogUtil.log("dispatchKeyEvent => stopFloat =>");
-            stopFloat();
-            return true;
-        }
-        // stopFull
-        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            MediaLogUtil.log("decodeKeyEvent => stopFull =>");
-            stopFull();
+            // seekForward
+            else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                int count = event.getRepeatCount();
+                MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count);
+                boolean playing = isPlaying();
+                if (!playing) {
+                    startLoop();
+                    seekForward(true);
+                }
+            }
+            // seekRewind
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                int count = event.getRepeatCount();
+                MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count);
+                if (count > 0) {
+                    boolean playing = isPlaying();
+                    if (playing) {
+                        pause(true);
+                    }
+                    clearLoop();
+                    seekRewind(false);
+                } else {
+                    callWindowState(PlayerType.WindowType.FULL);
+                }
+            }
+            // seekRewind
+            else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                int count = event.getRepeatCount();
+                MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count);
+                boolean playing = isPlaying();
+                if (!playing) {
+                    startLoop();
+                    seekRewind(true);
+                }
+            }
+            // stopFull
+            else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                MediaLogUtil.log("decodeKeyEvent => stopFull =>");
+                stopFull();
+            }
             return true;
         }
         return false;

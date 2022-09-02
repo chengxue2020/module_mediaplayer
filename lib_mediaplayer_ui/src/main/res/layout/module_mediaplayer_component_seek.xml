@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000"
-    android:visibility="gone">
+    android:background="#00000000">
 
     <!--    &lt;!&ndash; 标题 &ndash;&gt;-->
     <!--    <TextView-->
@@ -60,7 +59,7 @@
             android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
             android:thumb="@drawable/module_mediaplayer_shape_seek_thumb" />
 
-        <!-- 时长 -->
+        <!-- 进度 -->
         <TextView
             android:id="@+id/module_mediaplayer_component_seek_position"
             android:layout_width="wrap_content"
@@ -85,6 +84,17 @@
             android:text="-"
             android:textColor="#ffffff"
             android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/module_mediaplayer_component_seek_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/module_mediaplayer_component_seek_sb"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"
+            android:gravity="center_vertical|left"
+            android:textColor="#00000000"
+            android:textSize="1sp" />
 
     </RelativeLayout>
 

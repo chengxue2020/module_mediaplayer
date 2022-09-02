@@ -268,8 +268,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void callState(int state) {
-        mPlayer.callState(state);
+    public void callPlayerState(int playerState) {
+        mPlayer.callPlayerState(playerState);
+    }
+
+    @Override
+    public void callWindowState(int windowState) {
+        mPlayer.callWindowState(windowState);
     }
 
 //    /**
