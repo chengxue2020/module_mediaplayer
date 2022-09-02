@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.view;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.KeyEvent;
 import android.view.View;
 
 import androidx.annotation.BoolRes;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * revise: 播放器基础属性获取和设置属性接口
@@ -133,31 +135,15 @@ public interface PlayerApi {
 
     boolean isFull();
 
-    default void startFull() {
-        startFull(false);
-    }
+    void startFull();
 
-    default void stopFull() {
-        stopFull(false);
-    }
-
-    void startFull(@NonNull boolean requestFocus);
-
-    void stopFull(@NonNull boolean cleanFocus);
+    void stopFull();
 
     boolean isFloat();
 
-    default void startFloat() {
-        startFloat(false);
-    }
+    void startFloat();
 
-    default void stopFloat() {
-        stopFloat(false);
-    }
-
-    void startFloat(@NonNull boolean requestFocus);
-
-    void stopFloat(@NonNull boolean cleanFocus);
+    void stopFloat();
 
     boolean isMute();
 

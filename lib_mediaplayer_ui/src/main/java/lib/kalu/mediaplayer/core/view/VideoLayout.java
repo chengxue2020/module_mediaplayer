@@ -135,7 +135,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     private void init(AttributeSet attrs) {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_player, this, true);
-
         setClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
@@ -1108,7 +1107,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void startFull(@NonNull boolean requestFocus) {
+    public void startFull() {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
         if (null == activity)
@@ -1131,10 +1130,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             int index = decorView.getChildCount();
             decorView.addView(real, index);
             // 3
-            if (requestFocus) {
-                setFocusable(true);
-                requestFocus();
-            }
+//            View v = decorView.findViewById(R.id.module_mediaplayer_root);
+//            v.setFocusable(true);
+//            v.requestFocus();
+//            v.setOnKeyListener(new OnKeyListener() {
+//                @Override
+//                public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                    decodeKeyEvent(event);
+//                    return true;
+//                }
+//            });
             // 4
             setWindowState(PlayerType.WindowType.FULL);
             // 5
@@ -1143,15 +1148,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (requestFocus) {
-                setFocusable(false);
-                clearFocus();
-            }
         }
     }
 
     @Override
-    public void stopFull(@NonNull boolean cleanFocus) {
+    public void stopFull() {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
         if (null == activity)
@@ -1164,17 +1165,17 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             // 1
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+//            View v = decorView.findViewById(R.id.module_mediaplayer_root);
+//            v.clearFocus();
+//            v.setFocusable(false);
+//            v.setOnKeyListener(null);
+            // 2
             int index = decorView.getChildCount();
             View real = decorView.getChildAt(index - 1);
             decorView.removeView(real);
             // 2
             removeAllViews();
             addView(real, 0);
-            // 3
-            if (cleanFocus) {
-                setFocusable(false);
-                clearFocus();
-            }
             // 4
             setWindowState(PlayerType.WindowType.NORMAL);
             // 5
@@ -1183,10 +1184,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (cleanFocus) {
-                setFocusable(false);
-                clearFocus();
-            }
         }
     }
 
@@ -1211,7 +1208,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void startFloat(@NonNull boolean requestFocus) {
+    public void startFloat() {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
         if (null == activity)
@@ -1226,6 +1223,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return;
 
         try {
+            // 0
+            setFocusable(true);
             // 1
             ViewGroup real = (ViewGroup) getChildAt(0);
             removeAllViews();
@@ -1242,24 +1241,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             int index = decorView.getChildCount();
             decorView.addView(real, index);
-            // 4
-            if (requestFocus) {
-                setFocusable(true);
-                requestFocus();
-            }
             // 5
             setWindowState(PlayerType.WindowType.FLOAT);
         } catch (Exception e) {
             e.printStackTrace();
-            if (requestFocus) {
-                clearFocus();
-                setFocusable(false);
-            }
         }
     }
 
     @Override
-    public void stopFloat(@NonNull boolean cleanFocus) {
+    public void stopFloat() {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
         if (null == activity)
@@ -1270,6 +1260,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return;
 
         try {
+            // 0
+            setFocusable(false);
             // 1
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             int index = decorView.getChildCount();
@@ -1283,19 +1275,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // 2
             removeAllViews();
             addView(real, 0);
-            // 3
-            if (cleanFocus) {
-                clearFocus();
-                setFocusable(false);
-            }
             // 4
             setWindowState(PlayerType.WindowType.NORMAL);
         } catch (Exception e) {
             e.printStackTrace();
-            if (cleanFocus) {
-                clearFocus();
-                setFocusable(false);
-            }
         }
     }
 
@@ -1368,9 +1351,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-
         // seekForward
-        if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+        if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             int count = event.getRepeatCount();
             MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count);
             if (count > 0) {
@@ -1380,7 +1362,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return true;
         }
         // seekForward
-        else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             int count = event.getRepeatCount();
             MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count);
             startLoop();
@@ -1388,7 +1370,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return true;
         }
         // seekRewind
-        else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+        else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             int count = event.getRepeatCount();
             MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count);
             if (count > 0) {
@@ -1398,7 +1380,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return true;
         }
         // seekRewind
-        else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             int count = event.getRepeatCount();
             MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count);
             startLoop();
@@ -1406,17 +1388,17 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return true;
         }
         // stopFloat
-        else if (isFocusable() && isFloat() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            MediaLogUtil.log("dispatchKeyEvent => stopFloat => cleanRequest = true");
-            stopFloat(true);
+        else if (isFloat() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            MediaLogUtil.log("dispatchKeyEvent => stopFloat =>");
+            stopFloat();
             return true;
         }
         // stopFull
-        else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            MediaLogUtil.log("dispatchKeyEvent => stopFull => cleanRequest = true");
-            stopFull(true);
+        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            MediaLogUtil.log("decodeKeyEvent => stopFull =>");
+            stopFull();
             return true;
         }
-        return super.dispatchKeyEvent(event);
+        return false;
     }
 }
