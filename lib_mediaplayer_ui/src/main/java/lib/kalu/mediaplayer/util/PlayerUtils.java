@@ -544,7 +544,7 @@ public final class PlayerUtils {
             case PlayerType.WindowType.FULL:
                 playerStateString = "full screen";
                 break;
-            case PlayerType.WindowType.TINY:
+            case PlayerType.WindowType.FLOAT:
                 playerStateString = "tiny screen";
                 break;
         }

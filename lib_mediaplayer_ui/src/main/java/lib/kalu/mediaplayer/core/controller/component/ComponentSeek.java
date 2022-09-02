@@ -60,33 +60,33 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         }
 
         // step3
-        View play = findViewById(R.id.module_mediaplayer_component_seek_play);
-        if (null != play) {
-            play.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != mControllerWrapper) {
-                        boolean playing = mControllerWrapper.isPlaying();
-                        if (playing) {
-                            mControllerWrapper.pause();
-                        } else {
-                            mControllerWrapper.resume();
-                        }
-                    }
-                }
-            });
-        }
+//        View play = findViewById(R.id.module_mediaplayer_component_seek_play);
+//        if (null != play) {
+//            play.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (null != mControllerWrapper) {
+//                        boolean playing = mControllerWrapper.isPlaying();
+//                        if (playing) {
+//                            mControllerWrapper.pause();
+//                        } else {
+//                            mControllerWrapper.resume();
+//                        }
+//                    }
+//                }
+//            });
+//        }
 
         // step4
-        View back = findViewById(R.id.module_mediaplayer_component_seek_back);
-        if (null != back) {
-            back.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "back", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+//        View back = findViewById(R.id.module_mediaplayer_component_seek_back);
+//        if (null != back) {
+//            back.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(getContext(), "back", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
 
         // step5
         SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
@@ -201,82 +201,20 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 setVisibility(View.GONE);
                 break;
         }
-
-//        View viewPlayer = findViewById(R.id.module_mediaplayer_controller_bottom_play);
-//        View viewRoot = findViewById(R.id.module_mediaplayer_controller_bottom_root);
-//        ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
-//        switch (playState) {
-//            case PlayerType.StateType.STATE_INIT:
-//            case PlayerType.StateType.STATE_BUFFERING_START:
-//                setVisibility(GONE);
-//                progressBar.setProgress(0);
-//                progressBar.setSecondaryProgress(0);
-//                SeekBar seekBar = findViewById(R.id.module_mediaplayer_controller_bottom_seek);
-//                seekBar.setProgress(0);
-//                seekBar.setSecondaryProgress(0);
-//                break;
-//            case PlayerType.StateType.STATE_START_ABORT:
-//            case PlayerType.StateType.STATE_LOADING_START:
-//            case PlayerType.StateType.STATE_LOADING_STOP:
-//            case PlayerType.StateType.STATE_ERROR:
-//            case PlayerType.StateType.STATE_ONCE_LIVE:
-//                setVisibility(GONE);
-//                break;
-//            case PlayerType.StateType.STATE_START:
-//                viewPlayer.setSelected(true);
-//                if (mIsShowBottomProgress) {
-//                    if (mControllerWrapper.isShowing()) {
-//                        progressBar.setVisibility(GONE);
-//                        viewRoot.setVisibility(VISIBLE);
-//                    } else {
-//                        viewRoot.setVisibility(GONE);
-//                        progressBar.setVisibility(VISIBLE);
-//                    }
-//                } else {
-//                    viewRoot.setVisibility(GONE);
-//                }
-//                setVisibility(VISIBLE);
-//                //开始刷新进度
-//                mControllerWrapper.startProgress();
-//                break;
-//            case PlayerType.StateType.STATE_PAUSE:
-//                viewPlayer.setSelected(false);
-//                break;
-//            case PlayerType.StateType.STATE_BUFFERING_STOP:
-//            case PlayerType.StateType.STATE_END:
-//                viewPlayer.setSelected(mControllerWrapper.isPlaying());
-//                break;
-//    }
     }
 
     @Override
-    public void onWindowStateChanged(int playerState) {
-//        View viewFull = findViewById(R.id.module_mediaplayer_controller_bottom_full);
-//        View viewRoot = findViewById(R.id.module_mediaplayer_controller_bottom_root);
-//        ProgressBar progressBar = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
-//        switch (playerState) {
-//            case PlayerType.WindowType.NORMAL:
-//                viewFull.setSelected(false);
-//                break;
+    public void onWindowStateChanged(int windowState) {
+//        switch (windowState) {
 //            case PlayerType.WindowType.FULL:
-//                viewFull.setSelected(true);
+//                MediaLogUtil.log("ComponentSeek[show] => onWindowStateChanged => windowState = " + windowState);
+//                bringToFront();
+//                setVisibility(View.VISIBLE);
 //                break;
-//        }
-//
-//        Activity activity = PlayerUtils.scanForActivity(getContext());
-//        if (activity != null && mControllerWrapper.hasCutout()) {
-//            int orientation = activity.getRequestedOrientation();
-//            int cutoutHeight = mControllerWrapper.getCutoutHeight();
-//            if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-//                viewRoot.setPadding(0, 0, 0, 0);
-//                progressBar.setPadding(0, 0, 0, 0);
-//            } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-//                viewRoot.setPadding(cutoutHeight, 0, 0, 0);
-//                progressBar.setPadding(cutoutHeight, 0, 0, 0);
-//            } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-//                viewRoot.setPadding(0, 0, cutoutHeight, 0);
-//                progressBar.setPadding(0, 0, cutoutHeight, 0);
-//            }
+//            default:
+//                MediaLogUtil.log("ComponentSeek[gone] => onWindowStateChanged => windowState = " + windowState);
+//                setVisibility(View.GONE);
+//                break;
 //        }
     }
 

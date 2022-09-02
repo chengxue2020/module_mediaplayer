@@ -673,7 +673,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
                     StatesCutoutUtils.adaptCutoutAboveAndroidP(getContext(), true);
                 }
                 break;
-            case PlayerType.WindowType.TINY:
+            case PlayerType.WindowType.FLOAT:
                 //小窗口取消重力感应监听
                 mOrientationHelper.disable();
                 break;

@@ -36,13 +36,13 @@ public @interface PlayerType {
         int NORMAL = 1001;
         //全屏模式
         int FULL = 1002;
-        //小屏模式
-        int TINY = 1003;
+        //窗口模式
+        int FLOAT = 1003;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({NORMAL, FULL, TINY})
+        @IntDef({NORMAL, FULL, FLOAT})
         @Keep
         @interface Value {
         }

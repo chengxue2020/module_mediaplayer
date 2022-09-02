@@ -5,36 +5,27 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.google.android.exoplayer2.util.Log;
-
-import org.checkerframework.checker.units.qual.A;
-
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
@@ -69,11 +60,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      * assets文件
      */
     protected AssetFileDescriptor mAssetFileDescriptor;
-    /**
-     * 播放模式，普通模式，小窗口模式，正常模式等等
-     * 存在局限性：比如小窗口下的正在播放模式，那么mCurrentMode就是STATE_PLAYING，而不是MODE_TINY_WINDOW并存
-     **/
-    protected int mCurrentPlayerState = PlayerType.WindowType.NORMAL;
 
     /**
      * OnStateChangeListener集合，保存了所有开发者设置的监听器
@@ -146,7 +132,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     private void init(AttributeSet attrs) {
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_root, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_player, this, true);
 
         setClickable(true);
         setFocusable(true);
@@ -695,13 +681,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     /**
-     * 获取当前播放器的状态
-     */
-    public int getWindowState() {
-        return mCurrentPlayerState;
-    }
-
-    /**
      * 获取缓冲速度
      */
     @Override
@@ -844,7 +823,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      * MODE_TINY_WINDOW         小屏模式
      */
     protected void setWindowState(@PlayerType.WindowType.Value int windowState) {
-        mCurrentPlayerState = windowState;
 
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
@@ -1152,11 +1130,18 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             int index = decorView.getChildCount();
             decorView.addView(real, index);
             // 3
+            setFocusable(true);
+            requestFocus();
+            // 4
+            setWindowState(PlayerType.WindowType.FULL);
+            // 5
             if (null != mOnFullChangeListener) {
                 mOnFullChangeListener.onFull();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            setFocusable(false);
+            clearFocus();
         }
     }
 
@@ -1182,11 +1167,18 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             removeAllViews();
             addView(real, 0);
             // 3
+            setFocusable(false);
+            clearFocus();
+            // 4
+            setWindowState(PlayerType.WindowType.NORMAL);
+            // 5
             if (null != mOnFullChangeListener) {
                 mOnFullChangeListener.onNormal();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            setFocusable(false);
+            clearFocus();
         }
     }
 
@@ -1194,48 +1186,85 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public boolean isFloat() {
-        return false;
+        try {
+            View v = findViewById(R.id.module_mediaplayer_root);
+            ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
+            return layoutParams.width != ViewGroup.LayoutParams.MATCH_PARENT && layoutParams.height != ViewGroup.LayoutParams.MATCH_PARENT;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public void startFloat() {
-//        if (mIsTinyScreen) {
-//            return;
-//        }
-//        ViewGroup contentView = VideoHelper.instance().getContentView(getContext().getApplicationContext(), mControlLayout);
-//        if (contentView == null) {
-//            return;
-//        }
-//        this.removeView(mVideoContainer);
-//        int width = mTinyScreenSize[0];
-//        if (width <= 0) {
-//            width = PlayerUtils.getScreenWidth(getContext(), false) / 2;
-//        }
-//        int height = mTinyScreenSize[1];
-//        if (height <= 0) {
-//            height = width * 9 / 16;
-//        }
-//        LayoutParams params = new LayoutParams(width, height);
-//        params.gravity = Gravity.BOTTOM | Gravity.END;
-//        contentView.addView(mVideoContainer, params);
-//        mIsTinyScreen = true;
-//        setWindowState(PlayerType.WindowType.TINY);
+        Context context = getContext();
+        Activity activity = ActivityUtils.getActivity(context);
+        if (null == activity)
+            return;
+
+        int count = getChildCount();
+        if (count <= 0)
+            return;
+
+        boolean playing = isPlaying();
+        if (!playing)
+            return;
+
+        try {
+            // 1
+            ViewGroup real = (ViewGroup) getChildAt(0);
+            removeAllViews();
+            // 2
+            ViewGroup root = real.findViewById(R.id.module_mediaplayer_root);
+            int width = getResources().getDimensionPixelOffset(R.dimen.module_mediaplayer_dimen_float_width);
+            int height = width * 9 / 16;
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+            layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            root.setBackgroundColor(Color.BLACK);
+            root.setLayoutParams(layoutParams);
+            // 3
+            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            int index = decorView.getChildCount();
+            decorView.addView(real, index);
+            // 3
+            setWindowState(PlayerType.WindowType.FLOAT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void stopFloat() {
-//        if (!mIsTinyScreen) {
-//            return;
-//        }
-//        ViewGroup contentView = VideoHelper.instance().getContentView(getContext().getApplicationContext(), mControlLayout);
-//        if (contentView == null) {
-//            return;
-//        }
-//        contentView.removeView(mVideoContainer);
-//        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        this.addView(mVideoContainer, params);
-//        mIsTinyScreen = false;
-//        setWindowState(PlayerType.WindowType.NORMAL);
+        Context context = getContext();
+        Activity activity = ActivityUtils.getActivity(context);
+        if (null == activity)
+            return;
+
+        int count = getChildCount();
+        if (count > 0)
+            return;
+
+        try {
+            // 1
+            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            int index = decorView.getChildCount();
+            View real = decorView.getChildAt(index - 1);
+            decorView.removeView(real);
+            // 2
+            ViewGroup root = real.findViewById(R.id.module_mediaplayer_root);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            root.setBackground(null);
+            root.setLayoutParams(layoutParams);
+            // 2
+            removeAllViews();
+            addView(real, 0);
+            // 4
+            setWindowState(PlayerType.WindowType.NORMAL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Handler mHandler = new Handler(this);
@@ -1309,7 +1338,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public boolean dispatchKeyEvent(KeyEvent event) {
 
         // seekForward
-        if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+        if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             int count = event.getRepeatCount();
             MediaLogUtil.log("seekForward[false] => count = " + count);
             if (count > 0) {
@@ -1319,7 +1348,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return true;
         }
         // seekForward
-        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+        else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             int count = event.getRepeatCount();
             MediaLogUtil.log("seekForward[true] => count = " + count);
             startLoop();
@@ -1327,7 +1356,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return true;
         }
         // seekRewind
-        else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+        else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             int count = event.getRepeatCount();
             MediaLogUtil.log("seekRewind[false] => count = " + count);
             if (count > 0) {
@@ -1337,15 +1366,20 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return true;
         }
         // seekRewind
-        else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+        else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             int count = event.getRepeatCount();
             MediaLogUtil.log("seekRewind[true] => count = " + count);
             startLoop();
             seekRewind(true);
             return true;
         }
+        // stopFloat
+        else if (isFocusable() && isFloat() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            stopFloat();
+            return true;
+        }
         // stopFull
-        else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+        else if (isFocusable() && isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             stopFull();
             return true;
         }

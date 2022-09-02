@@ -110,7 +110,7 @@ public final class TestActivity extends AppCompatActivity {
                     case PlayerType.WindowType.FULL:
                         //全屏模式
                         break;
-                    case PlayerType.WindowType.TINY:
+                    case PlayerType.WindowType.FLOAT:
                         //小屏模式
                         break;
                 }
