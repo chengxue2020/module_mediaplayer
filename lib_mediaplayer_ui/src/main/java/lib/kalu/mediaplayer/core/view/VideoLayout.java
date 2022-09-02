@@ -1195,10 +1195,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public boolean isFloat() {
         try {
+            int count = getChildCount();
             Activity activity = ActivityUtils.getActivity(getContext());
             View decorView = activity.getWindow().getDecorView();
             View v = decorView.findViewById(R.id.module_mediaplayer_root);
-            return null != v;
+            return count <= 0 && null != v;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
