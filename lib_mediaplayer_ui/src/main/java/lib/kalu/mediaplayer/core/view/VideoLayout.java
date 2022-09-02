@@ -1232,10 +1232,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             int index = decorView.getChildCount();
             decorView.addView(real, index);
-            // 3
+            // 4
+            setFocusable(true);
+            requestFocus();
+            // 5
             setWindowState(PlayerType.WindowType.FLOAT);
         } catch (Exception e) {
             e.printStackTrace();
+            clearFocus();
+            setFocusable(false);
         }
     }
 
@@ -1243,12 +1248,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public void stopFloat() {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
-        Log.e("UIUIIUUIU", "stopFloat => activity = " + activity);
         if (null == activity)
             return;
 
         int count = getChildCount();
-        Log.e("UIUIIUUIU", "stopFloat => count = " + count);
         if (count > 0)
             return;
 
@@ -1266,12 +1269,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // 2
             removeAllViews();
             addView(real, 0);
+            // 3
+            clearFocus();
+            setFocusable(false);
             // 4
             setWindowState(PlayerType.WindowType.NORMAL);
-            Log.e("UIUIIUUIU", "stopFloat => succ");
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("UIUIIUUIU", "stopFloat => fail");
+            clearFocus();
+            setFocusable(false);
         }
     }
 
