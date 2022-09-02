@@ -22,6 +22,11 @@ lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full
 #
 #### 更新
 ```
+2022-09-02
+1.新增：全屏播放
+2.新增：小窗播放
+```
+```
 2022-08-05
 1.新增：针对RecyclerView自动回收销毁机制, 增加autoRelease方法
 ```
