@@ -1223,8 +1223,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return;
 
         try {
-            // 0
-            setFocusable(true);
             // 1
             ViewGroup real = (ViewGroup) getChildAt(0);
             removeAllViews();
@@ -1260,8 +1258,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return;
 
         try {
-            // 0
-            setFocusable(false);
             // 1
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             int index = decorView.getChildCount();
