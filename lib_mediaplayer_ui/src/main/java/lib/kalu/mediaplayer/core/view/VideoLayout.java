@@ -11,11 +11,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -1150,6 +1152,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
+        Log.e("UIUIIUUIU", "stopFull => activity = " + activity);
         if (null == activity)
             return;
 
@@ -1187,9 +1190,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public boolean isFloat() {
         try {
-            View v = findViewById(R.id.module_mediaplayer_root);
-            ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
-            return layoutParams.width != ViewGroup.LayoutParams.MATCH_PARENT && layoutParams.height != ViewGroup.LayoutParams.MATCH_PARENT;
+            Activity activity = ActivityUtils.getActivity(getContext());
+            View decorView = activity.getWindow().getDecorView();
+            View v = decorView.findViewById(R.id.module_mediaplayer_root);
+            return null != v;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -1239,10 +1243,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public void stopFloat() {
         Context context = getContext();
         Activity activity = ActivityUtils.getActivity(context);
+        Log.e("UIUIIUUIU", "stopFloat => activity = " + activity);
         if (null == activity)
             return;
 
         int count = getChildCount();
+        Log.e("UIUIIUUIU", "stopFloat => count = " + count);
         if (count > 0)
             return;
 
@@ -1262,8 +1268,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             addView(real, 0);
             // 4
             setWindowState(PlayerType.WindowType.NORMAL);
+            Log.e("UIUIIUUIU", "stopFloat => succ");
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("UIUIIUUIU", "stopFloat => fail");
         }
     }
 

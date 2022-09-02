@@ -31,6 +31,14 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
+        // main_full
+        findViewById(R.id.main_full).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FullActivity.class);
+                startActivity(intent);
+            }
+        });
         // main_toggle
         findViewById(R.id.main_toggle).setOnClickListener(new View.OnClickListener() {
             @Override

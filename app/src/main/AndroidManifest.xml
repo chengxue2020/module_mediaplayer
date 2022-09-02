@@ -23,7 +23,11 @@
             android:name=".TestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
-            android:process=":demo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".FullActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
             android:screenOrientation="landscape" />
         <activity
             android:name=".MainActivity"
