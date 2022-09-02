@@ -152,7 +152,7 @@ public interface PlayerApi {
     }
 
     default void stopFloat() {
-        startFloat(false);
+        stopFloat(false);
     }
 
     void startFloat(@NonNull boolean requestFocus);
