@@ -32,6 +32,8 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.exo.ExoMediaPlayer;
+import lib.kalu.mediaplayer.core.kernel.ijk.IjkMediaPlayer;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
@@ -212,9 +214,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             callPlayerState(PlayerType.StateType.STATE_LOADING_START);
 
             // step2
-            String temp = getUrl();
-            if (null != temp && temp.length() > 0) {
-                release();
+            // exo
+            if (null != mKernel && mKernel instanceof ExoMediaPlayer) {
+
+            }
+            // ijk
+            else if(null != mKernel && mKernel instanceof IjkMediaPlayer) {
+                String temp = getUrl();
+                if (null != temp && temp.length() > 0) {
+                    release();
+                }
             }
 
             // step3

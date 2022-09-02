@@ -323,6 +323,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void setSurface(@NonNull Surface surface) {
+//        MediaLogUtil.log("setSurface => surface = " + surface + ", mExoPlayer = " + mExoPlayer);
         if (null != surface && null != mExoPlayer) {
             try {
                 mExoPlayer.setVideoSurface(surface);
