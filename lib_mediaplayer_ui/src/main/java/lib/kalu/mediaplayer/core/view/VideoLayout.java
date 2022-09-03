@@ -28,7 +28,6 @@ import java.util.List;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
-import lib.kalu.mediaplayer.config.buried.BuriedEvent;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
@@ -100,9 +99,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        boolean autoRelease = isAutoRelease();
-        MediaLogUtil.log("onLife => onDetachedFromWindow => autoRelease = " + autoRelease + ", this = " + this);
-        release(!autoRelease);
+        boolean release = isRelease();
+        MediaLogUtil.log("onLife => onDetachedFromWindow => release = " + release + ", this = " + this);
+        release(!release);
     }
 
     @Override
@@ -234,7 +233,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
             // step3
             if (null == mKernel) {
-                create();
+                create(builder);
             } else {
                 pause(true);
             }
@@ -254,7 +253,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void create() {
+    public void create(@NonNull BundleBuilder builder) {
 
         // step1
         release(true);
@@ -354,7 +353,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                                 // step3
                                 long seek = getSeek();
                                 long max = getMax();
-                                seekTo(true, seek, max, true);
+                                seekTo(true, builder);
                             }
                             // sample
                             else {
@@ -466,12 +465,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MediaLogUtil.log("onEvent => repeat => url = " + url);
         if (null == url || url.length() <= 0)
             return;
-        long seek = getSeek();
-        long max = getMax();
-        boolean looping = isLooping();
-        MediaLogUtil.log("onEvent => repeat => seek = " + seek + ", max = " + max + ", loop = " + looping);
         callPlayerState(PlayerType.StateType.STATE_REPEAT);
-        seekTo(true, seek, max, looping);
+        seekTo(true);
     }
 
     @Override
@@ -517,7 +512,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public boolean isAutoRelease() {
+    public boolean isRelease() {
         try {
             return mKernel.isAutoRelease();
         } catch (Exception e) {
@@ -637,7 +632,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+    public void seekTo(@NonNull boolean force, @NonNull BundleBuilder builder) {
+
+        long seek = builder.getSeek();
+        long max = builder.getMax();
+        boolean loop = builder.isLoop();
+        boolean live = builder.isLive() || isLive();
 
         if (seek < 0)
             return;
@@ -657,7 +657,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         clearLoop();
         // step3
         if (force) {
-            boolean live = isLive();
             mKernel.update(seek, max, loop, live);
             pause(true);
         }
@@ -1301,7 +1300,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public boolean handleMessage(@NonNull Message msg) {
 //        MediaLogUtil.log("onEvent => onMessage => what = " + msg.what);
         if (null != msg && msg.what == 0x92001) {
-            long seek = getSeek();
             long max = getMax();
             boolean looping = isLooping();
             long start = (long) msg.obj;
@@ -1321,7 +1319,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     pause(true);
 
                     // step3
-                    seekTo(true, seek, max, true);
+                    seekTo(true);
                 }
                 // stop
                 else {

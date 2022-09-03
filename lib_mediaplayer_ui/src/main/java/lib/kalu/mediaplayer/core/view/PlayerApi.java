@@ -31,9 +31,35 @@ public interface PlayerApi {
         start(build, url);
     }
 
+    default void startLive(@NonNull String url) {
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        builder.setLive(true);
+        builder.setLoop(false);
+        BundleBuilder build = builder.build();
+        start(build, url);
+    }
+
+    default void startLoop(@NonNull String url) {
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        builder.setLive(false);
+        builder.setLoop(true);
+        BundleBuilder build = builder.build();
+        start(build, url);
+    }
+
+    default void startLoop( @NonNull long seek, @NonNull long max, @NonNull String url) {
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        builder.setLive(false);
+        builder.setLoop(true);
+        builder.setSeek(seek);
+        builder.setMax(max);
+        BundleBuilder build = builder.build();
+        start(build, url);
+    }
+
     void start(@NonNull BundleBuilder builder, @NonNull String url);
 
-    void create();
+    void create(@NonNull BundleBuilder builder);
 
     default void pause() {
         pause(false);
@@ -55,7 +81,7 @@ public interface PlayerApi {
 
     boolean isLooping();
 
-    boolean isAutoRelease();
+    boolean isRelease();
 
     long getSeek();
 
@@ -79,22 +105,50 @@ public interface PlayerApi {
 
     void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek);
 
-    /**
-     * 获取当前缓冲百分比
-     *
-     * @return 百分比
-     */
     int getBufferedPercentage();
 
+    default void seekTo(@NonNull boolean force) {
+        boolean live = isLive();
+        boolean looping = isLooping();
+        long max = getMax();
+        long seek = getSeek();
+        boolean release = isRelease();
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        builder.setMax(max);
+        builder.setSeek(seek);
+        builder.setLoop(looping);
+        builder.setLive(live);
+        builder.setRelease(release);
+        BundleBuilder build = builder.build();
+        seekTo(force, build);
+    }
+
     default void seekTo(@NonNull long seek) {
-        seekTo(false, seek, 0, false);
+        seekTo(false, seek, getMax(), isLooping());
+    }
+
+    default void seekTo(@NonNull long seek, @NonNull long max) {
+        seekTo(false, seek, max, isLooping());
     }
 
     default void seekTo(@NonNull boolean force, @NonNull long seek) {
-        seekTo(force, seek, 0, false);
+        seekTo(force, seek, getMax(), isLooping());
     }
 
-    void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop);
+    default void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+        boolean live = isLive();
+        boolean release = isRelease();
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        builder.setMax(max);
+        builder.setSeek(seek);
+        builder.setLoop(loop);
+        builder.setLive(live);
+        builder.setRelease(release);
+        BundleBuilder build = builder.build();
+        seekTo(force, build);
+    }
+
+    void seekTo(@NonNull boolean force, @NonNull BundleBuilder builder);
 
     boolean seekForward(@NonNull boolean callback);
 

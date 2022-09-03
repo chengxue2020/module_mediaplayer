@@ -34,8 +34,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void create() {
-        mPlayer.create();
+    public void create(@NonNull BundleBuilder builder) {
+        mPlayer.create(builder);
     }
 
     @Override
@@ -79,8 +79,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public boolean isAutoRelease() {
-        return mPlayer.isAutoRelease();
+    public boolean isRelease() {
+        return mPlayer.isRelease();
     }
 
     @Override
@@ -169,8 +169,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
-        mPlayer.seekTo(force, seek, max, loop);
+    public void seekTo(@NonNull boolean force, @NonNull BundleBuilder builder) {
+        mPlayer.seekTo(force, builder);
     }
 
     @Override

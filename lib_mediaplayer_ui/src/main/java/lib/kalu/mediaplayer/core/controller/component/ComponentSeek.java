@@ -399,9 +399,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         if (fromUser) {
             refreshTimestamp(false);
             if (null != mControllerWrapper) {
-                long max = mControllerWrapper.getMax();
-                boolean looping = mControllerWrapper.isLooping();
-                mControllerWrapper.seekTo(true, progress, max, looping);
+                mControllerWrapper.seekTo(true, progress);
             }
         } else {
             long timestamp = getTimestamp();
