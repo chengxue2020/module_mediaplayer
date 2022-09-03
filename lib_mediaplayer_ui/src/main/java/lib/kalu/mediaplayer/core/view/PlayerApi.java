@@ -1,10 +1,7 @@
 package lib.kalu.mediaplayer.core.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.KeyEvent;
-import android.view.View;
 
 import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
@@ -18,50 +15,23 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Map;
 
+import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
  * revise: 播放器基础属性获取和设置属性接口
  */
 public interface PlayerApi {
 
-    default void saveBundle(@NonNull Context context, @NonNull String url, @NonNull long position, @NonNull long duration) {
-
-        if (null == url || url.length() <= 0)
-            return;
-        try {
-            JSONObject object = new JSONObject();
-            object.putOpt("url", url);
-            object.putOpt("position", position);
-            object.putOpt("duration", duration);
-            String s = object.toString();
-            setCache(context, "save_bundle", s);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     default void start(@NonNull String url) {
-        start(0, 0, false, true, false, url);
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        BundleBuilder build = builder.build();
+        start(build, url);
     }
 
-    default void start(@NonNull boolean live, @NonNull String url) {
-        start(0, 0, false, live, false, url);
-    }
-
-    default void start(@NonNull long seek, @NonNull String url) {
-        start(seek, 0, false, true, false, url);
-    }
-
-    default void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
-        start(seek, max, loop, true, false, url);
-    }
-
-    void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url);
+    void start(@NonNull BundleBuilder builder, @NonNull String url);
 
     void create();
 
@@ -279,5 +249,23 @@ public interface PlayerApi {
 
         String value = content.toString();
         return value;
+    }
+
+    /************/
+
+    default void saveBundle(@NonNull Context context, @NonNull String url, @NonNull long position, @NonNull long duration) {
+
+        if (null == url || url.length() <= 0)
+            return;
+        try {
+            JSONObject object = new JSONObject();
+            object.putOpt("url", url);
+            object.putOpt("position", position);
+            object.putOpt("duration", duration);
+            String s = object.toString();
+            setCache(context, "save_bundle", s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

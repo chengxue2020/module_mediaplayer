@@ -102,8 +102,8 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         } catch (Exception e) {
         }
         mOrientationHelper = new OrientationHelper(getContext().getApplicationContext());
-        mEnableOrientation = PlayerConfigManager.getInstance().getConfig().mEnableOrientation;
-        mAdaptCutout = PlayerConfigManager.getInstance().getConfig().mAdaptCutout;
+        mEnableOrientation = PlayerConfigManager.getInstance().getConfig().isCheckOrientation();
+        mAdaptCutout = PlayerConfigManager.getInstance().getConfig().isFitMobileCutout();
         mActivity = PlayerUtils.scanForActivity(getContext());
     }
 

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 
+import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.core.controller.ControllerApi;
 import lib.kalu.mediaplayer.core.view.PlayerApi;
 
@@ -28,8 +29,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url) {
-        mPlayer.start(seek, max, loop, live, autoRelease, url);
+    public void start(@NonNull BundleBuilder builder, @NonNull String url) {
+        mPlayer.start(builder, url);
     }
 
     @Override

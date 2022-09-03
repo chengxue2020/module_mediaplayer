@@ -1,0 +1,224 @@
+package lib.kalu.mediaplayer.config.builder;
+
+import androidx.annotation.Keep;
+
+import lib.kalu.mediaplayer.config.buried.BuriedEvent;
+import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.keycode.KeycodeApi;
+import lib.kalu.mediaplayer.keycode.KeycodeTV;
+
+/**
+ * @description: 播放器全局配置
+ * @date: 2021-05-12 14:43
+ */
+@Keep
+public final class PlayerBuilder implements BuriedEvent {
+
+    private boolean enable; // 是否生效
+    private boolean log;// 日志log
+    @PlayerType.KernelType.Value
+    private int kernel; // 播放器内核
+    @PlayerType.RenderType.Value
+    private int render; // 渲染类型
+    @PlayerType.ScaleType
+    private int scaleType; // 视频缩放比例
+    private boolean checkMobileNetwork; // 监测手机网络环境
+    private boolean fitMobileCutout; // 是否适配手机刘海屏，默认适配
+    private boolean checkOrientation;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
+    private BuriedEvent buriedEvent;  // 埋点事件log
+    private KeycodeApi keycodeApi; // 遥控code
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public boolean isLog() {
+        return log;
+    }
+
+    public int getKernel() {
+        return kernel;
+    }
+
+    public int getRender() {
+        return render;
+    }
+
+    public int getScaleType() {
+        return scaleType;
+    }
+
+    public boolean isCheckMobileNetwork() {
+        return checkMobileNetwork;
+    }
+
+    public boolean isFitMobileCutout() {
+        return fitMobileCutout;
+    }
+
+    public boolean isCheckOrientation() {
+        return checkOrientation;
+    }
+
+    public BuriedEvent getBuriedEvent() {
+        return buriedEvent;
+    }
+
+    public KeycodeApi getKeycodeApi() {
+        return keycodeApi;
+    }
+
+    /****************/
+
+    private PlayerBuilder(Builder builder) {
+        enable = builder.enable;
+        log = builder.log;
+        kernel = builder.kernel;
+        render = builder.render;
+        scaleType = builder.scaleType;
+        checkMobileNetwork = builder.checkMobileNetwork;
+        fitMobileCutout = builder.fitMobileCutout;
+        checkOrientation = builder.checkOrientation;
+        buriedEvent = builder.buriedEvent;
+        keycodeApi = builder.keycodeApi;
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    @Override
+    public void playerIn(String url) {
+        if (null != buriedEvent) {
+            buriedEvent.playerIn(url);
+        }
+    }
+
+    @Override
+    public void playerDestroy(String url) {
+        if (null != buriedEvent) {
+            buriedEvent.playerDestroy(url);
+        }
+    }
+
+    @Override
+    public void playerCompletion(String url) {
+        if (null != buriedEvent) {
+            buriedEvent.playerCompletion(url);
+        }
+    }
+
+    @Override
+    public void onError(String url, boolean isNetError) {
+        if (null != buriedEvent) {
+            buriedEvent.onError(url, isNetError);
+        }
+    }
+
+    @Override
+    public void clickAd(String url) {
+        if (null != buriedEvent) {
+            buriedEvent.clickAd(url);
+        }
+    }
+
+    @Override
+    public void playerAndProved(String url) {
+        if (null != buriedEvent) {
+            buriedEvent.playerAndProved(url);
+        }
+    }
+
+    @Override
+    public void playerOutProgress(String url, float progress) {
+        if (null != buriedEvent) {
+            buriedEvent.playerOutProgress(url, progress);
+        }
+    }
+
+    @Override
+    public void playerOutProgress(String url, long duration, long currentPosition) {
+        if (null != buriedEvent) {
+            buriedEvent.playerOutProgress(url, duration, currentPosition);
+        }
+    }
+
+    @Override
+    public void videoToMusic(String url) {
+        if (null != buriedEvent) {
+            buriedEvent.videoToMusic(url);
+        }
+    }
+
+    @Keep
+    public final static class Builder {
+
+        private boolean enable = false; // 是否生效
+        private boolean log = false;// 日志log
+        @PlayerType.KernelType.Value
+        private int kernel = PlayerType.KernelType.ANDROID; // 播放器内核
+        @PlayerType.RenderType.Value
+        private int render = PlayerType.RenderType.TEXTURE_VIEW; // 渲染类型
+        @PlayerType.ScaleType
+        private int scaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT; // 视频缩放比例
+        private boolean checkMobileNetwork = false; // 监测手机网络环境
+        private boolean fitMobileCutout = true; // 是否适配手机刘海屏，默认适配
+        private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
+        private BuriedEvent buriedEvent = null;  // 埋点事件log
+        private KeycodeApi keycodeApi = null; // 遥控code
+
+        public Builder setEnable(boolean v) {
+            enable = v;
+            return this;
+        }
+
+        public Builder setLog(boolean v) {
+            log = v;
+            return this;
+        }
+
+        public Builder setKernel(@PlayerType.KernelType.Value int v) {
+            kernel = v;
+            return this;
+        }
+
+        public Builder setRender(@PlayerType.RenderType.Value int v) {
+            render = v;
+            return this;
+        }
+
+        public Builder setScaleType(@PlayerType.ScaleType.Value int v) {
+            scaleType = v;
+            return this;
+        }
+
+        public Builder setCheckMobileNetwork(boolean v) {
+            checkMobileNetwork = v;
+            return this;
+        }
+
+        public Builder setFitMobileCutout(boolean v) {
+            fitMobileCutout = v;
+            return this;
+        }
+
+        public Builder setCheckOrientation(boolean v) {
+            checkOrientation = v;
+            return this;
+        }
+
+        public Builder setBuriedEvent(BuriedEvent buriedEvent) {
+            this.buriedEvent = buriedEvent;
+            return this;
+        }
+
+        public Builder setKeycodeApi(KeycodeApi keycodeApi) {
+            this.keycodeApi = keycodeApi;
+            return this;
+        }
+
+        public PlayerBuilder build() {
+            return new PlayerBuilder(this);
+        }
+    }
+}

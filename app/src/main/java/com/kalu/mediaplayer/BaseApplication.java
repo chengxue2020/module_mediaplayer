@@ -1,8 +1,6 @@
 package com.kalu.mediaplayer;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 
@@ -12,14 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import lib.kalu.mediaplayer.config.cache.CacheConfig;
+import lib.kalu.mediaplayer.config.builder.CacheBuilder;
 import lib.kalu.mediaplayer.config.cache.CacheConfigManager;
 import lib.kalu.mediaplayer.config.cache.CacheType;
-import lib.kalu.mediaplayer.config.player.PlayerConfig;
+import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.keycode.KeycodeSimulator;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public class BaseApplication extends MultiDexApplication {
 
@@ -28,24 +25,23 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
 
         // config
-        PlayerConfig build = PlayerConfig.newBuilder()
-                //设置视频全局埋点事件
-                .setBuriedPointEvent(new BuriedPointEventImpl())
-                //调试的时候请打开日志，方便排错
-                .setLogEnabled(true)
+        PlayerBuilder build = PlayerBuilder.newBuilder()
+                .setEnable(true)
+                .setLog(true)
                 .setKernel(PlayerType.KernelType.EXO)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
-                .setKeycode(new KeycodeSimulator())
+                .setKeycodeApi(new KeycodeSimulator())
+                .setBuriedEvent(new BuriedPointEventImpl())
                 .build();
         PlayerConfigManager.getInstance().setConfig(build);
 
         // cache
-        CacheConfig config = new CacheConfig.Build()
-                .setIsEffective(true)
-                .setCacheType(CacheType.DEFAULT)
-                .setCacheMaxMB(1024)
-                .setCacheDir("temp")
+        CacheBuilder config = new CacheBuilder.Build()
+                .setEnable(true)
                 .setLog(true)
+                .setType(CacheType.DEFAULT)
+                .setMax(1024)
+                .setDir("temp")
                 .build();
         CacheConfigManager.getInstance().setConfig(getApplicationContext(), config);
     }

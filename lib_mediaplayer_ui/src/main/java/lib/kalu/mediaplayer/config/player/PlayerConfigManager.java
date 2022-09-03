@@ -6,7 +6,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
-
+import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
@@ -37,11 +37,11 @@ public class PlayerConfigManager {
     /**
      * VideoViewConfig实例
      */
-    private PlayerConfig mPlayerConfig;
+    private PlayerBuilder mPlayerConfig;
 
     private PlayerConfigManager() {
-        mPlayerConfig = PlayerConfig.newBuilder().build();
-        mPlayOnMobileNetwork = mPlayerConfig.mPlayOnMobileNetwork;
+        mPlayerConfig = PlayerBuilder.newBuilder().build();
+        mPlayOnMobileNetwork = mPlayerConfig.isCheckMobileNetwork();
     }
 
     private static class Holder {
@@ -52,7 +52,7 @@ public class PlayerConfigManager {
         return PlayerConfigManager.Holder.INSTANCE;
     }
 
-    public final void setConfig(@NonNull PlayerConfig config) {
+    public final void setConfig(@NonNull PlayerBuilder config) {
         this.mPlayerConfig = config;
     }
 
@@ -80,7 +80,7 @@ public class PlayerConfigManager {
     /**
      * 获取VideoViewConfig
      */
-    public final PlayerConfig getConfig() {
+    public final PlayerBuilder getConfig() {
 //        setConfig(null);
         return mPlayerConfig;
     }

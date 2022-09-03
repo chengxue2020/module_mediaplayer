@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.config.builder.CacheBuilder;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 /**
@@ -17,7 +18,7 @@ public class CacheConfigManager {
     /**
      * 配置类
      */
-    private CacheConfig cacheConfig = null;
+    private CacheBuilder cacheConfig = null;
 
     private static class Holder {
         private static final CacheConfigManager INSTANCE = new CacheConfigManager();
@@ -27,14 +28,14 @@ public class CacheConfigManager {
         return Holder.INSTANCE;
     }
 
-    public void setConfig(@NonNull Context context, @NonNull CacheConfig config) {
+    public void setConfig(@NonNull Context context, @NonNull CacheBuilder config) {
         this.cacheConfig = config;
         MediaLogUtil.setIsLog(cacheConfig.isLog());
         MediaLogUtil.log("CacheConfigManager-----init初始化-");
     }
 
     public @NonNull
-    CacheConfig getCacheConfig() {
+    CacheBuilder getCacheConfig() {
         return cacheConfig;
     }
 }

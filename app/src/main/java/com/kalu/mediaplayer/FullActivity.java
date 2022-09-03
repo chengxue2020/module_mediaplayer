@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
@@ -47,7 +48,11 @@ public class FullActivity extends AppCompatActivity {
 
         VideoLayout videoView = findViewById(R.id.full_video);
         videoView.setControllerLayout(controller);
-        videoView.start(booleanExtra, extra);
+
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        builder.setLive(booleanExtra);
+        BundleBuilder build = builder.build();
+        videoView.start(build, extra);
     }
 
     @Override

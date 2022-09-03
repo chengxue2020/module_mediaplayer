@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.exoplayer2.util.Log;
 
+import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
@@ -197,7 +198,13 @@ public final class TestActivity extends AppCompatActivity {
         long max = getIntent().getLongExtra(INTENT_MAX, 0);
         boolean loop = getIntent().getBooleanExtra(INTENT_LOOP, false);
         MediaLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", url = " + url);
-        videoLayout.start(seek, max, loop, url);
+
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        builder.setSeek(seek);
+        builder.setMax(max);
+        builder.setLoop(loop);
+        BundleBuilder build = builder.build();
+        videoLayout.start(build, url);
     }
 
     @Override

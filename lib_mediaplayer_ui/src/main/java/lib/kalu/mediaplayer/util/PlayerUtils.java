@@ -24,9 +24,6 @@ import android.widget.FrameLayout;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ContextThemeWrapper;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -37,7 +34,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-import lib.kalu.mediaplayer.config.player.PlayerConfig;
+import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 
@@ -474,7 +471,7 @@ public final class PlayerUtils {
      * 获取当前的播放核心
      */
     public static Object getCurrentPlayerFactory() {
-        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
+        PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
         Object playerFactory = null;
         try {
             Field mPlayerFactoryField = config.getClass().getDeclaredField("mPlayerFactory");

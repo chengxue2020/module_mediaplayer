@@ -11,13 +11,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -28,24 +26,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.config.builder.BundleBuilder;
+import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
+import lib.kalu.mediaplayer.config.buried.BuriedEvent;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
-import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.exo.ExoMediaPlayer;
 import lib.kalu.mediaplayer.core.kernel.ijk.IjkMediaPlayer;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
-import lib.kalu.mediaplayer.config.player.PlayerConfig;
-import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.listener.OnFullChangeListener;
 import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.BaseToast;
-import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.PlayerUtils;
 
 /**
  * @description: 播放器具体实现类
@@ -144,10 +144,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         BaseToast.init(getContext().getApplicationContext());
 
         // 全局配置
-        PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
-        mCurrentScreenScaleType = config.mScreenScaleType;
+        PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
+        mCurrentScreenScaleType = config.getScaleType();
         //设置是否打印日志
-        MediaLogUtil.setIsLog(config.mIsEnableLog);
+        MediaLogUtil.setIsLog(config.isLog());
 
         //读取xml中的配置，并综合全局配置
         try {
@@ -202,8 +202,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url) {
-        MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", autoRelease = " + autoRelease + ", url = " + url);
+    public void start(@NonNull BundleBuilder builder, @NonNull String url) {
+
+        long seek = builder.getSeek();
+        long max = builder.getMax();
+        boolean loop = builder.isLoop();
+        boolean live = builder.isLive();
+        boolean release = builder.isRelease();
+        MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", release = " + release + ", url = " + url);
         try {
 
             // step0
@@ -240,7 +246,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
 
             // step4
-            mKernel.create(getContext(), seek, max, loop, live, autoRelease, url);
+            mKernel.create(getContext(), seek, max, loop, live, release, url);
             setKeepScreenOn(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -255,7 +261,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
         // step2
         if (null == mKernel) {
-            mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().mKernel, new KernelEvent() {
+            mKernel = KernelFactoryManager.getKernel(getContext(), PlayerConfigManager.getInstance().getConfig().getKernel(), new KernelEvent() {
                 @Override
                 public void onEvent(int kernel, int event) {
 
@@ -321,11 +327,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                                 toggleMusicDefault(true);
                             }
 
-                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                                //相当于进入了视频页面
-                                String url = getUrl();
-                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerIn(url);
-                            }
+                            // 埋点
+                            PlayerConfigManager.getInstance().getConfig().playerIn(getUrl());
 
                             break;
                         // 播放结束
@@ -335,10 +338,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             clearLoop();
 
                             // 埋点
-                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                                String url = getUrl();
-                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.playerCompletion(url);
-                            }
+                            PlayerConfigManager.getInstance().getConfig().playerCompletion(getUrl());
 
                             boolean looping = isLooping();
                             // loop
@@ -377,11 +377,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             callPlayerState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
 
                             // 埋点
-                            if (PlayerConfigManager.getInstance().getConfig() != null && PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent != null) {
-                                String url = getUrl();
-                                PlayerConfigManager.getInstance().getConfig().mBuriedPointEvent.onError(url, connected);
-                            }
-
+                            PlayerConfigManager.getInstance().getConfig().onError(getUrl(), connected);
                             break;
                     }
                 }
@@ -404,7 +400,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
         // step3
         if (null == mRender) {
-            mRender = RenderFactoryManager.getRender(getContext(), PlayerConfigManager.getInstance().getConfig().mRender);
+            mRender = RenderFactoryManager.getRender(getContext(), PlayerConfigManager.getInstance().getConfig().getRender());
             mRender.setKernel(mKernel);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             mRender.getReal().setLayoutParams(params);
