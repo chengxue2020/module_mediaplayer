@@ -71,25 +71,33 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
             case PlayerType.StateType.STATE_PAUSE:
                 MediaLogUtil.log("ComponentPause[show] => playState = " + playState);
                 bringToFront();
-                setVisibility(View.VISIBLE);
+                show();
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_REPEAT:
                 MediaLogUtil.log("ComponentPause[show] => playState = " + playState);
-                setVisibility(View.GONE);
+                gone();
                 break;
         }
     }
 
     @Override
     public void onWindowStateChanged(int playerState) {
-
     }
 
     @Override
     public void onLockStateChanged(boolean isLocked) {
+    }
 
+    @Override
+    public void gone() {
+        findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void show() {
+        findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
     }
 
     public final void setPauseImageResource(@DrawableRes int res) {

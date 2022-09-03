@@ -135,6 +135,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     private void init(AttributeSet attrs) {
+        setBackgroundColor(Color.parseColor("#000000"));
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_player, this, true);
         setClickable(true);
         setFocusable(true);
@@ -1373,8 +1374,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
             return true;
         } else if (isFull) {
+            // toogle
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                MediaLogUtil.log("dispatchKeyEvent => toggle =>");
+                toggle();
+            }
             // seekForward
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 int count = event.getRepeatCount();
                 boolean isLive = isLive();
                 MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count + ", isLive = " + isLive);
