@@ -2,8 +2,6 @@ package lib.kalu.mediaplayer.core.controller.component;
 
 import android.content.Context;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -60,79 +57,36 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         }
 
         // step3
-//        View play = findViewById(R.id.module_mediaplayer_component_seek_play);
-//        if (null != play) {
-//            play.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (null != mControllerWrapper) {
-//                        boolean playing = mControllerWrapper.isPlaying();
-//                        if (playing) {
-//                            mControllerWrapper.pause();
-//                        } else {
-//                            mControllerWrapper.resume();
-//                        }
-//                    }
-//                }
-//            });
-//        }
-
-        // step4
-//        View back = findViewById(R.id.module_mediaplayer_component_seek_back);
-//        if (null != back) {
-//            back.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(getContext(), "back", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-
-        // step5
         SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
         if (null != sb) {
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    //  MediaLogUtil.log("ComponentSeek => onStartTrackingTouch => mControllerWrapper = " + mControllerWrapper);
-//        // sb开始拖动
-//        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
-//        if (null != sb) {
-//            sb.setTag(1);
-//        }
-//        // pb
-//        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
-//        if (null != pb) {
-//            pb.setTag(1);
-//        }
-                    if (null != mControllerWrapper) {
-                        mControllerWrapper.pause();
-                    }
-                    mControllerWrapper.stopFadeOut();
+//                    if (null != mControllerWrapper) {
+//                        mControllerWrapper.pause();
+//                    }
+//                    mControllerWrapper.stopFadeOut();
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    //   MediaLogUtil.log("ComponentSeek => onStopTrackingTouch => mControllerWrapper = " + mControllerWrapper);
-//        // sb结束拖动
-//        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
-//        if (null != sb) {
-//            sb.setTag(null);
-//        }
-//        // pb
-//        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
-//        if (null != pb) {
-//            pb.setTag(null);
-//        }
-                    if (null != mControllerWrapper) {
-                        mControllerWrapper.resume();
-                    }
+//                    if (null != mControllerWrapper) {
+//                        mControllerWrapper.resume();
+//                    }
                 }
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    //  MediaLogUtil.log("ComponentSeek => onProgressChanged => progress = " + progress + ", fromUser = " + fromUser + ", mControllerWrapper = " + mControllerWrapper);
-                    onSeekChanged(progress, fromUser);
+                    if (fromUser) {
+                        seekPlayer(progress);
+                    } else {
+                        refreshPB(progress, 0);
+                        long timestamp = getTimestamp();
+                        long millis = System.currentTimeMillis();
+                        if (millis - timestamp > 10000) {
+                            gone();
+                        }
+                    }
                 }
             });
         }
@@ -140,16 +94,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 //        viewFull.setOnClickListener(this);
 //        View viewPlayer = findViewById(R.id.module_mediaplayer_controller_bottom_play);
 //        viewPlayer.setOnClickListener(this);
-    }
-
-    /**
-     * 是否显示底部进度条，默认显示
-     */
-    public void showBottomProgress(boolean show) {
-        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
-        if (null == pb)
-            return;
-        pb.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -164,28 +108,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onVisibilityChanged(boolean isVisible, Animation anim) {
-//        View view = findViewById(R.id.module_mediaplayer_controller_bottom_progress);
-//        View viewRoot = findViewById(R.id.module_mediaplayer_controller_bottom_root);
-//        if (isVisible) {
-//            viewRoot.setVisibility(VISIBLE);
-//            if (anim != null) {
-//                viewRoot.startAnimation(anim);
-//            }
-//            if (mIsShowBottomProgress) {
-//                view.setVisibility(GONE);
-//            }
-//        } else {
-//            viewRoot.setVisibility(GONE);
-//            if (anim != null) {
-//                viewRoot.startAnimation(anim);
-//            }
-//            if (mIsShowBottomProgress) {
-//                view.setVisibility(VISIBLE);
-//                AlphaAnimation animation = new AlphaAnimation(0f, 1f);
-//                animation.setDuration(300);
-//                view.startAnimation(animation);
-//            }
-//        }
     }
 
     @Override
@@ -194,17 +116,17 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         boolean isFull = mControllerWrapper.isFull();
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_STOP:
-                MediaLogUtil.log("ComponentSeek[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
+                MediaLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
                 if (!isLive && isFull) {
                     refreshTimestamp(false);
                     bringToFront();
-                    setVisibility(View.VISIBLE);
+                    show();
                 }
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
-                MediaLogUtil.log("ComponentSeek[gone] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
+                MediaLogUtil.log("ComponentSeek22[gone] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
                 refreshTimestamp(true);
-                setVisibility(View.GONE);
+                gone();
                 break;
         }
     }
@@ -215,19 +137,39 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         boolean isFull = mControllerWrapper.isFull();
         switch (windowState) {
             case PlayerType.WindowType.FULL:
-                MediaLogUtil.log("ComponentSeek[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
+                MediaLogUtil.log("ComponentSeek22[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
                 if (!isLive && isFull) {
                     refreshTimestamp(false);
                     bringToFront();
-                    setVisibility(View.VISIBLE);
+                    show();
                 }
                 break;
             default:
-                MediaLogUtil.log("ComponentSeek[gone] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
+                MediaLogUtil.log("ComponentSeek22[gone] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
                 refreshTimestamp(true);
-                setVisibility(View.GONE);
+                gone();
                 break;
         }
+    }
+
+    @Override
+    public void show() {
+        MediaLogUtil.log("ComponentSeek88 => show =>");
+        findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.GONE);
+        findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
+        findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.VISIBLE);
+        findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.VISIBLE);
+        findViewById(R.id.module_mediaplayer_component_seek_max).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void gone() {
+        MediaLogUtil.log("ComponentSeek88 => gone =>");
+        findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.VISIBLE);
+        findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
+        findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.GONE);
+        findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.GONE);
+        findViewById(R.id.module_mediaplayer_component_seek_max).setVisibility(View.GONE);
     }
 
     @Override
@@ -261,61 +203,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         if (position <= 0 && duration <= 0)
             return;
 
-        int visibility = getVisibility();
-        if (visibility != View.VISIBLE)
-            return;
-
-        // pb
-        ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
-        if (null != pb && pb.getVisibility() == View.VISIBLE) {
-            refreshProgress((int) position, (int) duration);
-        }
-
         // sb
-        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null != sb && sb.getVisibility() == View.VISIBLE) {
-            refreshSeek((int) position, (int) duration);
-        }
-
-        // time
-        TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
-        TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
-        // 1
-        // ms => s
-        long c = position / 1000;
-        long c1 = c / 60;
-        long c2 = c % 60;
-        StringBuilder builder1 = new StringBuilder();
-        if (c1 < 10) {
-            builder1.append("0");
-        }
-        builder1.append(c1);
-        builder1.append(":");
-        if (c2 < 10) {
-            builder1.append("0");
-        }
-        builder1.append(c2);
-        String s1 = builder1.toString();
-        viewPosition.setText(s1);
-
-        // 2
-        // ms => s
-        StringBuilder builder2 = new StringBuilder();
-        long d = duration / 1000;
-        long d1 = d / 60;
-        long d2 = d % 60;
-        if (d1 < 10) {
-            builder2.append("0");
-        }
-        builder2.append(d1);
-        builder2.append(":");
-        if (d2 < 10) {
-            builder2.append("0");
-        }
-        builder2.append(d2);
-        String s2 = builder2.toString();
-        viewMax.setText(s2);
-        MediaLogUtil.log("ComponentSeek => seekProgress => s1 = " + s1 + ", s2 = " + s2);
+        refreshSB((int) position, (int) duration);
+        // pb
+        refreshPB((int) position, (int) duration);
+        // text
+        refreshText(position, duration);
     }
 
     @Override
@@ -330,9 +223,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 if (next > max) {
                     next = max;
                 }
-                refreshSeek(next, 0);
+                refreshSB(next, 0);
                 if (callback) {
-                    onSeekChanged(progress, true);
+                    seekPlayer(progress);
                 }
                 return true;
             }
@@ -352,9 +245,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 if (next < 0) {
                     next = 0;
                 }
-                refreshSeek(next, 0);
+                refreshSB(next, 0);
                 if (callback) {
-                    onSeekChanged(progress, true);
+                    seekPlayer(progress);
                 }
                 return true;
             }
@@ -362,59 +255,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         return false;
     }
 
-    /****************************************/
-
-//    private final Handler mHandler = new Handler(this);
-
-//    @Override
-//    public boolean handleMessage(@NonNull Message msg) {
-//        if (msg.what == 0x123456) {
-//            setVisibility(View.GONE);
-//        }
-//        return false;
-//    }
-
-    private boolean isOK = true;
-
-    @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-    }
-
-    private void autoGone() {
-//        mHandler.removeCallbacksAndMessages(null);
-//        mHandler.sendEmptyMessageDelayed(0x123456, 10000);
-//        postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (isOK) {
-//                    setVisibility(View.GONE);
-//                }
-//            }
-//        }, 10000);
-    }
-
-    private void onSeekChanged(int progress, boolean fromUser) {
-
-        if (fromUser) {
-            refreshTimestamp(false);
-            if (null != mControllerWrapper) {
-                mControllerWrapper.seekTo(true, progress);
-            }
-        } else {
-            long timestamp = getTimestamp();
-            long millis = System.currentTimeMillis();
-            MediaLogUtil.log("ComponentSeek => onSeekChanged => timestamp = " + timestamp + ", millis = " + millis);
-            if (millis - timestamp > 10000) {
-                refreshTimestamp(true);
-                setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private void refreshSeek(int progress, int max) {
+    private void refreshSB(int progress, int max) {
         SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
         if (null == sb)
+            return;
+        int visibility = sb.getVisibility();
+        if (visibility != View.VISIBLE)
             return;
         sb.setProgress(progress);
         sb.setSecondaryProgress(progress);
@@ -423,7 +269,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         }
     }
 
-    private void refreshProgress(int progress, int max) {
+    private void refreshPB(int progress, int max) {
         ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
         if (null == pb)
             return;
@@ -431,6 +277,55 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         pb.setSecondaryProgress(progress);
         if (max > 0) {
             pb.setMax(max);
+        }
+    }
+
+    private void refreshText(long position, long duration) {
+
+        // ms => s
+        long c = position / 1000;
+        long c1 = c / 60;
+        long c2 = c % 60;
+        StringBuilder builderPosition = new StringBuilder();
+        if (c1 < 10) {
+            builderPosition.append("0");
+        }
+        builderPosition.append(c1);
+        builderPosition.append(":");
+        if (c2 < 10) {
+            builderPosition.append("0");
+        }
+        builderPosition.append(c2);
+        String strPosition = builderPosition.toString();
+
+        // ms => s
+        StringBuilder builderDuration = new StringBuilder();
+        long d = duration / 1000;
+        long d1 = d / 60;
+        long d2 = d % 60;
+        if (d1 < 10) {
+            builderDuration.append("0");
+        }
+        builderDuration.append(d1);
+        builderDuration.append(":");
+        if (d2 < 10) {
+            builderDuration.append("0");
+        }
+        builderDuration.append(d2);
+        String strDuration = builderDuration.toString();
+
+        MediaLogUtil.log("ComponentSeek => refreshText => position = " + position + ", strPosition = " + strPosition + ", duration = " + duration + ", strDuration = " + strDuration);
+
+        TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
+        viewMax.setText(strDuration);
+        TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
+        viewPosition.setText(strPosition);
+    }
+
+    private void seekPlayer(long progress) {
+        refreshTimestamp(false);
+        if (null != mControllerWrapper) {
+            mControllerWrapper.seekTo(true, progress);
         }
     }
 }

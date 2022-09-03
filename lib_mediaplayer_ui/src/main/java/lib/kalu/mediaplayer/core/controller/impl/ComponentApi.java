@@ -185,6 +185,14 @@ public interface ComponentApi {
 
     /******************/
 
+    default void show() {
+    }
+
+    default void gone() {
+    }
+
+    /******************/
+
     default boolean seekForward(boolean callback) {
         return false;
     }

@@ -2,101 +2,85 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000">
+    android:background="#00000000"
+    android:focusable="false">
 
-    <!--    &lt;!&ndash; 标题 &ndash;&gt;-->
-    <!--    <TextView-->
-    <!--        android:id="@+id/module_mediaplayer_component_seek_back"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="48dp"-->
-    <!--        android:layout_alignParentLeft="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:background="#990a0d0f"-->
-    <!--        android:gravity="center_vertical|left"-->
-    <!--        android:paddingLeft="30dp"-->
-    <!--        android:paddingRight="30dp"-->
-    <!--        android:singleLine="true"-->
-    <!--        android:text="-"-->
-    <!--        android:textColor="#ffffff"-->
-    <!--        android:textSize="16sp" />-->
-
-
-    <!--    &lt;!&ndash; 播放/暂停 &ndash;&gt;-->
-    <!--    <Button-->
-    <!--        android:id="@+id/module_mediaplayer_component_seek_play"-->
-    <!--        android:layout_width="80dp"-->
-    <!--        android:layout_height="40dp"-->
-    <!--        android:layout_centerInParent="true"-->
-    <!--        android:background="@android:color/white"-->
-    <!--        android:clickable="true"-->
-    <!--        android:focusable="true"-->
-    <!--        android:focusableInTouchMode="true"-->
-    <!--        android:gravity="center"-->
-    <!--        android:text="@string/module_mediaplayer_string_pause"-->
-    <!--        android:textColor="@android:color/black"-->
-    <!--        android:textSize="14sp" />-->
-
-    <RelativeLayout
+    <!-- 背景 -->
+    <View
+        android:id="@+id/module_mediaplayer_component_seek_bg"
         android:layout_width="match_parent"
-        android:layout_height="118dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:background="#990a0d0f"
-        android:paddingLeft="48dp"
-        android:paddingRight="48dp">
+        android:focusable="false"
+        android:visibility="gone" />
 
-        <!-- 进度条 -->
-        <SeekBar
-            android:id="@+id/module_mediaplayer_component_seek_sb"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_centerInParent="true"
-            android:background="@android:color/transparent"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:maxHeight="5dp"
-            android:minHeight="5dp"
-            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
-            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb" />
+    <!-- 进度条 -->
+    <SeekBar
+        android:id="@+id/module_mediaplayer_component_seek_sb"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="40dp"
+        android:background="#00000000"
+        android:focusable="false"
+        android:maxHeight="5dp"
+        android:minHeight="5dp"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingEnd="0dp"
+        android:paddingRight="0dp"
+        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
+        android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
+        android:visibility="gone" />
 
-        <!-- 进度 -->
-        <TextView
-            android:id="@+id/module_mediaplayer_component_seek_position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/module_mediaplayer_component_seek_sb"
-            android:layout_alignLeft="@id/module_mediaplayer_component_seek_sb"
-            android:layout_marginTop="18dp"
-            android:gravity="center_vertical|left"
-            android:text="-"
-            android:textColor="#ffffff"
-            android:textSize="12sp" />
+    <!-- 进度 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_component_seek_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="20dp"
+        android:background="#00000000"
+        android:focusable="false"
+        android:gravity="center_vertical|left"
+        android:text="-"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
-        <!-- 时长 -->
-        <TextView
-            android:id="@+id/module_mediaplayer_component_seek_max"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/module_mediaplayer_component_seek_sb"
-            android:layout_alignRight="@id/module_mediaplayer_component_seek_sb"
-            android:layout_marginTop="18dp"
-            android:gravity="center_vertical|right"
-            android:text="-"
-            android:textColor="#ffffff"
-            android:textSize="12sp" />
+    <!-- 时长 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_component_seek_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="20dp"
+        android:background="#00000000"
+        android:focusable="false"
+        android:gravity="center_vertical|right"
+        android:text="-"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/module_mediaplayer_component_seek_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/module_mediaplayer_component_seek_sb"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:gravity="center_vertical|left"
-            android:textColor="#00000000"
-            android:textSize="1sp" />
-
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/module_mediaplayer_component_seek_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/module_mediaplayer_component_seek_sb"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:focusable="false"
+        android:gravity="center_vertical|left"
+        android:textColor="#00000000"
+        android:textSize="1sp" />
 
     <!-- 进度条 -->
     <ProgressBar
@@ -105,6 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_round" />
+        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_round"
+        android:visibility="gone" />
 
 </RelativeLayout>

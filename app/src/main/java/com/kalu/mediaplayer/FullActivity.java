@@ -39,20 +39,20 @@ public class FullActivity extends AppCompatActivity {
             }
         });
 
-        ComponentSeek loading = new ComponentSeek(this);
         ControllerEmpty controller = new ControllerEmpty(this);
-        controller.addComponent(loading);
-
-        String extra = getIntent().getStringExtra(INTENT_URL);
-        boolean booleanExtra = getIntent().getBooleanExtra(INTENT_LIVE, false);
+        controller.addComponent(new ComponentSeek(this));
+        controller.addComponent(new ComponentLoading(this));
 
         VideoLayout videoView = findViewById(R.id.full_video);
         videoView.setControllerLayout(controller);
 
-        BundleBuilder.Builder builder = new BundleBuilder.Builder();
-        builder.setLive(booleanExtra);
-        BundleBuilder build = builder.build();
-        videoView.start(build, extra);
+        String url = getIntent().getStringExtra(INTENT_URL);
+        boolean isLive = getIntent().getBooleanExtra(INTENT_LIVE, false);
+        if (isLive) {
+            videoView.startLive(url);
+        } else {
+            videoView.startLoop(url);
+        }
     }
 
     @Override

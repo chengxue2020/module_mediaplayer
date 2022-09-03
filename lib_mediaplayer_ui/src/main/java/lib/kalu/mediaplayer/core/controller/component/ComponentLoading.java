@@ -62,13 +62,15 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
             case PlayerType.StateType.STATE_LOADING_START:
                 MediaLogUtil.log("ComponentLoading[show] => playState = " + playState);
                 bringToFront();
-                setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
                 break;
-            case PlayerType.StateType.STATE_INIT:
-//            case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_LOADING_STOP:
                 MediaLogUtil.log("ComponentLoading[gone] => playState = " + playState);
-                setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
                 break;
         }
     }

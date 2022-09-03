@@ -212,7 +212,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
 
             // step0
-            callWindowState(PlayerType.WindowType.NORMAL);
             callPlayerState(PlayerType.StateType.STATE_INIT);
 
             // step1
@@ -897,6 +896,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         layout.setLayoutParams(params);
         viewGroup.addView(layout);
         layout.setMediaPlayer(this);
+        // call
+        callWindowState(PlayerType.WindowType.NORMAL);
     }
 
     public void clearControllerLayout() {

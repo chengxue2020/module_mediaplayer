@@ -107,7 +107,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         if (vodControlView == null) {
             vodControlView = new ComponentSeek(getContext());
             //是否显示底部进度条。默认显示
-            vodControlView.showBottomProgress(true);
+//            vodControlView.showBottomProgress(true);
         }
 //        this.removeComponent(vodControlView);
         this.addComponent(vodControlView);
