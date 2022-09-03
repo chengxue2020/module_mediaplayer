@@ -219,7 +219,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
             }
             // ijk
-            else if(null != mKernel && mKernel instanceof IjkMediaPlayer) {
+            else if (null != mKernel && mKernel instanceof IjkMediaPlayer) {
                 String temp = getUrl();
                 if (null != temp && temp.length() > 0) {
                     release();
@@ -669,19 +669,19 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void seekForward(@NonNull boolean callback) {
+    public boolean seekForward(@NonNull boolean callback) {
         ControllerLayout layout = getControlLayout();
         if (null == layout)
-            return;
-        layout.seekForward(callback);
+            return false;
+        return layout.seekForward(callback);
     }
 
     @Override
-    public void seekRewind(boolean callback) {
+    public boolean seekRewind(boolean callback) {
         ControllerLayout layout = getControlLayout();
         if (null == layout)
-            return;
-        layout.seekRewind(callback);
+            return false;
+        return layout.seekRewind(callback);
     }
 
     @Override
@@ -1372,12 +1372,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 int count = event.getRepeatCount();
                 MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count);
                 if (count > 0) {
-                    boolean playing = isPlaying();
-                    if (playing) {
-                        pause(true);
-                    }
                     clearLoop();
-                    seekForward(false);
+                    boolean seekForward = seekForward(false);
+                    if (seekForward) {
+                        setTag(R.id.module_mediaplayer_id_seek, "1");
+                    }
                 } else {
                     callWindowState(PlayerType.WindowType.FULL);
                 }
@@ -1386,10 +1385,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 int count = event.getRepeatCount();
                 MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count);
-                boolean playing = isPlaying();
-                if (!playing) {
+                Object tag = getTag(R.id.module_mediaplayer_id_seek);
+                if (null != tag && "1".equals(tag)) {
                     startLoop();
-                    seekForward(true);
+                    boolean seekForward = seekForward(true);
+                    if (seekForward) {
+                        setTag(R.id.module_mediaplayer_id_seek, null);
+                    }
                 }
             }
             // seekRewind
@@ -1397,12 +1399,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 int count = event.getRepeatCount();
                 MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count);
                 if (count > 0) {
-                    boolean playing = isPlaying();
-                    if (playing) {
-                        pause(true);
-                    }
                     clearLoop();
-                    seekRewind(false);
+                    boolean seekRewind = seekRewind(false);
+                    if (seekRewind) {
+                        setTag(R.id.module_mediaplayer_id_seek, "1");
+                    }
                 } else {
                     callWindowState(PlayerType.WindowType.FULL);
                 }
@@ -1411,10 +1412,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                 int count = event.getRepeatCount();
                 MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count);
-                boolean playing = isPlaying();
-                if (!playing) {
+                Object tag = getTag(R.id.module_mediaplayer_id_seek);
+                if (null != tag && "1".equals(tag)) {
                     startLoop();
-                    seekRewind(true);
+                    boolean seekRewind = seekRewind(true);
+                    if (seekRewind) {
+                        setTag(R.id.module_mediaplayer_id_seek, null);
+                    }
                 }
             }
             // stopFull

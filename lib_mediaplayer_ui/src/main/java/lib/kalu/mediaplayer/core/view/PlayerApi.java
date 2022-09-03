@@ -122,9 +122,9 @@ public interface PlayerApi {
 
     void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop);
 
-    void seekForward(@NonNull boolean callback);
+    boolean seekForward(@NonNull boolean callback);
 
-    void seekRewind(boolean callback);
+    boolean seekRewind(boolean callback);
 
     /**
      * 是否处于播放状态

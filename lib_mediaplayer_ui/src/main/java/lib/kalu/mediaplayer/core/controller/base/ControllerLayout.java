@@ -325,29 +325,39 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
     /**********************/
 
     @Override
-    public void seekForward(boolean callback) {
+    public boolean seekForward(boolean callback) {
         if (null == mComponents)
-            return;
+            return false;
+        boolean state = false;
         int size = mComponents.size();
         for (int i = 0; i < size; i++) {
             ComponentApi api = mComponents.get(i);
             if (null == api)
                 continue;
-            api.seekForward(callback);
+            boolean seekForward = api.seekForward(callback);
+            if (seekForward) {
+                state = true;
+            }
         }
+        return state;
     }
 
     @Override
-    public void seekRewind(boolean callback) {
+    public boolean seekRewind(boolean callback) {
         if (null == mComponents)
-            return;
+            return false;
+        boolean state = false;
         int size = mComponents.size();
         for (int i = 0; i < size; i++) {
             ComponentApi api = mComponents.get(i);
             if (null == api)
                 continue;
-            api.seekRewind(callback);
+            boolean seekRewind = api.seekRewind(callback);
+            if (seekRewind) {
+                state = true;
+            }
         }
+        return state;
     }
 
     @Override

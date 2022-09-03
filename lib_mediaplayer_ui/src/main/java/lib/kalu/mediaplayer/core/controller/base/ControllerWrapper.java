@@ -173,13 +173,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void seekForward(@NonNull boolean callback) {
-        mPlayer.seekForward(callback);
+    public boolean seekForward(@NonNull boolean callback) {
+        return mPlayer.seekForward(callback);
     }
 
     @Override
-    public void seekRewind(boolean callback) {
-        mPlayer.seekRewind(callback);
+    public boolean seekRewind(boolean callback) {
+        return mPlayer.seekRewind(callback);
     }
 
     @Override

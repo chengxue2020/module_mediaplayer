@@ -71,9 +71,9 @@ public interface ControllerApi {
     int getCutoutHeight();
 
 
-    void seekForward(boolean callback);
+    boolean seekForward(boolean callback);
 
-    void seekRewind(boolean callback);
+    boolean seekRewind(boolean callback);
 
     void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration);
 }

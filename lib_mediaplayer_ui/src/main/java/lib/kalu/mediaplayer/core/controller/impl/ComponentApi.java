@@ -185,12 +185,12 @@ public interface ComponentApi {
 
     /******************/
 
-    default void seekForward(boolean callback) {
-
+    default boolean seekForward(boolean callback) {
+        return false;
     }
 
-    default void seekRewind(boolean callback) {
-
+    default boolean seekRewind(boolean callback) {
+        return false;
     }
 
     default void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {

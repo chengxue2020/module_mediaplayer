@@ -314,7 +314,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void seekForward(boolean callback) {
+    public boolean seekForward(boolean callback) {
         SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
         if (null != sb && sb.getVisibility() == View.VISIBLE) {
             int max = sb.getMax();
@@ -329,12 +329,14 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 if (callback) {
                     onSeekChanged(progress, true);
                 }
+                return true;
             }
         }
+        return false;
     }
 
     @Override
-    public void seekRewind(boolean callback) {
+    public boolean seekRewind(boolean callback) {
         SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
 //        MediaLogUtil.log("ComponentSeek => seekRewind => callback = " + callback);
         if (null != sb && sb.getVisibility() == View.VISIBLE) {
@@ -349,8 +351,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 if (callback) {
                     onSeekChanged(progress, true);
                 }
+                return true;
             }
         }
+        return false;
     }
 
     /****************************************/
