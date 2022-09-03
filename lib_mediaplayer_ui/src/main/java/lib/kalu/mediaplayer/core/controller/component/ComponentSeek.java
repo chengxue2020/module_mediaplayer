@@ -165,7 +165,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     @Override
     public void gone() {
         MediaLogUtil.log("ComponentSeek88 => gone =>");
-        findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.VISIBLE);
+        boolean isFull = mControllerWrapper.isFull();
+        findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(isFull ? View.VISIBLE : View.GONE);
         findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
         findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.GONE);
         findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.GONE);
