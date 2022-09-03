@@ -34,23 +34,24 @@ public interface KernelApi extends KernelEvent {
 
     void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url);
 
-    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        MediaLogUtil.log("KernelApi => create => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url + ", autoRelease = " + autoRelease);
-        update(seek, max, loop, autoRelease, url);
+    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url) {
+        MediaLogUtil.log("KernelApi => create => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url + ", autoRelease = " + autoRelease + ", live = " + live);
+        update(seek, max, loop, live, autoRelease, url);
         init(context, seek, max, url);
     }
 
-    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live) {
         boolean autoRelease = isAutoRelease();
         String url = getUrl();
-        update(seek, max, loop, autoRelease, url);
+        update(seek, max, loop, live, autoRelease, url);
     }
 
-    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        MediaLogUtil.log("KernelApi => update => seek = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url + ", mKernel = " + this);
+    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url) {
+        MediaLogUtil.log("KernelApi => update => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", autoRelease = " + autoRelease + ", url = " + url + ", mKernel = " + this);
         setSeek(seek);
         setMax(max);
         setLooping(loop);
+        setLive(live);
         setAutoRelease(autoRelease);
         if (null != url && url.length() > 0) {
             setUrl(url);
@@ -96,6 +97,10 @@ public interface KernelApi extends KernelEvent {
     long getMax();
 
     void setMax(long max);
+
+    boolean isLive();
+
+    void setLive(@NonNull boolean live);
 
     void setLooping(boolean loop);
 

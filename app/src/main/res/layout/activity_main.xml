@@ -61,14 +61,25 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/main_full"
+                android:id="@+id/main_full1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/colorAccent"
                 android:focusable="true"
                 android:padding="10dp"
-                android:text="full and float" />
+                android:text="直播 => 全屏小窗" />
+
+            <Button
+                android:id="@+id/main_full2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="点播 => 全屏小窗" />
+
 
             <Button
                 android:id="@+id/main_toggle"

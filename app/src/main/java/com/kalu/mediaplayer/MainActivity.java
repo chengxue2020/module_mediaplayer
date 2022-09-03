@@ -31,11 +31,23 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
-        // main_full
-        findViewById(R.id.main_full).setOnClickListener(new View.OnClickListener() {
+        // main_full1
+        findViewById(R.id.main_full1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), FullActivity.class);
+                intent.putExtra(FullActivity.INTENT_URL, "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com");
+                intent.putExtra(FullActivity.INTENT_LIVE, true);
+                startActivity(intent);
+            }
+        });
+        // main_full2
+        findViewById(R.id.main_full2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FullActivity.class);
+                intent.putExtra(FullActivity.INTENT_URL, "https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4");
+                intent.putExtra(FullActivity.INTENT_LIVE, false);
                 startActivity(intent);
             }
         });

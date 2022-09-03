@@ -46,18 +46,22 @@ public interface PlayerApi {
     }
 
     default void start(@NonNull String url) {
-        start(0, 0, false, true, url);
+        start(0, 0, false, true, false, url);
+    }
+
+    default void start(@NonNull boolean live, @NonNull String url) {
+        start(0, 0, false, live, false, url);
     }
 
     default void start(@NonNull long seek, @NonNull String url) {
-        start(seek, 0, false, true, url);
+        start(seek, 0, false, true, false, url);
     }
 
     default void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull String url) {
-        start(seek, max, loop, true, url);
+        start(seek, max, loop, true, false, url);
     }
 
-    void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url);
+    void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url);
 
     void create();
 
@@ -126,11 +130,8 @@ public interface PlayerApi {
 
     boolean seekRewind(boolean callback);
 
-    /**
-     * 是否处于播放状态
-     *
-     * @return 是否处于播放状态
-     */
+    boolean isLive();
+
     boolean isPlaying();
 
     boolean isFull();

@@ -190,18 +190,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onPlayStateChanged(int playState) {
+        boolean isLive = mControllerWrapper.isLive();
         boolean isFull = mControllerWrapper.isFull();
-        if (!isFull)
-            return;
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_STOP:
-                MediaLogUtil.log("ComponentSeek[show] => playState = " + playState);
-                refreshTimestamp(false);
-                bringToFront();
-                setVisibility(View.VISIBLE);
+                MediaLogUtil.log("ComponentSeek[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
+                if (!isLive && isFull) {
+                    refreshTimestamp(false);
+                    bringToFront();
+                    setVisibility(View.VISIBLE);
+                }
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
-                MediaLogUtil.log("ComponentSeek[gone] => playState = " + playState);
+                MediaLogUtil.log("ComponentSeek[gone] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
                 refreshTimestamp(true);
                 setVisibility(View.GONE);
                 break;
@@ -210,15 +211,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onWindowStateChanged(int windowState) {
+        boolean isLive = mControllerWrapper.isLive();
+        boolean isFull = mControllerWrapper.isFull();
         switch (windowState) {
             case PlayerType.WindowType.FULL:
-                MediaLogUtil.log("ComponentSeek[show] => onWindowStateChanged => windowState = " + windowState);
-                refreshTimestamp(false);
-                bringToFront();
-                setVisibility(View.VISIBLE);
+                MediaLogUtil.log("ComponentSeek[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
+                if (!isLive && isFull) {
+                    refreshTimestamp(false);
+                    bringToFront();
+                    setVisibility(View.VISIBLE);
+                }
                 break;
             default:
-                MediaLogUtil.log("ComponentSeek[gone] => onWindowStateChanged => windowState = " + windowState);
+                MediaLogUtil.log("ComponentSeek[gone] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
                 refreshTimestamp(true);
                 setVisibility(View.GONE);
                 break;

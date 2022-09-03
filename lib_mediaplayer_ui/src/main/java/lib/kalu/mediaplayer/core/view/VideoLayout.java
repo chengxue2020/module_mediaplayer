@@ -202,8 +202,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", autoRelease = " + autoRelease + ", url = " + url);
+    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url) {
+        MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", autoRelease = " + autoRelease + ", url = " + url);
         try {
 
             // step0
@@ -240,7 +240,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
 
             // step4
-            mKernel.create(getContext(), seek, max, loop, autoRelease, url);
+            mKernel.create(getContext(), seek, max, loop, live, autoRelease, url);
             setKeepScreenOn(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -661,7 +661,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         clearLoop();
         // step3
         if (force) {
-            mKernel.update(seek, max, loop);
+            boolean live = isLive();
+            mKernel.update(seek, max, loop, live);
             pause(true);
         }
         // step4
@@ -682,6 +683,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         if (null == layout)
             return false;
         return layout.seekRewind(callback);
+    }
+
+    @Override
+    public boolean isLive() {
+        try {
+            return mKernel.isLive();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -1370,54 +1381,66 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // seekForward
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 int count = event.getRepeatCount();
-                MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count);
-                if (count > 0) {
-                    clearLoop();
-                    boolean seekForward = seekForward(false);
-                    if (seekForward) {
-                        setTag(R.id.module_mediaplayer_id_seek, "1");
+                boolean isLive = isLive();
+                MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count + ", isLive = " + isLive);
+                if (!isLive) {
+                    if (count > 0) {
+                        clearLoop();
+                        boolean seekForward = seekForward(false);
+                        if (seekForward) {
+                            setTag(R.id.module_mediaplayer_id_seek, "1");
+                        }
+                    } else {
+                        callWindowState(PlayerType.WindowType.FULL);
                     }
-                } else {
-                    callWindowState(PlayerType.WindowType.FULL);
                 }
             }
             // seekForward
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 int count = event.getRepeatCount();
-                MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count);
-                Object tag = getTag(R.id.module_mediaplayer_id_seek);
-                if (null != tag && "1".equals(tag)) {
-                    startLoop();
-                    boolean seekForward = seekForward(true);
-                    if (seekForward) {
-                        setTag(R.id.module_mediaplayer_id_seek, null);
+                boolean isLive = isLive();
+                MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count + ", isLive = " + isLive);
+                if (!isLive) {
+                    Object tag = getTag(R.id.module_mediaplayer_id_seek);
+                    if (null != tag && "1".equals(tag)) {
+                        startLoop();
+                        boolean seekForward = seekForward(true);
+                        if (seekForward) {
+                            setTag(R.id.module_mediaplayer_id_seek, null);
+                        }
                     }
                 }
             }
             // seekRewind
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                 int count = event.getRepeatCount();
-                MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count);
-                if (count > 0) {
-                    clearLoop();
-                    boolean seekRewind = seekRewind(false);
-                    if (seekRewind) {
-                        setTag(R.id.module_mediaplayer_id_seek, "1");
+                boolean isLive = isLive();
+                MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count + ", isLive = " + isLive);
+                if (!isLive) {
+                    if (count > 0) {
+                        clearLoop();
+                        boolean seekRewind = seekRewind(false);
+                        if (seekRewind) {
+                            setTag(R.id.module_mediaplayer_id_seek, "1");
+                        }
+                    } else {
+                        callWindowState(PlayerType.WindowType.FULL);
                     }
-                } else {
-                    callWindowState(PlayerType.WindowType.FULL);
                 }
             }
             // seekRewind
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                 int count = event.getRepeatCount();
-                MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count);
-                Object tag = getTag(R.id.module_mediaplayer_id_seek);
-                if (null != tag && "1".equals(tag)) {
-                    startLoop();
-                    boolean seekRewind = seekRewind(true);
-                    if (seekRewind) {
-                        setTag(R.id.module_mediaplayer_id_seek, null);
+                boolean isLive = isLive();
+                MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count + ", isLive = " + isLive);
+                if (!isLive) {
+                    Object tag = getTag(R.id.module_mediaplayer_id_seek);
+                    if (null != tag && "1".equals(tag)) {
+                        startLoop();
+                        boolean seekRewind = seekRewind(true);
+                        if (seekRewind) {
+                            setTag(R.id.module_mediaplayer_id_seek, null);
+                        }
                     }
                 }
             }

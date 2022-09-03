@@ -27,6 +27,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     private long mMax = 0L; // 试播时常
     private boolean mAutoRelease = false;
     private boolean mLoop = false; // 循环播放
+    private boolean mLive = false;
     private boolean mMute = false; // 静音
     private String mUrl = null; // 视频串
 
@@ -471,6 +472,16 @@ public final class AndroidMediaPlayer implements KernelApi {
         if (max < 0)
             return;
         mMax = max;
+    }
+
+    @Override
+    public boolean isLive() {
+        return mLive;
+    }
+
+    @Override
+    public void setLive(@NonNull boolean live) {
+        this.mLive = live;
     }
 
     @Override

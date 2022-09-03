@@ -15,6 +15,9 @@ import lib.kalu.mediaplayer.core.view.VideoLayout;
 
 public class FullActivity extends AppCompatActivity {
 
+    public static String INTENT_LIVE = "intent_live";
+    public static String INTENT_URL = "intent_url";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +42,12 @@ public class FullActivity extends AppCompatActivity {
         ControllerEmpty controller = new ControllerEmpty(this);
         controller.addComponent(loading);
 
+        String extra = getIntent().getStringExtra(INTENT_URL);
+        boolean booleanExtra = getIntent().getBooleanExtra(INTENT_LIVE, false);
+
         VideoLayout videoView = findViewById(R.id.full_video);
         videoView.setControllerLayout(controller);
-        videoView.start(0, 0, true, "https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4");
+        videoView.start(booleanExtra, extra);
     }
 
     @Override

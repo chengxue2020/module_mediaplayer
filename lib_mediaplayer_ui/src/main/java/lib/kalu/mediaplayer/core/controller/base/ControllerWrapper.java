@@ -28,8 +28,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean autoRelease, @NonNull String url) {
-        mPlayer.start(seek, max, loop, autoRelease, url);
+    public void start(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url) {
+        mPlayer.start(seek, max, loop, live, autoRelease, url);
     }
 
     @Override
@@ -180,6 +180,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     @Override
     public boolean seekRewind(boolean callback) {
         return mPlayer.seekRewind(callback);
+    }
+
+    @Override
+    public boolean isLive() {
+        return mPlayer.isLive();
     }
 
     @Override
