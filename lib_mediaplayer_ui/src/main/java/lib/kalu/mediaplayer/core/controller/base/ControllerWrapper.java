@@ -259,13 +259,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void startLoop() {
-        mPlayer.startLoop();
+    public void startHanlder() {
+        mPlayer.startHanlder();
     }
 
     @Override
-    public void clearLoop() {
-        mPlayer.clearLoop();
+    public void clearHanlder() {
+        mPlayer.clearHanlder();
     }
 
     @Override

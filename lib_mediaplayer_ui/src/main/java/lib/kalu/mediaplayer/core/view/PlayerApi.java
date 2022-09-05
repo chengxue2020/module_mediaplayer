@@ -202,9 +202,9 @@ public interface PlayerApi {
 
     void release(@NonNull boolean onlyHandle);
 
-    void startLoop();
+    void startHanlder();
 
-    void clearLoop();
+    void clearHanlder();
 
     /*********/
 
