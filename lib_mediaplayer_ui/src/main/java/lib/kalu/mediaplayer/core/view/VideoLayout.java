@@ -219,25 +219,18 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             callPlayerState(PlayerType.StateType.STATE_LOADING_START);
 
             // step2
+            PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
+            int kernel = config.getKernel();
             // exo
-            try {
-                if (null != mKernel && mKernel instanceof ExoMediaPlayer) {
+            if (kernel == PlayerType.KernelType.EXO) {
 
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-
             // ijk
-            try {
-                if (null != mKernel && mKernel instanceof IjkMediaPlayer) {
-                    String temp = getUrl();
-                    if (null != temp && temp.length() > 0) {
-                        release();
-                    }
+            else if (kernel == PlayerType.KernelType.IJK) {
+                String temp = getUrl();
+                if (null != temp && temp.length() > 0) {
+                    release();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
             // step3
