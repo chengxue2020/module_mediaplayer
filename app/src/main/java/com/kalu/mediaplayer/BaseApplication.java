@@ -25,7 +25,7 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
 
         // config
-        PlayerBuilder build = PlayerBuilder.newBuilder()
+        PlayerBuilder build = new PlayerBuilder.Builder()
                 .setEnable(true)
                 .setLog(true)
                 .setKernel(PlayerType.KernelType.EXO)

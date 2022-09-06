@@ -405,7 +405,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             mRender.getReal().setLayoutParams(params);
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
             if (null != viewGroup) {
-                viewGroup.removeAllViews();
                 viewGroup.addView(mRender.getReal(), 0);
             }
         }
@@ -760,27 +759,22 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
     }
 
-    /**
-     * 自定义播放核心，继承{@link KernelFactory}实现自己的播放核心
-     */
-    public void setKernel(@PlayerType.KernelType.Value int type) {
-
-//        try {
-//            PlayerConfigManager.getInstance().getConfig().mType(playerFactory);
-//        }catch (Exception e){
-//        }
+    @Override
+    public void setKernel(@PlayerType.KernelType.Value int v) {
+        PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
+        PlayerBuilder.Builder builder = config.newBuilder();
+        builder.setKernel(v);
+        PlayerConfigManager.getInstance().setConfig(config);
     }
 
-    public void setRender(@PlayerType.RenderType int type) {
-//        if (renderViewFactory == null) {
-//            throw new VideoException(VideoException.CODE_NOT_RENDER_FACTORY, "RenderViewFactory can not be null!");
-//        }
-//        mRenderFactory = renderViewFactory;
+    @Override
+    public void setRender(@PlayerType.RenderType int v) {
+        PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
+        PlayerBuilder.Builder builder = config.newBuilder();
+        builder.setRender(v);
+        PlayerConfigManager.getInstance().setConfig(config);
     }
 
-    /**
-     * 设置视频比例
-     */
     @Override
     public void setScaleType(@PlayerType.ScaleType.Value int scaleType) {
         mCurrentScreenScaleType = scaleType;
@@ -992,7 +986,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         if (onlyHandle)
             return;
 
-        // step5
+        // step51
+        ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
+        if (null != viewGroup) {
+            viewGroup.removeAllViews();
+        }
+
+        // step52
         try {
             mRender.releaseReal();
             mRender = null;

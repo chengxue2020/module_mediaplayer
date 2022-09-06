@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import lib.kalu.mediaplayer.config.builder.BundleBuilder;
+import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 
@@ -47,7 +49,7 @@ public interface PlayerApi {
         start(build, url);
     }
 
-    default void startLoop( @NonNull long seek, @NonNull long max, @NonNull String url) {
+    default void startLoop(@NonNull long seek, @NonNull long max, @NonNull String url) {
         BundleBuilder.Builder builder = new BundleBuilder.Builder();
         builder.setLive(false);
         builder.setLoop(true);
@@ -209,6 +211,12 @@ public interface PlayerApi {
     /*********/
 
     void playEnd();
+
+    /*********/
+
+    void setKernel(@PlayerType.KernelType.Value int v);
+
+    void setRender(@PlayerType.RenderType int v);
 
     /*********/
 

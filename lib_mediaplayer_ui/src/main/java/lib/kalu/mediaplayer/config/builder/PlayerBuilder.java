@@ -83,8 +83,20 @@ public final class PlayerBuilder implements BuriedEvent {
         keycodeApi = builder.keycodeApi;
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
+
+    public Builder newBuilder() {
+        Builder builder = new Builder();
+        builder.setEnable(this.enable);
+        builder.setLog(this.log);
+        builder.setKernel(this.kernel);
+        builder.setRender(this.render);
+        builder.setScaleType(this.scaleType);
+        builder.setCheckMobileNetwork(this.checkMobileNetwork);
+        builder.setFitMobileCutout(this.fitMobileCutout);
+        builder.setCheckOrientation(this.checkOrientation);
+        builder.setBuriedEvent(this.buriedEvent);
+        builder.setKeycodeApi(this.keycodeApi);
+        return builder;
     }
 
     @Override

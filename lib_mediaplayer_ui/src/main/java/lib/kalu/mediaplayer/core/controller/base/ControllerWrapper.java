@@ -274,6 +274,16 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void setKernel(int v) {
+        mPlayer.setKernel(v);
+    }
+
+    @Override
+    public void setRender(int v) {
+        mPlayer.setRender(v);
+    }
+
+    @Override
     public void callPlayerState(int playerState) {
         mPlayer.callPlayerState(playerState);
     }

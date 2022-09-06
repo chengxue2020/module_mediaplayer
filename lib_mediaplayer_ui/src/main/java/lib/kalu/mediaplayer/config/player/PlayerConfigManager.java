@@ -6,6 +6,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
+
 import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
@@ -40,7 +41,7 @@ public class PlayerConfigManager {
     private PlayerBuilder mPlayerConfig;
 
     private PlayerConfigManager() {
-        mPlayerConfig = PlayerBuilder.newBuilder().build();
+        mPlayerConfig = new PlayerBuilder.Builder().build();
         mPlayOnMobileNetwork = mPlayerConfig.isCheckMobileNetwork();
     }
 
