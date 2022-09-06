@@ -220,15 +220,24 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
             // step2
             // exo
-            if (null != mKernel && mKernel instanceof ExoMediaPlayer) {
+            try {
+                if (null != mKernel && mKernel instanceof ExoMediaPlayer) {
 
-            }
-            // ijk
-            else if (null != mKernel && mKernel instanceof IjkMediaPlayer) {
-                String temp = getUrl();
-                if (null != temp && temp.length() > 0) {
-                    release();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // ijk
+            try {
+                if (null != mKernel && mKernel instanceof IjkMediaPlayer) {
+                    String temp = getUrl();
+                    if (null != temp && temp.length() > 0) {
+                        release();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             // step3
