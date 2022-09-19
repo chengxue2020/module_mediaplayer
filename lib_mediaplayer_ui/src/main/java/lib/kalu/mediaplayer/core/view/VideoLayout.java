@@ -474,7 +474,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public long getDuration() {
         try {
             long duration = mKernel.getDuration();
-            MediaLogUtil.log("VideoLayout => getDuration => duration = " + duration);
             return duration;
         } catch (Exception e) {
             e.printStackTrace();
