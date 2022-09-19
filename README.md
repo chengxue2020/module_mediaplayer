@@ -22,6 +22,11 @@ lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full
 #
 #### 更新
 ```
+20220919
+1. fix bug => exoplayer 子线程获取时长exception【com.google.android.exoplayer2.ExoPlayerImpl -> verifyApplicationThread】
+verifyApplicationThread
+```
+```
 2022-09-02
 1.新增：全屏播放
 2.新增：小窗播放

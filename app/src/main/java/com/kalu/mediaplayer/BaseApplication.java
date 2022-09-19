@@ -27,7 +27,7 @@ public class BaseApplication extends MultiDexApplication {
         // config
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setEnable(true)
-                .setLog(true)
+                .setLog(false)
                 .setKernel(PlayerType.KernelType.EXO)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())

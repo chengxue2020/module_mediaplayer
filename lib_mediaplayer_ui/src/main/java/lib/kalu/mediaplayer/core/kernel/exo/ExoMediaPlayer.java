@@ -236,7 +236,11 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         if (mExoPlayer == null) {
             return 0L;
         }
-        return mExoPlayer.getDuration();
+        long duration = mExoPlayer.getDuration();
+        if (duration < 0) {
+            duration = 0L;
+        }
+        return duration;
     }
 
     /**

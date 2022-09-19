@@ -3,6 +3,7 @@ package com.kalu.mediaplayer;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,6 +37,24 @@ public class FullActivity extends AppCompatActivity {
             public void onClick(View v) {
                 VideoLayout view = findViewById(R.id.full_video);
                 view.startFloat();
+            }
+        });
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        VideoLayout view = findViewById(R.id.full_video);
+                        long duration = view.getDuration();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "=>" + duration, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).start();
             }
         });
 

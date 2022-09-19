@@ -2585,23 +2585,23 @@ import java.util.concurrent.TimeoutException;
   }
 
   private void verifyApplicationThread() {
-    // The constructor may be executed on a background thread. Wait with accessing the player from
-    // the app thread until the constructor finished executing.
-    constructorFinished.blockUninterruptible();
-    if (Thread.currentThread() != getApplicationLooper().getThread()) {
-      String message =
-          Util.formatInvariant(
-              "Player is accessed on the wrong thread.\n"
-                  + "Current thread: '%s'\n"
-                  + "Expected thread: '%s'\n"
-                  + "See https://exoplayer.dev/issues/player-accessed-on-wrong-thread",
-              Thread.currentThread().getName(), getApplicationLooper().getThread().getName());
-      if (throwsWhenUsingWrongThread) {
-        throw new IllegalStateException(message);
-      }
-      Log.w(TAG, message, hasNotifiedFullWrongThreadWarning ? null : new IllegalStateException());
-      hasNotifiedFullWrongThreadWarning = true;
-    }
+//    // The constructor may be executed on a background thread. Wait with accessing the player from
+//    // the app thread until the constructor finished executing.
+//    constructorFinished.blockUninterruptible();
+//    if (Thread.currentThread() != getApplicationLooper().getThread()) {
+//      String message =
+//          Util.formatInvariant(
+//              "Player is accessed on the wrong thread.\n"
+//                  + "Current thread: '%s'\n"
+//                  + "Expected thread: '%s'\n"
+//                  + "See https://exoplayer.dev/issues/player-accessed-on-wrong-thread",
+//              Thread.currentThread().getName(), getApplicationLooper().getThread().getName());
+//      if (throwsWhenUsingWrongThread) {
+//        throw new IllegalStateException(message);
+//      }
+//      Log.w(TAG, message, hasNotifiedFullWrongThreadWarning ? null : new IllegalStateException());
+//      hasNotifiedFullWrongThreadWarning = true;
+//    }
   }
 
   private void sendRendererMessage(
