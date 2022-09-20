@@ -28,7 +28,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private boolean mAutoRelease = false;
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
-    private boolean mMute = false; // 静音
+    private boolean mMute = false;
     private String mUrl = null; // 视频串
 
     private String mMusicPath = null;
@@ -59,10 +59,13 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 //    }
 
     @Override
-    public void createDecoder(@NonNull Context context) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute) {
         if (null == mIjkPlayer) {
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
             mIjkPlayer.setLooping(false);
+            if (mute) {
+                mIjkPlayer.setVolume(0f, 0f);
+            }
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(MediaLogUtil.isIsLog() ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_SILENT);
             setOptions();
             initListener();
@@ -377,13 +380,32 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void setVolume(float v1, float v2) {
-        mMute = (v1 <= 0 || v2 <= 0);
-        mIjkPlayer.setVolume(v1, v2);
+        try {
+            float value = Math.max(v1, v2);
+            if (value > 1f) {
+                value = 1f;
+            }
+            mIjkPlayer.setVolume(value,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean isMute() {
         return mMute;
+//        try {
+//                float volume = mVlcPlayer.getVLC().getVolume();
+//                return volume <= 0;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+    }
+
+    @Override
+    public void setMute(boolean mute) {
+        this.mMute = mute;
     }
 
     @Override

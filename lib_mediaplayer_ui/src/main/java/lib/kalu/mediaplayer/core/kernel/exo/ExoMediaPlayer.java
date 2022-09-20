@@ -43,7 +43,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     private boolean mAutoRelease = false;
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
-    private boolean mMute = false; // 静音
+    private boolean mMute = false;
     private String mUrl = null; // 视频串
 
     private String mMusicPath = null;
@@ -68,7 +68,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute) {
         ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
         builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
         builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
@@ -79,6 +79,9 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
         mExoPlayer.addAnalyticsListener(this);
+        if (mute) {
+            setVolume(0f, 0f);
+        }
         setOptions();
         //播放器日志
         if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
@@ -111,6 +114,51 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 //        mLastReportedPlaybackState = Player.STATE_IDLE;
 //        mLastReportedPlayWhenReady = false;
         mSpeedPlaybackParameters = null;
+    }
+
+    @Override
+    public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
+
+// loading-start
+        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
+
+        // fail
+        if (null == url || url.length() <= 0) {
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_URL);
+        }
+        // next
+        else {
+
+            if (mExoPlayer == null) {
+                return;
+            }
+//        if (mMediaSource == null) {
+//            return;
+//        }
+            if (mSpeedPlaybackParameters != null) {
+                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
+            }
+//        mIsPreparing = true;
+
+            CacheBuilder config = CacheConfigManager.getInstance().getCacheConfig();
+            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, null, config);
+//            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
+//                @Override
+//                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+//                    MediaLogUtil.log("onEXOLoadStarted => ");
+//                }
+//
+//                @Override
+//                public void onLoadCompleted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
+//                    MediaLogUtil.log("onEXOLoadCompleted => ");
+//                }
+//            });
+
+            //准备播放
+            mExoPlayer.setMediaSource(mediaSource);
+            mExoPlayer.prepare();
+        }
     }
 
 //    public void setTrackSelector(TrackSelector trackSelector) {
@@ -206,15 +254,13 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         }
     }
 
-    /**
-     * 调整进度
-     */
     @Override
-    public void seekTo(long time) {
-        if (mExoPlayer == null) {
-            return;
+    public void seekTo(@NonNull long position) {
+        try {
+            mExoPlayer.seekTo(position);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        mExoPlayer.seekTo(time);
     }
 
     /**
@@ -271,51 +317,6 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 //            }
 //        }
 //    }
-
-    @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
-
-        // loading-start
-        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
-
-        // fail
-        if (null == url || url.length() <= 0) {
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_URL);
-        }
-        // next
-        else {
-
-            if (mExoPlayer == null) {
-                return;
-            }
-//        if (mMediaSource == null) {
-//            return;
-//        }
-            if (mSpeedPlaybackParameters != null) {
-                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
-            }
-//        mIsPreparing = true;
-
-            CacheBuilder config = CacheConfigManager.getInstance().getCacheConfig();
-            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, null, config);
-//            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
-//                @Override
-//                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-//                    MediaLogUtil.log("onEXOLoadStarted => ");
-//                }
-//
-//                @Override
-//                public void onLoadCompleted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-//                    MediaLogUtil.log("onEXOLoadCompleted => ");
-//                }
-//            });
-
-            //准备播放
-            mExoPlayer.setMediaSource(mediaSource);
-            mExoPlayer.prepare();
-        }
-    }
 
     @Override
     public void setSurface(@NonNull Surface surface) {
@@ -430,7 +431,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void onPlaybackStateChanged(EventTime eventTime, int state) {
-        MediaLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => state = " + state);
+        MediaLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
 
         // 播放结束
         if (state == Player.STATE_ENDED) {
@@ -439,14 +440,8 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         // 准备完成
         else if (state == Player.STATE_READY) {
 
-//                        long seek = getSeek();
-//                        long position = getPosition();
-//
-//                        // 快进 => begin
-//                        if (seek >0 && seek != position) {
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
-//                        }
         }
     }
 
@@ -477,21 +472,42 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     @Override
     public void onAudioInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
         MediaLogUtil.log("ExoMediaPlayer => onAudioInputFormatChanged =>");
+        // mute
+//        if (isMute()) {
+//            setVolume(0, 0);
+//        }
     }
 
     /****************/
 
     @Override
     public void setVolume(float v1, float v2) {
-        mMute = (v1 <= 0 || v2 <= 0);
-        if (mExoPlayer != null) {
-            mExoPlayer.setVolume((v1 + v2) / 2);
+        try {
+            float value = Math.max(v1, v2);
+            if (value > 1f) {
+                value = 1f;
+            }
+            mExoPlayer.setVolume(value);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public boolean isMute() {
         return mMute;
+//        try {
+//                float volume = mVlcPlayer.getVLC().getVolume();
+//                return volume <= 0;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+    }
+
+    @Override
+    public void setMute(boolean mute) {
+        this.mMute = mute;
     }
 
     @Override

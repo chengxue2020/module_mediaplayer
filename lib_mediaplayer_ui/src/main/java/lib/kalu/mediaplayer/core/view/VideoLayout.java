@@ -209,7 +209,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         boolean loop = builder.isLoop();
         boolean live = builder.isLive();
         boolean release = builder.isRelease();
-        MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", release = " + release + ", url = " + url);
+        boolean mute = builder.isMute();
+        MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", release = " + release + ", mute = " + mute + ", url = " + url);
         try {
 
             // step0
@@ -247,7 +248,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
 
             // step4
-            mKernel.create(getContext(), seek, max, loop, live, release, url);
+            mKernel.create(getContext(), seek, max, loop, live, release, mute, url);
             setKeepScreenOn(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -353,8 +354,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                                 pause(true);
 
                                 // step3
-                                long seek = getSeek();
-                                long max = getMax();
                                 seekTo(true, builder);
                             }
                             // sample
@@ -396,7 +395,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     }
                 }
             });
-            mKernel.createDecoder(getContext());
+            mKernel.createDecoder(getContext(), builder.isMute());
         }
 
         // step3

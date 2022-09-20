@@ -31,7 +31,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     private boolean mAutoRelease = false;
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
-    private boolean mMute = false; // 静音
+    private boolean mMute = false;
     private String mUrl = null; // 视频串
 
     private String mMusicPath = null;
@@ -54,8 +54,9 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         return this;
     }
 
+
     @Override
-    public void createDecoder(@NonNull Context context) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute) {
         //        ArrayList args = new ArrayList<>();//VLC参数
 //        args.add("--rtsp-tcp");//强制rtsp-tcp，加快加载视频速度
 //        args.add("--aout=opensles");
@@ -64,6 +65,9 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //        mLibVLC = new LibVLC(context);
         mVlcPlayer = new org.videolan.libvlc.media.MediaPlayer(context);
         mVlcPlayer.setLooping(false);
+        if (mute) {
+            mVlcPlayer.setVolume(0f, 0f);
+        }
         setOptions();
         initListener();
     }
@@ -320,13 +324,32 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void setVolume(float v1, float v2) {
-        mMute = (v1 <= 0 || v2 <= 0);
-        mVlcPlayer.setVolume(v1, v2);
+        try {
+            float value = Math.max(v1, v2);
+            if (value > 1f) {
+                value = 1f;
+            }
+            mVlcPlayer.getVLC().setVolume((int) value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public boolean isMute() {
         return mMute;
+//        try {
+//                float volume = mVlcPlayer.getVLC().getVolume();
+//                return volume <= 0;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+    }
+
+    @Override
+    public void setMute(boolean mute) {
+        this.mMute = mute;
     }
 
     @Override

@@ -28,31 +28,33 @@ public interface KernelApi extends KernelEvent {
     @NonNull
     <T extends Object> T getPlayer();
 
-    void createDecoder(@NonNull Context context);
+    void createDecoder(@NonNull Context context, @NonNull boolean mute);
 
     void releaseDecoder();
 
     void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url);
 
-    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url) {
-        MediaLogUtil.log("KernelApi => create => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url + ", autoRelease = " + autoRelease + ", live = " + live);
-        update(seek, max, loop, live, autoRelease, url);
+    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean release, boolean mute, @NonNull String url) {
+        MediaLogUtil.log("KernelApi => create => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url + ", release = " + release + ", mute = " + mute + ", live = " + live);
+        update(seek, max, loop, live, release, mute, url);
         init(context, seek, max, url);
     }
 
     default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live) {
-        boolean autoRelease = isAutoRelease();
+        boolean release = isAutoRelease();
         String url = getUrl();
-        update(seek, max, loop, live, autoRelease, url);
+        boolean mute = isMute();
+        update(seek, max, loop, live, release, mute, url);
     }
 
-    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean autoRelease, @NonNull String url) {
-        MediaLogUtil.log("KernelApi => update => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", autoRelease = " + autoRelease + ", url = " + url + ", mKernel = " + this);
+    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean release, boolean mute, @NonNull String url) {
+        MediaLogUtil.log("KernelApi => update => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", release = " + release + ", mute = " + mute + ", url = " + url + ", mKernel = " + this);
         setSeek(seek);
         setMax(max);
+        setMute(mute);
         setLooping(loop);
         setLive(live);
-        setAutoRelease(autoRelease);
+        setAutoRelease(release);
         if (null != url && url.length() > 0) {
             setUrl(url);
         }
@@ -70,7 +72,7 @@ public interface KernelApi extends KernelEvent {
 
     boolean isPlaying();
 
-    void seekTo(long time);
+    void seekTo(@NonNull long position);
 
     long getPosition();
 
@@ -113,6 +115,8 @@ public interface KernelApi extends KernelEvent {
     void setVolume(float left, float right);
 
     boolean isMute();
+
+    void setMute(boolean mute);
 
     /********/
 
@@ -315,7 +319,10 @@ public interface KernelApi extends KernelEvent {
         // 切换原声
         releaseMusic();
         pause();
-        setVolume(1, 1);
+        if (isMute()) {
+        } else {
+            setVolume(1f, 1f);
+        }
         start();
     }
 

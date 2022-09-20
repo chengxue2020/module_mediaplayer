@@ -28,7 +28,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     private boolean mAutoRelease = false;
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
-    private boolean mMute = false; // 静音
+    private boolean mMute = false;
     private String mUrl = null; // 视频串
 
     private String mMusicPath = null;
@@ -53,10 +53,13 @@ public final class AndroidMediaPlayer implements KernelApi {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute) {
         releaseDecoder();
         mAndroidPlayer = new MediaPlayer();
         mAndroidPlayer.setLooping(false);
+        if (mute) {
+            mAndroidPlayer.setVolume(0f, 0f);
+        }
         setOptions();
         initListener();
     }
@@ -373,9 +376,13 @@ public final class AndroidMediaPlayer implements KernelApi {
 
     @Override
     public void setVolume(float v1, float v2) {
-        mMute = (v1 <= 0 || v2 <= 0);
         try {
-            mAndroidPlayer.setVolume(v1, v2);
+            float value = Math.max(v1, v2);
+            if (value > 1f) {
+                value = 1f;
+            }
+            setMute(value > 0);
+            mAndroidPlayer.setVolume(value, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -384,6 +391,18 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public boolean isMute() {
         return mMute;
+//        try {
+//                float volume = mVlcPlayer.getVLC().getVolume();
+//                return volume <= 0;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+    }
+
+    @Override
+    public void setMute(boolean mute) {
+        this.mMute = mute;
     }
 
     @Override

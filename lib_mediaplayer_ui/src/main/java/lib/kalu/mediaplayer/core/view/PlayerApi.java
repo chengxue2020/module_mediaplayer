@@ -115,11 +115,13 @@ public interface PlayerApi {
         long max = getMax();
         long seek = getSeek();
         boolean release = isRelease();
+        boolean mute = isMute();
         BundleBuilder.Builder builder = new BundleBuilder.Builder();
         builder.setMax(max);
         builder.setSeek(seek);
         builder.setLoop(looping);
         builder.setLive(live);
+        builder.setMute(mute);
         builder.setRelease(release);
         BundleBuilder build = builder.build();
         seekTo(force, build);

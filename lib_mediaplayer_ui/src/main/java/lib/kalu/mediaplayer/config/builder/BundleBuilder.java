@@ -10,6 +10,11 @@ public final class BundleBuilder {
     private boolean live;
     private boolean loop;
     private boolean release;
+    private boolean mute;
+
+    public boolean isMute() {
+        return mute;
+    }
 
     public long getMax() {
         return max;
@@ -34,6 +39,7 @@ public final class BundleBuilder {
     public BundleBuilder(BundleBuilder.Builder builder) {
         this.max = builder.max;
         this.seek = builder.seek;
+        this.mute = builder.mute;
         this.live = builder.live;
         this.loop = builder.loop;
         this.release = builder.release;
@@ -47,8 +53,14 @@ public final class BundleBuilder {
         private boolean live = false;
         private boolean loop = false;
         private boolean release = true;
+        private boolean mute = false;
 
         public Builder() {
+        }
+
+        public Builder setMute(boolean v) {
+            mute = v;
+            return this;
         }
 
         public Builder setMax(long v) {
