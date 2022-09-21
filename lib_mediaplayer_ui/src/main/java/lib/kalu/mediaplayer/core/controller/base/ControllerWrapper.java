@@ -274,6 +274,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void setExternalMusicAuto(boolean auto) {
+        mPlayer.setExternalMusicAuto(auto);
+    }
+
+    @Override
     public boolean isExternalMusicAuto() {
         return mPlayer.isExternalMusicAuto();
     }

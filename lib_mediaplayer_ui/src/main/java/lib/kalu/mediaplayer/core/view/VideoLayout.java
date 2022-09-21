@@ -1073,6 +1073,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
     }
 
+    @Override
+    public void setExternalMusicAuto(boolean auto) {
+        try {
+            mKernel.setExternalMusicAuto(auto);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /*****************************/
 
     private OnFullChangeListener mOnFullChangeListener;
