@@ -297,11 +297,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             // step4
                             resume();
                             // step5
-                            boolean has = hasExternalMusicPath();
-                            if (has) {
+                            if (isExternalMusicAuto()) {
+                                setVolume(0f, 0f);
                                 enableExternalMusic(true, false);
                             } else {
-                                enableExternalMusic(false, true);
+                                enableExternalMusic(false, false);
                             }
 
                             break;
@@ -322,11 +322,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             checkReal();
 
                             // step4
-                            boolean has1 = hasExternalMusicPath();
-                            if (has1) {
+                            if (isExternalMusicAuto()) {
+                                setVolume(0f, 0f);
                                 enableExternalMusic(true, false);
                             } else {
-                                enableExternalMusic(false, true);
+                                enableExternalMusic(false, false);
                             }
 
                             // 埋点
@@ -544,61 +544,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return null;
         }
     }
-
-//    @Override
-//    public void toggleMusicExtra(boolean auto) {
-//        try {
-//            mKernel.toggleMusicExtra(auto);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public void toggleMusicDefault(boolean musicPrepare) {
-//        try {
-//            mKernel.toggleMusicDafault(musicPrepare);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public void toggleMusicDefault() {
-//        try {
-//            mKernel.toggleMusicDafault();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public void toggleMusic() {
-//        try {
-//            mKernel.toggleMusic();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public boolean hasMusicExtra() {
-//        try {
-//            return mKernel.hasMusicExtra();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-//
-//    @Override
-//    public void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek) {
-//        try {
-//            mKernel.updateMusic(musicPath, musicPlay, musicLoop, musicSeek);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /**
      * 是否处于播放状态
@@ -1101,9 +1046,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public boolean hasExternalMusicPath() {
+    public boolean isExternalMusicAuto() {
         try {
-            return mKernel.hasExternalMusicPath();
+            boolean auto = mKernel.isExternalMusicAuto();
+            if (auto) {
+                String path = mKernel.getExternalMusicPath();
+                return null != path && path.length() > 0;
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -1117,8 +1068,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             mKernel.setExternalMusicPath(url);
             boolean loop = bundle.isExternalMusicLoop();
             mKernel.setExternalMusicLoop(loop);
-            boolean seek = bundle.isExternalMusicSeek();
-            mKernel.setExternalMusicSeek(seek);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -319,9 +319,13 @@ public interface PlayerApi {
 
     /*************************/
 
+    default void enableExternalMusic(boolean enable) {
+        enableExternalMusic(enable, false);
+    }
+
     void enableExternalMusic(boolean enable, boolean release);
 
-    boolean hasExternalMusicPath();
-
     void setExternalMusic(@NonNull BundleBuilder bundle);
+
+    boolean isExternalMusicAuto();
 }

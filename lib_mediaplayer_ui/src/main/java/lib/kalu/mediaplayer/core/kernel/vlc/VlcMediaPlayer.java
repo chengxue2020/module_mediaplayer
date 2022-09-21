@@ -37,8 +37,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     private String mExternalMusicPath = null;
     private boolean mExternalMusicPlaying = false;
     private boolean mExternalMusicLoop = false;
-    private boolean mExternalMusicSeek = false;
-    private android.media.MediaPlayer mExternalMusicPlayer = null; // 配音音频
+    private boolean mExternalMusicAuto = false;
 
     //    private LibVLC mLibVLC;
     private KernelEvent mEvent;
@@ -439,13 +438,13 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public boolean isExternalMusicSeek() {
-        return mExternalMusicSeek;
+    public boolean isExternalMusicAuto() {
+        return mExternalMusicAuto;
     }
 
     @Override
-    public void setExternalMusicSeek(boolean seek) {
-        this.mExternalMusicSeek = seek;
+    public void setExternalMusicAuto(boolean auto) {
+        this.mExternalMusicAuto = auto;
     }
 
     @Override
@@ -456,19 +455,5 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public String getExternalMusicPath() {
         return this.mExternalMusicPath;
-    }
-
-    @Override
-    public void releaseExternalMusic() {
-        KernelApi.super.releaseExternalMusic();
-        mExternalMusicPlayer = null;
-    }
-
-    @Override
-    public android.media.MediaPlayer getExternalMusicPlayer() {
-        if (null == mExternalMusicPlayer) {
-            mExternalMusicPlayer = new android.media.MediaPlayer();
-        }
-        return mExternalMusicPlayer;
     }
 }

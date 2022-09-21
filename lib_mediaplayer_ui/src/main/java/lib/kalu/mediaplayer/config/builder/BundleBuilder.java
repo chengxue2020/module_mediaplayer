@@ -15,7 +15,7 @@ public final class BundleBuilder {
     // 外部背景音
     private String externalMusicUrl = null;
     private boolean externalMusicLoop = false;
-    private boolean externalMusicSeek = false;
+    private boolean externalMusicAuto = false;
 
     public boolean isMute() {
         return mute;
@@ -49,23 +49,8 @@ public final class BundleBuilder {
         return externalMusicLoop;
     }
 
-    public boolean isExternalMusicSeek() {
-        return externalMusicSeek;
-    }
-
-    @Override
-    public String toString() {
-        return "BundleBuilder{" +
-                "max=" + max +
-                ", seek=" + seek +
-                ", live=" + live +
-                ", loop=" + loop +
-                ", release=" + release +
-                ", mute=" + mute +
-                ", externalMusicUrl='" + externalMusicUrl + '\'' +
-                ", externalMusicLoop=" + externalMusicLoop +
-                ", externalMusicSeek=" + externalMusicSeek +
-                '}';
+    public boolean isExternalMusicAuto() {
+        return externalMusicAuto;
     }
 
     public BundleBuilder(BundleBuilder.Builder builder) {
@@ -77,7 +62,7 @@ public final class BundleBuilder {
         this.release = builder.release;
         this.externalMusicUrl = builder.externalMusicUrl;
         this.externalMusicLoop = builder.externalMusicLoop;
-        this.externalMusicSeek = builder.externalMusicSeek;
+        this.externalMusicAuto = builder.externalMusicAuto;
     }
 
     @Keep
@@ -92,18 +77,19 @@ public final class BundleBuilder {
 
         private String externalMusicUrl = null;
         private boolean externalMusicLoop = false;
-        private boolean externalMusicSeek = false;
+        private boolean externalMusicAuto = false;
+
 
         public Builder() {
         }
 
-        public Builder setExternalMusicLoop(boolean v) {
-            externalMusicLoop = v;
+        public Builder setExternalMusicAuto(boolean v) {
+            externalMusicAuto = v;
             return this;
         }
 
-        public Builder setExternalMusicSeek(boolean v) {
-            externalMusicSeek = v;
+        public Builder setExternalMusicLoop(boolean v) {
+            externalMusicLoop = v;
             return this;
         }
 
