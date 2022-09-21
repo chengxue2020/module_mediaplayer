@@ -588,7 +588,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         clearHanlder();
         // step3
         if (force) {
-            mKernel.update(seek);
+            mKernel.update(seek, max, loop);
             pause(true);
         }
         // step4

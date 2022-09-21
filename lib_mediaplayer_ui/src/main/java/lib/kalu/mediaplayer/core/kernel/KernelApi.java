@@ -38,8 +38,10 @@ public interface KernelApi extends KernelEvent {
         init(context, url);
     }
 
-    default void update(@NonNull long seek) {
+    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
         setSeek(seek);
+        setMax(max);
+        setLooping(loop);
     }
 
     default void update(@NonNull BundleBuilder bundle, @NonNull String playUrl) {
