@@ -248,7 +248,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
 
             // step4
-            mKernel.create(getContext(), seek, max, loop, live, release, mute, url);
+            mKernel.create(getContext(), builder, url);
             setKeepScreenOn(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -297,11 +297,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             // step4
                             resume();
                             // step5
-                            boolean hasMusicExtra = hasMusicExtra();
-                            if (hasMusicExtra) {
-                                toggleMusicExtra(true);
+                            boolean has = hasExternalMusicPath();
+                            if (has) {
+                                enableExternalMusic(true, false);
                             } else {
-                                toggleMusicDefault(true);
+                                enableExternalMusic(false, true);
                             }
 
                             break;
@@ -322,11 +322,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             checkReal();
 
                             // step4
-                            boolean has = hasMusicExtra();
-                            if (has) {
-                                toggleMusicExtra(true);
+                            boolean has1 = hasExternalMusicPath();
+                            if (has1) {
+                                enableExternalMusic(true, false);
                             } else {
-                                toggleMusicDefault(true);
+                                enableExternalMusic(false, true);
                             }
 
                             // 埋点
@@ -545,60 +545,60 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
     }
 
-    @Override
-    public void toggleMusicExtra(boolean auto) {
-        try {
-            mKernel.toggleMusicExtra(auto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void toggleMusicDefault(boolean musicPrepare) {
-        try {
-            mKernel.toggleMusicDafault(musicPrepare);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void toggleMusicDefault() {
-        try {
-            mKernel.toggleMusicDafault();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void toggleMusic() {
-        try {
-            mKernel.toggleMusic();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public boolean hasMusicExtra() {
-        try {
-            return mKernel.hasMusicExtra();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek) {
-        try {
-            mKernel.updateMusic(musicPath, musicPlay, musicLoop, musicSeek);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @Override
+//    public void toggleMusicExtra(boolean auto) {
+//        try {
+//            mKernel.toggleMusicExtra(auto);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public void toggleMusicDefault(boolean musicPrepare) {
+//        try {
+//            mKernel.toggleMusicDafault(musicPrepare);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public void toggleMusicDefault() {
+//        try {
+//            mKernel.toggleMusicDafault();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public void toggleMusic() {
+//        try {
+//            mKernel.toggleMusic();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Override
+//    public boolean hasMusicExtra() {
+//        try {
+//            return mKernel.hasMusicExtra();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek) {
+//        try {
+//            mKernel.updateMusic(musicPath, musicPlay, musicLoop, musicSeek);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * 是否处于播放状态
@@ -631,14 +631,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         long seek = builder.getSeek();
         long max = builder.getMax();
         boolean loop = builder.isLoop();
-        boolean live = builder.isLive() || isLive();
-
-        if (seek < 0)
-            return;
-
-        if (seek == 0) {
-            seek = 1;
-        }
 
         String url = getUrl();
         MediaLogUtil.log("onEvent => seekTo => seek = " + seek + ", max = " + max + ", loop = " + loop + ", force = " + force + ", url = " + url + ", mKernel = " + mKernel);
@@ -651,7 +643,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         clearHanlder();
         // step3
         if (force) {
-            mKernel.update(seek, max, loop, live);
+            mKernel.update(seek);
             pause(true);
         }
         // step4
@@ -1096,6 +1088,39 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     l.onWindow(windowState);
                 }
             }
+        }
+    }
+
+    @Override
+    public void enableExternalMusic(boolean enable, boolean release) {
+        try {
+            mKernel.enableExternalMusic(enable, release);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean hasExternalMusicPath() {
+        try {
+            return mKernel.hasExternalMusicPath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public void setExternalMusic(@NonNull BundleBuilder bundle) {
+        try {
+            String url = bundle.getExternalMusicUrl();
+            mKernel.setExternalMusicPath(url);
+            boolean loop = bundle.isExternalMusicLoop();
+            mKernel.setExternalMusicLoop(loop);
+            boolean seek = bundle.isExternalMusicSeek();
+            mKernel.setExternalMusicSeek(seek);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

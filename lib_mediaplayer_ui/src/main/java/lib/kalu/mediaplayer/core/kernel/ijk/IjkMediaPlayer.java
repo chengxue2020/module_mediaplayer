@@ -31,11 +31,11 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private boolean mMute = false;
     private String mUrl = null; // 视频串
 
-    private String mMusicPath = null;
-    private boolean mMusicPrepare = false;
-    private boolean mMusicLoop = false;
-    private boolean mMusicSeek = false;
-    private android.media.MediaPlayer mMusicPlayer = null; // 配音音频
+    private String mExternalMusicPath = null;
+    private boolean mExternalMusicPlaying = false;
+    private boolean mExternalMusicLoop = false;
+    private boolean mExternalMusicSeek = false;
+    private android.media.MediaPlayer mExternalMusicPlayer = null; // 配音音频
 
     private KernelEvent mEvent;
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer;
@@ -74,11 +74,48 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void releaseDecoder() {
-        releaseMusic();
+        releaseExternalMusic();
         if (null != mIjkPlayer) {
             mIjkPlayer.stop();
             mIjkPlayer.release();
             mIjkPlayer = null;
+        }
+    }
+
+    @Override
+    public void init(@NonNull Context context, @NonNull String url) {
+
+        // 设置dataSource
+        if (url == null || url.length() == 0) {
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
+            return;
+        }
+        try {
+            //解析path
+            Uri uri = Uri.parse(url);
+            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
+                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
+                mIjkPlayer.setDataSource(rawDataSourceProvider);
+            } else {
+                //处理UA问题
+//                if (headers != null) {
+//                    String userAgent = headers.get("User-Agent");
+//                    if (!TextUtils.isEmpty(userAgent)) {
+//                        mIjkPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
+//                    }
+//                }
+                mIjkPlayer.setDataSource(context, uri, null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
+        }
+
+        try {
+            mIjkPlayer.prepareAsync();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
         }
     }
 
@@ -202,43 +239,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         try {
             mIjkPlayer.setDataSource(new RawDataSourceProvider(fd));
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
-
-        // 设置dataSource
-        if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
-            return;
-        }
-        try {
-            //解析path
-            Uri uri = Uri.parse(url);
-            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
-                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
-                mIjkPlayer.setDataSource(rawDataSourceProvider);
-            } else {
-                //处理UA问题
-//                if (headers != null) {
-//                    String userAgent = headers.get("User-Agent");
-//                    if (!TextUtils.isEmpty(userAgent)) {
-//                        mIjkPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
-//                    }
-//                }
-                mIjkPlayer.setDataSource(context, uri, null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
-        }
-
-        try {
-            mIjkPlayer.prepareAsync();
-        } catch (IllegalStateException e) {
             e.printStackTrace();
         }
     }
@@ -385,7 +385,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             if (value > 1f) {
                 value = 1f;
             }
-            mIjkPlayer.setVolume(value,value);
+            mIjkPlayer.setVolume(value, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -406,60 +406,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setMute(boolean mute) {
         this.mMute = mute;
-    }
-
-    @Override
-    public boolean isMusicPrepare() {
-        return mMusicPrepare;
-    }
-
-    @Override
-    public boolean isMusicLoop() {
-        return mMusicLoop;
-    }
-
-    @Override
-    public void setMusicLoop(boolean loop) {
-        this.mMusicLoop = loop;
-    }
-
-    @Override
-    public boolean isMusicSeek() {
-        return mMusicSeek;
-    }
-
-    @Override
-    public void setMusicSeek(boolean seek) {
-        this.mMusicSeek = seek;
-    }
-
-    @Override
-    public void setMusicPrepare(boolean prepare) {
-        this.mMusicPrepare = prepare;
-    }
-
-    @Override
-    public void setMusicPath(@NonNull String musicPath) {
-        this.mMusicPath = musicPath;
-    }
-
-    @Override
-    public String getMusicPath() {
-        return this.mMusicPath;
-    }
-
-    @Override
-    public void releaseMusic() {
-        KernelApi.super.releaseMusic();
-        mMusicPlayer = null;
-    }
-
-    @Override
-    public MediaPlayer getMusicPlayer() {
-        if (null == mMusicPlayer) {
-            mMusicPlayer = new MediaPlayer();
-        }
-        return mMusicPlayer;
     }
 
     @Override
@@ -644,4 +590,60 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             MediaLogUtil.log("IjkMediaPlayer => onSeekComplete => ");
         }
     };
+
+    /****************/
+
+    @Override
+    public boolean isExternalMusicPlaying() {
+        return mExternalMusicPlaying;
+    }
+
+    @Override
+    public void setExternalMusicPlaying(boolean v) {
+        this.mExternalMusicPlaying = v;
+    }
+
+    @Override
+    public boolean isExternalMusicLoop() {
+        return mExternalMusicLoop;
+    }
+
+    @Override
+    public void setExternalMusicLoop(boolean loop) {
+        this.mExternalMusicLoop = loop;
+    }
+
+    @Override
+    public boolean isExternalMusicSeek() {
+        return mExternalMusicSeek;
+    }
+
+    @Override
+    public void setExternalMusicSeek(boolean seek) {
+        this.mExternalMusicSeek = seek;
+    }
+
+    @Override
+    public void setExternalMusicPath(@NonNull String musicPath) {
+        this.mExternalMusicPath = musicPath;
+    }
+
+    @Override
+    public String getExternalMusicPath() {
+        return this.mExternalMusicPath;
+    }
+
+    @Override
+    public void releaseExternalMusic() {
+        KernelApi.super.releaseExternalMusic();
+        mExternalMusicPlayer = null;
+    }
+
+    @Override
+    public android.media.MediaPlayer getExternalMusicPlayer() {
+        if (null == mExternalMusicPlayer) {
+            mExternalMusicPlayer = new android.media.MediaPlayer();
+        }
+        return mExternalMusicPlayer;
+    }
 }

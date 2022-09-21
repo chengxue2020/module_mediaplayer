@@ -99,36 +99,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void toggleMusicExtra(boolean auto) {
-        mPlayer.toggleMusicExtra(auto);
-    }
-
-    @Override
-    public void toggleMusicDefault() {
-        mPlayer.toggleMusicDefault();
-    }
-
-    @Override
-    public void toggleMusicDefault(boolean musicPrepare) {
-        mPlayer.toggleMusicDefault(musicPrepare);
-    }
-
-    @Override
-    public void toggleMusic() {
-        mPlayer.toggleMusic();
-    }
-
-    @Override
-    public boolean hasMusicExtra() {
-        return false;
-    }
-
-    @Override
-    public void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek) {
-        mPlayer.updateMusic(musicPath, musicPlay, musicLoop, musicSeek);
-    }
-
-    @Override
     public boolean isPlaying() {
         return mPlayer.isPlaying();
     }
@@ -291,6 +261,21 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     @Override
     public void callWindowState(int windowState) {
         mPlayer.callWindowState(windowState);
+    }
+
+    @Override
+    public void enableExternalMusic(boolean enable, boolean release) {
+        mPlayer.enableExternalMusic(enable, release);
+    }
+
+    @Override
+    public boolean hasExternalMusicPath() {
+        return mPlayer.hasExternalMusicPath();
+    }
+
+    @Override
+    public void setExternalMusic(@NonNull BundleBuilder bundle) {
+        mPlayer.setExternalMusic(bundle);
     }
 
 //    /**

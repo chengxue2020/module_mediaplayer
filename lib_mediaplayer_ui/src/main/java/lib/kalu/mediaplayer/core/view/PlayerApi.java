@@ -91,22 +91,6 @@ public interface PlayerApi {
 
     String getUrl();
 
-    default void toggleMusicExtra() {
-        toggleMusicExtra(false);
-    }
-
-    void toggleMusicExtra(boolean auto);
-
-    void toggleMusicDefault();
-
-    void toggleMusicDefault(boolean musicPrepare);
-
-    void toggleMusic();
-
-    boolean hasMusicExtra();
-
-    void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek);
-
     int getBufferedPercentage();
 
     default void seekTo(@NonNull boolean force) {
@@ -332,4 +316,12 @@ public interface PlayerApi {
             e.printStackTrace();
         }
     }
+
+    /*************************/
+
+    void enableExternalMusic(boolean enable, boolean release);
+
+    boolean hasExternalMusicPath();
+
+    void setExternalMusic(@NonNull BundleBuilder bundle);
 }

@@ -34,11 +34,11 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     private boolean mMute = false;
     private String mUrl = null; // 视频串
 
-    private String mMusicPath = null;
-    private boolean mMusicPrepare = false;
-    private boolean mMusicLoop = false;
-    private boolean mMusicSeek = false;
-    private android.media.MediaPlayer mMusicPlayer = null; // 配音音频
+    private String mExternalMusicPath = null;
+    private boolean mExternalMusicPlaying = false;
+    private boolean mExternalMusicLoop = false;
+    private boolean mExternalMusicSeek = false;
+    private android.media.MediaPlayer mExternalMusicPlayer = null; // 配音音频
 
     //    private LibVLC mLibVLC;
     private KernelEvent mEvent;
@@ -74,7 +74,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void releaseDecoder() {
-        releaseMusic();
+        releaseExternalMusic();
         if (null != mVlcPlayer) {
             mVlcPlayer.release();
             mVlcPlayer = null;
@@ -223,7 +223,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url) {
+    public void init(@NonNull Context context, @NonNull String url) {
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
@@ -353,60 +353,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public boolean isMusicPrepare() {
-        return mMusicPrepare;
-    }
-
-    @Override
-    public void setMusicPrepare(boolean prepare) {
-        this.mMusicPrepare = prepare;
-    }
-
-    @Override
-    public boolean isMusicLoop() {
-        return mMusicLoop;
-    }
-
-    @Override
-    public void setMusicLoop(boolean loop) {
-        this.mMusicLoop = loop;
-    }
-
-    @Override
-    public boolean isMusicSeek() {
-        return mMusicSeek;
-    }
-
-    @Override
-    public void setMusicSeek(boolean seek) {
-        this.mMusicSeek = seek;
-    }
-
-    @Override
-    public void setMusicPath(@NonNull String musicPath) {
-        this.mMusicPath = musicPath;
-    }
-
-    @Override
-    public String getMusicPath() {
-        return this.mMusicPath;
-    }
-
-    @Override
-    public void releaseMusic() {
-        KernelApi.super.releaseMusic();
-        mMusicPlayer = null;
-    }
-
-    @Override
-    public android.media.MediaPlayer getMusicPlayer() {
-        if (null == mMusicPlayer) {
-            mMusicPlayer = new android.media.MediaPlayer();
-        }
-        return mMusicPlayer;
-    }
-
-    @Override
     public String getUrl() {
         return mUrl;
     }
@@ -471,4 +417,58 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     /****************/
+
+    @Override
+    public boolean isExternalMusicPlaying() {
+        return mExternalMusicPlaying;
+    }
+
+    @Override
+    public void setExternalMusicPlaying(boolean v) {
+        this.mExternalMusicPlaying = v;
+    }
+
+    @Override
+    public boolean isExternalMusicLoop() {
+        return mExternalMusicLoop;
+    }
+
+    @Override
+    public void setExternalMusicLoop(boolean loop) {
+        this.mExternalMusicLoop = loop;
+    }
+
+    @Override
+    public boolean isExternalMusicSeek() {
+        return mExternalMusicSeek;
+    }
+
+    @Override
+    public void setExternalMusicSeek(boolean seek) {
+        this.mExternalMusicSeek = seek;
+    }
+
+    @Override
+    public void setExternalMusicPath(@NonNull String musicPath) {
+        this.mExternalMusicPath = musicPath;
+    }
+
+    @Override
+    public String getExternalMusicPath() {
+        return this.mExternalMusicPath;
+    }
+
+    @Override
+    public void releaseExternalMusic() {
+        KernelApi.super.releaseExternalMusic();
+        mExternalMusicPlayer = null;
+    }
+
+    @Override
+    public android.media.MediaPlayer getExternalMusicPlayer() {
+        if (null == mExternalMusicPlayer) {
+            mExternalMusicPlayer = new android.media.MediaPlayer();
+        }
+        return mExternalMusicPlayer;
+    }
 }

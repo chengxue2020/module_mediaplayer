@@ -9,6 +9,9 @@ import android.view.Surface;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import java.io.IOException;
+
+import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 
@@ -19,12 +22,6 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public interface KernelApi extends KernelEvent {
 
-//    Boolean[] mLoop = new Boolean[1]; // 循环播放
-//    Boolean[] mMute = new Boolean[1]; // 静音
-//    Long[] mMax = new Long[1]; // 试播时常
-//    String[] mUrl = new String[1]; // 视频串
-//    MediaPlayer[] mMusicPlayer = new MediaPlayer[1]; // 配音音频
-
     @NonNull
     <T extends Object> T getPlayer();
 
@@ -32,51 +29,42 @@ public interface KernelApi extends KernelEvent {
 
     void releaseDecoder();
 
-    void init(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull String url);
+    void init(@NonNull Context context, @NonNull String url);
+//    void init(@NonNull Context context, @NonNull BundleBuilder bundle, @NonNull String url);
 
-    default void create(@NonNull Context context, @NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean release, boolean mute, @NonNull String url) {
-        MediaLogUtil.log("KernelApi => create => seek = " + seek + ", max = " + max + ", loop = " + loop + ", url = " + url + ", release = " + release + ", mute = " + mute + ", live = " + live);
-        update(seek, max, loop, live, release, mute, url);
-        init(context, seek, max, url);
+    default void create(@NonNull Context context, @NonNull BundleBuilder bundle, @NonNull String url) {
+        update(bundle, url);
+        init(context, url);
     }
 
-    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live) {
-        boolean release = isAutoRelease();
-        String url = getUrl();
-        boolean mute = isMute();
-        update(seek, max, loop, live, release, mute, url);
-    }
-
-    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop, @NonNull boolean live, @NonNull boolean release, boolean mute, @NonNull String url) {
-        MediaLogUtil.log("KernelApi => update => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", release = " + release + ", mute = " + mute + ", url = " + url + ", mKernel = " + this);
+    default void update(@NonNull long seek) {
         setSeek(seek);
-        setMax(max);
-        setMute(mute);
-        setLooping(loop);
-        setLive(live);
-        setAutoRelease(release);
-        if (null != url && url.length() > 0) {
-            setUrl(url);
+    }
+
+    default void update(@NonNull BundleBuilder bundle, @NonNull String playUrl) {
+        MediaLogUtil.log("KernelApi => update => this = " + this + ", playUrl = " + playUrl);
+        MediaLogUtil.log("KernelApi => update => bundle = " + bundle);
+        // 1
+        setSeek(bundle.getSeek());
+        setMax(bundle.getMax());
+        setMute(bundle.isMute());
+        setLooping(bundle.isLoop());
+        setLive(bundle.isLive());
+        setAutoRelease(bundle.isRelease());
+        if (null != playUrl && playUrl.length() > 0) {
+            setUrl(playUrl);
         }
+        // 2
+        setExternalMusicPath(bundle.getExternalMusicUrl());
+        setExternalMusicLoop(bundle.isExternalMusicLoop());
+        setExternalMusicSeek(bundle.isExternalMusicSeek());
     }
 
     void setDataSource(AssetFileDescriptor fd);
 
     void setSurface(@NonNull Surface surface);
 
-    void start();
-
-    void pause();
-
-    void stop();
-
-    boolean isPlaying();
-
     void seekTo(@NonNull long position);
-
-    long getPosition();
-
-    long getDuration();
 
     int getBufferedPercentage();
 
@@ -112,80 +100,92 @@ public interface KernelApi extends KernelEvent {
 
     boolean isAutoRelease();
 
-    void setVolume(float left, float right);
-
     boolean isMute();
 
     void setMute(boolean mute);
 
-    /********/
+    void start();
 
-    boolean isMusicPrepare();
+    void pause();
 
-    void setMusicPrepare(boolean prepare);
+    void stop();
 
-    boolean isMusicLoop();
+    boolean isPlaying();
 
-    void setMusicLoop(boolean loop);
+    long getPosition();
 
-    boolean isMusicSeek();
+    long getDuration();
 
-    void setMusicSeek(boolean seek);
+    void setVolume(float left, float right);
 
-    void setMusicPath(@NonNull String musicPath);
+    /*************** 外部背景音乐 **************/
 
-    String getMusicPath();
+    boolean isExternalMusicPlaying();
 
-    android.media.MediaPlayer getMusicPlayer();
+    void setExternalMusicPlaying(boolean v);
 
-    default void releaseMusic() {
+    boolean isExternalMusicLoop();
 
-        String musicPath = getMusicPath();
-        MediaLogUtil.log("KernelApiMusic => releaseMusic => musicPath = " + musicPath);
-        if (null == musicPath || musicPath.length() <= 0)
-            return;
+    void setExternalMusicLoop(boolean loop);
 
-        // 1
-        setMusicPrepare(false);
+    boolean isExternalMusicSeek();
 
-        // 2
-        MediaPlayer musicPlayer = getMusicPlayer();
-        if (musicPlayer.isLooping()) {
-            musicPlayer.setLooping(false);
-        }
-        if (musicPlayer.isPlaying()) {
-            musicPlayer.stop();
-        }
-        musicPlayer.reset();
-        musicPlayer.release();
-    }
+    void setExternalMusicSeek(boolean seek);
 
-    default void resumeMusic() {
+    void setExternalMusicPath(@NonNull String musicPath);
 
-        String musicPath = getMusicPath();
-        MediaLogUtil.log("KernelApiMusic => resumeMusic => musicPath = " + musicPath);
-        if (null == musicPath || musicPath.length() <= 0)
-            return;
+    String getExternalMusicPath();
 
-        // step1
-        pause();
-        setVolume(0, 0);
+    android.media.MediaPlayer getExternalMusicPlayer();
 
-        // step2
-        MediaPlayer musicPlayer = getMusicPlayer();
-        if (musicPlayer.isLooping()) {
-            musicPlayer.setLooping(false);
-        }
-        try {
-            musicPlayer.prepare();
-        } catch (Exception e) {
-        }
-        musicPlayer.start();
-        boolean musicSeek = isMusicSeek();
-        if (musicSeek) {
-            long position = getPosition();
-            musicPlayer.seekTo((int) position);
-        }
+    default void enableExternalMusic(boolean enable, boolean release) {
+
+        String path = getExternalMusicPath();
+        boolean playing = isExternalMusicPlaying();
+        MediaLogUtil.log("KernelApiMusic => enableExternalMusic => playing = " + playing + ", path = " + path);
+
+        // 播放额外音频
+        if (enable) {
+
+            // 1a
+            if (playing) {
+                setExternalVolume(1f);
+            }
+            // 1b, 2. 设置额外音频地址
+            else {
+
+                // a
+                releaseExternalMusic();
+
+                // b
+                MediaPlayer musicPlayer = getExternalMusicPlayer();
+                try {
+                    musicPlayer.setDataSource(Uri.parse(path).toString());
+                } catch (IOException e) {
+                }
+
+                // c
+                // 3-1. 播放额外音频
+                pause();
+                setVolume(0f, 0f);
+
+                // 3.2. 播放额外音频
+                boolean loop = isExternalMusicLoop();
+                musicPlayer.setLooping(loop);
+                try {
+                    musicPlayer.prepare();
+                } catch (Exception e) {
+                }
+                musicPlayer.setVolume(1f, 1f);
+                musicPlayer.start();
+                boolean seek = isExternalMusicSeek();
+                if (seek) {
+                    long position = getPosition();
+                    if (position > 0) {
+                        MediaLogUtil.log("KernelApiMusic => seekTo => position = " + position);
+                        musicPlayer.seekTo((int) position);
+                    }
+                }
 //        musicPlayer.setOnInfoListener(null);
 //        musicPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
 //            @Override
@@ -202,134 +202,80 @@ public interface KernelApi extends KernelEvent {
 //                return false;
 //            }
 //        });
-        musicPlayer.setOnPreparedListener(null);
-        musicPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                boolean playing = isPlaying();
-                MediaLogUtil.log("KernelApiMusic => onPrepared => playing = " + playing);
-                if (!playing) {
-                    setMusicPrepare(true);
-                    start();
-                }
+                MediaLogUtil.log("KernelApiMusic => setOnPreparedListener =>");
+                musicPlayer.setOnPreparedListener(null);
+                musicPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        boolean playing = isPlaying();
+                        MediaLogUtil.log("KernelApiMusic => onPrepared => playing = " + playing);
+                        if (!playing) {
+                            setExternalMusicPlaying(true);
+                            start();
+                        }
+                    }
+                });
             }
-        });
+        }
+        // 停止额外音频
+        else {
+
+            // 1.暂停视频播放器
+            pause();
+            setExternalMusicPlaying(false);
+
+            // 2a.销毁额外音频播放器
+            if (release) {
+                releaseExternalMusic();
+            }
+            // 2b.暂停额外音频播放器
+            else {
+                setExternalVolume(0f);
+            }
+
+            // 3.
+            if (isMute()) {
+            } else {
+                setVolume(1f, 1f);
+            }
+
+            // 4.
+            start();
+        }
     }
 
-    default void startMusic() {
+    default void releaseExternalMusic() {
 
         // 1
-        String musicPath = getMusicPath();
-        MediaLogUtil.log("KernelApiMusic => startMusic => musicPath = " + musicPath);
-        if (null == musicPath || musicPath.length() <= 0)
-            return;
+        setExternalMusicPath(null);
+        setExternalMusicLoop(false);
+        setExternalMusicPlaying(false);
 
         // 2
-        MediaPlayer musicPlayer = getMusicPlayer();
+        MediaPlayer musicPlayer = getExternalMusicPlayer();
+        if (musicPlayer.isLooping()) {
+            musicPlayer.setLooping(false);
+        }
+        if (musicPlayer.isPlaying()) {
+            musicPlayer.stop();
+        }
+        musicPlayer.reset();
+        musicPlayer.release();
+    }
+
+    default void setExternalVolume(float v) {
         try {
-            musicPlayer.setDataSource(Uri.parse(musicPath).toString());
-            MediaLogUtil.log("KernelApiMusic => startMusic => setDataSource = " + true);
+            MediaPlayer musicPlayer = getExternalMusicPlayer();
+            musicPlayer.setVolume(v, v);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // 3
-        resumeMusic();
     }
 
-
-    default void updateMusic(@NonNull String musicPath, @NonNull boolean musicPlay, @NonNull boolean musicLoop, @NonNull boolean musicSeek) {
-
-        // step1
-        setMusicPath(musicPath);
-        setMusicLoop(musicLoop);
-        setMusicSeek(musicSeek);
-
-        // step2
-        releaseMusic();
-
-        // step3
-        if (musicPlay) {
-            startMusic();
-        }
+    default boolean hasExternalMusicPath() {
+        String path = getExternalMusicPath();
+        return null != path && path.length() > 0;
     }
 
-    default void toggleMusic() {
-
-        String musicPath = getMusicPath();
-        MediaLogUtil.log("KernelApiMusic => toggleMusic => musicPath = " + musicPath);
-        if (null == musicPath || musicPath.length() <= 0) {
-            return;
-        }
-
-        // 视频音源
-        MediaPlayer musicPlayer = getMusicPlayer();
-        boolean playing = musicPlayer.isPlaying();
-        boolean musicPrepare = isMusicPrepare();
-        MediaLogUtil.log("KernelApiMusic => toggleMusic => playing = " + playing + ", musicPrepare = " + musicPrepare);
-
-        // 切换原声
-        if (musicPrepare && playing) {
-            toggleMusicDafault();
-        }
-        // 切换配音
-        else {
-            toggleMusicExtra(false);
-        }
-    }
-
-    default void toggleMusicExtra(boolean auto) {
-
-        String musicPath = getMusicPath();
-        MediaLogUtil.log("KernelApiMusic => toggleMusicExtra => musicPath = " + musicPath);
-        if (null == musicPath || musicPath.length() <= 0)
-            return;
-
-        if (auto) {
-            releaseMusic();
-        }
-
-        // 视频音源
-        boolean musicPrepare = isMusicPrepare();
-        if (!auto && null != musicPath && musicPath.length() > 0 && musicPrepare)
-            return;
-
-        // 切换配音1
-        if (musicPrepare) {
-            resumeMusic();
-        }
-        // 切换配音2
-        else {
-            startMusic();
-        }
-    }
-
-    default void toggleMusicDafault() {
-        boolean musicPrepare = isMusicPrepare();
-        toggleMusicDafault(musicPrepare);
-    }
-
-    default void toggleMusicDafault(boolean musicPrepare) {
-
-        String musicPath = getMusicPath();
-        MediaLogUtil.log("KernelApiMusic => toggleMusicDafault => musicPrepare = " + musicPrepare + ", musicPath = " + musicPath);
-        if (!musicPrepare && (null == musicPath || musicPath.length() <= 0))
-            return;
-
-        // 切换原声
-        releaseMusic();
-        pause();
-        if (isMute()) {
-        } else {
-            setVolume(1f, 1f);
-        }
-        start();
-    }
-
-    default boolean hasMusicExtra() {
-        boolean musicPrepare = isMusicPrepare();
-        boolean musicLoop = isMusicLoop();
-        String musicPath = getMusicPath();
-        return (null != musicPath && musicPath.length() > 0 && musicPrepare && musicLoop);
-    }
+    /*************** 外部背景音乐 **************/
 }

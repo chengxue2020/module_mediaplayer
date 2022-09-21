@@ -12,6 +12,11 @@ public final class BundleBuilder {
     private boolean release;
     private boolean mute;
 
+    // 外部背景音
+    private String externalMusicUrl = null;
+    private boolean externalMusicLoop = false;
+    private boolean externalMusicSeek = false;
+
     public boolean isMute() {
         return mute;
     }
@@ -36,6 +41,33 @@ public final class BundleBuilder {
         return release;
     }
 
+    public String getExternalMusicUrl() {
+        return externalMusicUrl;
+    }
+
+    public boolean isExternalMusicLoop() {
+        return externalMusicLoop;
+    }
+
+    public boolean isExternalMusicSeek() {
+        return externalMusicSeek;
+    }
+
+    @Override
+    public String toString() {
+        return "BundleBuilder{" +
+                "max=" + max +
+                ", seek=" + seek +
+                ", live=" + live +
+                ", loop=" + loop +
+                ", release=" + release +
+                ", mute=" + mute +
+                ", externalMusicUrl='" + externalMusicUrl + '\'' +
+                ", externalMusicLoop=" + externalMusicLoop +
+                ", externalMusicSeek=" + externalMusicSeek +
+                '}';
+    }
+
     public BundleBuilder(BundleBuilder.Builder builder) {
         this.max = builder.max;
         this.seek = builder.seek;
@@ -43,6 +75,9 @@ public final class BundleBuilder {
         this.live = builder.live;
         this.loop = builder.loop;
         this.release = builder.release;
+        this.externalMusicUrl = builder.externalMusicUrl;
+        this.externalMusicLoop = builder.externalMusicLoop;
+        this.externalMusicSeek = builder.externalMusicSeek;
     }
 
     @Keep
@@ -55,7 +90,26 @@ public final class BundleBuilder {
         private boolean release = true;
         private boolean mute = false;
 
+        private String externalMusicUrl = null;
+        private boolean externalMusicLoop = false;
+        private boolean externalMusicSeek = false;
+
         public Builder() {
+        }
+
+        public Builder setExternalMusicLoop(boolean v) {
+            externalMusicLoop = v;
+            return this;
+        }
+
+        public Builder setExternalMusicSeek(boolean v) {
+            externalMusicSeek = v;
+            return this;
+        }
+
+        public Builder setExternalMusicUrl(String v) {
+            externalMusicUrl = v;
+            return this;
         }
 
         public Builder setMute(boolean v) {
