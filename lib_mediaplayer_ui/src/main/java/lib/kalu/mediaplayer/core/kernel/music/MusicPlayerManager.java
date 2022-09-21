@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.music;
 
 
+import android.media.MediaPlayer;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ public final class MusicPlayerManager {
     public static void release() {
         if (null == mMediaPlayer)
             return;
+        mMediaPlayer.setOnSeekCompleteListener(null);
         mMediaPlayer.setOnPreparedListener(null);
         mMediaPlayer.setLooping(false);
         mMediaPlayer.stop();
@@ -65,10 +67,12 @@ public final class MusicPlayerManager {
         mMediaPlayer.setOnPreparedListener(listener);
     }
 
-    public static void restart() {
+    public static void restart(@NonNull long msec, @NonNull MediaPlayer.OnSeekCompleteListener listener) {
         if (null == mMediaPlayer)
             return;
         mMediaPlayer.setVolume(1f, 1f);
         mMediaPlayer.start();
+        mMediaPlayer.seekTo((int) msec);
+        mMediaPlayer.setOnSeekCompleteListener(listener);
     }
 }

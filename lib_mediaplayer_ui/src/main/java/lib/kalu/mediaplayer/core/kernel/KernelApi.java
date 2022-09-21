@@ -152,10 +152,18 @@ public interface KernelApi extends KernelEvent {
                 return;
 
             setVolume(0f, 0f);
+            pause();
 
             // 1a
             if (musicPlaying) {
-                MusicPlayerManager.restart();
+                long position = getPosition();
+                MusicPlayerManager.restart(position, new MediaPlayer.OnSeekCompleteListener() {
+                    @Override
+                    public void onSeekComplete(MediaPlayer mp) {
+                        setExternalMusicPlaying(true);
+                        start();
+                    }
+                });
             }
             // 1b, 2. 设置额外音频地址
             else {
@@ -164,9 +172,6 @@ public interface KernelApi extends KernelEvent {
                 if (release) {
                     releaseExternalMusic();
                 }
-
-                // b
-                pause();
 
                 // c
                 long position = getPosition();

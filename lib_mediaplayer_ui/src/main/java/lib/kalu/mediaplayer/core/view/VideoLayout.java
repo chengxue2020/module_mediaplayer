@@ -1046,6 +1046,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void enableExternalMusic(boolean enable, boolean release, boolean auto) {
+        try {
+            mKernel.setExternalMusicAuto(auto);
+            mKernel.enableExternalMusic(enable, release);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public boolean isExternalMusicAuto() {
         try {
             boolean auto = mKernel.isExternalMusicAuto();
@@ -1068,15 +1078,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             mKernel.setExternalMusicPath(url);
             boolean loop = bundle.isExternalMusicLoop();
             mKernel.setExternalMusicLoop(loop);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void setExternalMusicAuto(boolean auto) {
-        try {
-            mKernel.setExternalMusicAuto(auto);
         } catch (Exception e) {
             e.printStackTrace();
         }

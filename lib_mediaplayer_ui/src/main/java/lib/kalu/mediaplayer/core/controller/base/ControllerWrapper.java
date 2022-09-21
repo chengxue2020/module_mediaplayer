@@ -269,13 +269,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void setExternalMusic(@NonNull BundleBuilder bundle) {
-        mPlayer.setExternalMusic(bundle);
+    public void enableExternalMusic(boolean enable, boolean release, boolean auto) {
+        mPlayer.enableExternalMusic(enable, release, auto);
     }
 
     @Override
-    public void setExternalMusicAuto(boolean auto) {
-        mPlayer.setExternalMusicAuto(auto);
+    public void setExternalMusic(@NonNull BundleBuilder bundle) {
+        mPlayer.setExternalMusic(bundle);
     }
 
     @Override
