@@ -63,8 +63,14 @@ public final class MusicPlayerManager {
         mMediaPlayer.start();
         if (msec > 0) {
             mMediaPlayer.seekTo((int) msec);
+            mMediaPlayer.setOnPreparedListener(listener);
+        } else {
+            listener.onPrepared(null);
         }
-        mMediaPlayer.setOnPreparedListener(listener);
+    }
+
+    public static void restart() {
+        restart(0, null);
     }
 
     public static void restart(@NonNull long msec, @NonNull MediaPlayer.OnSeekCompleteListener listener) {
@@ -72,7 +78,10 @@ public final class MusicPlayerManager {
             return;
         mMediaPlayer.setVolume(1f, 1f);
         mMediaPlayer.start();
-        mMediaPlayer.seekTo((int) msec);
-        mMediaPlayer.setOnSeekCompleteListener(listener);
+
+        if (msec > 0 && null != listener) {
+            mMediaPlayer.seekTo((int) msec);
+            mMediaPlayer.setOnSeekCompleteListener(listener);
+        }
     }
 }

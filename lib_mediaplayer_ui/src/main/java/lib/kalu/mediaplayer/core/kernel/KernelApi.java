@@ -157,16 +157,24 @@ public interface KernelApi extends KernelEvent {
                 long seek = getSeek();
                 long start = position - seek;
                 if (start <= 0) {
-                    start = 1;
+                    start = 0;
                 }
                 MediaLogUtil.log("KernelApiMusic => enableExternalMusic => start = " + start);
-                MusicPlayerManager.restart(start, new MediaPlayer.OnSeekCompleteListener() {
-                    @Override
-                    public void onSeekComplete(MediaPlayer mp) {
-                        setExternalMusicPlaying(true);
-                        start();
-                    }
-                });
+                if (start > 0) {
+                    MusicPlayerManager.restart(start, new MediaPlayer.OnSeekCompleteListener() {
+                        @Override
+                        public void onSeekComplete(MediaPlayer mp) {
+                            MediaLogUtil.log("KernelApiMusic => enableExternalMusic => onSeekComplete => ");
+                            setExternalMusicPlaying(true);
+                            start();
+                        }
+                    });
+                } else {
+                    MediaLogUtil.log("KernelApiMusic => enableExternalMusic => onSeekComplete => ");
+                    MusicPlayerManager.restart();
+                    setExternalMusicPlaying(true);
+                    start();
+                }
             }
             // 1b, 2. 设置额外音频地址
             else {
@@ -180,13 +188,14 @@ public interface KernelApi extends KernelEvent {
                 long position = getPosition();
                 long seek = getSeek();
                 long start = position - seek;
-                if (start <= 0) {
-                    start = 1;
+                if (start < 0) {
+                    start = 0;
                 }
                 MediaLogUtil.log("KernelApiMusic => enableExternalMusic => start = " + start);
                 MusicPlayerManager.start(start, path, new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
+                        MediaLogUtil.log("KernelApiMusic => enableExternalMusic => onPrepared => ");
                         setExternalMusicPlaying(true);
                         start();
                     }
