@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.keycode.KeycodeSimulator;
 
-public class BaseApplication extends MultiDexApplication {
+public class Application extends MultiDexApplication {
 
     @Override
     public void onCreate() {
@@ -28,7 +28,7 @@ public class BaseApplication extends MultiDexApplication {
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setEnable(true)
                 .setLog(true)
-                .setKernel(PlayerType.KernelType.EXO)
+                .setKernel(PlayerType.KernelType.IJK)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())
                 .setBuriedEvent(new BuriedPointEventImpl())
