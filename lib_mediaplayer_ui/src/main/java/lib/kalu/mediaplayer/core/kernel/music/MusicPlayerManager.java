@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.music;
 
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
@@ -22,7 +23,12 @@ public final class MusicPlayerManager {
             mMediaPlayer.stop();
             mMediaPlayer.setLooping(false);
             mMediaPlayer.setVolume(1f, 1f);
-            mMediaPlayer.setDataSource(Uri.parse(path).toString());
+            if (path.startsWith("http")) {
+                String s = Uri.parse(path).toString();
+                mMediaPlayer.setDataSource(s);
+            } else {
+                mMediaPlayer.setDataSource(path);
+            }
             mMediaPlayer.prepare();
         } catch (Exception e) {
             e.printStackTrace();

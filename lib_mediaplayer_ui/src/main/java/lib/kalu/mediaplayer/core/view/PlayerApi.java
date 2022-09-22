@@ -320,6 +320,7 @@ public interface PlayerApi {
     /*************************/
 
     void enableExternalMusic(boolean enable, boolean release);
+
     void enableExternalMusic(boolean enable, boolean release, boolean auto);
 
     void setExternalMusic(@NonNull BundleBuilder bundle);
