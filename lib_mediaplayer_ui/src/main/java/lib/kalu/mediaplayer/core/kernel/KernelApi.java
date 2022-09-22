@@ -142,24 +142,25 @@ public interface KernelApi extends KernelEvent {
     default void enableExternalMusic(boolean enable, boolean release) {
 
         String path = getExternalMusicPath();
-        boolean musicPlaying = isExternalMusicPlaying();
-        boolean videoPlaying = isPlaying();
-        MediaLogUtil.log("KernelApiMusic => enableExternalMusic => enable = " + enable + ", release = " + release);
-        MediaLogUtil.log("KernelApiMusic => enableExternalMusic => musicPlaying = " + musicPlaying + ", videoPlaying = " + videoPlaying + ", path = " + path);
+        boolean playing = isExternalMusicPlaying();
+        MediaLogUtil.log("KernelApiMusic => enableExternalMusic => enable = " + enable + ", release = " + release + ", playing = " + playing);
 
         // 播放额外音频
         if (enable) {
-
-            if (!videoPlaying)
-                return;
 
             setVolume(0f, 0f);
             pause();
 
             // 1a
-            if (musicPlaying) {
+            if (playing) {
                 long position = getPosition();
-                MusicPlayerManager.restart(position, new MediaPlayer.OnSeekCompleteListener() {
+                long seek = getSeek();
+                long start = position - seek;
+                if (start <= 0) {
+                    start = 1;
+                }
+                MediaLogUtil.log("KernelApiMusic => enableExternalMusic => start = " + start);
+                MusicPlayerManager.restart(start, new MediaPlayer.OnSeekCompleteListener() {
                     @Override
                     public void onSeekComplete(MediaPlayer mp) {
                         setExternalMusicPlaying(true);
@@ -177,7 +178,13 @@ public interface KernelApi extends KernelEvent {
 
                 // c
                 long position = getPosition();
-                MusicPlayerManager.start(position, path, new MediaPlayer.OnPreparedListener() {
+                long seek = getSeek();
+                long start = position - seek;
+                if (start <= 0) {
+                    start = 1;
+                }
+                MediaLogUtil.log("KernelApiMusic => enableExternalMusic => start = " + start);
+                MusicPlayerManager.start(start, path, new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         setExternalMusicPlaying(true);
@@ -189,7 +196,7 @@ public interface KernelApi extends KernelEvent {
         // 停止额外音频
         else {
 
-            if (musicPlaying) {
+            if (playing) {
                 // 1.暂停视频播放器
                 pause();
 
