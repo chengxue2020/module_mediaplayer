@@ -29,6 +29,7 @@ import lib.kalu.mediaplayer.util.MediaLogUtil;
 @Keep
 public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
+    protected boolean mShowBottomPB = false;
     protected ControllerWrapper mControllerWrapper;
 
     public ComponentSeek(@NonNull Context context) {
@@ -46,15 +47,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         init();
     }
 
+    public void enableBottomPB(boolean enable) {
+        this.mShowBottomPB = enable;
+    }
+
     private void init() {
         // step1
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
 
         // step2, 5.1以下系统SeekBar高度需要设置成WRAP_CONTENT
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek_pb);
-            progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        }
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+//            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek_pb);
+//            progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//        }
 
         // step3
         SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
@@ -155,7 +160,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     @Override
     public void show() {
         MediaLogUtil.log("ComponentSeek88 => show =>");
-        findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.GONE);
+        if (mShowBottomPB) {
+            findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.GONE);
+        }
         findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
         findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.VISIBLE);
         findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.VISIBLE);
@@ -166,7 +173,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public void gone() {
         MediaLogUtil.log("ComponentSeek88 => gone =>");
         boolean isFull = mControllerWrapper.isFull();
-        findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(isFull ? View.VISIBLE : View.GONE);
+        if (mShowBottomPB) {
+            findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(isFull ? View.VISIBLE : View.GONE);
+        }
         findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
         findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.GONE);
         findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.GONE);
@@ -271,6 +280,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     private void refreshPB(int progress, int max) {
+        if (!mShowBottomPB)
+            return;
         ProgressBar pb = findViewById(R.id.module_mediaplayer_component_seek_pb);
         if (null == pb)
             return;
