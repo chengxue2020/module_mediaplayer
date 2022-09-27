@@ -125,6 +125,8 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
         int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 
+        // 不显示字幕
+        mIjkPlayer.setOption(player, "subtitle", 0);
         //是否有声音, 1无声音、0有声音
         mIjkPlayer.setOption(player, "an", 0);
         mIjkPlayer.setOption(player, "volume", 100);
