@@ -137,9 +137,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     private void init(AttributeSet attrs) {
         setBackgroundColor(Color.parseColor("#000000"));
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_player, this, true);
-        setClickable(true);
-        setFocusable(true);
-        setFocusableInTouchMode(true);
+        setFocusable(false);
         setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
         BaseToast.init(getContext().getApplicationContext());
 
@@ -1113,6 +1111,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return;
 
         try {
+            // 0
+            setFocusable(true);
             // 1
             View real = getChildAt(0);
             removeAllViews();
@@ -1121,16 +1121,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             int index = decorView.getChildCount();
             decorView.addView(real, index);
             // 3
-//            View v = decorView.findViewById(R.id.module_mediaplayer_root);
-//            v.setFocusable(true);
-//            v.requestFocus();
-//            v.setOnKeyListener(new OnKeyListener() {
-//                @Override
-//                public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                    decodeKeyEvent(event);
-//                    return true;
-//                }
-//            });
             // 4
             callWindowState(PlayerType.WindowType.FULL);
             // 5
@@ -1154,12 +1144,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return;
 
         try {
+            // 0
+            setFocusable(false);
             // 1
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-//            View v = decorView.findViewById(R.id.module_mediaplayer_root);
-//            v.clearFocus();
-//            v.setFocusable(false);
-//            v.setOnKeyListener(null);
             // 2
             int index = decorView.getChildCount();
             View real = decorView.getChildAt(index - 1);
@@ -1346,93 +1334,96 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        boolean isFull = isFull();
-        boolean isFloat = isFloat();
-        if (isFloat) {
-            // stopFloat
-            if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MediaLogUtil.log("dispatchKeyEvent => stopFloat =>");
-                stopFloat();
-            }
-            return true;
-        } else if (isFull) {
-            // toogle
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                MediaLogUtil.log("dispatchKeyEvent => toggle =>");
-                toggle();
-            }
-            // seekForward
-            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                int count = event.getRepeatCount();
-                boolean isLive = isLive();
-                MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count + ", isLive = " + isLive);
-                if (!isLive) {
-                    if (count > 0) {
-                        clearHanlder();
-                        boolean seekForward = seekForward(false);
-                        if (seekForward) {
-                            setTag(R.id.module_mediaplayer_id_seek, "1");
-                        }
-                    } else {
-                        callWindowState(PlayerType.WindowType.FULL);
-                    }
+        boolean focusable = isFocusable();
+        if (focusable) {
+            boolean isFull = isFull();
+            boolean isFloat = isFloat();
+            if (isFloat) {
+                // stopFloat
+                if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    MediaLogUtil.log("dispatchKeyEvent => stopFloat =>");
+                    stopFloat();
                 }
-            }
-            // seekForward
-            else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                int count = event.getRepeatCount();
-                boolean isLive = isLive();
-                MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count + ", isLive = " + isLive);
-                if (!isLive) {
-                    Object tag = getTag(R.id.module_mediaplayer_id_seek);
-                    if (null != tag && "1".equals(tag)) {
-                        startHanlder();
-                        boolean seekForward = seekForward(true);
-                        if (seekForward) {
-                            setTag(R.id.module_mediaplayer_id_seek, null);
+                return true;
+            } else if (isFull) {
+                // toogle
+                if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                    MediaLogUtil.log("dispatchKeyEvent => toggle =>");
+                    toggle();
+                }
+                // seekForward
+                else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                    int count = event.getRepeatCount();
+                    boolean isLive = isLive();
+                    MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count + ", isLive = " + isLive);
+                    if (!isLive) {
+                        if (count > 0) {
+                            clearHanlder();
+                            boolean seekForward = seekForward(false);
+                            if (seekForward) {
+                                setTag(R.id.module_mediaplayer_id_seek, "1");
+                            }
+                        } else {
+                            callWindowState(PlayerType.WindowType.FULL);
                         }
                     }
                 }
-            }
-            // seekRewind
-            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-                int count = event.getRepeatCount();
-                boolean isLive = isLive();
-                MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count + ", isLive = " + isLive);
-                if (!isLive) {
-                    if (count > 0) {
-                        clearHanlder();
-                        boolean seekRewind = seekRewind(false);
-                        if (seekRewind) {
-                            setTag(R.id.module_mediaplayer_id_seek, "1");
-                        }
-                    } else {
-                        callWindowState(PlayerType.WindowType.FULL);
-                    }
-                }
-            }
-            // seekRewind
-            else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-                int count = event.getRepeatCount();
-                boolean isLive = isLive();
-                MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count + ", isLive = " + isLive);
-                if (!isLive) {
-                    Object tag = getTag(R.id.module_mediaplayer_id_seek);
-                    if (null != tag && "1".equals(tag)) {
-                        startHanlder();
-                        boolean seekRewind = seekRewind(true);
-                        if (seekRewind) {
-                            setTag(R.id.module_mediaplayer_id_seek, null);
+                // seekForward
+                else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                    int count = event.getRepeatCount();
+                    boolean isLive = isLive();
+                    MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count + ", isLive = " + isLive);
+                    if (!isLive) {
+                        Object tag = getTag(R.id.module_mediaplayer_id_seek);
+                        if (null != tag && "1".equals(tag)) {
+                            startHanlder();
+                            boolean seekForward = seekForward(true);
+                            if (seekForward) {
+                                setTag(R.id.module_mediaplayer_id_seek, null);
+                            }
                         }
                     }
                 }
+                // seekRewind
+                else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                    int count = event.getRepeatCount();
+                    boolean isLive = isLive();
+                    MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count + ", isLive = " + isLive);
+                    if (!isLive) {
+                        if (count > 0) {
+                            clearHanlder();
+                            boolean seekRewind = seekRewind(false);
+                            if (seekRewind) {
+                                setTag(R.id.module_mediaplayer_id_seek, "1");
+                            }
+                        } else {
+                            callWindowState(PlayerType.WindowType.FULL);
+                        }
+                    }
+                }
+                // seekRewind
+                else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                    int count = event.getRepeatCount();
+                    boolean isLive = isLive();
+                    MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count + ", isLive = " + isLive);
+                    if (!isLive) {
+                        Object tag = getTag(R.id.module_mediaplayer_id_seek);
+                        if (null != tag && "1".equals(tag)) {
+                            startHanlder();
+                            boolean seekRewind = seekRewind(true);
+                            if (seekRewind) {
+                                setTag(R.id.module_mediaplayer_id_seek, null);
+                            }
+                        }
+                    }
+                }
+                // stopFull
+                else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    MediaLogUtil.log("decodeKeyEvent => stopFull =>");
+                    stopFull();
+                }
+                return true;
             }
-            // stopFull
-            else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MediaLogUtil.log("decodeKeyEvent => stopFull =>");
-                stopFull();
-            }
-            return true;
         }
         return false;
     }

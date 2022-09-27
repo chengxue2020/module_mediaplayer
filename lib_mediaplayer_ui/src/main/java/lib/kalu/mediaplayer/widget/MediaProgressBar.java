@@ -58,6 +58,7 @@ public class MediaProgressBar extends View {
 
     private final void init(@Nullable AttributeSet attrs) {
 //        setEnabled(true);
+        setFocusable(false);
 
         TypedArray typedArray = null;
 

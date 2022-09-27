@@ -19,16 +19,14 @@
             android:id="@+id/module_mediaplayer_video"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="false"
-            android:focusableInTouchMode="false" />
+            android:focusable="false" />
 
         <!-- 控制器 -->
         <RelativeLayout
             android:id="@+id/module_mediaplayer_control"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusable="false"
-            android:focusableInTouchMode="false" />
+            android:focusable="false" />
 
     </RelativeLayout>
 

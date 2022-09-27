@@ -130,28 +130,6 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
 
     @Override
     protected void onVisibilityChanged(boolean isVisible, Animation anim) {
-//        if (mControllerWrapper.isFullScreen()) {
-//            View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
-//            if (isVisible) {
-//                if (view.getVisibility() == GONE) {
-//                    view.setVisibility(VISIBLE);
-//                    if (anim != null) {
-//                        view.startAnimation(anim);
-//                    }
-//                }
-//            } else {
-//                view.setVisibility(GONE);
-//                if (anim != null) {
-//                    view.startAnimation(anim);
-//                }
-//            }
-//            postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    view.requestFocus();
-//                }
-//            }, 400);
-//        }
     }
 
     /**
