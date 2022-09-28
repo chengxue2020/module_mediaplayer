@@ -151,8 +151,8 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         //设置播放前的最大探测时间
         mIjkPlayer.setOption(format, "analyzeduration", 30 * 1000 * 1000);
         mIjkPlayer.setOption(format, "analyzemaxduration", 30 * 1000 * 1000);
-//        //设置是否开启变调isModifyTone?0:1
-        mIjkPlayer.setOption(player, "soundtouch", 0);
+        //倍速功能能够在所有android机型上正常使用，倍速时可能也存在声调问题，但是可以通过设置参数来解决：
+        mIjkPlayer.setOption(player, "soundtouch", 1);
         //每处理一个packet之后刷新io上下文
         mIjkPlayer.setOption(format, "flush_packets", 1);
         // 关闭播放器缓冲，这个必须关闭，否则会出现播放一段时间后，一直卡主，控制台打印 FFP_MSG_BUFFERING_START
