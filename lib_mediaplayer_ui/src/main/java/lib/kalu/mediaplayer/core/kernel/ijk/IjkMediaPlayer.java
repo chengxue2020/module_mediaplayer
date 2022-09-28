@@ -167,7 +167,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // SeekTo设置优化
         // 1 seek超级慢
         // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-        mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
+        mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
         // 设置seekTo能够快速seek到指定位置并播放
         // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
         mIjkPlayer.setOption(format, "fflags", "fastseek");

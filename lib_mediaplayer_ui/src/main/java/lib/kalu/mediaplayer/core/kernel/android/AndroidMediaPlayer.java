@@ -7,18 +7,13 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import java.util.Map;
-
-import lib.kalu.mediaplayer.config.builder.BundleBuilder;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 @Keep
@@ -192,7 +187,11 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void seekTo(long time) {
         try {
-            mAndroidPlayer.seekTo((int) time);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mAndroidPlayer.seekTo(time, MediaPlayer.SEEK_CLOSEST);
+            } else {
+                mAndroidPlayer.seekTo((int) time);
+            }
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
