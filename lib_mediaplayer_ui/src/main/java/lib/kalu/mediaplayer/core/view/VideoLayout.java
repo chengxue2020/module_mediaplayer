@@ -1070,6 +1070,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public boolean isExternalMusicPlaying() {
+        try {
+            return mKernel.isExternalMusicPlaying();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
     public void setExternalMusic(@NonNull BundleBuilder bundle) {
         try {
             String url = bundle.getExternalMusicUrl();

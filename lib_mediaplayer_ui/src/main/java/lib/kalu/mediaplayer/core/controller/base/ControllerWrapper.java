@@ -283,6 +283,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
         return mPlayer.isExternalMusicAuto();
     }
 
+    @Override
+    public boolean isExternalMusicPlaying() {
+        return mPlayer.isExternalMusicPlaying();
+    }
+
 //    /**
 //     * 横竖屏切换，会旋转屏幕
 //     */

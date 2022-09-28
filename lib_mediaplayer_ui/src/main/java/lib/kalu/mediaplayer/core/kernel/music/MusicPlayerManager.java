@@ -56,6 +56,12 @@ public final class MusicPlayerManager {
         mMediaPlayer = null;
     }
 
+    public static boolean isPlaying() {
+        if (null == mMediaPlayer)
+            return false;
+        return mMediaPlayer.isPlaying();
+    }
+
     public static void start(@NonNull long msec, @NonNull String path, @NonNull android.media.MediaPlayer.OnPreparedListener listener) {
 
         if (null == path || path.length() < 0)

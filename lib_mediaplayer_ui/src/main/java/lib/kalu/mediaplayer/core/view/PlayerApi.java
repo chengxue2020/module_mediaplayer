@@ -326,4 +326,6 @@ public interface PlayerApi {
     void setExternalMusic(@NonNull BundleBuilder bundle);
 
     boolean isExternalMusicAuto();
+
+    boolean isExternalMusicPlaying();
 }
