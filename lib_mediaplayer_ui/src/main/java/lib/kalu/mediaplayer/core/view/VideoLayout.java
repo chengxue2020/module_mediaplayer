@@ -202,6 +202,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public void start(@NonNull BundleBuilder builder, @NonNull String url) {
 
+        MediaLogUtil.log("VideoLayout => start => url = " + url);
+        if (null == url || url.length() <= 0)
+            return;
+
         long seek = builder.getSeek();
         long max = builder.getMax();
         boolean loop = builder.isLoop();
