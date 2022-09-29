@@ -1,11 +1,12 @@
 package lib.kalu.mediaplayer.core.kernel.music;
 
 
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+
+import lib.kalu.mediaplayer.util.MediaLogUtil;
 
 public final class MusicPlayerManager {
 
@@ -35,6 +36,10 @@ public final class MusicPlayerManager {
         }
     }
 
+    public static boolean isNull() {
+        return null == mMediaPlayer;
+    }
+
     public static void setVolume(float v) {
         if (null == mMediaPlayer)
             return;
@@ -45,6 +50,7 @@ public final class MusicPlayerManager {
     }
 
     public static void release() {
+        MediaLogUtil.log("MusicPlayerManager => release => mMediaPlayer = " + mMediaPlayer);
         if (null == mMediaPlayer)
             return;
         mMediaPlayer.setOnSeekCompleteListener(null);
@@ -57,13 +63,14 @@ public final class MusicPlayerManager {
     }
 
     public static boolean isPlaying() {
+        MediaLogUtil.log("MusicPlayerManager => isPlaying => mMediaPlayer = " + mMediaPlayer);
         if (null == mMediaPlayer)
             return false;
         return mMediaPlayer.isPlaying();
     }
 
     public static void start(@NonNull long msec, @NonNull String path, @NonNull android.media.MediaPlayer.OnPreparedListener listener) {
-
+        MediaLogUtil.log("MusicPlayerManager => start => mMediaPlayer = " + mMediaPlayer + ", msec = " + msec + ", path = " + path + ", listener = " + listener);
         if (null == path || path.length() < 0)
             return;
 
@@ -86,6 +93,7 @@ public final class MusicPlayerManager {
     }
 
     public static void restart(@NonNull long msec, @NonNull MediaPlayer.OnSeekCompleteListener listener) {
+        MediaLogUtil.log("MusicPlayerManager => restart => mMediaPlayer = " + mMediaPlayer + ", msec = " + msec + ", listener = " + listener);
         if (null == mMediaPlayer)
             return;
         mMediaPlayer.setVolume(1f, 1f);

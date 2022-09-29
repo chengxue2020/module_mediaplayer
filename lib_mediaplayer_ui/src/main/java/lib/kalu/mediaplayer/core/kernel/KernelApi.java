@@ -143,6 +143,10 @@ public interface KernelApi extends KernelEvent {
 
         String path = getExternalMusicPath();
         boolean playing = isExternalMusicPlaying();
+        boolean aNull = MusicPlayerManager.isNull();
+        if (aNull) {
+            playing = false;
+        }
         MediaLogUtil.log("KernelApiMusic => enableExternalMusic => enable = " + enable + ", release = " + release + ", playing = " + playing);
 
         // 播放额外音频
@@ -152,7 +156,7 @@ public interface KernelApi extends KernelEvent {
             pause();
 
             // 1a
-            if (playing) {
+            if (playing && !release) {
                 long position = getPosition();
                 long seek = getSeek();
                 long start = position - seek;
@@ -181,7 +185,7 @@ public interface KernelApi extends KernelEvent {
 
                 // a
                 if (release) {
-                    releaseExternalMusic();
+                    releaseExternalMusic(false);
                 }
 
                 // c
@@ -214,7 +218,7 @@ public interface KernelApi extends KernelEvent {
 
                 // 3.销毁额外音频播放器
                 if (release) {
-                    releaseExternalMusic();
+                    releaseExternalMusic(true);
                 }
 
                 // 4.
@@ -230,9 +234,15 @@ public interface KernelApi extends KernelEvent {
     }
 
     default void releaseExternalMusic() {
+        releaseExternalMusic(true);
+    }
+
+    default void releaseExternalMusic(boolean clearPath) {
 
         // 1
-        setExternalMusicPath(null);
+        if (clearPath) {
+            setExternalMusicPath(null);
+        }
         setExternalMusicLoop(false);
         setExternalMusicPlaying(false);
 

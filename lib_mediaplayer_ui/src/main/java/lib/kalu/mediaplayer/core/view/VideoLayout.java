@@ -296,8 +296,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             resume();
                             // step5
                             if (isExternalMusicAuto()) {
-                                setVolume(0f, 0f);
-                                enableExternalMusic(true, false);
+                                enableExternalMusic(true, true);
                             } else {
                                 enableExternalMusic(false, false);
                             }
@@ -321,8 +320,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             // step4
                             if (isExternalMusicAuto()) {
-                                setVolume(0f, 0f);
-                                enableExternalMusic(true, false);
+                                enableExternalMusic(true, true);
                             } else {
                                 enableExternalMusic(false, false);
                             }
@@ -1057,6 +1055,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public boolean isExternalMusicAuto() {
         try {
             boolean auto = mKernel.isExternalMusicAuto();
+            MediaLogUtil.log("isExternalMusicAuto => auto = " + auto);
             if (auto) {
                 String path = mKernel.getExternalMusicPath();
                 return null != path && path.length() > 0;
