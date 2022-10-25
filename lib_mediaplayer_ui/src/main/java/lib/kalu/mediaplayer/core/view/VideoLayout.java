@@ -449,6 +449,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void pause() {
+        PlayerApi.super.pause();
+        clearHanlder();
+    }
+
+    @Override
     public void resume() {
         String url = getUrl();
         MediaLogUtil.log("onEvent => resume => url = " + url + ", mHanlder = " + mHandler + ", mKernel = " + mKernel);
