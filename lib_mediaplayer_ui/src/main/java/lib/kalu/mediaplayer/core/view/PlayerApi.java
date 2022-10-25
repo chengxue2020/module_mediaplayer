@@ -63,13 +63,17 @@ public interface PlayerApi {
 
     void create(@NonNull BundleBuilder builder);
 
-    default void pause() {
-        pause(false);
-    }
-
     void toggle();
 
-    void pause(boolean auto);
+    default void pause() {
+        pause(false, false);
+    }
+
+    default void pause(boolean clearHanlder) {
+        pause(false, clearHanlder);
+    }
+
+    void pause(boolean auto, boolean clearHanlder);
 
     void resume();
 

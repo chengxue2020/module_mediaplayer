@@ -422,10 +422,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void pause(boolean auto) {
+    public void pause(boolean auto, boolean clearHanlder) {
         boolean playing = isPlaying();
         if (!playing)
             return;
+        if (clearHanlder) {
+            clearHanlder();
+        }
         // 自动不回调状态
         if (auto) {
 
@@ -446,12 +449,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         callPlayerState(PlayerType.StateType.STATE_CLOSE);
         setKeepScreenOn(false);
         mKernel.stop();
-    }
-
-    @Override
-    public void pause() {
-        PlayerApi.super.pause();
-        clearHanlder();
     }
 
     @Override
