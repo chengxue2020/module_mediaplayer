@@ -44,8 +44,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void pause(boolean auto) {
-        mPlayer.pause(auto);
+    public void pause(boolean auto, boolean clearHanlder) {
+        mPlayer.pause(auto, clearHanlder);
     }
 
     @Override
