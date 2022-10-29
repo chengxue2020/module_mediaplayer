@@ -70,8 +70,8 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.2.0'
 
     // ijkplayer
-    api project(path: ':lib_mediaplayer_core_ijk_k0.8.8_ff4.0_temp')
-//    api project(path: ':lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full')
+//    api project(path: ':lib_mediaplayer_core_ijk_k0.8.8_ff4.0_lite')
+    api project(path: ':lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full')
 
     // exoplayer
     api project(path: ':lib_mediaplayer_core_exo_r2.18.0')
