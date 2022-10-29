@@ -12,9 +12,8 @@ lib_mediaplayer_core_vlc_r3.4.9
 ```
 ```
 ijk => k0.8.8、ff4.0--ijk0.8.8--20210426--001
-lib_mediaplayer_core_ijk_k0.8.8_ff4.0_lite【轻量版本】
-lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full【全量版本】
-lib_mediaplayer_core_ijk_k0.8.8_ff4.0_temp【cmake版本】
+lib_mediaplayer_core_ijk_k0.8.8_ff4.0_lite【轻量】
+lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full【全量】
 ```
 
 #
