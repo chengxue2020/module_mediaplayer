@@ -71,7 +71,6 @@ set(common_sources
         ijkmedia/ijksdl/android/ijksdl_vout_overlay_android_mediacodec.c
 
         #ijkmedia/ijksoundtouch/
-        ijkmedia/ijksoundtouch/soundtouch-jni.cpp
         ijkmedia/ijksoundtouch/source/SoundTouch/AAFilter.cpp
         ijkmedia/ijksoundtouch/source/SoundTouch/FIFOSampleBuffer.cpp
         ijkmedia/ijksoundtouch/source/SoundTouch/FIRFilter.cpp
@@ -173,14 +172,14 @@ set(arm64_v8a_sources
 
 if (${ANDROID_ABI} STREQUAL armeabi-v7a)
     add_library( # Sets the name of the library.
-            avplayer
+            avffmpeg-player
             SHARED
             ${common_sources}
             ${armeabi_v7a_sources}
             )
 else ()
     add_library( # Sets the name of the library.
-            avplayer
+            avffmpeg-player
             SHARED
             ${common_sources}
             ${arm64_v8a_sources}
@@ -232,7 +231,7 @@ include_directories(
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        avplayer
+        avffmpeg-player
 
         # Links the target library to the log library
         # included in the NDK.
