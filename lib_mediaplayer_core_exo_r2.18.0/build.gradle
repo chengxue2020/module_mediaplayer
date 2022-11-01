@@ -147,9 +147,5 @@ dependencies {
 
     // tools
     api files('libs/lib_mediaplayer_core_exo_common.jar')
-    api files('libs/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar')
-//    api(name: 'libs/lib_mediaplayer_core_exoplayer_jar', ext: 'jar') {
-////        exclude module: 'gson'
-//        exclude group: "androidx.google.guava"
-//    }
+    // api files('libs/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar')
 }
