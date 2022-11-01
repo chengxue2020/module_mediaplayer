@@ -101,6 +101,10 @@ android {
 //        // 忽略指定问题的规则(同关闭检查)
 //        ignore 'TypographyQuotes'
 //    }
+
+    configurations {
+        all*.exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
 }
 
 repositories {
@@ -110,9 +114,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'androidx.appcompat:appcompat:1.2.0'
-    compileOnly 'androidx.annotation:annotation:1.2.0'
-
+    compileOnly('androidx.appcompat:appcompat:1.2.0') {
+        exclude group: "com.google.guava"
+    }
+    compileOnly('androidx.annotation:annotation:1.2.0') {
+        exclude group: "com.google.guava"
+    }
     compileOnly('androidx.media2:media2-common:1.2.0') {
         exclude group: "com.google.guava"
     }
@@ -140,6 +147,7 @@ dependencies {
 
     // tools
     api files('libs/lib_mediaplayer_core_exo_common.jar')
+    api files('libs/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar')
 //    api(name: 'libs/lib_mediaplayer_core_exoplayer_jar', ext: 'jar') {
 ////        exclude module: 'gson'
 //        exclude group: "androidx.google.guava"
