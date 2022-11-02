@@ -214,7 +214,7 @@ find_library(OpenSLES-lib OpenSLES)
 
 include_directories(
         ffmpeginclude
-        src/main/cpp/ffmpeginclude/${ANDROID_ABI}
+        src/main/cpp/ffmpeginclude/config/${ANDROID_ABI}
         ijkmedia
         ijkmedia/ijkplayer
         ijkmedia/ijkj4a
