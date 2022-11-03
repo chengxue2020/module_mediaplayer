@@ -19,8 +19,8 @@ lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full【全量】
 #
 #### 更新
 ```
-2022-11-02
-1. ijk-full增加armv7、arm64、x86、x86_64
+2022-11-03
+1. ijk增加armv7、arm64、x86、x86_64
 ```
 ```
 2022-10-27
