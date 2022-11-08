@@ -33,34 +33,19 @@
 #endif
 
 #define J4A_LOG_TAG "IJK_J4A"
-
-#if(LOGOPEN == 1)
-#define J4A_VLOGV(...)  __android_log_vprint(ANDROID_LOG_VERBOSE,   J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_VLOGD(...)  __android_log_vprint(ANDROID_LOG_DEBUG,     J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_VLOGI(...)  __android_log_vprint(ANDROID_LOG_INFO,      J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_VLOGW(...)  __android_log_vprint(ANDROID_LOG_WARN,      J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_VLOGE(...)  __android_log_vprint(ANDROID_LOG_ERROR,     J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_ALOGV(...)  __android_log_print(ANDROID_LOG_VERBOSE,    J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_ALOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,      J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_ALOGI(...)  __android_log_print(ANDROID_LOG_INFO,       J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_ALOGW(...)  __android_log_print(ANDROID_LOG_WARN,       J4A_LOG_TAG, __VA_ARGS__)
-#define J4A_ALOGE(...)  __android_log_print(ANDROID_LOG_ERROR,      J4A_LOG_TAG, __VA_ARGS__)
-#else
-#define J4A_VLOGV(...)  NULL
-#define J4A_VLOGD(...)  NULL
-#define J4A_VLOGI(...)  NULL
-#define J4A_VLOGW(...)  NULL
-#define J4A_VLOGE(...)  NULL
-#define J4A_ALOGV(...)  NULL
-#define J4A_ALOGD(...)  NULL
-#define J4A_ALOGI(...)  NULL
-#define J4A_ALOGW(...)  NULL
-#define J4A_ALOGE(...)  NULL
-#endif
-
-#define J4A_FUNC_FAIL_TRACE()               do {J4A_ALOGE("%s: failed\n", __func__);} while (0)
-#define J4A_FUNC_FAIL_TRACE1(x__)           do {J4A_ALOGE("%s: failed: %s\n", __func__, x__);} while (0)
-#define J4A_FUNC_FAIL_TRACE2(x1__, x2__)    do {J4A_ALOGE("%s: failed: %s %s\n", __func__, x1__, x2__);} while (0)
+#define  J4A_VLOGV(...)  ((void)_ijk_vprint_verbose(ANDROID_LOG_VERBOSE,   J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_VLOGD(...)  ((void)_ijk_vprint_debug(ANDROID_LOG_DEBUG,     J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_VLOGI(...)  ((void)_ijk_vprint_info(ANDROID_LOG_INFO,      J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_VLOGW(...)  ((void)_ijk_vprint_warning(ANDROID_LOG_WARN,      J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_VLOGE(...)  ((void)_ijk_vprint_error(ANDROID_LOG_ERROR,     J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_ALOGV(...)  ((void)_ijk_print_verbose(ANDROID_LOG_VERBOSE,    J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_ALOGD(...)  ((void)_ijk_print_debug(ANDROID_LOG_DEBUG,      J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_ALOGI(...)  ((void)_ijk_print_info(ANDROID_LOG_INFO,       J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_ALOGW(...)  ((void)_ijk_print_warning(ANDROID_LOG_WARN,       J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_ALOGE(...)  ((void)_ijk_print_error(ANDROID_LOG_ERROR,      J4A_LOG_TAG, __VA_ARGS__))
+#define  J4A_FUNC_FAIL_TRACE()               do {J4A_ALOGE("%s: failed\n", __func__);} while (0)
+#define  J4A_FUNC_FAIL_TRACE1(x__)           do {J4A_ALOGE("%s: failed: %s\n", __func__, x__);} while (0)
+#define  J4A_FUNC_FAIL_TRACE2(x1__, x2__)    do {J4A_ALOGE("%s: failed: %s %s\n", __func__, x1__, x2__);} while (0)
 
 #define J4A_LOAD_CLASS(class__) \
     do { \

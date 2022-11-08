@@ -26,7 +26,7 @@
 
 #include <stdio.h>
 #include <android/log.h>
-#include <log_base.h>
+#include "log_base.h"
 
 #define IJK_LOG_UNKNOWN     ANDROID_LOG_UNKNOWN
 #define IJK_LOG_DEFAULT     ANDROID_LOG_DEFAULT
@@ -41,7 +41,6 @@
 
 #define IJK_LOG_TAG "MP_JNI_IJK_SOUNDTOUCH"
 
-#if(LOGOPEN == 1)
 #define VLOGV(...)  VLOG(IJK_LOG_VERBOSE,   IJK_LOG_TAG, __VA_ARGS__)
 #define VLOGD(...)  VLOG(IJK_LOG_DEBUG,     IJK_LOG_TAG, __VA_ARGS__)
 #define VLOGI(...)  VLOG(IJK_LOG_INFO,      IJK_LOG_TAG, __VA_ARGS__)
@@ -53,22 +52,6 @@
 #define ALOGI(...)  ALOG(IJK_LOG_INFO,      IJK_LOG_TAG, __VA_ARGS__)
 #define ALOGW(...)  ALOG(IJK_LOG_WARN,      IJK_LOG_TAG, __VA_ARGS__)
 #define ALOGE(...)  ALOG(IJK_LOG_ERROR,     IJK_LOG_TAG, __VA_ARGS__)
-#define VLOG(level, TAG, ...)    ((void)__android_log_vprint(level, TAG, __VA_ARGS__))
-#define ALOG(level, TAG, ...)    ((void)__android_log_print(level, TAG, __VA_ARGS__))
+#define VLOG(level, TAG, ...)    ((void)_ijk_vprint_error(level, TAG, __VA_ARGS__))
+#define ALOG(level, TAG, ...)    ((void)_ijk_print_error(level, TAG, __VA_ARGS__))
 #define LOG_ALWAYS_FATAL(...)   do { ALOGE(__VA_ARGS__); exit(1); } while (0)
-#else
-#define VLOGV(...)  NULL
-#define VLOGD(...)  NULL
-#define VLOGI(...)  NULL
-#define VLOGW(...)  NULL
-#define VLOGE(...)  NULL
-
-#define ALOGV(...)  NULL
-#define ALOGD(...)  NULL
-#define ALOGI(...)  NULL
-#define ALOGW(...)  NULL
-#define ALOGE(...)  NULL
-#define VLOG(level, TAG, ...)    NULL
-#define ALOG(level, TAG, ...)    NULL
-#define LOG_ALWAYS_FATAL(...)   NULL
-#endif

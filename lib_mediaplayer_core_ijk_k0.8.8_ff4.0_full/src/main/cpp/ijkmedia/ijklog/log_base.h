@@ -21,9 +21,26 @@
 #ifndef LOG_BASE_H
 #define LOG_BASE_H
 
-#define LOGOPEN  0 //日志开关，1为开，其它为关
+#define  LOGOPEN  0 //日志开关，1为开，其它为关
 
-//const int get_log_status();
-//#define const LOGOPEN  get_log_status()
+int _ijk_vprint_verbose(const char *tag, const char *fmt, ...);
+
+int _ijk_vprint_debug(const char *tag, const char *fmt, ...);
+
+int _ijk_vprint_info(const char *tag, const char *fmt, ...);
+
+int _ijk_vprint_warning(const char *tag, const char *fmt, ...);
+
+int _ijk_vprint_error(const char *tag, const char *fmt, ...);
+
+int _ijk_print_verbose(const char *tag, const char *fmt, ...);
+
+int _ijk_print_debug(const char *tag, const char *fmt, ...);
+
+int _ijk_print_info(const char *tag, const char *fmt, ...);
+
+int _ijk_print_warning(const char *tag, const char *fmt, ...);
+
+int _ijk_print_error(const char *tag, const char *fmt, ...);
 
 #endif//LOG_BASE_INTERNAL_H
