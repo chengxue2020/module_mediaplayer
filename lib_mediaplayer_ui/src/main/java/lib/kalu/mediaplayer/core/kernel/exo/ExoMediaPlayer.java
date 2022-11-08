@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.core.kernel.exo;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.view.Surface;
 
 import androidx.annotation.Keep;
@@ -33,7 +32,7 @@ import lib.kalu.mediaplayer.config.cache.CacheConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
 public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
@@ -205,7 +204,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
             mExoPlayer.play();
 //            mExoPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -218,7 +217,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
             mExoPlayer.pause();
 //            mExoPlayer.setPlayWhenReady(false);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -230,7 +229,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         try {
             mExoPlayer.stop();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -259,7 +258,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         try {
             mExoPlayer.seekTo(position);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -305,7 +304,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 //            try {
 //                mExoPlayer.setVideoSurface(holder.getSurface());
 //            } catch (Exception e) {
-//                e.printStackTrace();
+//                MediaLogUtil.log(e.getMessage(), e);
 //            }
 //        }
 //
@@ -313,7 +312,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 //            try {
 //                mExoPlayer.setVideoSurface(surface);
 //            } catch (Exception e) {
-//                e.printStackTrace();
+//                MediaLogUtil.log(e.getMessage(), e);
 //            }
 //        }
 //    }
@@ -325,7 +324,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
             try {
                 mExoPlayer.setVideoSurface(surface);
             } catch (Exception e) {
-                e.printStackTrace();
+                MPLogUtil.log(e.getMessage(), e);
             }
         }
     }
@@ -401,17 +400,17 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void onPlayWhenReadyChanged(EventTime eventTime, boolean playWhenReady, int reason) {
-        MediaLogUtil.log("ExoMediaPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
+        MPLogUtil.log("ExoMediaPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
     }
 
     @Override
     public void onPlayerError(EventTime eventTime, PlaybackException error) {
-        MediaLogUtil.log("ExoMediaPlayer => onPlayerError => error = " + error.getMessage());
+        MPLogUtil.log("ExoMediaPlayer => onPlayerError => error = " + error.getMessage());
     }
 
     @Override
     public void onTimelineChanged(EventTime eventTime, int reason) {
-        MediaLogUtil.log("ExoMediaPlayer => onTimelineChanged => reason = " + reason);
+        MPLogUtil.log("ExoMediaPlayer => onTimelineChanged => reason = " + reason);
     }
 
     @Override
@@ -426,12 +425,12 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
-        MediaLogUtil.log("ExoMediaPlayer => onIsPlayingChanged => isPlaying = " + isPlaying);
+        MPLogUtil.log("ExoMediaPlayer => onIsPlayingChanged => isPlaying = " + isPlaying);
     }
 
     @Override
     public void onPlaybackStateChanged(EventTime eventTime, int state) {
-        MediaLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
+        MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
 
         // 播放结束
         if (state == Player.STATE_ENDED) {
@@ -462,7 +461,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
         long seek = getSeek();
         long position = getPosition();
-        MediaLogUtil.log("ExoMediaPlayer => onVideoInputFormatChanged => seek = " + seek + ", position = " + position);
+        MPLogUtil.log("ExoMediaPlayer => onVideoInputFormatChanged => seek = " + seek + ", position = " + position);
         // 快进 => begin
         if (seek > 0 && seek != position) {
             seekTo(seek);
@@ -471,7 +470,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void onAudioInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-        MediaLogUtil.log("ExoMediaPlayer => onAudioInputFormatChanged =>");
+        MPLogUtil.log("ExoMediaPlayer => onAudioInputFormatChanged =>");
         // mute
 //        if (isMute()) {
 //            setVolume(0, 0);
@@ -489,7 +488,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
             }
             mExoPlayer.setVolume(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -500,7 +499,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 //                float volume = mVlcPlayer.getVLC().getVolume();
 //                return volume <= 0;
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            MediaLogUtil.log(e.getMessage(), e);
 //            return false;
 //        }
     }

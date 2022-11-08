@@ -124,4 +124,6 @@ android {
 //}
 
 dependencies {
+    compileOnly 'androidx.appcompat:appcompat:1.2.0'
+    compileOnly 'androidx.annotation:annotation:1.2.0'
 }

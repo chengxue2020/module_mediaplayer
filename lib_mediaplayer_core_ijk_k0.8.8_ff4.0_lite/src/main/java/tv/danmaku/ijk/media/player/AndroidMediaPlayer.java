@@ -155,7 +155,7 @@ public class AndroidMediaPlayer extends AbstractMediaPlayer {
             try {
                 mMediaDataSource.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                MediaLogUtil.log(e.getMessage(), e);
             }
             mMediaDataSource = null;
         }

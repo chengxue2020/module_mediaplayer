@@ -22,7 +22,7 @@
 #ifndef J4A__android_media_PlaybackParams__H
 #define J4A__android_media_PlaybackParams__H
 
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 
 jobject J4AC_android_media_PlaybackParams__setSpeed(JNIEnv *env, jobject thiz, jfloat speed);
 jobject J4AC_android_media_PlaybackParams__setSpeed__catchAll(JNIEnv *env, jobject thiz, jfloat speed);

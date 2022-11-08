@@ -22,7 +22,7 @@
 #ifndef J4A__java_nio_Buffer__H
 #define J4A__java_nio_Buffer__H
 
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 
 int J4A_loadClass__J4AC_java_nio_Buffer(JNIEnv *env);
 

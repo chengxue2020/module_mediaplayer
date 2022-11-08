@@ -6,7 +6,7 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class MusicPlayerManager {
 
@@ -32,7 +32,7 @@ public final class MusicPlayerManager {
             }
             mMediaPlayer.prepare();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -50,7 +50,7 @@ public final class MusicPlayerManager {
     }
 
     public static void release() {
-        MediaLogUtil.log("MusicPlayerManager => release => mMediaPlayer = " + mMediaPlayer);
+        MPLogUtil.log("MusicPlayerManager => release => mMediaPlayer = " + mMediaPlayer);
         if (null == mMediaPlayer)
             return;
         mMediaPlayer.setOnSeekCompleteListener(null);
@@ -63,14 +63,14 @@ public final class MusicPlayerManager {
     }
 
     public static boolean isPlaying() {
-        MediaLogUtil.log("MusicPlayerManager => isPlaying => mMediaPlayer = " + mMediaPlayer);
+        MPLogUtil.log("MusicPlayerManager => isPlaying => mMediaPlayer = " + mMediaPlayer);
         if (null == mMediaPlayer)
             return false;
         return mMediaPlayer.isPlaying();
     }
 
     public static void start(@NonNull long msec, @NonNull String path, @NonNull android.media.MediaPlayer.OnPreparedListener listener) {
-        MediaLogUtil.log("MusicPlayerManager => start => mMediaPlayer = " + mMediaPlayer + ", msec = " + msec + ", path = " + path + ", listener = " + listener);
+        MPLogUtil.log("MusicPlayerManager => start => mMediaPlayer = " + mMediaPlayer + ", msec = " + msec + ", path = " + path + ", listener = " + listener);
         if (null == path || path.length() < 0)
             return;
 
@@ -93,7 +93,7 @@ public final class MusicPlayerManager {
     }
 
     public static void restart(@NonNull long msec, @NonNull MediaPlayer.OnSeekCompleteListener listener) {
-        MediaLogUtil.log("MusicPlayerManager => restart => mMediaPlayer = " + mMediaPlayer + ", msec = " + msec + ", listener = " + listener);
+        MPLogUtil.log("MusicPlayerManager => restart => mMediaPlayer = " + mMediaPlayer + ", msec = " + msec + ", listener = " + listener);
         if (null == mMediaPlayer)
             return;
         mMediaPlayer.setVolume(1f, 1f);

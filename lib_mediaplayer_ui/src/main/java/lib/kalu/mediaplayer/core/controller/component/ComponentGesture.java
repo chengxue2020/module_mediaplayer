@@ -19,7 +19,7 @@ import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.GestureApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentGesture extends RelativeLayout implements GestureApi {
 
@@ -111,7 +111,7 @@ public class ComponentGesture extends RelativeLayout implements GestureApi {
      */
     @Override
     public void onPositionChange(int slidePosition, int currentPosition, int duration) {
-        MediaLogUtil.log("onPositionChange => slidePosition = " + slidePosition + ", currentPosition = " + currentPosition + ", duration = " + duration);
+        MPLogUtil.log("onPositionChange => slidePosition = " + slidePosition + ", currentPosition = " + currentPosition + ", duration = " + duration);
         TextView viewText = findViewById(R.id.module_mediaplayer_controller_gesture_text);
         if (slidePosition > currentPosition) {
             viewText.setText("快进\n" + String.format("%s/%s", PlayerUtils.formatTime(slidePosition), PlayerUtils.formatTime(duration)));

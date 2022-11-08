@@ -127,7 +127,7 @@ public class DebugLog {
 
     public static void printStackTrace(Throwable e) {
         if (ENABLE_WARN) {
-            e.printStackTrace();
+            MediaLogUtil.log(e.getMessage(), e);
         }
     }
 

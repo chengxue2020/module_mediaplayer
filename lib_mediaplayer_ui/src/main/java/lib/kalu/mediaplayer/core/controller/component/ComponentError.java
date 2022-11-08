@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -18,7 +17,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ComponentError extends RelativeLayout implements ComponentApi {
 
@@ -60,14 +59,14 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR_NET:
             case PlayerType.StateType.STATE_ERROR:
-                MediaLogUtil.log("ComponentError[show] => playState = " + playState);
+                MPLogUtil.log("ComponentError[show] => playState = " + playState);
                 bringToFront();
                 setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_REPEAT:
-                MediaLogUtil.log("ComponentError[gone] => playState = " + playState);
+                MPLogUtil.log("ComponentError[gone] => playState = " + playState);
                 setVisibility(View.GONE);
                 break;
         }

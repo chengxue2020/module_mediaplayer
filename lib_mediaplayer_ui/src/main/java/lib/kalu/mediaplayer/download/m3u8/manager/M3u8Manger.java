@@ -15,12 +15,12 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lib.kalu.mediaplayer.download.m3u8.inter.M3U8Listener;
 import lib.kalu.mediaplayer.download.m3u8.bean.M3u8;
 import lib.kalu.mediaplayer.download.m3u8.bean.M3u8Ts;
+import lib.kalu.mediaplayer.download.m3u8.inter.M3U8Listener;
 import lib.kalu.mediaplayer.download.m3u8.task.M3u8DownloadTask;
 import lib.kalu.mediaplayer.download.m3u8.utils.M3u8FileUtils;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
 /**
@@ -175,7 +175,7 @@ public class M3u8Manger {
                         sendM3u8Info(m3u8);
                         mHandler.sendEmptyMessage(WHAT_ON_COMPLITED);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        MPLogUtil.log(e.getMessage(), e);
                         handlerError(e);
                     }
                 }
@@ -230,10 +230,10 @@ public class M3u8Manger {
                         isRunning = false;//复位
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    MPLogUtil.log(e.getMessage(), e);
                     handlerError(e);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    MPLogUtil.log(e.getMessage(), e);
                     handlerError(e);
                 } finally {
                     //清空临时目录
@@ -299,7 +299,7 @@ public class M3u8Manger {
      * @throws IOException
      */
     private void download(final M3u8 m3u8, final String saveFileName) throws IOException {
-        MediaLogUtil.log("caching(M3U8Manger.java:293):" + saveFileName);
+        MPLogUtil.log("caching(M3U8Manger.java:293):" + saveFileName);
         final File dir = new File(saveFileName);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -350,7 +350,7 @@ public class M3u8Manger {
                             }
 //                        System.out.println("caching ok for: " + ts);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            MPLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         }
                     }

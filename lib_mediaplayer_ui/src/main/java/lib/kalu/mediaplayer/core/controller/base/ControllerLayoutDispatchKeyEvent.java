@@ -13,7 +13,7 @@ import androidx.annotation.RequiresApi;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
  * description:
@@ -57,17 +57,17 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
         KeycodeApi mKeycodeImpl = config.getKeycodeApi();
         // 返回
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.back() && isShowing()) {
-            MediaLogUtil.log("dispatchKeyEvent[返回] => " + event.getKeyCode());
+            MPLogUtil.log("dispatchKeyEvent[返回] => " + event.getKeyCode());
             hide();
         }
         // 方向键：中间
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.dpadCenter()) {
-            MediaLogUtil.log("dispatchKeyEvent[方向键：中间] => " + event.getKeyCode());
+            MPLogUtil.log("dispatchKeyEvent[方向键：中间] => " + event.getKeyCode());
             show();
         }
         // 快进
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.fastForward()) {
-            MediaLogUtil.log("dispatchKeyEvent[快进] => " + event.getKeyCode());
+            MPLogUtil.log("dispatchKeyEvent[快进] => " + event.getKeyCode());
             long position = mControllerWrapper.getPosition() + 1000;
             long duration = mControllerWrapper.getDuration();
             if (position > duration) {
@@ -77,7 +77,7 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
         }
         // 快退
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.fastRewind()) {
-            MediaLogUtil.log("dispatchKeyEvent[快退] => " + event.getKeyCode());
+            MPLogUtil.log("dispatchKeyEvent[快退] => " + event.getKeyCode());
             long position = mControllerWrapper.getPosition() - 1000;
             if (position <= 0) {
                 position = 0;
@@ -86,12 +86,12 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
         }
         // 房子
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.home()) {
-            MediaLogUtil.log("dispatchKeyEvent[房子] => " + event.getKeyCode());
+            MPLogUtil.log("dispatchKeyEvent[房子] => " + event.getKeyCode());
             Toast.makeText(getContext(), "房子", Toast.LENGTH_SHORT).show();
         }
         // 菜单
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == mKeycodeImpl.menu()) {
-            MediaLogUtil.log("dispatchKeyEvent[菜单] => " + event.getKeyCode());
+            MPLogUtil.log("dispatchKeyEvent[菜单] => " + event.getKeyCode());
             Toast.makeText(getContext(), "菜单", Toast.LENGTH_SHORT).show();
         }
 //        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {

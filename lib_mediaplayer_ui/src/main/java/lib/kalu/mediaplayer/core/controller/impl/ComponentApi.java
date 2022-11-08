@@ -1,10 +1,5 @@
 package lib.kalu.mediaplayer.core.controller.impl;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
@@ -21,8 +15,8 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
 @Keep
@@ -111,7 +105,7 @@ public interface ComponentApi {
             ImageView view = layout.findViewById(id);
             view.setImageResource(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -120,7 +114,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setTextColor(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -130,7 +124,7 @@ public interface ComponentApi {
             int offset = layout.getResources().getDimensionPixelOffset(value);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -139,7 +133,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setText(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -148,7 +142,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setText(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -157,7 +151,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -170,7 +164,7 @@ public interface ComponentApi {
             layoutParams.height = offset;
             view.setLayoutParams(layoutParams);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -179,7 +173,7 @@ public interface ComponentApi {
             View view = layout.findViewById(id);
             view.setBackgroundColor(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 

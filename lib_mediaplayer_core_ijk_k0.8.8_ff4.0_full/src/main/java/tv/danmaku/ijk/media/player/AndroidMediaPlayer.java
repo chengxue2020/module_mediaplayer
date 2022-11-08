@@ -38,7 +38,8 @@ import java.util.Map;
 import tv.danmaku.ijk.media.player.misc.AndroidTrackInfo;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
-import tv.danmaku.ijk.media.player.pragma.DebugLog;
+import tv.danmaku.ijk.media.player.util.DebugLog;
+import tv.danmaku.ijk.media.player.util.IjkLogUtil;
 
 public class AndroidMediaPlayer extends AbstractMediaPlayer {
     private final MediaPlayer mInternalMediaPlayer;
@@ -155,7 +156,7 @@ public class AndroidMediaPlayer extends AbstractMediaPlayer {
             try {
                 mMediaDataSource.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                IjkLogUtil.log(e.getMessage(), e);
             }
             mMediaDataSource = null;
         }

@@ -39,6 +39,7 @@ import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.subtitle.exception.FatalParsingException;
 import lib.kalu.mediaplayer.widget.subtitle.model.Style;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
@@ -238,7 +239,7 @@ public class FormatTTML implements TimedTextFileFormat {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             //this could be a fatal error...
             throw new FatalParsingException("Error during parsing: " + e.getMessage());
         }

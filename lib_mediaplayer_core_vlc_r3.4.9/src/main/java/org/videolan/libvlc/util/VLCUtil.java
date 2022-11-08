@@ -321,7 +321,9 @@ public class VLCUtil {
         return null;
     }
 
-    /** '*' prefix means it's unsupported */
+    /**
+     * '*' prefix means it's unsupported
+     */
     private final static String[] CPU_archs = {"*Pre-v4", "*v4", "*v4T",
             "v5T", "v5TE", "v5TEJ",
             "v6", "v6KZ", "v6T2", "v6K", "v7",
@@ -357,7 +359,7 @@ public class VLCUtil {
             }
             return elf;
         } catch (IOException e) {
-            e.printStackTrace();
+            VlcLogUtil.log(e.getMessage(), e);
         } finally {
             close(in);
         }
@@ -505,7 +507,7 @@ public class VLCUtil {
     public static Uri UriFromMrl(String mrl) {
         if (mrl == null) return null;
         final char[] array = mrl.toCharArray();
-        final StringBuilder sb = new StringBuilder(array.length*2);
+        final StringBuilder sb = new StringBuilder(array.length * 2);
         for (int i = 0; i < array.length; ++i) {
             final char c = array[i];
             if (c == '%') {
@@ -527,7 +529,7 @@ public class VLCUtil {
         return Uri.parse(sb.toString());
     }
 
-    public static String encodeVLCUri( Uri uri) {
+    public static String encodeVLCUri(Uri uri) {
         return encodeVLCString(uri.toString());
     }
 
@@ -535,7 +537,7 @@ public class VLCUtil {
      * VLC only acccepts "-._~" in Mrl format, android Uri accepts "_-!.~'()*".
      * Therefore, encode the characters authorized by Android Uri when creating a mrl from an Uri.
      */
-    public static String encodeVLCString( String mrl) {
+    public static String encodeVLCString(String mrl) {
         final char[] array = mrl.toCharArray();
         final StringBuilder sb = new StringBuilder(array.length * 2);
 
@@ -553,6 +555,7 @@ public class VLCUtil {
         if (closeable != null)
             try {
                 closeable.close();
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
     }
 }

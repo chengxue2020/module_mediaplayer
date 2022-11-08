@@ -478,7 +478,7 @@ public final class PlayerUtils {
             mPlayerFactoryField.setAccessible(true);
             playerFactory = mPlayerFactoryField.get(config);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
         return playerFactory;
     }

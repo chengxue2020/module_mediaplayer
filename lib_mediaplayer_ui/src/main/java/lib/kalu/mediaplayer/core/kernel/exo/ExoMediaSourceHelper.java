@@ -35,7 +35,7 @@ import java.util.WeakHashMap;
 
 import lib.kalu.mediaplayer.config.builder.CacheBuilder;
 import lib.kalu.mediaplayer.config.cache.CacheType;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ExoMediaSourceHelper {
 
@@ -59,7 +59,7 @@ public final class ExoMediaSourceHelper {
      */
     public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean hasCache, @NonNull CharSequence url, @Nullable Map<String, String> headers, @NonNull CacheBuilder config) {
         Uri contentUri = Uri.parse(url.toString());
-        MediaLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", hasCache = " + hasCache + ", url = " + url);
+        MPLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", hasCache = " + hasCache + ", url = " + url);
         // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
             RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
@@ -85,7 +85,7 @@ public final class ExoMediaSourceHelper {
 
             // 本地缓存
             if (hasCache && null != config && config.getType() == CacheType.DEFAULT) {
-                MediaLogUtil.log("getMediaSource => 策略, 本地缓存");
+                MPLogUtil.log("getMediaSource => 策略, 本地缓存");
 
                 // cache
                 int size;
@@ -118,7 +118,7 @@ public final class ExoMediaSourceHelper {
             }
             // 默认
             else {
-                MediaLogUtil.log("getMediaSource => 默认, 不缓存");
+                MPLogUtil.log("getMediaSource => 默认, 不缓存");
                 DefaultDataSource.Factory factory = new DefaultDataSource.Factory(context, http);
                 return createMediaSource(url, factory);
             }
@@ -159,16 +159,16 @@ public final class ExoMediaSourceHelper {
 
         switch (contentType) {
             case C.CONTENT_TYPE_DASH:
-                MediaLogUtil.log("SRT => TYPE_DASH");
+                MPLogUtil.log("SRT => TYPE_DASH");
                 return new DashMediaSource.Factory(factory).createMediaSource(mediaItem);
             case C.CONTENT_TYPE_SS:
-                MediaLogUtil.log("SRT => TYPE_SS");
+                MPLogUtil.log("SRT => TYPE_SS");
                 return new SsMediaSource.Factory(factory).createMediaSource(mediaItem);
             case C.CONTENT_TYPE_HLS:
-                MediaLogUtil.log("SRT => TYPE_HLS");
+                MPLogUtil.log("SRT => TYPE_HLS");
                 return new HlsMediaSource.Factory(factory).createMediaSource(mediaItem);
             default:
-                MediaLogUtil.log("SRT => TYPE_DEFAULT");
+                MPLogUtil.log("SRT => TYPE_DEFAULT");
 //                return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
                 DefaultExtractorsFactory extractors = new DefaultExtractorsFactory();
                 extractors.setConstantBitrateSeekingEnabled(true);

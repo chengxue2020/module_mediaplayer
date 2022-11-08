@@ -22,7 +22,7 @@
 #ifndef J4A__java_util_ArrayList__H
 #define J4A__java_util_ArrayList__H
 
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 
 jobject J4AC_java_util_ArrayList__ArrayList(JNIEnv *env);
 jobject J4AC_java_util_ArrayList__ArrayList__catchAll(JNIEnv *env);

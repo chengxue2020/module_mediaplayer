@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
 public final class AndroidMediaPlayer implements KernelApi {
@@ -82,7 +82,7 @@ public final class AndroidMediaPlayer implements KernelApi {
 //                try {
 //                    mAndroidPlayer.release();
 //                } catch (Exception e) {
-//                    e.printStackTrace();
+//                    MediaLogUtil.log(e.getMessage(), e);
 //                }
 //            }
 //        }.start();
@@ -108,7 +108,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -133,7 +133,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -145,7 +145,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.start();
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -157,7 +157,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.pause();
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -169,7 +169,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         try {
             mAndroidPlayer.stop();
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -193,7 +193,7 @@ public final class AndroidMediaPlayer implements KernelApi {
                 mAndroidPlayer.seekTo((int) time);
             }
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -229,30 +229,13 @@ public final class AndroidMediaPlayer implements KernelApi {
             try {
                 mAndroidPlayer.setSurface(surface);
             } catch (Exception e) {
-                e.printStackTrace();
+                MPLogUtil.log(e.getMessage(), e);
             }
         }
     }
 
     @Override
     public void setOptions() {
-    }
-
-    /**
-     * 设置播放速度
-     *
-     * @param speed 速度
-     */
-    @Override
-    public void setSpeed(float speed) {
-        // only support above Android M
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                mAndroidPlayer.setPlaybackParams(mAndroidPlayer.getPlaybackParams().setSpeed(speed));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -267,10 +250,27 @@ public final class AndroidMediaPlayer implements KernelApi {
             try {
                 return mAndroidPlayer.getPlaybackParams().getSpeed();
             } catch (Exception e) {
-                e.printStackTrace();
+                MPLogUtil.log(e.getMessage(), e);
             }
         }
         return 1f;
+    }
+
+    /**
+     * 设置播放速度
+     *
+     * @param speed 速度
+     */
+    @Override
+    public void setSpeed(float speed) {
+        // only support above Android M
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                mAndroidPlayer.setPlaybackParams(mAndroidPlayer.getPlaybackParams().setSpeed(speed));
+            } catch (Exception e) {
+                MPLogUtil.log(e.getMessage(), e);
+            }
+        }
     }
 
     /**
@@ -287,7 +287,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     private MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            MediaLogUtil.log("K_ANDROID => onError => what = " + what);
+            MPLogUtil.log("K_ANDROID => onError => what = " + what);
             // ignore -38
             if (what == -38) {
 
@@ -317,7 +317,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     private MediaPlayer.OnInfoListener onInfoListener = new MediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(MediaPlayer mp, int what, int extra) {
-            MediaLogUtil.log("K_ANDROID => onInfo => what = " + what);
+            MPLogUtil.log("K_ANDROID => onInfo => what = " + what);
             //解决MEDIA_INFO_VIDEO_RENDERING_START多次回调问题
 //            MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START
             if (what == PlayerType.EventType.EVENT_VIDEO_START) {
@@ -342,7 +342,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-            MediaLogUtil.log("K_ANDROID => onPrepared => ");
+            MPLogUtil.log("K_ANDROID => onPrepared => ");
 
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
 //            int position = mp.getCurrentPosition();
@@ -382,7 +382,7 @@ public final class AndroidMediaPlayer implements KernelApi {
             setMute(value > 0);
             mAndroidPlayer.setVolume(value, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -393,7 +393,7 @@ public final class AndroidMediaPlayer implements KernelApi {
 //                float volume = mVlcPlayer.getVLC().getVolume();
 //                return volume <= 0;
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            MediaLogUtil.log(e.getMessage(), e);
 //            return false;
 //        }
     }

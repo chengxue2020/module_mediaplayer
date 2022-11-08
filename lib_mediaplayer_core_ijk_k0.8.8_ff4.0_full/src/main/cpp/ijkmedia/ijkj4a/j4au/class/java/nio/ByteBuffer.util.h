@@ -21,7 +21,7 @@
 #ifndef J4A__java_nio_ByteBuffer__UTIL__H
 #define J4A__java_nio_ByteBuffer__UTIL__H
 
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 #include "j4a/class/java/nio/ByteBuffer.h"
 
 void *J4AC_java_nio_ByteBuffer__getDirectBufferAddress(JNIEnv *env, jobject thiz);

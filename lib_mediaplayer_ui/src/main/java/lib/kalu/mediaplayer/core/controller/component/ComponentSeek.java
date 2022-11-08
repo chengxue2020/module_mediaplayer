@@ -1,11 +1,9 @@
 package lib.kalu.mediaplayer.core.controller.component;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -20,7 +18,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
  * description: 底部控制栏视图
@@ -121,7 +119,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         boolean isFull = mControllerWrapper.isFull();
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_STOP:
-                MediaLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
+                MPLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
                 if (!isLive && isFull) {
                     refreshTimestamp(false);
                     bringToFront();
@@ -129,7 +127,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 }
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
-                MediaLogUtil.log("ComponentSeek22[gone] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
+                MPLogUtil.log("ComponentSeek22[gone] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
                 refreshTimestamp(true);
                 gone();
                 break;
@@ -142,7 +140,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         boolean isFull = mControllerWrapper.isFull();
         switch (windowState) {
             case PlayerType.WindowType.FULL:
-                MediaLogUtil.log("ComponentSeek22[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
+                MPLogUtil.log("ComponentSeek22[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
                 if (!isLive && isFull) {
                     refreshTimestamp(false);
                     bringToFront();
@@ -150,7 +148,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 }
                 break;
             default:
-                MediaLogUtil.log("ComponentSeek22[gone] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
+                MPLogUtil.log("ComponentSeek22[gone] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
                 refreshTimestamp(true);
                 gone();
                 break;
@@ -159,7 +157,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void show() {
-        MediaLogUtil.log("ComponentSeek88 => show =>");
+        MPLogUtil.log("ComponentSeek88 => show =>");
         if (mShowBottomPB) {
             findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.GONE);
         }
@@ -171,7 +169,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void gone() {
-        MediaLogUtil.log("ComponentSeek88 => gone =>");
+        MPLogUtil.log("ComponentSeek88 => gone =>");
         boolean isFull = mControllerWrapper.isFull();
         if (mShowBottomPB) {
             findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(isFull ? View.VISIBLE : View.GONE);
@@ -199,7 +197,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             CharSequence text = textView.getText();
             return Long.parseLong(String.valueOf(text));
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return 0;
         }
     }
@@ -209,7 +207,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     @Override
     public void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
 
-        MediaLogUtil.log("ComponentSeek => seekProgress => duration = " + duration + ", position = " + position);
+        MPLogUtil.log("ComponentSeek => seekProgress => duration = " + duration + ", position = " + position);
         if (position <= 0 && duration <= 0)
             return;
 
@@ -326,7 +324,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         builderDuration.append(d2);
         String strDuration = builderDuration.toString();
 
-        MediaLogUtil.log("ComponentSeek => refreshText => position = " + position + ", strPosition = " + strPosition + ", duration = " + duration + ", strDuration = " + strDuration);
+        MPLogUtil.log("ComponentSeek => refreshText => position = " + position + ", strPosition = " + strPosition + ", duration = " + duration + ", strDuration = " + strDuration);
 
         TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
         viewMax.setText(strDuration);

@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ComponentLoading extends RelativeLayout implements ComponentApi {
 
@@ -60,14 +60,14 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     public void onPlayStateChanged(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
-                MediaLogUtil.log("ComponentLoading[show] => playState = " + playState);
+                MPLogUtil.log("ComponentLoading[show] => playState = " + playState);
                 bringToFront();
                 findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_LOADING_STOP:
-                MediaLogUtil.log("ComponentLoading[gone] => playState = " + playState);
+                MPLogUtil.log("ComponentLoading[gone] => playState = " + playState);
                 findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);

@@ -318,7 +318,7 @@ public final class BaseToast {
                 sField_TN_Handler = sField_TN.getType().getDeclaredField("mHandler");
                 sField_TN_Handler.setAccessible(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                MPLogUtil.log(e.getMessage(), e);
             }
         }
 
@@ -328,7 +328,7 @@ public final class BaseToast {
                 Handler preHandler = (Handler) sField_TN_Handler.get(tn);
                 sField_TN_Handler.set(tn, new HookToast.SafelyHandler(preHandler));
             } catch (Exception e) {
-                e.printStackTrace();
+                MPLogUtil.log(e.getMessage(), e);
             }
         }
 
@@ -344,7 +344,7 @@ public final class BaseToast {
                 try {
                     super.dispatchMessage(msg);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    MPLogUtil.log(e.getMessage(), e);
                 }
             }
 

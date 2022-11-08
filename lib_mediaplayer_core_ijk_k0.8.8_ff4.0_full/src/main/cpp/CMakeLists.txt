@@ -154,6 +154,9 @@ set(common_sources
 
         #ijkprof
         ijkprof/prof.c
+
+        #ijklog
+        ijkmedia/ijklog/log_base.c
         )
 
 set(armeabi_v7a_sources
@@ -217,6 +220,7 @@ include_directories(
         src/main/cpp/ffmpeginclude/config/${ANDROID_ABI}
         ijkmedia
         ijkmedia/ijkplayer
+        ijkmedia/ijklog
         ijkmedia/ijkj4a
         ijkmedia/ijksdl
         ijkmedia/ijksoundtouch

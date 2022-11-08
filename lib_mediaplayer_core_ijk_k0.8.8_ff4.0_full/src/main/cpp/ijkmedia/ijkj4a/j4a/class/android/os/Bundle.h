@@ -22,7 +22,7 @@
 #ifndef J4A__android_os_Bundle__H
 #define J4A__android_os_Bundle__H
 
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 
 jobject J4AC_android_os_Bundle__Bundle(JNIEnv *env);
 jobject J4AC_android_os_Bundle__Bundle__catchAll(JNIEnv *env);

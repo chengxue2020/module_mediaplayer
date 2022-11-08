@@ -21,7 +21,7 @@
 #ifndef J4AU__android_media_AudioTrack__UTIL__H
 #define J4AU__android_media_AudioTrack__UTIL__H
 
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 #include "j4a/class/android/media/AudioTrack.h"
 
 void J4AC_android_media_AudioTrack__setSpeed(JNIEnv *env, jobject thiz, jfloat speed);

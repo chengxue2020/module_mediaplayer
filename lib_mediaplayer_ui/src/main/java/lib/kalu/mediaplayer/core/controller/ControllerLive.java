@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.core.controller;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.view.View;
@@ -15,8 +14,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
-import lib.kalu.mediaplayer.util.BaseToast;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 
@@ -86,7 +84,7 @@ public class ControllerLive extends ControllerLayout {
     @Override
     protected void onPlayerStatusChanged(int playState) {
         super.onPlayerStatusChanged(playState);
-        MediaLogUtil.log("ControllerLive => playState = " + playState);
+        MPLogUtil.log("ControllerLive => playState = " + playState);
         View view = findViewById(R.id.module_mediaplayer_controller_live_loading);
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_STOP:

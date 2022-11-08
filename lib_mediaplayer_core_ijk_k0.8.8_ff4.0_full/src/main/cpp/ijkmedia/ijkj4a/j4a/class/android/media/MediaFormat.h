@@ -22,7 +22,7 @@
 #ifndef J4A__android_media_MediaFormat__H
 #define J4A__android_media_MediaFormat__H
 
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 
 jobject J4AC_android_media_MediaFormat__MediaFormat(JNIEnv *env);
 jobject J4AC_android_media_MediaFormat__MediaFormat__catchAll(JNIEnv *env);

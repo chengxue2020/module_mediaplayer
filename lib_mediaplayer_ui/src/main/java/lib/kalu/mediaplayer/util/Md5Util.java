@@ -79,7 +79,7 @@ public final class Md5Util {
             md.update(data);
             return md.digest();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return null;
         }
     }

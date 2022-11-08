@@ -3,12 +3,9 @@ package lib.kalu.mediaplayer;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.KeyEvent;
 
 import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.exoplayer2.util.Log;
 
 import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -19,7 +16,7 @@ import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -133,8 +130,7 @@ public final class TestActivity extends AppCompatActivity {
              */
             @Override
             public void onChange(int playState) {
-                MediaLogUtil.setIsLog(true);
-                MediaLogUtil.log("onPlayStateChanged => playState = " + playState);
+                MPLogUtil.log("onPlayStateChanged => playState = " + playState);
 
                 switch (playState) {
                     case PlayerType.StateType.STATE_INIT:
@@ -197,7 +193,7 @@ public final class TestActivity extends AppCompatActivity {
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
         long max = getIntent().getLongExtra(INTENT_MAX, 0);
         boolean loop = getIntent().getBooleanExtra(INTENT_LOOP, false);
-        MediaLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", url = " + url);
+        MPLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", url = " + url);
 
         BundleBuilder.Builder builder = new BundleBuilder.Builder();
         builder.setSeek(seek);

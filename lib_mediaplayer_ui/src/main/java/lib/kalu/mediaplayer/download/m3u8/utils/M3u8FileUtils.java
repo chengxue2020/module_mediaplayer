@@ -18,7 +18,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.download.m3u8.bean.M3u8;
 import lib.kalu.mediaplayer.download.m3u8.bean.M3u8Ts;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
 /**
@@ -136,7 +136,7 @@ public final class M3u8FileUtils {
         try {
             FileUtils.moveFile(new File(sFile), new File(tFile));
         } catch (IOException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -196,7 +196,7 @@ public final class M3u8FileUtils {
                 }
             }
         }
-        MediaLogUtil.log("getLimitM3U8Ts(MUtils.java:152):" + downList);
+        MPLogUtil.log("getLimitM3U8Ts(MUtils.java:152):" + downList);
         return downList;
     }
 }

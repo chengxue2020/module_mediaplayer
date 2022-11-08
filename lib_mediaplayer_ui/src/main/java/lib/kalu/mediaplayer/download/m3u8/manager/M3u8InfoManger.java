@@ -8,8 +8,8 @@ import androidx.annotation.Keep;
 
 import java.io.IOException;
 
-import lib.kalu.mediaplayer.download.m3u8.inter.OnM3u8InfoListener;
 import lib.kalu.mediaplayer.download.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.download.m3u8.inter.OnM3u8InfoListener;
 import lib.kalu.mediaplayer.download.m3u8.utils.M3u8FileUtils;
 
 
@@ -68,7 +68,7 @@ public class M3u8InfoManger {
                     M3u8 m3u8 = M3u8FileUtils.parseIndex(url);
                     handlerSuccess(m3u8);
                 } catch (IOException e) {
-//                    e.printStackTrace();
+//                    MediaLogUtil.log(e.getMessage(), e);
                     handlerError(e);
                 }
             }

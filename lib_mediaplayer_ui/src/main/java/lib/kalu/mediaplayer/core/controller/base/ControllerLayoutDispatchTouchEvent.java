@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.core.controller.impl.GestureApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
 /**
@@ -376,7 +376,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        MediaLogUtil.log("事件----------事件拦截----------");
+        MPLogUtil.log("事件----------事件拦截----------");
         return super.onInterceptTouchEvent(ev);
     }
 
@@ -391,7 +391,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        MediaLogUtil.log("事件----------事件分发----------");
+        MPLogUtil.log("事件----------事件分发----------");
         return super.dispatchTouchEvent(ev);
     }
 
@@ -408,7 +408,7 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
         if (!isEnabled())
             return super.onTouchEvent(event);
 
-        MediaLogUtil.log("事件----------事件触摸----------");
+        MPLogUtil.log("事件----------事件触摸----------");
         //滑动结束时事件处理
         if (!mGestureDetector.onTouchEvent(event)) {
             int action = event.getAction();

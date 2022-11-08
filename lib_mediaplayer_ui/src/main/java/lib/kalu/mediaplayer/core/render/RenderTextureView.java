@@ -26,8 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
-import lib.kalu.mediaplayer.util.MeasureHelper;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
 /**
@@ -131,7 +130,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
          */
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-            MediaLogUtil.log("RenderApi => onSurfaceTextureAvailable => " + this);
+            MPLogUtil.log("RenderApi => onSurfaceTextureAvailable => " + this);
             if (mSurfaceTexture != null) {
                 setSurfaceTexture(mSurfaceTexture);
             } else {
@@ -151,7 +150,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
          */
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-            MediaLogUtil.log("RenderApi => onSurfaceTextureSizeChanged => " + this);
+            MPLogUtil.log("RenderApi => onSurfaceTextureSizeChanged => " + this);
         }
 
         /**
@@ -169,7 +168,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
          */
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            MediaLogUtil.log("RenderApi => onSurfaceTextureUpdated => " + this);
+            MPLogUtil.log("RenderApi => onSurfaceTextureUpdated => " + this);
         }
     };
 }

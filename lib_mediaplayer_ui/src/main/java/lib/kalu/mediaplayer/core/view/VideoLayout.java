@@ -33,17 +33,14 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
-import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
-import lib.kalu.mediaplayer.core.kernel.exo.ExoMediaPlayer;
-import lib.kalu.mediaplayer.core.kernel.ijk.IjkMediaPlayer;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.listener.OnFullChangeListener;
 import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.BaseToast;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 /**
@@ -93,20 +90,20 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        MediaLogUtil.log("onLife => onAttachedToWindow => this = " + this);
+        MPLogUtil.log("onLife => onAttachedToWindow => this = " + this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         boolean release = isRelease();
-        MediaLogUtil.log("onLife => onDetachedFromWindow => release = " + release + ", this = " + this);
+        MPLogUtil.log("onLife => onDetachedFromWindow => release = " + release + ", this = " + this);
         release(!release);
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        MediaLogUtil.log("onLife => onWindowVisibilityChanged => visibility = " + visibility + ", this = " + this);
+        MPLogUtil.log("onLife => onWindowVisibilityChanged => visibility = " + visibility + ", this = " + this);
         // visable
         if (visibility == View.VISIBLE) {
             startHanlder();
@@ -144,8 +141,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // 全局配置
         PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
         mCurrentScreenScaleType = config.getScaleType();
-        //设置是否打印日志
-        MediaLogUtil.setIsLog(config.isLog());
 
         //读取xml中的配置，并综合全局配置
         try {
@@ -164,15 +159,15 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     protected Parcelable onSaveInstanceState() {
         String url = getUrl();
-        MediaLogUtil.log("onSaveInstanceState => url = " + url);
+        MPLogUtil.log("onSaveInstanceState => url = " + url);
         if (null != url && url.length() > 0) {
             try {
                 long position = getPosition();
                 long duration = getDuration();
-                MediaLogUtil.log("onSaveInstanceState => position = " + position + ", duration = " + duration + ", url = " + url);
+                MPLogUtil.log("onSaveInstanceState => position = " + position + ", duration = " + duration + ", url = " + url);
                 saveBundle(getContext(), url, position, duration);
             } catch (Exception e) {
-                e.printStackTrace();
+                MPLogUtil.log(e.getMessage(), e);
             }
         }
         return super.onSaveInstanceState();
@@ -202,7 +197,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public void start(@NonNull BundleBuilder builder, @NonNull String url) {
 
-        MediaLogUtil.log("VideoLayout => start => url = " + url);
+        MPLogUtil.log("VideoLayout => start => url = " + url);
         if (null == url || url.length() <= 0)
             return;
 
@@ -212,8 +207,25 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         boolean live = builder.isLive();
         boolean release = builder.isRelease();
         boolean mute = builder.isMute();
-        MediaLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", release = " + release + ", mute = " + mute + ", url = " + url);
+        MPLogUtil.log("VideoLayout => start => seek = " + seek + ", max = " + max + ", loop = " + loop + ", live = " + live + ", release = " + release + ", mute = " + mute + ", url = " + url);
         try {
+
+            PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
+            int kernel = config.getKernel();
+            // exo
+            if (kernel == PlayerType.KernelType.EXO) {
+            }
+            // ijk
+            else if (kernel == PlayerType.KernelType.IJK) {
+                MPLogUtil.setLogger(PlayerType.KernelType.IJK, config.isLog());
+            }
+            // vlc
+            else if (kernel == PlayerType.KernelType.VLC) {
+                MPLogUtil.setLogger(PlayerType.KernelType.VLC, config.isLog());
+            }
+            // android
+            else if (kernel == PlayerType.KernelType.ANDROID) {
+            }
 
             // step0
             callPlayerState(PlayerType.StateType.STATE_INIT);
@@ -222,11 +234,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             callPlayerState(PlayerType.StateType.STATE_LOADING_START);
 
             // step2
-            PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
-            int kernel = config.getKernel();
             // exo
             if (kernel == PlayerType.KernelType.EXO) {
-
             }
             // ijk
             else if (kernel == PlayerType.KernelType.IJK) {
@@ -234,6 +243,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 if (null != temp && temp.length() > 0) {
                     release();
                 }
+            }
+            // vlc
+            else if (kernel == PlayerType.KernelType.VLC) {
+            }
+            // android
+            else if (kernel == PlayerType.KernelType.ANDROID) {
             }
 
             // step3
@@ -253,7 +268,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             mKernel.create(getContext(), builder, url);
             setKeepScreenOn(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -269,7 +284,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 @Override
                 public void onEvent(int kernel, int event) {
 
-                    MediaLogUtil.log("onEvent => onKernel = " + kernel + ", event = " + event);
+                    MPLogUtil.log("onEvent => onKernel = " + kernel + ", event = " + event);
 
                     switch (event) {
                         // 网络拉流开始
@@ -454,7 +469,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public void resume() {
         String url = getUrl();
-        MediaLogUtil.log("onEvent => resume => url = " + url + ", mHanlder = " + mHandler + ", mKernel = " + mKernel);
+        MPLogUtil.log("onEvent => resume => url = " + url + ", mHanlder = " + mHandler + ", mKernel = " + mKernel);
         if (null == url || url.length() <= 0)
             return;
         callPlayerState(PlayerType.StateType.STATE_RESUME);
@@ -465,7 +480,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public void repeat() {
         String url = getUrl();
-        MediaLogUtil.log("onEvent => repeat => url = " + url);
+        MPLogUtil.log("onEvent => repeat => url = " + url);
         if (null == url || url.length() <= 0)
             return;
         callPlayerState(PlayerType.StateType.STATE_REPEAT);
@@ -478,7 +493,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             long duration = mKernel.getDuration();
             return duration;
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return 0L;
         }
     }
@@ -503,7 +518,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             return mKernel.isLooping();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return false;
         }
     }
@@ -513,7 +528,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             return mKernel.isAutoRelease();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return false;
         }
     }
@@ -523,7 +538,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             return mKernel.getSeek();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return 0L;
         }
     }
@@ -533,7 +548,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             return mKernel.getMax();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return -1L;
         }
     }
@@ -543,7 +558,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             return mKernel.getUrl();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return null;
         }
     }
@@ -581,7 +596,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         boolean loop = builder.isLoop();
 
         String url = getUrl();
-        MediaLogUtil.log("onEvent => seekTo => seek = " + seek + ", max = " + max + ", loop = " + loop + ", force = " + force + ", url = " + url + ", mKernel = " + mKernel);
+        MPLogUtil.log("onEvent => seekTo => seek = " + seek + ", max = " + max + ", loop = " + loop + ", force = " + force + ", url = " + url + ", mKernel = " + mKernel);
         if (null == url || url.length() < 0)
             return;
 
@@ -619,7 +634,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             return mKernel.isLive();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return false;
         }
     }
@@ -629,7 +644,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             return mKernel.isMute();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return false;
         }
     }
@@ -869,7 +884,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 child.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -884,14 +899,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             }
             viewGroup.setVisibility(View.INVISIBLE);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
     @Override
     public void checkReal() {
         int visibility = getWindowVisibility();
-        MediaLogUtil.log("onLife => checkReal => visibility = " + visibility);
+        MPLogUtil.log("onLife => checkReal => visibility = " + visibility);
         if (visibility == View.VISIBLE)
             return;
         clearHanlder();
@@ -900,7 +915,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void release(@NonNull boolean onlyHandle) {
-        MediaLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mHandler = " + mHandler + ", mKernel = " + mKernel);
+        MPLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mHandler = " + mHandler + ", mKernel = " + mKernel);
         // control
 //        clearControllerLayout();
 //        try {
@@ -932,7 +947,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             mRender.releaseReal();
             mRender = null;
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
 
         // step7
@@ -942,7 +957,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             mKernel.releaseDecoder();
             mKernel = null;
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
 //        if (!isInit()) {
 //            PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
@@ -963,7 +978,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //                try {
 //                    mAssetFileDescriptor.close();
 //                } catch (IOException e) {
-//                    e.printStackTrace();
+//                    MediaLogUtil.log(e.getMessage(), e);
 //                }
 //            }
 //            //关闭屏幕常亮
@@ -1044,7 +1059,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             mKernel.enableExternalMusic(enable, release);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -1054,7 +1069,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             mKernel.setExternalMusicAuto(auto);
             mKernel.enableExternalMusic(enable, release);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -1062,7 +1077,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public boolean isExternalMusicAuto() {
         try {
             boolean auto = mKernel.isExternalMusicAuto();
-            MediaLogUtil.log("isExternalMusicAuto => auto = " + auto);
+            MPLogUtil.log("isExternalMusicAuto => auto = " + auto);
             if (auto) {
                 String path = mKernel.getExternalMusicPath();
                 return null != path && path.length() > 0;
@@ -1070,7 +1085,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return false;
         }
     }
@@ -1080,7 +1095,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         try {
             return mKernel.isExternalMusicPlaying();
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return false;
         }
     }
@@ -1093,7 +1108,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             boolean loop = bundle.isExternalMusicLoop();
             mKernel.setExternalMusicLoop(loop);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -1144,7 +1159,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 mOnFullChangeListener.onFull();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -1178,7 +1193,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 mOnFullChangeListener.onNormal();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -1202,7 +1217,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return false;
         }
     }
@@ -1242,7 +1257,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // 5
             callWindowState(PlayerType.WindowType.FLOAT);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -1274,7 +1289,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // 4
             callWindowState(PlayerType.WindowType.NORMAL);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -1357,21 +1372,21 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             if (isFloat) {
                 // stopFloat
                 if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                    MediaLogUtil.log("dispatchKeyEvent => stopFloat =>");
+                    MPLogUtil.log("dispatchKeyEvent => stopFloat =>");
                     stopFloat();
                 }
                 return true;
             } else if (isFull) {
                 // toogle
                 if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                    MediaLogUtil.log("dispatchKeyEvent => toggle =>");
+                    MPLogUtil.log("dispatchKeyEvent => toggle =>");
                     toggle();
                 }
                 // seekForward
                 else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                     int count = event.getRepeatCount();
                     boolean isLive = isLive();
-                    MediaLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count + ", isLive = " + isLive);
+                    MPLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count + ", isLive = " + isLive);
                     if (!isLive) {
                         if (count > 0) {
                             clearHanlder();
@@ -1388,7 +1403,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                     int count = event.getRepeatCount();
                     boolean isLive = isLive();
-                    MediaLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count + ", isLive = " + isLive);
+                    MPLogUtil.log("dispatchKeyEvent => seekForward[true] => count = " + count + ", isLive = " + isLive);
                     if (!isLive) {
                         Object tag = getTag(R.id.module_mediaplayer_id_seek);
                         if (null != tag && "1".equals(tag)) {
@@ -1404,7 +1419,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                     int count = event.getRepeatCount();
                     boolean isLive = isLive();
-                    MediaLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count + ", isLive = " + isLive);
+                    MPLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count + ", isLive = " + isLive);
                     if (!isLive) {
                         if (count > 0) {
                             clearHanlder();
@@ -1421,7 +1436,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                     int count = event.getRepeatCount();
                     boolean isLive = isLive();
-                    MediaLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count + ", isLive = " + isLive);
+                    MPLogUtil.log("dispatchKeyEvent => seekRewind[true] => count = " + count + ", isLive = " + isLive);
                     if (!isLive) {
                         Object tag = getTag(R.id.module_mediaplayer_id_seek);
                         if (null != tag && "1".equals(tag)) {
@@ -1435,7 +1450,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                 }
                 // stopFull
                 else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                    MediaLogUtil.log("decodeKeyEvent => stopFull =>");
+                    MPLogUtil.log("decodeKeyEvent => stopFull =>");
                     stopFull();
                 }
                 return true;

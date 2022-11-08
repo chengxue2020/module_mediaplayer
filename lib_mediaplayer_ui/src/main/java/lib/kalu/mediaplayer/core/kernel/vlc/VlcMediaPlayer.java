@@ -2,26 +2,18 @@ package lib.kalu.mediaplayer.core.kernel.vlc;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import org.videolan.libvlc.LibVLC;
-import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
-import org.videolan.libvlc.interfaces.IVLCVout;
-
-import java.util.Map;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
 public final class VlcMediaPlayer implements KernelApi, KernelEvent {
@@ -94,7 +86,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         mVlcPlayer.getVLC().setEventListener(new MediaPlayer.EventListener() {
             @Override
             public void onEvent(MediaPlayer.Event event) {
-                MediaLogUtil.log("K_VLC => event = " + event.type);
+                MPLogUtil.log("K_VLC => event = " + event.type);
                 // 首帧画面
                 if (event.type == MediaPlayer.Event.Vout) {
                     mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
@@ -130,7 +122,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.setDataSource(fd.getFileDescriptor());
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -142,7 +134,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.start();
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -154,7 +146,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.pause();
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -166,7 +158,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.stop();
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -190,7 +182,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             mVlcPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -239,7 +231,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         try {
             start();
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -249,7 +241,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
             try {
                 mVlcPlayer.setSurface(surface);
             } catch (Exception e) {
-                e.printStackTrace();
+                MPLogUtil.log(e.getMessage(), e);
             }
         }
     }
@@ -262,7 +254,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //            try {
 //                mVlcPlayer.setDisplay(holder);
 //            } catch (Exception e) {
-//                e.printStackTrace();
+//                MediaLogUtil.log(e.getMessage(), e);
 //            }
 //        }
 //
@@ -271,23 +263,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void setOptions() {
-    }
-
-    /**
-     * 设置播放速度
-     *
-     * @param speed 速度
-     */
-    @Override
-    public void setSpeed(float speed) {
-        // only support above Android M
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                mVlcPlayer.setSpeed(speed);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -302,10 +277,27 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
             try {
                 return mVlcPlayer.getSpeed();
             } catch (Exception e) {
-                e.printStackTrace();
+                MPLogUtil.log(e.getMessage(), e);
             }
         }
         return 1f;
+    }
+
+    /**
+     * 设置播放速度
+     *
+     * @param speed 速度
+     */
+    @Override
+    public void setSpeed(float speed) {
+        // only support above Android M
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                mVlcPlayer.setSpeed(speed);
+            } catch (Exception e) {
+                MPLogUtil.log(e.getMessage(), e);
+            }
+        }
     }
 
     /**
@@ -330,7 +322,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
             }
             mVlcPlayer.getVLC().setVolume((int) value);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -341,7 +333,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //                float volume = mVlcPlayer.getVLC().getVolume();
 //                return volume <= 0;
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            MediaLogUtil.log(e.getMessage(), e);
 //            return false;
 //        }
     }

@@ -2,12 +2,9 @@ package lib.kalu.mediaplayer.core.controller.base;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.OrientationEventListener;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
@@ -21,7 +18,6 @@ import java.util.ArrayList;
 
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi2;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.core.controller.ControllerApi;
@@ -31,7 +27,7 @@ import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.NetworkUtils;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.StatesCutoutUtils;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
  * 播放器控制容器
@@ -402,7 +398,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
                 mCutoutHeight = (int) PlayerUtils.getStatusBarHeightPortrait(mActivity);
             }
         }
-        MediaLogUtil.log("hasCutout: " + mHasCutout + " cutout height: " + mCutoutHeight);
+        MPLogUtil.log("hasCutout: " + mHasCutout + " cutout height: " + mCutoutHeight);
     }
 
     /**

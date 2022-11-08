@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.util.MeasureHelper;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
  * <pre>
@@ -132,7 +132,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
          */
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            MediaLogUtil.log("RenderApi => surfaceCreated => " + this);
+            MPLogUtil.log("RenderApi => surfaceCreated => " + this);
             if (mKernel != null) {
                 mSurface = holder.getSurface();
                 mKernel.setSurface(mSurface);
@@ -148,7 +148,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
          */
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            MediaLogUtil.log("RenderApi => surfaceChanged => " + this);
+            MPLogUtil.log("RenderApi => surfaceChanged => " + this);
 //            if (mKernel != null) {
 //                mSurface = holder.getSurface();
 //                mKernel.setSurface(mSurface);

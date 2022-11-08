@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
@@ -58,7 +58,7 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onPlayStateChanged(int playState) {
-        MediaLogUtil.log("ComponentPrepare => onPlayStateChanged => playState = " + playState);
+        MPLogUtil.log("ComponentPrepare => onPlayStateChanged => playState = " + playState);
 //        switch (playState) {
 //            case PlayerType.StateType.STATE_SUBTITLE_START:
 //                bringToFront();

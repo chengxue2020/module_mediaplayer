@@ -20,10 +20,11 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lib.kalu.mediaplayer.download.m3u8.inter.OnDownloadListener;
 import lib.kalu.mediaplayer.download.m3u8.bean.M3u8;
 import lib.kalu.mediaplayer.download.m3u8.bean.M3u8Ts;
+import lib.kalu.mediaplayer.download.m3u8.inter.OnDownloadListener;
 import lib.kalu.mediaplayer.download.m3u8.utils.M3u8FileUtils;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
  * desc  : 直播管理器
@@ -186,24 +187,24 @@ public class M3u8LiveManger {
                                 handlerError(new Throwable(String.valueOf(conn.getResponseCode())));
                             }
                         } catch (MalformedURLException e) {
-//                            e.printStackTrace();
+//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         } catch (IOException e) {
-//                            e.printStackTrace();
+//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         } finally {//关流
                             if (inputStream != null) {
                                 try {
                                     inputStream.close();
                                 } catch (IOException e) {
-//                                    e.printStackTrace();
+//                                    MediaLogUtil.log(e.getMessage(), e);
                                 }
                             }
                             if (fos != null) {
                                 try {
                                     fos.close();
                                 } catch (IOException e) {
-//                                    e.printStackTrace();
+//                                    MediaLogUtil.log(e.getMessage(), e);
                                 }
                             }
                         }
@@ -268,7 +269,7 @@ public class M3u8LiveManger {
 //                                m3U8TsList.addAll(m3u8.getTsList());
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            MPLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         }
                     }
@@ -349,7 +350,7 @@ public class M3u8LiveManger {
         try {
             M3u8FileUtils.merge(downloadedFileList, saveFilePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
             return "";
         }
         Log.i("hdltag", "getCurrentTs(M3U8LiveManger.java:287):已保存至 " + saveFilePath);

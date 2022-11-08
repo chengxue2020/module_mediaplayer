@@ -26,7 +26,7 @@
 #define IJKSDL_ANDROID__IJKSDL_ANDROID_JNI_H
 
 #include <jni.h>
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 #include "j4a/j4a_allclasses.h"
 
 #define IJK_API_1_BASE                      1   // 1.0

@@ -3,17 +3,14 @@ package lib.kalu.mediaplayer.core.kernel;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.view.Surface;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import java.io.IOException;
-
 import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.core.kernel.music.MusicPlayerManager;
-import lib.kalu.mediaplayer.util.MediaLogUtil;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
 /**
@@ -45,8 +42,8 @@ public interface KernelApi extends KernelEvent {
     }
 
     default void update(@NonNull BundleBuilder bundle, @NonNull String playUrl) {
-        MediaLogUtil.log("KernelApi => update => this = " + this + ", playUrl = " + playUrl);
-        MediaLogUtil.log("KernelApi => update => bundle = " + bundle);
+        MPLogUtil.log("KernelApi => update => this = " + this + ", playUrl = " + playUrl);
+        MPLogUtil.log("KernelApi => update => bundle = " + bundle);
         // 1
         setSeek(bundle.getSeek());
         setMax(bundle.getMax());
@@ -147,7 +144,7 @@ public interface KernelApi extends KernelEvent {
         if (aNull) {
             playing = false;
         }
-        MediaLogUtil.log("KernelApiMusic => enableExternalMusic => enable = " + enable + ", release = " + release + ", playing = " + playing);
+        MPLogUtil.log("KernelApiMusic => enableExternalMusic => enable = " + enable + ", release = " + release + ", playing = " + playing);
 
         // 播放额外音频
         if (enable) {
@@ -163,18 +160,18 @@ public interface KernelApi extends KernelEvent {
                 if (start <= 0) {
                     start = 0;
                 }
-                MediaLogUtil.log("KernelApiMusic => enableExternalMusic => start = " + start);
+                MPLogUtil.log("KernelApiMusic => enableExternalMusic => start = " + start);
                 if (start > 0) {
                     MusicPlayerManager.restart(start, new MediaPlayer.OnSeekCompleteListener() {
                         @Override
                         public void onSeekComplete(MediaPlayer mp) {
-                            MediaLogUtil.log("KernelApiMusic => enableExternalMusic => onSeekComplete => ");
+                            MPLogUtil.log("KernelApiMusic => enableExternalMusic => onSeekComplete => ");
                             setExternalMusicPlaying(true);
                             start();
                         }
                     });
                 } else {
-                    MediaLogUtil.log("KernelApiMusic => enableExternalMusic => onSeekComplete => ");
+                    MPLogUtil.log("KernelApiMusic => enableExternalMusic => onSeekComplete => ");
                     MusicPlayerManager.restart();
                     setExternalMusicPlaying(true);
                     start();
@@ -195,11 +192,11 @@ public interface KernelApi extends KernelEvent {
                 if (start < 0) {
                     start = 0;
                 }
-                MediaLogUtil.log("KernelApiMusic => enableExternalMusic => start = " + start);
+                MPLogUtil.log("KernelApiMusic => enableExternalMusic => start = " + start);
                 MusicPlayerManager.start(start, path, new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
-                        MediaLogUtil.log("KernelApiMusic => enableExternalMusic => onPrepared => ");
+                        MPLogUtil.log("KernelApiMusic => enableExternalMusic => onPrepared => ");
                         setExternalMusicPlaying(true);
                         start();
                     }

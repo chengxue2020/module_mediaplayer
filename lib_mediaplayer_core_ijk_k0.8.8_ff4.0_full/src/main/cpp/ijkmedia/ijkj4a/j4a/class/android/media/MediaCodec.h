@@ -22,7 +22,7 @@
 #ifndef J4A__android_media_MediaCodec__H
 #define J4A__android_media_MediaCodec__H
 
-#include "j4a/j4a_base.h"
+#include "ijkj4a/j4a/j4a_base.h"
 
 jint J4AC_android_media_MediaCodec__BufferInfo__flags__get(JNIEnv *env, jobject thiz);
 jint J4AC_android_media_MediaCodec__BufferInfo__flags__get__catchAll(JNIEnv *env, jobject thiz);

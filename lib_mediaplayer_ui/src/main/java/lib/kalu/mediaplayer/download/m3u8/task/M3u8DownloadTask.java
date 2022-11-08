@@ -20,11 +20,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import lib.kalu.mediaplayer.download.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.download.m3u8.bean.M3u8Ts;
 import lib.kalu.mediaplayer.download.m3u8.inter.OnDownloadListener;
 import lib.kalu.mediaplayer.download.m3u8.inter.OnM3u8InfoListener;
 import lib.kalu.mediaplayer.download.m3u8.manager.M3u8InfoManger;
 import lib.kalu.mediaplayer.download.m3u8.utils.M3u8FileUtils;
-import lib.kalu.mediaplayer.download.m3u8.bean.M3u8Ts;
 
 /**
  * desc  : M3U8下载管理器
@@ -206,16 +206,16 @@ public class M3u8DownloadTask {
                                 isRunning = false;
                             }
                         } catch (InterruptedIOException e) {
-//                    e.printStackTrace();
+//                    MediaLogUtil.log(e.getMessage(), e);
                             //被中断了，使用stop时会抛出这个，不需要处理
 //                            handlerError(e);
                             return;
                         } catch (IOException e) {
-//                    e.printStackTrace();
+//                    MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                             return;
                         } catch (InterruptedException e) {
-//                            e.printStackTrace();
+//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         }
                     }
@@ -300,24 +300,24 @@ public class M3u8DownloadTask {
                                 handlerError(new Throwable(String.valueOf(conn.getResponseCode())));
                             }
                         } catch (MalformedURLException e) {
-//                            e.printStackTrace();
+//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         } catch (IOException e) {
-//                            e.printStackTrace();
+//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         } finally {//关流
                             if (inputStream != null) {
                                 try {
                                     inputStream.close();
                                 } catch (IOException e) {
-//                                    e.printStackTrace();
+//                                    MediaLogUtil.log(e.getMessage(), e);
                                 }
                             }
                             if (fos != null) {
                                 try {
                                     fos.close();
                                 } catch (IOException e) {
-//                                    e.printStackTrace();
+//                                    MediaLogUtil.log(e.getMessage(), e);
                                 }
                             }
                         }

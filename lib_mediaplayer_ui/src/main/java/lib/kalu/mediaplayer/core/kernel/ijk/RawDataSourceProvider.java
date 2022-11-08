@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 
 public class RawDataSourceProvider implements IMediaDataSource {
@@ -76,7 +77,7 @@ public class RawDataSourceProvider implements IMediaDataSource {
                     .openAssetFileDescriptor(uri, "r");
             return new RawDataSourceProvider(fileDescriptor);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
         return null;
     }

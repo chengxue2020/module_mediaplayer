@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer.core.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
 
 import org.json.JSONObject;
@@ -17,10 +16,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import lib.kalu.mediaplayer.config.builder.BundleBuilder;
-import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
  * revise: 播放器基础属性获取和设置属性接口
@@ -317,7 +315,7 @@ public interface PlayerApi {
             String s = object.toString();
             setCache(context, "save_bundle", s);
         } catch (Exception e) {
-            e.printStackTrace();
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 

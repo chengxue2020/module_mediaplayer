@@ -884,7 +884,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         try {
             mediaInfo.mMeta = IjkMediaMeta.parse(_getMediaMeta());
         } catch (Throwable e) {
-            e.printStackTrace();
+            MediaLogUtil.log(e.getMessage(), e);
         }
         return mediaInfo;
     }
