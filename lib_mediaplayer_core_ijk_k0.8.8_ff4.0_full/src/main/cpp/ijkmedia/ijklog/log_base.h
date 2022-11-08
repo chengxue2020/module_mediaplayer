@@ -21,7 +21,7 @@
 #ifndef LOG_BASE_H
 #define LOG_BASE_H
 
-#define LOGOPEN  1 //日志开关，1为开，其它为关
+#define LOGOPEN  0 //日志开关，1为开，其它为关
 
 //const int get_log_status();
 //#define const LOGOPEN  get_log_status()
