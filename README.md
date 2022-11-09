@@ -22,6 +22,10 @@ lib_mediaplayer_core_ijk_k0.8.8_ff4.0
 #
 #### 更新
 ```
+2022-11-09
+1. ijk增加log开关
+```
+```
 2022-11-03
 1. ijk增加armv7、arm64、x86、x86_64
 ```
