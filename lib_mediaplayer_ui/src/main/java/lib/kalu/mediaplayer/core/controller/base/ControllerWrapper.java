@@ -34,8 +34,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void create(@NonNull BundleBuilder builder) {
-        mPlayer.create(builder);
+    public void create(@NonNull BundleBuilder builder, @NonNull boolean logger) {
+        mPlayer.create(builder, logger);
     }
 
     @Override

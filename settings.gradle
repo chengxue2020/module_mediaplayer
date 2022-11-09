@@ -5,7 +5,6 @@ include ':lib_mediaplayer_ui'
 //include ':lib_mediaplayer_core_exo_common'
 include ':lib_mediaplayer_core_exo_r2.18.0'
 // ijk
-include ':lib_mediaplayer_core_ijk_k0.8.8_ff4.0_full'
-//include ':lib_mediaplayer_core_ijk_k0.8.8_ff4.0_lite'
+include ':lib_mediaplayer_core_ijk_k0.8.8_ff4.0'
 // vlc
 include ':lib_mediaplayer_core_vlc_r3.4.9'

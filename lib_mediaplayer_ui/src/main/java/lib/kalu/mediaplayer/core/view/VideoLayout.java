@@ -253,7 +253,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
             // step3
             if (null == mKernel) {
-                create(builder);
+                create(builder, config.isLog());
             } else {
                 pause(true);
             }
@@ -273,7 +273,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void create(@NonNull BundleBuilder builder) {
+    public void create(@NonNull BundleBuilder builder, @NonNull boolean logger) {
 
         // step1
         release(true);
@@ -410,7 +410,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     }
                 }
             });
-            mKernel.createDecoder(getContext(), builder.isMute());
+            mKernel.createDecoder(getContext(), builder.isMute(), logger);
         }
 
         // step3

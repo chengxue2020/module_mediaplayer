@@ -59,7 +59,7 @@ public interface PlayerApi {
 
     void start(@NonNull BundleBuilder builder, @NonNull String url);
 
-    void create(@NonNull BundleBuilder builder);
+    void create(@NonNull BundleBuilder builder, @NonNull boolean logger);
 
     void toggle();
 

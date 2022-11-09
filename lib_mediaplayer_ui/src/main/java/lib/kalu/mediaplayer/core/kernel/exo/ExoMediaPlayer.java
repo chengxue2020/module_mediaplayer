@@ -66,7 +66,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger) {
         ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
         builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
         builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));

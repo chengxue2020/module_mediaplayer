@@ -47,7 +47,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger) {
         //        ArrayList args = new ArrayList<>();//VLC参数
 //        args.add("--rtsp-tcp");//强制rtsp-tcp，加快加载视频速度
 //        args.add("--aout=opensles");

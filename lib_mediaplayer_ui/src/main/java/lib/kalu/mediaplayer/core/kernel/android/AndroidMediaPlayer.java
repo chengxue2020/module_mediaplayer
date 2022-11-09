@@ -48,7 +48,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger) {
         releaseDecoder();
         mAndroidPlayer = new MediaPlayer();
         mAndroidPlayer.setLooping(false);

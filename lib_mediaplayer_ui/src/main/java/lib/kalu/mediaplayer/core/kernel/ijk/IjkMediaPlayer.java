@@ -57,14 +57,15 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 //    }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger) {
         if (null == mIjkPlayer) {
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
             mIjkPlayer.setLooping(false);
             if (mute) {
                 mIjkPlayer.setVolume(0f, 0f);
             }
-            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(MPLogUtil.isIsLog() ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_SILENT);
+            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
+            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO);
             setOptions();
             initListener();
         }

@@ -23,7 +23,7 @@ public interface KernelApi extends KernelEvent {
     @NonNull
     <T extends Object> T getPlayer();
 
-    void createDecoder(@NonNull Context context, @NonNull boolean mute);
+    void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger);
 
     void releaseDecoder();
 
