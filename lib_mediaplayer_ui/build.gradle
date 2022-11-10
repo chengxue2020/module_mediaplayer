@@ -48,8 +48,7 @@ android {
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
     }
-
-
+    
     //jdk1.8
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
