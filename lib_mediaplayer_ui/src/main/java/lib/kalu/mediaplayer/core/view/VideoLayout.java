@@ -28,6 +28,7 @@ import java.util.List;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.builder.BundleBuilder;
 import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
+import lib.kalu.mediaplayer.config.buried.BuriedEvent;
 import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
@@ -345,7 +346,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             }
 
                             // 埋点
-                            PlayerConfigManager.getInstance().getConfig().playerIn(getUrl());
+                            try {
+                                BuriedEvent buriedEvent = PlayerConfigManager.getInstance().getConfig().getBuriedEvent();
+                                buriedEvent.playerIn(getUrl());
+                            } catch (Exception e) {
+                            }
 
                             break;
                         // 播放结束
@@ -355,7 +360,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             clearHanlder();
 
                             // 埋点
-                            PlayerConfigManager.getInstance().getConfig().playerCompletion(getUrl());
+                            try {
+                                BuriedEvent buriedEvent = PlayerConfigManager.getInstance().getConfig().getBuriedEvent();
+                                buriedEvent.playerCompletion(getUrl());
+                            } catch (Exception e) {
+                            }
 
                             boolean looping = isLooping();
                             // loop
@@ -392,7 +401,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             callPlayerState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
 
                             // 埋点
-                            PlayerConfigManager.getInstance().getConfig().onError(getUrl(), connected);
+                            try {
+                                BuriedEvent buriedEvent = PlayerConfigManager.getInstance().getConfig().getBuriedEvent();
+                                buriedEvent.playerError(getUrl(), connected);
+                            } catch (Exception e) {
+                            }
                             break;
                     }
                 }

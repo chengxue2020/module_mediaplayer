@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.listener;
 
+import android.widget.ImageView;
+
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -23,6 +25,12 @@ public interface OnChangeListener {
      * @param state 播放状态，主要是指播放器的各种状态
      */
     default void onChange(@PlayerType.StateType.Value int state) {
+    }
+
+    /**
+     * 暂停广告
+     */
+    default void onAD(@NonNull ImageView imageView) {
     }
 
     default void onProgress(@NonNull long position, @NonNull long durning) {

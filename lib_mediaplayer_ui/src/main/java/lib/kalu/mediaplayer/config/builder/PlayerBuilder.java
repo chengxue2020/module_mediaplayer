@@ -5,16 +5,14 @@ import androidx.annotation.Keep;
 import lib.kalu.mediaplayer.config.buried.BuriedEvent;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
-import lib.kalu.mediaplayer.keycode.KeycodeTV;
 
 /**
  * @description: 播放器全局配置
  * @date: 2021-05-12 14:43
  */
 @Keep
-public final class PlayerBuilder implements BuriedEvent {
+public final class PlayerBuilder {
 
-    private boolean enable; // 是否生效
     private boolean log;// 日志log
     @PlayerType.KernelType.Value
     private int kernel; // 播放器内核
@@ -28,8 +26,29 @@ public final class PlayerBuilder implements BuriedEvent {
     private BuriedEvent buriedEvent;  // 埋点事件log
     private KeycodeApi keycodeApi; // 遥控code
 
-    public boolean isEnable() {
-        return enable;
+    /**
+     * 本地视频缓存
+     */
+    @PlayerType.CacheType
+    private int cacheType = PlayerType.CacheType.NONE;
+    private int cacheMax = 0;
+    private String cacheDir = null;
+    private String cacheSalt = "qwerpoiu";
+
+    public int getCacheType() {
+        return cacheType;
+    }
+
+    public int getCacheMax() {
+        return cacheMax;
+    }
+
+    public String getCacheDir() {
+        return cacheDir;
+    }
+
+    public String getCacheSalt() {
+        return cacheSalt;
     }
 
     public boolean isLog() {
@@ -71,7 +90,6 @@ public final class PlayerBuilder implements BuriedEvent {
     /****************/
 
     private PlayerBuilder(Builder builder) {
-        enable = builder.enable;
         log = builder.log;
         kernel = builder.kernel;
         render = builder.render;
@@ -81,12 +99,15 @@ public final class PlayerBuilder implements BuriedEvent {
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
         keycodeApi = builder.keycodeApi;
+        cacheType = builder.cacheType;
+        cacheDir = builder.cacheDir;
+        cacheMax = builder.cacheMax;
+        cacheSalt = builder.cacheSalt;
     }
 
 
     public Builder newBuilder() {
         Builder builder = new Builder();
-        builder.setEnable(this.enable);
         builder.setLog(this.log);
         builder.setKernel(this.kernel);
         builder.setRender(this.render);
@@ -96,76 +117,16 @@ public final class PlayerBuilder implements BuriedEvent {
         builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setKeycodeApi(this.keycodeApi);
+        builder.setCacheType(this.cacheType);
+        builder.setCacheDir(this.cacheDir);
+        builder.setCacheMax(this.cacheMax);
+        builder.setCacheSalt(this.cacheSalt);
         return builder;
-    }
-
-    @Override
-    public void playerIn(String url) {
-        if (null != buriedEvent) {
-            buriedEvent.playerIn(url);
-        }
-    }
-
-    @Override
-    public void playerDestroy(String url) {
-        if (null != buriedEvent) {
-            buriedEvent.playerDestroy(url);
-        }
-    }
-
-    @Override
-    public void playerCompletion(String url) {
-        if (null != buriedEvent) {
-            buriedEvent.playerCompletion(url);
-        }
-    }
-
-    @Override
-    public void onError(String url, boolean isNetError) {
-        if (null != buriedEvent) {
-            buriedEvent.onError(url, isNetError);
-        }
-    }
-
-    @Override
-    public void clickAd(String url) {
-        if (null != buriedEvent) {
-            buriedEvent.clickAd(url);
-        }
-    }
-
-    @Override
-    public void playerAndProved(String url) {
-        if (null != buriedEvent) {
-            buriedEvent.playerAndProved(url);
-        }
-    }
-
-    @Override
-    public void playerOutProgress(String url, float progress) {
-        if (null != buriedEvent) {
-            buriedEvent.playerOutProgress(url, progress);
-        }
-    }
-
-    @Override
-    public void playerOutProgress(String url, long duration, long currentPosition) {
-        if (null != buriedEvent) {
-            buriedEvent.playerOutProgress(url, duration, currentPosition);
-        }
-    }
-
-    @Override
-    public void videoToMusic(String url) {
-        if (null != buriedEvent) {
-            buriedEvent.videoToMusic(url);
-        }
     }
 
     @Keep
     public final static class Builder {
 
-        private boolean enable = false; // 是否生效
         private boolean log = false;// 日志log
         @PlayerType.KernelType.Value
         private int kernel = PlayerType.KernelType.ANDROID; // 播放器内核
@@ -179,8 +140,32 @@ public final class PlayerBuilder implements BuriedEvent {
         private BuriedEvent buriedEvent = null;  // 埋点事件log
         private KeycodeApi keycodeApi = null; // 遥控code
 
-        public Builder setEnable(boolean v) {
-            enable = v;
+        /**
+         * 本地视频缓存
+         */
+        @PlayerType.CacheType
+        private int cacheType = PlayerType.CacheType.NONE;
+        private int cacheMax = 0;
+        private String cacheDir = null;
+        private String cacheSalt = "qwerpoiu";
+
+        public Builder setCacheType(@PlayerType.CacheType int v) {
+            cacheType = v;
+            return this;
+        }
+
+        public Builder setCacheMax(int v) {
+            cacheMax = v;
+            return this;
+        }
+
+        public Builder setCacheDir(String v) {
+            cacheDir = v;
+            return this;
+        }
+
+        public Builder setCacheSalt(String v) {
+            cacheSalt = v;
             return this;
         }
 

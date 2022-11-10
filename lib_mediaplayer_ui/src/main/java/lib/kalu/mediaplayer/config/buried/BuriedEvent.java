@@ -32,7 +32,7 @@ public interface BuriedEvent {
      * @param url        视频url
      * @param isNetError 是否是网络异常
      */
-    void onError(String url, boolean isNetError);
+    void playerError(String url, boolean isNetError);
 
     /**
      * 点击了视频广告

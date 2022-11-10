@@ -27,8 +27,8 @@ import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.video.VideoSize;
 
-import lib.kalu.mediaplayer.config.builder.CacheBuilder;
-import lib.kalu.mediaplayer.config.cache.CacheConfigManager;
+import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
+import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
@@ -140,8 +140,8 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
             }
 //        mIsPreparing = true;
 
-            CacheBuilder config = CacheConfigManager.getInstance().getCacheConfig();
-            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, null, config);
+            PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
+            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, null, config.getCacheType(), config.getCacheMax(), config.getCacheDir(), config.getCacheSalt());
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
 //                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {

@@ -33,8 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import lib.kalu.mediaplayer.config.builder.CacheBuilder;
-import lib.kalu.mediaplayer.config.cache.CacheType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ExoMediaSourceHelper {
@@ -57,7 +56,15 @@ public final class ExoMediaSourceHelper {
      * @param headers 视频headers
      * @return
      */
-    public MediaSource getMediaSource(@NonNull Context context, @NonNull boolean hasCache, @NonNull CharSequence url, @Nullable Map<String, String> headers, @NonNull CacheBuilder config) {
+    public MediaSource getMediaSource(@NonNull Context context,
+                                      @NonNull boolean hasCache,
+                                      @NonNull CharSequence url,
+                                      @Nullable Map<String, String> headers,
+                                      @PlayerType.CacheType int cacheType,
+                                      @NonNull int cacheMax,
+                                      @NonNull String cacheDir,
+                                      @NonNull String caheSate
+    ) {
         Uri contentUri = Uri.parse(url.toString());
         MPLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", hasCache = " + hasCache + ", url = " + url);
         // rtmp
@@ -84,24 +91,30 @@ public final class ExoMediaSourceHelper {
             refreshHeaders(http, headers);
 
             // 本地缓存
-            if (hasCache && null != config && config.getType() == CacheType.DEFAULT) {
+            if (hasCache && cacheType == PlayerType.CacheType.DEFAULT) {
                 MPLogUtil.log("getMediaSource => 策略, 本地缓存");
 
                 // cache
                 int size;
-                String dir;
-                if (null != config) {
-                    size = config.getMax();
-                    dir = config.getDir();
-                } else {
+                if(cacheMax<=0){
                     size = 1024;
+                }
+                else{
+                    size = cacheMax;
+                }
+
+                String dir;
+                if(null == cacheDir || cacheDir.length()<=0){
                     dir = "temp";
+                }
+                else{
+                    dir = cacheDir;
                 }
 
                 CacheDataSource.Factory factory = new CacheDataSource.Factory();
 
                 // 缓存策略：磁盘
-                if (null != context && null != config && config.getType() == CacheType.DEFAULT) {
+                if (null != context && cacheType == PlayerType.CacheType.DEFAULT) {
                     if (!mWHM.containsKey(dir)) {
                         File file = new File(context.getExternalCacheDir(), dir);
                         LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);

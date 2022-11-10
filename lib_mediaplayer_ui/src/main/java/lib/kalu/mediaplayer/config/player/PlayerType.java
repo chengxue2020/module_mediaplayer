@@ -23,6 +23,25 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
 @Keep
 public @interface PlayerType {
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @Keep
+    @interface CacheType {
+
+        int NONE = 1002;
+        int DEFAULT = 1001;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {CacheType.DEFAULT, CacheType.NONE})
+        @Keep
+        @interface Value {
+        }
+    }
+
     /**
      * 播放模式
      * 普通模式，小窗口模式，正常模式三种其中一种
