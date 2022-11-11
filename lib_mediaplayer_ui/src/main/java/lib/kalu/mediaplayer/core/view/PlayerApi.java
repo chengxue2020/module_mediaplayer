@@ -73,7 +73,11 @@ public interface PlayerApi {
 
     void pause(boolean auto, boolean clearHanlder);
 
-    void resume();
+    default void resume() {
+        resume(true);
+    }
+
+    void resume(boolean call);
 
     void close();
 

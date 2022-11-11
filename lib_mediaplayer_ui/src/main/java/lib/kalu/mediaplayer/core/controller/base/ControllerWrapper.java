@@ -49,8 +49,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void resume() {
-        mPlayer.resume();
+    public void resume(boolean call) {
+        mPlayer.resume(call);
     }
 
     @Override

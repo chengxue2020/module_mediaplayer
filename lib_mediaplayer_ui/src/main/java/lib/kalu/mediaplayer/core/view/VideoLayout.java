@@ -108,7 +108,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // visable
         if (visibility == View.VISIBLE) {
             startHanlder();
-            resume();
+            resume(false);
         }
         // not visable
         else {
@@ -308,12 +308,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             // step1
                             callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
+                            callPlayerState(PlayerType.StateType.STATE_START_SEEK);
                             // step2
                             showReal();
                             // step3
                             startHanlder();
                             // step4
-                            resume();
+                            resume(false);
                             // step5
                             if (isExternalMusicAuto()) {
                                 enableExternalMusic(true, true);
@@ -328,12 +329,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
 
 
-                            long position = getPosition();
-                            if (position <= 0) {
-                                callPlayerState(PlayerType.StateType.STATE_START);
-                            } else {
-                                callPlayerState(PlayerType.StateType.STATE_RESUME_START);
-                            }
+                            callPlayerState(PlayerType.StateType.STATE_START);
 
                             // step1
                             showReal();
@@ -453,13 +449,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         if (playing) {
             pause(false);
         } else {
-            resume();
+            resume(true);
         }
     }
 
     @Override
     public void pause(boolean auto, boolean clearHanlder) {
         boolean playing = isPlaying();
+        MPLogUtil.log("pauseME => auto = " + auto + ", clearHanlder = " + clearHanlder + ", playing = " + playing);
         if (!playing)
             return;
         if (clearHanlder) {
@@ -488,12 +485,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void resume() {
+    public void resume(boolean call) {
         String url = getUrl();
         MPLogUtil.log("onEvent => resume => url = " + url + ", mHanlder = " + mHandler + ", mKernel = " + mKernel);
         if (null == url || url.length() <= 0)
             return;
-        callPlayerState(PlayerType.StateType.STATE_RESUME);
+        if(call){
+            callPlayerState(PlayerType.StateType.STATE_RESUME);
+        }
         setKeepScreenOn(true);
         mKernel.start();
     }
