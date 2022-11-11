@@ -291,7 +291,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                         // 网络拉流开始
                         case PlayerType.EventType.EVENT_OPEN_INPUT:
                             // step1
-                            callPlayerState(PlayerType.StateType.STATE_START);
+//                            callPlayerState(PlayerType.StateType.STATE_START);
                             // step2
                             goneReal();
                             break;
@@ -327,7 +327,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
 
-                            callPlayerState(PlayerType.StateType.STATE_START);
+
+                            long position = getPosition();
+                            if (position <= 0) {
+                                callPlayerState(PlayerType.StateType.STATE_START);
+                            } else {
+                                callPlayerState(PlayerType.StateType.STATE_RESUME_START);
+                            }
 
                             // step1
                             showReal();
@@ -355,6 +361,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             break;
                         // 播放结束
                         case PlayerType.EventType.EVENT_VIDEO_END:
+
+                            callPlayerState(PlayerType.StateType.STATE_END);
 
                             // step2
                             clearHanlder();
@@ -1317,7 +1325,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             boolean looping = isLooping();
             long start = (long) msg.obj;
             long millis = System.currentTimeMillis();
-//            MediaLogUtil.log("onEvent => onMessage => millis = " + millis + ", start = " + start + ", seek = " + seek + ", max = " + max + ", loop = " + looping + ", mKernel = " + mKernel);
+//            MPLogUtil.log("handleMessage => onMessage => millis = " + millis + ", start = " + start  + ", max = " + max + ", loop = " + looping + ", mKernel = " + mKernel);
 
             // end
             if (max > 0 && ((millis - start) > max)) {
