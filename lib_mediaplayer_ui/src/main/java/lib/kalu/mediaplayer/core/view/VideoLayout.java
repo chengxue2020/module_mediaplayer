@@ -490,8 +490,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MPLogUtil.log("onEvent => resume => url = " + url + ", mHanlder = " + mHandler + ", mKernel = " + mKernel);
         if (null == url || url.length() <= 0)
             return;
-        if(call){
+        if (call) {
             callPlayerState(PlayerType.StateType.STATE_RESUME);
+        } else {
+            callPlayerState(PlayerType.StateType.STATE_RESUME_IGNORE);
         }
         setKeepScreenOn(true);
         mKernel.start();
@@ -627,7 +629,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         // step3
         if (force) {
             mKernel.update(seek, max, loop);
-            pause(true);
+            pause(true, true);
         }
         // step4
         mKernel.seekTo(seek);
@@ -1336,7 +1338,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     goneReal();
 
                     // step2
-                    pause(true);
+                    // pause(true, true);
 
                     // step3
                     seekTo(true);

@@ -75,6 +75,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_RESUME:
+            case PlayerType.StateType.STATE_RESUME_IGNORE:
             case PlayerType.StateType.STATE_REPEAT:
                 MPLogUtil.log("ComponentPause[show] => playState = " + playState);
                 gone();
