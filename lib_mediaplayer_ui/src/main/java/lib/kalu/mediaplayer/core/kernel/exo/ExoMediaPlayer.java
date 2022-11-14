@@ -46,7 +46,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     private String mUrl = null; // 视频串
 
     private String mExternalMusicPath = null;
-    private boolean mExternalMusicPlaying = false;
+    private boolean mExternalMusicPrepared = false;
     private boolean mExternalMusicLoop = false;
     private boolean mExternalMusicAuto = false;
 
@@ -495,18 +495,12 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     @Override
     public boolean isMute() {
         return mMute;
-//        try {
-//                float volume = mVlcPlayer.getVLC().getVolume();
-//                return volume <= 0;
-//        } catch (Exception e) {
-//            MediaLogUtil.log(e.getMessage(), e);
-//            return false;
-//        }
     }
 
     @Override
-    public void setMute(boolean mute) {
-        this.mMute = mute;
+    public void setMute(boolean v) {
+        mMute = v;
+        setVolume(v ? 0f : 1f, v ? 0f : 1f);
     }
 
     @Override
@@ -576,13 +570,13 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     /****************/
 
     @Override
-    public boolean isExternalMusicPlaying() {
-        return mExternalMusicPlaying;
+    public boolean isExternalMusicPrepared() {
+        return mExternalMusicPrepared;
     }
 
     @Override
-    public void setExternalMusicPlaying(boolean v) {
-        this.mExternalMusicPlaying = v;
+    public void setExternalMusicPrepared(boolean v) {
+        this.mExternalMusicPrepared = v;
     }
 
     @Override

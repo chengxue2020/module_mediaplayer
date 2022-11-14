@@ -29,6 +29,16 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void setVolume(float v1, float v2) {
+        this.mPlayer.setVolume(v1, v2);
+    }
+
+    @Override
+    public void setMute(boolean v) {
+        this.mPlayer.setMute(v);
+    }
+
+    @Override
     public void start(@NonNull BundleBuilder builder, @NonNull String url) {
         mPlayer.start(builder, url);
     }
@@ -284,8 +294,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public boolean isExternalMusicPlaying() {
-        return mPlayer.isExternalMusicPlaying();
+    public boolean isExternalMusicLoop() {
+        return mPlayer.isExternalMusicLoop();
+    }
+
+    @Override
+    public boolean isExternalMusicPrepared() {
+        return mPlayer.isExternalMusicPrepared();
     }
 
 //    /**

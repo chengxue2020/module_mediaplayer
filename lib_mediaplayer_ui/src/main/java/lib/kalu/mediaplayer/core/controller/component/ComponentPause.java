@@ -73,6 +73,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 bringToFront();
                 show();
                 break;
+            case PlayerType.StateType.STATE_LOADING_START:
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_RESUME_IGNORE:

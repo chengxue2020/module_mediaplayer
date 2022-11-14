@@ -42,22 +42,39 @@ public interface KernelApi extends KernelEvent {
     }
 
     default void update(@NonNull BundleBuilder bundle, @NonNull String playUrl) {
-        MPLogUtil.log("KernelApi => update => this = " + this + ", playUrl = " + playUrl);
-        MPLogUtil.log("KernelApi => update => bundle = " + bundle);
-        // 1
-        setSeek(bundle.getSeek());
-        setMax(bundle.getMax());
-        setMute(bundle.isMute());
-        setLooping(bundle.isLoop());
-        setLive(bundle.isLive());
-        setAutoRelease(bundle.isRelease());
+
+        MPLogUtil.log("KernelApi => update => playUrl = " + playUrl);
+        long seek = bundle.getSeek();
+        MPLogUtil.log("KernelApi => update => seek = " + seek);
+        setSeek(seek);
+        long max = bundle.getMax();
+        MPLogUtil.log("KernelApi => update => max = " + max);
+        setMax(max);
+        boolean mute = bundle.isMute();
+        MPLogUtil.log("KernelApi => update => mute = " + mute);
+        setMute(mute);
+        boolean loop = bundle.isLoop();
+        MPLogUtil.log("KernelApi => update => loop = " + loop);
+        setLooping(loop);
+        boolean live = bundle.isLive();
+        MPLogUtil.log("KernelApi => update => live = " + live);
+        setLive(live);
+        boolean release = bundle.isRelease();
+        MPLogUtil.log("KernelApi => update => release = " + release);
+        setAutoRelease(release);
         if (null != playUrl && playUrl.length() > 0) {
             setUrl(playUrl);
         }
         // 2
-        setExternalMusicPath(bundle.getExternalMusicUrl());
-        setExternalMusicLoop(bundle.isExternalMusicLoop());
-        setExternalMusicAuto(bundle.isExternalMusicAuto());
+        String musicUrl = bundle.getExternalMusicUrl();
+        MPLogUtil.log("KernelApi => update => musicUrl = " + musicUrl);
+        setExternalMusicPath(musicUrl);
+        boolean musicLoop = bundle.isExternalMusicLoop();
+        MPLogUtil.log("KernelApi => update => musicLoop = " + musicLoop);
+        setExternalMusicLoop(musicLoop);
+        boolean musicAuto = bundle.isExternalMusicAuto();
+        MPLogUtil.log("KernelApi => update => musicAuto = " + musicAuto);
+        setExternalMusicAuto(musicAuto);
     }
 
     void setDataSource(AssetFileDescriptor fd);
@@ -102,7 +119,7 @@ public interface KernelApi extends KernelEvent {
 
     boolean isMute();
 
-    void setMute(boolean mute);
+    void setMute(boolean v);
 
     void start();
 
@@ -120,9 +137,9 @@ public interface KernelApi extends KernelEvent {
 
     /*************** 外部背景音乐 **************/
 
-    boolean isExternalMusicPlaying();
+    boolean isExternalMusicPrepared();
 
-    void setExternalMusicPlaying(boolean v);
+    void setExternalMusicPrepared(boolean v);
 
     boolean isExternalMusicLoop();
 
@@ -139,12 +156,13 @@ public interface KernelApi extends KernelEvent {
     default void enableExternalMusic(boolean enable, boolean release) {
 
         String path = getExternalMusicPath();
-        boolean playing = isExternalMusicPlaying();
+        boolean prepared = isExternalMusicPrepared();
         boolean aNull = MusicPlayerManager.isNull();
+        boolean mute = isMute(); //视频强制静音
         if (aNull) {
-            playing = false;
+            prepared = false;
         }
-        MPLogUtil.log("KernelApiMusic => enableExternalMusic => enable = " + enable + ", release = " + release + ", playing = " + playing);
+        MPLogUtil.log("KernelApiMusic => enableExternalMusic => enable = " + enable + ", release = " + release + ", prepared = " + prepared + ", mute = " + mute);
 
         // 播放额外音频
         if (enable) {
@@ -153,7 +171,7 @@ public interface KernelApi extends KernelEvent {
             pause();
 
             // 1a
-            if (playing && !release) {
+            if (prepared && !release) {
                 long position = getPosition();
                 long seek = getSeek();
                 long start = position - seek;
@@ -166,14 +184,14 @@ public interface KernelApi extends KernelEvent {
                         @Override
                         public void onSeekComplete(MediaPlayer mp) {
                             MPLogUtil.log("KernelApiMusic => enableExternalMusic => onSeekComplete => ");
-                            setExternalMusicPlaying(true);
+                            setExternalMusicPrepared(true);
                             start();
                         }
                     });
                 } else {
                     MPLogUtil.log("KernelApiMusic => enableExternalMusic => onSeekComplete => ");
                     MusicPlayerManager.restart();
-                    setExternalMusicPlaying(true);
+                    setExternalMusicPrepared(true);
                     start();
                 }
             }
@@ -197,7 +215,7 @@ public interface KernelApi extends KernelEvent {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         MPLogUtil.log("KernelApiMusic => enableExternalMusic => onPrepared => ");
-                        setExternalMusicPlaying(true);
+                        setExternalMusicPrepared(true);
                         start();
                     }
                 });
@@ -206,9 +224,12 @@ public interface KernelApi extends KernelEvent {
         // 停止额外音频
         else {
 
-            if (playing) {
-                // 1.暂停视频播放器
-                pause();
+            // 1.暂停视频播放器
+            pause();
+
+            // 2. 销毁外部音源播放器
+            if (prepared) {
+                MPLogUtil.log("SEKK11 => enableExternalMusic => 销毁外部音源播放器 => prepared = " + prepared);
 
                 // 2
                 MusicPlayerManager.setVolume(0f);
@@ -219,7 +240,8 @@ public interface KernelApi extends KernelEvent {
                 }
 
                 // 4.
-                if (isMute()) {
+                MPLogUtil.log("SEKK11 => enableExternalMusic => 视频播放器恢复音频 => mute = " + mute);
+                if (mute) {
                 } else {
                     setVolume(1f, 1f);
                 }
@@ -234,14 +256,14 @@ public interface KernelApi extends KernelEvent {
         releaseExternalMusic(true);
     }
 
-    default void releaseExternalMusic(boolean clearPath) {
+    default void releaseExternalMusic(boolean clear) {
 
         // 1
-        if (clearPath) {
+        if (clear) {
             setExternalMusicPath(null);
+            setExternalMusicLoop(false);
+            setExternalMusicPrepared(false);
         }
-        setExternalMusicLoop(false);
-        setExternalMusicPlaying(false);
 
         // 2
         MusicPlayerManager.release();

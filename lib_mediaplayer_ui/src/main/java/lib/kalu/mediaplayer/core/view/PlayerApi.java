@@ -57,6 +57,10 @@ public interface PlayerApi {
         start(build, url);
     }
 
+    void setVolume(float v1, float v2);
+
+    void setMute(boolean v);
+
     void start(@NonNull BundleBuilder builder, @NonNull String url);
 
     void create(@NonNull BundleBuilder builder, @NonNull boolean logger);
@@ -325,7 +329,9 @@ public interface PlayerApi {
 
     /*************************/
 
-    void enableExternalMusic(boolean enable, boolean release);
+    default void enableExternalMusic(boolean enable, boolean release) {
+        enableExternalMusic(enable, release, false);
+    }
 
     void enableExternalMusic(boolean enable, boolean release, boolean auto);
 
@@ -333,5 +339,7 @@ public interface PlayerApi {
 
     boolean isExternalMusicAuto();
 
-    boolean isExternalMusicPlaying();
+    boolean isExternalMusicLoop();
+
+    boolean isExternalMusicPrepared();
 }

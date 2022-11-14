@@ -316,10 +316,20 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             // step4
                             resume(false);
                             // step5
-                            if (isExternalMusicAuto()) {
-                                enableExternalMusic(true, true);
+                            boolean musicAuto = isExternalMusicAuto();
+                            MPLogUtil.log("SEKK11 => musicAuto = " + musicAuto);
+                            if (musicAuto) {
+                                boolean musicLoop = isExternalMusicLoop();
+                                boolean prepared = isExternalMusicPrepared();
+                                MPLogUtil.log("SEKK11 => musicLoop = " + musicLoop + ", prepared = " + prepared);
+                                if (musicLoop || !prepared) {
+                                    enableExternalMusic(true, true);
+                                } else {
+                                    enableExternalMusic(false, true);
+                                }
                             } else {
-                                enableExternalMusic(false, false);
+                                boolean prepared = isExternalMusicPrepared();
+                                enableExternalMusic(false, prepared);
                             }
 
                             break;
@@ -341,10 +351,20 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             checkReal();
 
                             // step4
-                            if (isExternalMusicAuto()) {
-                                enableExternalMusic(true, true);
+                            boolean musicAuto1 = isExternalMusicAuto();
+                            MPLogUtil.log("SEKK22 => musicAuto = " + musicAuto1);
+                            if (musicAuto1) {
+                                boolean musicLoop = isExternalMusicLoop();
+                                boolean prepared = isExternalMusicPrepared();
+                                MPLogUtil.log("SEKK22 => musicLoop = " + musicLoop + ", prepared = " + prepared);
+                                if (musicLoop || !prepared) {
+                                    enableExternalMusic(true, true);
+                                } else {
+                                    enableExternalMusic(false, true);
+                                }
                             } else {
-                                enableExternalMusic(false, false);
+                                boolean prepared = isExternalMusicPrepared();
+                                enableExternalMusic(false, prepared);
                             }
 
                             // 埋点
@@ -716,9 +736,17 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
      * @param v1 左声道音量
      * @param v2 右声道音量
      */
+    @Override
     public void setVolume(float v1, float v2) {
         if (mKernel != null) {
             mKernel.setVolume(v1, v2);
+        }
+    }
+
+    @Override
+    public void setMute(boolean v) {
+        if (mKernel != null) {
+            mKernel.setMute(v);
         }
     }
 
@@ -1077,18 +1105,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void enableExternalMusic(boolean enable, boolean release) {
-        try {
-            mKernel.enableExternalMusic(enable, release);
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
-    }
-
-    @Override
     public void enableExternalMusic(boolean enable, boolean release, boolean auto) {
         try {
-            mKernel.setExternalMusicAuto(auto);
+            if (auto) {
+                mKernel.setExternalMusicAuto(true);
+            }
             mKernel.enableExternalMusic(enable, release);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
@@ -1113,9 +1134,19 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public boolean isExternalMusicPlaying() {
+    public boolean isExternalMusicLoop() {
         try {
-            return mKernel.isExternalMusicPlaying();
+            return mKernel.isExternalMusicLoop();
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isExternalMusicPrepared() {
+        try {
+            return mKernel.isExternalMusicPrepared();
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
             return false;

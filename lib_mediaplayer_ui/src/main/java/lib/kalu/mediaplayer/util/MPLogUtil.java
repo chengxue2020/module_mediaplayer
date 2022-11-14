@@ -21,7 +21,7 @@ public final class MPLogUtil {
         MPLogUtil.mLog = enable;
     }
 
-    public static boolean isIsLog() {
+    public static boolean isLog() {
         return mLog;
     }
 
