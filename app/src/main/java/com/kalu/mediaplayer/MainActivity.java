@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@172.10.10.106:1234");
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.226:10000");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@192.168.1.71:1234");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@192.168.50.55:1234");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
