@@ -15,7 +15,7 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        // https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4
+        // https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4
         open();
 
         // 配音
@@ -65,7 +65,6 @@ public class TestActivity extends AppCompatActivity {
         builder.setExternalMusicLoop(true);
         builder.setExternalMusicAuto(true);
         builder.setLoop(true);
-//        videoView.start(builder.build(), "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
-        videoView.start(builder.build(), "https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4");
+        videoView.start(builder.build(), "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4");
     }
 }

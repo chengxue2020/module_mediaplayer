@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), FullActivity.class);
-                intent.putExtra(FullActivity.INTENT_URL, "https://cdn.qupeiyin.cn/2021-02-28/1614506793915md121nwz.mp4");
+                intent.putExtra(FullActivity.INTENT_URL, "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4");
                 intent.putExtra(FullActivity.INTENT_LIVE, false);
                 startActivity(intent);
             }
