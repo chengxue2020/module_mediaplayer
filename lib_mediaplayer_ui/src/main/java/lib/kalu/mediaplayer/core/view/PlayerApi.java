@@ -31,6 +31,13 @@ public interface PlayerApi {
         start(build, url);
     }
 
+    default void startSeek(@NonNull long seek, @NonNull String url) {
+        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        builder.setSeek(seek);
+        BundleBuilder build = builder.build();
+        start(build, url);
+    }
+
     default void startLive(@NonNull String url) {
         BundleBuilder.Builder builder = new BundleBuilder.Builder();
         builder.setLive(true);
@@ -65,7 +72,11 @@ public interface PlayerApi {
 
     void create(@NonNull BundleBuilder builder, @NonNull boolean logger);
 
-    void toggle();
+    default void toggle() {
+        toggle(false);
+    }
+
+    void toggle(boolean cleanHandler);
 
     default void pause() {
         pause(false, false);

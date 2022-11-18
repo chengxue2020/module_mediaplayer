@@ -464,11 +464,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void toggle() {
+    public void toggle(boolean cleanHandler) {
         boolean playing = isPlaying();
         if (playing) {
-            pause(false);
+            pause(cleanHandler);
         } else {
+            if (cleanHandler) {
+                startHanlder();
+            }
             resume(true);
         }
     }
@@ -1075,7 +1078,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void callPlayerState(int playerState) {
+    public void callPlayerState(@PlayerType.StateType.Value int playerState) {
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
             layout.setPlayState(playerState);
@@ -1090,7 +1093,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void callWindowState(int windowState) {
+    public void callWindowState(@PlayerType.WindowType.Value int windowState) {
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
             layout.setWindowState(windowState);

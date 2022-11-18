@@ -49,8 +49,8 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void toggle() {
-        mPlayer.toggle();
+    public void toggle(boolean cleanHandler) {
+        mPlayer.toggle(cleanHandler);
     }
 
     @Override

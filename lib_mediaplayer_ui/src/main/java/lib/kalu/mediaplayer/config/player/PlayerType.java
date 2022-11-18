@@ -99,18 +99,18 @@ public @interface PlayerType {
         int STATE_ERROR = 2018; // 错误1
         int STATE_ERROR_NET = 2019; // 错误2
 
+        int STATE_HIDE_ERROE_COMPONENT = 2020; // 隐藏
+
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
-//                STATE_TIMESTAMP_LOOP,
-//                STATE_TIMESTAMP_CLEAN,
-//                STATE_SUBTITLE_START,
                 STATE_INIT,
                 STATE_CLEAN,
                 STATE_START,
                 STATE_START_SEEK,
                 STATE_PAUSE,
+                STATE_PAUSE_IGNORE,
                 STATE_RESUME,
                 STATE_RESUME_IGNORE,
                 STATE_REPEAT,
@@ -123,7 +123,8 @@ public @interface PlayerType {
                 STATE_LOADING_START,
                 STATE_ONCE_LIVE,
                 STATE_ERROR,
-                STATE_ERROR_NET})
+                STATE_ERROR_NET,
+                STATE_HIDE_ERROE_COMPONENT})
         @Keep
         @interface Value {
         }
