@@ -31,6 +31,42 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
+        // mkv
+        findViewById(R.id.main_mkv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FullActivity.class);
+                intent.putExtra(FullActivity.INTENT_URL, "https://sample-videos.com/video123/mkv/720/big_buck_bunny_720p_2mb.mkv");
+                startActivity(intent);
+            }
+        });
+        // 3gp
+        findViewById(R.id.main_3gp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FullActivity.class);
+                intent.putExtra(FullActivity.INTENT_URL, "https://sample-videos.com/video123/3gp/144/big_buck_bunny_144p_1mb.3gp");
+                startActivity(intent);
+            }
+        });
+        // flv
+        findViewById(R.id.main_flv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FullActivity.class);
+                intent.putExtra(FullActivity.INTENT_URL, "https://sample-videos.com/video123/flv/720/big_buck_bunny_720p_1mb.flv");
+                startActivity(intent);
+            }
+        });
+        // mp4
+        findViewById(R.id.main_mp4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FullActivity.class);
+                intent.putExtra(FullActivity.INTENT_URL, "https://sample-videos.com/video123/mp4/240/big_buck_bunny_240p_1mb.mp4");
+                startActivity(intent);
+            }
+        });
         // main_full1
         findViewById(R.id.main_full1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,18 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_SEEK, 10 * 1000L);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_MAX, 10 * 1000L);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LOOP, true);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
-                startActivity(intent);
-            }
-        });
-        // main_mp4
-        findViewById(R.id.main_mp4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://cdn.dfhon.com/599670896134659e143a892ebc0a6110.mp4");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_SEEK, 100 * 1000L);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, false);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
