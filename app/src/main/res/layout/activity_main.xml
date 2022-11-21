@@ -60,6 +60,15 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/main_4k"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorAccent"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="4k" />
+            <Button
                 android:id="@+id/main_mkv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

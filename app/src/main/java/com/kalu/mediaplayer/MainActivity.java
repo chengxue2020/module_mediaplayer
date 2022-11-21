@@ -31,6 +31,15 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
+        // 4k
+        findViewById(R.id.main_4k).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://39.135.6.71:6610/000000001000/1000000005000025222/index.m3u8?stbId=3&livemode=1&IASHttpSessionId=OTT766120221121084721264367&channel-id=ystenlive&Contentid=1000000005000025222");
+                startActivity(intent);
+            }
+        });
         // mkv
         findViewById(R.id.main_mkv).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@172.10.10.106:1234");
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.226:10000");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@192.168.50.55:1234");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@239.112.205.59:5140");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);

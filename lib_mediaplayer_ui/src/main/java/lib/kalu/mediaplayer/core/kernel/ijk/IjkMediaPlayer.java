@@ -159,7 +159,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         mIjkPlayer.setOption(player, "packet-buffering", 0);
         //播放重连次数
         mIjkPlayer.setOption(player, "reconnect", 1);
-        // 跳帧处理,放CPU处理较慢时，进行跳帧处理，保证播放流程，画面和声音同步
+        // 是否允许跳帧 1、允许 0、不允许
         mIjkPlayer.setOption(player, "framedrop", 1);
         //最大fps
         mIjkPlayer.setOption(player, "max-fps", 30);
@@ -188,19 +188,32 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 无限读
         mIjkPlayer.setOption(format, "infbuf", 1);
 
-//        mIjkPlayer.setOption(player, "opensles", 0);
-//        mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-//        mIjkPlayer.setOption(player, "start-on-prepared", 0);
-//        mIjkPlayer.setOption(format, "http-detect-range-support", 0);
-//
-//        //jkPlayer支持硬解码和软解码。
-//        //软解码时不会旋转视频角度这时需要你通过onInfo的what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED去获取角度，自己旋转画面。
-//        //或者开启硬解硬解码，不过硬解码容易造成黑屏无声（硬件兼容问题），下面是设置硬解码相关的代码
-        mIjkPlayer.setOption(player, "videotoolbox", 0);
-        mIjkPlayer.setOption(player, "mediacodec", 0);//1为硬解 0为软解
-        mIjkPlayer.setOption(player, "mediacodec-hevc", 0);//打开h265硬解
+        // 视频缓存好之后是否自动播放 1、允许 0、不允许
+        mIjkPlayer.setOption(player, "start-on-prepared", 1);
+
+        //使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
+        mIjkPlayer.setOption(player, "opensles", 0);
+        // sdl渲染
+        mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
+
+        // 不清楚 1、允许 0、不允许
+        mIjkPlayer.setOption(format, "http-detect-range-support", 0);
+
+        /**
+         * ijkPlayer支持硬解码和软解码。
+         * 软解码时不会旋转视频角度这时需要你通过onInfo的what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED去获取角度，自己旋转画面。
+         * 或者开启硬解硬解码，不过硬解码容易造成黑屏无声（硬件兼容问题），下面是设置硬解码相关的代码
+         */
+        // 选择avcodec 进行软件解码， 1为硬解 0为软解
+        mIjkPlayer.setOption(player, "mediacodec", 0);
+        // 打开h265硬解
+        mIjkPlayer.setOption(player, "mediacodec-hevc", 1);
+        // 硬解, 1
         mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+        // 硬解, 1
         mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
+
+        mIjkPlayer.setOption(player, "videotoolbox", 0);
     }
 
     /**
