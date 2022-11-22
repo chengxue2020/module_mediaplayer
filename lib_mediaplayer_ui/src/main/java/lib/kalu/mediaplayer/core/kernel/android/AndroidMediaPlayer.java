@@ -11,7 +11,7 @@ import android.view.Surface;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -21,11 +21,15 @@ public final class AndroidMediaPlayer implements KernelApi {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
-    private boolean mAutoRelease = false;
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
     private String mUrl = null; // 视频串
+
+    private boolean mInvisibleStop = false; // 不可见静音
+    private boolean mInvisibleIgnore = false; // 不可见忽略, 什么也不做
+    private boolean mInvisibleRelease = true; // 不可见生命周期自动销毁
+
 
     private String mExternalMusicPath = null;
     private boolean mExternalMusicPrepared = false;
@@ -91,19 +95,19 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void init(@NonNull Context context, @NonNull String url) {
         // loading-start
-        mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+        mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_LOADING_START);
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
+            mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_ERROR_URL);
             return;
         }
         try {
             Uri uri = Uri.parse(url);
             mAndroidPlayer.setDataSource(context, uri, null);
         } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+            mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_ERROR_PARSE);
         }
         try {
             mAndroidPlayer.prepareAsync();
@@ -295,13 +299,13 @@ public final class AndroidMediaPlayer implements KernelApi {
             // ignore 1
             else if (what == 1) {
 //                resetKernel();
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+                mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_LOADING_START);
+                mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_ERROR_PARSE);
             }
             // next
             else {
 //                resetKernel();
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_LOADING_STOP);
             }
             return true;
         }
@@ -310,7 +314,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
+            mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -320,12 +324,12 @@ public final class AndroidMediaPlayer implements KernelApi {
             MPLogUtil.log("K_ANDROID => onInfo => what = " + what);
             //解决MEDIA_INFO_VIDEO_RENDERING_START多次回调问题
 //            MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START
-            if (what == PlayerType.EventType.EVENT_VIDEO_START) {
+            if (what == ConfigType.EventType.EVENT_VIDEO_START) {
 //                if (mIsPreparing) {
 //                    mIsPreparing = false;
 //                }
             } else {
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, what);
+                mEvent.onEvent(ConfigType.KernelType.ANDROID, what);
             }
             return true;
         }
@@ -344,7 +348,7 @@ public final class AndroidMediaPlayer implements KernelApi {
         public void onPrepared(MediaPlayer mp) {
             MPLogUtil.log("K_ANDROID => onPrepared => ");
 
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_LOADING_STOP);
 //            int position = mp.getCurrentPosition();
 //            long duration = getDuration();
 //            getVideoPlayerChangeListener().onPrepared(mSeek, duration);
@@ -355,7 +359,7 @@ public final class AndroidMediaPlayer implements KernelApi {
                 seekTo(seek);
             }
 
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+            mEvent.onEvent(ConfigType.KernelType.ANDROID, ConfigType.EventType.EVENT_VIDEO_START);
         }
     };
 
@@ -365,7 +369,7 @@ public final class AndroidMediaPlayer implements KernelApi {
             int videoWidth = mp.getVideoWidth();
             int videoHeight = mp.getVideoHeight();
             if (videoWidth != 0 && videoHeight != 0) {
-                onChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, -1);
+                onChanged(ConfigType.KernelType.ANDROID, videoWidth, videoHeight, -1);
             }
         }
     };
@@ -451,13 +455,33 @@ public final class AndroidMediaPlayer implements KernelApi {
     }
 
     @Override
-    public void setAutoRelease(boolean release) {
-        this.mAutoRelease = release;
+    public boolean isInvisibleStop() {
+        return mInvisibleStop;
     }
 
     @Override
-    public boolean isAutoRelease() {
-        return this.mAutoRelease;
+    public void setInvisibleStop(boolean v) {
+        mInvisibleStop =v;
+    }
+
+    @Override
+    public boolean isInvisibleIgnore() {
+        return mInvisibleIgnore;
+    }
+
+    @Override
+    public void setInvisibleIgnore(boolean v) {
+        mInvisibleIgnore = v;
+    }
+
+    @Override
+    public boolean isInvisibleRelease() {
+        return mInvisibleRelease;
+    }
+
+    @Override
+    public void setInvisibleRelease(boolean v) {
+        mInvisibleRelease = v;
     }
 
     /****************/

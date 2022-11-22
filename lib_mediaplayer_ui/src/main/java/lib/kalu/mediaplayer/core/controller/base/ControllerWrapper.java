@@ -1,17 +1,11 @@
 package lib.kalu.mediaplayer.core.controller.base;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.view.View;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import java.util.Map;
-
-import lib.kalu.mediaplayer.config.builder.BundleBuilder;
+import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.ControllerApi;
 import lib.kalu.mediaplayer.core.view.PlayerApi;
 
@@ -39,12 +33,12 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void start(@NonNull BundleBuilder builder, @NonNull String url) {
+    public void start(@NonNull StartBuilder builder, @NonNull String url) {
         mPlayer.start(builder, url);
     }
 
     @Override
-    public void create(@NonNull BundleBuilder builder, @NonNull boolean logger) {
+    public void create(@NonNull StartBuilder builder, @NonNull boolean logger) {
         mPlayer.create(builder, logger);
     }
 
@@ -89,8 +83,18 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public boolean isRelease() {
-        return mPlayer.isRelease();
+    public boolean isInvisibleStop() {
+        return mPlayer.isInvisibleStop();
+    }
+
+    @Override
+    public boolean isInvisibleIgnore() {
+        return mPlayer.isInvisibleIgnore();
+    }
+
+    @Override
+    public boolean isInvisibleRelease() {
+        return mPlayer.isInvisibleRelease();
     }
 
     @Override
@@ -149,7 +153,7 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void seekTo(@NonNull boolean force, @NonNull BundleBuilder builder) {
+    public void seekTo(@NonNull boolean force, @NonNull StartBuilder builder) {
         mPlayer.seekTo(force, builder);
     }
 
@@ -284,7 +288,7 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void setExternalMusic(@NonNull BundleBuilder bundle) {
+    public void setExternalMusic(@NonNull StartBuilder bundle) {
         mPlayer.setExternalMusic(bundle);
     }
 

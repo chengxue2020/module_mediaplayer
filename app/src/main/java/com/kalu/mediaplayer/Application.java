@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigBuilder;
+import lib.kalu.mediaplayer.config.config.ConfigManager;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.keycode.KeycodeSimulator;
 
 public class Application extends MultiDexApplication {
@@ -22,17 +22,17 @@ public class Application extends MultiDexApplication {
         super.onCreate();
 
         // config
-        PlayerBuilder build = new PlayerBuilder.Builder()
+        ConfigBuilder build = new ConfigBuilder.Builder()
                 .setLog(true)
-                .setKernel(PlayerType.KernelType.IJK)
-                .setRender(PlayerType.RenderType.SURFACE_VIEW)
+                .setKernel(ConfigType.KernelType.IJK)
+                .setRender(ConfigType.RenderType.SURFACE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())
                 .setBuriedEvent(new BuriedPointEventImpl())
-                .setCacheType(PlayerType.CacheType.DEFAULT)
+                .setCacheType(ConfigType.CacheType.DEFAULT)
                 .setCacheMax(1024)
                 .setCacheDir("temp")
                 .build();
-        PlayerConfigManager.getInstance().setConfig(build);
+        ConfigManager.getInstance().setConfig(build);
     }
 
 

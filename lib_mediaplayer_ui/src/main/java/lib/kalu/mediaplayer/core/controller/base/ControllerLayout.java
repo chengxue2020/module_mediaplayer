@@ -16,8 +16,8 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
-import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigManager;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi2;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.core.controller.ControllerApi;
@@ -98,8 +98,8 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         } catch (Exception e) {
         }
         mOrientationHelper = new OrientationHelper(getContext().getApplicationContext());
-        mEnableOrientation = PlayerConfigManager.getInstance().getConfig().isCheckOrientation();
-        mAdaptCutout = PlayerConfigManager.getInstance().getConfig().isFitMobileCutout();
+        mEnableOrientation = ConfigManager.getInstance().getConfig().isCheckOrientation();
+        mAdaptCutout = ConfigManager.getInstance().getConfig().isFitMobileCutout();
         mActivity = PlayerUtils.scanForActivity(getContext());
     }
 
@@ -199,7 +199,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
      * 8                开始播放中止
      */
     @CallSuper
-    public void setPlayState(@PlayerType.StateType.Value int playState) {
+    public void setPlayState(@ConfigType.StateType.Value int playState) {
         //设置播放器的状态
         handlePlayStateChanged(playState);
     }
@@ -213,7 +213,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
      * MODE_TINY_WINDOW         小屏模式
      */
     @CallSuper
-    public void setWindowState(@PlayerType.WindowType.Value int windowState) {
+    public void setWindowState(@ConfigType.WindowType.Value int windowState) {
         //调用此方法向控制器设置播放器状态
         handleWindowStateChanged(windowState);
     }
@@ -425,7 +425,7 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
      */
     public boolean showNetWarning() {
         return NetworkUtils.getNetworkType(getContext()) == NetworkUtils.NETWORK_MOBILE
-                && !PlayerConfigManager.instance().playOnMobileNetwork();
+                && !ConfigManager.instance().playOnMobileNetwork();
     }
 
     /**
@@ -615,17 +615,17 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
     @CallSuper
     protected void onPlayerStatusChanged(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_INIT:
+            case ConfigType.StateType.STATE_INIT:
                 mOrientationHelper.disable();
                 mOrientation = 0;
                 mIsLocked = false;
                 mIsShowing = false;
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_START:
+            case ConfigType.StateType.STATE_BUFFERING_START:
                 mIsLocked = false;
                 mIsShowing = false;
                 break;
-            case PlayerType.StateType.STATE_ERROR:
+            case ConfigType.StateType.STATE_ERROR:
                 mIsShowing = false;
                 break;
         }
@@ -657,9 +657,9 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
      * MODE_TINY_WINDOW         小屏模式
      */
     @CallSuper
-    protected void onWindowStatusChanged(@PlayerType.WindowType.Value int playerState) {
+    protected void onWindowStatusChanged(@ConfigType.WindowType.Value int playerState) {
         switch (playerState) {
-            case PlayerType.WindowType.NORMAL:
+            case ConfigType.WindowType.NORMAL:
                 //视频正常播放是设置监听
                 if (mEnableOrientation) {
                     //检查系统是否开启自动旋转
@@ -672,14 +672,14 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
                     StatesCutoutUtils.adaptCutoutAboveAndroidP(getContext(), false);
                 }
                 break;
-            case PlayerType.WindowType.FULL:
+            case ConfigType.WindowType.FULL:
                 //在全屏时强制监听设备方向
                 mOrientationHelper.enable();
                 if (hasCutout()) {
                     StatesCutoutUtils.adaptCutoutAboveAndroidP(getContext(), true);
                 }
                 break;
-            case PlayerType.WindowType.FLOAT:
+            case ConfigType.WindowType.FLOAT:
                 //小窗口取消重力感应监听
                 mOrientationHelper.disable();
                 break;

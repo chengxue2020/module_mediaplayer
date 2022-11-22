@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
@@ -141,12 +141,12 @@ public class ComponentTop extends RelativeLayout implements ComponentApi {
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_INIT:
-            case PlayerType.StateType.STATE_START_ABORT:
-            case PlayerType.StateType.STATE_LOADING_START:
-            case PlayerType.StateType.STATE_LOADING_STOP:
-            case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_BUFFERING_START:
+            case ConfigType.StateType.STATE_INIT:
+            case ConfigType.StateType.STATE_START_ABORT:
+            case ConfigType.StateType.STATE_LOADING_START:
+            case ConfigType.StateType.STATE_LOADING_STOP:
+            case ConfigType.StateType.STATE_ERROR:
+            case ConfigType.StateType.STATE_BUFFERING_START:
                 setVisibility(GONE);
                 break;
         }
@@ -154,7 +154,7 @@ public class ComponentTop extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onWindowStateChanged(int playerState) {
-        if (playerState == PlayerType.WindowType.FULL) {
+        if (playerState == ConfigType.WindowType.FULL) {
             if (mControllerWrapper.isShowing() && !mControllerWrapper.isLocked()) {
                 setVisibility(VISIBLE);
                 TextView viewTime = findViewById(R.id.module_mediaplayer_controller_top_title);

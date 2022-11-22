@@ -15,8 +15,8 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import lib.kalu.mediaplayer.config.builder.BundleBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -26,41 +26,41 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public interface PlayerApi {
 
     default void start(@NonNull String url) {
-        BundleBuilder.Builder builder = new BundleBuilder.Builder();
-        BundleBuilder build = builder.build();
+        StartBuilder.Builder builder = new StartBuilder.Builder();
+        StartBuilder build = builder.build();
         start(build, url);
     }
 
     default void startSeek(@NonNull long seek, @NonNull String url) {
-        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setSeek(seek);
-        BundleBuilder build = builder.build();
+        StartBuilder build = builder.build();
         start(build, url);
     }
 
     default void startLive(@NonNull String url) {
-        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setLive(true);
         builder.setLoop(false);
-        BundleBuilder build = builder.build();
+        StartBuilder build = builder.build();
         start(build, url);
     }
 
     default void startLoop(@NonNull String url) {
-        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setLive(false);
         builder.setLoop(true);
-        BundleBuilder build = builder.build();
+        StartBuilder build = builder.build();
         start(build, url);
     }
 
     default void startLoop(@NonNull long seek, @NonNull long max, @NonNull String url) {
-        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setLive(false);
         builder.setLoop(true);
         builder.setSeek(seek);
         builder.setMax(max);
-        BundleBuilder build = builder.build();
+        StartBuilder build = builder.build();
         start(build, url);
     }
 
@@ -68,9 +68,9 @@ public interface PlayerApi {
 
     void setMute(boolean v);
 
-    void start(@NonNull BundleBuilder builder, @NonNull String url);
+    void start(@NonNull StartBuilder builder, @NonNull String url);
 
-    void create(@NonNull BundleBuilder builder, @NonNull boolean logger);
+    void create(@NonNull StartBuilder builder, @NonNull boolean logger);
 
     default void toggle() {
         toggle(false);
@@ -104,7 +104,11 @@ public interface PlayerApi {
 
     boolean isLooping();
 
-    boolean isRelease();
+    boolean isInvisibleStop();
+
+    boolean isInvisibleIgnore();
+
+    boolean isInvisibleRelease();
 
     long getSeek();
 
@@ -115,20 +119,16 @@ public interface PlayerApi {
     int getBufferedPercentage();
 
     default void seekTo(@NonNull boolean force) {
-        boolean live = isLive();
-        boolean looping = isLooping();
-        long max = getMax();
-        long seek = getSeek();
-        boolean release = isRelease();
-        boolean mute = isMute();
-        BundleBuilder.Builder builder = new BundleBuilder.Builder();
-        builder.setMax(max);
-        builder.setSeek(seek);
-        builder.setLoop(looping);
-        builder.setLive(live);
-        builder.setMute(mute);
-        builder.setRelease(release);
-        BundleBuilder build = builder.build();
+        StartBuilder.Builder builder = new StartBuilder.Builder();
+        builder.setMax(getMax());
+        builder.setSeek(getSeek());
+        builder.setLoop(isLooping());
+        builder.setLive(isLive());
+        builder.setMute(isMute());
+        builder.setInvisibleStop(isInvisibleStop());
+        builder.setInvisibleIgnore(isInvisibleIgnore());
+        builder.setInvisibleRelease(isInvisibleRelease());
+        StartBuilder build = builder.build();
         seekTo(force, build);
     }
 
@@ -145,19 +145,19 @@ public interface PlayerApi {
     }
 
     default void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
-        boolean live = isLive();
-        boolean release = isRelease();
-        BundleBuilder.Builder builder = new BundleBuilder.Builder();
+        StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setMax(max);
         builder.setSeek(seek);
         builder.setLoop(loop);
-        builder.setLive(live);
-        builder.setRelease(release);
-        BundleBuilder build = builder.build();
+        builder.setLive(isLive());
+        builder.setInvisibleStop(isInvisibleStop());
+        builder.setInvisibleIgnore(isInvisibleIgnore());
+        builder.setInvisibleRelease(isInvisibleRelease());
+        StartBuilder build = builder.build();
         seekTo(force, build);
     }
 
-    void seekTo(@NonNull boolean force, @NonNull BundleBuilder builder);
+    void seekTo(@NonNull boolean force, @NonNull StartBuilder builder);
 
     boolean seekForward(@NonNull boolean callback);
 
@@ -181,7 +181,7 @@ public interface PlayerApi {
 
     boolean isMute();
 
-    void setScaleType(@PlayerType.ScaleType.Value int scaleType);
+    void setScaleType(@ConfigType.ScaleType.Value int scaleType);
 
     void setSpeed(float speed);
 
@@ -221,15 +221,15 @@ public interface PlayerApi {
 
     /*********/
 
-    void setKernel(@PlayerType.KernelType.Value int v);
+    void setKernel(@ConfigType.KernelType.Value int v);
 
-    void setRender(@PlayerType.RenderType int v);
+    void setRender(@ConfigType.RenderType int v);
 
     /*********/
 
-    void callPlayerState(@PlayerType.StateType.Value int playerState);
+    void callPlayerState(@ConfigType.StateType.Value int playerState);
 
-    void callWindowState(@PlayerType.WindowType.Value int windowState);
+    void callWindowState(@ConfigType.WindowType.Value int windowState);
 
     /***********/
 
@@ -346,7 +346,7 @@ public interface PlayerApi {
 
     void enableExternalMusic(boolean enable, boolean release, boolean auto);
 
-    void setExternalMusic(@NonNull BundleBuilder bundle);
+    void setExternalMusic(@NonNull StartBuilder bundle);
 
     boolean isExternalMusicAuto();
 

@@ -8,7 +8,7 @@ import android.view.Surface;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.builder.BundleBuilder;
+import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.kernel.music.MusicPlayerManager;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -30,7 +30,7 @@ public interface KernelApi extends KernelEvent {
     void init(@NonNull Context context, @NonNull String url);
 //    void init(@NonNull Context context, @NonNull BundleBuilder bundle, @NonNull String url);
 
-    default void create(@NonNull Context context, @NonNull BundleBuilder bundle, @NonNull String url) {
+    default void create(@NonNull Context context, @NonNull StartBuilder bundle, @NonNull String url) {
         update(bundle, url);
         init(context, url);
     }
@@ -41,7 +41,7 @@ public interface KernelApi extends KernelEvent {
         setLooping(loop);
     }
 
-    default void update(@NonNull BundleBuilder bundle, @NonNull String playUrl) {
+    default void update(@NonNull StartBuilder bundle, @NonNull String playUrl) {
 
         MPLogUtil.log("KernelApi => update => playUrl = " + playUrl);
         long seek = bundle.getSeek();
@@ -59,9 +59,15 @@ public interface KernelApi extends KernelEvent {
         boolean live = bundle.isLive();
         MPLogUtil.log("KernelApi => update => live = " + live);
         setLive(live);
-        boolean release = bundle.isRelease();
-        MPLogUtil.log("KernelApi => update => release = " + release);
-        setAutoRelease(release);
+        boolean invisibleStop = bundle.isInvisibleStop();
+        MPLogUtil.log("KernelApi => update => invisibleStop = " + invisibleStop);
+        setInvisibleStop(invisibleStop);
+        boolean invisibleIgnore = bundle.isInvisibleIgnore();
+        MPLogUtil.log("KernelApi => update => invisibleIgnore = " + invisibleIgnore);
+        setInvisibleIgnore(invisibleIgnore);
+        boolean invisibleRelease = bundle.isInvisibleRelease();
+        MPLogUtil.log("KernelApi => update => invisibleRelease = " + invisibleRelease);
+        setInvisibleRelease(invisibleRelease);
         if (null != playUrl && playUrl.length() > 0) {
             setUrl(playUrl);
         }
@@ -113,9 +119,17 @@ public interface KernelApi extends KernelEvent {
 
     boolean isLooping();
 
-    void setAutoRelease(boolean release);
+    boolean isInvisibleStop();
 
-    boolean isAutoRelease();
+    void setInvisibleStop(boolean v);
+
+    boolean isInvisibleIgnore();
+
+    void setInvisibleIgnore(boolean v);
+
+    boolean isInvisibleRelease();
+
+    void setInvisibleRelease(boolean v);
 
     boolean isMute();
 

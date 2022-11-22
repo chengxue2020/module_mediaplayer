@@ -34,9 +34,9 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerConfigManager;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigBuilder;
+import lib.kalu.mediaplayer.config.config.ConfigManager;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 
 @Keep
 public final class PlayerUtils {
@@ -471,7 +471,7 @@ public final class PlayerUtils {
      * 获取当前的播放核心
      */
     public static Object getCurrentPlayerFactory() {
-        PlayerBuilder config = PlayerConfigManager.getInstance().getConfig();
+        ConfigBuilder config = ConfigManager.getInstance().getConfig();
         Object playerFactory = null;
         try {
             Field mPlayerFactoryField = config.getClass().getDeclaredField("mPlayerFactory");
@@ -500,31 +500,31 @@ public final class PlayerUtils {
         String playStateString;
         switch (state) {
             default:
-            case PlayerType.StateType.STATE_INIT:
+            case ConfigType.StateType.STATE_INIT:
                 playStateString = "idle";
                 break;
-            case PlayerType.StateType.STATE_LOADING_START:
+            case ConfigType.StateType.STATE_LOADING_START:
                 playStateString = "prepare_start";
                 break;
-            case PlayerType.StateType.STATE_LOADING_STOP:
+            case ConfigType.StateType.STATE_LOADING_STOP:
                 playStateString = "prepare_end";
                 break;
-            case PlayerType.StateType.STATE_START:
+            case ConfigType.StateType.STATE_START:
                 playStateString = "start";
                 break;
-            case PlayerType.StateType.STATE_PAUSE:
+            case ConfigType.StateType.STATE_PAUSE:
                 playStateString = "pause";
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_STOP:
+            case ConfigType.StateType.STATE_BUFFERING_STOP:
                 playStateString = "buffering";
                 break;
-            case PlayerType.StateType.STATE_END:
+            case ConfigType.StateType.STATE_END:
                 playStateString = "end";
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_START:
+            case ConfigType.StateType.STATE_BUFFERING_START:
                 playStateString = "playback completed";
                 break;
-            case PlayerType.StateType.STATE_ERROR:
+            case ConfigType.StateType.STATE_ERROR:
                 playStateString = "error";
                 break;
         }
@@ -535,13 +535,13 @@ public final class PlayerUtils {
         String playerStateString;
         switch (state) {
             default:
-            case PlayerType.WindowType.NORMAL:
+            case ConfigType.WindowType.NORMAL:
                 playerStateString = "normal";
                 break;
-            case PlayerType.WindowType.FULL:
+            case ConfigType.WindowType.FULL:
                 playerStateString = "full screen";
                 break;
-            case PlayerType.WindowType.FLOAT:
+            case ConfigType.WindowType.FLOAT:
                 playerStateString = "tiny screen";
                 break;
         }

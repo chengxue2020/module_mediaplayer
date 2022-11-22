@@ -1,16 +1,19 @@
-package lib.kalu.mediaplayer.config.builder;
+package lib.kalu.mediaplayer.config.start;
 
 import androidx.annotation.Keep;
 
 @Keep
-public final class BundleBuilder {
+public final class StartBuilder {
 
     private long max;
     private long seek;
     private boolean live;
     private boolean loop;
-    private boolean release;
     private boolean mute;
+
+    private boolean invisibleStop = false; // 不可见， 停止
+    private boolean invisibleIgnore = false; // 不可见忽略, 什么也不做
+    private boolean invisibleRelease = true; // 不可见生命周期自动销毁
 
     // 外部背景音
     private String externalMusicUrl = null;
@@ -37,8 +40,16 @@ public final class BundleBuilder {
         return loop;
     }
 
-    public boolean isRelease() {
-        return release;
+    public boolean isInvisibleIgnore() {
+        return invisibleIgnore;
+    }
+
+    public boolean isInvisibleStop() {
+        return invisibleStop;
+    }
+
+    public boolean isInvisibleRelease() {
+        return invisibleRelease;
     }
 
     public String getExternalMusicUrl() {
@@ -53,13 +64,15 @@ public final class BundleBuilder {
         return externalMusicAuto;
     }
 
-    public BundleBuilder(BundleBuilder.Builder builder) {
+    public StartBuilder(StartBuilder.Builder builder) {
         this.max = builder.max;
         this.seek = builder.seek;
         this.mute = builder.mute;
         this.live = builder.live;
         this.loop = builder.loop;
-        this.release = builder.release;
+        this.invisibleStop = builder.invisibleStop;
+        this.invisibleIgnore = builder.invisibleIgnore;
+        this.invisibleRelease = builder.invisibleRelease;
         this.externalMusicUrl = builder.externalMusicUrl;
         this.externalMusicLoop = builder.externalMusicLoop;
         this.externalMusicAuto = builder.externalMusicAuto;
@@ -72,8 +85,11 @@ public final class BundleBuilder {
         private long seek = 0;
         private boolean live = false;
         private boolean loop = false;
-        private boolean release = true;
         private boolean mute = false;
+
+        private boolean invisibleStop = false; // 不可见, 暂停
+        private boolean invisibleIgnore = false; // 不可见忽略, 什么也不做
+        private boolean invisibleRelease = true; // 不可见生命周期自动销毁
 
         private String externalMusicUrl = null;
         private boolean externalMusicLoop = false;
@@ -123,13 +139,23 @@ public final class BundleBuilder {
             return this;
         }
 
-        public Builder setRelease(boolean v) {
-            release = v;
+        public Builder setInvisibleStop(boolean v) {
+            this.invisibleStop = v;
             return this;
         }
 
-        public BundleBuilder build() {
-            return new BundleBuilder(this);
+        public Builder setInvisibleIgnore(boolean v) {
+            this.invisibleIgnore = v;
+            return this;
+        }
+
+        public Builder setInvisibleRelease(boolean v) {
+            this.invisibleRelease = v;
+            return this;
+        }
+
+        public StartBuilder build() {
+            return new StartBuilder(this);
         }
     }
 }

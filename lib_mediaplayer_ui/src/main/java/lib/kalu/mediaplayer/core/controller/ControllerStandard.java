@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.core.controller;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
@@ -14,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
@@ -146,11 +145,11 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         super.onWindowStatusChanged(playerState);
         View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
         switch (playerState) {
-            case PlayerType.WindowType.NORMAL:
+            case ConfigType.WindowType.NORMAL:
                 setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
                 view.setVisibility(GONE);
                 break;
-            case PlayerType.WindowType.FULL:
+            case ConfigType.WindowType.FULL:
                 view.setVisibility(isShowing() ? VISIBLE : GONE);
                 break;
         }
@@ -179,22 +178,22 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         View viewLoading = findViewById(R.id.module_mediaplayer_controller_center_loading);
         switch (playState) {
             //调用release方法会回到此状态
-            case PlayerType.StateType.STATE_INIT:
+            case ConfigType.StateType.STATE_INIT:
                 view.setSelected(false);
                 viewLoading.setVisibility(GONE);
                 break;
-            case PlayerType.StateType.STATE_START:
-            case PlayerType.StateType.STATE_PAUSE:
-            case PlayerType.StateType.STATE_LOADING_STOP:
-            case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_END:
+            case ConfigType.StateType.STATE_START:
+            case ConfigType.StateType.STATE_PAUSE:
+            case ConfigType.StateType.STATE_LOADING_STOP:
+            case ConfigType.StateType.STATE_ERROR:
+            case ConfigType.StateType.STATE_END:
                 viewLoading.setVisibility(GONE);
                 break;
-            case PlayerType.StateType.STATE_LOADING_START:
-            case PlayerType.StateType.STATE_BUFFERING_STOP:
+            case ConfigType.StateType.STATE_LOADING_START:
+            case ConfigType.StateType.STATE_BUFFERING_STOP:
                 viewLoading.setVisibility(VISIBLE);
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_START:
+            case ConfigType.StateType.STATE_BUFFERING_START:
                 viewLoading.setVisibility(GONE);
                 view.setVisibility(GONE);
                 view.setSelected(false);

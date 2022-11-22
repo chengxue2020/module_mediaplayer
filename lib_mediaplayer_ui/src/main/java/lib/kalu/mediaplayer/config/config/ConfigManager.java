@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.config.player;
+package lib.kalu.mediaplayer.config.config;
 
 import android.app.Application;
 
@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 
-import lib.kalu.mediaplayer.config.builder.PlayerBuilder;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -18,7 +17,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  * @date: 2021-05-12 14:43
  */
 @Keep
-public class PlayerConfigManager {
+public class ConfigManager {
 
     /**
      * 保存VideoView的容器
@@ -33,27 +32,27 @@ public class PlayerConfigManager {
     /**
      * VideoViewManager实例
      */
-    private static volatile PlayerConfigManager sInstance;
+    private static volatile ConfigManager sInstance;
 
     /**
      * VideoViewConfig实例
      */
-    private PlayerBuilder mPlayerConfig;
+    private ConfigBuilder mPlayerConfig;
 
-    private PlayerConfigManager() {
-        mPlayerConfig = new PlayerBuilder.Builder().build();
+    private ConfigManager() {
+        mPlayerConfig = new ConfigBuilder.Builder().build();
         mPlayOnMobileNetwork = mPlayerConfig.isCheckMobileNetwork();
     }
 
     private static class Holder {
-        private static final PlayerConfigManager INSTANCE = new PlayerConfigManager();
+        private static final ConfigManager INSTANCE = new ConfigManager();
     }
 
-    public static PlayerConfigManager getInstance() {
-        return PlayerConfigManager.Holder.INSTANCE;
+    public static ConfigManager getInstance() {
+        return ConfigManager.Holder.INSTANCE;
     }
 
-    public final void setConfig(@NonNull PlayerBuilder config) {
+    public final void setConfig(@NonNull ConfigBuilder config) {
         this.mPlayerConfig = config;
     }
 
@@ -81,7 +80,7 @@ public class PlayerConfigManager {
     /**
      * 获取VideoViewConfig
      */
-    public final PlayerBuilder getConfig() {
+    public final ConfigBuilder getConfig() {
 //        setConfig(null);
         return mPlayerConfig;
     }
@@ -100,11 +99,11 @@ public class PlayerConfigManager {
         mPlayOnMobileNetwork = playOnMobileNetwork;
     }
 
-    public static PlayerConfigManager instance() {
+    public static ConfigManager instance() {
         if (sInstance == null) {
-            synchronized (PlayerConfigManager.class) {
+            synchronized (ConfigManager.class) {
                 if (sInstance == null) {
-                    sInstance = new PlayerConfigManager();
+                    sInstance = new ConfigManager();
                 }
             }
         }

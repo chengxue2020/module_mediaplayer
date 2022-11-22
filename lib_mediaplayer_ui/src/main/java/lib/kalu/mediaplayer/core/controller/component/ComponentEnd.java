@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -69,14 +69,14 @@ public class ComponentEnd extends RelativeLayout implements ComponentApi {
     public void onPlayStateChanged(int playState) {
 
         switch (playState) {
-            case PlayerType.StateType.STATE_END:
+            case ConfigType.StateType.STATE_END:
                 MPLogUtil.log("ComponentEnd[show] => playState = " + playState);
                 bringToFront();
                 setVisibility(View.VISIBLE);
                 break;
-            case PlayerType.StateType.STATE_START:
-            case PlayerType.StateType.STATE_RESUME:
-            case PlayerType.StateType.STATE_REPEAT:
+            case ConfigType.StateType.STATE_START:
+            case ConfigType.StateType.STATE_RESUME:
+            case ConfigType.StateType.STATE_REPEAT:
                 MPLogUtil.log("ComponentEnd[gone] => playState = " + playState);
                 setVisibility(View.GONE);
                 break;

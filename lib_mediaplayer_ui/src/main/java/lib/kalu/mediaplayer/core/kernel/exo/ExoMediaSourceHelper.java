@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ExoMediaSourceHelper {
@@ -60,7 +60,7 @@ public final class ExoMediaSourceHelper {
                                       @NonNull boolean hasCache,
                                       @NonNull CharSequence url,
                                       @Nullable Map<String, String> headers,
-                                      @PlayerType.CacheType int cacheType,
+                                      @ConfigType.CacheType int cacheType,
                                       @NonNull int cacheMax,
                                       @NonNull String cacheDir,
                                       @NonNull String caheSate
@@ -91,7 +91,7 @@ public final class ExoMediaSourceHelper {
             refreshHeaders(http, headers);
 
             // 本地缓存
-            if (hasCache && cacheType == PlayerType.CacheType.DEFAULT) {
+            if (hasCache && cacheType == ConfigType.CacheType.DEFAULT) {
                 MPLogUtil.log("getMediaSource => 策略, 本地缓存");
 
                 // cache
@@ -114,7 +114,7 @@ public final class ExoMediaSourceHelper {
                 CacheDataSource.Factory factory = new CacheDataSource.Factory();
 
                 // 缓存策略：磁盘
-                if (null != context && cacheType == PlayerType.CacheType.DEFAULT) {
+                if (null != context && cacheType == ConfigType.CacheType.DEFAULT) {
                     if (!mWHM.containsKey(dir)) {
                         File file = new File(context.getExternalCacheDir(), dir);
                         LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);

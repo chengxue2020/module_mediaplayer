@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.util;
 
 import android.view.View;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 
 public class MeasureHelper {
 
@@ -57,7 +57,7 @@ public class MeasureHelper {
         //如果设置了比例
         switch (mCurrentScreenScale) {
             //默认正常类型
-            case PlayerType.ScaleType.SCREEN_SCALE_DEFAULT:
+            case ConfigType.ScaleType.SCREEN_SCALE_DEFAULT:
             default:
                 if (mVideoWidth * height < width * mVideoHeight) {
                     width = height * mVideoWidth / mVideoHeight;
@@ -66,12 +66,12 @@ public class MeasureHelper {
                 }
                 break;
             //原始类型，指视频的原始类型
-            case PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL:
+            case ConfigType.ScaleType.SCREEN_SCALE_ORIGINAL:
                 width = mVideoWidth;
                 height = mVideoHeight;
                 break;
             //16：9比例类型，最为常见
-            case PlayerType.ScaleType.SCREEN_SCALE_16_9:
+            case ConfigType.ScaleType.SCREEN_SCALE_16_9:
                 if (height > width / 16 * 9) {
                     height = width / 16 * 9;
                 } else {
@@ -79,7 +79,7 @@ public class MeasureHelper {
                 }
                 break;
             //4：3比例类型，也比较常见
-            case PlayerType.ScaleType.SCREEN_SCALE_4_3:
+            case ConfigType.ScaleType.SCREEN_SCALE_4_3:
                 if (height > width / 4 * 3) {
                     height = width / 4 * 3;
                 } else {
@@ -87,12 +87,12 @@ public class MeasureHelper {
                 }
                 break;
             //充满整个控件视图
-            case PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT:
+            case ConfigType.ScaleType.SCREEN_SCALE_MATCH_PARENT:
                 width = widthMeasureSpec;
                 height = heightMeasureSpec;
                 break;
             //剧中裁剪类型
-            case PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP:
+            case ConfigType.ScaleType.SCREEN_SCALE_CENTER_CROP:
                 if (mVideoWidth * height > width * mVideoHeight) {
                     width = height * mVideoWidth / mVideoHeight;
                 } else {

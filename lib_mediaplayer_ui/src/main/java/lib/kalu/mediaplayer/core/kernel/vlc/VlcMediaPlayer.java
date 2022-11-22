@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import org.videolan.libvlc.MediaPlayer;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -20,11 +20,15 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
-    private boolean mAutoRelease = false;
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
     private String mUrl = null; // 视频串
+
+    private boolean mInvisibleStop = false; // 不可见静音
+    private boolean mInvisibleIgnore = false; // 不可见忽略, 什么也不做
+    private boolean mInvisibleRelease = true; // 不可见生命周期自动销毁
+
 
     private String mExternalMusicPath = null;
     private boolean mExternalMusicPrepared = false;
@@ -89,8 +93,8 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
                 MPLogUtil.log("K_VLC => event = " + event.type);
                 // 首帧画面
                 if (event.type == MediaPlayer.Event.Vout) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_START);
+                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_LOADING_STOP);
+                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_VIDEO_START);
 
                     long seek = getSeek();
                     if (seek > 0) {
@@ -99,16 +103,16 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
                 }
                 // 解析开始
                 else if (event.type == MediaPlayer.Event.MediaChanged) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
+                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_LOADING_START);
                 }
                 // 播放完成
                 else if (event.type == MediaPlayer.Event.EndReached) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_END);
+                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_VIDEO_END);
                 }
                 // 错误
                 else if (event.type == MediaPlayer.Event.Stopped) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
+                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_LOADING_STOP);
+                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_ERROR_PARSE);
                 }
             }
         });
@@ -218,15 +222,15 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
+            mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_ERROR_URL);
             return;
         }
         try {
             mVlcPlayer.setDataSource(url);//
 
         } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
+            mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_ERROR_PARSE);
         }
         try {
             start();
@@ -392,13 +396,33 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void setAutoRelease(boolean release) {
-        this.mAutoRelease = release;
+    public boolean isInvisibleStop() {
+        return mInvisibleStop;
     }
 
     @Override
-    public boolean isAutoRelease() {
-        return this.mAutoRelease;
+    public void setInvisibleStop(boolean v) {
+        mInvisibleStop =v;
+    }
+
+    @Override
+    public boolean isInvisibleIgnore() {
+        return mInvisibleIgnore;
+    }
+
+    @Override
+    public void setInvisibleIgnore(boolean v) {
+        mInvisibleIgnore = v;
+    }
+
+    @Override
+    public boolean isInvisibleRelease() {
+        return mInvisibleRelease;
+    }
+
+    @Override
+    public void setInvisibleRelease(boolean v) {
+        mInvisibleRelease = v;
     }
 
     /****************/

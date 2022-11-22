@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.config.player;
+package lib.kalu.mediaplayer.config.config;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -22,7 +22,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 @Retention(CLASS)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
 @Keep
-public @interface PlayerType {
+public @interface ConfigType {
 
     @Documented
     @Retention(CLASS)

@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -118,7 +118,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         boolean isLive = mControllerWrapper.isLive();
         boolean isFull = mControllerWrapper.isFull();
         switch (playState) {
-            case PlayerType.StateType.STATE_LOADING_STOP:
+            case ConfigType.StateType.STATE_LOADING_STOP:
                 MPLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
                 if (!isLive && isFull) {
                     refreshTimestamp(false);
@@ -126,7 +126,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                     show();
                 }
                 break;
-            case PlayerType.StateType.STATE_LOADING_START:
+            case ConfigType.StateType.STATE_LOADING_START:
                 MPLogUtil.log("ComponentSeek22[gone] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
                 refreshTimestamp(true);
                 gone();
@@ -139,7 +139,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         boolean isLive = mControllerWrapper.isLive();
         boolean isFull = mControllerWrapper.isFull();
         switch (windowState) {
-            case PlayerType.WindowType.FULL:
+            case ConfigType.WindowType.FULL:
                 MPLogUtil.log("ComponentSeek22[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
                 if (!isLive && isFull) {
                     refreshTimestamp(false);

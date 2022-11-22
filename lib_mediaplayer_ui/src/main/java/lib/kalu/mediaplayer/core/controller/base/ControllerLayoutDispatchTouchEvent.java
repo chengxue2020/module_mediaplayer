@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.config.ConfigType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.core.controller.impl.GestureApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
@@ -118,11 +118,11 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
      * @param windowState 播放模式
      */
     @Override
-    public void setWindowState(@PlayerType.WindowType.Value int windowState) {
+    public void setWindowState(@ConfigType.WindowType.Value int windowState) {
         super.setWindowState(windowState);
-        if (windowState == PlayerType.WindowType.NORMAL) {
+        if (windowState == ConfigType.WindowType.NORMAL) {
             mCanSlide = mEnableInNormal;
-        } else if (windowState == PlayerType.WindowType.FULL) {
+        } else if (windowState == ConfigType.WindowType.FULL) {
             mCanSlide = true;
         }
     }
@@ -133,19 +133,19 @@ public abstract class ControllerLayoutDispatchTouchEvent extends ControllerLayou
      * @param playState 播放状态
      */
     @Override
-    public void setPlayState(@PlayerType.StateType.Value int playState) {
+    public void setPlayState(@ConfigType.StateType.Value int playState) {
         super.setPlayState(playState);
         mCurPlayState = playState;
     }
 
     private boolean isInPlaybackState() {
         return mControllerWrapper != null
-                && mCurPlayState != PlayerType.StateType.STATE_ERROR
-                && mCurPlayState != PlayerType.StateType.STATE_INIT
-                && mCurPlayState != PlayerType.StateType.STATE_LOADING_START
-                && mCurPlayState != PlayerType.StateType.STATE_LOADING_STOP
-                && mCurPlayState != PlayerType.StateType.STATE_START_ABORT
-                && mCurPlayState != PlayerType.StateType.STATE_BUFFERING_START;
+                && mCurPlayState != ConfigType.StateType.STATE_ERROR
+                && mCurPlayState != ConfigType.StateType.STATE_INIT
+                && mCurPlayState != ConfigType.StateType.STATE_LOADING_START
+                && mCurPlayState != ConfigType.StateType.STATE_LOADING_STOP
+                && mCurPlayState != ConfigType.StateType.STATE_START_ABORT
+                && mCurPlayState != ConfigType.StateType.STATE_BUFFERING_START;
     }
 
     @Override

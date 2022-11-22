@@ -1,9 +1,8 @@
-package lib.kalu.mediaplayer.config.builder;
+package lib.kalu.mediaplayer.config.config;
 
 import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.config.buried.BuriedEvent;
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 
 /**
@@ -11,14 +10,14 @@ import lib.kalu.mediaplayer.keycode.KeycodeApi;
  * @date: 2021-05-12 14:43
  */
 @Keep
-public final class PlayerBuilder {
+public final class ConfigBuilder {
 
     private boolean log;// 日志log
-    @PlayerType.KernelType.Value
+    @ConfigType.KernelType.Value
     private int kernel; // 播放器内核
-    @PlayerType.RenderType.Value
+    @ConfigType.RenderType.Value
     private int render; // 渲染类型
-    @PlayerType.ScaleType
+    @ConfigType.ScaleType
     private int scaleType; // 视频缩放比例
     private boolean checkMobileNetwork; // 监测手机网络环境
     private boolean fitMobileCutout; // 是否适配手机刘海屏，默认适配
@@ -29,8 +28,8 @@ public final class PlayerBuilder {
     /**
      * 本地视频缓存
      */
-    @PlayerType.CacheType
-    private int cacheType = PlayerType.CacheType.NONE;
+    @ConfigType.CacheType
+    private int cacheType = ConfigType.CacheType.NONE;
     private int cacheMax = 0;
     private String cacheDir = null;
     private String cacheSalt = "qwerpoiu";
@@ -89,7 +88,7 @@ public final class PlayerBuilder {
 
     /****************/
 
-    private PlayerBuilder(Builder builder) {
+    private ConfigBuilder(Builder builder) {
         log = builder.log;
         kernel = builder.kernel;
         render = builder.render;
@@ -128,12 +127,12 @@ public final class PlayerBuilder {
     public final static class Builder {
 
         private boolean log = false;// 日志log
-        @PlayerType.KernelType.Value
-        private int kernel = PlayerType.KernelType.ANDROID; // 播放器内核
-        @PlayerType.RenderType.Value
-        private int render = PlayerType.RenderType.TEXTURE_VIEW; // 渲染类型
-        @PlayerType.ScaleType
-        private int scaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT; // 视频缩放比例
+        @ConfigType.KernelType.Value
+        private int kernel = ConfigType.KernelType.ANDROID; // 播放器内核
+        @ConfigType.RenderType.Value
+        private int render = ConfigType.RenderType.TEXTURE_VIEW; // 渲染类型
+        @ConfigType.ScaleType
+        private int scaleType = ConfigType.ScaleType.SCREEN_SCALE_DEFAULT; // 视频缩放比例
         private boolean checkMobileNetwork = false; // 监测手机网络环境
         private boolean fitMobileCutout = true; // 是否适配手机刘海屏，默认适配
         private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
@@ -143,13 +142,13 @@ public final class PlayerBuilder {
         /**
          * 本地视频缓存
          */
-        @PlayerType.CacheType
-        private int cacheType = PlayerType.CacheType.NONE;
+        @ConfigType.CacheType
+        private int cacheType = ConfigType.CacheType.NONE;
         private int cacheMax = 0;
         private String cacheDir = null;
         private String cacheSalt = "qwerpoiu";
 
-        public Builder setCacheType(@PlayerType.CacheType int v) {
+        public Builder setCacheType(@ConfigType.CacheType int v) {
             cacheType = v;
             return this;
         }
@@ -174,17 +173,17 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setKernel(@PlayerType.KernelType.Value int v) {
+        public Builder setKernel(@ConfigType.KernelType.Value int v) {
             kernel = v;
             return this;
         }
 
-        public Builder setRender(@PlayerType.RenderType.Value int v) {
+        public Builder setRender(@ConfigType.RenderType.Value int v) {
             render = v;
             return this;
         }
 
-        public Builder setScaleType(@PlayerType.ScaleType.Value int v) {
+        public Builder setScaleType(@ConfigType.ScaleType.Value int v) {
             scaleType = v;
             return this;
         }
@@ -214,8 +213,8 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public PlayerBuilder build() {
-            return new PlayerBuilder(this);
+        public ConfigBuilder build() {
+            return new ConfigBuilder(this);
         }
     }
 }
