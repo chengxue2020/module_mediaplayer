@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -68,16 +68,16 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConfigType.StateType.STATE_PAUSE:
+            case PlayerType.StateType.STATE_PAUSE:
                 MPLogUtil.log("ComponentPause[show] => playState = " + playState);
                 bringToFront();
                 show();
                 break;
-            case ConfigType.StateType.STATE_LOADING_START:
-            case ConfigType.StateType.STATE_START:
-            case ConfigType.StateType.STATE_RESUME:
-            case ConfigType.StateType.STATE_RESUME_IGNORE:
-            case ConfigType.StateType.STATE_REPEAT:
+            case PlayerType.StateType.STATE_LOADING_START:
+            case PlayerType.StateType.STATE_START:
+            case PlayerType.StateType.STATE_RESUME:
+            case PlayerType.StateType.STATE_RESUME_IGNORE:
+            case PlayerType.StateType.STATE_REPEAT:
                 MPLogUtil.log("ComponentPause[show] => playState = " + playState);
                 gone();
                 break;

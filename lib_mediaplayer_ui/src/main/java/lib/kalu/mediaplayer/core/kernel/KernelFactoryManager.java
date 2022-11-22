@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.core.kernel.exo.ExoFactory;
 import lib.kalu.mediaplayer.core.kernel.ijk.IjkFactory;
 import lib.kalu.mediaplayer.core.kernel.android.AndroidFactory;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.vlc.VlcFactory;
 
 /**
@@ -18,17 +18,17 @@ import lib.kalu.mediaplayer.core.kernel.vlc.VlcFactory;
 @Keep
 public final class KernelFactoryManager {
 
-    public static KernelFactory getFactory(@ConfigType.KernelType int type) {
+    public static KernelFactory getFactory(@PlayerType.KernelType int type) {
         // ijk
-        if (type == ConfigType.KernelType.IJK) {
+        if (type == PlayerType.KernelType.IJK) {
             return IjkFactory.build();
         }
         // exo
-        else if (type == ConfigType.KernelType.EXO) {
+        else if (type == PlayerType.KernelType.EXO) {
             return ExoFactory.build();
         }
         // vlc
-        else if (type == ConfigType.KernelType.VLC) {
+        else if (type == PlayerType.KernelType.VLC) {
             return VlcFactory.build();
         }
         // android
@@ -37,17 +37,17 @@ public final class KernelFactoryManager {
         }
     }
 
-    public static KernelApi getKernel(@NonNull Context context, @ConfigType.KernelType.Value int type, @NonNull KernelEvent event) {
+    public static KernelApi getKernel(@NonNull Context context, @PlayerType.KernelType.Value int type, @NonNull KernelEvent event) {
         // ijk
-        if (type == ConfigType.KernelType.IJK) {
+        if (type == PlayerType.KernelType.IJK) {
             return getFactory(type).createKernel(context, event);
         }
         // exo
-        else if (type == ConfigType.KernelType.EXO) {
+        else if (type == PlayerType.KernelType.EXO) {
             return getFactory(type).createKernel(context, event);
         }
         // vlc
-        else if (type == ConfigType.KernelType.VLC) {
+        else if (type == PlayerType.KernelType.VLC) {
             return getFactory(type).createKernel(context, event);
         }
         // android

@@ -10,7 +10,7 @@ import android.view.Surface;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -89,8 +89,8 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_ERROR_URL);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
         try {
@@ -111,7 +111,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             }
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
-            mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_ERROR_PARSE);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
 
         try {
@@ -326,7 +326,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     public void seekTo(long seek) {
         MPLogUtil.log("IjkMediaPlayer => seekTo => seek = " + seek);
         try {
-            mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_BUFFERING_START);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mIjkPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);
@@ -528,8 +528,8 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             MPLogUtil.log("IjkMediaPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-            mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_ERROR_PARSE);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
             return true;
         }
     };
@@ -541,7 +541,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             MPLogUtil.log("IjkMediaPlayer => onCompletion =>");
-            mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_VIDEO_END);
+            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -555,16 +555,16 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             MPLogUtil.log("IjkMediaPlayer => onInfo => what = " + what + ", extra = " + extra);
             // loading-start
             if (what == IMediaPlayer.MEDIA_INFO_OPEN_INPUT) {
-                mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_LOADING_START);
+                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             }
             // 首帧画面
             else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                mEvent.onEvent(ConfigType.KernelType.IJK, ConfigType.EventType.EVENT_LOADING_STOP);
-                mEvent.onEvent(ConfigType.KernelType.IJK, what);
+                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+                mEvent.onEvent(PlayerType.KernelType.IJK, what);
             }
             // 事件通知
             else {
-                mEvent.onEvent(ConfigType.KernelType.IJK, what);
+                mEvent.onEvent(PlayerType.KernelType.IJK, what);
             }
             return true;
         }
@@ -606,7 +606,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             int videoWidth = iMediaPlayer.getVideoWidth();
             int videoHeight = iMediaPlayer.getVideoHeight();
             if (videoWidth != 0 && videoHeight != 0) {
-                onChanged(ConfigType.KernelType.IJK, videoWidth, videoHeight, -1);
+                onChanged(PlayerType.KernelType.IJK, videoWidth, videoHeight, -1);
             }
         }
     };

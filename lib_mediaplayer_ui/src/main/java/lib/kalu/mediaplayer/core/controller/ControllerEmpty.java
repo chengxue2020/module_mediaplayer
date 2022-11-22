@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 
 @Keep
@@ -30,7 +30,7 @@ public class ControllerEmpty extends ControllerLayout {
     protected void onPlayerStatusChanged(int playState) {
         super.onPlayerStatusChanged(playState);
         switch (playState) {
-            case ConfigType.StateType.STATE_START:
+            case PlayerType.StateType.STATE_START:
                 super.setBackgroundColor(Color.TRANSPARENT);
                 break;
             default:

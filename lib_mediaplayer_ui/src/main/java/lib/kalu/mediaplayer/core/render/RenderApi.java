@@ -6,7 +6,7 @@ import android.view.View;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 
 @Keep
@@ -51,7 +51,7 @@ public interface RenderApi {
      *
      * @param scaleType 类型
      */
-    void setScaleType(@ConfigType.ScaleType.Value int scaleType);
+    void setScaleType(@PlayerType.ScaleType.Value int scaleType);
 
 //    @PlayerType.ScaleType.Value
 //    int getScaleType();

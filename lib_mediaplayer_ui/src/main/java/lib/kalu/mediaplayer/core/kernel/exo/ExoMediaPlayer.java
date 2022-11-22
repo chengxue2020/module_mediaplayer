@@ -27,9 +27,9 @@ import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.video.VideoSize;
 
-import lib.kalu.mediaplayer.config.config.ConfigBuilder;
-import lib.kalu.mediaplayer.config.config.ConfigManager;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerBuilder;
+import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -123,12 +123,12 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     @Override
     public void init(@NonNull Context context, @NonNull String url) {
         // loading-start
-        mEvent.onEvent(ConfigType.KernelType.EXO, ConfigType.EventType.EVENT_LOADING_START);
+        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
 
         // fail
         if (null == url || url.length() <= 0) {
-            mEvent.onEvent(ConfigType.KernelType.EXO, ConfigType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(ConfigType.KernelType.EXO, ConfigType.EventType.EVENT_ERROR_URL);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_URL);
         }
         // next
         else {
@@ -144,7 +144,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
             }
 //        mIsPreparing = true;
 
-            ConfigBuilder config = ConfigManager.getInstance().getConfig();
+            PlayerBuilder config = PlayerManager.getInstance().getConfig();
             MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, null, config.getCacheType(), config.getCacheMax(), config.getCacheDir(), config.getCacheSalt());
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
@@ -424,7 +424,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void onVideoSizeChanged(EventTime eventTime, VideoSize videoSize) {
-        onChanged(ConfigType.KernelType.EXO, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : -1);
+        onChanged(PlayerType.KernelType.EXO, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : -1);
     }
 
     @Override
@@ -438,13 +438,13 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
         // 播放结束
         if (state == Player.STATE_ENDED) {
-            mEvent.onEvent(ConfigType.KernelType.EXO, ConfigType.EventType.EVENT_VIDEO_END);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_END);
         }
         // 准备完成
         else if (state == Player.STATE_READY) {
 
-            mEvent.onEvent(ConfigType.KernelType.EXO, ConfigType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(ConfigType.KernelType.EXO, ConfigType.EventType.EVENT_VIDEO_START);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
         }
     }
 

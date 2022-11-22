@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.config.config;
+package lib.kalu.mediaplayer.config.player;
 
 import android.app.Application;
 
@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  * @date: 2021-05-12 14:43
  */
 @Keep
-public class ConfigManager {
+public class PlayerManager {
 
     /**
      * 保存VideoView的容器
@@ -32,27 +32,27 @@ public class ConfigManager {
     /**
      * VideoViewManager实例
      */
-    private static volatile ConfigManager sInstance;
+    private static volatile PlayerManager sInstance;
 
     /**
      * VideoViewConfig实例
      */
-    private ConfigBuilder mPlayerConfig;
+    private PlayerBuilder mPlayerConfig;
 
-    private ConfigManager() {
-        mPlayerConfig = new ConfigBuilder.Builder().build();
+    private PlayerManager() {
+        mPlayerConfig = new PlayerBuilder.Builder().build();
         mPlayOnMobileNetwork = mPlayerConfig.isCheckMobileNetwork();
     }
 
     private static class Holder {
-        private static final ConfigManager INSTANCE = new ConfigManager();
+        private static final PlayerManager INSTANCE = new PlayerManager();
     }
 
-    public static ConfigManager getInstance() {
-        return ConfigManager.Holder.INSTANCE;
+    public static PlayerManager getInstance() {
+        return PlayerManager.Holder.INSTANCE;
     }
 
-    public final void setConfig(@NonNull ConfigBuilder config) {
+    public final void setConfig(@NonNull PlayerBuilder config) {
         this.mPlayerConfig = config;
     }
 
@@ -80,7 +80,7 @@ public class ConfigManager {
     /**
      * 获取VideoViewConfig
      */
-    public final ConfigBuilder getConfig() {
+    public final PlayerBuilder getConfig() {
 //        setConfig(null);
         return mPlayerConfig;
     }
@@ -99,11 +99,11 @@ public class ConfigManager {
         mPlayOnMobileNetwork = playOnMobileNetwork;
     }
 
-    public static ConfigManager instance() {
+    public static PlayerManager instance() {
         if (sInstance == null) {
-            synchronized (ConfigManager.class) {
+            synchronized (PlayerManager.class) {
                 if (sInstance == null) {
-                    sInstance = new ConfigManager();
+                    sInstance = new PlayerManager();
                 }
             }
         }

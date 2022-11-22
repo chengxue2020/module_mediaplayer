@@ -27,9 +27,9 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.buried.BuriedEvent;
-import lib.kalu.mediaplayer.config.config.ConfigBuilder;
-import lib.kalu.mediaplayer.config.config.ConfigManager;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerBuilder;
+import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
@@ -149,11 +149,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         setBackgroundColor(Color.parseColor("#000000"));
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_player, this, true);
         setFocusable(false);
-        setScaleType(ConfigType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
+        setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
         BaseToast.init(getContext().getApplicationContext());
 
         // 全局配置
-        ConfigBuilder config = ConfigManager.getInstance().getConfig();
+        PlayerBuilder config = PlayerManager.getInstance().getConfig();
         mCurrentScreenScaleType = config.getScaleType();
 
         //读取xml中的配置，并综合全局配置
@@ -233,45 +233,45 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MPLogUtil.log("VideoLayout => start => invisibleRelease = " + invisibleRelease);
         try {
 
-            ConfigBuilder config = ConfigManager.getInstance().getConfig();
+            PlayerBuilder config = PlayerManager.getInstance().getConfig();
             int kernel = config.getKernel();
             // exo
-            if (kernel == ConfigType.KernelType.EXO) {
+            if (kernel == PlayerType.KernelType.EXO) {
             }
             // ijk
-            else if (kernel == ConfigType.KernelType.IJK) {
-                MPLogUtil.setLogger(ConfigType.KernelType.IJK, config.isLog());
+            else if (kernel == PlayerType.KernelType.IJK) {
+                MPLogUtil.setLogger(PlayerType.KernelType.IJK, config.isLog());
             }
             // vlc
-            else if (kernel == ConfigType.KernelType.VLC) {
-                MPLogUtil.setLogger(ConfigType.KernelType.VLC, config.isLog());
+            else if (kernel == PlayerType.KernelType.VLC) {
+                MPLogUtil.setLogger(PlayerType.KernelType.VLC, config.isLog());
             }
             // android
-            else if (kernel == ConfigType.KernelType.ANDROID) {
+            else if (kernel == PlayerType.KernelType.ANDROID) {
             }
 
             // step0
-            callPlayerState(ConfigType.StateType.STATE_INIT);
+            callPlayerState(PlayerType.StateType.STATE_INIT);
 
             // step1
-            callPlayerState(ConfigType.StateType.STATE_LOADING_START);
+            callPlayerState(PlayerType.StateType.STATE_LOADING_START);
 
             // step2
             // exo
-            if (kernel == ConfigType.KernelType.EXO) {
+            if (kernel == PlayerType.KernelType.EXO) {
             }
             // ijk
-            else if (kernel == ConfigType.KernelType.IJK) {
+            else if (kernel == PlayerType.KernelType.IJK) {
                 String temp = getUrl();
                 if (null != temp && temp.length() > 0) {
                     release();
                 }
             }
             // vlc
-            else if (kernel == ConfigType.KernelType.VLC) {
+            else if (kernel == PlayerType.KernelType.VLC) {
             }
             // android
-            else if (kernel == ConfigType.KernelType.ANDROID) {
+            else if (kernel == PlayerType.KernelType.ANDROID) {
             }
 
             // step3
@@ -284,7 +284,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // step4
             boolean showNetWarning = showNetWarning();
             if (showNetWarning) {
-                callPlayerState(ConfigType.StateType.STATE_START_ABORT);
+                callPlayerState(PlayerType.StateType.STATE_START_ABORT);
             }
 
             // step4
@@ -303,7 +303,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
         // step2
         if (null == mKernel) {
-            mKernel = KernelFactoryManager.getKernel(getContext(), ConfigManager.getInstance().getConfig().getKernel(), new KernelEvent() {
+            mKernel = KernelFactoryManager.getKernel(getContext(), PlayerManager.getInstance().getConfig().getKernel(), new KernelEvent() {
                 @Override
                 public void onEvent(int kernel, int event) {
 
@@ -311,26 +311,26 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                     switch (event) {
                         // 网络拉流开始
-                        case ConfigType.EventType.EVENT_OPEN_INPUT:
+                        case PlayerType.EventType.EVENT_OPEN_INPUT:
                             // step1
 //                            callPlayerState(PlayerType.StateType.STATE_START);
                             // step2
                             goneReal();
                             break;
                         // 初始化开始 => loading start
-                        case ConfigType.EventType.EVENT_LOADING_START:
-                            callPlayerState(ConfigType.StateType.STATE_LOADING_START);
+                        case PlayerType.EventType.EVENT_LOADING_START:
+                            callPlayerState(PlayerType.StateType.STATE_LOADING_START);
                             break;
                         // 初始化完成 => loading stop
-                        case ConfigType.EventType.EVENT_LOADING_STOP:
-                            callPlayerState(ConfigType.StateType.STATE_LOADING_STOP);
+                        case PlayerType.EventType.EVENT_LOADING_STOP:
+                            callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
                             break;
                         // 播放开始-快进
-                        case ConfigType.EventType.EVENT_VIDEO_START_SEEK:
+                        case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
 
                             // step1
-                            callPlayerState(ConfigType.StateType.STATE_LOADING_STOP);
-                            callPlayerState(ConfigType.StateType.STATE_START_SEEK);
+                            callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
+                            callPlayerState(PlayerType.StateType.STATE_START_SEEK);
                             // step2
                             showReal();
                             // step3
@@ -356,12 +356,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             break;
                         // 播放开始
-                        case ConfigType.EventType.EVENT_VIDEO_START:
+                        case PlayerType.EventType.EVENT_VIDEO_START:
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
 
 
-                            callPlayerState(ConfigType.StateType.STATE_START);
+                            callPlayerState(PlayerType.StateType.STATE_START);
 
                             // step1
                             showReal();
@@ -391,23 +391,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             // 埋点
                             try {
-                                BuriedEvent buriedEvent = ConfigManager.getInstance().getConfig().getBuriedEvent();
+                                BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
                                 buriedEvent.playerIn(getUrl());
                             } catch (Exception e) {
                             }
 
                             break;
                         // 播放结束
-                        case ConfigType.EventType.EVENT_VIDEO_END:
+                        case PlayerType.EventType.EVENT_VIDEO_END:
 
-                            callPlayerState(ConfigType.StateType.STATE_END);
+                            callPlayerState(PlayerType.StateType.STATE_END);
 
                             // step2
                             clearHanlder();
 
                             // 埋点
                             try {
-                                BuriedEvent buriedEvent = ConfigManager.getInstance().getConfig().getBuriedEvent();
+                                BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
                                 buriedEvent.playerCompletion(getUrl());
                             } catch (Exception e) {
                             }
@@ -417,7 +417,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             if (looping) {
 
                                 // step1
-                                callPlayerState(ConfigType.StateType.STATE_LOADING_START);
+                                callPlayerState(PlayerType.StateType.STATE_LOADING_START);
                                 goneReal();
 
                                 // step2
@@ -437,18 +437,18 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             break;
                         // 播放错误
-                        case ConfigType.EventType.EVENT_ERROR_URL:
-                        case ConfigType.EventType.EVENT_ERROR_PARSE:
-                        case ConfigType.EventType.EVENT_ERROR_RETRY:
-                        case ConfigType.EventType.EVENT_ERROR_SOURCE:
+                        case PlayerType.EventType.EVENT_ERROR_URL:
+                        case PlayerType.EventType.EVENT_ERROR_PARSE:
+                        case PlayerType.EventType.EVENT_ERROR_RETRY:
+                        case PlayerType.EventType.EVENT_ERROR_SOURCE:
 
                             boolean connected = PlayerUtils.isConnected(getContext());
                             setKeepScreenOn(false);
-                            callPlayerState(connected ? ConfigType.StateType.STATE_ERROR : ConfigType.StateType.STATE_ERROR_NET);
+                            callPlayerState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
 
                             // 埋点
                             try {
-                                BuriedEvent buriedEvent = ConfigManager.getInstance().getConfig().getBuriedEvent();
+                                BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
                                 buriedEvent.playerError(getUrl(), connected);
                             } catch (Exception e) {
                             }
@@ -474,7 +474,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
         // step3
         if (null == mRender) {
-            mRender = RenderFactoryManager.getRender(getContext(), ConfigManager.getInstance().getConfig().getRender());
+            mRender = RenderFactoryManager.getRender(getContext(), PlayerManager.getInstance().getConfig().getRender());
             mRender.setKernel(mKernel);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             mRender.getReal().setLayoutParams(params);
@@ -513,7 +513,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
         // 用户手动，需要显示暂停图标
         else {
-            callPlayerState(ConfigType.StateType.STATE_PAUSE);
+            callPlayerState(PlayerType.StateType.STATE_PAUSE);
         }
         setKeepScreenOn(false);
         mKernel.pause();
@@ -524,7 +524,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         boolean playing = isPlaying();
         if (!playing)
             return;
-        callPlayerState(ConfigType.StateType.STATE_CLOSE);
+        callPlayerState(PlayerType.StateType.STATE_CLOSE);
         setKeepScreenOn(false);
         mKernel.stop();
     }
@@ -536,9 +536,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         if (null == url || url.length() <= 0)
             return;
         if (call) {
-            callPlayerState(ConfigType.StateType.STATE_RESUME);
+            callPlayerState(PlayerType.StateType.STATE_RESUME);
         } else {
-            callPlayerState(ConfigType.StateType.STATE_RESUME_IGNORE);
+            callPlayerState(PlayerType.StateType.STATE_RESUME_IGNORE);
         }
         setKeepScreenOn(true);
         mKernel.start();
@@ -550,7 +550,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MPLogUtil.log("onEvent => repeat => url = " + url);
         if (null == url || url.length() <= 0)
             return;
-        callPlayerState(ConfigType.StateType.STATE_REPEAT);
+        callPlayerState(PlayerType.StateType.STATE_REPEAT);
         seekTo(true);
     }
 
@@ -688,7 +688,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             return;
 
         // step1
-        callPlayerState(ConfigType.StateType.STATE_LOADING_START);
+        callPlayerState(PlayerType.StateType.STATE_LOADING_START);
         // step2
         clearHanlder();
         // step3
@@ -805,23 +805,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void setKernel(@ConfigType.KernelType.Value int v) {
-        ConfigBuilder config = ConfigManager.getInstance().getConfig();
-        ConfigBuilder.Builder builder = config.newBuilder();
+    public void setKernel(@PlayerType.KernelType.Value int v) {
+        PlayerBuilder config = PlayerManager.getInstance().getConfig();
+        PlayerBuilder.Builder builder = config.newBuilder();
         builder.setKernel(v);
-        ConfigManager.getInstance().setConfig(config);
+        PlayerManager.getInstance().setConfig(config);
     }
 
     @Override
-    public void setRender(@ConfigType.RenderType int v) {
-        ConfigBuilder config = ConfigManager.getInstance().getConfig();
-        ConfigBuilder.Builder builder = config.newBuilder();
+    public void setRender(@PlayerType.RenderType int v) {
+        PlayerBuilder config = PlayerManager.getInstance().getConfig();
+        PlayerBuilder.Builder builder = config.newBuilder();
         builder.setRender(v);
-        ConfigManager.getInstance().setConfig(config);
+        PlayerManager.getInstance().setConfig(config);
     }
 
     @Override
-    public void setScaleType(@ConfigType.ScaleType.Value int scaleType) {
+    public void setScaleType(@PlayerType.ScaleType.Value int scaleType) {
         mCurrentScreenScaleType = scaleType;
 //        if (mRender != null) {
 //            mRender.setScaleType(scaleType);
@@ -937,7 +937,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         viewGroup.addView(layout);
         layout.setMediaPlayer(this);
         // call
-        callWindowState(ConfigType.WindowType.NORMAL);
+        callWindowState(PlayerType.WindowType.NORMAL);
     }
 
     public void clearControllerLayout() {
@@ -1126,11 +1126,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public void playEnd() {
         goneReal();
         setKeepScreenOn(false);
-        callPlayerState(ConfigType.StateType.STATE_END);
+        callPlayerState(PlayerType.StateType.STATE_END);
     }
 
     @Override
-    public void callPlayerState(@ConfigType.StateType.Value int playerState) {
+    public void callPlayerState(@PlayerType.StateType.Value int playerState) {
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
             layout.setPlayState(playerState);
@@ -1145,7 +1145,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
-    public void callWindowState(@ConfigType.WindowType.Value int windowState) {
+    public void callWindowState(@PlayerType.WindowType.Value int windowState) {
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
             layout.setWindowState(windowState);
@@ -1261,7 +1261,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             decorView.addView(real, index);
             // 3
             // 4
-            callWindowState(ConfigType.WindowType.FULL);
+            callWindowState(PlayerType.WindowType.FULL);
             // 5
             if (null != mOnFullChangeListener) {
                 mOnFullChangeListener.onFull();
@@ -1295,7 +1295,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             removeAllViews();
             addView(real, 0);
             // 4
-            callWindowState(ConfigType.WindowType.NORMAL);
+            callWindowState(PlayerType.WindowType.NORMAL);
             // 5
             if (null != mOnFullChangeListener) {
                 mOnFullChangeListener.onNormal();
@@ -1363,7 +1363,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             int index = decorView.getChildCount();
             decorView.addView(real, index);
             // 5
-            callWindowState(ConfigType.WindowType.FLOAT);
+            callWindowState(PlayerType.WindowType.FLOAT);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -1395,7 +1395,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             removeAllViews();
             addView(real, 0);
             // 4
-            callWindowState(ConfigType.WindowType.NORMAL);
+            callWindowState(PlayerType.WindowType.NORMAL);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -1503,7 +1503,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                                 setTag(R.id.module_mediaplayer_id_seek, "1");
                             }
                         } else {
-                            callWindowState(ConfigType.WindowType.FULL);
+                            callWindowState(PlayerType.WindowType.FULL);
                         }
                     }
                 }
@@ -1536,7 +1536,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                                 setTag(R.id.module_mediaplayer_id_seek, "1");
                             }
                         } else {
-                            callWindowState(ConfigType.WindowType.FULL);
+                            callWindowState(PlayerType.WindowType.FULL);
                         }
                     }
                 }

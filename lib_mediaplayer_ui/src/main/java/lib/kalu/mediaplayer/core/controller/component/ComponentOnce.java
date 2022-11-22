@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
@@ -67,7 +67,7 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
         mTvRetry.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (playState == ConfigType.StateType.STATE_ONCE_LIVE) {
+                if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
                     //即将开播
                     if (PlayerUtils.isConnected(mContext)) {
                         mControllerWrapper.repeat();
@@ -99,7 +99,7 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
     @Override
     public void onPlayStateChanged(int playState) {
         this.playState = playState;
-        if (playState == ConfigType.StateType.STATE_ONCE_LIVE) {
+        if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             //即将开播
             setVisibility(VISIBLE);
         } else {

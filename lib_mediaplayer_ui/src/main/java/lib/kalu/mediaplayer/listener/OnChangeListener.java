@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 
 @Keep
 public interface OnChangeListener {
@@ -16,7 +16,7 @@ public interface OnChangeListener {
      *
      * @param state 播放模式
      */
-    default void onWindow(@ConfigType.WindowType.Value int state) {
+    default void onWindow(@PlayerType.WindowType.Value int state) {
     }
 
     /**
@@ -24,7 +24,7 @@ public interface OnChangeListener {
      *
      * @param state 播放状态，主要是指播放器的各种状态
      */
-    default void onChange(@ConfigType.StateType.Value int state) {
+    default void onChange(@PlayerType.StateType.Value int state) {
     }
 
     /**

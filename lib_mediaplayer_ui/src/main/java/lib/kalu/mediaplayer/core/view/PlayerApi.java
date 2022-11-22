@@ -15,7 +15,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -181,7 +181,7 @@ public interface PlayerApi {
 
     boolean isMute();
 
-    void setScaleType(@ConfigType.ScaleType.Value int scaleType);
+    void setScaleType(@PlayerType.ScaleType.Value int scaleType);
 
     void setSpeed(float speed);
 
@@ -221,15 +221,15 @@ public interface PlayerApi {
 
     /*********/
 
-    void setKernel(@ConfigType.KernelType.Value int v);
+    void setKernel(@PlayerType.KernelType.Value int v);
 
-    void setRender(@ConfigType.RenderType int v);
+    void setRender(@PlayerType.RenderType int v);
 
     /*********/
 
-    void callPlayerState(@ConfigType.StateType.Value int playerState);
+    void callPlayerState(@PlayerType.StateType.Value int playerState);
 
-    void callWindowState(@ConfigType.WindowType.Value int windowState);
+    void callWindowState(@PlayerType.WindowType.Value int windowState);
 
     /***********/
 

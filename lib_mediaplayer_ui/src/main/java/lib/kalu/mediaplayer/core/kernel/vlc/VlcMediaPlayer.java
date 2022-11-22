@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import org.videolan.libvlc.MediaPlayer;
 
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -93,8 +93,8 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
                 MPLogUtil.log("K_VLC => event = " + event.type);
                 // 首帧画面
                 if (event.type == MediaPlayer.Event.Vout) {
-                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_LOADING_STOP);
-                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_VIDEO_START);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_START);
 
                     long seek = getSeek();
                     if (seek > 0) {
@@ -103,16 +103,16 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
                 }
                 // 解析开始
                 else if (event.type == MediaPlayer.Event.MediaChanged) {
-                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_LOADING_START);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
                 }
                 // 播放完成
                 else if (event.type == MediaPlayer.Event.EndReached) {
-                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_VIDEO_END);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_END);
                 }
                 // 错误
                 else if (event.type == MediaPlayer.Event.Stopped) {
-                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_LOADING_STOP);
-                    mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_ERROR_PARSE);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
+                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
                 }
             }
         });
@@ -222,15 +222,15 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_ERROR_URL);
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
         try {
             mVlcPlayer.setDataSource(url);//
 
         } catch (Exception e) {
-            mEvent.onEvent(ConfigType.KernelType.VLC, ConfigType.EventType.EVENT_ERROR_PARSE);
+            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
         try {
             start();

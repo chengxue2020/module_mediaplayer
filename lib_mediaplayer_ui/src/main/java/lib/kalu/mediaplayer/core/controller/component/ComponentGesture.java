@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.GestureApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -156,13 +156,13 @@ public class ComponentGesture extends RelativeLayout implements GestureApi {
 
     @Override
     public void onPlayStateChanged(int playState) {
-        if (playState == ConfigType.StateType.STATE_INIT
-                || playState == ConfigType.StateType.STATE_START_ABORT
-                || playState == ConfigType.StateType.STATE_LOADING_START
-                || playState == ConfigType.StateType.STATE_LOADING_STOP
-                || playState == ConfigType.StateType.STATE_ERROR
-                || playState == ConfigType.StateType.STATE_BUFFERING_START
-                || playState == ConfigType.StateType.STATE_ONCE_LIVE) {
+        if (playState == PlayerType.StateType.STATE_INIT
+                || playState == PlayerType.StateType.STATE_START_ABORT
+                || playState == PlayerType.StateType.STATE_LOADING_START
+                || playState == PlayerType.StateType.STATE_LOADING_STOP
+                || playState == PlayerType.StateType.STATE_ERROR
+                || playState == PlayerType.StateType.STATE_BUFFERING_START
+                || playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             setVisibility(GONE);
         } else {
             setVisibility(VISIBLE);

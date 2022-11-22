@@ -8,7 +8,7 @@ import androidx.annotation.Keep;
 import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
@@ -83,7 +83,7 @@ public final class TestActivity extends AppCompatActivity {
         // control
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
         videoLayout.setControllerLayout(controller);
-        videoLayout.setScaleType(ConfigType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
+        videoLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
 
         // 设置视频播放链接地址
 //        videoLayout.showNetWarning();
@@ -101,14 +101,14 @@ public final class TestActivity extends AppCompatActivity {
             @Override
             public void onWindow(int playerState) {
                 switch (playerState) {
-                    case ConfigType.WindowType.NORMAL:
+                    case PlayerType.WindowType.NORMAL:
                         onBackPressed();
                         //普通模式
                         break;
-                    case ConfigType.WindowType.FULL:
+                    case PlayerType.WindowType.FULL:
                         //全屏模式
                         break;
-                    case ConfigType.WindowType.FLOAT:
+                    case PlayerType.WindowType.FLOAT:
                         //小屏模式
                         break;
                 }
@@ -133,16 +133,16 @@ public final class TestActivity extends AppCompatActivity {
                 MPLogUtil.log("onPlayStateChanged => playState = " + playState);
 
                 switch (playState) {
-                    case ConfigType.StateType.STATE_INIT:
+                    case PlayerType.StateType.STATE_INIT:
                         //播放未开始，初始化
                         break;
-                    case ConfigType.StateType.STATE_START_ABORT:
+                    case PlayerType.StateType.STATE_START_ABORT:
                         //开始播放中止
                         break;
-                    case ConfigType.StateType.STATE_LOADING_START:
+                    case PlayerType.StateType.STATE_LOADING_START:
                         //播放准备中
                         break;
-                    case ConfigType.StateType.STATE_LOADING_STOP:
+                    case PlayerType.StateType.STATE_LOADING_STOP:
 
 //                        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
 //                        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
@@ -153,13 +153,13 @@ public final class TestActivity extends AppCompatActivity {
 
                         //播放准备就绪
                         break;
-                    case ConfigType.StateType.STATE_ERROR:
+                    case PlayerType.StateType.STATE_ERROR:
                         //播放错误
                         break;
-                    case ConfigType.StateType.STATE_BUFFERING_START:
+                    case PlayerType.StateType.STATE_BUFFERING_START:
                         //正在缓冲
                         break;
-                    case ConfigType.StateType.STATE_START:
+                    case PlayerType.StateType.STATE_START:
 
 //                        SimpleSubtitleView subtitleView = findViewById(R.id.module_mediaplayer_subtitle);
                         // 绑定MediaPlayer
@@ -176,13 +176,13 @@ public final class TestActivity extends AppCompatActivity {
 
                         //正在播放
                         break;
-                    case ConfigType.StateType.STATE_PAUSE:
+                    case PlayerType.StateType.STATE_PAUSE:
                         //暂停播放
                         break;
-                    case ConfigType.StateType.STATE_BUFFERING_STOP:
+                    case PlayerType.StateType.STATE_BUFFERING_STOP:
                         //暂停缓冲
                         break;
-                    case ConfigType.StateType.STATE_END:
+                    case PlayerType.StateType.STATE_END:
                         //播放完成
                         break;
                 }

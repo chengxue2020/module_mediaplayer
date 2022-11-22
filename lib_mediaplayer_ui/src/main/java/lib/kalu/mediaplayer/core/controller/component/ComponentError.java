@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.config.ConfigType;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -57,18 +57,18 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
-            case ConfigType.StateType.STATE_ERROR_NET:
-            case ConfigType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR_NET:
+            case PlayerType.StateType.STATE_ERROR:
                 MPLogUtil.log("ComponentError[show] => playState = " + playState);
                 bringToFront();
                 findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
                 break;
-            case ConfigType.StateType.STATE_HIDE_ERROE_COMPONENT:
-            case ConfigType.StateType.STATE_START:
-            case ConfigType.StateType.STATE_START_SEEK:
-            case ConfigType.StateType.STATE_RESUME:
-            case ConfigType.StateType.STATE_RESUME_IGNORE:
-            case ConfigType.StateType.STATE_REPEAT:
+            case PlayerType.StateType.STATE_HIDE_ERROE_COMPONENT:
+            case PlayerType.StateType.STATE_START:
+            case PlayerType.StateType.STATE_START_SEEK:
+            case PlayerType.StateType.STATE_RESUME:
+            case PlayerType.StateType.STATE_RESUME_IGNORE:
+            case PlayerType.StateType.STATE_REPEAT:
                 MPLogUtil.log("ComponentError[gone] => playState = " + playState);
                 findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
                 break;
