@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://39.135.6.71:6610/000000001000/1000000005000025222/index.m3u8?stbId=3&livemode=1&IASHttpSessionId=OTT766120221121084721264367&channel-id=ystenlive&Contentid=1000000005000025222");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://yfsl.vsd.gehua.net.cn/live/CCTV1HD_6000.m3u8");
                 startActivity(intent);
             }
         });

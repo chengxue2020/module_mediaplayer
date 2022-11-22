@@ -125,79 +125,88 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
         int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 
-        // 不显示字幕
+        // 字幕; 1显示。0禁止
         mIjkPlayer.setOption(player, "subtitle", 0);
+        //是否有视频, 1无视频、0有视频
+        mIjkPlayer.setOption(player, "vn", 0);
         //是否有声音, 1无声音、0有声音
         mIjkPlayer.setOption(player, "an", 0);
         mIjkPlayer.setOption(player, "volume", 100);
-        //是否有视频, 1无视频、0有视频
-        mIjkPlayer.setOption(player, "vn", 0);
 
-        /**
-         *  IJK_AVDISCARD_NONE    =-16, ///< discard nothing
-         *  IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，责抛弃无效的包
-         *  IJK_AVDISCARD_NONREF  =  8, ///< 抛弃非参考帧（I帧）
-         *  IJK_AVDISCARD_BIDIR   = 16, ///< 抛弃B帧
-         *  IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
-         *  IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
-         */
-        // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
+        // 0、未知
+        // 根据媒体类型来配置 => bug => resp aac音频无声音
+//         mIjkPlayer.setOption(format, "allowed_media_types", "video");
+
+        // 不清楚 1、允许 0、不允许
+        mIjkPlayer.setOption(format, "http-detect-range-support", 0);
+
+        // 3、缓冲相关
+        // 不额外优化
+        mIjkPlayer.setOption(player, "fast", 1);
+        // 31、探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
+        mIjkPlayer.setOption(format, "probesize", 2048 * 1024);
+        // 32、是否开启预缓冲，一般直播项目会开启，达到秒开的效果，不过带来了播放丢帧卡顿的体验
+        mIjkPlayer.setOption(player, "packet-buffering", 0);
+        // 33、设置缓冲区为100KB，目前我看来，多缓冲了4秒
+        mIjkPlayer.setOption(format, "buffer_size", 1024 * 1024);
+        mIjkPlayer.setOption(player, "max-buffer-size", 2048 * 1024);
+        // 34、视频的话，设置100帧即开始播放
+        mIjkPlayer.setOption(player, "min-frames", 1024);
+        // 是否限制输入缓存数
+        mIjkPlayer.setOption(player, "infbuf", 1);
+        // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
+        mIjkPlayer.setOption(format, "fflags", "fastseek");
+//        mIjkPlayer.setOption(format, "fflags", "nobuffer");
+
+        // 1、播放相关
+        // sdl渲染
+        mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
+        // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
+        mIjkPlayer.setOption(player, "opensles", 0);
+        // 11、视频缓存好之后是否自动播放 1、允许 0、不允许
+        mIjkPlayer.setOption(player, "start-on-prepared", 1);
+        // 12、设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
+        // 12、IJK_AVDISCARD_NONE    =-16, ///< discard nothing
+        // 12、IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，责抛弃无效的包
+        // 12、IJK_AVDISCARD_NONREF  =  8, ///< 抛弃非参考帧（I帧）
+        // 12、IJK_AVDISCARD_BIDIR   = 16, ///< 抛弃B帧
+        // 12、IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
+        //IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
         mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
-        // 预加载800K
-        mIjkPlayer.setOption(format, "probesize", 1024 * 800);
-        // 最大缓冲800K
-        mIjkPlayer.setOption(player, "max-buffer-size", 1024 * 800);
-//
-        //设置播放前的最大探测时间
-        mIjkPlayer.setOption(format, "analyzeduration", 30 * 1000 * 1000);
-        mIjkPlayer.setOption(format, "analyzemaxduration", 30 * 1000 * 1000);
+        mIjkPlayer.setOption(codec, "skip_frame", 0);
+        // 13、最大fps
+        mIjkPlayer.setOption(player, "fps", 30);
+        mIjkPlayer.setOption(player, "max-fps", 60);
+
+
+        // 2、 网络相关
+        // 21、清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频),有时会造成因为DNS的问题而报10000问题的
+        mIjkPlayer.setOption(format, "dns_cache_clear", 1);
+        // 22、重连次数
+        mIjkPlayer.setOption(format, "reconnect", 1);
+        // 23、设置播放前的最大探测时间
+        mIjkPlayer.setOption(format, "analyzeduration", 1);
+        mIjkPlayer.setOption(format, "analyzemaxduration", 10);
+        mIjkPlayer.setOption(format, "rtbufsize", 60);
+        // 最大缓存时长
+        mIjkPlayer.setOption(player, "max_cached_duration", 10);
         //倍速功能能够在所有android机型上正常使用，倍速时可能也存在声调问题，但是可以通过设置参数来解决：
         mIjkPlayer.setOption(player, "soundtouch", 1);
         //每处理一个packet之后刷新io上下文
         mIjkPlayer.setOption(format, "flush_packets", 1);
-        // 关闭播放器缓冲，这个必须关闭，否则会出现播放一段时间后，一直卡主，控制台打印 FFP_MSG_BUFFERING_START
-        mIjkPlayer.setOption(player, "packet-buffering", 0);
-        //播放重连次数
-        mIjkPlayer.setOption(player, "reconnect", 1);
-        // 是否允许跳帧 1、允许 0、不允许
-        mIjkPlayer.setOption(player, "framedrop", 1);
-        //最大fps
-        mIjkPlayer.setOption(player, "max-fps", 30);
+        // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
+        mIjkPlayer.setOption(player, "framedrop", 5);   //丢帧  是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
 
         // SeekTo设置优化
         // 1 seek超级慢
         // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
         mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
-        // 设置seekTo能够快速seek到指定位置并播放
-        // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
-        mIjkPlayer.setOption(format, "fflags", "fastseek");
-
-        // http、https混合存在时
-        mIjkPlayer.setOption(format, "dns_cache_clear", 1);
         //超时时间，timeout参数只对http设置有效，若果你用rtmp设置timeout，ijkplayer内部会忽略timeout参数。rtmp的timeout参数含义和http的不一样。
         mIjkPlayer.setOption(format, "timeout", 30 * 1000 * 1000);
 
         //rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
-        mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
         mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
-
-        // 根据媒体类型来配置 => bug => resp aac音频无声音
-//         mIjkPlayer.setOption(format, "allowed_media_types", "video");
-        // 缓冲800K
-        mIjkPlayer.setOption(format, "buffer_size", 1024 * 800);
-        // 无限读
-        mIjkPlayer.setOption(format, "infbuf", 1);
-
-        // 视频缓存好之后是否自动播放 1、允许 0、不允许
-        mIjkPlayer.setOption(player, "start-on-prepared", 1);
-
-        //使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
-        mIjkPlayer.setOption(player, "opensles", 0);
-        // sdl渲染
-        mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-
-        // 不清楚 1、允许 0、不允许
-        mIjkPlayer.setOption(format, "http-detect-range-support", 0);
+        mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
 
         /**
          * ijkPlayer支持硬解码和软解码。
@@ -212,8 +221,8 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
         // 硬解, 1
         mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
-
-        mIjkPlayer.setOption(player, "videotoolbox", 0);
+        // ios硬解开关
+        // mIjkPlayer.setOption(player, "videotoolbox", 0);
     }
 
     /**
