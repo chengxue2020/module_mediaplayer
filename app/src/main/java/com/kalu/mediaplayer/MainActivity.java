@@ -31,6 +31,17 @@ public class MainActivity extends AppCompatActivity {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
 
+        // udp
+        findViewById(R.id.main_udp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.0.1.100:1234");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
         // 4k
         findViewById(R.id.main_4k).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,20 +165,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        // udp
-        findViewById(R.id.main_udp).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@172.10.10.106:1234");
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.226:10000");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@239.112.205.59:5140");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
-                startActivity(intent);
-            }
-        });
-
         // main_srt
         findViewById(R.id.main_m3).setOnClickListener(new View.OnClickListener() {
             @Override
