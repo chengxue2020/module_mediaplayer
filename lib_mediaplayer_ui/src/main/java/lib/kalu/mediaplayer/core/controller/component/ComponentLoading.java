@@ -14,12 +14,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public final class ComponentLoading extends RelativeLayout implements ComponentApi {
+public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
     private ControllerWrapper mControllerWrapper;
 
@@ -83,23 +83,23 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     public void onLockStateChanged(boolean isLocked) {
     }
 
-    public final void setMessage(@NonNull String value) {
+    public void setMessage(@NonNull String value) {
         setText(this, R.id.module_mediaplayer_component_loading_message, value);
     }
 
-    public final void setMessage(@StringRes int value) {
+    public void setMessage(@StringRes int value) {
         setText(this, R.id.module_mediaplayer_component_loading_message, value);
     }
 
-    public final void setMessageSize(@DimenRes int value) {
+    public void setMessageSize(@DimenRes int value) {
         setTextSize(this, R.id.module_mediaplayer_component_loading_message, value);
     }
 
-    public final void setMessageColor(@ColorInt int color) {
+    public void setMessageColor(@ColorInt int color) {
         setTextColor(this, R.id.module_mediaplayer_component_loading_message, color);
     }
 
-    public final void setBackgroundColor(@ColorInt int value) {
-//        setBackgroundColor(this, R.id.module_mediaplayer_component_loading_bg, value);
+    public void setBackgroundColor(@ColorInt int value) {
+        setBackgroundColor(this, R.id.module_mediaplayer_component_loading_bg, value);
     }
 }

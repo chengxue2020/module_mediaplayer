@@ -7,6 +7,13 @@
     android:focusable="false"
     android:longClickable="false">
 
+    <!-- 背景 -->
+    <View
+        android:id="@+id/module_mediaplayer_component_error_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
     <!-- 提示 -->
     <TextView
         android:id="@+id/module_mediaplayer_component_error_message"

@@ -151,7 +151,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 32、是否开启预缓冲，一般直播项目会开启，达到秒开的效果，不过带来了播放丢帧卡顿的体验
         mIjkPlayer.setOption(player, "packet-buffering", 0);
         // 33、设置缓冲区为100KB，目前我看来，多缓冲了4秒
-        mIjkPlayer.setOption(format, "buffer_size", 1024 * 1024);
+        mIjkPlayer.setOption(format, "buffer_size", 2048 * 1024);
         mIjkPlayer.setOption(player, "max-buffer-size", 2048 * 1024);
         // 34、视频的话，设置100帧即开始播放
         mIjkPlayer.setOption(player, "min-frames", 1024);
@@ -176,7 +176,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 12、IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
         //IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
         mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
-        mIjkPlayer.setOption(codec, "skip_frame", 0);
+        mIjkPlayer.setOption(codec, "skip_frame", 4);
         // 13、最大fps
         mIjkPlayer.setOption(player, "fps", 30);
         mIjkPlayer.setOption(player, "max-fps", 60);
@@ -189,23 +189,23 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         mIjkPlayer.setOption(format, "reconnect", 1);
         // 23、设置播放前的最大探测时间
         mIjkPlayer.setOption(format, "analyzeduration", 1);
-        mIjkPlayer.setOption(format, "analyzemaxduration", 10);
+        mIjkPlayer.setOption(format, "analyzemaxduration", 60);
         mIjkPlayer.setOption(format, "rtbufsize", 60);
         // 最大缓存时长
-        mIjkPlayer.setOption(player, "max_cached_duration", 10);
+        mIjkPlayer.setOption(player, "max_cached_duration", 60);
         //倍速功能能够在所有android机型上正常使用，倍速时可能也存在声调问题，但是可以通过设置参数来解决：
         mIjkPlayer.setOption(player, "soundtouch", 1);
         //每处理一个packet之后刷新io上下文
         mIjkPlayer.setOption(format, "flush_packets", 1);
         // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
-        mIjkPlayer.setOption(player, "framedrop", 5);   //丢帧  是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
+        mIjkPlayer.setOption(player, "framedrop", 1);   //丢帧  是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
 
         // SeekTo设置优化
         // 1 seek超级慢
         // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
         mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
-        //超时时间，timeout参数只对http设置有效，若果你用rtmp设置timeout，ijkplayer内部会忽略timeout参数。rtmp的timeout参数含义和http的不一样。
-        mIjkPlayer.setOption(format, "timeout", 30 * 1000 * 1000);
+        // 超时时间
+        mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
 
         //rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
         mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
@@ -219,7 +219,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 选择avcodec 进行软件解码， 1为硬解 0为软解
         mIjkPlayer.setOption(player, "mediacodec", 0);
         // 打开h265硬解
-        mIjkPlayer.setOption(player, "mediacodec-hevc", 1);
+        mIjkPlayer.setOption(player, "mediacodec-hevc", 0);
         // 硬解, 1
         mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
         // 硬解, 1
@@ -489,7 +489,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void setInvisibleStop(boolean v) {
-        mInvisibleStop =v;
+        mInvisibleStop = v;
     }
 
     @Override

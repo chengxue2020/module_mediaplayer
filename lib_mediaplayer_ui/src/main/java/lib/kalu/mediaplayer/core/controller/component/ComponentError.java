@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -61,6 +62,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
             case PlayerType.StateType.STATE_ERROR:
                 MPLogUtil.log("ComponentError[show] => playState = " + playState);
                 bringToFront();
+                findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_HIDE_ERROE_COMPONENT:
@@ -70,6 +72,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
             case PlayerType.StateType.STATE_RESUME_IGNORE:
             case PlayerType.StateType.STATE_REPEAT:
                 MPLogUtil.log("ComponentError[gone] => playState = " + playState);
+                findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
                 break;
         }
@@ -118,5 +121,9 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
 
     public void setMessageSize(@DimenRes int value) {
         this.setTextSize(this, R.id.module_mediaplayer_component_error_message, value);
+    }
+
+    public void setBackgroundColor(@ColorInt int value) {
+        setBackgroundColor(this, R.id.module_mediaplayer_component_error_bg, value);
     }
 }

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.0.1.100:1234");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.128:10000");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
