@@ -147,12 +147,12 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 不额外优化
         mIjkPlayer.setOption(player, "fast", 1);
         // 31、探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
-        mIjkPlayer.setOption(format, "probesize", 2048 * 1024);
+        mIjkPlayer.setOption(format, "probesize", 1024 * 1024);
         // 32、是否开启预缓冲，一般直播项目会开启，达到秒开的效果，不过带来了播放丢帧卡顿的体验
         mIjkPlayer.setOption(player, "packet-buffering", 0);
         // 33、设置缓冲区为100KB，目前我看来，多缓冲了4秒
-        mIjkPlayer.setOption(format, "buffer_size", 2048 * 1024);
-        mIjkPlayer.setOption(player, "max-buffer-size", 2048 * 1024);
+        mIjkPlayer.setOption(format, "buffer_size", 1024 * 1024);
+        mIjkPlayer.setOption(player, "max-buffer-size", 1024 * 1024);
         // 34、视频的话，设置100帧即开始播放
         mIjkPlayer.setOption(player, "min-frames", 1024);
         // 是否限制输入缓存数

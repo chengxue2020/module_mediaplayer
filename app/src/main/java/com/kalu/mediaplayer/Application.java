@@ -24,7 +24,7 @@ public class Application extends MultiDexApplication {
         // config
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
-                .setKernel(PlayerType.KernelType.IJK)
+                .setKernel(PlayerType.KernelType.EXO)
                 .setRender(PlayerType.RenderType.SURFACE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())
                 .setBuriedEvent(new BuriedPointEventImpl())
