@@ -174,7 +174,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 12、IJK_AVDISCARD_NONREF  =  8, ///< 抛弃非参考帧（I帧）
         // 12、IJK_AVDISCARD_BIDIR   = 16, ///< 抛弃B帧
         // 12、IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
-        //IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
+        // 12、IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
         mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
         mIjkPlayer.setOption(codec, "skip_frame", 4);
         // 13、最大fps
