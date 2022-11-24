@@ -30,7 +30,7 @@ public class Application extends android.app.Application {
         // config
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
-                .setKernel(PlayerType.KernelType.EXO)
+                .setKernel(PlayerType.KernelType.IJK)
                 .setRender(PlayerType.RenderType.SURFACE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())
                 .setBuriedEvent(new BuriedPointEventImpl())

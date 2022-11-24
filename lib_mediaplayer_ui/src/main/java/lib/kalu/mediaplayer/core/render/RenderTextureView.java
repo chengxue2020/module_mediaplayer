@@ -114,12 +114,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
         }
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int[] measuredSize = mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
-//        setMeasuredDimension(measuredSize[0], measuredSize[1]);
-//    }
-
     /**
      * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
      * 设置视频旋转角度

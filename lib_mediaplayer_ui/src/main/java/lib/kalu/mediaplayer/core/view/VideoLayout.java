@@ -496,14 +496,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
         // 自动不回调状态
         if (auto) {
-
+            callPlayerState(PlayerType.StateType.STATE_PAUSE_IGNORE);
         }
         // 用户手动，需要显示暂停图标
         else {
             callPlayerState(PlayerType.StateType.STATE_PAUSE);
         }
         setKeepScreenOn(false);
-        mRender.clearSurface();
         mKernel.pause();
     }
 

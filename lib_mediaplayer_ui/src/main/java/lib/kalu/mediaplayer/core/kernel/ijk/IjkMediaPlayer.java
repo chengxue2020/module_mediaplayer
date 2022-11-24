@@ -147,12 +147,12 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 不额外优化
         mIjkPlayer.setOption(player, "fast", 1);
         // 31、探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
-        mIjkPlayer.setOption(format, "probesize", 102400);// 1024 * 1024
+        mIjkPlayer.setOption(format, "probesize", 409600);// 400KB
         // 32、ijkplayer中的buffering逻辑不适合低延迟直播场景，可以关闭。快直播传输层SDK是基于webrtc增强的半可靠传输协议，在一般弱网（20%）下能保证音视频正常播放，极端弱网（50%丢包）场景下，也可以保证音频正常播放，视频低帧率播放。
         mIjkPlayer.setOption(player, "packet-buffering", 0);
         // 33、设置缓冲区为100KB，目前我看来，多缓冲了4秒
-        mIjkPlayer.setOption(format, "buffer_size", 102400); //1024 * 1024
-        mIjkPlayer.setOption(player, "max-buffer-size", 102400);// 1024 * 1024
+        mIjkPlayer.setOption(format, "buffer_size", 409600); // 400KB
+        mIjkPlayer.setOption(player, "max-buffer-size", 409600);// 400KB
         // 34、视频的话，设置100帧即开始播放
         mIjkPlayer.setOption(player, "min-frames", 100);// 1024
         // 直播场景时实时推流，可以开启无限制buffer，这样可以尽可能快的读取数据，避免出现网络拥塞恢复后延迟累积的情况。
