@@ -1,13 +1,13 @@
-package tv.danmaku.ijk.media.player.util;
+package lib.kalu.exoplayer2.util;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public final class IjkLogUtil {
+public final class ExoLogUtil {
 
-    private static String mTag = "MP_IJK";
+    private static String mTag = "MP_EXO";
     private static boolean mLog = false;
 
     public static void setLogger(boolean enable) {

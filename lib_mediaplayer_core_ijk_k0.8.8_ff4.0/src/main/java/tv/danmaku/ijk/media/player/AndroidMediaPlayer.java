@@ -38,7 +38,7 @@ import java.util.Map;
 import tv.danmaku.ijk.media.player.misc.AndroidTrackInfo;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
-import tv.danmaku.ijk.media.player.util.IjkLogUtil;
+import lib.kalu.ijkplayer.util.IjkLogUtil;
 
 public class AndroidMediaPlayer extends AbstractMediaPlayer {
     private final MediaPlayer mInternalMediaPlayer;

@@ -58,21 +58,25 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onPlayStateChanged(int playState) {
-        MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
         switch (playState) {
-//            case PlayerType.StateType.STATE_PAUSE_IGNORE:
-//                bringToFront();
-//                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
-//                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
-//                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
-//                break;
+            case PlayerType.StateType.STATE_PAUSE_IGNORE:
+                MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
+                bringToFront();
+                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
+                break;
             case PlayerType.StateType.STATE_LOADING_START:
+                MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
                 bringToFront();
                 findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
                 break;
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR_NET:
             case PlayerType.StateType.STATE_LOADING_STOP:
+                MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
                 findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);

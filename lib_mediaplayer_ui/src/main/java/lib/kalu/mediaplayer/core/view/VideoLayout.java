@@ -326,11 +326,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             resume(false);
                             // step5
                             boolean musicAuto = isExternalMusicAuto();
-                            MPLogUtil.log("SEKK11 => musicAuto = " + musicAuto);
                             if (musicAuto) {
                                 boolean musicLoop = isExternalMusicLoop();
                                 boolean prepared = isExternalMusicPrepared();
-                                MPLogUtil.log("SEKK11 => musicLoop = " + musicLoop + ", prepared = " + prepared);
                                 if (musicLoop || !prepared) {
                                     enableExternalMusic(true, true);
                                 } else {
@@ -361,11 +359,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             // step4
                             boolean musicAuto1 = isExternalMusicAuto();
-                            MPLogUtil.log("SEKK22 => musicAuto = " + musicAuto1);
                             if (musicAuto1) {
                                 boolean musicLoop = isExternalMusicLoop();
                                 boolean prepared = isExternalMusicPrepared();
-                                MPLogUtil.log("SEKK22 => musicLoop = " + musicLoop + ", prepared = " + prepared);
                                 if (musicLoop || !prepared) {
                                     enableExternalMusic(true, true);
                                 } else {

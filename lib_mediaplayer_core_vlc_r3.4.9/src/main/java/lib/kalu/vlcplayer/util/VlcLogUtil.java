@@ -1,4 +1,4 @@
-package org.videolan.libvlc.util;
+package lib.kalu.vlcplayer.util;
 
 import android.util.Log;
 

@@ -38,7 +38,6 @@ import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -58,7 +57,7 @@ import tv.danmaku.ijk.media.player.misc.IAndroidIO;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
-import tv.danmaku.ijk.media.player.util.IjkLogUtil;
+import lib.kalu.ijkplayer.util.IjkLogUtil;
 
 /**
  * @author bbcallen

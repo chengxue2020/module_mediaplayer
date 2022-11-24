@@ -14,10 +14,13 @@ public final class MPLogUtil {
 
     public static void setLogger(@PlayerType.KernelType int type, @NonNull boolean enable) {
         if (type == PlayerType.KernelType.IJK) {
-            tv.danmaku.ijk.media.player.util.IjkLogUtil.setLogger(enable);
+            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(enable);
         } else if (type == PlayerType.KernelType.VLC) {
-            org.videolan.libvlc.util.VlcLogUtil.setLogger(enable);
+            lib.kalu.vlcplayer.util.VlcLogUtil.setLogger(enable);
+        } else if (type == PlayerType.KernelType.EXO) {
+            lib.kalu.exoplayer2.util.ExoLogUtil.setLogger(enable);
         }
+
         MPLogUtil.mLog = enable;
     }
 

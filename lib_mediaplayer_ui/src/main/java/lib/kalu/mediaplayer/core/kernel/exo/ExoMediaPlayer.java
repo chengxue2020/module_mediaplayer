@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackException;
@@ -371,35 +372,6 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         return 0;
     }
 
-//    @Override
-//    public void onPlayerError(PlaybackException error) {
-//
-//        if (null == error)
-//            return;
-//        if (!(error instanceof ExoPlaybackException))
-//            return;
-//
-//        long seek = getSeek();
-//        MediaLogUtil.log("ExoMediaPlayer => onPlayerError => seek = " + seek + ", type = " + ((ExoPlaybackException) error).type + ", error = " + error);
-//
-//        switch (((ExoPlaybackException) error).type) {
-//            case PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW:
-//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
-//                break;
-//            case ExoPlaybackException.TYPE_RENDERER:
-//            case ExoPlaybackException.TYPE_UNEXPECTED:
-//            case ExoPlaybackException.TYPE_REMOTE:
-////            case ExoPlaybackException.TYPE_SOURCE:
-//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-//                break;
-//            default:
-//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-//                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_RETRY);
-//                break;
-//        }
-//    }
-
     /*****************/
 
     @Override
@@ -410,6 +382,30 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     @Override
     public void onPlayerError(EventTime eventTime, PlaybackException error) {
         MPLogUtil.log("ExoMediaPlayer => onPlayerError => error = " + error.getMessage());
+
+        if (null == error)
+            return;
+        if (!(error instanceof ExoPlaybackException))
+            return;
+
+        switch (((ExoPlaybackException) error).type) {
+            case PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW:
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
+                break;
+            case ExoPlaybackException.TYPE_RENDERER:
+            case ExoPlaybackException.TYPE_UNEXPECTED:
+            case ExoPlaybackException.TYPE_REMOTE:
+            case ExoPlaybackException.TYPE_SOURCE:
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+                break;
+            default:
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_RETRY);
+                break;
+        }
+
+        mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
     }
 
     @Override

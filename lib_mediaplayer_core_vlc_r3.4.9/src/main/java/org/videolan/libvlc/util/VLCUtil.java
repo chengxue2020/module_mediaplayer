@@ -37,6 +37,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Locale;
 
+import lib.kalu.vlcplayer.util.VlcLogUtil;
+
 public class VLCUtil {
     public final static String TAG = "VLC/LibVLC/Util";
 
