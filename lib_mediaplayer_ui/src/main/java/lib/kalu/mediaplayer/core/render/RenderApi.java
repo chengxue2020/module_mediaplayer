@@ -53,17 +53,19 @@ public interface RenderApi {
      */
     void setScaleType(@PlayerType.ScaleType.Value int scaleType);
 
-//    @PlayerType.ScaleType.Value
-//    int getScaleType();
-
     /**
      * 截图
-     *
-     * @return bitmap
+     * @return
      */
-    Bitmap doScreenShot();
+    String screenshot();
 
-    void clearSurface();
+    /**
+     * 清屏
+     */
+    void clearCanvas();
 
-    void updateSurface();
+    /**
+     * 刷屏
+     */
+    void updateCanvas();
 }

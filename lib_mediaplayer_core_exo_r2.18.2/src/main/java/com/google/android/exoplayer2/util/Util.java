@@ -197,7 +197,7 @@ public final class Util {
 
   /**
    * Registers a {@link BroadcastReceiver} that's not intended to receive broadcasts from other
-   * apps. This will be enforced by specifying {@link Context#RECEIVER_NOT_EXPORTED} if {@link
+   * apps. This will be enforced by specifying  if {@link
    * #SDK_INT} is 33 or above.
    *
    * @param context The context on which {@link Context#registerReceiver} will be called.
@@ -211,13 +211,13 @@ public final class Util {
     if (SDK_INT < 33) {
       return context.registerReceiver(receiver, filter);
     } else {
-      return context.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
+      return context.registerReceiver(receiver, filter, 0);
     }
   }
 
   /**
    * Registers a {@link BroadcastReceiver} that's not intended to receive broadcasts from other
-   * apps. This will be enforced by specifying {@link Context#RECEIVER_NOT_EXPORTED} if {@link
+   * apps. This will be enforced by specifying  if {@link
    * #SDK_INT} is 33 or above.
    *
    * @param context The context on which {@link Context#registerReceiver} will be called.
@@ -237,7 +237,7 @@ public final class Util {
           filter,
           /* broadcastPermission= */ null,
           handler,
-          Context.RECEIVER_NOT_EXPORTED);
+          0);
     }
   }
 

@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 
 android {
 
-    compileSdkVersion 33
-    buildToolsVersion "33.0.1"
+    compileSdkVersion 32
+    buildToolsVersion "32.0.0"
 
     compileOptions.encoding = "UTF-8"
     ndkPath "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\16.1.4479499"
@@ -12,8 +12,7 @@ android {
     defaultConfig {
 
         minSdkVersion 16
-        targetSdkVersion 33
-        vectorDrawables.useSupportLibrary = false
+        targetSdkVersion 32
 
         ndk {
 //            abiFilters 'armeabi-v7a'

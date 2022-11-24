@@ -100,22 +100,25 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     @Override
-    public Bitmap doScreenShot() {
-        return getBitmap();
+    public String screenshot() {
+//        getBitmap();
+        return "";
     }
 
+
     @Override
-    public void clearSurface() {
+    public void clearCanvas() {
         try {
             Canvas canvas = mSurface.lockCanvas(null);
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             mSurface.unlockCanvasAndPost(canvas);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
     @Override
-    public void updateSurface() {
+    public void updateCanvas() {
+
     }
 
     /**

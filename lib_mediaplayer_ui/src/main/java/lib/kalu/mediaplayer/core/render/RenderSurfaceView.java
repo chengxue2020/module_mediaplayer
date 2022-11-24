@@ -42,12 +42,12 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     private void init() {
         setFocusable(false);
-        // 设置播放时打开屏幕
-        getHolder().setKeepScreenOn(true);
-        // 设置SurfaceView自己不管理缓冲区
-        getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        // 监听器
-        getHolder().addCallback(mCallback);
+//        mMeasureHelper = new MeasureHelper();
+        SurfaceHolder holder = this.getHolder();
+        //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        //类型必须设置成SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS
+//        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        holder.addCallback(mCallback);
 //        setZOrderOnTop(true);
 //        setZOrderMediaOverlay(true);
     }
@@ -57,7 +57,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         if (null != mSurface) {
             mSurface.release();
         }
-        getHolder().removeCallback(mCallback);
+        if (mCallback != null) {
+            getHolder().removeCallback(mCallback);
+        }
     }
 
     @Override
@@ -81,17 +83,18 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
+    public String screenshot() {
+//        getDrawingCache();
+        return "";
+    }
+
+    @Override
     public View getReal() {
         return this;
     }
 
     @Override
-    public Bitmap doScreenShot() {
-        return getDrawingCache();
-    }
-
-    @Override
-    public void clearSurface() {
+    public void clearCanvas() {
         try {
             Canvas canvas = mSurface.lockCanvas(null);
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -101,7 +104,8 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public void updateSurface() {
+    public void updateCanvas() {
+
     }
 
     /**
@@ -130,7 +134,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             requestLayout();
         }
     }
-
 
     private final SurfaceHolder.Callback mCallback = new SurfaceHolder.Callback() {
         /**

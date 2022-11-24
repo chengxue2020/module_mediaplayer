@@ -60,12 +60,12 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     public void onPlayStateChanged(int playState) {
         MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
         switch (playState) {
-            case PlayerType.StateType.STATE_PAUSE_IGNORE:
-                bringToFront();
-                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
-                break;
+//            case PlayerType.StateType.STATE_PAUSE_IGNORE:
+//                bringToFront();
+//                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
+//                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
+//                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
+//                break;
             case PlayerType.StateType.STATE_LOADING_START:
                 bringToFront();
                 findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
