@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.128:10000");
+//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.128:10000");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.220.220.1:1234");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://yfsl.vsd.gehua.net.cn/live/CCTV1HD_6000.m3u8");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://111.20.105.192:6610/000000001000/5000000008000023254/index.m3u8?channel-id=bestzb&Contentid=5000000008000023254&livemode=1&stbId=3");
                 startActivity(intent);
             }
         });

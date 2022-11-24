@@ -210,7 +210,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void start(@NonNull StartBuilder builder, @NonNull String url) {
-
         MPLogUtil.log("VideoLayout => start => url = " + url);
         if (null == url || url.length() <= 0)
             return;
@@ -233,22 +232,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         MPLogUtil.log("VideoLayout => start => invisibleRelease = " + invisibleRelease);
         try {
 
+            // log
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
             int kernel = config.getKernel();
-            // exo
-            if (kernel == PlayerType.KernelType.EXO) {
-            }
-            // ijk
-            else if (kernel == PlayerType.KernelType.IJK) {
-                MPLogUtil.setLogger(PlayerType.KernelType.IJK, config.isLog());
-            }
-            // vlc
-            else if (kernel == PlayerType.KernelType.VLC) {
-                MPLogUtil.setLogger(PlayerType.KernelType.VLC, config.isLog());
-            }
-            // android
-            else if (kernel == PlayerType.KernelType.ANDROID) {
-            }
+            MPLogUtil.setLogger(kernel, config.isLog());
 
             // step0
             callPlayerState(PlayerType.StateType.STATE_INIT);
@@ -516,6 +503,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             callPlayerState(PlayerType.StateType.STATE_PAUSE);
         }
         setKeepScreenOn(false);
+        mRender.clearSurface();
         mKernel.pause();
     }
 

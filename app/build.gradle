@@ -72,6 +72,6 @@ dependencies {
 //    api files('libs/lib_mediaplayer_vlc_r3.4.9_release_20220722.aar')
     api files('libs/lib_mediaplayer_exo_r2.18.0_release_20221122.aar')
     api files('libs/lib_mediaplayer_ijk-k0.8.8-ff4.0_release_20221123.aar')
-    api files('libs/lib_mediaplayer_ui_release_20221123.aar')
+    api files('libs/lib_mediaplayer_ui_release_20221124.aar')
 //    api project(path: ':lib_mediaplayer_ui')
 }

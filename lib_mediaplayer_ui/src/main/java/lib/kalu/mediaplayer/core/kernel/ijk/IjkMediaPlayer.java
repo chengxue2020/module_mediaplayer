@@ -147,15 +147,15 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 不额外优化
         mIjkPlayer.setOption(player, "fast", 1);
         // 31、探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
-        mIjkPlayer.setOption(format, "probesize", 1024 * 1024);
-        // 32、是否开启预缓冲，一般直播项目会开启，达到秒开的效果，不过带来了播放丢帧卡顿的体验
+        mIjkPlayer.setOption(format, "probesize", 102400);// 1024 * 1024
+        // 32、ijkplayer中的buffering逻辑不适合低延迟直播场景，可以关闭。快直播传输层SDK是基于webrtc增强的半可靠传输协议，在一般弱网（20%）下能保证音视频正常播放，极端弱网（50%丢包）场景下，也可以保证音频正常播放，视频低帧率播放。
         mIjkPlayer.setOption(player, "packet-buffering", 0);
         // 33、设置缓冲区为100KB，目前我看来，多缓冲了4秒
-        mIjkPlayer.setOption(format, "buffer_size", 1024 * 1024);
-        mIjkPlayer.setOption(player, "max-buffer-size", 1024 * 1024);
+        mIjkPlayer.setOption(format, "buffer_size", 102400); //1024 * 1024
+        mIjkPlayer.setOption(player, "max-buffer-size", 102400);// 1024 * 1024
         // 34、视频的话，设置100帧即开始播放
-        mIjkPlayer.setOption(player, "min-frames", 1024);
-        // 是否限制输入缓存数
+        mIjkPlayer.setOption(player, "min-frames", 100);// 1024
+        // 直播场景时实时推流，可以开启无限制buffer，这样可以尽可能快的读取数据，避免出现网络拥塞恢复后延迟累积的情况。
         mIjkPlayer.setOption(player, "infbuf", 1);
         // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
         mIjkPlayer.setOption(format, "fflags", "fastseek");
@@ -176,10 +176,12 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         // 12、IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
         // 12、IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
         mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
-        mIjkPlayer.setOption(codec, "skip_frame", 4);
+        mIjkPlayer.setOption(codec, "skip_frame", 1); // 4
+        // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
+        mIjkPlayer.setOption(player, "framedrop", 4); // 1
         // 13、最大fps
         mIjkPlayer.setOption(player, "fps", 30);
-        mIjkPlayer.setOption(player, "max-fps", 60);
+        mIjkPlayer.setOption(player, "max-fps", 30);
 
 
         // 2、 网络相关
@@ -197,8 +199,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         mIjkPlayer.setOption(player, "soundtouch", 1);
         //每处理一个packet之后刷新io上下文
         mIjkPlayer.setOption(format, "flush_packets", 1);
-        // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
-        mIjkPlayer.setOption(player, "framedrop", 1);   //丢帧  是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
 
         // SeekTo设置优化
         // 1 seek超级慢

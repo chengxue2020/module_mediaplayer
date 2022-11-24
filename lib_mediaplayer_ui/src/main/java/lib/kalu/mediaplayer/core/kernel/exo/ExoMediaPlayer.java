@@ -204,9 +204,9 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     @Override
     public void start() {
         try {
-            mExoPlayer.prepare();
-            mExoPlayer.play();
-//            mExoPlayer.setPlayWhenReady(true);
+//            mExoPlayer.prepare();
+//            mExoPlayer.play();
+            mExoPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -218,8 +218,8 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     @Override
     public void pause() {
         try {
-            mExoPlayer.pause();
-//            mExoPlayer.setPlayWhenReady(false);
+//            mExoPlayer.pause();
+            mExoPlayer.setPlayWhenReady(false);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }

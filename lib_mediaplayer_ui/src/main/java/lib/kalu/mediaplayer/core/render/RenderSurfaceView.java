@@ -2,16 +2,19 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
-import lib.kalu.mediaplayer.util.MeasureHelper;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
@@ -34,7 +37,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      * 原来的frontCanvas将切换到后台作为backCanvas。
      */
 
-    private MeasureHelper mMeasureHelper;
     @Nullable
     private KernelApi mKernel;
     @Nullable
@@ -47,7 +49,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     private void init() {
         setFocusable(false);
-        mMeasureHelper = new MeasureHelper();
         SurfaceHolder holder = this.getHolder();
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         //类型必须设置成SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS
@@ -59,12 +60,13 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void releaseReal() {
-//        if (null != mSurface) {
-//            mSurface.release();
-//        }
-//        if (callback != null) {
-//            getHolder().removeCallback(callback);
-//        }
+        if (null != mSurface) {
+            mSurface.release();
+        }
+        if (callback != null) {
+            getHolder().addCallback(null);
+            getHolder().removeCallback(callback);
+        }
     }
 
     @Override
@@ -95,6 +97,16 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Override
     public Bitmap doScreenShot() {
         return getDrawingCache();
+    }
+
+    @Override
+    public void clearSurface() {
+        try {
+            Canvas canvas = mSurface.lockCanvas(null);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            mSurface.unlockCanvasAndPost(canvas);
+        }catch (Exception e){
+        }
     }
 
     /**

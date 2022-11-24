@@ -1,6 +1,19 @@
 package lib.kalu.mediaplayer.core.render;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.BitmapDrawable;
+import android.opengl.EGL14;
+import android.opengl.EGLConfig;
+import android.opengl.EGLContext;
+import android.opengl.EGLDisplay;
+import android.opengl.EGLSurface;
+import android.opengl.GLES20;
+import android.view.Surface;
 import android.view.View;
 
 import androidx.annotation.Keep;
@@ -62,4 +75,6 @@ public interface RenderApi {
      * @return bitmap
      */
     Bitmap doScreenShot();
+
+    void clearSurface();
 }
