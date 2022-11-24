@@ -5,10 +5,8 @@
 /app/release/
 /lib_mediaplayer_ui/build/
 /lib_mediaplayer_core_exo_jar/build/
-/lib_mediaplayer_core_exo_r2.14.0/build/
-/lib_mediaplayer_core_exo_r2.15.0/build/
-/lib_mediaplayer_core_exo_r2.16.1/build/
-/lib_mediaplayer_core_exo_r2.18.0/build/
+/lib_mediaplayer_core_exo_r2.18.2/build/
+/lib_mediaplayer_core_exo_r2.18.2/.cxx/
 /lib_mediaplayer_core_ijk_k0.8.8_ff4.0/build/
 /lib_mediaplayer_core_ijk_k0.8.8_ff4.0/.cxx/
 /lib_mediaplayer_core_vlc_r3.4.9/build/

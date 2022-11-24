@@ -63,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        // 8k
+        findViewById(R.id.main_8k).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://111.62.156.15/down.brtvcloud.com/brtv8kapptv/brtv8kapp8ktv.m3u8");
+                startActivity(intent);
+            }
+        });
         // mkv
         findViewById(R.id.main_mkv).setOnClickListener(new View.OnClickListener() {
             @Override

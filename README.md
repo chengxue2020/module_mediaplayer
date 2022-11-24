@@ -7,8 +7,8 @@ https://github.com/153437803/ijkplayer-k0.8.8-ff4.0
 #
 ####  版本
 ```
-exo => r2.18.0
-lib_mediaplayer_core_exo_r2.18.0
+exo => r2.18.2
+lib_mediaplayer_core_exo_r2.18.2
 ```
 ```
 vlc => r3.4.9
@@ -21,6 +21,10 @@ lib_mediaplayer_core_ijk_k0.8.8_ff4.0
 
 #
 #### 更新
+```
+2022-11-24
+1. exoplayer-2.18.2
+```
 ```
 2022-11-09
 1. ijk增加log开关
