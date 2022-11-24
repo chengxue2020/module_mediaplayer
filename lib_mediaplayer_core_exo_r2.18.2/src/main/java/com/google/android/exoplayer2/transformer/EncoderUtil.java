@@ -25,7 +25,6 @@ import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
-import android.os.Build;
 import android.util.Pair;
 import android.util.Range;
 import android.util.Size;
@@ -48,7 +47,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Ints;
 
 /** Utility methods for {@link MediaCodec} encoders. */
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public final class EncoderUtil {
 
   /** A value to indicate the encoding level is not set. */
@@ -89,7 +87,7 @@ public final class EncoderUtil {
       MediaCodecInfo mediaCodecInfo = mediaCodecInfos.get(i);
       if (mediaCodecInfo.isAlias()
           || !isFeatureSupported(
-              mediaCodecInfo, mimeType, "null")) {
+              mediaCodecInfo, mimeType, MediaCodecInfo.CodecCapabilities.FEATURE_HdrEditing)) {
         continue;
       }
       for (MediaCodecInfo.CodecProfileLevel codecProfileLevel :
@@ -149,7 +147,6 @@ public final class EncoderUtil {
   }
 
   /** Returns whether the {@linkplain MediaCodecInfo encoder} supports the given resolution. */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public static boolean isSizeSupported(
       MediaCodecInfo encoderInfo, String mimeType, int width, int height) {
     if (encoderInfo
@@ -179,7 +176,6 @@ public final class EncoderUtil {
    * @throws IllegalArgumentException When the width is not in the range of {@linkplain
    *     #getSupportedResolutionRanges supported widths}.
    */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public static Range<Integer> getSupportedHeights(
       MediaCodecInfo encoderInfo, String mimeType, int width) {
     return encoderInfo
@@ -192,7 +188,6 @@ public final class EncoderUtil {
    * Returns a {@link Pair} of supported width and height {@link Range ranges} for the given {@link
    * MediaCodecInfo encoder} and {@linkplain MimeTypes MIME type}.
    */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public static Pair<Range<Integer>, Range<Integer>> getSupportedResolutionRanges(
       MediaCodecInfo encoderInfo, String mimeType) {
     MediaCodecInfo.VideoCapabilities videoCapabilities =
@@ -219,7 +214,6 @@ public final class EncoderUtil {
    * @param height The original height.
    * @return A {@linkplain Size supported resolution}, or {@code null} if unable to find a fallback.
    */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Nullable
   public static Size getSupportedResolution(
       MediaCodecInfo encoderInfo, String mimeType, int width, int height) {
@@ -319,7 +313,6 @@ public final class EncoderUtil {
    * Finds a {@link MediaCodec} that supports the {@link MediaFormat}, or {@code null} if none is
    * found.
    */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Nullable
   public static String findCodecForFormat(MediaFormat format, boolean isDecoder) {
     MediaCodecList mediaCodecList = new MediaCodecList(MediaCodecList.REGULAR_CODECS);
@@ -348,14 +341,12 @@ public final class EncoderUtil {
   }
 
   /** Returns the range of supported bitrates for the given {@linkplain MimeTypes MIME type}. */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public static Range<Integer> getSupportedBitrateRange(
       MediaCodecInfo encoderInfo, String mimeType) {
     return encoderInfo.getCapabilitiesForType(mimeType).getVideoCapabilities().getBitrateRange();
   }
 
   /** Returns whether the bitrate mode is supported by the encoder. */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public static boolean isBitrateModeSupported(
       MediaCodecInfo encoderInfo, String mimeType, int bitrateMode) {
     return encoderInfo
@@ -387,7 +378,6 @@ public final class EncoderUtil {
   }
 
   /** Returns whether a given feature is supported. */
-  @RequiresApi(api = Build.VERSION_CODES.KITKAT)
   public static boolean isFeatureSupported(
       MediaCodecInfo encoderInfo, String mimeType, String featureName) {
     return encoderInfo.getCapabilitiesForType(mimeType).isFeatureSupported(featureName);
@@ -442,7 +432,6 @@ public final class EncoderUtil {
         : alignment * Math.round((float) size / alignment);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private static ImmutableListMultimap<String, MediaCodecInfo> populateEncoderInfos() {
     ImmutableListMultimap.Builder<String, MediaCodecInfo> encoderInfosBuilder =
         new ImmutableListMultimap.Builder<>();

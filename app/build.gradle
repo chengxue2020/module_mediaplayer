@@ -2,17 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 31
-    buildToolsVersion "31.0.0"
-
-    compileOptions.encoding = "UTF-8"
-    ndkPath "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\16.1.4479499"
-    ndkVersion "16.1.4479499"
+    compileSdkVersion 33
+    buildToolsVersion "33.0.1"
 
     defaultConfig {
 
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 33
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = false
@@ -65,13 +61,12 @@ repositories {
 dependencies {
     // implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.multidex:multidex:2.0.1'
 
 //    api files('libs/lib_mediaplayer_vlc_r3.4.9_release_20220722.aar')
-//    api files('libs/lib_mediaplayer_exo_r2.18.2_release_20221124')
-//    api files('libs/lib_mediaplayer_ijk-k0.8.8-ff4.0_release_20221123.aar')
-//    api files('libs/lib_mediaplayer_ui_release_20221124.aar')
-    api project(path: ':lib_mediaplayer_ui')
+    api files('libs/lib_mediaplayer_exo_r2.18.2_release_20221124.aar')
+    api files('libs/lib_mediaplayer_ijk-k0.8.8-ff4.0_release_20221123.aar')
+    api files('libs/lib_mediaplayer_ui_release_20221124.aar')
+//    api project(path: ':lib_mediaplayer_ui')
 }

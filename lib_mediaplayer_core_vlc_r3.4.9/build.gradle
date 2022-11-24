@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 
 android {
 
-    compileSdkVersion 31
-    buildToolsVersion "31.0.0"
+    compileSdkVersion 33
+    buildToolsVersion "33.0.1"
 
     compileOptions.encoding = "UTF-8"
     ndkPath "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\16.1.4479499"
@@ -12,7 +12,7 @@ android {
     defaultConfig {
 
         minSdkVersion 16
-        targetSdkVersion 31
+        targetSdkVersion 33
         vectorDrawables.useSupportLibrary = false
 
         ndk {
@@ -124,6 +124,5 @@ android {
 //}
 
 dependencies {
-    compileOnly 'androidx.appcompat:appcompat:1.2.0'
-    compileOnly 'androidx.annotation:annotation:1.2.0'
+    compileOnly('androidx.appcompat:appcompat:1.5.1')
 }

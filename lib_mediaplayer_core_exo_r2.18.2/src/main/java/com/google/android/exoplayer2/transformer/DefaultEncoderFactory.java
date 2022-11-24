@@ -27,12 +27,9 @@ import static java.lang.Math.round;
 import android.content.Context;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
-import android.os.Build;
 import android.util.Pair;
 import android.util.Size;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MediaFormatUtil;
@@ -207,7 +204,6 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
         /* outputSurface= */ null);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   public Codec createForVideoEncoding(Format format, List<String> allowedMimeTypes)
       throws TransformationException {
@@ -287,10 +283,10 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
     MediaFormatUtil.maybeSetColorInfo(mediaFormat, encoderSupportedFormat.colorInfo);
     if (Util.SDK_INT >= 31 && ColorInfo.isTransferHdr(format.colorInfo)) {
       if (EncoderUtil.getSupportedColorFormats(encoderInfo, mimeType)
-          .contains(MediaCodecInfo.CodecCapabilities.COLOR_Format32bitABGR8888)) {
+          .contains(MediaCodecInfo.CodecCapabilities.COLOR_Format32bitABGR2101010)) {
         mediaFormat.setInteger(
             MediaFormat.KEY_COLOR_FORMAT,
-            MediaCodecInfo.CodecCapabilities.COLOR_Format32bitABGR8888);
+            MediaCodecInfo.CodecCapabilities.COLOR_Format32bitABGR2101010);
       } else {
         throw createTransformationException(format);
       }
@@ -350,7 +346,6 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
    * <p>Returns the {@linkplain MediaCodecInfo encoder} and the supported {@link Format} in a {@link
    * Pair}, or {@code null} if none is found.
    */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @RequiresNonNull("#1.sampleMimeType")
   @Nullable
   private static VideoEncoderQueryResult findEncoderWithClosestSupportedFormat(
@@ -445,7 +440,6 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
   }
 
   /** Returns a list of encoders that support the requested resolution most closely. */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private static ImmutableList<MediaCodecInfo> filterEncodersByResolution(
       List<MediaCodecInfo> encoders, String mimeType, int requestedWidth, int requestedHeight) {
     return filterEncoders(

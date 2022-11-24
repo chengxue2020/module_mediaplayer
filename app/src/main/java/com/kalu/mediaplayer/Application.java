@@ -2,7 +2,7 @@ package com.kalu.mediaplayer;
 
 import android.content.Context;
 
-import androidx.multidex.MultiDexApplication;
+import androidx.multidex.MultiDex;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,7 +15,13 @@ import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.keycode.KeycodeSimulator;
 
-public class Application extends MultiDexApplication {
+public class Application extends android.app.Application {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
+    }
 
     @Override
     public void onCreate() {

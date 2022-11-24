@@ -15,6 +15,8 @@
  */
 package com.google.android.exoplayer2.ui;
 
+import static androidx.core.app.NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -250,8 +252,9 @@ public final class DownloadNotificationHelper {
   private static final class Api31 {
     @SuppressLint("WrongConstant") // TODO(b/254277605): remove lint suppression
     @DoNotInline
-    public static void setForegroundServiceBehavior(NotificationCompat.Builder notificationBuilder) {
-//      notificationBuilder.setForegroundServiceBehavior(FOREGROUND_SERVICE_IMMEDIATE);
+    public static void setForegroundServiceBehavior(
+        NotificationCompat.Builder notificationBuilder) {
+      notificationBuilder.setForegroundServiceBehavior(FOREGROUND_SERVICE_IMMEDIATE);
     }
   }
 }
