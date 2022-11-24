@@ -23,38 +23,38 @@ cmake_minimum_required(VERSION 3.4.1)
 add_definitions(-DNDEBUG)
 
 ## Enable C++11 features.
-#set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 #
-#project(libexoplayer-ffmpeg C CXX)
+project(libexoplayer-ffmpeg-jni C CXX)
 ##
 ### Additional flags needed for "arm64-v8a" from NDK 23.1.7779620 and above.
 ### See https://github.com/google/ExoPlayer/issues/9933#issuecomment-1029775358.
-#if (${ANDROID_ABI} MATCHES "arm64-v8a")
-#    set(CMAKE_CXX_FLAGS "-Wl,-Bsymbolic")
-#endif ()
+if (${ANDROID_ABI} MATCHES "arm64-v8a")
+    set(CMAKE_CXX_FLAGS "-Wl,-Bsymbolic")
+endif ()
 
 include_directories(
-        ffmpeginclude
-        ffmpeginclude/config/${ANDROID_ABI}
+        include
+        include/config/${ANDROID_ABI}
 )
 
 find_library(log-lib log)
 find_library(android-lib android)
 
 #ffmpeg
-configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/jniLibs/${ANDROID_ABI}/libavffmpeg.so ${Project_BINARY_DIR}/libavffmpeg.so COPYONLY)
-add_library(avffmpeg-lib
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/jniLibs/${ANDROID_ABI}/libexoplayer-ffmpeg.so ${Project_BINARY_DIR}/libexoplayer-ffmpeg.so COPYONLY)
+add_library(ffmpeg-lib
         SHARED
         IMPORTED)
-set_target_properties(avffmpeg-lib
+set_target_properties(ffmpeg-lib
         PROPERTIES IMPORTED_LOCATION
-        libavffmpeg.so)
+        libexoplayer-ffmpeg.so)
 
-add_library(exoplayer-ffmpeg
+add_library(exoplayer-ffmpeg-jni
         SHARED
         ffmpeg_jni.cc)
 
-target_link_libraries(exoplayer-ffmpeg
-        avffmpeg-lib
+target_link_libraries(exoplayer-ffmpeg-jni
+        ffmpeg-lib
         ${log-lib}
         ${android-lib})

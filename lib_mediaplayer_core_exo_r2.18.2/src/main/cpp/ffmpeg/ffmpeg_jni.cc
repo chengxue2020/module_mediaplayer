@@ -25,11 +25,11 @@ extern "C" {
 #endif
 #include <stdint.h>
 #endif
-#include "ffmpeginclude/libavcodec/avcodec.h"
-#include "ffmpeginclude/libavutil/channel_layout.h"
-#include "ffmpeginclude/libavutil/error.h"
-#include "ffmpeginclude/libavutil/opt.h"
-#include "ffmpeginclude/libswresample/swresample.h"
+#include "include/libavcodec/avcodec.h"
+#include "include/libavutil/channel_layout.h"
+#include "include/libavutil/error.h"
+#include "include/libavutil/opt.h"
+#include "include/libswresample/swresample.h"
 }
 
 #define LOG_TAG "ffmpeg_jni"

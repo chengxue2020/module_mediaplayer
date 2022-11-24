@@ -11,8 +11,8 @@ cmake_minimum_required(VERSION 3.4.1)
 # Gradle automatically packages shared libraries with your APK.
 add_definitions(-DNDEBUG)
 
-# exoplayer-rtmp
-add_subdirectory(${CMAKE_SOURCE_DIR}/rtmp/)
-
 # exoplayer-ffmpeg
 add_subdirectory(${CMAKE_SOURCE_DIR}/ffmpeg/)
+
+# exoplayer-rtmp
+add_subdirectory(${CMAKE_SOURCE_DIR}/rtmp/)
