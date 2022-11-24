@@ -22,6 +22,10 @@ lib_mediaplayer_core_ijk_k0.8.8_ff4.0
 #
 #### 更新
 ```
+2022-11-25
+1. 新增：exoplayer-ffmpeg
+```
+```
 2022-11-24
 1. exoplayer-2.18.2
 ```

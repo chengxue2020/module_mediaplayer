@@ -1,5 +1,6 @@
 package com.kalu.mediaplayer;
 
+import android.app.Application;
 import android.content.Context;
 
 import androidx.multidex.MultiDex;
@@ -15,12 +16,12 @@ import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.keycode.KeycodeSimulator;
 
-public class App extends android.app.Application {
+public class App extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(base);
+        MultiDex.install(this);
     }
 
     @Override

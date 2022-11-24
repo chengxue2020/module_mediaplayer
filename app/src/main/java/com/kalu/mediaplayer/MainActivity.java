@@ -191,10 +191,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "android.resource://" + getPackageName() + "/" + R.raw.test2);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_SRT, "android.resource://" + getPackageName() + "/" + R.raw.test1);
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-uni4934e7b/c4d93960-5643-11eb-a16f-5b3e54966275.m3u8");
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_SRT, "http://145.239.255.77/gtsubtitle/127%20Hours/English.srt");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_SRT, "http://145.239.255.77/gtsubtitle/127%20Hours/English.srt");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 startActivity(intent);
             }

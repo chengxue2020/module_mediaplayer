@@ -27,9 +27,9 @@ import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
-import net.butterflytv.rtmp_client.RtmpClient;
-
 import java.io.IOException;
+
+import lib.kalu.exoplayer2.rtmp.RtmpClient;
 
 /** A Real-Time Messaging Protocol (RTMP) {@link DataSource}. */
 public final class RtmpDataSource extends BaseDataSource {

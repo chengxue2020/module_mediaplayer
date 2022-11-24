@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackException;
@@ -27,6 +26,7 @@ import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.video.VideoSize;
 
+import lib.kalu.exoplayer2.ffmpeg.FFmpegDefaultRenderersFactory;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -77,7 +77,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         builder.setLoadControl(new DefaultLoadControl());
         builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
         builder.setTrackSelector(new DefaultTrackSelector(context));
-        builder.setRenderersFactory(new DefaultRenderersFactory(context));
+        builder.setRenderersFactory(new FFmpegDefaultRenderersFactory(context));
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
         mExoPlayer.addAnalyticsListener(this);
@@ -568,7 +568,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void setInvisibleStop(boolean v) {
-        mInvisibleStop =v;
+        mInvisibleStop = v;
     }
 
     @Override
