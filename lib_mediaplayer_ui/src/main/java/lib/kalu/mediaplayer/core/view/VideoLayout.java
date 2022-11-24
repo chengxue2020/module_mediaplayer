@@ -463,7 +463,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         if (null == mRender) {
             mRender = RenderFactoryManager.getRender(getContext(), PlayerManager.getInstance().getConfig().getRender());
             mRender.setKernel(mKernel);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             mRender.getReal().setLayoutParams(params);
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
             if (null != viewGroup) {
@@ -919,7 +919,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     public void setControllerLayout(@Nullable ControllerLayout layout) {
         ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_control);
         viewGroup.removeAllViews();
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(params);
         viewGroup.addView(layout);
         layout.setMediaPlayer(this);
@@ -1340,7 +1340,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             ViewGroup root = real.findViewById(R.id.module_mediaplayer_root);
             int width = getResources().getDimensionPixelOffset(R.dimen.module_mediaplayer_dimen_float_width);
             int height = width * 9 / 16;
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+            LayoutParams layoutParams = new LayoutParams(width, height);
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             root.setBackgroundColor(Color.BLACK);
@@ -1375,7 +1375,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             decorView.removeView(real);
             // 2
             ViewGroup root = real.findViewById(R.id.module_mediaplayer_root);
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             root.setBackground(null);
             root.setLayoutParams(layoutParams);
             // 2

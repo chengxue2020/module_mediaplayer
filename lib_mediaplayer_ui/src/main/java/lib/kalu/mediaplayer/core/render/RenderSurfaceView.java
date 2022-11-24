@@ -9,7 +9,6 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,24 +17,18 @@ import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
- * <pre>
- *     desc  : 重写SurfaceView，适配视频的宽高和旋转
- * </pre>
+ * 优点：可以在一个独立的线程中进行绘制，不会影响主线程；使用双缓冲机制，播放视频时画面更流畅
+ * 缺点：Surface不在View hierachy中，它的显示也不受View的属性控制，所以不能进行平移，缩放等变换，
+ * 也不能放在其它ViewGroup中。SurfaceView 不能嵌套使用。
+ * <p>
+ * SurfaceView双缓冲
+ * 1.SurfaceView在更新视图时用到了两张Canvas，一张frontCanvas和一张backCanvas。
+ * 2.每次实际显示的是frontCanvas，backCanvas存储的是上一次更改前的视图，当使用lockCanvas（）获取画布时，
+ * 得到的实际上是backCanvas而不是正在显示的frontCanvas，之后你在获取到的backCanvas上绘制新视图，
+ * 再unlockCanvasAndPost（canvas）此视图，那么上传的这张canvas将替换原来的frontCanvas作为新的frontCanvas，
+ * 原来的frontCanvas将切换到后台作为backCanvas。
  */
 public class RenderSurfaceView extends SurfaceView implements RenderApi {
-
-    /**
-     * 优点：可以在一个独立的线程中进行绘制，不会影响主线程；使用双缓冲机制，播放视频时画面更流畅
-     * 缺点：Surface不在View hierachy中，它的显示也不受View的属性控制，所以不能进行平移，缩放等变换，
-     * 也不能放在其它ViewGroup中。SurfaceView 不能嵌套使用。
-     * <p>
-     * SurfaceView双缓冲
-     * 1.SurfaceView在更新视图时用到了两张Canvas，一张frontCanvas和一张backCanvas。
-     * 2.每次实际显示的是frontCanvas，backCanvas存储的是上一次更改前的视图，当使用lockCanvas（）获取画布时，
-     * 得到的实际上是backCanvas而不是正在显示的frontCanvas，之后你在获取到的backCanvas上绘制新视图，
-     * 再unlockCanvasAndPost（canvas）此视图，那么上传的这张canvas将替换原来的frontCanvas作为新的frontCanvas，
-     * 原来的frontCanvas将切换到后台作为backCanvas。
-     */
 
     @Nullable
     private KernelApi mKernel;
@@ -49,11 +42,12 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     private void init() {
         setFocusable(false);
-        SurfaceHolder holder = this.getHolder();
-        //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        //类型必须设置成SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS
-//        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        holder.addCallback(callback);
+        // 设置播放时打开屏幕
+        getHolder().setKeepScreenOn(true);
+        // 设置SurfaceView自己不管理缓冲区
+        getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        // 监听器
+        getHolder().addCallback(mCallback);
 //        setZOrderOnTop(true);
 //        setZOrderMediaOverlay(true);
     }
@@ -63,10 +57,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         if (null != mSurface) {
             mSurface.release();
         }
-        if (callback != null) {
-            getHolder().addCallback(null);
-            getHolder().removeCallback(callback);
-        }
+        getHolder().removeCallback(mCallback);
     }
 
     @Override
@@ -105,8 +96,12 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             Canvas canvas = mSurface.lockCanvas(null);
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             mSurface.unlockCanvasAndPost(canvas);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
+    }
+
+    @Override
+    public void updateSurface() {
     }
 
     /**
@@ -137,14 +132,14 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
 
-    private SurfaceHolder.Callback callback = new SurfaceHolder.Callback() {
+    private final SurfaceHolder.Callback mCallback = new SurfaceHolder.Callback() {
         /**
          * 创建的时候调用该方法
          * @param holder                        holder
          */
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            MPLogUtil.log("RenderApi => surfaceCreated => " + this);
+            MPLogUtil.log("RenderSurfaceView => surfaceCreated => " + this);
             if (mKernel != null) {
                 mSurface = holder.getSurface();
                 mKernel.setSurface(mSurface);
@@ -160,7 +155,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
          */
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            MPLogUtil.log("RenderApi => surfaceChanged => " + this);
+            MPLogUtil.log("RenderSurfaceView => surfaceChanged => " + this);
 //            if (mKernel != null) {
 //                mSurface = holder.getSurface();
 //                mKernel.setSurface(mSurface);
@@ -173,6 +168,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
          */
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
+            MPLogUtil.log("RenderSurfaceView => surfaceDestroyed => " + this);
         }
     };
 }

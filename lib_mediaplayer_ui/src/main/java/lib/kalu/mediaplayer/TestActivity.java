@@ -1,14 +1,14 @@
 package lib.kalu.mediaplayer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.Keep;
-import androidx.appcompat.app.AppCompatActivity;
 
-import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
 import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
@@ -22,7 +22,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  * @description: 横屏全屏视频播放器
  * @date: 2021-05-25 10:37
  */
-public final class TestActivity extends AppCompatActivity {
+public final class TestActivity extends Activity {
 
     @Keep
     public static final int RESULT_CODE = 31001;

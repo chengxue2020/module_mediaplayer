@@ -1,18 +1,17 @@
 package com.kalu.mediaplayer;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 
-public class FullActivity extends AppCompatActivity {
+public class FullActivity extends Activity {
 
     public static String INTENT_LIVE = "intent_live";
     public static String INTENT_URL = "intent_url";

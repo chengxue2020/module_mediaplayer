@@ -1,14 +1,13 @@
 package com.kalu.mediaplayer;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,7 @@ public class TestActivity extends AppCompatActivity {
 
     private void open() {
         VideoLayout videoView = findViewById(R.id.video);
-        String path = Application.getModelFilePath(getApplicationContext(), "test.mp3");
+        String path = App.getModelFilePath(getApplicationContext(), "test.mp3");
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setExternalMusicUrl(path);
         builder.setExternalMusicLoop(true);
