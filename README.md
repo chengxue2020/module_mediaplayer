@@ -7,6 +7,7 @@ https://github.com/153437803/ijkplayer-k0.8.8-ff4.0
 #
 #### libexoplayer-ffmpeg.so编译源码
 ```
+https://github.com/kalu-github/exoplayer2-ff4.4.3
 ```
 
 #
