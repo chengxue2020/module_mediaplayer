@@ -13,6 +13,8 @@ import com.google.android.exoplayer2.video.VideoRendererEventListener;
 
 import java.util.ArrayList;
 
+import lib.kalu.exoplayer2.util.ExoLogUtil;
+
 public final class FFmpegDefaultRenderersFactory extends DefaultRenderersFactory {
 
     public FFmpegDefaultRenderersFactory(Context context) {
@@ -22,13 +24,22 @@ public final class FFmpegDefaultRenderersFactory extends DefaultRenderersFactory
 
     @Override
     protected void buildAudioRenderers(Context context, @ExtensionRendererMode int extensionRendererMode, MediaCodecSelector mediaCodecSelector, boolean enableDecoderFallback, AudioSink audioSink, Handler eventHandler, AudioRendererEventListener eventListener, ArrayList<Renderer> out) {
-        // ffmpeg
+        ExoLogUtil.log("FFmpegDefaultRenderersFactory => buildAudioRenderers => ");
         out.add(new FfmpegAudioRenderer());
+        for (int i = 0; i < out.size(); i++) {
+            Renderer renderer = out.get(i);
+            ExoLogUtil.log("FFmpegDefaultRenderersFactory => buildAudioRenderers => " + renderer);
+        }
         super.buildAudioRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, audioSink, eventHandler, eventListener, out);
     }
 
     @Override
     protected void buildVideoRenderers(Context context, @ExtensionRendererMode int extensionRendererMode, MediaCodecSelector mediaCodecSelector, boolean enableDecoderFallback, Handler eventHandler, VideoRendererEventListener eventListener, long allowedVideoJoiningTimeMs, ArrayList<Renderer> out) {
+        ExoLogUtil.log("FFmpegDefaultRenderersFactory => buildVideoRenderers => ");
+        for (int i = 0; i < out.size(); i++) {
+            Renderer renderer = out.get(i);
+            ExoLogUtil.log("FFmpegDefaultRenderersFactory => buildVideoRenderers => " + renderer);
+        }
         super.buildVideoRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, eventHandler, eventListener, allowedVideoJoiningTimeMs, out);
     }
 }

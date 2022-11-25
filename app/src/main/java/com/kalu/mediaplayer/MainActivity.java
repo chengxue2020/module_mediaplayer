@@ -30,13 +30,12 @@ public class MainActivity extends Activity {
 //        } else {
 //            mTvTitle.setText("视频内核：" + " (unknown)");
 //        }
-
-        // vr
-        findViewById(R.id.main_vr).setOnClickListener(new View.OnClickListener() {
+        // main_mpeg_L2
+        findViewById(R.id.main_mpeg_L2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "https://rongxingvr11.rx9696mv.com:8866/0nwDOqrZ1VmZkSOw7rYKjD8BgeUeLFXqzUuGmFb3akj9M4nEzz92_R70UgP8OiryFEXVLEgWROMM_u8Lyiq8lw/RongXingVR.m3u8");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://114.118.13.20:8197/data_source/test/001/06/06.m3u8");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
@@ -48,7 +47,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.128:10000");
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.220.220.1:1234");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.224.224.224:10000");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);

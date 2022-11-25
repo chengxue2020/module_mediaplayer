@@ -79,16 +79,23 @@ public final class ExoMediaSourceHelper {
         }
         // other
         else {
+
+            // okhttp
+//            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//            OkHttpClient client = builder.build();
+//            OkHttpDataSource.Factory http = new OkHttpDataSource.Factory(client);
+//            http.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+
             // http
-            DefaultHttpDataSource.Factory http = new DefaultHttpDataSource.Factory();
-            http.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-            http.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
-            http.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
-            http.setAllowCrossProtocolRedirects(true);
-            http.setKeepPostFor302Redirects(true);
+            DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory();
+            httpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+            httpFactory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
+            httpFactory.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
+            httpFactory.setAllowCrossProtocolRedirects(true);
+            httpFactory.setKeepPostFor302Redirects(true);
 
             // head
-            refreshHeaders(http, headers);
+            refreshHeaders(httpFactory, headers);
 
             // 本地缓存
             if (hasCache && cacheType == PlayerType.CacheType.DEFAULT) {
@@ -96,22 +103,20 @@ public final class ExoMediaSourceHelper {
 
                 // cache
                 int size;
-                if(cacheMax<=0){
+                if (cacheMax <= 0) {
                     size = 1024;
-                }
-                else{
+                } else {
                     size = cacheMax;
                 }
 
                 String dir;
-                if(null == cacheDir || cacheDir.length()<=0){
+                if (null == cacheDir || cacheDir.length() <= 0) {
                     dir = "temp";
-                }
-                else{
+                } else {
                     dir = cacheDir;
                 }
 
-                CacheDataSource.Factory factory = new CacheDataSource.Factory();
+                CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
 
                 // 缓存策略：磁盘
                 if (null != context && cacheType == PlayerType.CacheType.DEFAULT) {
@@ -122,17 +127,17 @@ public final class ExoMediaSourceHelper {
                         SimpleCache simpleCache = new SimpleCache(file, evictor, provider);
                         mWHM.put(dir, simpleCache);
                     }
-                    factory.setCache(mWHM.get(dir));
+                    cacheFactory.setCache(mWHM.get(dir));
                 }
 
-                factory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-                factory.setUpstreamDataSourceFactory(http);
-                return createMediaSource(url, factory);
+                cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+                cacheFactory.setUpstreamDataSourceFactory(httpFactory);
+                return createMediaSource(url, cacheFactory);
             }
             // 默认
             else {
                 MPLogUtil.log("getMediaSource => 默认, 不缓存");
-                DefaultDataSource.Factory factory = new DefaultDataSource.Factory(context, http);
+                DefaultDataSource.Factory factory = new DefaultDataSource.Factory(context, httpFactory);
                 return createMediaSource(url, factory);
             }
         }

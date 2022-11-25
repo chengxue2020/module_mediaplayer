@@ -35,6 +35,8 @@ import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.TraceUtil;
 import com.google.android.exoplayer2.util.Util;
 
+import lib.kalu.exoplayer2.util.ExoLogUtil;
+
 /** Decodes and renders audio using FFmpeg. */
 public final class FfmpegAudioRenderer extends DecoderAudioRenderer<FfmpegAudioDecoder> {
 
@@ -112,6 +114,7 @@ public final class FfmpegAudioRenderer extends DecoderAudioRenderer<FfmpegAudioD
   @Override
   protected FfmpegAudioDecoder createDecoder(Format format, @Nullable CryptoConfig cryptoConfig)
       throws FfmpegDecoderException {
+    ExoLogUtil.log("FfmpegAudioRenderer => createDecoder => ");
     TraceUtil.beginSection("createFfmpegAudioDecoder");
     int initialInputBufferSize =
         format.maxInputSize != Format.NO_VALUE ? format.maxInputSize : DEFAULT_INPUT_BUFFER_SIZE;
@@ -126,12 +129,14 @@ public final class FfmpegAudioRenderer extends DecoderAudioRenderer<FfmpegAudioD
   @Override
   protected Format getOutputFormat(FfmpegAudioDecoder decoder) {
     Assertions.checkNotNull(decoder);
-    return new Format.Builder()
-        .setSampleMimeType(MimeTypes.AUDIO_RAW)
-        .setChannelCount(decoder.getChannelCount())
-        .setSampleRate(decoder.getSampleRate())
-        .setPcmEncoding(decoder.getEncoding())
-        .build();
+    Format build = new Format.Builder()
+            .setSampleMimeType(MimeTypes.AUDIO_RAW)
+            .setChannelCount(decoder.getChannelCount())
+            .setSampleRate(decoder.getSampleRate())
+            .setPcmEncoding(decoder.getEncoding())
+            .build();
+    ExoLogUtil.log("FfmpegAudioRenderer => getOutputFormat => "+build);
+    return build;
   }
 
   /**

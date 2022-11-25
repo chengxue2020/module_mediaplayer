@@ -52,7 +52,7 @@ public final class UdpDataSource extends BaseDataSource {
   public static final int DEFAULT_MAX_PACKET_SIZE = 2000;
 
   /** The default socket timeout, in milliseconds. */
-  public static final int DEFAULT_SOCKET_TIMEOUT_MILLIS = 8 * 1000;
+  public static final int DEFAULT_SOCKET_TIMEOUT_MILLIS = 1 * 1000;
 
   public static final int UDP_PORT_UNSET = -1;
 

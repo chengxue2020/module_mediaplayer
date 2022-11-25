@@ -2,8 +2,11 @@ package com.kalu.mediaplayer;
 
 import android.app.Application;
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.multidex.MultiDex;
+
+import com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,6 +30,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        String version = FfmpegLibrary.getVersion();
+        Toast.makeText(getApplicationContext(), version, Toast.LENGTH_SHORT).show();
 
         // config
         PlayerBuilder build = new PlayerBuilder.Builder()

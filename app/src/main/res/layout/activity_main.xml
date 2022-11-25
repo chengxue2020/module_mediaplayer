@@ -60,14 +60,14 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/main_vr"
+                android:id="@+id/main_mpeg_L2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/colorAccent"
                 android:focusable="true"
                 android:padding="10dp"
-                android:text="vr" />
+                android:text="mpeg-L2" />
             <Button
                 android:id="@+id/main_udp"
                 android:layout_width="match_parent"
