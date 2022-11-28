@@ -13,20 +13,20 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 #
 ####  exoplayer-extensions
 ```
-- [X] av1 => 视频格式
-- [X] cast => DRM支持
-- [X] cronet => 网络库
+- [x] av1 => 视频格式
+- [x] cast => DRM支持
+- [x] cronet => 网络库
 - [✓] ffmpeg
-- [X] flac => 音频解码库
-- [X] ima => ad
-- [X] leanback
-- [X] media2
-- [X] mediasession => 音频播放器
-- [X] okhttp => 网络库
-- [X] opus => 音频解码库
+- [x] flac => 音频解码库
+- [x] ima => ad
+- [x] leanback
+- [x] media2
+- [x] mediasession => 音频播放器
+- [x] okhttp => 网络库
+- [x] opus => 音频解码库
 - [✓] rtmp
-- [X] vp9 => 视频格式
-- [X] workmanager
+- [x] vp9 => 视频格式
+- [x] workmanager
 ```
 
 #
