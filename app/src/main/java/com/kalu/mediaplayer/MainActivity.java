@@ -35,8 +35,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://114.118.13.20:8197/data_source/test/001/06/06.m3u8");
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://ott.fj.chinamobile.com/88888888/16/20221128/285108643/285108643.ts?rrsip=ott.fj.chinamobile.com&amp;zoneoffset=0&amp;servicetype=0&amp;icpid=&amp;accounttype=1&amp;limitflux=-1&amp;limitdur=-1&amp;tenantId=8601&amp;accountinfo=%2C1306450%2C61.185.224.115%2C20221128132312%2C757024070033346560%2C1306450%2C0.0%2C1%2C0%2C-1%2C2%2C1%2C%2C%2C87303773%2C1%2C%2CEND&amp;GuardEncType=2&amp;it=H4sIAAAAAAAAAE2Oyw6CMBRE_6bLBiovF11pTEwMmoBuzVAulVAotmji3wuGhaubuTlnMpODouNepjHCRKhAVJskikJCs51vFlWZSpsqAfP0zK0UTMGYdtC5rRftVuzuYSh4HHAhUp6xcuk7GGgZ_ND81Vfk1jB7Bbl3q0jWvuFveA6tHWlMrR34xeBzdWZFGJXrtuFlDJuWUMJ384M94He2H-GoPln942QD44mNUB005ejpzzu7eh7xBULgYs3sAAAA");
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "http://111.20.105.192:6610/000000001000/5000000008000023254/index.m3u8?channel-id=bestzb&Contentid=5000000008000023254&livemode=1&stbId=3");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
@@ -47,7 +46,6 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.255.0.128:10000");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, "udp://@224.224.224.224:10000");
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, true);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
