@@ -14,7 +14,7 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 ####  exoplayer-extensions
 ```
 - [X] av1 => 视频格式
-- [X] cast
+- [X] cast => DRM支持
 - [X] cronet => 网络库
 - [✓] ffmpeg
 - [X] flac => 音频解码库
