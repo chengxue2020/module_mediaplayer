@@ -11,6 +11,25 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 ```
 
 #
+####  exoplayer-extensions
+```
+- [X] av1 => 视频格式
+- [X] cast
+- [X] cronet => 网络库
+- [✓] ffmpeg
+- [X] flac => 音频解码库
+- [X] ima => ad
+- [X] leanback
+- [X] media2
+- [X] mediasession => 音频播放器
+- [X] okhttp => 网络库
+- [X] opus => 音频解码库
+- [✓] rtmp
+- [X] vp9 => 视频格式
+- [X] workmanager
+```
+
+#
 ####  版本
 ```
 exo => r2.18.2
