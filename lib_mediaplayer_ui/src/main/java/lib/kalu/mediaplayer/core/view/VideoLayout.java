@@ -1544,6 +1544,22 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                     MPLogUtil.log("decodeKeyEvent => stopFull =>");
                     stopFull();
                 }
+                // VOLUME_UP
+                else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
+                    return super.dispatchKeyEvent(event);
+                }
+                // VOLUME_DOWN
+                else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                    return super.dispatchKeyEvent(event);
+                }
+                // VOLUME_MUTE
+                else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_MUTE) {
+                    return super.dispatchKeyEvent(event);
+                }
+                // VOICE_ASSIST
+                else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOICE_ASSIST) {
+                    return super.dispatchKeyEvent(event);
+                }
                 return true;
             }
         }
