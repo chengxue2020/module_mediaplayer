@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -246,6 +245,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
             // step2
             // exo
             if (kernel == PlayerType.KernelType.EXO) {
+                // release();
             }
             // ijk
             else if (kernel == PlayerType.KernelType.IJK) {
@@ -489,6 +489,40 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void stopKernel(@NonNull boolean call) {
+        setKeepScreenOn(false);
+        clearHanlder();
+        try {
+            if (call) {
+                callPlayerState(PlayerType.StateType.STATE_HIDE_ERROE_COMPONENT);
+                callPlayerState(PlayerType.StateType.STATE_LOADING_START);
+            }
+            mKernel.stop();
+        } catch (Exception e) {
+            MPLogUtil.log("stopKernel => " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void pauseKernel(@NonNull boolean call) {
+        setKeepScreenOn(false);
+        clearHanlder();
+        try {
+            // 自动不回调状态
+            if (call) {
+                callPlayerState(PlayerType.StateType.STATE_PAUSE);
+            }
+            // 用户手动，需要显示暂停图标
+            else {
+                callPlayerState(PlayerType.StateType.STATE_PAUSE_IGNORE);
+            }
+            mKernel.pause();
+        } catch (Exception e) {
+            MPLogUtil.log("pauseKernel => " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public void pause(boolean auto, boolean clearHanlder) {
         boolean playing = isPlaying();
         MPLogUtil.log("pauseME => auto = " + auto + ", clearHanlder = " + clearHanlder + ", playing = " + playing);
@@ -497,16 +531,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         if (clearHanlder) {
             clearHanlder();
         }
-        // 自动不回调状态
-        if (auto) {
-            callPlayerState(PlayerType.StateType.STATE_PAUSE_IGNORE);
-        }
-        // 用户手动，需要显示暂停图标
-        else {
-            callPlayerState(PlayerType.StateType.STATE_PAUSE);
-        }
-        setKeepScreenOn(false);
-        mKernel.pause();
+        pauseKernel(!auto);
     }
 
     @Override
@@ -515,8 +540,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         if (!playing)
             return;
         callPlayerState(PlayerType.StateType.STATE_CLOSE);
-        setKeepScreenOn(false);
-        mKernel.stop();
+        stopKernel(true);
     }
 
     @Override
@@ -829,21 +853,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     /**
-     * 截图，暂不支持SurfaceView
-     */
-    @Override
-    public Bitmap doScreenShot() {
-//        if (mRender != null) {
-//            return mRender.doScreenShot();
-//        }
-        return null;
-    }
-
-//    public View getRenderView() {
-//        return mRender.getView();
-//    }
-
-    /**
      * 获取视频宽高,其中width: mVideoSize[0], height: mVideoSize[1]
      */
     @Override
@@ -1000,9 +1009,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
     @Override
     public void releaseKernel() {
+        stopKernel(true);
         try {
             mKernel.pause();
-            mKernel.stop();
             mKernel.releaseDecoder();
             mKernel = null;
         } catch (Exception e) {
@@ -1037,7 +1046,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
 
         // step2
-        pause(true);
+        pause(!onlyHandle, true);
 
         // step3
         if (onlyHandle)

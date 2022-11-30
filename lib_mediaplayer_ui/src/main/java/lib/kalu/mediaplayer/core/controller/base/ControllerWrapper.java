@@ -1,7 +1,5 @@
 package lib.kalu.mediaplayer.core.controller.base;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -24,297 +22,515 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
 
     @Override
     public void setVolume(float v1, float v2) {
+        try {
+
+        } catch (Exception e) {
+        }
         this.mPlayer.setVolume(v1, v2);
     }
 
     @Override
     public void setMute(boolean v) {
+        try {
+
+        } catch (Exception e) {
+        }
         this.mPlayer.setMute(v);
     }
 
     @Override
     public void start(@NonNull StartBuilder builder, @NonNull String url) {
+        try {
+
+        } catch (Exception e) {
+        }
         mPlayer.start(builder, url);
     }
 
     @Override
     public void create(@NonNull StartBuilder builder, @NonNull boolean logger) {
+        try {
+
+        } catch (Exception e) {
+        }
         mPlayer.create(builder, logger);
     }
 
     @Override
     public void toggle(boolean cleanHandler) {
+        try {
+
+        } catch (Exception e) {
+        }
         mPlayer.toggle(cleanHandler);
     }
 
     @Override
+    public void stopKernel(@NonNull boolean call) {
+        try {
+            mPlayer.stopKernel(call);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void pauseKernel(@NonNull boolean call) {
+        try {
+            mPlayer.pauseKernel(call);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
     public void pause(boolean auto, boolean clearHanlder) {
+        try {
+
+        } catch (Exception e) {
+        }
         mPlayer.pause(auto, clearHanlder);
     }
 
     @Override
     public void resume(boolean call) {
+        try {
+
+        } catch (Exception e) {
+        }
         mPlayer.resume(call);
     }
 
     @Override
     public void close() {
+        try {
+
+        } catch (Exception e) {
+        }
         mPlayer.close();
     }
 
     @Override
     public void repeat() {
+        try {
+
+        } catch (Exception e) {
+        }
         mPlayer.repeat();
     }
 
     @Override
     public long getDuration() {
+        try {
+
+        } catch (Exception e) {
+        }
         return mPlayer.getDuration();
     }
 
     @Override
     public long getPosition() {
+        try {
+
+        } catch (Exception e) {
+        }
         return mPlayer.getPosition();
     }
 
     @Override
     public boolean isLooping() {
+        try {
+
+        } catch (Exception e) {
+        }
         return mPlayer.isLooping();
     }
 
     @Override
     public boolean isInvisibleStop() {
+        try {
+
+        } catch (Exception e) {
+        }
         return mPlayer.isInvisibleStop();
     }
 
     @Override
     public boolean isInvisibleIgnore() {
-        return mPlayer.isInvisibleIgnore();
+        try {
+            return mPlayer.isInvisibleIgnore();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean isInvisibleRelease() {
-        return mPlayer.isInvisibleRelease();
+        try {
+            return mPlayer.isInvisibleRelease();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public long getSeek() {
-        return mPlayer.getSeek();
+        try {
+            return mPlayer.getSeek();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override
     public long getMax() {
-        return mPlayer.getMax();
+        try {
+            return mPlayer.getMax();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override
     public String getUrl() {
-        return mPlayer.getUrl();
+        try {
+            return mPlayer.getUrl();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public boolean isPlaying() {
-        return mPlayer.isPlaying();
+        try {
+            return mPlayer.isPlaying();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean isFull() {
-        return mPlayer.isFull();
+        try {
+            return mPlayer.isFull();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public void startFull() {
-        mPlayer.startFull();
+        try {
+            mPlayer.startFull();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void stopFull() {
-        mPlayer.stopFull();
+        try {
+            mPlayer.stopFull();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public boolean isFloat() {
-        return mPlayer.isFloat();
+        try {
+            return mPlayer.isFloat();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public void startFloat() {
-        mPlayer.startFloat();
+        try {
+            mPlayer.startFloat();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void stopFloat() {
-        mPlayer.stopFloat();
+        try {
+            mPlayer.stopFloat();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public int getBufferedPercentage() {
-        return mPlayer.getBufferedPercentage();
+        try {
+            return mPlayer.getBufferedPercentage();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override
     public void seekTo(@NonNull boolean force, @NonNull StartBuilder builder) {
-        mPlayer.seekTo(force, builder);
+        try {
+            mPlayer.seekTo(force, builder);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public boolean seekForward(@NonNull boolean callback) {
-        return mPlayer.seekForward(callback);
+        try {
+            return mPlayer.seekForward(callback);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean seekRewind(boolean callback) {
-        return mPlayer.seekRewind(callback);
+        try {
+            return mPlayer.seekRewind(callback);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean isLive() {
-        return mPlayer.isLive();
+        try {
+            return mPlayer.isLive();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean isMute() {
-        return mPlayer.isMute();
+        try {
+            return mPlayer.isMute();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public void setScaleType(int scaleType) {
-        mPlayer.setScaleType(scaleType);
+        try {
+            mPlayer.setScaleType(scaleType);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void setSpeed(float speed) {
-        mPlayer.setSpeed(speed);
+        try {
+            mPlayer.setSpeed(speed);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public float getSpeed() {
-        return mPlayer.getSpeed();
+        try {
+            return mPlayer.getSpeed();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override
     public long getTcpSpeed() {
-        return mPlayer.getTcpSpeed();
+        try {
+            return mPlayer.getTcpSpeed();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override
     public void setMirrorRotation(boolean enable) {
-        mPlayer.setMirrorRotation(enable);
-    }
-
-    @Override
-    public Bitmap doScreenShot() {
-        return mPlayer.doScreenShot();
+        try {
+            mPlayer.setMirrorRotation(enable);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public int[] getVideoSize() {
-        return mPlayer.getVideoSize();
+        try {
+            return mPlayer.getVideoSize();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public void setRotation(float rotation) {
-        mPlayer.setRotation(rotation);
+        try {
+            mPlayer.setRotation(rotation);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public ControllerLayout getControlLayout() {
-        return null;
+        try {
+            return (ControllerLayout) mController;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public void showReal() {
-        mPlayer.showReal();
+        try {
+            mPlayer.showReal();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void goneReal() {
-        mPlayer.goneReal();
+        try {
+            mPlayer.goneReal();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void checkReal() {
-        mPlayer.checkReal();
+        try {
+            mPlayer.checkReal();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void releaseKernel() {
-        mPlayer.releaseKernel();
+        try {
+            mPlayer.releaseKernel();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void releaseRender() {
-        mPlayer.releaseRender();
+        try {
+            mPlayer.releaseRender();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void release(@NonNull boolean onlyHandle) {
-        mPlayer.release(onlyHandle);
+        try {
+            mPlayer.release(onlyHandle);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void startHanlder() {
-        mPlayer.startHanlder();
+        try {
+            mPlayer.startHanlder();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void clearHanlder() {
-        mPlayer.clearHanlder();
+        try {
+            mPlayer.clearHanlder();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void playEnd() {
-        mPlayer.playEnd();
+        try {
+            mPlayer.playEnd();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void setKernel(int v) {
-        mPlayer.setKernel(v);
+        try {
+            mPlayer.setKernel(v);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void setRender(int v) {
-        mPlayer.setRender(v);
+        try {
+            mPlayer.setRender(v);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void callPlayerState(int playerState) {
-        mPlayer.callPlayerState(playerState);
+        try {
+            mPlayer.callPlayerState(playerState);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void callWindowState(int windowState) {
-        mPlayer.callWindowState(windowState);
+        try {
+            mPlayer.callWindowState(windowState);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void enableExternalMusic(boolean enable, boolean release) {
-        mPlayer.enableExternalMusic(enable, release);
+        try {
+            mPlayer.enableExternalMusic(enable, release);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void enableExternalMusic(boolean enable, boolean release, boolean auto) {
-        mPlayer.enableExternalMusic(enable, release, auto);
+        try {
+            mPlayer.enableExternalMusic(enable, release, auto);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void setExternalMusic(@NonNull StartBuilder bundle) {
-        mPlayer.setExternalMusic(bundle);
+        try {
+            mPlayer.setExternalMusic(bundle);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public boolean isExternalMusicAuto() {
-        return mPlayer.isExternalMusicAuto();
+        try {
+            return mPlayer.isExternalMusicAuto();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean isExternalMusicLoop() {
-        return mPlayer.isExternalMusicLoop();
+        try {
+            return mPlayer.isExternalMusicLoop();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean isExternalMusicPrepared() {
-        return mPlayer.isExternalMusicPrepared();
+        try {
+            return mPlayer.isExternalMusicPrepared();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -342,111 +558,103 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
         }
     }
 
-//    /**
-//     * 横竖屏切换，会旋转屏幕
-//     */
-//    public void toggleFullScreen(Activity activity) {
-//        if (activity == null || activity.isFinishing())
-//            return;
-//        if (isFullScreen()) {
-//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//            stopFullScreen();
-//        } else {
-//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//            startFullScreen();
-//        }
-//    }
-//
-//    /**
-//     * 横竖屏切换，不会旋转屏幕
-//     */
-//    public void toggleFullScreen() {
-//        if (isFullScreen()) {
-//            stopFullScreen();
-//        } else {
-//            startFullScreen();
-//        }
-//    }
-
-//    /**
-//     * 横竖屏切换，根据适配宽高决定是否旋转屏幕
-//     */
-//    public void toggleFullScreenByVideoSize(Activity activity) {
-//        if (activity == null || activity.isFinishing())
-//            return;
-//        int[] size = getVideoSize();
-//        int width = size[0];
-//        int height = size[1];
-//        if (isFullScreen()) {
-//            stopFullScreen();
-//            if (width > height) {
-//                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//            }
-//        } else {
-//            startFullScreen();
-//            if (width > height) {
-//                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//            }
-//        }
-//    }
-
     @Override
     public void startFadeOut() {
-        mController.startFadeOut();
+        try {
+            mController.startFadeOut();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void stopFadeOut() {
-        mController.stopFadeOut();
+        try {
+            mController.stopFadeOut();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public boolean isShowing() {
-        return mController.isShowing();
+        try {
+            return mController.isShowing();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public void setLocked(boolean locked) {
-        mController.setLocked(locked);
+        try {
+            mController.setLocked(locked);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public boolean isLocked() {
-        return mController.isLocked();
+        try {
+            return mController.isLocked();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public void hide() {
-        mController.hide();
+        try {
+            mController.hide();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void show() {
-        mController.show();
+        try {
+            mController.show();
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public boolean hasCutout() {
-        return mController.hasCutout();
+        try {
+            return mController.hasCutout();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public int getCutoutHeight() {
-        return mController.getCutoutHeight();
+        try {
+            return mController.getCutoutHeight();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override
     public void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
-        mController.seekProgress(fromUser, position, duration);
+        try {
+            mController.seekProgress(fromUser, position, duration);
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void init() {
+        try {
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void destroy() {
-        mController.destroy();
+        try {
+            mController.destroy();
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -458,7 +666,10 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
      * 切换锁定状态
      */
     public void toggleLockState() {
-        setLocked(!isLocked());
+        try {
+            setLocked(!isLocked());
+        } catch (Exception e) {
+        }
     }
 
 
@@ -466,10 +677,13 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
      * 切换显示/隐藏状态
      */
     public void toggleShowState() {
-        if (isShowing()) {
-            hide();
-        } else {
-            show();
+        try {
+            if (isShowing()) {
+                hide();
+            } else {
+                show();
+            }
+        } catch (Exception e) {
         }
     }
 }

@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 
@@ -78,6 +77,14 @@ public interface PlayerApi {
 
     void toggle(boolean cleanHandler);
 
+    /*********************/
+
+    void stopKernel(@NonNull boolean call);
+
+    void pauseKernel(@NonNull boolean call);
+
+    void releaseKernel();
+
     default void pause() {
         pause(false, false);
     }
@@ -87,6 +94,8 @@ public interface PlayerApi {
     }
 
     void pause(boolean auto, boolean clearHanlder);
+
+    /*********************/
 
     default void resume() {
         resume(true);
@@ -191,8 +200,6 @@ public interface PlayerApi {
 
     void setMirrorRotation(boolean enable);
 
-    Bitmap doScreenShot();
-
     int[] getVideoSize();
 
     void setRotation(float rotation);
@@ -204,8 +211,6 @@ public interface PlayerApi {
     void goneReal();
 
     void checkReal();
-
-    void releaseKernel();
 
     void releaseRender();
 
