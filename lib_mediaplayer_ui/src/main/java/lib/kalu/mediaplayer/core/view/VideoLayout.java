@@ -657,6 +657,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     @Override
     public String getUrl() {
         try {
+            if (null == mKernel)
+                return null;
             return mKernel.getUrl();
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
