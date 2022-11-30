@@ -84,8 +84,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public String screenshot() {
-//        getDrawingCache();
-        return "";
+        Context context = getContext();
+        Bitmap bitmap = getDrawingCache();
+        return saveBitmap(context, bitmap);
     }
 
     @Override

@@ -307,6 +307,31 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
         return mPlayer.isExternalMusicPrepared();
     }
 
+    @Override
+    public void clearSuface() {
+        try {
+            mPlayer.clearSuface();
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void updateSuface() {
+        try {
+            mPlayer.updateSuface();
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public String screenshot() {
+        try {
+            return mPlayer.screenshot();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 //    /**
 //     * 横竖屏切换，会旋转屏幕
 //     */

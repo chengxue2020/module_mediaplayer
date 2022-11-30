@@ -1192,6 +1192,34 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void clearSuface() {
+        try {
+            mRender.clearCanvas();
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void updateSuface() {
+        try {
+            mRender.updateCanvas();
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String screenshot() {
+        try {
+            return mRender.screenshot();
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
     public void setExternalMusic(@NonNull StartBuilder bundle) {
         try {
             String url = bundle.getExternalMusicUrl();

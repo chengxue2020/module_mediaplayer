@@ -101,8 +101,9 @@ public class RenderTextureView extends TextureView implements RenderApi {
 
     @Override
     public String screenshot() {
-//        getBitmap();
-        return "";
+        Context context = getContext();
+        Bitmap bitmap = getBitmap();
+        return saveBitmap(context, bitmap);
     }
 
 
