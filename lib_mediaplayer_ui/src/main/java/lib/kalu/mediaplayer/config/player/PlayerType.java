@@ -301,8 +301,9 @@ public @interface PlayerType {
         int EVENT_ERROR_RETRY = 9902;
         int EVENT_ERROR_SOURCE = 9903;
         int EVENT_ERROR_PARSE = 9904;
-        int EVENT_LOADING_START = 9905; // 开始转圈
-        int EVENT_LOADING_STOP = 9906; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
+        int EVENT_ERROR_NET = 9905;
+        int EVENT_LOADING_START = 9906; // 开始转圈
+        int EVENT_LOADING_STOP = 9907; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
         // 播放结束
         //        // 开始渲染视频画面
 //        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -311,7 +312,7 @@ public @interface PlayerType {
 //        // 开始渲染视频画面
 //        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 开始渲染视频画面
-        int EVENT_VIDEO_END = 9907;
+        int EVENT_VIDEO_END = 9908;
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
         int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -336,6 +337,7 @@ public @interface PlayerType {
                 EVENT_ERROR_RETRY,
                 EVENT_ERROR_SOURCE,
                 EVENT_ERROR_PARSE,
+                EVENT_ERROR_NET,
                 EVENT_OPEN_INPUT,
                 EVENT_LOADING_START,
                 EVENT_LOADING_STOP,

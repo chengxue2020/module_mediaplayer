@@ -205,6 +205,10 @@ public interface PlayerApi {
 
     void checkReal();
 
+    void releaseKernel();
+
+    void releaseRender();
+
     default void release() {
         release(false);
     }
@@ -366,6 +370,7 @@ public interface PlayerApi {
 
     /**
      * 截图
+     *
      * @return
      */
     String screenshot();

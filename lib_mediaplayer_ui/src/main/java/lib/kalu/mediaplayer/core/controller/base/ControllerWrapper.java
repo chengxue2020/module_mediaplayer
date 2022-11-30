@@ -238,6 +238,16 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void releaseKernel() {
+        mPlayer.releaseKernel();
+    }
+
+    @Override
+    public void releaseRender() {
+        mPlayer.releaseRender();
+    }
+
+    @Override
     public void release(@NonNull boolean onlyHandle) {
         mPlayer.release(onlyHandle);
     }

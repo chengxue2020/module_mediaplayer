@@ -385,6 +385,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             callPlayerState(PlayerType.StateType.STATE_END);
 
+                            // step1
+                            pause(true);
+
                             // step2
                             clearHanlder();
 
@@ -420,6 +423,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             break;
                         // 播放错误
+                        case PlayerType.EventType.EVENT_ERROR_NET:
                         case PlayerType.EventType.EVENT_ERROR_URL:
                         case PlayerType.EventType.EVENT_ERROR_PARSE:
                         case PlayerType.EventType.EVENT_ERROR_RETRY:
@@ -428,6 +432,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
                             boolean connected = PlayerUtils.isConnected(getContext());
                             setKeepScreenOn(false);
                             callPlayerState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
+
+                            // step1
+                            pause(true);
 
                             // 埋点
                             try {
@@ -992,6 +999,28 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
     }
 
     @Override
+    public void releaseKernel() {
+        try {
+            mKernel.pause();
+            mKernel.stop();
+            mKernel.releaseDecoder();
+            mKernel = null;
+        } catch (Exception e) {
+            MPLogUtil.log("releaseKernel => " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void releaseRender() {
+        try {
+            mRender.releaseReal();
+            mRender = null;
+        } catch (Exception e) {
+            MPLogUtil.log("releaseRender => " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public void release(@NonNull boolean onlyHandle) {
         MPLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mHandler = " + mHandler + ", mKernel = " + mKernel);
         // control
@@ -1031,22 +1060,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
         }
 
         // step52
-        try {
-            mRender.releaseReal();
-            mRender = null;
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
+        releaseRender();
 
         // step7
-        try {
-            mKernel.pause();
-            mKernel.stop();
-            mKernel.releaseDecoder();
-            mKernel = null;
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
+        releaseKernel();
 //        if (!isInit()) {
 //            PlayerConfig config = PlayerConfigManager.getInstance().getConfig();
 //            if (config != null && config.mBuriedPointEvent != null) {

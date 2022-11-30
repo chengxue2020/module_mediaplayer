@@ -376,7 +376,19 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void onPlayWhenReadyChanged(EventTime eventTime, boolean playWhenReady, int reason) {
-        MPLogUtil.log("ExoMediaPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
+
+//        MPLogUtil.log("ExoMediaPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
+
+//        // loading-start
+//        if (reason == 1 && !playWhenReady) {
+//            MPLogUtil.log("ExoMediaPlayer => onPlayWhenReadyChanged => 准备fail");
+//            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
+//        }
+//        // loading-close
+//        else if (reason == 1 && playWhenReady) {
+//            MPLogUtil.log("ExoMediaPlayer => onPlayWhenReadyChanged => 准备succ");
+//            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+//        }
     }
 
     @Override
@@ -410,7 +422,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void onTimelineChanged(EventTime eventTime, int reason) {
-        MPLogUtil.log("ExoMediaPlayer => onTimelineChanged => reason = " + reason);
+        MPLogUtil.log("ExoMediaPlayer => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
     }
 
     @Override
@@ -455,7 +467,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
         }
         // 未知??
-        else{
+        else {
             MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => 未知??");
         }
     }
