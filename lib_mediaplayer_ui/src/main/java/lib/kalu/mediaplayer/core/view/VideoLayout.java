@@ -381,6 +381,26 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             break;
                         // 播放结束
+                        case PlayerType.EventType.EVENT_ERROR_URL:
+                        case PlayerType.EventType.EVENT_ERROR_RETRY:
+                        case PlayerType.EventType.EVENT_ERROR_SOURCE:
+                        case PlayerType.EventType.EVENT_ERROR_PARSE:
+                        case PlayerType.EventType.EVENT_ERROR_NET:
+
+                            boolean connected = PlayerUtils.isConnected(getContext());
+                            setKeepScreenOn(false);
+                            callPlayerState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
+
+                            // step1
+                            pause(true);
+
+                            // 埋点
+                            try {
+                                BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
+                                buriedEvent.playerError(getUrl(), connected);
+                            } catch (Exception e) {
+                            }
+                            break;
                         case PlayerType.EventType.EVENT_VIDEO_END:
 
                             callPlayerState(PlayerType.StateType.STATE_END);
@@ -423,26 +443,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi, Handler.Ca
 
                             break;
                         // 播放错误
-                        case PlayerType.EventType.EVENT_ERROR_NET:
-                        case PlayerType.EventType.EVENT_ERROR_URL:
-                        case PlayerType.EventType.EVENT_ERROR_PARSE:
-                        case PlayerType.EventType.EVENT_ERROR_RETRY:
-                        case PlayerType.EventType.EVENT_ERROR_SOURCE:
-
-                            boolean connected = PlayerUtils.isConnected(getContext());
-                            setKeepScreenOn(false);
-                            callPlayerState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
-
-                            // step1
-                            pause(true);
-
-                            // 埋点
-                            try {
-                                BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
-                                buriedEvent.playerError(getUrl(), connected);
-                            } catch (Exception e) {
-                            }
-                            break;
                     }
                 }
 
