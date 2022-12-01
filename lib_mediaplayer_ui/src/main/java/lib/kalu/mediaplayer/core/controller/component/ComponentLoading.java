@@ -73,6 +73,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
                 findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
                 break;
+            case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_NET:
             case PlayerType.StateType.STATE_LOADING_STOP:
