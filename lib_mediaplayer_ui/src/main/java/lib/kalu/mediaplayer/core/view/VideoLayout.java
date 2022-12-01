@@ -36,7 +36,7 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
-import lib.kalu.mediaplayer.handler.PlayerMessage;
+import lib.kalu.mediaplayer.message.PlayerMessage;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.listener.OnFullChangeListener;
 import lib.kalu.mediaplayer.util.ActivityUtils;

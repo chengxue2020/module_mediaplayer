@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.handler;
+package lib.kalu.mediaplayer.message;
 
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -24,7 +24,7 @@ public final class PlayerMessage {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-                MPLogUtil.log("PlayerMessage => handleMessage => what = " + msg.what);
+                MPLogUtil.log("PlayerMessage => handleMessage => what = " + msg.what + ", thread = " + Thread.currentThread().getName());
                 if (null != onMessageChangeListener) {
                     onMessageChangeListener.onMessage(msg);
                 }
@@ -33,22 +33,22 @@ public final class PlayerMessage {
     }
 
     public static void clearMessage() {
-        MPLogUtil.log("PlayerMessage => clearMessage =>");
+        MPLogUtil.log("PlayerMessage => clearMessage => thread = " + Thread.currentThread().getName());
         Holder.mHandler.removeCallbacksAndMessages(null);
     }
 
     public static void clearMessage(int what) {
-        MPLogUtil.log("PlayerMessage => clearMessage => what = " + what);
+        MPLogUtil.log("PlayerMessage => clearMessage => what = " + what + ", thread = " + Thread.currentThread().getName());
         Holder.mHandler.removeMessages(what);
     }
 
     public static void sendMessage(@NonNull Message message) {
-        MPLogUtil.log("PlayerMessage => sendMessage => what = " + message.what);
+        MPLogUtil.log("PlayerMessage => sendMessage => what = " + message.what + ", thread = " + Thread.currentThread().getName());
         Holder.mHandler.sendMessage(message);
     }
 
     public static void sendMessageDelayed(@NonNull Message message, long delayMillis) {
-        MPLogUtil.log("PlayerMessage => sendMessageDelayed => what = " + message.what + ", delayMillis = " + delayMillis);
+        MPLogUtil.log("PlayerMessage => sendMessageDelayed => what = " + message.what + ", delayMillis = " + delayMillis + ", thread = " + Thread.currentThread().getName());
         Holder.mHandler.sendMessageDelayed(message, delayMillis);
     }
 
