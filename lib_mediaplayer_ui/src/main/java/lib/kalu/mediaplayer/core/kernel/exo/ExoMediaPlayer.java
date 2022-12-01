@@ -402,14 +402,12 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
         switch (((ExoPlaybackException) error).type) {
             case PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW:
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
-                break;
             case ExoPlaybackException.TYPE_RENDERER:
             case ExoPlaybackException.TYPE_UNEXPECTED:
             case ExoPlaybackException.TYPE_REMOTE:
             case ExoPlaybackException.TYPE_SOURCE:
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
                 break;
             default:
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
