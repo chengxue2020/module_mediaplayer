@@ -456,13 +456,19 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         // 播放开始
         else if (state == Player.STATE_READY) {
             MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => 播放开始");
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
         }
         // 播放缓冲
         else if (state == Player.STATE_BUFFERING) {
             MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => 播放缓冲");
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
+            boolean playing = isPlaying();
+            if (playing) {
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_START);
+            } else {
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
+            }
         }
         // 未知??
         else {

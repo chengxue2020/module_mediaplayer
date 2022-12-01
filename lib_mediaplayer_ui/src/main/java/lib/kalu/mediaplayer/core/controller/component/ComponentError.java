@@ -65,7 +65,8 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
                 findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
                 break;
-            case PlayerType.StateType.STATE_HIDE_ERROE_COMPONENT:
+            case PlayerType.StateType.STATE_KERNEL_STOP:
+            case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_START_SEEK:
             case PlayerType.StateType.STATE_RESUME:

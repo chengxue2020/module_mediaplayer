@@ -334,6 +334,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                         case PlayerType.EventType.EVENT_LOADING_STOP:
                             callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
                             break;
+                        // 缓冲开始
+                        case PlayerType.EventType.EVENT_BUFFERING_START:
+                            callPlayerState(PlayerType.StateType.STATE_BUFFERING_START);
+                            break;
+                        // 缓冲结束
+                        case PlayerType.EventType.EVENT_BUFFERING_STOP:
+                            callPlayerState(PlayerType.StateType.STATE_BUFFERING_STOP);
+                            break;
                         // 播放开始-快进
                         case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
 
@@ -529,7 +537,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         clearHanlder();
         try {
             if (call) {
-                callPlayerState(PlayerType.StateType.STATE_HIDE_ERROE_COMPONENT);
+                callPlayerState(PlayerType.StateType.STATE_KERNEL_STOP);
                 callPlayerState(PlayerType.StateType.STATE_LOADING_START);
             }
             mKernel.stop();

@@ -82,24 +82,23 @@ public @interface PlayerType {
         int STATE_CLEAN = 2002; //
         int STATE_LOADING_START = 2003; // 开始转圈
         int STATE_LOADING_STOP = 2004; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_START = 2005; // 开始播放
-        int STATE_START_SEEK = 2006; // 开始播放
-        int STATE_END = 2007; // 播放完成
-        int STATE_PAUSE = 2008; // 暂停播放
-        int STATE_PAUSE_IGNORE = 2009; // 暂停播放
-        int STATE_RESUME = 2010; // 暂停播放
-        int STATE_RESUME_IGNORE = 2011; // 暂停播放
-        int STATE_REPEAT = 2012; // 重播一次
-        int STATE_CLOSE = 2013; // 暂停播放
-        int STATE_BUFFERING_START = 2014; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int STATE_BUFFERING_STOP = 2015; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_START_ABORT = 2016; // 开始播放中止
-        int STATE_ONCE_LIVE = 2017; // 即将开播
+        int STATE_KERNEL_STOP = 2005; // 开始播放
+        int STATE_START = 2006; // 开始播放
+        int STATE_START_SEEK = 2007; // 开始播放
+        int STATE_END = 2008; // 播放完成
+        int STATE_PAUSE = 2009; // 暂停播放
+        int STATE_PAUSE_IGNORE = 2010; // 暂停播放
+        int STATE_RESUME = 2011; // 暂停播放
+        int STATE_RESUME_IGNORE = 2012; // 暂停播放
+        int STATE_REPEAT = 2013; // 重播一次
+        int STATE_CLOSE = 2014; // 暂停播放
+        int STATE_BUFFERING_START = 2015; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int STATE_BUFFERING_STOP = 2016; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_START_ABORT = 2017; // 开始播放中止
+        int STATE_ONCE_LIVE = 2018; // 即将开播
 
-        int STATE_ERROR = 2018; // 错误1
-        int STATE_ERROR_NET = 2019; // 错误2
-
-        int STATE_HIDE_ERROE_COMPONENT = 2020; // 隐藏
+        int STATE_ERROR = 2019; // 错误1
+        int STATE_ERROR_NET = 2020; // 错误2
 
         @Documented
         @Retention(CLASS)
@@ -107,6 +106,7 @@ public @interface PlayerType {
         @IntDef({
                 STATE_INIT,
                 STATE_CLEAN,
+                STATE_KERNEL_STOP,
                 STATE_START,
                 STATE_START_SEEK,
                 STATE_PAUSE,
@@ -123,8 +123,7 @@ public @interface PlayerType {
                 STATE_LOADING_START,
                 STATE_ONCE_LIVE,
                 STATE_ERROR,
-                STATE_ERROR_NET,
-                STATE_HIDE_ERROE_COMPONENT})
+                STATE_ERROR_NET})
         @Keep
         @interface Value {
         }
@@ -312,7 +311,7 @@ public @interface PlayerType {
 //        // 开始渲染视频画面
 //        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 开始渲染视频画面
-        int EVENT_VIDEO_END = 9908;
+        int EVENT_VIDEO_END = 9910;
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
         int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -323,7 +322,7 @@ public @interface PlayerType {
         // 缓冲开始
         int EVENT_BUFFERING_START = IMediaPlayer.MEDIA_INFO_BUFFERING_START;
         // 缓冲结束
-        int EVENT_BUFFERING_END = IMediaPlayer.MEDIA_INFO_BUFFERING_END;
+        int EVENT_BUFFERING_STOP = IMediaPlayer.MEDIA_INFO_BUFFERING_END;
         // 视频旋转信息
 //        int EVENT_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
 //        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
@@ -350,7 +349,7 @@ public @interface PlayerType {
 //                EVENT_VIDEO_STOP,
 //                EVENT_VIDEO_END,
                 EVENT_BUFFERING_START,
-                EVENT_BUFFERING_END,
+                EVENT_BUFFERING_STOP,
 //                EVENT_VIDEO_ROTATION_CHANGED,
 //                EVENT_AUDIO_DECODED_START,
 //                EVENT_VIDEO_DECODED_START
