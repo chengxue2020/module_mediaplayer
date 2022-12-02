@@ -7,56 +7,85 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public final class TimerUtil {
 
-    public static final class Holder {
+    private Handler mHandler;
 
-//        private static final HandlerThread thread = new HandlerThread("timerThread" + new Random().nextInt(1000));
-//
-//        static {
-//            thread.start();
-//        }
-
-        private static final Handler mHandler = new Handler(Looper.getMainLooper()) {
+    private TimerUtil() {
+        mHandler = new Handler(Looper.myLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-                MPLogUtil.log("TimerUtil => handleMessage => what = " + msg.what + ", thread = " + Thread.currentThread().getName());
-                if (null != onMessageChangeListener) {
-                    onMessageChangeListener.onMessage(msg);
+                if (null == mListener)
+                    return;
+                Set<Map.Entry<Integer, OnMessageChangeListener>> entrySet = mListener.entrySet();
+                if (null == entrySet)
+                    return;
+                for (Map.Entry<Integer, OnMessageChangeListener> entry : entrySet) {
+                    Integer k = entry.getKey();
+                    OnMessageChangeListener v = entry.getValue();
+                    MPLogUtil.log("TimerUtil => handleMessage => key = " + k + ", listener = " + v);
+                    if (null == v)
+                        continue;
+                    v.onMessage(msg);
                 }
             }
         };
     }
 
-    public static void clearMessage() {
-        MPLogUtil.log("TimerUtil => clearMessage => thread = " + Thread.currentThread().getName());
-        Holder.mHandler.removeCallbacksAndMessages(null);
+    private static final class Holder {
+        static final TimerUtil mTimer = new TimerUtil();
     }
 
-    public static void clearMessage(int what) {
+    public static TimerUtil getInstance() {
+        return Holder.mTimer;
+    }
+
+    public boolean containsListener(int key) {
+        boolean containsKey = false;
+        if (null != mListener) {
+            containsKey = mListener.containsKey(key);
+        }
+        return containsKey;
+    }
+
+    public void clearListener(int key) {
+        boolean containsKey = mListener.containsKey(key);
+        MPLogUtil.log("TimerUtil => clearListener => key = " + key + ", containsKey = " + containsKey);
+        mListener.remove(key);
+    }
+
+    public void clearMessage(int what) {
         MPLogUtil.log("TimerUtil => clearMessage => what = " + what + ", thread = " + Thread.currentThread().getName());
-        Holder.mHandler.removeMessages(what);
+        mHandler.removeMessages(what);
     }
 
-    public static void sendMessage(@NonNull Message message) {
+    public void sendMessage(@NonNull Message message) {
         MPLogUtil.log("TimerUtil => sendMessage => what = " + message.what + ", thread = " + Thread.currentThread().getName());
-        Holder.mHandler.sendMessage(message);
+        mHandler.sendMessage(message);
     }
 
-    public static void sendMessageDelayed(@NonNull Message message, long delayMillis) {
+    public void sendMessageDelayed(@NonNull Message message, long delayMillis) {
         MPLogUtil.log("TimerUtil => sendMessageDelayed => what = " + message.what + ", delayMillis = " + delayMillis + ", thread = " + Thread.currentThread().getName());
-        Holder.mHandler.sendMessageDelayed(message, delayMillis);
+        mHandler.sendMessageDelayed(message, delayMillis);
     }
 
     /*******/
 
-    private static OnMessageChangeListener onMessageChangeListener;
+    private Map<Integer, OnMessageChangeListener> mListener = null;
 
-    public static void regist(@NonNull OnMessageChangeListener listener) {
-        onMessageChangeListener = listener;
+    public void registTimer(@NonNull int key, @NonNull OnMessageChangeListener listener) {
+        if (null == mListener) {
+            mListener = new HashMap<>();
+        }
+        boolean contains = containsListener(key);
+        if (contains)
+            return;
+        mListener.put(key, listener);
     }
 
     public interface OnMessageChangeListener {

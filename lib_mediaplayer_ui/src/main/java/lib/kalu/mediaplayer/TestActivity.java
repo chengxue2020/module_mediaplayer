@@ -14,6 +14,7 @@ import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSpeed;
 import lib.kalu.mediaplayer.core.view.VideoLayout;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -68,6 +69,7 @@ public final class TestActivity extends Activity {
         error.setMessageSize(20);
 
         ComponentSeek bottom = new ComponentSeek(this);
+        ComponentSpeed speed = new ComponentSpeed(this);
 
         // component
         ControllerEmpty controller = new ControllerEmpty(this);
@@ -75,6 +77,7 @@ public final class TestActivity extends Activity {
         controller.addComponent(error);
         controller.addComponent(end);
         controller.addComponent(bottom);
+        controller.addComponent(speed);
 
         // control
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);

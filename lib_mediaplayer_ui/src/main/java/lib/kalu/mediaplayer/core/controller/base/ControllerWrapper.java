@@ -345,11 +345,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public long getTcpSpeed() {
+    public String getTcpSpeed() {
         try {
             return mPlayer.getTcpSpeed();
         } catch (Exception e) {
-            return 0;
+            return "0 kb/s";
         }
     }
 

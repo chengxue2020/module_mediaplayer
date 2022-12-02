@@ -37,6 +37,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.SpeedUtil;
 
 @Keep
 public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
@@ -264,19 +265,16 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
      */
     @Override
     public float getSpeed() {
-        if (mSpeedPlaybackParameters != null) {
+        try {
             return mSpeedPlaybackParameters.speed;
+        }catch (Exception e){
+            return 1f;
         }
-        return 1f;
     }
 
-    /**
-     * 获取当前缓冲的网速
-     */
     @Override
-    public long getTcpSpeed() {
-        // no support
-        return 0;
+    public String getTcpSpeed(Context context) {
+        return SpeedUtil.getNetSpeed(context);
     }
 
     /*****************/
@@ -351,27 +349,27 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
         // 播放错误
         if (state == Player.STATE_IDLE) {
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => 播放错误");
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] =>");
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
 //            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
         }
         // 播放结束
         else if (state == Player.STATE_ENDED) {
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => 播放结束");
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放结束] =>");
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_END);
         }
         // 播放开始
         else if (state == Player.STATE_READY) {
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => 播放开始");
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] =>");
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
         }
         // 播放缓冲
         else if (state == Player.STATE_BUFFERING) {
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => 播放缓冲");
-            boolean playing = isPlaying();
-            if (playing) {
+            long position = getPosition();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放缓冲] => position = " + position);
+            if (position > 0) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_START);
             } else {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
@@ -379,7 +377,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         }
         // 未知??
         else {
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => 未知??");
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[未知??] =>");
         }
     }
 

@@ -198,7 +198,7 @@ public interface PlayerApi {
 
     float getSpeed();
 
-    long getTcpSpeed();
+    String getTcpSpeed();
 
     void setMirrorRotation(boolean enable);
 

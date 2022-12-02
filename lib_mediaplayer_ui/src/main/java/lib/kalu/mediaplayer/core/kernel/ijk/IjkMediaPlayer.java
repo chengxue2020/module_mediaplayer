@@ -399,8 +399,8 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      * 获取当前缓冲的网速
      */
     @Override
-    public long getTcpSpeed() {
-        return mIjkPlayer.getTcpSpeed();
+    public String getTcpSpeed(Context context) {
+        return mIjkPlayer.getTcpSpeed()+" kb/s";
     }
 
     /****************/

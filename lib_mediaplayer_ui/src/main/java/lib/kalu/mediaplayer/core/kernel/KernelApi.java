@@ -99,7 +99,7 @@ public interface KernelApi extends KernelEvent {
 
     float getSpeed();
 
-    long getTcpSpeed();
+    String getTcpSpeed(Context context);
 
     String getUrl();
 

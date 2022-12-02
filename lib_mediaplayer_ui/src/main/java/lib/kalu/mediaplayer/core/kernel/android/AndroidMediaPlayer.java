@@ -284,9 +284,8 @@ public final class AndroidMediaPlayer implements KernelApi {
      * @return 获取网络
      */
     @Override
-    public long getTcpSpeed() {
-        // no support
-        return 0;
+    public String getTcpSpeed(Context context) {
+        return null;
     }
 
     private MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
