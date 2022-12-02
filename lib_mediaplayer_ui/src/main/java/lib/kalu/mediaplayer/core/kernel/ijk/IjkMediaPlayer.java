@@ -14,6 +14,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.SpeedUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 
@@ -400,7 +401,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public String getTcpSpeed(Context context) {
-        return mIjkPlayer.getTcpSpeed()+" kb/s";
+        return SpeedUtil.getNetSpeed(context);
     }
 
     /****************/

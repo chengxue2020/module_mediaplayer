@@ -15,6 +15,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.SpeedUtil;
 
 @Keep
 public final class AndroidMediaPlayer implements KernelApi {
@@ -285,7 +286,7 @@ public final class AndroidMediaPlayer implements KernelApi {
      */
     @Override
     public String getTcpSpeed(Context context) {
-        return null;
+        return SpeedUtil.getNetSpeed(context);
     }
 
     private MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {

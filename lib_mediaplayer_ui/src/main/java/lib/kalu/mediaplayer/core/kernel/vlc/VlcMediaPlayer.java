@@ -14,6 +14,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.SpeedUtil;
 
 @Keep
 public final class VlcMediaPlayer implements KernelApi, KernelEvent {
@@ -312,7 +313,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public String getTcpSpeed(Context context) {
-        return 0 + " kb/s";
+        return SpeedUtil.getNetSpeed(context);
     }
 
     /****************/
