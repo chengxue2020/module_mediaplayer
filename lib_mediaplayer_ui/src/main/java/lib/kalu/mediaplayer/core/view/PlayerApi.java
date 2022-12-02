@@ -125,6 +125,8 @@ public interface PlayerApi {
 
     String getUrl();
 
+    boolean isTimer();
+
     int getBufferedPercentage();
 
     default void seekTo(@NonNull boolean force) {
@@ -220,9 +222,9 @@ public interface PlayerApi {
 
     void release(@NonNull boolean onlyHandle);
 
-    void startHanlder();
+    void startTimer();
 
-    void clearHanlder();
+    void clearTimer();
 
     /*********/
 

@@ -28,7 +28,6 @@ public interface KernelApi extends KernelEvent {
     void releaseDecoder();
 
     void init(@NonNull Context context, @NonNull String url);
-//    void init(@NonNull Context context, @NonNull BundleBuilder bundle, @NonNull String url);
 
     default void create(@NonNull Context context, @NonNull StartBuilder bundle, @NonNull String url) {
         update(bundle, url);
@@ -44,6 +43,9 @@ public interface KernelApi extends KernelEvent {
     default void update(@NonNull StartBuilder bundle, @NonNull String playUrl) {
 
         MPLogUtil.log("KernelApi => update => playUrl = " + playUrl);
+        boolean timer = bundle.isTimer();
+        MPLogUtil.log("KernelApi => update => timer = " + timer);
+        setTimer(timer);
         long seek = bundle.getSeek();
         MPLogUtil.log("KernelApi => update => seek = " + seek);
         setSeek(seek);
@@ -113,7 +115,11 @@ public interface KernelApi extends KernelEvent {
 
     boolean isLive();
 
-    void setLive(@NonNull boolean live);
+    void setLive(@NonNull boolean v);
+
+    boolean isTimer();
+
+    void setTimer(@NonNull boolean v);
 
     void setLooping(boolean loop);
 

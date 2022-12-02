@@ -2,6 +2,9 @@ package lib.kalu.mediaplayer.core.kernel.exo;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Surface;
 
 import androidx.annotation.Keep;
@@ -43,6 +46,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
+    private boolean mTimer = false;
     private String mUrl = null; // 视频串
 
     private boolean mInvisibleStop = false; // 不可见静音
@@ -93,35 +97,6 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     }
 
     @Override
-    public void releaseDecoder() {
-
-        releaseExternalMusic();
-
-        if (null != mExoPlayer) {
-            mExoPlayer.addAnalyticsListener(null);
-            mExoPlayer.setVideoSurface(null);
-            mExoPlayer.stop();
-            mExoPlayer.release();
-            mExoPlayer = null;
-        }
-
-        // TODO: 2021-05-21  同步释放，防止卡顿
-//            new Thread() {
-//                @Override
-//                public void run() {
-//                    //异步释放，防止卡顿
-//                    player.release();
-//                }
-//            }.start();
-
-//        mIsPreparing = false;
-//        mIsBuffering = false;
-//        mLastReportedPlaybackState = Player.STATE_IDLE;
-//        mLastReportedPlayWhenReady = false;
-        mSpeedPlaybackParameters = null;
-    }
-
-    @Override
     public void init(@NonNull Context context, @NonNull String url) {
         // loading-start
         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
@@ -165,77 +140,9 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         }
     }
 
-//    public void setTrackSelector(TrackSelector trackSelector) {
-//        mTrackSelector = trackSelector;
-//    }
-//
-//    public void setRenderersFactory(RenderersFactory renderersFactory) {
-//        mRenderersFactory = renderersFactory;
-//    }
-
-//    public void setLoadControl(LoadControl loadControl) {
-//        mLoadControl = loadControl;
-//    }
-
-//    /**
-//     * 设置播放地址
-//     *
-//     * @param url     播放地址
-//     * @param headers 播放地址请求头
-//     */
-////    @Override
-//    public void setDataSource(@NonNull Context context, @NonNull boolean cache, @NonNull String url, @Nullable Map<String, String> headers, @NonNull CacheConfig config) {
-//        // 设置dataSource
-//        if (url == null || url.length() == 0) {
-//            if (getVideoPlayerChangeListener() != null) {
-//                getVideoPlayerChangeListener().onInfo(PlayerType.MediaType.MEDIA_INFO_URL_NULL, 0);
-//            }
-//            return;
-//        }
-//    }
-
     @Override
     public void setDataSource(AssetFileDescriptor fd) {
         //no support
-    }
-
-    /**
-     * 播放
-     */
-    @Override
-    public void start() {
-        try {
-//            mExoPlayer.prepare();
-//            mExoPlayer.play();
-            mExoPlayer.setPlayWhenReady(true);
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 暂停
-     */
-    @Override
-    public void pause() {
-        try {
-//            mExoPlayer.pause();
-            mExoPlayer.setPlayWhenReady(false);
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 停止
-     */
-    @Override
-    public void stop() {
-        try {
-            mExoPlayer.stop();
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
     }
 
     /**
@@ -580,6 +487,16 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     }
 
     @Override
+    public boolean isTimer() {
+        return mTimer;
+    }
+
+    @Override
+    public void setTimer(@NonNull boolean v) {
+        mTimer = v;
+    }
+
+    @Override
     public void setLooping(boolean loop) {
         this.mLoop = loop;
     }
@@ -660,4 +577,131 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     public String getExternalMusicPath() {
         return this.mExternalMusicPath;
     }
+
+    /************************/
+
+
+    /**
+     * 播放
+     */
+    @Override
+    public void start() {
+        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            doStart();
+        } else {
+            mHandler.sendEmptyMessage(99991);
+        }
+    }
+
+    private void doStart() {
+        try {
+//            mExoPlayer.prepare();
+//            mExoPlayer.play();
+            mExoPlayer.setPlayWhenReady(true);
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 暂停
+     */
+    @Override
+    public void pause() {
+        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            doPause();
+        } else {
+            mHandler.sendEmptyMessage(99992);
+        }
+    }
+
+    private void doPause() {
+        try {
+//            mExoPlayer.pause();
+            mExoPlayer.setPlayWhenReady(false);
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 停止
+     */
+    @Override
+    public void stop() {
+        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            doStop();
+        } else {
+            mHandler.sendEmptyMessage(99993);
+        }
+    }
+
+    private void doStop() {
+        try {
+            mExoPlayer.stop();
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void releaseDecoder() {
+        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            doReleaseDecoder();
+        } else {
+            mHandler.sendEmptyMessage(99995);
+        }
+    }
+
+    private void doReleaseDecoder() {
+        releaseExternalMusic();
+
+        if (null != mExoPlayer) {
+            mExoPlayer.addAnalyticsListener(null);
+            mExoPlayer.setVideoSurface(null);
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
+
+        // TODO: 2021-05-21  同步释放，防止卡顿
+//            new Thread() {
+//                @Override
+//                public void run() {
+//                    //异步释放，防止卡顿
+//                    player.release();
+//                }
+//            }.start();
+
+//        mIsPreparing = false;
+//        mIsBuffering = false;
+//        mLastReportedPlaybackState = Player.STATE_IDLE;
+//        mLastReportedPlayWhenReady = false;
+        mSpeedPlaybackParameters = null;
+    }
+
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            // start
+            if (msg.what == 99991) {
+                doStart();
+            }
+            // pause
+            else if (msg.what == 99992) {
+                doPause();
+            }
+            // stop
+            else if (msg.what == 99993) {
+                doStop();
+            }
+            // release
+            else if (msg.what == 99995) {
+                doReleaseDecoder();
+            }
+        }
+    };
+
+    /************************/
 }

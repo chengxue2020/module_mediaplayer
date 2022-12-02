@@ -36,9 +36,9 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
-import lib.kalu.mediaplayer.message.PlayerMessage;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.listener.OnFullChangeListener;
+import lib.kalu.mediaplayer.message.PlayerMessage;
 import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -140,12 +140,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         } else {
             // visable
             if (visibility == View.VISIBLE) {
-                startHanlder();
+                startTimer();
                 resume(false);
             }
             // not visable
             else {
-                clearHanlder();
+                clearTimer();
                 pause(true);
             }
         }
@@ -235,6 +235,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         if (null == url || url.length() <= 0)
             return;
 
+        boolean timer = builder.isTimer();
+        MPLogUtil.log("VideoLayout => start => timer = " + timer);
         long seek = builder.getSeek();
         MPLogUtil.log("VideoLayout => start => seek = " + seek);
         long max = builder.getMax();
@@ -267,7 +269,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             // step2
             // exo
             if (kernel == PlayerType.KernelType.EXO) {
-                // release();
             }
             // ijk
             else if (kernel == PlayerType.KernelType.IJK) {
@@ -351,7 +352,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                             // step2
                             showReal();
                             // step3
-                            startHanlder();
+                            startTimer();
                             // step4
                             resume(false);
                             // step5
@@ -382,7 +383,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                             showReal();
 
                             // step2
-                            startHanlder();
+                            startTimer();
 
                             // step3
                             checkReal();
@@ -439,7 +440,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                             pause(true);
 
                             // step2
-                            clearHanlder();
+                            clearTimer();
 
                             // 埋点
                             try {
@@ -512,7 +513,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             pause(cleanHandler);
         } else {
             if (cleanHandler) {
-                startHanlder();
+                startTimer();
             }
             resume(true);
         }
@@ -520,21 +521,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void stopKernel(@NonNull boolean call) {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doStopKernel(call);
-        } else {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    doStopKernel(call);
-                }
-            });
-        }
-    }
-
-    private void doStopKernel(@NonNull boolean call) {
         setKeepScreenOn(false);
-        clearHanlder();
+        clearTimer();
         try {
             if (call) {
                 callPlayerState(PlayerType.StateType.STATE_KERNEL_STOP);
@@ -548,21 +536,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void pauseKernel(@NonNull boolean call) {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doPauseKernel(call);
-        } else {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    doPauseKernel(call);
-                }
-            });
-        }
-    }
-
-    public void doPauseKernel(@NonNull boolean call) {
         setKeepScreenOn(false);
-        clearHanlder();
+        clearTimer();
         try {
             // 自动不回调状态
             if (call) {
@@ -579,13 +554,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public void pause(boolean auto, boolean clearHanlder) {
+    public void pause(boolean auto, boolean clearTimer) {
         boolean playing = isPlaying();
-        MPLogUtil.log("pauseME => auto = " + auto + ", clearHanlder = " + clearHanlder + ", playing = " + playing);
+        MPLogUtil.log("pauseME => auto = " + auto + ", clearTimer = " + clearTimer + ", playing = " + playing);
         if (!playing)
             return;
-        if (clearHanlder) {
-            clearHanlder();
+        if (clearTimer) {
+            clearTimer();
         }
         pauseKernel(!auto);
     }
@@ -722,6 +697,25 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         }
     }
 
+    @Override
+    public boolean isTimer() {
+        try {
+            return mKernel.isTimer();
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private boolean doTimer() {
+        try {
+            return mKernel.isTimer();
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+            return false;
+        }
+    }
+
     /**
      * 是否处于播放状态
      */
@@ -762,7 +756,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         // step1
         callPlayerState(PlayerType.StateType.STATE_LOADING_START);
         // step2
-        clearHanlder();
+        clearTimer();
         // step3
         if (force) {
             mKernel.update(seek, max, loop);
@@ -1061,25 +1055,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         MPLogUtil.log("onLife => checkReal => visibility = " + visibility);
         if (visibility == View.VISIBLE)
             return;
-        clearHanlder();
+        clearTimer();
         pause();
     }
 
     @Override
     public void releaseKernel() {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doReleaseKernel();
-        } else {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    doReleaseKernel();
-                }
-            });
-        }
-    }
-
-    private void doReleaseKernel() {
         stopKernel(true);
         try {
             mKernel.pause();
@@ -1092,19 +1073,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void releaseRender() {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doReleaseRender();
-        } else {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    doReleaseRender();
-                }
-            });
-        }
-    }
-
-    private void doReleaseRender() {
         try {
             mRender.releaseReal();
             mRender = null;
@@ -1115,23 +1083,10 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void release(@NonNull boolean onlyHandle) {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doRelease(onlyHandle);
-        } else {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    doRelease(onlyHandle);
-                }
-            });
-        }
-    }
-
-    private void doRelease(@NonNull boolean onlyHandle) {
         MPLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mKernel = " + mKernel);
 
         // step1
-        PlayerMessage.clearMessage();
+        clearTimer();
         // step2
         pause(!onlyHandle, true);
 
@@ -1163,22 +1118,28 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public void startHanlder() {
-        clearHanlder();
-//        MediaLogUtil.log("onEvent => startLoop => mhandler = " + mHandler);
+    public void startTimer() {
+        boolean timer = isTimer();
+        if (!timer)
+            return;
+        clearTimer();
+//        MediaLogUtil.log("onEvent => startTimer => mhandler = " + mHandler);
         String url = getUrl();
         if (null == url || url.length() <= 0)
             return;
         Message message = Message.obtain();
-        message.what = 0x92001;
+        message.what = 1001;
         long millis = System.currentTimeMillis();
         message.obj = millis;
         PlayerMessage.sendMessage(message);
     }
 
     @Override
-    public void clearHanlder() {
-//        MediaLogUtil.log("onEvent => clearLoop => mHandler = " + mHandler);
+    public void clearTimer() {
+//        MediaLogUtil.log("onEvent => clearTimer => mHandler = " + mHandler);
+        boolean timer = isTimer();
+        if (!timer)
+            return;
         PlayerMessage.clearMessage();
     }
 
@@ -1489,68 +1450,67 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         }
     }
 
-    private final boolean handleMessage(@NonNull Message msg) {
+    private final void handleMessage(@NonNull Message msg) {
         MPLogUtil.log("handleMessage => what = " + msg.what + ", thread = " + Thread.currentThread().getName());
 
-        if (msg.what == 0x92001) {
-            long max = getMax();
-            boolean looping = isLooping();
-            long start = (long) msg.obj;
-            long millis = System.currentTimeMillis();
+        if (msg.what != 1001)
+            return;
+        long max = getMax();
+        boolean looping = isLooping();
+        long start = (long) msg.obj;
+        long millis = System.currentTimeMillis();
 
-            // end
-            if (max > 0 && ((millis - start) > max)) {
+        // end
+        if (max > 0 && ((millis - start) > max)) {
 
-                // loop
-                if (looping) {
+            // loop
+            if (looping) {
 
-                    // step1
-                    goneReal();
+                // step1
+                goneReal();
 
-                    // step2
-                    // pause(true, true);
+                // step2
+                // pause(true, true);
 
-                    // step3
-                    seekTo(true);
-                }
-                // stop
-                else {
-
-                    // step1
-                    pause(true);
-
-                    // step2
-                    playEnd();
-                }
+                // step3
+                seekTo(true);
             }
-            // next
+            // stop
             else {
 
-                Message message = Message.obtain();
-                message.what = 0x92001;
-                message.obj = msg.obj;
-                PlayerMessage.sendMessageDelayed(message, 1000);
+                // step1
+                pause(true);
 
-                long position = getPosition();
-                long duration = getDuration();
+                // step2
+                playEnd();
+            }
+        }
+        // next
+        else {
 
-                if (position > 0 && duration > 0) {
-                    ControllerLayout controlLayout = getControlLayout();
-                    if (null != controlLayout) {
-                        controlLayout.seekProgress(false, position, duration);
-                    }
+            Message message = Message.obtain();
+            message.what = 1001;
+            message.obj = msg.obj;
+            PlayerMessage.sendMessageDelayed(message, 1000);
 
-                    if (mOnStateChangeListeners != null) {
-                        for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
-                            if (l != null) {
-                                l.onProgress(position, duration);
-                            }
+            long position = getPosition();
+            long duration = getDuration();
+
+            if (position > 0 && duration > 0) {
+                ControllerLayout controlLayout = getControlLayout();
+                if (null != controlLayout) {
+                    controlLayout.seekProgress(false, position, duration);
+                }
+
+                if (mOnStateChangeListeners != null) {
+                    for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
+                        if (l != null) {
+                            l.onProgress(position, duration);
                         }
                     }
                 }
             }
         }
-        return false;
     }
 
     @Override
@@ -1580,7 +1540,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     MPLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count + ", isLive = " + isLive);
                     if (!isLive) {
                         if (count > 0) {
-                            clearHanlder();
+                            clearTimer();
                             boolean seekForward = seekForward(false);
                             if (seekForward) {
                                 setTag(R.id.module_mediaplayer_id_seek, "1");
@@ -1598,7 +1558,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     if (!isLive) {
                         Object tag = getTag(R.id.module_mediaplayer_id_seek);
                         if (null != tag && "1".equals(tag)) {
-                            startHanlder();
+                            startTimer();
                             boolean seekForward = seekForward(true);
                             if (seekForward) {
                                 setTag(R.id.module_mediaplayer_id_seek, null);
@@ -1613,7 +1573,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     MPLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count + ", isLive = " + isLive);
                     if (!isLive) {
                         if (count > 0) {
-                            clearHanlder();
+                            clearTimer();
                             boolean seekRewind = seekRewind(false);
                             if (seekRewind) {
                                 setTag(R.id.module_mediaplayer_id_seek, "1");
@@ -1631,7 +1591,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     if (!isLive) {
                         Object tag = getTag(R.id.module_mediaplayer_id_seek);
                         if (null != tag && "1".equals(tag)) {
-                            startHanlder();
+                            startTimer();
                             boolean seekRewind = seekRewind(true);
                             if (seekRewind) {
                                 setTag(R.id.module_mediaplayer_id_seek, null);

@@ -199,6 +199,15 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public boolean isTimer() {
+        try {
+            return mPlayer.isTimer();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean isPlaying() {
         try {
             return mPlayer.isPlaying();
@@ -427,17 +436,17 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void startHanlder() {
+    public void startTimer() {
         try {
-            mPlayer.startHanlder();
+            mPlayer.startTimer();
         } catch (Exception e) {
         }
     }
 
     @Override
-    public void clearHanlder() {
+    public void clearTimer() {
         try {
-            mPlayer.clearHanlder();
+            mPlayer.clearTimer();
         } catch (Exception e) {
         }
     }

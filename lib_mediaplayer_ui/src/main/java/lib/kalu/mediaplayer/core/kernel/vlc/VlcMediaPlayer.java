@@ -23,6 +23,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
+    private boolean mTimer = false;
     private String mUrl = null; // 视频串
 
     private boolean mInvisibleStop = false; // 不可见静音
@@ -386,6 +387,16 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
+    public boolean isTimer() {
+        return mTimer;
+    }
+
+    @Override
+    public void setTimer(@NonNull boolean v) {
+        mTimer = v;
+    }
+
+    @Override
     public void setLooping(boolean loop) {
         this.mLoop = loop;
     }
@@ -402,7 +413,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void setInvisibleStop(boolean v) {
-        mInvisibleStop =v;
+        mInvisibleStop = v;
     }
 
     @Override
