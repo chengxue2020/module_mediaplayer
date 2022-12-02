@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.util;
 
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
@@ -54,8 +53,10 @@ public final class TimerUtil {
     }
 
     public void clearListener(int key) {
-        boolean containsKey = mListener.containsKey(key);
-        MPLogUtil.log("TimerUtil => clearListener => key = " + key + ", containsKey = " + containsKey);
+        boolean contains = containsListener(key);
+        MPLogUtil.log("TimerUtil => clearListener => key = " + key + ", contains = " + contains);
+        if (!contains)
+            return;
         mListener.remove(key);
     }
 

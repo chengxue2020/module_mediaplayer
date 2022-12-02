@@ -196,6 +196,7 @@ public final class TestActivity extends Activity {
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setSeek(seek);
         builder.setMax(max);
+        builder.setTimer(false);
         StartBuilder build = builder.build();
         videoLayout.start(build, url);
     }
