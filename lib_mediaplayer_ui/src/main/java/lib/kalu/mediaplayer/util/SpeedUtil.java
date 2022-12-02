@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -26,15 +25,23 @@ public class SpeedUtil {
         return TrafficStats.getUidRxBytes(uid) == TrafficStats.UNSUPPORTED ? 0 : (TrafficStats.getTotalRxBytes() / 1024);//转为KB
     }
 
-    @SuppressLint("WrongConstant")
     private static int getUid(Context context) {
         try {
             String packageName = context.getPackageName();
             PackageManager pm = context.getPackageManager();
-            ApplicationInfo ai = pm.getApplicationInfo(packageName, PackageManager.GET_ACTIVITIES);
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
             return ai.uid;
         } catch (Exception e) {
-            return -1;
+            return 0;
         }
+//        try {
+//
+//            String packageName = context.getPackageName();
+//            PackageManager pm = context.getPackageManager();
+//            ApplicationInfo ai = pm.getApplicationInfo(packageName, PackageManager.GET_ACTIVITIES);
+//            return ai.uid;
+//        } catch (Exception e) {
+//            return -1;
+//        }
     }
 }
