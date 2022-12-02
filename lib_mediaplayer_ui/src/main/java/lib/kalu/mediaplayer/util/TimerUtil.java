@@ -1,30 +1,29 @@
-package lib.kalu.mediaplayer.message;
+package lib.kalu.mediaplayer.util;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
 
 import java.util.Random;
 
-import lib.kalu.mediaplayer.util.MPLogUtil;
-
-public final class PlayerMessage {
+public final class TimerUtil {
 
     public static final class Holder {
 
-        private static final HandlerThread thread = new HandlerThread("playerThread" + new Random().nextInt(1000));
+//        private static final HandlerThread thread = new HandlerThread("timerThread" + new Random().nextInt(1000));
+//
+//        static {
+//            thread.start();
+//        }
 
-        static {
-            thread.start();
-        }
-
-        private static final Handler mHandler = new Handler(thread.getLooper()) {
+        private static final Handler mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-                MPLogUtil.log("PlayerMessage => handleMessage => what = " + msg.what + ", thread = " + Thread.currentThread().getName());
+                MPLogUtil.log("TimerUtil => handleMessage => what = " + msg.what + ", thread = " + Thread.currentThread().getName());
                 if (null != onMessageChangeListener) {
                     onMessageChangeListener.onMessage(msg);
                 }
@@ -33,22 +32,22 @@ public final class PlayerMessage {
     }
 
     public static void clearMessage() {
-        MPLogUtil.log("PlayerMessage => clearMessage => thread = " + Thread.currentThread().getName());
+        MPLogUtil.log("TimerUtil => clearMessage => thread = " + Thread.currentThread().getName());
         Holder.mHandler.removeCallbacksAndMessages(null);
     }
 
     public static void clearMessage(int what) {
-        MPLogUtil.log("PlayerMessage => clearMessage => what = " + what + ", thread = " + Thread.currentThread().getName());
+        MPLogUtil.log("TimerUtil => clearMessage => what = " + what + ", thread = " + Thread.currentThread().getName());
         Holder.mHandler.removeMessages(what);
     }
 
     public static void sendMessage(@NonNull Message message) {
-        MPLogUtil.log("PlayerMessage => sendMessage => what = " + message.what + ", thread = " + Thread.currentThread().getName());
+        MPLogUtil.log("TimerUtil => sendMessage => what = " + message.what + ", thread = " + Thread.currentThread().getName());
         Holder.mHandler.sendMessage(message);
     }
 
     public static void sendMessageDelayed(@NonNull Message message, long delayMillis) {
-        MPLogUtil.log("PlayerMessage => sendMessageDelayed => what = " + message.what + ", delayMillis = " + delayMillis + ", thread = " + Thread.currentThread().getName());
+        MPLogUtil.log("TimerUtil => sendMessageDelayed => what = " + message.what + ", delayMillis = " + delayMillis + ", thread = " + Thread.currentThread().getName());
         Holder.mHandler.sendMessageDelayed(message, delayMillis);
     }
 

@@ -31,13 +31,9 @@ public final class TestActivity extends Activity {
     @Keep
     public static final String INTENT_MAX = "intent_max"; // max
     @Keep
-    public static final String INTENT_LOOP = "intent_loop"; // loop
-    @Keep
     public static final String INTENT_SEEK = "intent_seek"; // 快进
     @Keep
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
-    @Keep
-    public static final String INTENT_LIVE = "intent_live"; // 直播
     @Keep
     public static final String INTENT_URL = "intent_url"; // 视频Url
     @Keep
@@ -192,13 +188,11 @@ public final class TestActivity extends Activity {
         // 开始播放
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
         long max = getIntent().getLongExtra(INTENT_MAX, 0);
-        boolean loop = getIntent().getBooleanExtra(INTENT_LOOP, false);
         MPLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", url = " + url);
 
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setSeek(seek);
         builder.setMax(max);
-        builder.setLoop(loop);
         StartBuilder build = builder.build();
         videoLayout.start(build, url);
     }

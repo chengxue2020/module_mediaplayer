@@ -12,14 +12,14 @@ public final class StartBuilder {
     private boolean mute;
     private boolean timer;
 
-    private boolean invisibleStop = false; // 不可见， 停止
-    private boolean invisibleIgnore = false; // 不可见忽略, 什么也不做
-    private boolean invisibleRelease = true; // 不可见生命周期自动销毁
+    private boolean invisibleStop; // 不可见， 停止
+    private boolean invisibleIgnore; // 不可见忽略, 什么也不做
+    private boolean invisibleRelease; // 不可见生命周期自动销毁
 
     // 外部背景音
-    private String externalMusicUrl = null;
-    private boolean externalMusicLoop = false;
-    private boolean externalMusicAuto = false;
+    private String externalMusicUrl;
+    private boolean externalMusicLoop;
+    private boolean externalMusicAuto;
 
     public boolean isTimer() {
         return timer;
@@ -84,6 +84,23 @@ public final class StartBuilder {
         this.externalMusicAuto = builder.externalMusicAuto;
     }
 
+    public Builder newBuilder() {
+        Builder builder = new Builder();
+        builder.max = max;
+        builder.seek = seek;
+        builder.mute = mute;
+        builder.live = live;
+        builder.loop = loop;
+        builder.timer = timer;
+        builder.invisibleStop = invisibleStop;
+        builder.invisibleIgnore = invisibleIgnore;
+        builder.invisibleRelease = invisibleRelease;
+        builder.externalMusicUrl = externalMusicUrl;
+        builder.externalMusicLoop = externalMusicLoop;
+        builder.externalMusicAuto = externalMusicAuto;
+        return builder;
+    }
+
     @Keep
     public final static class Builder {
 
@@ -92,7 +109,7 @@ public final class StartBuilder {
         private boolean live = false;
         private boolean loop = false;
         private boolean mute = false;
-        private boolean timer = false;
+        private boolean timer = true;
 
         private boolean invisibleStop = false; // 不可见, 暂停
         private boolean invisibleIgnore = false; // 不可见忽略, 什么也不做
