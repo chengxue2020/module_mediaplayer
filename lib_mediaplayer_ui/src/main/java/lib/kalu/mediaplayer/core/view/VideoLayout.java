@@ -291,8 +291,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             // step4
             mKernel.create(getContext(), builder, url);
             // step5
-            startTimer();
-            // step6
             setKeepScreenOn(true);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
