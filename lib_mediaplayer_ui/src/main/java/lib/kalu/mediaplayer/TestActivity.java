@@ -59,6 +59,8 @@ public final class TestActivity extends Activity {
         ComponentLoading loading = new ComponentLoading(this);
         loading.setMessage("加载中...");
         loading.setMessageSize(20);
+        int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, 0);
+        loading.setBackgroundResource(resId);
 
         ComponentEnd end = new ComponentEnd(this);
 //        loading.setMessage("加载中...");

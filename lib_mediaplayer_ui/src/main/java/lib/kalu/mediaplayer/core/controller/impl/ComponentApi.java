@@ -177,6 +177,15 @@ public interface ComponentApi {
         }
     }
 
+    default void setBackgroundResource(@NonNull View layout, @IdRes int id, @ColorInt int resid) {
+        try {
+            View view = layout.findViewById(id);
+            view.setBackgroundResource(resid);
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+        }
+    }
+
     /******************/
 
     default void show() {

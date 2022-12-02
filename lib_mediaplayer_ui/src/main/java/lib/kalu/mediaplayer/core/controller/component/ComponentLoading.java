@@ -112,4 +112,9 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     public void setBackgroundColor(@ColorInt int value) {
         setBackgroundColor(this, R.id.module_mediaplayer_component_loading_bg, value);
     }
+
+    @Override
+    public void setBackgroundResource(int resid) {
+        setBackgroundResource(this, R.id.module_mediaplayer_component_loading_bg, resid);
+    }
 }
