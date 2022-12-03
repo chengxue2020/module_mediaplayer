@@ -7,8 +7,8 @@ import android.net.TrafficStats;
 
 public class SpeedUtil {
 
-    private static String UNIT_KB = "KB/s";
-    private static String UNIT_MB = "MB/s";
+    private static String UNIT_KB = "KB";
+    private static String UNIT_MB = "MB";
     private static long lastTotalRxBytes = 0;
     private static long lastTimeStamp = 0;
 
