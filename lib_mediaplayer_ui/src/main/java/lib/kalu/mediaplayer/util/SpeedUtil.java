@@ -7,18 +7,18 @@ import android.net.TrafficStats;
 
 public class SpeedUtil {
 
-    private static String UNIT_KB = "kb";
-    private static String UNIT_MB = "mb";
+    private static String UNIT_KB = "KB/s";
+    private static String UNIT_MB = "MB/s";
     private static long lastTotalRxBytes = 0;
     private static long lastTimeStamp = 0;
 
     public static String getNetSpeed(Context context) {
         int uid = getUid(context);
-        long nowTotalRxBytes = getTotalRxBytes(uid);
-        long nowTimeStamp = System.currentTimeMillis();
-        long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / (nowTimeStamp - lastTimeStamp));//毫秒转换
-        lastTimeStamp = nowTimeStamp;
-        lastTotalRxBytes = nowTotalRxBytes;
+        long total = getTotalRxBytes(uid);
+        long time = System.currentTimeMillis();
+        long speed = ((total - lastTotalRxBytes) * 1000 / (time - lastTimeStamp));//毫秒转换
+        lastTimeStamp = time;
+        lastTotalRxBytes = total;
         if (speed > 1000) {
             return speed / 1000 + UNIT_MB;
         } else {
