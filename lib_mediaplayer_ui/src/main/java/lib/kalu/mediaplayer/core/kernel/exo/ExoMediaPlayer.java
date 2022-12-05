@@ -349,9 +349,12 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
         // 播放错误
         if (state == Player.STATE_IDLE) {
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] =>");
+            long position = getPosition();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => position = " + position);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-//            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
+            if (position > 0) {
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
+            }
         }
         // 播放结束
         else if (state == Player.STATE_ENDED) {
@@ -362,10 +365,9 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         else if (state == Player.STATE_READY) {
             long position = getPosition();
             MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => position = " + position);
-            if (position > 0) {
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
-            } else {
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+            if (position <= 0) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
             }
         }
