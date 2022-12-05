@@ -350,9 +350,10 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         // 播放错误
         if (state == Player.STATE_IDLE) {
             long position = getPosition();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => position = " + position);
+            long seek = getSeek();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => position = " + position + ", seek = " + seek);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-            if (position > 0) {
+            if (position > seek) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
             }
         }
@@ -364,18 +365,20 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         // 播放开始
         else if (state == Player.STATE_READY) {
             long position = getPosition();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => position = " + position);
+            long seek = getSeek();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => position = " + position + ", seek = " + seek);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-            if (position <= 0) {
+            if (position <= seek) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
             }
         }
         // 播放缓冲
         else if (state == Player.STATE_BUFFERING) {
             long position = getPosition();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放缓冲] => position = " + position);
-            if (position > 0) {
+            long seek = getSeek();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放缓冲] => position = " + position + ", seek = " + seek);
+            if (position > seek) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_START);
             } else {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
