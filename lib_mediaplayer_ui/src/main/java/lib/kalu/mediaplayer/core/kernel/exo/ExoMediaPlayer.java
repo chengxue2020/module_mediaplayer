@@ -267,7 +267,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     public float getSpeed() {
         try {
             return mSpeedPlaybackParameters.speed;
-        }catch (Exception e){
+        } catch (Exception e) {
             return 1f;
         }
     }
@@ -360,10 +360,14 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         }
         // 播放开始
         else if (state == Player.STATE_READY) {
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] =>");
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
+            long position = getPosition();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => position = " + position);
+            if (position > 0) {
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            } else {
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
+            }
         }
         // 播放缓冲
         else if (state == Player.STATE_BUFFERING) {
