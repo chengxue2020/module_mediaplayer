@@ -72,29 +72,35 @@ public final class TestActivity extends Activity {
             }
         });
 
+        // component
+        ControllerEmpty controller = new ControllerEmpty(this);
+
+        // 加载ui
         ComponentLoading loading = new ComponentLoading(this);
         loading.setMessage("加载中...");
         loading.setMessageSize(20);
         int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, 0);
         loading.setBackgroundResource(resId);
+        controller.addComponent(loading);
 
+        // 结束ui
         ComponentEnd end = new ComponentEnd(this);
 //        loading.setMessage("加载中...");
 //        loading.setMessageSize(20);
+        controller.addComponent(end);
 
+        // 错误ui
         ComponentError error = new ComponentError(this);
         error.setMessage("发生错误");
         error.setMessageSize(20);
-
-        ComponentSeek bottom = new ComponentSeek(this);
-        ComponentSpeed speed = new ComponentSpeed(this);
-
-        // component
-        ControllerEmpty controller = new ControllerEmpty(this);
-        controller.addComponent(loading);
         controller.addComponent(error);
-        controller.addComponent(end);
+
+        // 进度条ui
+        ComponentSeek bottom = new ComponentSeek(this);
         controller.addComponent(bottom);
+
+        // 网速ui
+        ComponentSpeed speed = new ComponentSpeed(this);
         controller.addComponent(speed);
 
         // control
