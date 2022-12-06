@@ -31,14 +31,11 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ExoMediaSourceHelper {
-
-    private final WeakHashMap<String, SimpleCache> mWHM = new WeakHashMap<>();
 
     private ExoMediaSourceHelper() {
     }
@@ -120,14 +117,11 @@ public final class ExoMediaSourceHelper {
 
                 // 缓存策略：磁盘
                 if (null != context && cacheType == PlayerType.CacheType.DEFAULT) {
-                    if (!mWHM.containsKey(dir)) {
-                        File file = new File(context.getExternalCacheDir(), dir);
-                        LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
-                        StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
-                        SimpleCache simpleCache = new SimpleCache(file, evictor, provider);
-                        mWHM.put(dir, simpleCache);
-                    }
-                    cacheFactory.setCache(mWHM.get(dir));
+                    File file = new File(context.getExternalCacheDir(), dir);
+                    LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
+                    StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
+                    SimpleCache simpleCache = new SimpleCache(file, evictor, provider);
+                    cacheFactory.setCache(simpleCache);
                 }
 
                 cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
