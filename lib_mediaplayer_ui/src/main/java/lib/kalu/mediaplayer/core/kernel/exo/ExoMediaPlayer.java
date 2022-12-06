@@ -353,7 +353,9 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
             long seek = getSeek();
             MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => position = " + position + ", seek = " + seek);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-            if (position > seek) {
+            if (seek <= 0 && position > 0) {
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
+            } else if (seek > 0 && position > seek) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
             }
         }
