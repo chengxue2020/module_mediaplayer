@@ -76,9 +76,15 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
     private void updateSpeed() {
         try {
             String speed = mControllerWrapper.getTcpSpeed();
+            int length = speed.length();
+            int start = length - 4;
+            String unit = speed.substring(start, length);
+            String num = speed.substring(0, start);
             MPLogUtil.log("ComponentSpeed => updateSpeed => speed = " + speed);
-            TextView textView = findViewById(R.id.module_mediaplayer_component_speed_txt);
-            textView.setText(speed);
+            TextView textView1 = findViewById(R.id.module_mediaplayer_component_speed_txt);
+            textView1.setText(num);
+            TextView textView2 = findViewById(R.id.module_mediaplayer_component_speed_unit);
+            textView2.setText(unit);
         } catch (Exception e) {
         }
     }
@@ -100,6 +106,7 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
                 findViewById(R.id.module_mediaplayer_component_speed_bg).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_speed_pb).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_speed_txt).setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_speed_unit).setVisibility(View.VISIBLE);
                 break;
             case PlayerType.StateType.STATE_BUFFERING_STOP:
                 MPLogUtil.log("ComponentSpeed => onPlayStateChanged => playState = " + playState);
@@ -109,6 +116,7 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
                 findViewById(R.id.module_mediaplayer_component_speed_bg).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_speed_pb).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_speed_txt).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_speed_unit).setVisibility(View.GONE);
                 break;
         }
     }

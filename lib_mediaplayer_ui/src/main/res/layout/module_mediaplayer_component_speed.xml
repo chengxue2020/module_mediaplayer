@@ -14,23 +14,23 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="30dp"
+        android:visibility="gone"
         android:layout_marginRight="30dp"
         android:background="@drawable/module_mediaplayer_shape_speed_bg"
-        android:focusable="false"
-        android:visibility="gone" />
+        android:focusable="false" />
 
     <!-- 转圈 -->
     <lib.kalu.mediaplayer.widget.MediaProgressBar
         android:id="@+id/module_mediaplayer_component_speed_pb"
         android:layout_width="34dp"
         android:layout_height="34dp"
+        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="38dp"
-        android:layout_marginRight="90dp"
+        android:layout_marginRight="85dp"
         android:focusable="false"
         android:indeterminateDuration="2000"
-        android:visibility="gone"
         app:mpb_color_round="#ffffff"
         app:mpb_count="8"
         app:mpb_radius="4dp"
@@ -39,17 +39,30 @@
     <!-- 网速 -->
     <TextView
         android:id="@+id/module_mediaplayer_component_speed_txt"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="30dp"
-        android:layout_marginRight="40dp"
+        android:layout_marginRight="38dp"
         android:focusable="false"
-        android:gravity="center_vertical|right"
-        android:text="400KB"
+        android:visibility="gone"
+        android:gravity="bottom|left"
         android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:visibility="gone" />
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/module_mediaplayer_component_speed_unit"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="58dp"
+        android:layout_marginRight="38dp"
+        android:focusable="false"
+        android:gravity="top|left"
+        android:visibility="gone"
+        android:textColor="#ffffff"
+        android:textSize="10sp" />
 
 </RelativeLayout>

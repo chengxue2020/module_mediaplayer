@@ -349,7 +349,7 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
         try {
             return mPlayer.getTcpSpeed();
         } catch (Exception e) {
-            return "0 kb/s";
+            return "0kb/s";
         }
     }
 
