@@ -38,6 +38,8 @@ import java.lang.annotation.Target;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import lib.kalu.exoplayer2.util.ExoLogUtil;
+
 /** Manages the background loading of {@link Loadable}s. */
 public final class Loader implements LoaderErrorThrower {
 
@@ -406,6 +408,7 @@ public final class Loader implements LoaderErrorThrower {
           shouldLoad = !canceled;
           executorThread = Thread.currentThread();
         }
+//        ExoLogUtil.log("runPP => shouldLoad = " + shouldLoad);
         if (shouldLoad) {
           TraceUtil.beginSection("load:" + loadable.getClass().getSimpleName());
           try {
