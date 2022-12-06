@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Keep;
 
@@ -55,6 +56,21 @@ public final class TestActivity extends Activity {
             onBackPressed();
             return;
         }
+
+
+        findViewById(R.id.module_mediaplayer_switch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartBuilder.Builder builder = new StartBuilder.Builder();
+                builder.setSeek(0);
+                builder.setMax(0);
+                builder.setTimer(false);
+                StartBuilder build = builder.build();
+                VideoLayout layout = findViewById(R.id.module_mediaplayer_test);
+                layout.hideReal();
+                layout.start(build, "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4");
+            }
+        });
 
         ComponentLoading loading = new ComponentLoading(this);
         loading.setMessage("加载中...");

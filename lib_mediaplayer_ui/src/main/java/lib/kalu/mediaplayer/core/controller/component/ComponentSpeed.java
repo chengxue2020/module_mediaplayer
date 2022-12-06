@@ -108,6 +108,8 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
                 findViewById(R.id.module_mediaplayer_component_speed_txt).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_speed_unit).setVisibility(View.VISIBLE);
                 break;
+            case PlayerType.StateType.STATE_INIT:
+            case PlayerType.StateType.STATE_LOADING_START:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
                 MPLogUtil.log("ComponentSpeed => onPlayStateChanged => playState = " + playState);
                 // 1

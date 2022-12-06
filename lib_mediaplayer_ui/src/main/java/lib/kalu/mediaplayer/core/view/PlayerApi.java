@@ -210,7 +210,7 @@ public interface PlayerApi {
 
     void showReal();
 
-    void goneReal();
+    void hideReal();
 
     void checkReal();
 

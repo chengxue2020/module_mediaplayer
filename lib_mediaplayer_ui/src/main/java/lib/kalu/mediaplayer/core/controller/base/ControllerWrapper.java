@@ -23,46 +23,41 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-
+            this.mPlayer.setVolume(v1, v2);
         } catch (Exception e) {
         }
-        this.mPlayer.setVolume(v1, v2);
     }
 
     @Override
     public void setMute(boolean v) {
         try {
-
+            this.mPlayer.setMute(v);
         } catch (Exception e) {
         }
-        this.mPlayer.setMute(v);
     }
 
     @Override
     public void start(@NonNull StartBuilder builder, @NonNull String url) {
         try {
-
+            mPlayer.start(builder, url);
         } catch (Exception e) {
         }
-        mPlayer.start(builder, url);
     }
 
     @Override
     public void create(@NonNull StartBuilder builder, @NonNull boolean logger) {
         try {
-
+            mPlayer.create(builder, logger);
         } catch (Exception e) {
         }
-        mPlayer.create(builder, logger);
     }
 
     @Override
     public void toggle(boolean cleanHandler) {
         try {
-
+            mPlayer.toggle(cleanHandler);
         } catch (Exception e) {
         }
-        mPlayer.toggle(cleanHandler);
     }
 
     @Override
@@ -396,9 +391,9 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void goneReal() {
+    public void hideReal() {
         try {
-            mPlayer.goneReal();
+            mPlayer.hideReal();
         } catch (Exception e) {
         }
     }

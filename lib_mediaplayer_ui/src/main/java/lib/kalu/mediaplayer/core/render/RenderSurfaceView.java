@@ -96,17 +96,16 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void clearCanvas() {
-        try {
-            Canvas canvas = mSurface.lockCanvas(null);
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            mSurface.unlockCanvasAndPost(canvas);
-        } catch (Exception e) {
-        }
+//        try {
+//            Canvas canvas = mSurface.lockCanvas(null);
+//            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+//            mSurface.unlockCanvasAndPost(canvas);
+//        } catch (Exception e) {
+//        }
     }
 
     @Override
     public void updateCanvas() {
-
     }
 
     /**

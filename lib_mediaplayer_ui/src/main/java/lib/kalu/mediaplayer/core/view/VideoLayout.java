@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -304,7 +303,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     switch (event) {
                         // 网络拉流开始
                         case PlayerType.EventType.EVENT_OPEN_INPUT:
-                            goneReal();
+                            hideReal();
                             break;
                         // 初始化开始 => loading start
                         case PlayerType.EventType.EVENT_LOADING_START:
@@ -429,7 +428,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
                                 // step1
                                 callPlayerState(PlayerType.StateType.STATE_LOADING_START);
-                                goneReal();
+                                hideReal();
 
                                 // step2
                                 pause(true);
@@ -999,7 +998,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public void goneReal() {
+    public void hideReal() {
         try {
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
             int count = viewGroup.getChildCount();
@@ -1097,7 +1096,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     private void sendMessage(Object obj) {
         // 1
         boolean containsListener = TimerUtil.getInstance().containsListener(9002);
-        if(!containsListener){
+        if (!containsListener) {
             TimerUtil.getInstance().registTimer(9002, new TimerUtil.OnMessageChangeListener() {
                 @Override
                 public void onMessage(@NonNull Message msg) {
@@ -1129,13 +1128,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void playEnd() {
-        goneReal();
+        hideReal();
         setKeepScreenOn(false);
         callPlayerState(PlayerType.StateType.STATE_END);
     }
 
     @Override
     public void callPlayerState(@PlayerType.StateType.Value int playerState) {
+
         ControllerLayout layout = getControlLayout();
         if (null != layout) {
             layout.setPlayState(playerState);
@@ -1453,7 +1453,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             if (looping) {
 
                 // step1
-                goneReal();
+                hideReal();
 
                 // step2
                 // pause(true, true);

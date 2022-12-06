@@ -351,7 +351,8 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         if (state == Player.STATE_IDLE) {
             long position = getPosition();
             long seek = getSeek();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => position = " + position + ", seek = " + seek);
+            String url = getUrl();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => position = " + position + ", seek = " + seek + ", url = " + url);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
             if (seek <= 0 && position > 0) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
@@ -361,14 +362,16 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         }
         // 播放结束
         else if (state == Player.STATE_ENDED) {
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放结束] =>");
+            String url = getUrl();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放结束] => url = " + url);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_END);
         }
         // 播放开始
         else if (state == Player.STATE_READY) {
             long position = getPosition();
             long seek = getSeek();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => position = " + position + ", seek = " + seek);
+            String url = getUrl();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => position = " + position + ", seek = " + seek + ", url = " + url);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
 
@@ -382,7 +385,8 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         else if (state == Player.STATE_BUFFERING) {
             long position = getPosition();
             long seek = getSeek();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放缓冲] => position = " + position + ", seek = " + seek);
+            String url = getUrl();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放缓冲] => position = " + position + ", seek = " + seek+", url = "+url);
             if (position > seek) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_START);
             } else {

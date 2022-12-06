@@ -17,9 +17,6 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
 import android.view.Surface;
 import android.view.TextureView;
@@ -106,20 +103,12 @@ public class RenderTextureView extends TextureView implements RenderApi {
         return saveBitmap(context, bitmap);
     }
 
-
     @Override
     public void clearCanvas() {
-        try {
-            Canvas canvas = mSurface.lockCanvas(null);
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            mSurface.unlockCanvasAndPost(canvas);
-        } catch (Exception e) {
-        }
     }
 
     @Override
     public void updateCanvas() {
-
     }
 
     /**
