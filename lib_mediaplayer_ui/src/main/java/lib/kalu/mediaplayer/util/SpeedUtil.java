@@ -7,6 +7,7 @@ import android.net.TrafficStats;
 
 public class SpeedUtil {
 
+    private static String UNIT_DOT = ".";
     private static String UNIT_KB = "Kb/s";
     private static String UNIT_MB = "Mb/s";
     private static long lastTotalRxBytes = 0;
@@ -20,7 +21,13 @@ public class SpeedUtil {
         lastTimeStamp = time;
         lastTotalRxBytes = total;
         if (speed > 1000) {
-            return speed / 1000 + UNIT_MB;
+            long a = speed / 1000;
+            long b = speed % 1000;
+            if (b <= 0) {
+                return a + UNIT_MB;
+            } else {
+                return a + UNIT_DOT + b + UNIT_MB;
+            }
         } else {
             return speed + UNIT_KB;
         }
