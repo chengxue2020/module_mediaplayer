@@ -23,9 +23,9 @@ public class MainActivity extends Activity {
         findViewById(R.id.open).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editText = findViewById(R.id.edit);
-                String s = editText.getText().toString();
-//                String s = "udp://@200.200.200.200:10000";
+//                EditText editText = findViewById(R.id.edit);
+//                String s = editText.getText().toString();
+                String s = "udp://@200.200.200.200:10000";
 //                String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, s);

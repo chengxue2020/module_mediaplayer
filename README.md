@@ -47,6 +47,10 @@ lib_mediaplayer_core_ijk_k0.8.8_ff4.0
 #
 #### 更新
 ```
+2022-12-07
+1. 修改：exoplayer-udp-超时时长[com/google/android/exoplayer2/upstream/UdpDataSource.java-55]
+```
+```
 2022-12-02
 1. 新增：视频网络缓冲, 显示提示loading和网速
 ```
