@@ -49,6 +49,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     private boolean mMute = false;
     private boolean mTimer = false;
     private String mUrl = null; // 视频串
+    private boolean mReadying = false;
 
     private boolean mInvisibleStop = false; // 不可见静音
     private boolean mInvisibleIgnore = false; // 不可见忽略, 什么也不做
@@ -349,16 +350,14 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
         // 播放错误
         if (state == Player.STATE_IDLE) {
-            long position = getPosition();
-            long seek = getSeek();
             String url = getUrl();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => position = " + position + ", seek = " + seek + ", url = " + url);
+            boolean readying = isReadying();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => readying = " + readying + ", url = " + url);
             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-            if (seek <= 0 && position > 0) {
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
-            } else if (seek > 0 && position > seek) {
+            if (readying) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_ERROR_SOURCE);
             }
+            setReadying(false);
         }
         // 播放结束
         else if (state == Player.STATE_ENDED) {
@@ -368,26 +367,25 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         }
         // 播放开始
         else if (state == Player.STATE_READY) {
-            long position = getPosition();
-            long seek = getSeek();
-            String url = getUrl();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => position = " + position + ", seek = " + seek + ", url = " + url);
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
 
-            if (seek <= 0 && position <= 0) {
-                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
-            } else if (seek > 0 && position <= seek) {
+            // 准备ok
+            String url = getUrl();
+            boolean readying = isReadying();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => readying = " + readying + ", url = " + url);
+            if (readying) {
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            } else {
+                setReadying(true);
+                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
             }
         }
         // 播放缓冲
         else if (state == Player.STATE_BUFFERING) {
-            long position = getPosition();
-            long seek = getSeek();
             String url = getUrl();
-            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放缓冲] => position = " + position + ", seek = " + seek+", url = "+url);
-            if (position > seek) {
+            boolean readying = isReadying();
+            MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放缓冲] => readying = " + readying + ", url = " + url);
+            if (readying) {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_START);
             } else {
                 mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_START);
@@ -395,6 +393,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         }
         // 未知??
         else {
+            setReadying(false);
             MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[未知??] =>");
         }
     }
@@ -465,6 +464,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void setUrl(String url) {
+        setReadying(false);
         this.mUrl = url;
     }
 
@@ -490,6 +490,17 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         if (max < 0)
             return;
         mMax = max;
+    }
+
+    @Override
+    public boolean isReadying() {
+        return mReadying;
+    }
+
+    @Override
+    public void setReadying(boolean v) {
+        mReadying = v;
+        MPLogUtil.log("ExoMediaPlayer => isReadying => readying = " + mReadying);
     }
 
     @Override
@@ -670,6 +681,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     }
 
     private void doReleaseDecoder() {
+
         releaseExternalMusic();
 
         if (null != mExoPlayer) {

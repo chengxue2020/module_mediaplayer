@@ -30,6 +30,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private boolean mMute = false;
     private boolean mTimer = false;
     private String mUrl = null; // 视频串
+    private boolean mReadying = false;
 
     private boolean mInvisibleStop = false; // 不可见静音
     private boolean mInvisibleIgnore = false; // 不可见忽略, 什么也不做
@@ -437,6 +438,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void setUrl(String url) {
+        setReadying(false);
         this.mUrl = url;
     }
 
@@ -462,6 +464,16 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         if (max < 0)
             return;
         mMax = max;
+    }
+
+    @Override
+    public boolean isReadying() {
+        return mReadying;
+    }
+
+    @Override
+    public void setReadying(boolean v) {
+        mReadying = v;
     }
 
     @Override

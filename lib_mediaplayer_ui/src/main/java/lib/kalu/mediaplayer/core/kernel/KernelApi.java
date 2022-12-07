@@ -113,6 +113,10 @@ public interface KernelApi extends KernelEvent {
 
     void setMax(long max);
 
+    boolean isReadying();
+
+    void setReadying(boolean v);
+
     boolean isLive();
 
     void setLive(@NonNull boolean v);
