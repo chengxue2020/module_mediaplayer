@@ -123,7 +123,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 //        mIsPreparing = true;
 
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().getMediaSource(context, false, url, null, config.getCacheType(), config.getCacheMax(), config.getCacheDir(), config.getCacheSalt());
+            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().createMediaSource(context, url, null, config.getCacheType(), config.getCacheMax(), config.getCacheDir(), config.getCacheSalt());
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
 //                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {

@@ -53,17 +53,16 @@ public final class ExoMediaSourceHelper {
      * @param headers 视频headers
      * @return
      */
-    public MediaSource getMediaSource(@NonNull Context context,
-                                      @NonNull boolean hasCache,
-                                      @NonNull CharSequence url,
-                                      @Nullable Map<String, String> headers,
-                                      @PlayerType.CacheType int cacheType,
-                                      @NonNull int cacheMax,
-                                      @NonNull String cacheDir,
-                                      @NonNull String caheSate
+    public MediaSource createMediaSource(@NonNull Context context,
+                                         @NonNull CharSequence url,
+                                         @Nullable Map<String, String> headers,
+                                         @PlayerType.CacheType int cacheType,
+                                         @NonNull int cacheMax,
+                                         @NonNull String cacheDir,
+                                         @NonNull String caheSate
     ) {
         Uri contentUri = Uri.parse(url.toString());
-        MPLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", hasCache = " + hasCache + ", url = " + url);
+        MPLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", url = " + url);
         // rtmp
         if ("rtmp".equals(contentUri.getScheme())) {
             RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
@@ -95,7 +94,7 @@ public final class ExoMediaSourceHelper {
             refreshHeaders(httpFactory, headers);
 
             // 本地缓存
-            if (hasCache && cacheType == PlayerType.CacheType.DEFAULT) {
+            if (null != context && cacheType == PlayerType.CacheType.DEFAULT) {
                 MPLogUtil.log("getMediaSource => 策略, 本地缓存");
 
                 // cache
@@ -116,13 +115,11 @@ public final class ExoMediaSourceHelper {
                 CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
 
                 // 缓存策略：磁盘
-                if (null != context && cacheType == PlayerType.CacheType.DEFAULT) {
-                    File file = new File(context.getExternalCacheDir(), dir);
-                    LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
-                    StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
-                    SimpleCache simpleCache = new SimpleCache(file, evictor, provider);
-                    cacheFactory.setCache(simpleCache);
-                }
+                File file = new File(context.getExternalCacheDir(), dir);
+                LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
+                StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
+                SimpleCache simpleCache = new SimpleCache(file, evictor, provider);
+                cacheFactory.setCache(simpleCache);
 
                 cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
                 cacheFactory.setUpstreamDataSourceFactory(httpFactory);
