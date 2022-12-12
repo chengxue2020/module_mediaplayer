@@ -14,10 +14,6 @@ import java.util.Scanner;
 
 public class UdpUtils {
 
-    private final static String BC_IP = "220.220.220.220"; // 组播地址
-    private final static int BC_PORT = 1234; // 组播端口
-    private final static int PACK_SIZE = 4096;
-
     public static boolean checkUdpJoinGroup(@NonNull String s) {
         try {
             // 1
@@ -47,49 +43,6 @@ public class UdpUtils {
             return true;
         } catch (Exception e) {
             return false;
-        }
-    }
-
-    public static void init() throws IOException {
-        MulticastSocket sock = new MulticastSocket(BC_PORT);
-        InetAddress bcAddr = InetAddress.getByName(BC_IP);
-        try (Scanner scan = new Scanner(System.in)) {
-            // 创建socket并加入组播地址
-            sock.joinGroup(bcAddr);
-            sock.setLoopbackMode(false); // 必须是false才能开启广播功能！！
-
-            new Thread(() -> { // 接受广播消息的线程
-                try {
-                    DatagramPacket inpack = new DatagramPacket(new byte[PACK_SIZE], PACK_SIZE);
-                    while (true) {
-                        sock.receive(inpack);
-                        Log.e("UUDDPP", "广播消息：" + new String(inpack.getData(), 0, inpack.getLength()));
-                    }
-                } catch (IOException e) {
-                    Log.e("UUDDPP", e.getMessage());
-//                    e.printStackTrace();
-
-                    if (sock != null) {
-                        try {
-                            sock.leaveGroup(bcAddr);
-                        } catch (Exception e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        }
-                        sock.close();
-                    }
-                }
-            }).start();
-
-            // 主线程接受控制台输入并广播出去
-            DatagramPacket outpack = new DatagramPacket(new byte[0], 0, bcAddr, BC_PORT); // 目的端口和MulticastSocket端口一样！！
-            while (scan.hasNextLine()) {
-                byte[] buf = scan.nextLine().getBytes();
-                outpack.setData(buf);
-                sock.send(outpack);
-            }
-        } finally { // 最终关闭程序之前一定要关闭socket
-            sock.close();
         }
     }
 }
