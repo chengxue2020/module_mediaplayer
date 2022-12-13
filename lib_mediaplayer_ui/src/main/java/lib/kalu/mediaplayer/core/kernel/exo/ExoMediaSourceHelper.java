@@ -97,29 +97,9 @@ public final class ExoMediaSourceHelper {
             if (null != context && cacheType == PlayerType.CacheType.DEFAULT) {
                 MPLogUtil.log("getMediaSource => 策略, 本地缓存");
 
-                // cache
-                int size;
-                if (cacheMax <= 0) {
-                    size = 1024;
-                } else {
-                    size = cacheMax;
-                }
-
-                String dir;
-                if (null == cacheDir || cacheDir.length() <= 0) {
-                    dir = "temp";
-                } else {
-                    dir = cacheDir;
-                }
-
                 CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
-
-                // 缓存策略：磁盘
-                File file = new File(context.getExternalCacheDir(), dir);
-                LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
-                StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
-                SimpleCache simpleCache = new SimpleCache(file, evictor, provider);
-                cacheFactory.setCache(simpleCache);
+                SimpleCache cache = ExoSimpleCache.getSimpleCache(context, cacheMax, cacheDir, caheSate);
+                cacheFactory.setCache(cache);
 
                 cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
                 cacheFactory.setUpstreamDataSourceFactory(httpFactory);

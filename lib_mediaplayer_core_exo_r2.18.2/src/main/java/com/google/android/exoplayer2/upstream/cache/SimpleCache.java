@@ -245,6 +245,7 @@ public final class SimpleCache implements Cache {
       CacheEvictor evictor,
       CachedContentIndex contentIndex,
       @Nullable CacheFileMetadataIndex fileIndex) {
+
     if (!lockFolder(cacheDir)) {
       throw new IllegalStateException("Another SimpleCache instance uses the folder: " + cacheDir);
     }

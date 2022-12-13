@@ -82,7 +82,6 @@ public final class TestActivity extends Activity {
         // 加载ui
         ComponentLoading loading = new ComponentLoading(this);
         loading.setMessage("加载中...");
-        loading.setMessageSize(20);
         int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, 0);
         loading.setBackgroundResource(resId);
         controller.addComponent(loading);
@@ -90,13 +89,11 @@ public final class TestActivity extends Activity {
         // 结束ui
         ComponentEnd end = new ComponentEnd(this);
 //        loading.setMessage("加载中...");
-//        loading.setMessageSize(20);
         controller.addComponent(end);
 
         // 错误ui
         ComponentError error = new ComponentError(this);
         error.setMessage("发生错误");
-        error.setMessageSize(20);
         controller.addComponent(error);
 
         // 进度条ui
