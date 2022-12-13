@@ -214,6 +214,10 @@ public interface PlayerApi {
 
     void checkReal();
 
+    void addRender();
+
+    void delRender();
+
     void releaseRender();
 
     default void release() {

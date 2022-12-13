@@ -20,6 +20,11 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public interface RenderApi {
 
     /**
+     *
+     */
+    void init();
+
+    /**
      * 释放资源
      */
     void releaseReal();

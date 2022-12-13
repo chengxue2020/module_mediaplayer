@@ -249,6 +249,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             // step2
             // exo
             if (kernel == PlayerType.KernelType.EXO) {
+//                releaseRender();
             }
             // ijk
             else if (kernel == PlayerType.KernelType.IJK) {
@@ -268,6 +269,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             if (null == mKernel) {
                 create(builder, config.isLog());
             } else {
+//                if (kernel == PlayerType.KernelType.EXO && null != mRender) {
+//                    mRender.init();
+//                    mRender.setKernel(mKernel);
+////                        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+////                        mRender.getReal().setLayoutParams(params);
+////                        ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
+////                        if (null != viewGroup) {
+////                            viewGroup.addView(mRender.getReal(), 0);
+////                        }
+//                }
                 pause(true);
             }
 
@@ -470,12 +481,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         if (null == mRender) {
             mRender = RenderFactoryManager.getRender(getContext(), PlayerManager.getInstance().getConfig().getRender());
             mRender.setKernel(mKernel);
-            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-            mRender.getReal().setLayoutParams(params);
-            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
-            if (null != viewGroup) {
-                viewGroup.addView(mRender.getReal(), 0);
-            }
+            addRender();
         }
     }
 
@@ -1034,7 +1040,43 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
+    public void addRender() {
+        delRender();
+        try {
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            mRender.getReal().setLayoutParams(params);
+            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
+            viewGroup.removeAllViews();
+            viewGroup.addView(mRender.getReal(), 0);
+        } catch (Exception e) {
+            MPLogUtil.log("addRender => " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void delRender() {
+        try {
+            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
+            int count = viewGroup.getChildCount();
+            for (int i = 0; i < count; i++) {
+                View child = viewGroup.getChildAt(i);
+                if (null == child)
+                    continue;
+                if (child instanceof RenderApi) {
+                    ((RenderApi) child).releaseReal();
+                }
+            }
+            if (null != viewGroup) {
+                viewGroup.removeView(mRender.getReal());
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("delRender => " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public void releaseRender() {
+        delRender();
         try {
             mRender.releaseReal();
             mRender = null;

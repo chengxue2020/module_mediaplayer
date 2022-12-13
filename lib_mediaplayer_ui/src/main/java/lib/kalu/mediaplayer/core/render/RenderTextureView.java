@@ -45,10 +45,12 @@ public class RenderTextureView extends TextureView implements RenderApi {
 
     public RenderTextureView(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
-    private void init(Context context) {
+
+    @Override
+    public void init() {
         setFocusable(false);
         setSurfaceTextureListener(listener);
     }

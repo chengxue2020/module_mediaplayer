@@ -2,9 +2,6 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -40,7 +37,10 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         init();
     }
 
-    private void init() {
+
+    @Override
+    public void init() {
+        MPLogUtil.log("RenderSurfaceView => init => " + this);
         setFocusable(false);
 //        mMeasureHelper = new MeasureHelper();
         SurfaceHolder holder = this.getHolder();

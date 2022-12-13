@@ -415,6 +415,22 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
+    public void addRender() {
+        try {
+            mPlayer.addRender();
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void delRender() {
+        try {
+            mPlayer.delRender();
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
     public void releaseRender() {
         try {
             mPlayer.releaseRender();
