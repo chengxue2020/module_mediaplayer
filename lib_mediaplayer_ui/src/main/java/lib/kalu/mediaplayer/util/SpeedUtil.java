@@ -25,6 +25,8 @@ public class SpeedUtil {
             long b = speed % 1000;
             if (b <= 0) {
                 return a + UNIT_MB;
+            } else if (b >= 100) {
+                return a + UNIT_DOT + 99 + UNIT_MB;
             } else {
                 return a + UNIT_DOT + b + UNIT_MB;
             }
