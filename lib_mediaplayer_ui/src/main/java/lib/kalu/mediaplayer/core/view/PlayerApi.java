@@ -63,13 +63,22 @@ public interface PlayerApi {
         start(build, url);
     }
 
+    default void createRender() {
+    }
+
+    default void createKernel(@NonNull StartBuilder builder, @NonNull boolean logger) {
+    }
+
+    default void attachKernelRender(){
+    }
+
+    /**********/
+
     void setVolume(float v1, float v2);
 
     void setMute(boolean v);
 
     void start(@NonNull StartBuilder builder, @NonNull String url);
-
-    void create(@NonNull StartBuilder builder, @NonNull boolean logger);
 
     default void toggle() {
         toggle(false);

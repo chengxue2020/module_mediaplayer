@@ -45,14 +45,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void create(@NonNull StartBuilder builder, @NonNull boolean logger) {
-        try {
-            mPlayer.create(builder, logger);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
     public void toggle(boolean cleanHandler) {
         try {
             mPlayer.toggle(cleanHandler);

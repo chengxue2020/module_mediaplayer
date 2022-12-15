@@ -249,12 +249,16 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             // step2
             // exo
             if (kernel == PlayerType.KernelType.EXO) {
-//                releaseRender();
+                if (null != mRender) {
+                    int render = config.getRender();
+                    if (render == PlayerType.RenderType.SURFACE_VIEW) {
+                        releaseRender();
+                    }
+                }
             }
             // ijk
             else if (kernel == PlayerType.KernelType.IJK) {
-                String temp = getUrl();
-                if (null != temp && temp.length() > 0) {
+                if (null != mKernel) {
                     release();
                 }
             }
@@ -265,22 +269,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             else if (kernel == PlayerType.KernelType.ANDROID) {
             }
 
-            // step3
-            if (null == mKernel) {
-                create(builder, config.isLog());
-            } else {
-//                if (kernel == PlayerType.KernelType.EXO && null != mRender) {
-//                    mRender.init();
-//                    mRender.setKernel(mKernel);
-////                        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-////                        mRender.getReal().setLayoutParams(params);
-////                        ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_video);
-////                        if (null != viewGroup) {
-////                            viewGroup.addView(mRender.getReal(), 0);
-////                        }
-//                }
-                pause(true);
-            }
+            // Render
+            createRender();
+
+            // Kernel
+            createKernel(builder, config.isLog());
+
+            // attachKernelRender
+            attachKernelRender();
 
             // step4
             boolean showNetWarning = showNetWarning();
@@ -298,13 +294,30 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public void create(@NonNull StartBuilder builder, @NonNull boolean logger) {
+    public void createRender() {
+        MPLogUtil.log("createRender => mRender = " + mRender);
+        if (null != mRender)
+            return;
+        try {
+            mRender = RenderFactoryManager.getRender(getContext(), PlayerManager.getInstance().getConfig().getRender());
+            addRender();
+        } catch (Exception e) {
+            MPLogUtil.log("createRender => " + e.getMessage(), e);
+        }
+    }
 
-        // step1
-        release(true);
+    @Override
+    public void createKernel(@NonNull StartBuilder builder, @NonNull boolean logger) {
+//// step1
+//        release(true);
 
-        // step2
-        if (null == mKernel) {
+        MPLogUtil.log("createKernel => mKernel = " + mKernel);
+        if (null != mKernel) {
+            pause(true);
+            return;
+        }
+
+        try {
             mKernel = KernelFactoryManager.getKernel(getContext(), PlayerManager.getInstance().getConfig().getKernel(), new KernelEvent() {
                 @Override
                 public void onEvent(int kernel, int event) {
@@ -475,13 +488,21 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                 }
             });
             mKernel.createDecoder(getContext(), builder.isMute(), logger);
+        } catch (Exception e) {
+            MPLogUtil.log("createKernel => " + e.getMessage(), e);
         }
+    }
 
-        // step3
-        if (null == mRender) {
-            mRender = RenderFactoryManager.getRender(getContext(), PlayerManager.getInstance().getConfig().getRender());
+    @Override
+    public void attachKernelRender() {
+        MPLogUtil.log("attachKernelRender => mRender = " + mRender);
+        MPLogUtil.log("attachKernelRender => mKernel = " + mKernel);
+        if (null == mRender || null == mKernel)
+            return;
+        try {
             mRender.setKernel(mKernel);
-            addRender();
+        } catch (Exception e) {
+            MPLogUtil.log("attachKernelRender => " + e.getMessage(), e);
         }
     }
 

@@ -54,6 +54,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void releaseReal() {
+        MPLogUtil.log("RenderSurfaceView => releaseReal => " + this);
         if (null != mSurface) {
             mSurface.release();
         }

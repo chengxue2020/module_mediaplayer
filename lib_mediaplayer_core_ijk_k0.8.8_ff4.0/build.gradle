@@ -38,15 +38,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-            multiDexEnabled true
+            consumerProguardFiles 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-            multiDexEnabled true
+            consumerProguardFiles 'proguard-rules.pro'
         }
     }
 

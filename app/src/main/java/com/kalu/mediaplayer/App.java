@@ -2,12 +2,7 @@ package com.kalu.mediaplayer;
 
 import android.app.Application;
 import android.content.Context;
-import android.widget.Toast;
-
 import androidx.multidex.MultiDex;
-
-import com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,13 +26,13 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        String version = FfmpegLibrary.getVersion();
-        Toast.makeText(getApplicationContext(), version, Toast.LENGTH_SHORT).show();
+//        String version = FfmpegLibrary.getVersion();
+//        Toast.makeText(getApplicationContext(), version, Toast.LENGTH_SHORT).show();
 
         // config
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
-                .setKernel(PlayerType.KernelType.EXO)
+                .setKernel(PlayerType.KernelType.IJK)
                 .setRender(PlayerType.RenderType.SURFACE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())
                 .setBuriedEvent(new Event())

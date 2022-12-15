@@ -41,17 +41,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-            multiDexEnabled false
-            //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-            multiDexEnabled false
-            //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
         }
     }
 
