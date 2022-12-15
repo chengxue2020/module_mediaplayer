@@ -17,4 +17,10 @@
         android:layout_height="60dp"
         android:text="播放" />
 
+    <Button
+        android:id="@+id/change"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="测试：大小屏切换" />
+
 </LinearLayout>

@@ -14,6 +14,14 @@ import androidx.annotation.Nullable;
  */
 public class MainActivity extends Activity {
 
+    private final String getUrl() {
+        EditText editText = findViewById(R.id.edit);
+        String s = editText.getText().toString();
+//                String s = "udp://@224.255.0.128:10000";
+//                String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+        return s;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,13 +30,18 @@ public class MainActivity extends Activity {
         findViewById(R.id.open).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editText = findViewById(R.id.edit);
-                String s = editText.getText().toString();
-//                String s = "udp://@224.255.0.128:10000";
-//                String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, s);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, getUrl());
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.change).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FullActivity.class);
+                intent.putExtra(FullActivity.INTENT_URL, getUrl());
+                intent.putExtra(FullActivity.INTENT_LIVE, true);
                 startActivity(intent);
             }
         });
