@@ -249,12 +249,22 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             // step2
             // exo
             if (kernel == PlayerType.KernelType.EXO) {
-                if (null != mRender) {
-                    int render = config.getRender();
-                    if (render == PlayerType.RenderType.SURFACE_VIEW) {
-                        releaseRender();
-                    }
+                if (null != mKernel) {
+                    release();
                 }
+//                if (null != mKernel) {
+//                    pauseKernel(true);
+////                    releaseKernel();
+////                    pauseKernel(false);
+////                    stopKernel(false);
+//                }
+//                if (null != mRender) {
+////                    releaseRender();
+//                    int render = config.getRender();
+//                    if (render == PlayerType.RenderType.SURFACE_VIEW) {
+//                        releaseRender();
+//                    }
+//                }
             }
             // ijk
             else if (kernel == PlayerType.KernelType.IJK) {
@@ -271,9 +281,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
             // Render
             createRender();
-
             // Kernel
             createKernel(builder, config.isLog());
+
+            MPLogUtil.log("createKernel => start = " + mKernel);
+            MPLogUtil.log("createKernel => start = " + mRender);
 
             // attachKernelRender
             attachKernelRender();
@@ -308,15 +320,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void createKernel(@NonNull StartBuilder builder, @NonNull boolean logger) {
-//// step1
-//        release(true);
-
         MPLogUtil.log("createKernel => mKernel = " + mKernel);
-        if (null != mKernel) {
-            pause(true);
+        if (null != mKernel)
             return;
-        }
-
         try {
             mKernel = KernelFactoryManager.getKernel(getContext(), PlayerManager.getInstance().getConfig().getKernel(), new KernelEvent() {
                 @Override
@@ -529,6 +535,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                 callPlayerState(PlayerType.StateType.STATE_LOADING_START);
             }
             mKernel.stop();
+            MPLogUtil.log("stopKernel => mKernel = " + mKernel);
         } catch (Exception e) {
             MPLogUtil.log("stopKernel => " + e.getMessage(), e);
         }
@@ -1051,12 +1058,13 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void releaseKernel() {
-        stopKernel(true);
         try {
-            mKernel.pause();
+            MPLogUtil.log("releaseKernel => mKernel = " + mKernel);
             mKernel.releaseDecoder();
             mKernel = null;
+            MPLogUtil.log("releaseKernel => mKernel = null");
         } catch (Exception e) {
+            MPLogUtil.log("releaseKernel => " + e.getMessage(), e);
         }
     }
 
@@ -1097,6 +1105,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void releaseRender() {
+        if (null == mRender)
+            return;
         delRender();
         try {
             mRender.releaseReal();

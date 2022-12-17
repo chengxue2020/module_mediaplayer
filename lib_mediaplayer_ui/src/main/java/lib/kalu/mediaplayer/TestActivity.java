@@ -53,26 +53,10 @@ public final class TestActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.module_mediaplayer_test);
 
-        String url = getIntent().getStringExtra(INTENT_URL);
-        if (null == url || url.length() == 0) {
-            onBackPressed();
-            return;
-        }
-
-
         findViewById(R.id.module_mediaplayer_switch).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                StartBuilder.Builder builder = new StartBuilder.Builder();
-                builder.setSeek(0);
-                builder.setMax(0);
-                builder.setTimer(false);
-                StartBuilder build = builder.build();
-                VideoLayout layout = findViewById(R.id.module_mediaplayer_test);
-                layout.hideReal();
-                String s = getIntent().getStringExtra(INTENT_URL);
-                layout.start(build, s);
+                startPlay();
             }
         });
 
@@ -214,6 +198,17 @@ public final class TestActivity extends Activity {
         });
 
         // 开始播放
+        startPlay();
+    }
+
+    private void startPlay() {
+
+        String url = getIntent().getStringExtra(INTENT_URL);
+        if (null == url || url.length() == 0) {
+            onBackPressed();
+            return;
+        }
+
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
         long max = getIntent().getLongExtra(INTENT_MAX, 0);
         MPLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", url = " + url);
@@ -223,6 +218,7 @@ public final class TestActivity extends Activity {
         builder.setMax(max);
         builder.setTimer(false);
         StartBuilder build = builder.build();
+        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
         videoLayout.start(build, url);
     }
 

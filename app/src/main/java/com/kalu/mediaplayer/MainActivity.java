@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 
+import lib.kalu.mediaplayer.TestActivity;
+
 /**
  * description:
  * created by kalu on 2021/11/23
@@ -15,10 +17,12 @@ import androidx.annotation.Nullable;
 public class MainActivity extends Activity {
 
     private final String getUrl() {
-        EditText editText = findViewById(R.id.edit);
-        String s = editText.getText().toString();
+//        EditText editText = findViewById(R.id.edit);
+//        String s = editText.getText().toString();
 //                String s = "udp://@224.255.0.128:10000";
-//                String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+        String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+//        String s = "http://10.43.111.4/PLTV/88888888/224/3221226306/index.m3u8?servicetype=1";
+//        String s = "http://10.43.111.4/88888888/16/20221212/269516746/index.m3u8?servicetype=0";
         return s;
     }
 
@@ -32,7 +36,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, getUrl());
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+//                intent.putExtra(TestActivity.INTENT_SEEK, 1000000L);
+//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);
             }
         });

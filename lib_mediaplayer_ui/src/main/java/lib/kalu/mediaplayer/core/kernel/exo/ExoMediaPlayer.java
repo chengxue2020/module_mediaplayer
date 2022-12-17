@@ -24,10 +24,8 @@ import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
-import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.video.VideoSize;
 
 import lib.kalu.exoplayer2.ffmpeg.FFmpegDefaultRenderersFactory;
@@ -67,6 +65,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
     private KernelEvent mEvent;
 
     public ExoMediaPlayer(@NonNull KernelEvent event) {
+        setReadying(false);
         this.mEvent = event;
     }
 
@@ -93,9 +92,9 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
         }
         setOptions();
         //播放器日志
-        if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
-            mExoPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mExoPlayer.getTrackSelector(), "ExoPlayer"));
-        }
+//        if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
+//            mExoPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mExoPlayer.getTrackSelector(), "ExoPlayer"));
+//        }
     }
 
     @Override
@@ -665,6 +664,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     private void doStop() {
         try {
+            mExoPlayer.pause();
             mExoPlayer.stop();
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
@@ -684,10 +684,16 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
         releaseExternalMusic();
 
+        setReadying(false);
+        if (null != mEvent) {
+            mEvent = null;
+        }
         if (null != mExoPlayer) {
-            mExoPlayer.addAnalyticsListener(null);
+            mExoPlayer.removeAnalyticsListener(this);
             mExoPlayer.setVideoSurface(null);
-            mExoPlayer.stop();
+        }
+        stop();
+        if (null != mExoPlayer) {
             mExoPlayer.release();
             mExoPlayer = null;
         }

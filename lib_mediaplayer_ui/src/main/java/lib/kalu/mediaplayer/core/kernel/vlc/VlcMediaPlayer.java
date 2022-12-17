@@ -43,6 +43,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     private org.videolan.libvlc.media.MediaPlayer mVlcPlayer;
 
     public VlcMediaPlayer(@NonNull KernelEvent event) {
+        setReadying(false);
         this.mEvent = event;
     }
 
@@ -51,7 +52,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     public VlcMediaPlayer getPlayer() {
         return this;
     }
-
 
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger) {
@@ -73,6 +73,15 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void releaseDecoder() {
         releaseExternalMusic();
+        setReadying(false);
+        if (null != mEvent) {
+            mEvent = null;
+        }
+        if (null != mVlcPlayer) {
+            mVlcPlayer.getVLC().setEventListener(null);
+            mVlcPlayer.setSurface(null);
+        }
+        stop();
         if (null != mVlcPlayer) {
             mVlcPlayer.release();
             mVlcPlayer = null;
@@ -163,6 +172,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void stop() {
         try {
+            mVlcPlayer.pause();
             mVlcPlayer.stop();
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);

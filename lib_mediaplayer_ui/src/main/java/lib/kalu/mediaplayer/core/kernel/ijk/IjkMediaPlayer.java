@@ -45,6 +45,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer;
 
     public IjkMediaPlayer(@NonNull KernelEvent event) {
+        setReadying(false);
         this.mEvent = event;
     }
 
@@ -80,8 +81,32 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void releaseDecoder() {
         releaseExternalMusic();
+        setReadying(false);
+        if (null != mEvent) {
+            mEvent = null;
+        }
         if (null != mIjkPlayer) {
-            mIjkPlayer.stop();
+            // 设置视频错误监听器
+            mIjkPlayer.setOnErrorListener(null);
+            // 设置视频播放完成监听事件
+            mIjkPlayer.setOnCompletionListener(null);
+            // 设置视频信息监听器
+            mIjkPlayer.setOnInfoListener(null);
+            // 设置视频缓冲更新监听事件
+            mIjkPlayer.setOnBufferingUpdateListener(null);
+            // 设置准备视频播放监听事件
+            mIjkPlayer.setOnPreparedListener(null);
+            // 设置视频大小更改监听器
+            mIjkPlayer.setOnVideoSizeChangedListener(null);
+            // 设置视频seek完成监听事件
+            mIjkPlayer.setOnSeekCompleteListener(null);
+            // 设置时间文本监听器
+            mIjkPlayer.setOnTimedTextListener(null);
+            mIjkPlayer.setOnNativeInvokeListener(null);
+            mIjkPlayer.setSurface(null);
+        }
+        stop();
+        if (null != mIjkPlayer) {
             mIjkPlayer.release();
             mIjkPlayer = null;
         }
@@ -302,6 +327,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void stop() {
         try {
+            mIjkPlayer.pause();
             mIjkPlayer.stop();
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);

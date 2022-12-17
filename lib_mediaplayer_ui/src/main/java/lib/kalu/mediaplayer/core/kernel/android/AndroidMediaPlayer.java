@@ -45,6 +45,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     private int mBufferedPercent;
 
     public AndroidMediaPlayer(@NonNull KernelEvent event) {
+        setReadying(false);
         this.mEvent = event;
     }
 
@@ -69,6 +70,10 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void releaseDecoder() {
         releaseExternalMusic();
+        setReadying(false);
+        if (null != mEvent) {
+            mEvent = null;
+        }
         if (null != mAndroidPlayer) {
             mAndroidPlayer.setOnErrorListener(null);
             mAndroidPlayer.setOnCompletionListener(null);
@@ -77,8 +82,10 @@ public final class AndroidMediaPlayer implements KernelApi {
             mAndroidPlayer.setOnPreparedListener(null);
             mAndroidPlayer.setOnVideoSizeChangedListener(null);
             mAndroidPlayer.setLooping(false);
-            mAndroidPlayer.stop();
-            mAndroidPlayer.reset();
+            mAndroidPlayer.setSurface(null);
+        }
+        stop();
+        if (null != mAndroidPlayer) {
             mAndroidPlayer.release();
             mAndroidPlayer = null;
         }
@@ -174,6 +181,7 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void stop() {
         try {
+            mAndroidPlayer.pause();
             mAndroidPlayer.stop();
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);
