@@ -2,9 +2,11 @@ package lib.kalu.exoplayer2.util;
 
 import android.util.Log;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+@Keep
 public final class ExoLogUtil {
 
     private static String mTag = "MP_EXO";

@@ -13,12 +13,47 @@ public final class MPLogUtil {
     private static boolean mLog = false;
 
     public static void setLogger(@PlayerType.KernelType int type, @NonNull boolean enable) {
-        if (type == PlayerType.KernelType.IJK) {
-            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(enable);
-        } else if (type == PlayerType.KernelType.VLC) {
-            lib.kalu.vlcplayer.util.VlcLogUtil.setLogger(enable);
+
+        log("setLogger => type = " + type);
+        if (type == PlayerType.KernelType.VLC) {
+            try {
+                Class<?> clazz = Class.forName("lib.kalu.vlcplayer.util.VlcLogUtil");
+                if (null != clazz) {
+                    clazz = null;
+                    lib.kalu.vlcplayer.util.VlcLogUtil.setLogger(enable);
+                    log("setLogger => vlc succ");
+                } else {
+                    log("setLogger => vlc fail");
+                }
+            } catch (Exception e) {
+                log("setLogger => vlc exception");
+            }
+        } else if (type == PlayerType.KernelType.IJK) {
+            try {
+                Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
+                if (null != clazz) {
+                    clazz = null;
+                    lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(enable);
+                    log("setLogger => ijk succ");
+                } else {
+                    log("setLogger => ijk fail");
+                }
+            } catch (Exception e) {
+                log("setLogger => ijk exception");
+            }
         } else if (type == PlayerType.KernelType.EXO) {
-            lib.kalu.exoplayer2.util.ExoLogUtil.setLogger(enable);
+            try {
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.util.ExoLogUtil");
+                if (null != clazz) {
+                    clazz = null;
+                    lib.kalu.exoplayer2.util.ExoLogUtil.setLogger(enable);
+                    log("setLogger => exo succ");
+                } else {
+                    log("setLogger => exo fail");
+                }
+            } catch (Exception e) {
+                log("setLogger => exo exception");
+            }
         }
 
         MPLogUtil.mLog = enable;

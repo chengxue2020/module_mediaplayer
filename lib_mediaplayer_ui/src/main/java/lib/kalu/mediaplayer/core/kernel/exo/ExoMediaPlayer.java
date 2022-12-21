@@ -168,6 +168,7 @@ public final class ExoMediaPlayer implements KernelApi, AnalyticsListener {
 
     @Override
     public void seekTo(@NonNull long position) {
+        setReadying(false);
         try {
             mExoPlayer.seekTo(position);
         } catch (Exception e) {

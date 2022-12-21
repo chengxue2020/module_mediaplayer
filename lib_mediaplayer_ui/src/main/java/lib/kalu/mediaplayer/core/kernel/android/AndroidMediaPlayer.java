@@ -201,6 +201,7 @@ public final class AndroidMediaPlayer implements KernelApi {
      */
     @Override
     public void seekTo(long time) {
+        setReadying(false);
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 mAndroidPlayer.seekTo(time, MediaPlayer.SEEK_CLOSEST);

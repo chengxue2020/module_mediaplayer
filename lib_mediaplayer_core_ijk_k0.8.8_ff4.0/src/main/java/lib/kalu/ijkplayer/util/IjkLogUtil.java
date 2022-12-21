@@ -2,9 +2,11 @@ package lib.kalu.ijkplayer.util;
 
 import android.util.Log;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+@Keep
 public final class IjkLogUtil {
 
     private static String mTag = "MP_IJK";
