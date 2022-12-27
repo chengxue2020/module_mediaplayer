@@ -60,6 +60,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR_NET:
             case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR_IGNORE:
                 MPLogUtil.log("ComponentError[show] => playState = " + playState);
                 bringToFront();
                 findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);

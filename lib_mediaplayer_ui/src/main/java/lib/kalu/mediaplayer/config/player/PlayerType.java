@@ -99,6 +99,7 @@ public @interface PlayerType {
 
         int STATE_ERROR = 2019; // 错误1
         int STATE_ERROR_NET = 2020; // 错误2
+        int STATE_ERROR_IGNORE = 2021; // 错误3
 
         @Documented
         @Retention(CLASS)
@@ -123,7 +124,8 @@ public @interface PlayerType {
                 STATE_LOADING_START,
                 STATE_ONCE_LIVE,
                 STATE_ERROR,
-                STATE_ERROR_NET})
+                STATE_ERROR_NET,
+                STATE_ERROR_IGNORE})
         @Keep
         @interface Value {
         }
