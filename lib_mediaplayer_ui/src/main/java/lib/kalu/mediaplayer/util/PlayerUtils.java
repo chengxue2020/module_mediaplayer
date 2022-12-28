@@ -209,21 +209,6 @@ public final class PlayerUtils {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, dpValue, context.getResources().getDisplayMetrics());
     }
 
-
-    /**
-     * 获取集合的快照
-     */
-    @NonNull
-    public static <T> List<T> getSnapshot(@NonNull Collection<T> other) {
-        List<T> result = new ArrayList<>(other.size());
-        for (T item : other) {
-            if (item != null) {
-                result.add(item);
-            }
-        }
-        return result;
-    }
-
     /**
      * 如果WindowManager还未创建，则创建一个新的WindowManager返回。否则返回当前已创建的WindowManager。
      */

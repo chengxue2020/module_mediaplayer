@@ -22,7 +22,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 /**
  * revise: 播放器基础属性获取和设置属性接口
  */
-public interface PlayerApi {
+public interface PlayerApi extends PlayerApiBase, PlayerApiComponent, PlayerApiSuface, PlayerApiExternal {
 
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
@@ -61,15 +61,6 @@ public interface PlayerApi {
         builder.setMax(max);
         StartBuilder build = builder.build();
         start(build, url);
-    }
-
-    default void createRender() {
-    }
-
-    default void createKernel(@NonNull StartBuilder builder, @NonNull boolean logger) {
-    }
-
-    default void attachKernelRender(){
     }
 
     /**********/
@@ -249,12 +240,6 @@ public interface PlayerApi {
 
     void setRender(@PlayerType.RenderType int v);
 
-    /*********/
-
-    void callPlayerState(@PlayerType.StateType.Value int playerState);
-
-    void callWindowState(@PlayerType.WindowType.Value int windowState);
-
     /***********/
 
     default boolean setCache(Context context, String key, String value) {
@@ -361,37 +346,4 @@ public interface PlayerApi {
             MPLogUtil.log(e.getMessage(), e);
         }
     }
-
-    /*************************/
-
-    default void enableExternalMusic(boolean enable, boolean release) {
-        enableExternalMusic(enable, release, false);
-    }
-
-    void enableExternalMusic(boolean enable, boolean release, boolean auto);
-
-    void setExternalMusic(@NonNull StartBuilder bundle);
-
-    boolean isExternalMusicAuto();
-
-    boolean isExternalMusicLoop();
-
-    boolean isExternalMusicPrepared();
-
-    /**
-     * 清屏
-     */
-    void clearSuface();
-
-    /**
-     * 刷屏
-     */
-    void updateSuface();
-
-    /**
-     * 截图
-     *
-     * @return
-     */
-    String screenshot();
 }

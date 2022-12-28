@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
@@ -62,11 +61,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
      * assets文件
      */
     protected AssetFileDescriptor mAssetFileDescriptor;
-
-    /**
-     * OnStateChangeListener集合，保存了所有开发者设置的监听器
-     */
-    protected List<OnChangeListener> mOnStateChangeListeners;
 
     public VideoLayout(@NonNull Context context) {
         super(context);
@@ -922,47 +916,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     /**
-     * 添加一个播放状态监听器，播放状态发生变化时将会调用。
-     */
-    public void addOnChangeListener(@NonNull OnChangeListener listener) {
-        if (mOnStateChangeListeners == null) {
-            mOnStateChangeListeners = new ArrayList<>();
-        }
-        mOnStateChangeListeners.add(listener);
-    }
-
-    /**
-     * 移除某个播放状态监听
-     */
-    public void removeOnChangeListener(@NonNull OnChangeListener listener) {
-        if (mOnStateChangeListeners != null) {
-            mOnStateChangeListeners.remove(listener);
-        }
-    }
-
-    /**
-     * 设置一个播放状态监听器，播放状态发生变化时将会调用，
-     * 如果你想同时设置多个监听器，推荐 {@link #addOnChangeListener(OnChangeListener)}。
-     */
-    public void setOnChangeListener(@NonNull OnChangeListener listener) {
-        if (mOnStateChangeListeners == null) {
-            mOnStateChangeListeners = new ArrayList<>();
-        }
-
-        clearListener();
-        mOnStateChangeListeners.add(listener);
-    }
-
-    /**
-     * 移除所有播放状态监听
-     */
-    private final void clearListener() {
-        if (mOnStateChangeListeners != null) {
-            mOnStateChangeListeners.clear();
-        }
-    }
-
-    /**
      * 改变返回键逻辑，用于activity
      */
     public boolean onBackPressed() {
@@ -1207,37 +1160,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public void callPlayerState(@PlayerType.StateType.Value int playerState) {
-
-        ControllerLayout layout = getControlLayout();
-        if (null != layout) {
-            layout.setPlayState(playerState);
-        }
-        if (mOnStateChangeListeners != null) {
-            for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
-                if (l != null) {
-                    l.onChange(playerState);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void callWindowState(@PlayerType.WindowType.Value int windowState) {
-        ControllerLayout layout = getControlLayout();
-        if (null != layout) {
-            layout.setWindowState(windowState);
-        }
-        if (mOnStateChangeListeners != null) {
-            for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
-                if (l != null) {
-                    l.onWindow(windowState);
-                }
-            }
-        }
-    }
-
-    @Override
     public void enableExternalMusic(boolean enable, boolean release, boolean auto) {
         try {
             if (auto) {
@@ -1366,9 +1288,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             int index = decorView.getChildCount();
             decorView.addView(real, index);
             // 3
-            // 4
             callWindowState(PlayerType.WindowType.FULL);
-            // 5
+            // 4
             if (null != mOnFullChangeListener) {
                 mOnFullChangeListener.onFull();
             }
@@ -1558,11 +1479,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     controlLayout.seekProgress(false, position, duration);
                 }
 
-                if (mOnStateChangeListeners != null) {
-                    for (OnChangeListener l : PlayerUtils.getSnapshot(mOnStateChangeListeners)) {
-                        if (l != null) {
-                            l.onProgress(position, duration);
-                        }
+                List<OnChangeListener> listener = getOnChangeListener();
+                if (null != listener) {
+                    for (OnChangeListener l : listener) {
+                        if (null == l)
+                            continue;
+                        l.onProgress(position, duration);
                     }
                 }
             }
