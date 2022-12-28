@@ -42,6 +42,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
     @Nullable
     private KernelApi mKernel;
     private Surface mSurface;
+    private SurfaceTextureListener mSurfaceTextureListener;
 
     public RenderTextureView(Context context) {
         super(context);
@@ -52,7 +53,57 @@ public class RenderTextureView extends TextureView implements RenderApi {
     @Override
     public void init() {
         setFocusable(false);
-        setSurfaceTextureListener(listener);
+        mSurfaceTextureListener = new SurfaceTextureListener() {
+            /**
+             * SurfaceTexture准备就绪
+             * @param surfaceTexture            surface
+             * @param width                     WIDTH
+             * @param height                    HEIGHT
+             */
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+                MPLogUtil.log("RenderApi => onSurfaceTextureAvailable => " + this);
+                if (mSurfaceTexture != null) {
+                    setSurfaceTexture(mSurfaceTexture);
+                } else {
+                    mSurfaceTexture = surfaceTexture;
+                    mSurface = new Surface(surfaceTexture);
+                    if (mKernel != null) {
+                        mKernel.setSurface(mSurface);
+                    }
+                }
+            }
+
+            /**
+             * SurfaceTexture缓冲大小变化
+             * @param surface                   surface
+             * @param width                     WIDTH
+             * @param height                    HEIGHT
+             */
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+                MPLogUtil.log("RenderApi => onSurfaceTextureSizeChanged => " + this);
+            }
+
+            /**
+             * SurfaceTexture即将被销毁
+             * @param surface                   surface
+             */
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                return false;
+            }
+
+            /**
+             * SurfaceTexture通过updateImage更新
+             * @param surface                   surface
+             */
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+                MPLogUtil.log("RenderApi => onSurfaceTextureUpdated => " + this);
+            }
+        };
+        setSurfaceTextureListener(mSurfaceTextureListener);
     }
 
     /**
@@ -60,6 +111,10 @@ public class RenderTextureView extends TextureView implements RenderApi {
      */
     @Override
     public void releaseReal() {
+        if (null != mSurfaceTextureListener) {
+            setSurfaceTexture(null);
+            mSurfaceTextureListener = null;
+        }
         if (mSurface != null) {
             mSurface.release();
         }
@@ -126,55 +181,4 @@ public class RenderTextureView extends TextureView implements RenderApi {
             requestLayout();
         }
     }
-
-    private SurfaceTextureListener listener = new SurfaceTextureListener() {
-        /**
-         * SurfaceTexture准备就绪
-         * @param surfaceTexture            surface
-         * @param width                     WIDTH
-         * @param height                    HEIGHT
-         */
-        @Override
-        public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-            MPLogUtil.log("RenderApi => onSurfaceTextureAvailable => " + this);
-            if (mSurfaceTexture != null) {
-                setSurfaceTexture(mSurfaceTexture);
-            } else {
-                mSurfaceTexture = surfaceTexture;
-                mSurface = new Surface(surfaceTexture);
-                if (mKernel != null) {
-                    mKernel.setSurface(mSurface);
-                }
-            }
-        }
-
-        /**
-         * SurfaceTexture缓冲大小变化
-         * @param surface                   surface
-         * @param width                     WIDTH
-         * @param height                    HEIGHT
-         */
-        @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-            MPLogUtil.log("RenderApi => onSurfaceTextureSizeChanged => " + this);
-        }
-
-        /**
-         * SurfaceTexture即将被销毁
-         * @param surface                   surface
-         */
-        @Override
-        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-            return false;
-        }
-
-        /**
-         * SurfaceTexture通过updateImage更新
-         * @param surface                   surface
-         */
-        @Override
-        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            MPLogUtil.log("RenderApi => onSurfaceTextureUpdated => " + this);
-        }
-    };
 }

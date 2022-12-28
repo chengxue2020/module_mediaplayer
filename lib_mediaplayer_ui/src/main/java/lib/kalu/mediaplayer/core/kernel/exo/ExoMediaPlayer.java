@@ -406,7 +406,7 @@ public final class ExoMediaPlayer implements KernelApi {
     @Override
     public void setOptions() {
         //准备好就开始播放
-        mExoPlayer.setPlayWhenReady(true);
+        start();
     }
 
     /**
@@ -627,8 +627,6 @@ public final class ExoMediaPlayer implements KernelApi {
 
     private void doStart() {
         try {
-//            mExoPlayer.prepare();
-//            mExoPlayer.play();
             mExoPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
@@ -649,8 +647,8 @@ public final class ExoMediaPlayer implements KernelApi {
 
     private void doPause() {
         try {
-//            mExoPlayer.pause();
-            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.pause();
+//            mExoPlayer.setPlayWhenReady(false);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }

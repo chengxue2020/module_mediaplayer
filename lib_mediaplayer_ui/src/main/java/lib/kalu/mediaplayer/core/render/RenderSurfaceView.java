@@ -31,6 +31,8 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     private KernelApi mKernel;
     @Nullable
     private Surface mSurface;
+    @Nullable
+    private SurfaceHolder.Callback mSurfaceHolderCallback;
 
     public RenderSurfaceView(Context context) {
         super(context);
@@ -47,7 +49,46 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         //类型必须设置成SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS
 //        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        holder.addCallback(mCallback);
+        mSurfaceHolderCallback = new SurfaceHolder.Callback() {
+            /**
+             * 创建的时候调用该方法
+             * @param holder                        holder
+             */
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                MPLogUtil.log("RenderSurfaceView => surfaceCreated => " + this);
+                if (mKernel != null) {
+                    mSurface = holder.getSurface();
+                    mKernel.setSurface(mSurface);
+                }
+            }
+
+            /**
+             * 视图改变的时候调用方法
+             * @param holder
+             * @param format
+             * @param width
+             * @param height
+             */
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                MPLogUtil.log("RenderSurfaceView => surfaceChanged => " + this);
+//            if (mKernel != null) {
+//                mSurface = holder.getSurface();
+//                mKernel.setSurface(mSurface);
+//            }
+            }
+
+            /**
+             * 销毁的时候调用该方法
+             * @param holder
+             */
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                MPLogUtil.log("RenderSurfaceView => surfaceDestroyed => " + this);
+            }
+        };
+        holder.addCallback(mSurfaceHolderCallback);
 //        setZOrderOnTop(true);
 //        setZOrderMediaOverlay(true);
     }
@@ -55,11 +96,12 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Override
     public void releaseReal() {
         MPLogUtil.log("RenderSurfaceView => releaseReal => " + this);
-        if (null != mSurface) {
-            mSurface.release();
+        if (mSurfaceHolderCallback != null) {
+            getHolder().removeCallback(mSurfaceHolderCallback);
+            mSurfaceHolderCallback = null;
         }
-        if (mCallback != null) {
-            getHolder().removeCallback(mCallback);
+        if (mSurface != null) {
+            mSurface.release();
         }
     }
 
@@ -135,44 +177,4 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             requestLayout();
         }
     }
-
-    private final SurfaceHolder.Callback mCallback = new SurfaceHolder.Callback() {
-        /**
-         * 创建的时候调用该方法
-         * @param holder                        holder
-         */
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            MPLogUtil.log("RenderSurfaceView => surfaceCreated => " + this);
-            if (mKernel != null) {
-                mSurface = holder.getSurface();
-                mKernel.setSurface(mSurface);
-            }
-        }
-
-        /**
-         * 视图改变的时候调用方法
-         * @param holder
-         * @param format
-         * @param width
-         * @param height
-         */
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            MPLogUtil.log("RenderSurfaceView => surfaceChanged => " + this);
-//            if (mKernel != null) {
-//                mSurface = holder.getSurface();
-//                mKernel.setSurface(mSurface);
-//            }
-        }
-
-        /**
-         * 销毁的时候调用该方法
-         * @param holder
-         */
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            MPLogUtil.log("RenderSurfaceView => surfaceDestroyed => " + this);
-        }
-    };
 }
