@@ -62,7 +62,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
              */
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-                MPLogUtil.log("RenderApi => onSurfaceTextureAvailable => " + this);
+                MPLogUtil.log("RenderTextureView => onSurfaceTextureAvailable => " + this);
                 if (mSurfaceTexture != null) {
                     setSurfaceTexture(mSurfaceTexture);
                 } else {
@@ -82,7 +82,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
              */
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                MPLogUtil.log("RenderApi => onSurfaceTextureSizeChanged => " + this);
+                MPLogUtil.log("RenderTextureView => onSurfaceTextureSizeChanged => " + this);
             }
 
             /**
@@ -90,7 +90,8 @@ public class RenderTextureView extends TextureView implements RenderApi {
              * @param surface                   surface
              */
             @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                MPLogUtil.log("RenderTextureView => onSurfaceTextureDestroyed => " + this);
                 return false;
             }
 
@@ -100,7 +101,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
              */
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-                MPLogUtil.log("RenderApi => onSurfaceTextureUpdated => " + this);
+                MPLogUtil.log("RenderTextureView => onSurfaceTextureUpdated => " + this);
             }
         };
         setSurfaceTextureListener(mSurfaceTextureListener);
@@ -111,15 +112,14 @@ public class RenderTextureView extends TextureView implements RenderApi {
      */
     @Override
     public void releaseReal() {
-        if (null != mSurfaceTextureListener) {
-            setSurfaceTexture(null);
-            mSurfaceTextureListener = null;
+        if (mSurfaceTexture != null) {
+            mSurfaceTexture.release();
         }
         if (mSurface != null) {
             mSurface.release();
         }
-        if (mSurfaceTexture != null) {
-            mSurfaceTexture.release();
+        if (null != mSurfaceTextureListener) {
+            mSurfaceTextureListener = null;
         }
     }
 
