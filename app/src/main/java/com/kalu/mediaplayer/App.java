@@ -36,9 +36,8 @@ public class App extends Application {
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())
                 .setBuriedEvent(new Event())
-                .setCacheType(PlayerType.CacheType.NONE)
+                .setCacheType(PlayerType.CacheType.DOWNLOAD)
                 .setCacheMax(1024)
-                .setCacheDir("temp")
                 .build();
         PlayerManager.getInstance().setConfig(build);
     }

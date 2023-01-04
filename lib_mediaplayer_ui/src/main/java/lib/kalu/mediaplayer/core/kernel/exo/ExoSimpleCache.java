@@ -17,8 +17,7 @@ public final class ExoSimpleCache {
     public static SimpleCache getSimpleCache(
             @NonNull Context context,
             @NonNull int cacheMax,
-            @NonNull String cacheDir,
-            @NonNull String caheSate) {
+            @NonNull String cacheDir) {
 
         if (null != mSimpleCache) {
             mSimpleCache.release();
@@ -34,12 +33,12 @@ public final class ExoSimpleCache {
 
         String dir;
         if (null == cacheDir || cacheDir.length() <= 0) {
-            dir = "temp_" + caheSate;
+            dir = "exo";
         } else {
-            dir = cacheDir + "_" + caheSate;
+            dir = cacheDir;
         }
 
-        File file = new File(context.getExternalCacheDir(), dir);
+        File file = new File(context.getCacheDir(), dir);
         LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
         StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
         mSimpleCache = new SimpleCache(file, evictor, provider);

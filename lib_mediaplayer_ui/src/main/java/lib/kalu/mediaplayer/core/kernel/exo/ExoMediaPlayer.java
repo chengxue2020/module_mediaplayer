@@ -53,7 +53,6 @@ public final class ExoMediaPlayer implements KernelApi {
     private boolean mInvisibleIgnore = false; // 不可见忽略, 什么也不做
     private boolean mInvisibleRelease = true; // 不可见生命周期自动销毁
 
-
     private String mExternalMusicPath = null;
     private boolean mExternalMusicPrepared = false;
     private boolean mExternalMusicLoop = false;
@@ -282,7 +281,7 @@ public final class ExoMediaPlayer implements KernelApi {
 //        mIsPreparing = true;
 
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().createMediaSource(context, url, null, config.getCacheType(), config.getCacheMax(), config.getCacheDir(), config.getCacheSalt());
+            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().createMediaSource(context, url, null, config.getCacheType(), config.getCacheMax(), config.getCacheDir());
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
 //                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {

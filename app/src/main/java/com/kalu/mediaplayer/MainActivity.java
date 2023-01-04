@@ -17,10 +17,11 @@ import lib.kalu.mediaplayer.TestActivity;
 public class MainActivity extends Activity {
 
     private final String getUrl() {
-        EditText editText = findViewById(R.id.edit);
-        String s = editText.getText().toString();
+//        EditText editText = findViewById(R.id.edit);
+//        String s = editText.getText().toString();
+//                String s = "http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400";
 //                String s = "udp://@224.255.0.128:10000";
-//        String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+        String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
 //        String s = "http://10.43.111.4/PLTV/88888888/224/3221226306/index.m3u8?servicetype=1";
 //        String s = "http://10.43.111.4/88888888/16/20221212/269516746/index.m3u8?servicetype=0";
         return s;
@@ -46,7 +47,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), FullActivity.class);
                 intent.putExtra(FullActivity.INTENT_URL, getUrl());
-                intent.putExtra(FullActivity.INTENT_LIVE, true);
+//                intent.putExtra(FullActivity.INTENT_LIVE, true);
                 startActivity(intent);
             }
         });

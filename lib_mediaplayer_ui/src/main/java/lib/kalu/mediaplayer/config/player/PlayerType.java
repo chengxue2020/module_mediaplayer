@@ -10,6 +10,7 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.Keep;
+import androidx.annotation.StringDef;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -30,13 +31,13 @@ public @interface PlayerType {
     @Keep
     @interface CacheType {
 
+        int DOWNLOAD = 1001;
         int NONE = 1002;
-        int DEFAULT = 1001;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {CacheType.DEFAULT, CacheType.NONE})
+        @IntDef(value = {CacheType.DOWNLOAD, CacheType.NONE})
         @Keep
         @interface Value {
         }
@@ -356,6 +357,36 @@ public @interface PlayerType {
 //                EVENT_AUDIO_DECODED_START,
 //                EVENT_VIDEO_DECODED_START
         })
+        @Keep
+        @interface Value {
+        }
+    }
+
+    /*************/
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @Keep
+    @interface SchemeType {
+
+        String RTMP = "rtmp";
+        String RTSP = "rtsp";
+        String _MPD = ".mpd";
+        String _M3U = ".m3u";
+        String _M3U8 = ".m3u8";
+        String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @StringDef(value = {
+                SchemeType.RTMP,
+                SchemeType.RTSP,
+                SchemeType._MPD,
+                SchemeType._M3U,
+                SchemeType._M3U8,
+                SchemeType._MATCHES})
         @Keep
         @interface Value {
         }

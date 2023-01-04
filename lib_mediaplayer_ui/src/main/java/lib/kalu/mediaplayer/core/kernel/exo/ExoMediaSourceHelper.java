@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
 import com.google.android.exoplayer2.ext.rtmp.RtmpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -22,15 +21,11 @@ import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
-import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import com.google.android.exoplayer2.util.MimeTypes;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -48,30 +43,37 @@ public final class ExoMediaSourceHelper {
         return Holder.mInstance;
     }
 
-    /**
-     * @param url     视频url
-     * @param headers 视频headers
-     * @return
-     */
     public MediaSource createMediaSource(@NonNull Context context,
-                                         @NonNull CharSequence url,
-                                         @Nullable Map<String, String> headers,
+                                         @NonNull String mediaUrl,
+                                         @Nullable String subtitleUrl,
                                          @PlayerType.CacheType int cacheType,
                                          @NonNull int cacheMax,
-                                         @NonNull String cacheDir,
-                                         @NonNull String caheSate
-    ) {
-        Uri contentUri = Uri.parse(url.toString());
-        MPLogUtil.log("getMediaSource => scheme = " + contentUri.getScheme() + ", url = " + url);
+                                         @NonNull String cacheDir) {
+
+        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => mediaUrl = " + mediaUrl);
+        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => subtitleUrl = " + subtitleUrl);
+        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => cacheType = " + cacheType);
+        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => cacheMax = " + cacheMax);
+        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => cacheDir = " + cacheDir);
+
+        String scheme;
+        Uri uri = Uri.parse(mediaUrl);
+        try {
+            scheme = uri.getScheme();
+        } catch (Exception e) {
+            scheme = null;
+        }
+        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => scheme = " + scheme);
+
         // rtmp
-        if ("rtmp".equals(contentUri.getScheme())) {
-            RtmpDataSource.Factory factory = new RtmpDataSource.Factory();
-            return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+        if (PlayerType.SchemeType.RTMP.equals(scheme)) {
+            MediaItem mediaItem = MediaItem.fromUri(uri);
+            return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory()).createMediaSource(mediaItem);
         }
         // rtsp
-        else if ("rtsp".equals(contentUri.getScheme())) {
-            RtspMediaSource.Factory factory = new RtspMediaSource.Factory();
-            return factory.createMediaSource(MediaItem.fromUri(contentUri));
+        else if (PlayerType.SchemeType.RTSP.equals(scheme)) {
+            MediaItem mediaItem = MediaItem.fromUri(uri);
+            return new RtspMediaSource.Factory().createMediaSource(mediaItem);
         }
         // other
         else {
@@ -91,141 +93,85 @@ public final class ExoMediaSourceHelper {
             httpFactory.setKeepPostFor302Redirects(true);
 
             // head
-            refreshHeaders(httpFactory, headers);
+//            refreshHeaders(httpFactory, headers);
 
-            // 本地缓存
-            if (null != context && cacheType == PlayerType.CacheType.DEFAULT) {
-                MPLogUtil.log("getMediaSource => 策略, 本地缓存");
-
+            DataSource.Factory dataSource;
+            if (cacheType == PlayerType.CacheType.NONE) {
+                dataSource = new DefaultDataSource.Factory(context, httpFactory);
+            } else {
                 CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
-                SimpleCache cache = ExoSimpleCache.getSimpleCache(context, cacheMax, cacheDir, caheSate);
+                SimpleCache cache = ExoSimpleCache.getSimpleCache(context, cacheMax, cacheDir);
                 cacheFactory.setCache(cache);
-
                 cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
                 cacheFactory.setUpstreamDataSourceFactory(httpFactory);
-                return createMediaSource(url, cacheFactory);
+                dataSource = cacheFactory;
             }
-            // 默认
-            else {
-                MPLogUtil.log("getMediaSource => 默认, 不缓存");
-                DefaultDataSource.Factory factory = new DefaultDataSource.Factory(context, httpFactory);
-                return createMediaSource(url, factory);
-            }
+
+            MediaSource mediaSource = createMediaSource(mediaUrl, subtitleUrl, dataSource);
+            return mediaSource;
         }
     }
 
-    private MediaSource createMediaSource(@NonNull CharSequence url, @NonNull DataSource.Factory factory) {
+    private MediaSource createMediaSource(
+            @NonNull String mediaUrl,
+            @Nullable String subtitleUrl,
+            @NonNull DataSource.Factory dataSource) {
 
+        // 1
         int contentType;
-        if (url.toString().toLowerCase().contains(".mpd")) {
-            contentType = C.CONTENT_TYPE_DASH;
-        } else if (url.toString().toLowerCase().contains(".m3u8")) {
-            contentType = C.CONTENT_TYPE_HLS;
-        } else if (url.toString().toLowerCase().matches(".*\\.ism(l)?(/manifest(\\(.+\\))?)?")) {
-            contentType = C.CONTENT_TYPE_SS;
-        } else {
+        try {
+            String s = mediaUrl.toLowerCase();
+            if (s.endsWith(PlayerType.SchemeType._MPD)) {
+                contentType = C.CONTENT_TYPE_DASH;
+            } else if (s.endsWith(PlayerType.SchemeType._M3U)) {
+                contentType = C.CONTENT_TYPE_HLS;
+            } else if (s.endsWith(PlayerType.SchemeType._M3U8)) {
+                contentType = C.CONTENT_TYPE_HLS;
+            } else if (s.matches(PlayerType.SchemeType._MATCHES)) {
+                contentType = C.CONTENT_TYPE_SS;
+            } else {
+                contentType = C.CONTENT_TYPE_OTHER;
+            }
+        } catch (Exception e) {
             contentType = C.CONTENT_TYPE_OTHER;
         }
+        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => contentType = " + contentType);
 
-        // 字幕
-//        MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(srtUri);
-//        subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
-//        subtitle.setLanguage("en");
-//        subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT);
-
-//        MediaLogUtil.log("SRT => srtUri = " + srtUri);
+        // 2
         MediaItem.Builder builder = new MediaItem.Builder();
-        builder.setUri(Uri.parse(url.toString()));
-//        builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
+        builder.setUri(Uri.parse(mediaUrl));
+        if (null != subtitleUrl && subtitleUrl.length() > 0) {
+            MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(mediaUrl));
+            subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
+            subtitle.setLanguage("en");
+            subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
+            builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
+
+//            MediaItem.SubtitleConfiguration.Builder builder = new MediaItem.SubtitleConfiguration.Builder(srtUri);
+//            builder.setMimeType(MimeTypes.APPLICATION_SUBRIP);
+//            builder.setMimeType(MimeTypes.TEXT_VTT);
+//            builder.setLanguage("en");
+//            builder.setSelectionFlags(C.SELECTION_FLAG_DEFAULT);
+//            MediaItem.SubtitleConfiguration subtitle = builder.build();
+//            MediaSource textMediaSource = new SingleSampleMediaSource.Factory(factory).createMediaSource(subtitle, C.TIME_UNSET);
+//            textMediaSource.getMediaItem().mediaMetadata.subtitle.toString();
+//            MediaLogUtil.log("SRT => " + subtitle);
+//            return new MergingMediaSource(mediaSource, srtSource);
+        }
         MediaItem mediaItem = builder.build();
-//        MediaItem.Subtitle subtitle = new MediaItem.Subtitle(
-//                srtUri,
-//                MimeTypes.APPLICATION_SUBRIP,
-//                "en",
-//                C.SELECTION_FLAG_DEFAULT);
-////                C.SELECTION_FLAG_AUTOSELECT);
 
-
+        // 3
         switch (contentType) {
             case C.CONTENT_TYPE_DASH:
-                MPLogUtil.log("SRT => TYPE_DASH");
-                return new DashMediaSource.Factory(factory).createMediaSource(mediaItem);
+                return new DashMediaSource.Factory(dataSource).createMediaSource(mediaItem);
             case C.CONTENT_TYPE_SS:
-                MPLogUtil.log("SRT => TYPE_SS");
-                return new SsMediaSource.Factory(factory).createMediaSource(mediaItem);
+                return new SsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
             case C.CONTENT_TYPE_HLS:
-                MPLogUtil.log("SRT => TYPE_HLS");
-                return new HlsMediaSource.Factory(factory).createMediaSource(mediaItem);
+                return new HlsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
             default:
-                MPLogUtil.log("SRT => TYPE_DEFAULT");
-//                return new DefaultMediaSourceFactory(factory).createMediaSource(mediaItem);
-                DefaultExtractorsFactory extractors = new DefaultExtractorsFactory();
-                extractors.setConstantBitrateSeekingEnabled(true);
-                return new ProgressiveMediaSource.Factory(factory, extractors).createMediaSource(mediaItem);
+                DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+                extractorsFactory.setConstantBitrateSeekingEnabled(true);
+                return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(mediaItem);
         }
-
-//        // 字幕
-//        if (null != srtUri) {
-//
-//            MediaItem.Builder srtBuilder = new MediaItem.Builder().setUri(srtUri);
-//            MediaItem.Subtitle subtitle = new MediaItem.Subtitle(srtUri,
-//                    MimeTypes.TEXT_VTT,
-//                    "en",
-//                    C.SELECTION_FLAG_DEFAULT);
-//            srtBuilder.setSubtitles(Arrays.asList(subtitle));
-//
-//            MediaItem srtItem = srtBuilder.build();
-////            MediaSource srtSource = new DefaultMediaSourceFactory(factory).createMediaSource(srtItem);
-//
-////            MediaItem.SubtitleConfiguration.Builder builder = new MediaItem.SubtitleConfiguration.Builder(srtUri);
-//////            builder.setMimeType(MimeTypes.APPLICATION_SUBRIP);
-////            builder.setMimeType(MimeTypes.TEXT_VTT);
-////            builder.setLanguage("en");
-////            builder.setSelectionFlags(C.SELECTION_FLAG_DEFAULT);
-////            MediaItem.SubtitleConfiguration subtitle = builder.build();
-//            MediaSource textMediaSource = new SingleSampleMediaSource.Factory(factory).createMediaSource(subtitle, C.TIME_UNSET);
-//////            textMediaSource.getMediaItem().mediaMetadata.subtitle.toString();
-////            MediaLogUtil.log("SRT => " + subtitle);
-//            return new MergingMediaSource(mediaSource, srtSource);
-//        }
-//        // 默认
-//        else {
-//            return mediaSource;
-//        }
-    }
-
-    private void refreshHeaders(@NonNull HttpDataSource.Factory factory, @NonNull Map<String, String> map) {
-
-        if (null == map || map.size() <= 0)
-            return;
-
-        String userAgent = null;
-        HashMap<String, String> mapFormat = new HashMap<>();
-
-        for (String temp : map.keySet()) {
-            if (null == temp || temp.length() <= 0)
-                continue;
-            String value = mapFormat.get(temp);
-            if (null == value || value.length() <= 0)
-                continue;
-            if ("User-Agent".equals(temp)) {
-                userAgent = value;
-            } else {
-                mapFormat.put(temp, value);
-            }
-        }
-
-        //如果发现用户通过header传递了UA，则强行将HttpDataSourceFactory里面的userAgent字段替换成用户的
-        if (null != userAgent) {
-            try {
-                Field userAgentField = factory.getClass().getDeclaredField("userAgent");
-                userAgentField.setAccessible(true);
-                userAgentField.set(factory, userAgent);
-            } catch (Exception e) {
-            }
-        }
-
-        // add
-        factory.setDefaultRequestProperties(mapFormat);
     }
 }

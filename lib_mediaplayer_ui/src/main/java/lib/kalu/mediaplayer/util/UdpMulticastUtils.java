@@ -1,18 +1,15 @@
-package com.kalu.mediaplayer;
+package lib.kalu.mediaplayer.util;
 
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
-import java.util.Scanner;
 
-public class UdpUtils {
+public class UdpMulticastUtils {
 
     public static boolean checkUdpJoinGroup(@NonNull String s) {
         try {

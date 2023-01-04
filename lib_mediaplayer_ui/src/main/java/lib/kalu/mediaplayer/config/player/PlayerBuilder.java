@@ -32,7 +32,6 @@ public final class PlayerBuilder {
     private int cacheType = PlayerType.CacheType.NONE;
     private int cacheMax = 0;
     private String cacheDir = null;
-    private String cacheSalt = "qwerpoiu";
 
     public int getCacheType() {
         return cacheType;
@@ -44,10 +43,6 @@ public final class PlayerBuilder {
 
     public String getCacheDir() {
         return cacheDir;
-    }
-
-    public String getCacheSalt() {
-        return cacheSalt;
     }
 
     public boolean isLog() {
@@ -101,9 +96,7 @@ public final class PlayerBuilder {
         cacheType = builder.cacheType;
         cacheDir = builder.cacheDir;
         cacheMax = builder.cacheMax;
-        cacheSalt = builder.cacheSalt;
     }
-
 
     public Builder newBuilder() {
         Builder builder = new Builder();
@@ -119,7 +112,6 @@ public final class PlayerBuilder {
         builder.setCacheType(this.cacheType);
         builder.setCacheDir(this.cacheDir);
         builder.setCacheMax(this.cacheMax);
-        builder.setCacheSalt(this.cacheSalt);
         return builder;
     }
 
@@ -146,7 +138,6 @@ public final class PlayerBuilder {
         private int cacheType = PlayerType.CacheType.NONE;
         private int cacheMax = 0;
         private String cacheDir = null;
-        private String cacheSalt = "qwerpoiu";
 
         public Builder setCacheType(@PlayerType.CacheType int v) {
             cacheType = v;
@@ -160,11 +151,6 @@ public final class PlayerBuilder {
 
         public Builder setCacheDir(String v) {
             cacheDir = v;
-            return this;
-        }
-
-        public Builder setCacheSalt(String v) {
-            cacheSalt = v;
             return this;
         }
 
