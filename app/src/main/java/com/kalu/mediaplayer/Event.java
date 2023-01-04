@@ -13,7 +13,7 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void playerIn(String url) {
-        Log.e("PPP", "BuriedPointEvent---进入视频播放--" + url);
+        Log.e("BuriedEvent", "playerIn => url = "+url);
     }
 
 
@@ -24,7 +24,7 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void playerDestroy(String url) {
-        Log.e("PPP", "BuriedPointEvent---退出视频播放--" + url);
+        Log.e("BuriedEvent", "playerDestroy => url = "+url);
     }
 
     /**
@@ -34,7 +34,7 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void playerCompletion(String url) {
-        Log.e("PPP", "BuriedPointEvent---视频播放完成--" + url);
+        Log.e("BuriedEvent", "playerCompletion => url = "+url);
     }
 
     /**
@@ -45,7 +45,7 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void playerError(String url, boolean isNetError) {
-        Log.e("PPP", "BuriedPointEvent---视频播放异常--" + url);
+        Log.e("BuriedEvent", "playerError => url = "+url);
     }
 
     /**
@@ -55,7 +55,7 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void clickAd(String url) {
-        Log.e("PPP", "BuriedPointEvent---点击了视频广告--" + url);
+        Log.e("BuriedEvent", "clickAd => url = "+url);
     }
 
     /**
@@ -65,7 +65,7 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void playerAndProved(String url) {
-        Log.e("PPP", "BuriedPointEvent---视频试看点击--" + url);
+        Log.e("BuriedEvent", "playerAndProved => url = "+url);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void playerOutProgress(String url, float progress) {
-        Log.e("PPP", "BuriedPointEvent---退出视频播放时候的播放进度百度比--" + url + "-----" + progress);
+        Log.e("BuriedEvent", "playerOutProgress => url = "+url+", progress = "+progress);
     }
 
     /**
@@ -88,9 +88,7 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void playerOutProgress(String url, long duration, long currentPosition) {
-        Log.e("PPP", "BuriedPointEvent---退出视频播放时候的播放进度百度比--" + url + "-----" + duration + "----" + currentPosition);
-//        VideoLocation location = new VideoLocation(url, currentPosition, duration);
-//        CacheConfigManager.getInstance().put(url, location);
+        Log.e("BuriedEvent", "playerOutProgress => url = "+url+", duration = "+duration+", currentPosition = "+currentPosition);
     }
 
     /**
@@ -100,6 +98,6 @@ public class Event implements BuriedEvent {
      */
     @Override
     public void videoToMusic(String url) {
-        Log.e("PPP", "BuriedPointEvent---视频切换音频--" + url);
+        Log.e("BuriedEvent", "videoToMusic => url = "+url);
     }
 }

@@ -121,11 +121,11 @@ public final class ExoMediaSourceHelper {
         int contentType;
         try {
             String s = mediaUrl.toLowerCase();
-            if (s.endsWith(PlayerType.SchemeType._MPD)) {
+            if (s.contains(PlayerType.SchemeType._MPD)) {
                 contentType = C.CONTENT_TYPE_DASH;
-            } else if (s.endsWith(PlayerType.SchemeType._M3U)) {
+            } else if (s.contains(PlayerType.SchemeType._M3U)) {
                 contentType = C.CONTENT_TYPE_HLS;
-            } else if (s.endsWith(PlayerType.SchemeType._M3U8)) {
+            } else if (s.contains(PlayerType.SchemeType._M3U8)) {
                 contentType = C.CONTENT_TYPE_HLS;
             } else if (s.matches(PlayerType.SchemeType._MATCHES)) {
                 contentType = C.CONTENT_TYPE_SS;
