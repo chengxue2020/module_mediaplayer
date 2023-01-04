@@ -69,75 +69,71 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void pause(boolean auto, boolean clearHanlder) {
+    public void pause(boolean auto) {
         try {
-
+            mPlayer.pause(auto);
         } catch (Exception e) {
         }
-        mPlayer.pause(auto, clearHanlder);
     }
 
     @Override
     public void resume(boolean call) {
         try {
-
+            mPlayer.resume(call);
         } catch (Exception e) {
         }
-        mPlayer.resume(call);
     }
 
     @Override
     public void close() {
         try {
-
+            mPlayer.close();
         } catch (Exception e) {
         }
-        mPlayer.close();
     }
 
     @Override
     public void repeat() {
         try {
-
+            mPlayer.repeat();
         } catch (Exception e) {
         }
-        mPlayer.repeat();
     }
 
     @Override
     public long getDuration() {
         try {
-
+            return mPlayer.getDuration();
         } catch (Exception e) {
+            return 0L;
         }
-        return mPlayer.getDuration();
     }
 
     @Override
     public long getPosition() {
         try {
-
+            return mPlayer.getPosition();
         } catch (Exception e) {
+            return 0L;
         }
-        return mPlayer.getPosition();
     }
 
     @Override
     public boolean isLooping() {
         try {
-
+            return mPlayer.isLooping();
         } catch (Exception e) {
+            return false;
         }
-        return mPlayer.isLooping();
     }
 
     @Override
     public boolean isInvisibleStop() {
         try {
-
+            return mPlayer.isInvisibleStop();
         } catch (Exception e) {
+            return false;
         }
-        return mPlayer.isInvisibleStop();
     }
 
     @Override
@@ -182,15 +178,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
             return mPlayer.getUrl();
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    @Override
-    public boolean isTimer() {
-        try {
-            return mPlayer.isTimer();
-        } catch (Exception e) {
-            return false;
         }
     }
 
@@ -434,22 +421,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     public void release(@NonNull boolean onlyHandle) {
         try {
             mPlayer.release(onlyHandle);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void startTimer() {
-        try {
-            mPlayer.startTimer();
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void clearTimer() {
-        try {
-            mPlayer.clearTimer();
         } catch (Exception e) {
         }
     }

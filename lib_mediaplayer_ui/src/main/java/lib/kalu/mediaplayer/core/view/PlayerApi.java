@@ -86,14 +86,10 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiComponent, PlayerApiS
     void releaseKernel();
 
     default void pause() {
-        pause(false, false);
+        pause(false);
     }
 
-    default void pause(boolean clearHanlder) {
-        pause(false, clearHanlder);
-    }
-
-    void pause(boolean auto, boolean clearHanlder);
+    void pause(boolean auto);
 
     /*********************/
 
@@ -124,8 +120,6 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiComponent, PlayerApiS
     long getMax();
 
     String getUrl();
-
-    boolean isTimer();
 
     int getBufferedPercentage();
 
@@ -226,9 +220,9 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiComponent, PlayerApiS
 
     void release(@NonNull boolean onlyHandle);
 
-    void startTimer();
+//    void startTimer();
 
-    void clearTimer();
+//    void clearTimer();
 
     /*********/
 

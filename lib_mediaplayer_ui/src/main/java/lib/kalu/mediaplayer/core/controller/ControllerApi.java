@@ -76,4 +76,7 @@ public interface ControllerApi {
     boolean seekRewind(boolean callback);
 
     void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration);
+
+    default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
+    }
 }

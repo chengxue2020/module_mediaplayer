@@ -10,7 +10,6 @@ public final class StartBuilder {
     private boolean live;
     private boolean loop;
     private boolean mute;
-    private boolean timer;
 
     private boolean invisibleStop; // 不可见， 停止
     private boolean invisibleIgnore; // 不可见忽略, 什么也不做
@@ -20,10 +19,6 @@ public final class StartBuilder {
     private String externalMusicUrl;
     private boolean externalMusicLoop;
     private boolean externalMusicAuto;
-
-    public boolean isTimer() {
-        return timer;
-    }
 
     public boolean isMute() {
         return mute;
@@ -75,7 +70,6 @@ public final class StartBuilder {
         this.mute = builder.mute;
         this.live = builder.live;
         this.loop = builder.loop;
-        this.timer = builder.timer;
         this.invisibleStop = builder.invisibleStop;
         this.invisibleIgnore = builder.invisibleIgnore;
         this.invisibleRelease = builder.invisibleRelease;
@@ -91,7 +85,6 @@ public final class StartBuilder {
         builder.mute = mute;
         builder.live = live;
         builder.loop = loop;
-        builder.timer = timer;
         builder.invisibleStop = invisibleStop;
         builder.invisibleIgnore = invisibleIgnore;
         builder.invisibleRelease = invisibleRelease;
@@ -109,7 +102,6 @@ public final class StartBuilder {
         private boolean live = false;
         private boolean loop = false;
         private boolean mute = false;
-        private boolean timer = true;
 
         private boolean invisibleStop = false; // 不可见, 暂停
         private boolean invisibleIgnore = false; // 不可见忽略, 什么也不做
@@ -122,12 +114,6 @@ public final class StartBuilder {
 
         public Builder() {
         }
-
-        public Builder setTimer(boolean v) {
-            timer = v;
-            return this;
-        }
-
 
         public Builder setExternalMusicAuto(boolean v) {
             externalMusicAuto = v;

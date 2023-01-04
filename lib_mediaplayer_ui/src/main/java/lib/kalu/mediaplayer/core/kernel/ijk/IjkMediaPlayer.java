@@ -28,7 +28,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    private boolean mTimer = false;
     private String mUrl = null; // 视频串
     private boolean mReadying = false;
 
@@ -62,6 +61,20 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 //            resetKernel();
 //        }
 //    }
+
+    @Override
+    public void onUpdateTimeMillis() {
+        if (null != mEvent) {
+            long position = getPosition();
+            long duration = getDuration();
+            if(position > 0 && duration > 0){
+                long seek = getSeek();
+                long max = getMax();
+                boolean looping = isLooping();
+                mEvent.onUpdateTimeMillis(looping, max, seek, position, duration);
+            }
+        }
+    }
 
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger) {
@@ -511,16 +524,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setLive(@NonNull boolean live) {
         this.mLive = live;
-    }
-
-    @Override
-    public boolean isTimer() {
-        return mTimer;
-    }
-
-    @Override
-    public void setTimer(@NonNull boolean v) {
-        mTimer = v;
     }
 
     @Override

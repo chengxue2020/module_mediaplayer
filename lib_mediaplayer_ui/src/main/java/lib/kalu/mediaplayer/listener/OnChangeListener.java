@@ -33,6 +33,6 @@ public interface OnChangeListener {
     default void onAD(@NonNull ImageView imageView) {
     }
 
-    default void onProgress(@NonNull long position, @NonNull long durning) {
+    default void onProgress(@NonNull long position, @NonNull long duration) {
     }
 }

@@ -6,7 +6,6 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Message;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -40,15 +39,12 @@ import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
-import lib.kalu.mediaplayer.util.TimerUtil;
 
 /**
  * @description: 播放器具体实现类
  */
 @Keep
 public class VideoLayout extends RelativeLayout implements PlayerApi {
-
-    private final int HANDLE_MESSAHE_WHAT_TIMER = 1;
 
     // 解码
     protected KernelApi mKernel;
@@ -114,12 +110,12 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         } else {
             // visable
             if (visibility == View.VISIBLE) {
-                startTimer();
+//                startTimer();
                 resume(false);
             }
             // not visable
             else {
-                clearTimer();
+//                clearTimer();
                 pause(true);
             }
         }
@@ -209,8 +205,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         if (null == url || url.length() <= 0)
             return;
 
-        boolean timer = builder.isTimer();
-        MPLogUtil.log("VideoLayout => start => timer = " + timer);
         long seek = builder.getSeek();
         MPLogUtil.log("VideoLayout => start => seek = " + seek);
         long max = builder.getMax();
@@ -319,6 +313,68 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
             return;
         try {
             mKernel = KernelFactoryManager.getKernel(getContext(), PlayerManager.getInstance().getConfig().getKernel(), new KernelEvent() {
+
+                @Override
+                public void onUpdateTimeMillis(@NonNull boolean isLooping, @NonNull long max, @NonNull long seek, @NonNull long position, @NonNull long duration) {
+
+                    boolean replay;
+                    if (max > 0) {
+                        long playTime = (position - seek);
+                        if (playTime > max) {
+                            replay = true;
+                        } else {
+                            replay = false;
+                        }
+                    } else {
+                        replay = false;
+                    }
+                    MPLogUtil.log("createKernel => onUpdateTimeMillis => replay = " + replay + ", isLooping = " + isLooping + ", max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
+
+                    // end
+                    if (replay) {
+
+                        // loop
+                        if (isLooping) {
+
+                            // step1
+                            hideReal();
+
+                            // step2
+                            // pause(true, true);
+
+                            // step3
+                            seekTo(true);
+                        }
+                        // stop
+                        else {
+
+                            // step1
+                            pause(true);
+
+                            // step2
+                            playEnd();
+                        }
+                    }
+                    // next
+                    else {
+
+                        ControllerLayout controlLayout = getControlLayout();
+                        if (null != controlLayout) {
+                            controlLayout.onUpdateTimeMillis(seek, position, duration);
+                            controlLayout.seekProgress(false, position, duration);
+                        }
+
+                        List<OnChangeListener> listener = getOnChangeListener();
+                        if (null != listener) {
+                            for (OnChangeListener l : listener) {
+                                if (null == l)
+                                    continue;
+                                l.onProgress(position, duration);
+                            }
+                        }
+                    }
+                }
+
                 @Override
                 public void onEvent(int kernel, int event) {
 
@@ -379,7 +435,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                             callPlayerState(PlayerType.StateType.STATE_START);
 
                             // step1
-                            startTimer();
+//                            startTimer();
                             // step2
                             showReal();
                             // step3
@@ -418,8 +474,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                             setKeepScreenOn(false);
                             callPlayerState(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
 
-                            // step1
-                            clearTimer();
                             // step2
                             pause(true);
 
@@ -434,8 +488,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
                             callPlayerState(PlayerType.StateType.STATE_END);
 
-                            // step1
-                            clearTimer();
                             // step2
                             pause(true);
 
@@ -512,9 +564,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         if (playing) {
             pause(cleanHandler);
         } else {
-            if (cleanHandler) {
-                startTimer();
-            }
             resume(true);
         }
     }
@@ -522,7 +571,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     @Override
     public void stopKernel(@NonNull boolean call) {
         setKeepScreenOn(false);
-        clearTimer();
         try {
             if (call) {
                 callPlayerState(PlayerType.StateType.STATE_KERNEL_STOP);
@@ -538,7 +586,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     @Override
     public void pauseKernel(@NonNull boolean call) {
         setKeepScreenOn(false);
-        clearTimer();
         try {
             // 自动不回调状态
             if (call) {
@@ -555,14 +602,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public void pause(boolean auto, boolean clearTimer) {
+    public void pause(boolean auto) {
         boolean playing = isPlaying();
-        MPLogUtil.log("pauseME => auto = " + auto + ", clearTimer = " + clearTimer + ", playing = " + playing);
+        MPLogUtil.log("pauseME => auto = " + auto + ", playing = " + playing);
         if (!playing)
             return;
-        if (clearTimer) {
-            clearTimer();
-        }
         pauseKernel(!auto);
     }
 
@@ -698,15 +742,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         }
     }
 
-    @Override
-    public boolean isTimer() {
-        try {
-            return mKernel.isTimer();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     /**
      * 是否处于播放状态
      */
@@ -747,11 +782,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         // step1
         callPlayerState(PlayerType.StateType.STATE_LOADING_START);
         // step2
-        clearTimer();
+//        clearTimer();
         // step3
         if (force) {
             mKernel.update(seek, max, loop);
-            pause(true, true);
+            pause(true);
         }
         // step4
         mKernel.seekTo(seek);
@@ -1005,7 +1040,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         MPLogUtil.log("onLife => checkReal => visibility = " + visibility);
         if (visibility == View.VISIBLE)
             return;
-        clearTimer();
         pause();
     }
 
@@ -1073,10 +1107,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     public void release(@NonNull boolean onlyHandle) {
         MPLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mKernel = " + mKernel);
 
-        // step1
-        clearTimer();
         // step2
-        pause(!onlyHandle, true);
+        pause(!onlyHandle);
 
         // step3
         if (onlyHandle)
@@ -1103,53 +1135,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
         // step7
         releaseKernel();
-    }
-
-    @Override
-    public void startTimer() {
-        boolean timer = isTimer();
-        boolean live = isLive();
-        MPLogUtil.log("Timer => startTimer => timer = " + timer + ", live = " + live);
-        if (live || !timer)
-            return;
-        String url = getUrl();
-        if (null == url || url.length() <= 0)
-            return;
-        clearTimer();
-        sendMessage(null);
-    }
-
-    private void sendMessage(Object obj) {
-        // 1
-        boolean containsListener = TimerUtil.getInstance().containsListener(9002);
-        if (!containsListener) {
-            TimerUtil.getInstance().registTimer(9002, new TimerUtil.OnMessageChangeListener() {
-                @Override
-                public void onMessage(@NonNull Message msg) {
-                    handleMessage(msg);
-                }
-            });
-        }
-        // 2
-        Message message = new Message();
-        message.what = HANDLE_MESSAHE_WHAT_TIMER;
-        if (null == obj) {
-            message.obj = System.currentTimeMillis();
-            TimerUtil.getInstance().sendMessage(message);
-        } else {
-            message.obj = obj;
-            TimerUtil.getInstance().sendMessageDelayed(message, 1000);
-        }
-    }
-
-    @Override
-    public void clearTimer() {
-        boolean timer = isTimer();
-        boolean live = isLive();
-        MPLogUtil.log("Timer => clearTimer => timer = " + timer + ", live = " + live);
-        if (live || !timer)
-            return;
-        TimerUtil.getInstance().clearMessage(HANDLE_MESSAHE_WHAT_TIMER);
     }
 
     @Override
@@ -1428,68 +1413,14 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         }
     }
 
-    private final void handleMessage(@NonNull Message msg) {
-        MPLogUtil.log("VideoLayout => handleMessage => what = " + msg.what + ", thread = " + Thread.currentThread().getName());
-
-        if (msg.what != HANDLE_MESSAHE_WHAT_TIMER)
-            return;
-
-        long max = getMax();
-        boolean looping = isLooping();
-        long start = (long) msg.obj;
-        long millis = System.currentTimeMillis();
-        MPLogUtil.log("VideoLayout => handleMessage => max = " + max + ", looping = " + looping + ", start = " + start + ", millis = " + millis);
-
-        // end
-        if (max > 0 && ((millis - start) > max)) {
-
-            // loop
-            if (looping) {
-
-                // step1
-                hideReal();
-
-                // step2
-                // pause(true, true);
-
-                // step3
-                seekTo(true);
-            }
-            // stop
-            else {
-
-                // step1
-                pause(true);
-
-                // step2
-                playEnd();
-            }
-        }
-        // next
-        else {
-
-            sendMessage(msg.obj);
-
-            long position = getPosition();
-            long duration = getDuration();
-
-            if (position > 0 && duration > 0) {
-                ControllerLayout controlLayout = getControlLayout();
-                if (null != controlLayout) {
-                    controlLayout.seekProgress(false, position, duration);
-                }
-
-                List<OnChangeListener> listener = getOnChangeListener();
-                if (null != listener) {
-                    for (OnChangeListener l : listener) {
-                        if (null == l)
-                            continue;
-                        l.onProgress(position, duration);
-                    }
-                }
-            }
-        }
-    }
+//    private final void handleMessage(@NonNull Message msg) {
+//        MPLogUtil.log("VideoLayout => handleMessage => what = " + msg.what + ", thread = " + Thread.currentThread().getName());
+//
+//        if (msg.what != HANDLE_MESSAHE_WHAT_TIMER)
+//            return;
+//
+//
+//    }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -1518,7 +1449,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     MPLogUtil.log("dispatchKeyEvent => seekForward[false] => count = " + count + ", isLive = " + isLive);
                     if (!isLive) {
                         if (count > 0) {
-                            clearTimer();
+//                            clearTimer();
                             boolean seekForward = seekForward(false);
                             if (seekForward) {
                                 setTag(R.id.module_mediaplayer_id_seek, "1");
@@ -1536,7 +1467,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     if (!isLive) {
                         Object tag = getTag(R.id.module_mediaplayer_id_seek);
                         if (null != tag && "1".equals(tag)) {
-                            startTimer();
+//                            startTimer();
                             boolean seekForward = seekForward(true);
                             if (seekForward) {
                                 setTag(R.id.module_mediaplayer_id_seek, null);
@@ -1551,7 +1482,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     MPLogUtil.log("dispatchKeyEvent => seekRewind[false] => count = " + count + ", isLive = " + isLive);
                     if (!isLive) {
                         if (count > 0) {
-                            clearTimer();
+//                            clearTimer();
                             boolean seekRewind = seekRewind(false);
                             if (seekRewind) {
                                 setTag(R.id.module_mediaplayer_id_seek, "1");
@@ -1569,7 +1500,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
                     if (!isLive) {
                         Object tag = getTag(R.id.module_mediaplayer_id_seek);
                         if (null != tag && "1".equals(tag)) {
-                            startTimer();
+//                            startTimer();
                             boolean seekRewind = seekRewind(true);
                             if (seekRewind) {
                                 setTag(R.id.module_mediaplayer_id_seek, null);

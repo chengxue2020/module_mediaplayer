@@ -20,6 +20,8 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 @Keep
 public interface KernelApi extends KernelEvent {
 
+    void onUpdateTimeMillis();
+
     @NonNull
     <T extends Object> T getPlayer();
 
@@ -43,9 +45,6 @@ public interface KernelApi extends KernelEvent {
     default void update(@NonNull StartBuilder bundle, @NonNull String playUrl) {
 
         MPLogUtil.log("KernelApi => update => playUrl = " + playUrl);
-        boolean timer = bundle.isTimer();
-        MPLogUtil.log("KernelApi => update => timer = " + timer);
-        setTimer(timer);
         long seek = bundle.getSeek();
         MPLogUtil.log("KernelApi => update => seek = " + seek);
         setSeek(seek);
@@ -120,10 +119,6 @@ public interface KernelApi extends KernelEvent {
     boolean isLive();
 
     void setLive(@NonNull boolean v);
-
-    boolean isTimer();
-
-    void setTimer(@NonNull boolean v);
 
     void setLooping(boolean loop);
 

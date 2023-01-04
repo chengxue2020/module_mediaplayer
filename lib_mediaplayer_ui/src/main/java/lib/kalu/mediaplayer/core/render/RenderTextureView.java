@@ -102,6 +102,9 @@ public class RenderTextureView extends TextureView implements RenderApi {
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
                 MPLogUtil.log("RenderTextureView => onSurfaceTextureUpdated => " + this);
+                if (null != mKernel) {
+                    mKernel.onUpdateTimeMillis();
+                }
             }
         };
         setSurfaceTextureListener(mSurfaceTextureListener);

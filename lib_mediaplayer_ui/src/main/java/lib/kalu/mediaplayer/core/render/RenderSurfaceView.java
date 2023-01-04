@@ -77,6 +77,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //                mSurface = holder.getSurface();
 //                mKernel.setSurface(mSurface);
 //            }
+                if (null != mKernel) {
+                    mKernel.onUpdateTimeMillis();
+                }
             }
 
             /**
