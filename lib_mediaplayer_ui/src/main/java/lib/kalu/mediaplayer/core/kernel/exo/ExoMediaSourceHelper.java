@@ -77,45 +77,18 @@ public final class ExoMediaSourceHelper {
         }
         // other
         else {
-
-            // okhttp
-//            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-//            OkHttpClient client = builder.build();
-//            OkHttpDataSource.Factory http = new OkHttpDataSource.Factory(client);
-//            http.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-
-            // http
-            DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory();
-            httpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-            httpFactory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
-            httpFactory.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
-            httpFactory.setAllowCrossProtocolRedirects(true);
-            httpFactory.setKeepPostFor302Redirects(true);
-
-            // head
-//            refreshHeaders(httpFactory, headers);
-
-            DataSource.Factory dataSource;
-            if (cacheType == PlayerType.CacheType.NONE) {
-                dataSource = new DefaultDataSource.Factory(context, httpFactory);
-            } else {
-                CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
-                SimpleCache cache = ExoSimpleCache.getSimpleCache(context, cacheMax, cacheDir);
-                cacheFactory.setCache(cache);
-                cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-                cacheFactory.setUpstreamDataSourceFactory(httpFactory);
-                dataSource = cacheFactory;
-            }
-
-            MediaSource mediaSource = createMediaSource(mediaUrl, subtitleUrl, dataSource);
+            MediaSource mediaSource = create(context, mediaUrl, subtitleUrl, cacheType, cacheMax, cacheDir);
             return mediaSource;
         }
     }
 
-    private MediaSource createMediaSource(
+    private MediaSource create(
+            @NonNull Context context,
             @NonNull String mediaUrl,
             @Nullable String subtitleUrl,
-            @NonNull DataSource.Factory dataSource) {
+            @PlayerType.CacheType int cacheType,
+            @NonNull int cacheMax,
+            @NonNull String cacheDir) {
 
         // 1
         int contentType;
@@ -158,9 +131,38 @@ public final class ExoMediaSourceHelper {
 //            MediaLogUtil.log("SRT => " + subtitle);
 //            return new MergingMediaSource(mediaSource, srtSource);
         }
-        MediaItem mediaItem = builder.build();
+
+        // okhttp
+//            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//            OkHttpClient client = builder.build();
+//            OkHttpDataSource.Factory http = new OkHttpDataSource.Factory(client);
+//            http.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+
+        // head
+//            refreshHeaders(httpFactory, headers);
+
+        // http
+        DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory();
+        httpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+        httpFactory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
+        httpFactory.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
+        httpFactory.setAllowCrossProtocolRedirects(true);
+        httpFactory.setKeepPostFor302Redirects(true);
+
+        DataSource.Factory dataSource;
+        if (cacheType == PlayerType.CacheType.NONE) {
+            dataSource = new DefaultDataSource.Factory(context, httpFactory);
+        } else {
+            CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
+            SimpleCache cache = ExoSimpleCache.getSimpleCache(context, cacheMax, cacheDir);
+            cacheFactory.setCache(cache);
+            cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+            cacheFactory.setUpstreamDataSourceFactory(httpFactory);
+            dataSource = cacheFactory;
+        }
 
         // 3
+        MediaItem mediaItem = builder.build();
         switch (contentType) {
             case C.CONTENT_TYPE_DASH:
                 return new DashMediaSource.Factory(dataSource).createMediaSource(mediaItem);

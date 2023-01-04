@@ -32,6 +32,8 @@ public final class TestActivity extends Activity {
     @Keep
     public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
     @Keep
+    public static final String INTENT_LIVE = "intent_live"; // live
+    @Keep
     public static final String INTENT_MAX = "intent_max"; // max
     @Keep
     public static final String INTENT_SEEK = "intent_seek"; // 快进
@@ -211,15 +213,16 @@ public final class TestActivity extends Activity {
 
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
         long max = getIntent().getLongExtra(INTENT_MAX, 0);
-        MPLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", url = " + url);
+        boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
+        MPLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", live = " + live + ", url = " + url);
 
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setSeek(seek);
         builder.setMax(max);
         builder.setTimer(false);
-        StartBuilder build = builder.build();
+        builder.setLive(live);
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
-        videoLayout.start(build, url);
+        videoLayout.start(builder.build(), url);
     }
 
     @Override

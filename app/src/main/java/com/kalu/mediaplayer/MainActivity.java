@@ -16,6 +16,11 @@ import lib.kalu.mediaplayer.TestActivity;
  */
 public class MainActivity extends Activity {
 
+    private final boolean isLive() {
+        String url = getUrl();
+        return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
+    }
+
     private final String getUrl() {
         EditText editText = findViewById(R.id.edit);
         String s = editText.getText().toString();
@@ -37,6 +42,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, getUrl());
+                intent.putExtra(TestActivity.INTENT_LIVE, isLive());
 //                intent.putExtra(TestActivity.INTENT_SEEK, 100000L); // 10s
 //                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
                 startActivity(intent);

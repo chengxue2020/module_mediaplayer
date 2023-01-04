@@ -281,7 +281,13 @@ public final class ExoMediaPlayer implements KernelApi {
 //        mIsPreparing = true;
 
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().createMediaSource(context, url, null, config.getCacheType(), config.getCacheMax(), config.getCacheDir());
+            int cacheType = config.getCacheType();
+            int cacheMax = config.getCacheMax();
+            String cacheDir = config.getCacheDir();
+            if (isLive()) {
+                cacheType = PlayerType.CacheType.NONE;
+            }
+            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().createMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
 //                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
