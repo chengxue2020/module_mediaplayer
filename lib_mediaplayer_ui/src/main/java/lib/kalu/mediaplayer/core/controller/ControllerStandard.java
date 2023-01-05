@@ -16,7 +16,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
+import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentGesture;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
@@ -72,7 +72,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         //滑动调节亮度，音量，进度，默认开启
         setGestureEnabled(true);
         //添加自动完成播放界面view
-        ComponentEnd completeView = new ComponentEnd(getContext());
+        ComponentComplete completeView = new ComponentComplete(getContext());
         completeView.setVisibility(GONE);
         this.addComponent(completeView);
 

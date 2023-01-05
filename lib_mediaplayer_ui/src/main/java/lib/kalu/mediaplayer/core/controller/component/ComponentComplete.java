@@ -17,35 +17,34 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public class ComponentEnd extends RelativeLayout implements ComponentApi {
+public class ComponentComplete extends RelativeLayout implements ComponentApi {
 
     private ControllerWrapper mControllerWrapper;
 
-    public ComponentEnd(@NonNull Context context) {
+    public ComponentComplete(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public ComponentEnd(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public ComponentComplete(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public ComponentEnd(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ComponentComplete(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_end, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_complete, this, true);
 
         // 重试
-        findViewById(R.id.module_mediaplayer_component_end_message).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.module_mediaplayer_component_complete_message).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "点击", Toast.LENGTH_SHORT).show();
-                repeat(mControllerWrapper);
+                restart(mControllerWrapper);
             }
         });
     }
@@ -76,7 +75,7 @@ public class ComponentEnd extends RelativeLayout implements ComponentApi {
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_RESUME:
-            case PlayerType.StateType.STATE_REPEAT:
+            case PlayerType.StateType.STATE_RESTAER:
                 MPLogUtil.log("ComponentEnd[gone] => playState = " + playState);
                 setVisibility(View.GONE);
                 break;

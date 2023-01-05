@@ -9,14 +9,10 @@ import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.kernel.KernelFactory;
 
 @Keep
-public class ExoFactory implements KernelFactory<ExoMediaPlayer> {
+public final class ExoFactory implements KernelFactory<ExoMediaPlayer> {
 
     private ExoFactory() {
     }
-//
-//    private static class Holder {
-//        static final ExoMediaPlayer mP = new ExoMediaPlayer();
-//    }
 
     public static ExoFactory build() {
         return new ExoFactory();

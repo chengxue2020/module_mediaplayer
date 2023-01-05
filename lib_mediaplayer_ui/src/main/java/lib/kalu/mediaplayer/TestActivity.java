@@ -12,7 +12,7 @@ import androidx.annotation.Keep;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
-import lib.kalu.mediaplayer.core.controller.component.ComponentEnd;
+import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
@@ -73,7 +73,7 @@ public final class TestActivity extends Activity {
         controller.addComponent(loading);
 
         // 结束ui
-        ComponentEnd end = new ComponentEnd(this);
+        ComponentComplete end = new ComponentComplete(this);
 //        loading.setMessage("加载中...");
         controller.addComponent(end);
 

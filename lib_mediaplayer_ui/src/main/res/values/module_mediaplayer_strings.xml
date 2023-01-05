@@ -1,12 +1,12 @@
 <resources>
     <string name="module_mediaplayer_string_pause">暂停</string>
     <string name="module_mediaplayer_string_start">播放</string>
-    <string name="module_mediaplayer_string_lock_tip">请先解锁屏幕！</string>
+    <string name="module_mediaplayer_string_lock_tip">请先解锁屏幕</string>
     <string name="module_mediaplayer_string_unlocked">已解锁</string>
     <string name="module_mediaplayer_string_locked">已锁定</string>
     <string name="module_mediaplayer_string_continue_play">继续播放</string>
     <string name="module_mediaplayer_string_error_message">未知错误</string>
-    <string name="module_mediaplayer_string_end">播放结束, 点击重播</string>
+    <string name="module_mediaplayer_string_end">播放结束, 点击重新播放</string>
     <string name="module_mediaplayer_string_share">分享视频</string>
     <string name="module_mediaplayer_string_retry">点击重试</string>
     <string name="module_mediaplayer_string_net_wifi_tip">您正在使用移动网络, 继续播放将消耗流量</string>

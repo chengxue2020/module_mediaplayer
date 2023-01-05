@@ -8,6 +8,10 @@ interface PlayerApiComponent extends PlayerApiState {
         callPlayerState(PlayerType.StateType.STATE_ERROR_IGNORE);
     }
 
+    default void showComponentSeek() {
+        callPlayerState(PlayerType.StateType.STATE_COMPONENT_SEEK_SHOW);
+    }
+
     default void hideComponentLoading() {
         callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
     }

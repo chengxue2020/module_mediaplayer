@@ -611,12 +611,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public void close() {
+    public void stop() {
         boolean playing = isPlaying();
         if (!playing)
             return;
         callPlayerState(PlayerType.StateType.STATE_CLOSE);
         stopKernel(true);
+    }
+
+    @Override
+    public void restart() {
+        StartBuilder builder = getStartBuilder();
+        MPLogUtil.log("onEvent => restart => builder = " + builder);
+        if (null == builder)
+            return;
+        callPlayerState(PlayerType.StateType.STATE_RESTAER);
+        String url = getUrl();
+        start(builder, url);
     }
 
     @Override
@@ -632,16 +643,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         }
         setKeepScreenOn(true);
         mKernel.start();
-    }
-
-    @Override
-    public void repeat() {
-        String url = getUrl();
-        MPLogUtil.log("onEvent => repeat => url = " + url);
-        if (null == url || url.length() <= 0)
-            return;
-        callPlayerState(PlayerType.StateType.STATE_REPEAT);
-        seekTo(true);
     }
 
     @Override

@@ -79,10 +79,10 @@ public interface ComponentApi {
      */
     void onLockStateChanged(boolean isLocked);
 
-    default void repeat(@NonNull ControllerWrapper wrapper) {
+    default void restart(@NonNull ControllerWrapper wrapper) {
         if (null == wrapper)
             return;
-        wrapper.repeat();
+        wrapper.restart();
     }
 
 //    default void finish(@NonNull Context context, @NonNull ControllerWrapper wrapper) {
@@ -177,7 +177,7 @@ public interface ComponentApi {
         }
     }
 
-    default void setBackgroundResource(@NonNull View layout, @IdRes int id, @ColorInt int resid) {
+    default void setBackgroundResource(@NonNull View layout, @IdRes int id, @DrawableRes int resid) {
         try {
             View view = layout.findViewById(id);
             view.setBackgroundResource(resid);

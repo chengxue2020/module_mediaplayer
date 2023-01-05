@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
 
     <lib.kalu.mediaplayer.core.view.VideoLayout
-        android:id="@+id/module_mediaplayer_test"
+        android:id="@+id/seek_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <Button
-        android:id="@+id/module_mediaplayer_switch"
+        android:id="@+id/seek_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerInParent="true"
-        android:text="切换" />
+        android:layout_centerVertical="true"
+        android:text="进度条" />
 
 </RelativeLayout>

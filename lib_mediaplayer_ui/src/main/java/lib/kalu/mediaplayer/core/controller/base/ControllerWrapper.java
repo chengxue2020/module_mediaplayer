@@ -85,17 +85,17 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void close() {
+    public void stop() {
         try {
-            mPlayer.close();
+            mPlayer.stop();
         } catch (Exception e) {
         }
     }
 
     @Override
-    public void repeat() {
+    public void restart() {
         try {
-            mPlayer.repeat();
+            mPlayer.restart();
         } catch (Exception e) {
         }
     }

@@ -91,7 +91,7 @@ public @interface PlayerType {
         int STATE_PAUSE_IGNORE = 2010; // 暂停播放
         int STATE_RESUME = 2011; // 暂停播放
         int STATE_RESUME_IGNORE = 2012; // 暂停播放
-        int STATE_REPEAT = 2013; // 重播一次
+        int STATE_RESTAER = 2013; // 重播一次
         int STATE_CLOSE = 2014; // 暂停播放
         int STATE_BUFFERING_START = 2015; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
         int STATE_BUFFERING_STOP = 2016; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
@@ -101,6 +101,7 @@ public @interface PlayerType {
         int STATE_ERROR = 2019; // 错误1
         int STATE_ERROR_NET = 2020; // 错误2
         int STATE_ERROR_IGNORE = 2021; // 错误3
+        int STATE_COMPONENT_SEEK_SHOW = 2022; // 显示进度条
 
         @Documented
         @Retention(CLASS)
@@ -115,7 +116,7 @@ public @interface PlayerType {
                 STATE_PAUSE_IGNORE,
                 STATE_RESUME,
                 STATE_RESUME_IGNORE,
-                STATE_REPEAT,
+                STATE_RESTAER,
                 STATE_CLOSE,
                 STATE_BUFFERING_START,
                 STATE_BUFFERING_STOP,
@@ -126,7 +127,8 @@ public @interface PlayerType {
                 STATE_ONCE_LIVE,
                 STATE_ERROR,
                 STATE_ERROR_NET,
-                STATE_ERROR_IGNORE})
+                STATE_ERROR_IGNORE,
+                STATE_COMPONENT_SEEK_SHOW})
         @Keep
         @interface Value {
         }

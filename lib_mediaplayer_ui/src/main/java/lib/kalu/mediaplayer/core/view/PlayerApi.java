@@ -65,9 +65,33 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiComponent, PlayerApiS
 
     /**********/
 
+    default StartBuilder getStartBuilder() {
+        try {
+            String url = getUrl();
+            if (null == url || url.length() <= 0)
+                throw new Exception();
+            StartBuilder.Builder builder = new StartBuilder.Builder();
+            builder.setMax(getMax());
+            builder.setSeek(getSeek());
+            builder.setLoop(isLooping());
+            builder.setLive(isLive());
+            builder.setMute(isMute());
+            builder.setInvisibleStop(isInvisibleStop());
+            builder.setInvisibleIgnore(isInvisibleIgnore());
+            builder.setInvisibleRelease(isInvisibleRelease());
+            return builder.build();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**********/
+
     void setVolume(float v1, float v2);
 
     void setMute(boolean v);
+
+    void restart();
 
     void start(@NonNull StartBuilder builder, @NonNull String url);
 
@@ -91,6 +115,8 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiComponent, PlayerApiS
 
     void pause(boolean auto);
 
+    void stop();
+
     /*********************/
 
     default void resume() {
@@ -98,10 +124,6 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiComponent, PlayerApiS
     }
 
     void resume(boolean call);
-
-    void close();
-
-    void repeat();
 
     long getDuration();
 

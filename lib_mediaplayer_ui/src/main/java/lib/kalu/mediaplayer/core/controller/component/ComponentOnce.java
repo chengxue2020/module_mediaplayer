@@ -70,7 +70,7 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
                 if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
                     //即将开播
                     if (PlayerUtils.isConnected(mContext)) {
-                        mControllerWrapper.repeat();
+                        mControllerWrapper.restart();
                     } else {
                         BaseToast.showRoundRectToast(v.getContext(), "请查看网络是否连接");
                     }

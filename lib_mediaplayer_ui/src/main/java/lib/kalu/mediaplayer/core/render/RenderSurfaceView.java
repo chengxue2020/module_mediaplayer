@@ -2,6 +2,9 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -28,6 +31,8 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Nullable
+    private Handler mHandler;
+    @Nullable
     private KernelApi mKernel;
     @Nullable
     private Surface mSurface;
@@ -38,7 +43,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         super(context);
         init();
     }
-
 
     @Override
     public void init() {
@@ -61,6 +65,19 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                     mSurface = holder.getSurface();
                     mKernel.setSurface(mSurface);
                 }
+                if (null == mHandler) {
+                    mHandler = new Handler(Looper.myLooper()) {
+                        @Override
+                        public void handleMessage(@NonNull Message msg) {
+                            super.handleMessage(msg);
+                            if (null != mKernel && null != msg && msg.what == 9899) {
+                                mKernel.onUpdateTimeMillis();
+                                mHandler.sendEmptyMessageDelayed(9899, 100);
+                            }
+                        }
+                    };
+                    mHandler.sendEmptyMessageDelayed(9899, 100);
+                }
             }
 
             /**
@@ -77,9 +94,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //                mSurface = holder.getSurface();
 //                mKernel.setSurface(mSurface);
 //            }
-                if (null != mKernel) {
-                    mKernel.onUpdateTimeMillis();
-                }
             }
 
             /**
@@ -89,6 +103,11 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 MPLogUtil.log("RenderSurfaceView => surfaceDestroyed => " + this);
+                if (null != mHandler) {
+                    mHandler.removeMessages(9899);
+                    mHandler.removeCallbacksAndMessages(null);
+                    mHandler = null;
+                }
             }
         };
         holder.addCallback(mSurfaceHolderCallback);

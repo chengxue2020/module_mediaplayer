@@ -72,7 +72,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
             case PlayerType.StateType.STATE_START_SEEK:
             case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_RESUME_IGNORE:
-            case PlayerType.StateType.STATE_REPEAT:
+            case PlayerType.StateType.STATE_RESTAER:
                 MPLogUtil.log("ComponentError[gone] => playState = " + playState);
                 findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);

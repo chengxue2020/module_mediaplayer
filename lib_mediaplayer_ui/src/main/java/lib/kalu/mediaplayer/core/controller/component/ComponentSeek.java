@@ -121,14 +121,15 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             case PlayerType.StateType.STATE_LOADING_STOP:
                 MPLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
                 if (!isLive && isFull) {
-                    refreshTimestamp(false);
-                    bringToFront();
                     show();
                 }
                 break;
+            case PlayerType.StateType.STATE_COMPONENT_SEEK_SHOW:
+                MPLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
+                show();
+                break;
             case PlayerType.StateType.STATE_LOADING_START:
                 MPLogUtil.log("ComponentSeek22[gone] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
-                refreshTimestamp(true);
                 gone();
                 break;
         }
@@ -142,14 +143,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             case PlayerType.WindowType.FULL:
                 MPLogUtil.log("ComponentSeek22[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
                 if (!isLive && isFull) {
-                    refreshTimestamp(false);
-                    bringToFront();
                     show();
                 }
                 break;
             default:
                 MPLogUtil.log("ComponentSeek22[gone] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
-                refreshTimestamp(true);
                 gone();
                 break;
         }
@@ -158,6 +156,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     @Override
     public void show() {
         MPLogUtil.log("ComponentSeek88 => show =>");
+        refreshTimestamp(false);
+        bringToFront();
         if (mShowBottomPB) {
             findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.GONE);
         }
@@ -170,6 +170,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     @Override
     public void gone() {
         MPLogUtil.log("ComponentSeek88 => gone =>");
+        refreshTimestamp(true);
         boolean isFull = mControllerWrapper.isFull();
         if (mShowBottomPB) {
             findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(isFull ? View.VISIBLE : View.GONE);
