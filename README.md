@@ -1,4 +1,13 @@
 #
+#### 说明
+```
+1. 进度条更新【TextureView基于回调方法，SurfaceView基于Handler消息】
+```
+```
+2. exoplayer增减FFmpeg音频解码库
+```
+
+#
 #### libavffmpeg.so编译源码
 ```
 https://github.com/153437803/ijkplayer-k0.8.8-ff4.0
