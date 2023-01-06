@@ -186,10 +186,6 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiComponent, PlayerApiS
 
     void seekTo(@NonNull boolean force, @NonNull StartBuilder builder);
 
-    boolean seekForward(@NonNull boolean callback);
-
-    boolean seekRewind(boolean callback);
-
     boolean isLive();
 
     boolean isPlaying();

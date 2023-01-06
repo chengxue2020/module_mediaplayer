@@ -258,24 +258,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public boolean seekForward(@NonNull boolean callback) {
-        try {
-            return mPlayer.seekForward(callback);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean seekRewind(boolean callback) {
-        try {
-            return mPlayer.seekRewind(callback);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
     public boolean isLive() {
         try {
             return mPlayer.isLive();
@@ -618,9 +600,33 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
+    public void seekForwardDown(boolean enable) {
         try {
-            mController.seekProgress(fromUser, position, duration);
+            mController.seekForwardDown(enable);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void seekForwardUp(boolean enable) {
+        try {
+            mController.seekForwardUp(enable);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void seekRewindDown(boolean enable) {
+        try {
+            mController.seekRewindDown(enable);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void seekRewindUp(boolean enable) {
+        try {
+            mController.seekRewindUp(enable);
         } catch (Exception e) {
         }
     }

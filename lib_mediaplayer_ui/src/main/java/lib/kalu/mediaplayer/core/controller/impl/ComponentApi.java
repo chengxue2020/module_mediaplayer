@@ -196,16 +196,29 @@ public interface ComponentApi {
 
     /******************/
 
-    default boolean seekForward(boolean callback) {
-        return false;
+    default void onSeekForwardDown(boolean enable) {
     }
 
-    default boolean seekRewind(boolean callback) {
-        return false;
+    default void onSeekForwardUp(boolean enable) {
     }
 
-    default void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
+    default void onSeekRewindDown(boolean enable) {
     }
+
+    default void onSeekRewindUp(boolean enable) {
+    }
+
+    default void onSeekProgressUpdate(@NonNull int position, @NonNull int duration) {
+    }
+
+    default void onSeekTimeUpdate(@NonNull int position, @NonNull int duration) {
+    }
+
+    default void onSeekPlaying(@NonNull int position) {
+    }
+
+//    default void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
+//    }
 
     default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
     }

@@ -70,12 +70,13 @@ public interface ControllerApi {
      */
     int getCutoutHeight();
 
+    void seekForwardDown(boolean enable);
 
-    boolean seekForward(boolean callback);
+    void seekForwardUp(boolean enable);
 
-    boolean seekRewind(boolean callback);
+    void seekRewindDown(boolean enable);
 
-    void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration);
+    void seekRewindUp(boolean enable);
 
     default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
     }
