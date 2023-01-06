@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <lib.kalu.mediaplayer.core.view.VideoLayout
+    <lib.kalu.mediaplayer.core.player.VideoLayout
         android:id="@+id/module_mediaplayer_test"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

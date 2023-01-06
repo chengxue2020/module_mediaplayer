@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.ControllerApi;
-import lib.kalu.mediaplayer.core.view.PlayerApi;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
 
 @Keep
 public class ControllerWrapper implements PlayerApi, ControllerApi {

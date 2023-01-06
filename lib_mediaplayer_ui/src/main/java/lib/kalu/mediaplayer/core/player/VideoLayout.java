@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.view;
+package lib.kalu.mediaplayer.core.player;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,6 +27,7 @@ import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
@@ -1397,95 +1398,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         }
     }
 
-//    private final void handleMessage(@NonNull Message msg) {
-//        MPLogUtil.log("VideoLayout => handleMessage => what = " + msg.what + ", thread = " + Thread.currentThread().getName());
-//
-//        if (msg.what != HANDLE_MESSAHE_WHAT_TIMER)
-//            return;
-//
-//
-//    }
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-
-        boolean focusable = isFocusable();
-        if (focusable) {
-            boolean isFull = isFull();
-            boolean isFloat = isFloat();
-            if (isFloat) {
-                // stopFloat
-                if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                    MPLogUtil.log("dispatchKeyEvent => stopFloat =>");
-                    stopFloat();
-                }
-                return true;
-            } else if (isFull) {
-                // toogle
-                if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                    MPLogUtil.log("dispatchKeyEvent => toggle =>");
-                    toggle();
-                }
-                // seekForward
-                else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                    ControllerLayout layout = getControlLayout();
-                    if (null != layout) {
-                        boolean live = isLive();
-                        MPLogUtil.log("dispatchKeyEvent => seekForward[ACTION_DOWN] => live = " + live);
-                        layout.seekForwardDown(!live);
-                    }
-                }
-                // seekForward
-                else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                    ControllerLayout layout = getControlLayout();
-                    if (null != layout) {
-                        boolean live = isLive();
-                        MPLogUtil.log("dispatchKeyEvent => seekForward[ACTION_UP] => live = " + live);
-                        layout.seekForwardUp(!live);
-                    }
-                }
-                // seekRewind
-                else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-                    ControllerLayout layout = getControlLayout();
-                    if (null != layout) {
-                        boolean live = isLive();
-                        MPLogUtil.log("dispatchKeyEvent => seekRewind[ACTION_DOWN] => live = " + live);
-                        layout.seekRewindDown(!live);
-                    }
-                }
-                // seekRewind
-                else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-                    ControllerLayout layout = getControlLayout();
-                    if (null != layout) {
-                        boolean live = isLive();
-                        MPLogUtil.log("dispatchKeyEvent => seekRewind[ACTION_UP] => live = " + live);
-                        layout.seekRewindUp(!live);
-                    }
-                }
-                // stopFull
-                else if (isFull() && event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                    MPLogUtil.log("decodeKeyEvent => stopFull =>");
-                    stopFull();
-                }
-                // VOLUME_UP
-                else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
-                    return super.dispatchKeyEvent(event);
-                }
-                // VOLUME_DOWN
-                else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
-                    return super.dispatchKeyEvent(event);
-                }
-                // VOLUME_MUTE
-                else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_MUTE) {
-                    return super.dispatchKeyEvent(event);
-                }
-                // VOICE_ASSIST
-                else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOICE_ASSIST) {
-                    return super.dispatchKeyEvent(event);
-                }
-                return true;
-            }
-        }
-        return false;
+        return dispatchKeyEvent(this, event) || super.dispatchKeyEvent(event);
     }
 }
