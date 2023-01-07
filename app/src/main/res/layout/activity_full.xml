@@ -90,7 +90,7 @@
 
     </ScrollView>
 
-    <lib.kalu.mediaplayer.core.view.VideoLayout
+    <lib.kalu.mediaplayer.core.player.VideoLayout
         android:id="@+id/full_video"
         android:layout_width="400dp"
         android:layout_height="200dp"

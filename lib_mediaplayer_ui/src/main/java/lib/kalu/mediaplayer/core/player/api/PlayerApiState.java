@@ -6,7 +6,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 
-interface PlayerApiState extends PlayerApiBase {
+public interface PlayerApiState extends PlayerApiBase {
 
     default void callPlayerState(@PlayerType.StateType.Value int playerState) {
         List<OnChangeListener> listener = getOnChangeListener();

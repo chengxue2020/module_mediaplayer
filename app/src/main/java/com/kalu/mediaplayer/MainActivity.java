@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 
@@ -21,9 +22,9 @@ public class MainActivity extends Activity {
     }
 
     private final String getUrl() {
-//        EditText editText = findViewById(R.id.edit);
-//        String s = editText.getText().toString();
-        String s = "http://video.cdn.aizys.com/video_vp09_fail.mp4";
+        EditText editText = findViewById(R.id.edit);
+        String s = editText.getText().toString();
+//        String s = "http://video.cdn.aizys.com/video_vp09_fail.mp4";
 //                String s = "http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400";
 //                String s = "udp://@224.255.0.128:10000";
 //        String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";

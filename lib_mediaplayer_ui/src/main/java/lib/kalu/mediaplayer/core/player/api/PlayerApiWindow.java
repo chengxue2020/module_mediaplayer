@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.core.player.api;
 
-interface PlayerApiWindow {
+public interface PlayerApiWindow {
 
     boolean isFull();
 

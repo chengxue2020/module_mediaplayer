@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 
-interface PlayerApiMedia extends PlayerApiBase, PlayerApiExternal {
+public interface PlayerApiMedia extends PlayerApiBase, PlayerApiExternal {
 
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();

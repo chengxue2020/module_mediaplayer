@@ -1,6 +1,9 @@
 package lib.kalu.mediaplayer.core.controller.component;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,6 +19,9 @@ import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ComponentSpeed extends RelativeLayout implements ComponentApi {
+
+    private Handler mHandler = null;
+    private long mUpdateTimeMillis = 0L;
 
     public ComponentSpeed(Context context) {
         super(context);
@@ -42,8 +48,6 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
     public void onVisibilityChanged(boolean isVisible, Animation anim) {
     }
 
-    private long mUpdateTimeMillis = 0L;
-
     @Override
     public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
 
@@ -57,26 +61,6 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
                 mUpdateTimeMillis = timeMillis;
             }
         }
-
-        View v = findViewById(R.id.module_mediaplayer_component_speed_bg);
-        int visibility = v.getVisibility();
-        MPLogUtil.log("ComponentSpeed => onUpdateTimeMillis => visibility = " + visibility);
-        if (visibility != View.VISIBLE)
-            return;
-
-        try {
-            String speed = mControllerWrapper.getTcpSpeed();
-            int length = speed.length();
-            int start = length - 4;
-            String unit = speed.substring(start, length);
-            String num = speed.substring(0, start);
-            MPLogUtil.log("ComponentSpeed => updateSpeed => speed = " + speed);
-            TextView v1 = findViewById(R.id.module_mediaplayer_component_speed_txt);
-            v1.setText(num);
-            TextView v2 = findViewById(R.id.module_mediaplayer_component_speed_unit);
-            v2.setText(unit);
-        } catch (Exception e) {
-        }
     }
 
     @Override
@@ -89,6 +73,31 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
                 findViewById(R.id.module_mediaplayer_component_speed_pb).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_speed_txt).setVisibility(View.VISIBLE);
                 findViewById(R.id.module_mediaplayer_component_speed_unit).setVisibility(View.VISIBLE);
+                if (null == mHandler) {
+                    mHandler = new Handler(Looper.myLooper()) {
+                        @Override
+                        public void handleMessage(@NonNull Message msg) {
+                            super.handleMessage(msg);
+                            if (null != msg && msg.what == 7677) {
+                                try {
+                                    String speed = mControllerWrapper.getTcpSpeed();
+                                    int length = speed.length();
+                                    int start = length - 4;
+                                    String unit = speed.substring(start, length);
+                                    String num = speed.substring(0, start);
+                                    MPLogUtil.log("ComponentSpeed => updateSpeed => speed = " + speed);
+                                    TextView v1 = findViewById(R.id.module_mediaplayer_component_speed_txt);
+                                    v1.setText(num);
+                                    TextView v2 = findViewById(R.id.module_mediaplayer_component_speed_unit);
+                                    v2.setText(unit);
+                                } catch (Exception e) {
+                                }
+                            }
+                            mHandler.sendEmptyMessageDelayed(7677, 1000);
+                        }
+                    };
+                    mHandler.sendEmptyMessage(7677);
+                }
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_LOADING_START:
@@ -98,6 +107,10 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
                 findViewById(R.id.module_mediaplayer_component_speed_pb).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_speed_txt).setVisibility(View.GONE);
                 findViewById(R.id.module_mediaplayer_component_speed_unit).setVisibility(View.GONE);
+                if (null != mHandler) {
+                    mHandler.removeMessages(7677);
+                    mHandler = null;
+                }
                 break;
         }
     }

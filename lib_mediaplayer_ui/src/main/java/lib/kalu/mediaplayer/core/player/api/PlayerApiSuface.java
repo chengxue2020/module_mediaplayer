@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.core.player.api;
 
-interface PlayerApiSuface {
+public interface PlayerApiSuface {
 
     /**
      * 清屏

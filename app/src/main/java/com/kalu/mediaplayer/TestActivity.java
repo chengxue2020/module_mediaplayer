@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
-import lib.kalu.mediaplayer.core.view.VideoLayout;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 
 public class TestActivity extends Activity {
 

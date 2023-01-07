@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 
-interface PlayerApiBase {
+public interface PlayerApiBase {
 
     List<OnChangeListener> mListeners = new LinkedList<>();
 

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 
-interface PlayerApiExternal {
+public interface PlayerApiExternal {
 
     default void enableExternalMusic(boolean enable, boolean release) {
         enableExternalMusic(enable, release, false);

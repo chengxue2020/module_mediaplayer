@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.core.player.api;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 
-interface PlayerApiComponent extends PlayerApiState {
+public interface PlayerApiComponent extends PlayerApiState {
 
     default void showComponentError() {
         callPlayerState(PlayerType.StateType.STATE_ERROR_IGNORE);

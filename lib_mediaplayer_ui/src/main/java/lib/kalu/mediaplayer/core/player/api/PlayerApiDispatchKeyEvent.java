@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-interface PlayerApiDispatchKeyEvent extends PlayerApiMedia, PlayerApiWindow {
+public interface PlayerApiDispatchKeyEvent extends PlayerApiMedia, PlayerApiWindow {
 
     default boolean dispatchKeyEvent(@NonNull View view, @NonNull KeyEvent event) {
 
