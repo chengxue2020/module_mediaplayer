@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
 import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
@@ -99,6 +100,7 @@ public final class ExoMediaPlayer implements KernelApi {
         builder.setRenderersFactory(new FFmpegDefaultRenderersFactory(context));
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
+        mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
 
         if (null != mAnalyticsListener) {
             mAnalyticsListener = null;
