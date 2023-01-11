@@ -10,6 +10,7 @@ import android.view.Surface;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.ijkplayer.util.IjkLogUtil;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
@@ -84,6 +85,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             if (mute) {
                 mIjkPlayer.setVolume(0f, 0f);
             }
+            // log
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO);
             setOptions();

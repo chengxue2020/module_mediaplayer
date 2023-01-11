@@ -36,10 +36,14 @@ extern "C" {
 #include <libavutil/error.h>
 #include <libavutil/opt.h>
 #include <libswresample/swresample.h>
+#include "log_base.h"
 }
 
-#define LOG_TAG "ffmpeg_jni"
-#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, \
+//#define LOG_TAG "ffmpeg_jni"
+//#define LOGE(...) \
+//  ((void)__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__))
+#define LOG_TAG "MP_EXO_JNI"
+#define LOGE(...) ((void)_exo_log_print(ANDROID_LOG_ERROR, LOG_TAG, \
                    __VA_ARGS__))
 
 #define LIBRARY_FUNC(RETURN_TYPE, NAME, ...)                              \
@@ -130,6 +134,10 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
     avcodec_register_all();
     return JNI_VERSION_1_6;
+}
+
+LIBRARY_FUNC(void, ffmpegLogger, jboolean enable) {
+    _exo_enable_logger(enable);
 }
 
 LIBRARY_FUNC(jstring, ffmpegGetVersion) {
@@ -447,9 +455,9 @@ void CopyPlane(const uint8_t *source, int source_stride, uint8_t *destination,
     while (height--) {
         LOGE("%d", height);
 //        try {
-            std::memcpy(destination, source, width);
-            source += source_stride;
-            destination += destination_stride;
+        std::memcpy(destination, source, width);
+        source += source_stride;
+        destination += destination_stride;
 //        } catch (const std::exception& e) {
 //            continue;
 //        }
@@ -744,3 +752,10 @@ VIDEO_DECODER_FUNC(jint, ffmpegRenderFrame, jlong jContext, jobject jSurface,
 }
 
 /* Here lies the code for ffmpeg video codec based on AV1 codec*/
+//
+//extern "C"
+//JNIEXPORT void JNICALL
+//Java_com_google_android_exoplayer2_ext_ffmpeg_FfmpegLibrary_ffmpegLogger(JNIEnv *env, jclass clazz,
+//                                                                         jboolean enable) {
+//    _exo_enable_logger(enable);
+//}

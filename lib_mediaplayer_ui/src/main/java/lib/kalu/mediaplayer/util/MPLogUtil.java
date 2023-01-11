@@ -19,7 +19,6 @@ public final class MPLogUtil {
             try {
                 Class<?> clazz = Class.forName("lib.kalu.vlcplayer.util.VlcLogUtil");
                 if (null != clazz) {
-                    clazz = null;
                     lib.kalu.vlcplayer.util.VlcLogUtil.setLogger(enable);
                     log("setLogger => vlc succ");
                 } else {
@@ -32,7 +31,6 @@ public final class MPLogUtil {
             try {
                 Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
                 if (null != clazz) {
-                    clazz = null;
                     lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(enable);
                     log("setLogger => ijk succ");
                 } else {
@@ -45,7 +43,6 @@ public final class MPLogUtil {
             try {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.util.ExoLogUtil");
                 if (null != clazz) {
-                    clazz = null;
                     lib.kalu.exoplayer2.util.ExoLogUtil.setLogger(enable);
                     log("setLogger => exo succ");
                 } else {

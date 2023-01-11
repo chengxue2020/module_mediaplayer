@@ -32,7 +32,7 @@ extern "C" {
 #include "include/libswresample/swresample.h"
 }
 
-#define LOG_TAG "ffmpeg_jni"
+#define LOG_TAG "MP_EXO_JNI"
 #define LOGE(...) \
   ((void)__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__))
 
@@ -110,6 +110,9 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
   }
   avcodec_register_all();
   return JNI_VERSION_1_6;
+}
+
+LIBRARY_FUNC(void, ffmpegLogger, jboolean enable) {
 }
 
 LIBRARY_FUNC(jstring, ffmpegGetVersion) {

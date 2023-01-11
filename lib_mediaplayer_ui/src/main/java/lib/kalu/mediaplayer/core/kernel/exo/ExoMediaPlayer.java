@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
 import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
+import com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -30,6 +31,7 @@ import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
 
 import lib.kalu.exoplayer2.ffmpeg.FFmpegDefaultRenderersFactory;
+import lib.kalu.exoplayer2.util.ExoLogUtil;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -101,6 +103,9 @@ public final class ExoMediaPlayer implements KernelApi {
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
         mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
+        // log
+        FfmpegLibrary.ffmpegLogger(logger);
+//        ExoLogUtil.setLogger(logger);
 
         if (null != mAnalyticsListener) {
             mAnalyticsListener = null;
