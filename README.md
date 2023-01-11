@@ -39,22 +39,11 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 ```
 
 #
-####  版本
-```
-exo => r2.18.2
-lib_mediaplayer_core_exo_r2.18.2
-```
-```
-vlc => r3.4.9
-lib_mediaplayer_core_vlc_r3.4.9
-```
-```
-ijk => k0.8.8、ff4.0--ijk0.8.8--20210426--001
-lib_mediaplayer_core_ijk_k0.8.8_ff4.0
-```
-
-#
 #### 更新
+```
+2023-01-11
+1. 新增：exoplayer-ffmpeg软解
+```
 ```
 2022-12-07
 1. 修改：exoplayer-udp-超时时长[com/google/android/exoplayer2/upstream/UdpDataSource.java-55]
