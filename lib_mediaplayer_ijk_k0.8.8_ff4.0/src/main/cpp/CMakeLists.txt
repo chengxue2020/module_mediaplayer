@@ -175,14 +175,14 @@ set(arm64_v8a_sources
 
 if (${ANDROID_ABI} STREQUAL armeabi-v7a)
     add_library( # Sets the name of the library.
-            avffmpeg-player
+            ijkplayer-ffmpeg-jni
             SHARED
             ${common_sources}
             ${armeabi_v7a_sources}
             )
 else ()
     add_library( # Sets the name of the library.
-            avffmpeg-player
+            ijkplayer-ffmpeg-jni
             SHARED
             ${common_sources}
             ${arm64_v8a_sources}
@@ -199,10 +199,10 @@ endif ()
 
 #ffmpeg
 configure_file(${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libavffmpeg.so ${Project_BINARY_DIR}/libavffmpeg.so COPYONLY)
-add_library(avffmpeg-lib
+add_library(ijkplayer-ffmpeg-lib
         SHARED
         IMPORTED)
-set_target_properties(avffmpeg-lib
+set_target_properties(ijkplayer-ffmpeg-lib
         PROPERTIES IMPORTED_LOCATION
         libavffmpeg.so)
 
@@ -235,8 +235,8 @@ include_directories(
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        avffmpeg-player
+        ijkplayer-ffmpeg-jni
 
         # Links the target library to the log library
         # included in the NDK.
-        avffmpeg-lib ${log-lib} ${m-lib} ${z-lib} ${android-lib} ${EGL-lib} ${GLES-lib} ${jnigraphics-lib} ${OpenSLES-lib})
+        ijkplayer-ffmpeg-lib ${log-lib} ${m-lib} ${z-lib} ${android-lib} ${EGL-lib} ${GLES-lib} ${jnigraphics-lib} ${OpenSLES-lib})

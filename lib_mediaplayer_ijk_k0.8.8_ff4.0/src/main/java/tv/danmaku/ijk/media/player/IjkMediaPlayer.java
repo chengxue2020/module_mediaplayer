@@ -167,69 +167,12 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
     private String mDataSource;
 
-    /**
-     * Default library loader
-     * Load them by yourself, if your libraries are not installed at default place.
-     */
-    private static final IjkLibLoader sLocalLibLoader = new IjkLibLoader() {
-        @Override
-        public void loadLibrary(String libName) throws UnsatisfiedLinkError, SecurityException {
-            System.loadLibrary(libName);
-        }
-    };
-
-    private static volatile boolean mIsLibLoaded = false;
-
-    public static void loadLibrariesOnce(IjkLibLoader libLoader) {
-        synchronized (IjkMediaPlayer.class) {
-            if (!mIsLibLoaded) {
-                if (libLoader == null)
-                    libLoader = sLocalLibLoader;
-
-                libLoader.loadLibrary("avffmpeg");
-                libLoader.loadLibrary("avffmpeg-player");
-                mIsLibLoaded = true;
-            }
-        }
+    static {
+        System.loadLibrary("ijkplayer-ffmpeg");
+        System.loadLibrary("ijkplayer-ffmpeg-jni");
     }
 
-    private static volatile boolean mIsNativeInitialized = false;
-
-    private static void initNativeOnce() {
-        synchronized (IjkMediaPlayer.class) {
-            if (!mIsNativeInitialized) {
-                native_init();
-                mIsNativeInitialized = true;
-            }
-        }
-    }
-
-    /**
-     * Default constructor. Consider using one of the create() methods for
-     * synchronously instantiating a IjkMediaPlayer from a Uri or resource.
-     * <p>
-     * When done with the IjkMediaPlayer, you should call {@link #release()}, to
-     * free the resources. If not released, too many IjkMediaPlayer instances
-     * may result in an exception.
-     * </p>
-     */
     public IjkMediaPlayer() {
-        this(sLocalLibLoader);
-    }
-
-    /**
-     * do not loadLibaray
-     *
-     * @param libLoader custom library loader, can be null.
-     */
-    public IjkMediaPlayer(IjkLibLoader libLoader) {
-        initPlayer(libLoader);
-    }
-
-    private void initPlayer(IjkLibLoader libLoader) {
-        loadLibrariesOnce(libLoader);
-        initNativeOnce();
-
         Looper looper;
         if ((looper = Looper.myLooper()) != null) {
             mEventHandler = new EventHandler(this, looper);
