@@ -1,13 +1,4 @@
 #
-#### 说明
-```
-1. 进度条更新【TextureView基于回调方法，SurfaceView基于Handler消息】
-```
-```
-2. exoplayer增减FFmpeg音频解码库
-```
-
-#
 #### libavffmpeg.so编译源码
 ```
 https://github.com/153437803/ijkplayer-k0.8.8-ff4.0
@@ -43,6 +34,7 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 ```
 2023-01-11
 1. 新增：exoplayer-ffmpeg视频软解
+2. 优化：进度条更新【TextureView基于回调方法，SurfaceView基于Handler消息】
 ```
 ```
 2022-12-07
