@@ -5,8 +5,10 @@
 # exoplayet-ffmpeg
 -dontwarn lib.kalu.exoplayer2.ffmpeg.**
 -keep class lib.kalu.exoplayer2.ffmpeg.** { *; }
--keep class com.google.android.exoplayer2.decoder.VideoDecoderOutputBuffer
 -keep interface lib.kalu.exoplayer2.ffmpeg.** { *; }
+-dontwarn lib.kalu.exoplayer2.decoder.**
+-keep class lib.kalu.exoplayer2.decoder.** { *; }
+-keep interface lib.kalu.exoplayer2.decoder.** { *; }
 # exoplayet-log
 -dontwarn lib.kalu.exoplayer2.util.**
 -keep class lib.kalu.exoplayer2.util.** { *; }
