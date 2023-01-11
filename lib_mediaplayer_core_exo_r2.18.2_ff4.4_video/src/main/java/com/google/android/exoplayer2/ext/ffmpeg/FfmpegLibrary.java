@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
+import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.util.LibraryLoader;
 import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MimeTypes;
@@ -101,13 +102,13 @@ public final class FfmpegLibrary {
     /**
      * Returns whether the underlying library supports the specified MIME type.
      *
-     * @param mimeType The MIME type to check.
+     * @param format The MIME type to check.
      */
-    public static boolean supportsFormat(String mimeType) {
+    public static boolean supportsFormat(Format format) {
         if (!isAvailable()) {
             return false;
         }
-        @Nullable String codecName = getCodecName(mimeType);
+        @Nullable String codecName = getCodecName(format);
         if (codecName == null) {
             return false;
         }
@@ -123,9 +124,12 @@ public final class FfmpegLibrary {
      * if it's unsupported.
      */
     @Nullable
-    /* package */ static String getCodecName(String mimeType) {
-        ExoLogUtil.log("FfmpegLibrary => getCodecName => mimeType = " + mimeType);
-        switch (mimeType) {
+    /* package */ static String getCodecName(Format format) {
+
+        String sampleMimeType = format.sampleMimeType;
+        String codecs = format.codecs;
+        ExoLogUtil.log("FfmpegLibrary => getCodecName => sampleMimeType = " + sampleMimeType + ", codecs = " + codecs);
+        switch (sampleMimeType) {
             case MimeTypes.AUDIO_AAC:
                 return "aac";
             case MimeTypes.AUDIO_MPEG:
@@ -158,10 +162,16 @@ public final class FfmpegLibrary {
                 return "pcm_mulaw";
             case MimeTypes.AUDIO_ALAW:
                 return "pcm_alaw";
-            case MimeTypes.VIDEO_H264:
-                return "h264";
-            case MimeTypes.VIDEO_H265:
-                return "hevc";
+//            case MimeTypes.VIDEO_H264:
+//                if ("avc1.42E01E".equals(codecs)) {
+//                    return "mp4";
+//                } else if ("avc1.42C015".equals(codecs)) {
+//                    return "mp4";
+//                } else {
+//                    return "h264";
+//                }
+//            case MimeTypes.VIDEO_H265:
+//                return "hevc";
             case MimeTypes.VIDEO_MPEG2:
                 return "mpeg2video";
             default:

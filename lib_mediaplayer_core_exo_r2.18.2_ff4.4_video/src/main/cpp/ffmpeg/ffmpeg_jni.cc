@@ -724,14 +724,14 @@ VIDEO_DECODER_FUNC(jint, ffmpegRenderFrame, jlong jContext, jobject jSurface,
     const int v_plane_size = v_plane_height * native_window_buffer_uv_stride;
 
     // U plane
-//    CopyPlane(
-//            reinterpret_cast<const uint8_t *>(planeU),
-//            strideU,
-//            reinterpret_cast<uint8_t *>(native_window_buffer.bits) +
-//            y_plane_size + v_plane_size,
-//            native_window_buffer_uv_stride, displayedWidth,
-//            std::min(native_window_buffer_uv_height,
-//                     displayedHeight));
+    CopyPlane(
+            reinterpret_cast<const uint8_t *>(planeU),
+            strideU,
+            reinterpret_cast<uint8_t *>(native_window_buffer.bits) +
+            y_plane_size + v_plane_size,
+            native_window_buffer_uv_stride, displayedWidth,
+            std::min(native_window_buffer_uv_height,
+                     displayedHeight));
 
 
     env->ReleaseIntArrayElements(*yuvStrides_array, yuvStrides, 0);
