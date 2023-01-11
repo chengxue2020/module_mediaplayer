@@ -42,7 +42,7 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 #### 更新
 ```
 2023-01-11
-1. 新增：exoplayer-ffmpeg软解
+1. 新增：exoplayer-ffmpeg视频软解
 ```
 ```
 2022-12-07
@@ -54,7 +54,7 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 ```
 ```
 2022-11-25
-1. 新增：exoplayer-ffmpeg
+1. 新增：exoplayer-ffmpeg音频软解
 ```
 ```
 2022-11-24
