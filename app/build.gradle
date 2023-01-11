@@ -75,9 +75,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    api files('libs/lib_mediaplayer_ijk-k0.8.8-ff4.0_release_20221221.aar')
-    api files('libs/lib_mediaplayer_exo_r2.18.2_release_20221228.aar')
-    api files('libs/lib_mediaplayer_vlc_r3.4.9_release_20221221.aar')
+//    api files('libs/lib_mediaplayer_ijk-k0.8.8-ff4.0_release_20221221.aar')
+    api files('libs/lib_mediaplayer_exo_r2.18.2_ff4.4_video_release_20230111.aar')
+//    api files('libs/lib_mediaplayer_vlc_r3.4.9_release_20221221.aar')
     api files('libs/lib_mediaplayer_ui_release_20230107.aar')
 //    api project(path: ':lib_mediaplayer_ui')
 }
