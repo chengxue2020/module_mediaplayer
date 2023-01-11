@@ -42,7 +42,7 @@ extern "C" {
 //#define LOG_TAG "ffmpeg_jni"
 //#define LOGE(...) \
 //  ((void)__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__))
-#define LOG_TAG "MP_EXO_JNI"
+#define LOG_TAG "MP_EXO_FFMPEG_JNI"
 #define LOGE(...) ((void)_exo_log_print(ANDROID_LOG_ERROR, LOG_TAG, \
                    __VA_ARGS__))
 

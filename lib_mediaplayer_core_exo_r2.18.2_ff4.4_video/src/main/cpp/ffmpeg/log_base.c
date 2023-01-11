@@ -4,7 +4,7 @@
 #include <android/log.h>
 #include "log_base.h"
 
-int mLog = 1;
+int mLog = 0;
 
 void _exo_enable_logger(jboolean enable) {
     if (enable) {

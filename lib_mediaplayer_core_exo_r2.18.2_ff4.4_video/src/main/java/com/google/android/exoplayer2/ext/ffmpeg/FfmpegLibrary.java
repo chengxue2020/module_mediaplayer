@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.util.LibraryLoader;
 import com.google.android.exoplayer2.util.Log;
 import com.google.android.exoplayer2.util.MimeTypes;
 
@@ -34,18 +33,18 @@ import lib.kalu.exoplayer2.util.ExoLogUtil;
 public final class FfmpegLibrary {
 
     static {
-        ExoPlayerLibraryInfo.registerModule("goog.exo.ffmpeg");
+        loadLibrary();
+        registerModule();
     }
 
-    private static final String TAG = "FfmpegLibrary";
+    static void loadLibrary() {
+        System.loadLibrary("exoplayer-ffmpeg");
+        System.loadLibrary("exoplayer-ffmpeg-jni");
+    }
 
-    private static final LibraryLoader LOADER =
-            new LibraryLoader("exoplayer-ffmpeg", "exoplayer-ffmpeg-jni") {
-                @Override
-                protected void loadLibrary(String name) {
-                    System.loadLibrary(name);
-                }
-            };
+    static void registerModule() {
+        ExoPlayerLibraryInfo.registerModule("goog.exo.ffmpeg");
+    }
 
     private static @MonotonicNonNull String version;
     private static int inputBufferPaddingSize = C.LENGTH_UNSET;
@@ -53,22 +52,8 @@ public final class FfmpegLibrary {
     private FfmpegLibrary() {
     }
 
-    /**
-     * Override the names of the FFmpeg native libraries. If an application wishes to call this
-     * method, it must do so before calling any other method defined by this class, and before
-     * instantiating a {@link FfmpegAudioRenderer} or {@link FfmpegVideoRenderer} instance.
-     *
-     * @param libraries The names of the FFmpeg native libraries.
-     */
-    public static void setLibraries(String... libraries) {
-        LOADER.setLibraries(libraries);
-    }
-
-    /**
-     * Returns whether the underlying library is available, loading it if necessary.
-     */
     public static boolean isAvailable() {
-        return LOADER.isAvailable();
+        return true;
     }
 
     /**
@@ -113,7 +98,7 @@ public final class FfmpegLibrary {
             return false;
         }
         if (!ffmpegHasDecoder(codecName)) {
-            Log.w(TAG, "No " + codecName + " decoder available. Check the FFmpeg build configuration.");
+            ExoLogUtil.log("FfmpegLibrary => supportsFormat => No " + codecName + " decoder available. Check the FFmpeg build configuration.");
             return false;
         }
         return true;
