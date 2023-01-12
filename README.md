@@ -32,6 +32,10 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 #
 #### 更新
 ```
+2023-01-12
+1. 优化：libijkplayer-ffmpeg.so编译脚本
+```
+```
 2023-01-11
 1. 新增：exoplayer-ffmpeg视频软解
 2. 优化：进度条更新【TextureView基于回调方法，SurfaceView基于Handler消息】
