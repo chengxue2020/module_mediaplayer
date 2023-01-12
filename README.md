@@ -139,6 +139,7 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 #
 #### 资料
 ```
+https://exoplayer.dev/
 https://github.com/google/ExoPlayer
 https://mvnrepository.com/search?q=exoplayer
 https://github.com/bilibili/ijkplayer
