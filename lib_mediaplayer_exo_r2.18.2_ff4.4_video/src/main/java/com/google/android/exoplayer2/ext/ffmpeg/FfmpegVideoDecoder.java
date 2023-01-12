@@ -15,7 +15,6 @@
  */
 package com.google.android.exoplayer2.ext.ffmpeg;
 
-import android.util.Log;
 import android.view.Surface;
 
 import androidx.annotation.Nullable;
@@ -26,11 +25,12 @@ import com.google.android.exoplayer2.decoder.SimpleDecoder;
 import com.google.android.exoplayer2.decoder.VideoDecoderInputBuffer;
 import com.google.android.exoplayer2.decoder.VideoDecoderOutputBuffer;
 import com.google.android.exoplayer2.util.Assertions;
-import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 
 import java.nio.ByteBuffer;
 import java.util.List;
+
+import lib.kalu.exoplayer2.util.ExoLogUtil;
 
 /**
  * Ffmpeg Video decoder.
@@ -51,8 +51,6 @@ import java.util.List;
     private long nativeContext;
     @Nullable
     private final byte[] extraData;
-    private Format format;
-
     @C.VideoOutputMode
     private volatile int outputMode;
 
@@ -77,7 +75,6 @@ import java.util.List;
         }
         codecName = Assertions.checkNotNull(FfmpegLibrary.getCodecName(format));
         extraData = getExtraData(format.sampleMimeType, format.initializationData);
-        this.format = format;
         nativeContext = ffmpegInitialize(codecName, extraData, threads);
         if (nativeContext == 0) {
             throw new FfmpegDecoderException("Failed to initialize decoder.");
@@ -90,22 +87,62 @@ import java.util.List;
      * not required.
      */
     @Nullable
-    private static byte[] getExtraData(String mimeType, List<byte[]> initializationData) {
-        switch (mimeType) {
-////            case MimeTypes.VIDEO_H264:
-////                byte[] sps = initializationData.get(0);
-////                byte[] pps = initializationData.get(1);
-////                byte[] extraData = new byte[sps.length + pps.length];
-////                System.arraycopy(sps, 0, extraData, 0, sps.length);
-////                System.arraycopy(pps, 0, extraData, sps.length, pps.length);
-////                return extraData;
-            case MimeTypes.VIDEO_MPEG2:
-////            case MimeTypes.VIDEO_H265:
-                return initializationData.get(0);
-            default:
-                // Other codecs do not require extra data.
-                return null;
+    private static byte[] getExtraData(String mimeType, List<byte[]> list) {
+        try {
+            if (null == list)
+                throw new Exception();
+            int num;
+            try {
+                num = list.size();
+            } catch (Exception e) {
+                num = 0;
+            }
+            ExoLogUtil.log("FfmpegVideoDecoder => getExtraData => mimeType = " + mimeType + ", num = " + num);
+            if (num <= 0)
+                throw new Exception();
+
+            int length = 0;
+            for (int i = 0; i < num; i++) {
+                byte[] bytes = list.get(i);
+                length += bytes.length;
+            }
+
+            byte[] extra = new byte[length];
+            int destPos = 0;
+            for (int i = 0; i < num; i++) {
+                byte[] bytes = list.get(i);
+                System.arraycopy(bytes, 0, extra, destPos, bytes.length);
+                destPos = bytes.length;
+            }
+            return extra;
+        } catch (Exception e) {
+            return null;
         }
+
+//        switch (mimeType) {
+//            case MimeTypes.VIDEO_H264:
+//                try {
+//                    byte[] sps = data.get(0);
+//                    byte[] pps = data.get(1);
+//                    byte[] extra = new byte[sps.length + pps.length];
+//                    System.arraycopy(sps, 0, extra, 0, sps.length);
+//                    System.arraycopy(pps, 0, extra, sps.length, pps.length);
+//                    return extra;
+//                } catch (Exception e) {
+//                    return null;
+//                }
+//            case MimeTypes.VIDEO_H265:
+//            case MimeTypes.VIDEO_MPEG2:
+//                try {
+//                    byte[] bytes = data.get(0);
+//                    return bytes;
+//                } catch (Exception e) {
+//                    return null;
+//                }
+//            default:
+//                // Other codecs do not require extra data.
+//                return null;
+//        }
     }
 
     @Override
@@ -178,10 +215,10 @@ import java.util.List;
         if (!decodeOnly) {
             outputBuffer.format = inputBuffer.format;
         }
-        Log.d("TAG", "decodeOnly: " + decodeOnly);
+        ExoLogUtil.log("decodeOnly: " + decodeOnly);
 
         if (needSendAgain) {
-            Log.e("ffmpeg_jni", "timeUs=" + inputBuffer.timeUs + ", " + "nendSendAagin");
+            ExoLogUtil.log("timeUs=" + inputBuffer.timeUs + ", " + "nendSendAagin");
         }
 
         return null;
@@ -216,8 +253,7 @@ import java.util.List;
         if (ffmpegRenderFrame(
                 nativeContext, surface,
                 outputBuffer, outputBuffer.width, outputBuffer.height) == VIDEO_DECODER_ERROR_OTHER) {
-            throw new FfmpegDecoderException(
-                    "Buffer render error: ");
+            throw new FfmpegDecoderException("Buffer render error: ");
         }
     }
 
@@ -241,8 +277,7 @@ import java.util.List;
      * @return {@link #VIDEO_DECODER_SUCCESS} if successful, {@link #VIDEO_DECODER_ERROR_OTHER} if an
      * error occurred.
      */
-    private native int ffmpegSendPacket(long context, ByteBuffer encodedData, int length,
-                                        long inputTime);
+    private native int ffmpegSendPacket(long context, ByteBuffer encodedData, int length, long inputTime);
 
     /**
      * Gets the decoded frame.
@@ -253,7 +288,5 @@ import java.util.List;
      * if successful but the frame is decode-only, {@link #VIDEO_DECODER_ERROR_OTHER} if an error
      * occurred.
      */
-    private native int ffmpegReceiveFrame(
-            long context, int outputMode, VideoDecoderOutputBuffer outputBuffer, boolean decodeOnly);
-
+    private native int ffmpegReceiveFrame(long context, int outputMode, VideoDecoderOutputBuffer outputBuffer, boolean decodeOnly);
 }

@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.util.Log;
+import com.google.android.exoplayer2.metadata.Metadata;
 import com.google.android.exoplayer2.util.MimeTypes;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -112,8 +112,7 @@ public final class FfmpegLibrary {
     /* package */ static String getCodecName(Format format) {
 
         String sampleMimeType = format.sampleMimeType;
-        String codecs = format.codecs;
-        ExoLogUtil.log("FfmpegLibrary => getCodecName => sampleMimeType = " + sampleMimeType + ", codecs = " + codecs);
+        ExoLogUtil.log("FfmpegLibrary => getCodecName => sampleMimeType = " + sampleMimeType);
         switch (sampleMimeType) {
             case MimeTypes.AUDIO_AAC:
                 return "aac";
@@ -147,16 +146,10 @@ public final class FfmpegLibrary {
                 return "pcm_mulaw";
             case MimeTypes.AUDIO_ALAW:
                 return "pcm_alaw";
-//            case MimeTypes.VIDEO_H264:
-//                if ("avc1.42E01E".equals(codecs)) {
-//                    return "mp4";
-//                } else if ("avc1.42C015".equals(codecs)) {
-//                    return "mp4";
-//                } else {
-//                    return "h264";
-//                }
-//            case MimeTypes.VIDEO_H265:
-//                return "hevc";
+            case MimeTypes.VIDEO_H264:
+                return "h264";
+            case MimeTypes.VIDEO_H265:
+                return "hevc";
             case MimeTypes.VIDEO_MPEG2:
                 return "mpeg2video";
             default:
