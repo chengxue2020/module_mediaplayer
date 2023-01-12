@@ -198,13 +198,13 @@ endif ()
 
 
 #ffmpeg
-configure_file(${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libavffmpeg.so ${Project_BINARY_DIR}/libavffmpeg.so COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libijkplayer-ffmpeg.so ${Project_BINARY_DIR}/libijkplayer-ffmpeg.so COPYONLY)
 add_library(ijkplayer-ffmpeg-lib
         SHARED
         IMPORTED)
 set_target_properties(ijkplayer-ffmpeg-lib
         PROPERTIES IMPORTED_LOCATION
-        libavffmpeg.so)
+        libijkplayer-ffmpeg.so)
 
 find_library(log-lib log)
 find_library(m-lib m)

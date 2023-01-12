@@ -31,8 +31,8 @@ public class App extends Application {
 
         // config
         PlayerBuilder build = new PlayerBuilder.Builder()
-                .setLog(false)
-                .setKernel(PlayerType.KernelType.EXO)
+                .setLog(true)
+                .setKernel(PlayerType.KernelType.IJK)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())
                 .setBuriedEvent(new Event())
