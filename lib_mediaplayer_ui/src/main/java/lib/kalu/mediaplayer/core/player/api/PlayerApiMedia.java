@@ -3,6 +3,8 @@ package lib.kalu.mediaplayer.core.player.api;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.core.kernel.KernelApi;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface PlayerApiMedia extends PlayerApiBase, PlayerApiExternal {
 
@@ -67,6 +69,33 @@ public interface PlayerApiMedia extends PlayerApiBase, PlayerApiExternal {
         }
     }
 
+    default long getDuration() {
+        try {
+            KernelApi kernel = getKernel();
+            long duration = kernel.getDuration();
+            if (duration < 0L) {
+                duration = 0L;
+            }
+            return duration;
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+            return 0L;
+        }
+    }
+
+    default long getPosition() {
+        try {
+            KernelApi kernel = getKernel();
+            long position = kernel.getPosition();
+            if (position < 0L) {
+                position = 0L;
+            }
+            return position;
+        } catch (Exception e) {
+            return 0L;
+        }
+    }
+
     void setVolume(float v1, float v2);
 
     void setMute(boolean v);
@@ -95,10 +124,6 @@ public interface PlayerApiMedia extends PlayerApiBase, PlayerApiExternal {
     }
 
     void resume(boolean call);
-
-    long getDuration();
-
-    long getPosition();
 
     boolean isLooping();
 

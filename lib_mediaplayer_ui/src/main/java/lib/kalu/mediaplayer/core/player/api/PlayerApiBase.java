@@ -7,6 +7,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 
 public interface PlayerApiBase {
@@ -35,6 +36,10 @@ public interface PlayerApiBase {
     }
 
     ControllerLayout getControlLayout();
+
+    default KernelApi getKernel(){
+        return null;
+    }
 
     default void createRender() {
     }

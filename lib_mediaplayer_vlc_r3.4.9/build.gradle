@@ -40,17 +40,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            zipAlignEnabled true
-            shrinkResources true
-            multiDexEnabled true
             //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
         debug {
-            minifyEnabled true
-            zipAlignEnabled true
-            shrinkResources true
-            multiDexEnabled true
             //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
     }

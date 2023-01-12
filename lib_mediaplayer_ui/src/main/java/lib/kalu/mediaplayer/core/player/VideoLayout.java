@@ -646,32 +646,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public long getDuration() {
-        try {
-            long duration = mKernel.getDuration();
-            return duration;
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-            return 0L;
-        }
-    }
-
-    /**
-     * 获取当前播放的位置
-     */
-    @Override
-    public long getPosition() {
-        boolean playing = isPlaying();
-        if (!playing)
-            return 0L;
-        long position = mKernel.getPosition();
-        if (position < 0) {
-            position = 0L;
-        }
-        return position;
-    }
-
-    @Override
     public boolean isLooping() {
         try {
             return mKernel.isLooping();
@@ -964,6 +938,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     public void clearControllerLayout() {
         ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_control);
         viewGroup.removeAllViews();
+    }
+
+    @Override
+    public KernelApi getKernel() {
+        return mKernel;
     }
 
     @Override
