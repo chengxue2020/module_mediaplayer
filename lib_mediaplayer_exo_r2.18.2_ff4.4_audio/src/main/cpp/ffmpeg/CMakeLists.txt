@@ -34,6 +34,7 @@ if (${ANDROID_ABI} MATCHES "arm64-v8a")
 endif ()
 
 include_directories(
+#        ffmpeg_log.h
         include
         include/config/${ANDROID_ABI}
 )
@@ -52,6 +53,7 @@ set_target_properties(ffmpeg-lib
 
 add_library(exoplayer-ffmpeg-jni
         SHARED
+#        ffmpeg_log.c
         ffmpeg_jni.cc)
 
 target_link_libraries(exoplayer-ffmpeg-jni

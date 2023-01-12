@@ -19,6 +19,11 @@ public final class FFmpegDefaultRenderersFactory extends DefaultRenderersFactory
 
     public FFmpegDefaultRenderersFactory(Context context) {
         super(context);
+        /**
+         * EXTENSION_RENDERER_MODE_OFF: 关闭扩展
+         * EXTENSION_RENDERER_MODE_ON: 打开扩展，优先使用硬解
+         * EXTENSION_RENDERER_MODE_PREFER: 打开扩展，优先使用软解
+         */
         setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
     }
 

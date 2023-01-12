@@ -36,7 +36,7 @@ extern "C" {
 #include <libavutil/error.h>
 #include <libavutil/opt.h>
 #include <libswresample/swresample.h>
-#include "log_base.h"
+#include "ffmpeg_log.h"
 }
 
 //#define LOG_TAG "ffmpeg_jni"
