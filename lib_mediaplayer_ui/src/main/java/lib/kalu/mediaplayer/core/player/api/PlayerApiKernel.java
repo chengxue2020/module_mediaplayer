@@ -257,6 +257,7 @@ public interface PlayerApiKernel extends
             String url = getUrl();
             start(builder, url);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => restart => " + e.getMessage());
         }
     }
 
@@ -452,7 +453,7 @@ public interface PlayerApiKernel extends
     default void checkKernel() throws Exception {
         KernelApi kernel = getKernel();
         if (null == kernel)
-            throw new Exception("kernel is null");
+            throw new Exception("check kernel is null");
     }
 
     default void resumeKernel(@NonNull boolean call) {
@@ -518,7 +519,7 @@ public interface PlayerApiKernel extends
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => releaseKernel => kernel = " + kernel);
             kernel.releaseDecoder();
-            kernel = null;
+            setKernel(null);
             setScreenKeep(false);
             MPLogUtil.log("PlayerApiKernel => releaseKernel => succ");
         } catch (Exception e) {
@@ -886,6 +887,7 @@ public interface PlayerApiKernel extends
             MPLogUtil.log("PlayerApiKernel => createKernel => kernel = " + kernel);
             // 4
             setKernel(kernel);
+            MPLogUtil.log("PlayerApiKernel => createKernel => kernel = " + getKernel());
             // 5
             createDecoder(builder, logger);
         } catch (Exception e) {
@@ -906,11 +908,17 @@ public interface PlayerApiKernel extends
 
     default void createDecoder(@NonNull StartBuilder builder, @NonNull boolean logger) {
         try {
+            // 1
+            checkKernel();
+            // 2
             ViewGroup layout = getLayout();
             Context context = layout.getContext();
             KernelApi kernel = getKernel();
+            MPLogUtil.log("PlayerApiKernel => createDecoder => kernel = " + kernel);
             kernel.createDecoder(context, builder.isMute(), logger);
+            MPLogUtil.log("PlayerApiKernel => createDecoder => succ");
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage(), e);
         }
     }
 
