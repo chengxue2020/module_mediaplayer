@@ -33,7 +33,7 @@ public class App extends Application {
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
                 .setKernel(PlayerType.KernelType.EXO)
-                .setRender(PlayerType.RenderType.TEXTURE_VIEW)
+                .setRender(PlayerType.RenderType.SURFACE_VIEW)
                 .setKeycodeApi(new KeycodeSimulator())
                 .setBuriedEvent(new Event())
                 .setCacheType(PlayerType.CacheType.NONE)
