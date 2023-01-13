@@ -57,6 +57,7 @@ public final class PlayerBuilder {
         return render;
     }
 
+    @PlayerType.ScaleType.Value
     public int getScaleType() {
         return scaleType;
     }

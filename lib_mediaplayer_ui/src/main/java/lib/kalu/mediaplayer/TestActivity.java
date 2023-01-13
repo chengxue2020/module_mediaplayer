@@ -92,8 +92,8 @@ public final class TestActivity extends Activity {
 
         // control
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
-        videoLayout.setControllerLayout(controller);
         videoLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
+        videoLayout.setControllerLayout(controller);
 
         // 设置视频播放链接地址
 //        videoLayout.showNetWarning();
@@ -245,19 +245,19 @@ public final class TestActivity extends Activity {
         super.finish();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
-        videoLayout.resume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
-        videoLayout.pause();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
+//        videoLayout.resume();
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
+//        videoLayout.pause();
+//    }
 
     @Override
     protected void onDestroy() {

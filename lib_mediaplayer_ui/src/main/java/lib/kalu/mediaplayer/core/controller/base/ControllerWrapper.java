@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.core.controller.base;
 
+import android.view.ViewGroup;
+
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -7,6 +9,7 @@ import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.ControllerApi;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.player.api.PlayerApi;
+import lib.kalu.mediaplayer.core.render.RenderApi;
 
 @Keep
 public class ControllerWrapper implements PlayerApi, ControllerApi {
@@ -33,14 +36,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     public void setMute(boolean v) {
         try {
             this.mPlayer.setMute(v);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void start(@NonNull StartBuilder builder, @NonNull String url) {
-        try {
-            mPlayer.start(builder, url);
         } catch (Exception e) {
         }
     }
@@ -89,14 +84,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     public void stop() {
         try {
             mPlayer.stop();
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void restart() {
-        try {
-            mPlayer.restart();
         } catch (Exception e) {
         }
     }
@@ -302,15 +289,6 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public String getTcpSpeed() {
-        try {
-            return mPlayer.getTcpSpeed();
-        } catch (Exception e) {
-            return "0kb/s";
-        }
-    }
-
-    @Override
     public void setMirrorRotation(boolean enable) {
         try {
             mPlayer.setMirrorRotation(enable);
@@ -319,19 +297,11 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public int[] getVideoSize() {
+    public ViewGroup getLayout() {
         try {
-            return mPlayer.getVideoSize();
+            return mPlayer.getLayout();
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    @Override
-    public void setRotation(float rotation) {
-        try {
-            mPlayer.setRotation(rotation);
-        } catch (Exception e) {
         }
     }
 
@@ -377,27 +347,16 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
     }
 
     @Override
-    public void addRender() {
-        try {
-            mPlayer.addRender();
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void delRender() {
-        try {
-            mPlayer.delRender();
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
     public void releaseRender() {
         try {
             mPlayer.releaseRender();
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    public void clearRender() {
+
     }
 
     @Override
@@ -422,6 +381,16 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
             mPlayer.setKernel(v);
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    public KernelApi getKernel() {
+        return null;
+    }
+
+    @Override
+    public void setKernel(@NonNull KernelApi kernel) {
+
     }
 
     @Override
@@ -497,6 +466,16 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public RenderApi getRender() {
+        return null;
+    }
+
+    @Override
+    public void setRender(@NonNull RenderApi render) {
+
     }
 
     @Override
@@ -675,5 +654,15 @@ public class ControllerWrapper implements PlayerApi, ControllerApi {
             }
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    public void clearComponent() {
+
+    }
+
+    @Override
+    public void setScreenKeep(boolean enable) {
+
     }
 }

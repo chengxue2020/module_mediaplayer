@@ -6,19 +6,19 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/edit"
+        android:id="@+id/main_edit"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com" />
 
     <Button
-        android:id="@+id/open"
+        android:id="@+id/main_open"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="播放" />
 
     <Button
-        android:id="@+id/change"
+        android:id="@+id/main_change"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="测试：大小屏切换" />

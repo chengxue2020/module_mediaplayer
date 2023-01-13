@@ -157,12 +157,12 @@ public class PlayerManager {
         }
     }
 
-    public boolean onBackPress(String tag) {
-        VideoLayout videoView = get(tag);
-        if (videoView == null) {
-            return false;
-        }
-        return videoView.onBackPressed();
-    }
+//    public boolean onBackPress(String tag) {
+//        VideoLayout videoView = get(tag);
+//        if (videoView == null) {
+//            return false;
+//        }
+//        return videoView.onBackPressed();
+//    }
 
 }

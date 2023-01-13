@@ -238,6 +238,7 @@ public final class ExoMediaPlayer implements KernelApi {
 
             @Override
             public void onRenderedFirstFrame(EventTime eventTime, Object output, long renderTimeMs) {
+                MPLogUtil.log("ExoMediaPlayer => onRenderedFirstFrame =>");
             }
 
             @Override
@@ -456,11 +457,6 @@ public final class ExoMediaPlayer implements KernelApi {
         } catch (Exception e) {
             return 1f;
         }
-    }
-
-    @Override
-    public String getTcpSpeed(Context context) {
-        return SpeedUtil.getNetSpeed(context);
     }
 
     @Override

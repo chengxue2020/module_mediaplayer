@@ -31,18 +31,7 @@ public interface KernelApi extends KernelEvent {
 
     void init(@NonNull Context context, @NonNull String url);
 
-    default void create(@NonNull Context context, @NonNull StartBuilder bundle, @NonNull String url) {
-        update(bundle, url);
-        init(context, url);
-    }
-
-    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
-        setSeek(seek);
-        setMax(max);
-        setLooping(loop);
-    }
-
-    default void update(@NonNull StartBuilder bundle, @NonNull String playUrl) {
+    default void update(@NonNull Context context, @NonNull StartBuilder bundle, @NonNull String playUrl) {
 
         MPLogUtil.log("KernelApi => update => playUrl = " + playUrl);
         long seek = bundle.getSeek();
@@ -82,6 +71,14 @@ public interface KernelApi extends KernelEvent {
         boolean musicAuto = bundle.isExternalMusicAuto();
         MPLogUtil.log("KernelApi => update => musicAuto = " + musicAuto);
         setExternalMusicAuto(musicAuto);
+
+        init(context, playUrl);
+    }
+
+    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+        setSeek(seek);
+        setMax(max);
+        setLooping(loop);
     }
 
     void setDataSource(AssetFileDescriptor fd);
@@ -97,8 +94,6 @@ public interface KernelApi extends KernelEvent {
     void setSpeed(float speed);
 
     float getSpeed();
-
-    String getTcpSpeed(Context context);
 
     String getUrl();
 

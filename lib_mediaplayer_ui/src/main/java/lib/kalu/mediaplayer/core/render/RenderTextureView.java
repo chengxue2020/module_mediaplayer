@@ -21,6 +21,7 @@ import android.graphics.SurfaceTexture;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -124,16 +125,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
         if (null != mSurfaceTextureListener) {
             mSurfaceTextureListener = null;
         }
-    }
-
-    /**
-     * 获取真实的RenderView
-     *
-     * @return view
-     */
-    @Override
-    public View getReal() {
-        return this;
     }
 
     @Override

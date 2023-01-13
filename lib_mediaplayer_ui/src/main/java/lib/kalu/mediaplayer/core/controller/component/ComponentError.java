@@ -52,7 +52,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
 
     @Override
     public void onVisibilityChanged(boolean isVisible, Animation anim) {
-
+        MPLogUtil.log("ComponentError => onVisibilityChanged => isVisible = " + isVisible);
     }
 
     @Override

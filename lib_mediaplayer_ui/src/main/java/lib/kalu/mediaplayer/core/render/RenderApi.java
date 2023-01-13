@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -29,12 +29,16 @@ public interface RenderApi {
      */
     void releaseReal();
 
-    /**
-     * 获取真实的RenderView
-     *
-     * @return view
-     */
-    View getReal();
+//    /**
+//     * 获取真实的RenderView
+//     *
+//     * @return view
+//     */
+//    View getReal();
+
+    void setLayoutParams(@NonNull ViewGroup.LayoutParams params);
+
+    void setScaleX(float v);
 
     /**
      * 关联AbstractPlayer

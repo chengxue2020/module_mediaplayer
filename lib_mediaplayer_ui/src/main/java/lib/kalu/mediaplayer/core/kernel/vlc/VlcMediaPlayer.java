@@ -331,16 +331,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
         }
     }
 
-    /**
-     * 获取当前缓冲的网速
-     *
-     * @return 获取网络
-     */
-    @Override
-    public String getTcpSpeed(Context context) {
-        return SpeedUtil.getNetSpeed(context);
-    }
-
     /****************/
 
     @Override

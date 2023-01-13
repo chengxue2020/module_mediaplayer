@@ -302,16 +302,6 @@ public final class AndroidMediaPlayer implements KernelApi {
         }
     }
 
-    /**
-     * 获取当前缓冲的网速
-     *
-     * @return 获取网络
-     */
-    @Override
-    public String getTcpSpeed(Context context) {
-        return SpeedUtil.getNetSpeed(context);
-    }
-
     private MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {

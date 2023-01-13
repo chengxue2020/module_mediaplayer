@@ -155,11 +155,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public View getReal() {
-        return this;
-    }
-
-    @Override
     public void clearCanvas() {
 //        try {
 //            Canvas canvas = mSurface.lockCanvas(null);

@@ -78,6 +78,23 @@ public final class StartBuilder {
         this.externalMusicAuto = builder.externalMusicAuto;
     }
 
+    @Override
+    public String toString() {
+        return "StartBuilder{" +
+                "max=" + max +
+                ", seek=" + seek +
+                ", live=" + live +
+                ", loop=" + loop +
+                ", mute=" + mute +
+                ", invisibleStop=" + invisibleStop +
+                ", invisibleIgnore=" + invisibleIgnore +
+                ", invisibleRelease=" + invisibleRelease +
+                ", externalMusicUrl='" + externalMusicUrl + '\'' +
+                ", externalMusicLoop=" + externalMusicLoop +
+                ", externalMusicAuto=" + externalMusicAuto +
+                '}';
+    }
+
     public Builder newBuilder() {
         Builder builder = new Builder();
         builder.max = max;
