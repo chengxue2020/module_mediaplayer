@@ -44,7 +44,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  * VideoDecoderOutputBuffers}. For other use cases a {@link android.view.SurfaceView} or {@link
  * android.view.TextureView} should be used instead.
  */
-public final class VideoDecoderGLSurfaceView extends GLSurfaceView
+public class VideoDecoderGLSurfaceView extends GLSurfaceView
     implements VideoDecoderOutputBufferRenderer {
 
   private static final String TAG = "VideoDecoderGLSV";

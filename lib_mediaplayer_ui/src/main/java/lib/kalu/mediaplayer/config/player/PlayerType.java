@@ -201,26 +201,6 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
-    @interface RenderType {
-        int SURFACE_VIEW = 1; // SurfaceView
-        int TEXTURE_VIEW = 0; // TextureView
-
-        @IntDef({SURFACE_VIEW, TEXTURE_VIEW})
-        @Retention(RetentionPolicy.SOURCE)
-        @Keep
-        @interface Value {
-        }
-    }
-
-    /*****************/
-
-    /**
-     * 通过注解限定类型
-     */
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface KernelType {
         int ANDROID = 5001; // MediaPlayer，基于原生自带的播放器控件
         int EXO = 5002; // exo
@@ -361,6 +341,28 @@ public @interface PlayerType {
 //                EVENT_AUDIO_DECODED_START,
 //                EVENT_VIDEO_DECODED_START
         })
+        @Keep
+        @interface Value {
+        }
+    }
+
+    /*************/
+
+
+    /**
+     * 通过注解限定类型
+     */
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @Keep
+    @interface RenderType {
+        int TEXTURE_VIEW = 10_001;
+        int SURFACE_VIEW = 10_002;
+
+        @IntDef({TEXTURE_VIEW,
+                SURFACE_VIEW})
+        @Retention(RetentionPolicy.SOURCE)
         @Keep
         @interface Value {
         }

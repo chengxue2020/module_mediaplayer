@@ -452,16 +452,19 @@ struct JniContext {
 
 void CopyPlane(const uint8_t *source, int source_stride, uint8_t *destination,
                int destination_stride, int width, int height) {
+//    LOGE("%d", height);
+    LOGE("CopyPlane => width = %d, height = %d", width, height);
     while (height--) {
-        LOGE("%d", height);
-//        try {
-        std::memcpy(destination, source, width);
-        source += source_stride;
-        destination += destination_stride;
-//        } catch (const std::exception& e) {
-//            continue;
-//        }
+        try {
+//            std::memcpy(destination, source, width);
+            std::memmove(destination, source, width);
+            source += source_stride;
+            destination += destination_stride;
+        } catch (const std::exception &e) {
+            continue;
+        }
     }
+    LOGE("CopyPlane => succ");
 }
 
 constexpr int AlignTo16(int value) { return (value + 15) & (~15); }
@@ -633,9 +636,12 @@ VIDEO_DECODER_FUNC(jint, ffmpegReceiveFrame, jlong jContext, jint outputMode, jo
 
     // TODO: Support rotate YUV data
 
-    memcpy(data, frame->data[0], yLength);
-    memcpy(data + yLength, frame->data[1], uvLength);
-    memcpy(data + yLength + uvLength, frame->data[2], uvLength);
+    memmove(data, frame->data[0], yLength);
+    memmove(data + yLength, frame->data[1], uvLength);
+    memmove(data + yLength + uvLength, frame->data[2], uvLength);
+//    memcpy(data, frame->data[0], yLength);
+//    memcpy(data + yLength, frame->data[1], uvLength);
+//    memcpy(data + yLength + uvLength, frame->data[2], uvLength);
 
     av_frame_free(&frame);
 
@@ -750,12 +756,3 @@ VIDEO_DECODER_FUNC(jint, ffmpegRenderFrame, jlong jContext, jobject jSurface,
 
     return VIDEO_DECODER_SUCCESS;
 }
-
-/* Here lies the code for ffmpeg video codec based on AV1 codec*/
-//
-//extern "C"
-//JNIEXPORT void JNICALL
-//Java_com_google_android_exoplayer2_ext_ffmpeg_FfmpegLibrary_ffmpegLogger(JNIEnv *env, jclass clazz,
-//                                                                         jboolean enable) {
-//    _exo_enable_logger(enable);
-//}

@@ -54,7 +54,7 @@ import javax.microedition.khronos.opengles.GL10;
  * apply the touch and sensor rotations in the correct order or the user's touch manipulations won't
  * match what they expect.
  */
-public final class SphericalGLSurfaceView extends GLSurfaceView {
+public class SphericalGLSurfaceView extends GLSurfaceView {
 
   /** Listener for the {@link Surface} to which video frames should be rendered. */
   public interface VideoSurfaceListener {

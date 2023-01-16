@@ -13,7 +13,7 @@ public final class RenderFactoryManager {
     public static RenderApi getRender(@NonNull Context context, @PlayerType.RenderType int type) {
         if (type == PlayerType.RenderType.SURFACE_VIEW) {
             return SurfaceFactory.build().create(context);
-        } else {
+        }else {
             return TextureFactory.build().create(context);
         }
     }
