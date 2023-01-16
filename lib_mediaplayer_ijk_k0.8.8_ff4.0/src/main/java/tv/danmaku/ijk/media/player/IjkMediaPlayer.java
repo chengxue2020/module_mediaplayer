@@ -71,7 +71,7 @@ import tv.danmaku.ijk.media.player.misc.IMediaDataSourceForRaw;
  */
 public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
-    private final List<String> SCHEME_PROTOCOL = Arrays.asList("http", "rtmp", "rtsp", "udp"); // interface test message
+    private final List<String> SCHEME_PROTOCOL = Arrays.asList("http", "https", "rtmp", "rtsp", "udp"); // interface test message
     private final String SCHEME_ANDROID_ASSET = "file:///android_asset/"; // interface test message
     private static final int MEDIA_NOP = 0; // interface test message
     private static final int MEDIA_PREPARED = 1;
