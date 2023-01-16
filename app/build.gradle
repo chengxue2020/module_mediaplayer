@@ -4,6 +4,7 @@ android {
 
     compileSdkVersion 32
     buildToolsVersion "32.0.0"
+    namespace 'com.kalu.mediaplayer'
 
     defaultConfig {
 
@@ -65,6 +66,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'com.kalu.mediaplayer'
 }
 
 repositories {
@@ -77,10 +79,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.multidex:multidex:2.0.1'
 
-//    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.0_release_20230112.aar')
-//    api files('libs/lib_mediaplayer_vlc_r3.4.9_release_20221221.aar')
+    api files('libs/lib_mediaplayer_ui_release_20230116.aar')
+    api files('libs/lib_mediaplayer_vlc_r3.4.9_release_20221221.aar')
+    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.0_release_20230116.aar')
     api files('libs/lib_mediaplayer_exo_r2.18.2_ff4.4_video_release_20230116.aar')
 //    api files('libs/lib_mediaplayer_exo_r2.18.2_ff4.4_audio_release_20230112.aar')
-    api files('libs/lib_mediaplayer_ui_release_20230116.aar')
 //    api project(path: ':lib_mediaplayer_ui')
 }

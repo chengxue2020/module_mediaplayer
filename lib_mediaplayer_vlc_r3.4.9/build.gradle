@@ -46,6 +46,7 @@ android {
             //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
         }
     }
+    namespace 'org.videolan.libvlc'
 
 //    externalNativeBuild {
 //        cmake {

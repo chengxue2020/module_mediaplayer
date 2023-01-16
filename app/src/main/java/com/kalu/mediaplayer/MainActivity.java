@@ -5,10 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.TestActivity;
+import lib.kalu.mediaplayer.config.player.PlayerBuilder;
+import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 
 /**
  * description:
@@ -16,41 +21,30 @@ import lib.kalu.mediaplayer.TestActivity;
  */
 public class MainActivity extends Activity {
 
-    private final boolean isLive() {
-        String url = getUrl();
-        return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
-    }
-
-    private final String getUrl() {
-//        EditText editText = findViewById(R.id.main_edit);
-//        String s = editText.getText().toString();
-//        String s = "http://video.cdn.aizys.com/video_vp09_fail.mp4";
-        String s = "file:///android_asset/video-h265.mkv";
-//                String s = "http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400";
-//                String s = "udp://@224.255.0.128:10000";
-//        String s = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4";
-//        String s = "https://media.w3.org/2010/05/sintel/trailer.mp4";
-//        String s = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
-        return s;
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.main_open).setOnClickListener(new View.OnClickListener() {
+        init();
+        RadioGroup radioGroup = findViewById(R.id.main_kernel);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                init();
+            }
+        });
+
+        findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
                 intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, getUrl());
-                intent.putExtra(TestActivity.INTENT_LIVE, isLive());
-//                intent.putExtra(TestActivity.INTENT_SEEK, 100000L); // 10s
-//                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_PREPARE_IMAGE_RESOURCE, R.drawable.ic_test_prepare);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, isLive());
                 startActivity(intent);
             }
         });
-        findViewById(R.id.main_change).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.main_button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), FullActivity.class);
@@ -59,7 +53,7 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-        findViewById(R.id.main_seek).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.main_button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SeekActivity.class);
@@ -67,5 +61,69 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void init() {
+
+        int type;
+        try {
+            RadioGroup radioGroup = findViewById(R.id.main_kernel);
+            int id = radioGroup.getCheckedRadioButtonId();
+            switch (id) {
+                case R.id.main_kernel_button1:
+                    type = PlayerType.KernelType.IJK;
+                    Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.main_kernel_button2:
+                    type = PlayerType.KernelType.EXO;
+                    Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.main_kernel_button3:
+                    type = PlayerType.KernelType.VLC;
+                    Toast.makeText(getApplicationContext(), "vlc init succ", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.main_kernel_button4:
+                    type = PlayerType.KernelType.ANDROID;
+                    Toast.makeText(getApplicationContext(), "android init succ", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    throw new Exception();
+            }
+        } catch (Exception e) {
+            type = PlayerType.KernelType.IJK;
+            Toast.makeText(getApplicationContext(), "default ijk init succ", Toast.LENGTH_SHORT).show();
+        }
+        init(type);
+    }
+
+    private void init(@PlayerType.KernelType.Value int type) {
+        PlayerBuilder build = new PlayerBuilder.Builder()
+                .setLog(true)
+                .setKernel(type)
+                .setRender(PlayerType.RenderType.SURFACE_VIEW)
+                .setBuriedEvent(new Event())
+                .build();
+        PlayerManager.getInstance().setConfig(build);
+    }
+
+    private final boolean isLive() {
+        String url = getUrl();
+        return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
+    }
+
+    private final String getUrl() {
+        String s = null;
+        try {
+            EditText editText = findViewById(R.id.main_edit);
+            s = editText.getText().toString();
+            if (null == s || s.length() <= 0) {
+                RadioGroup radioGroup = findViewById(R.id.main_radio);
+                int id = radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton = radioGroup.findViewById(id);
+                s = radioButton.getTag().toString();
+            }
+        } catch (Exception e) {
+        }
+        return s;
     }
 }

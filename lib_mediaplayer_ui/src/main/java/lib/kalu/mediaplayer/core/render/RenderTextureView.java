@@ -18,6 +18,9 @@ package lib.kalu.mediaplayer.core.render;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -49,7 +52,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
         super(context);
         init();
     }
-
 
     @Override
     public void init() {

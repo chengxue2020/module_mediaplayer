@@ -58,6 +58,7 @@ android {
             path "/src/main/cpp/CMakeLists.txt"
         }
     }
+    namespace 'lib.kalu.ijkplayer'
 }
 
 repositories {

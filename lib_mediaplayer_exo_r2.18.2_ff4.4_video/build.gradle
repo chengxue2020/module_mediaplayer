@@ -60,6 +60,7 @@ android {
             path "/src/main/cpp/CMakeLists.txt"
         }
     }
+    namespace 'com.google.android.exoplayer2'
 }
 
 repositories {

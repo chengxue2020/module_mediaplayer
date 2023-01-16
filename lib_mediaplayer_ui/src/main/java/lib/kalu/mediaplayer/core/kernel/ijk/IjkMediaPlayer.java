@@ -10,12 +10,11 @@ import android.view.Surface;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.ijkplayer.util.IjkLogUtil;
+import tv.danmaku.ijk.media.player.misc.IMediaDataSourceForRaw;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.mediaplayer.util.SpeedUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 
@@ -68,7 +67,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
         if (null != mEvent) {
             long position = getPosition();
             long duration = getDuration();
-            if(position > 0 && duration > 0){
+            if (position > 0 && duration > 0) {
                 long seek = getSeek();
                 long max = getMax();
                 boolean looping = isLooping();
@@ -137,21 +136,15 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             return;
         }
         try {
-            //解析path
-            Uri uri = Uri.parse(url);
-            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
-                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(context, uri);
-                mIjkPlayer.setDataSource(rawDataSourceProvider);
-            } else {
-                //处理UA问题
-//                if (headers != null) {
-//                    String userAgent = headers.get("User-Agent");
-//                    if (!TextUtils.isEmpty(userAgent)) {
-//                        mIjkPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
-//                    }
+            //处理UA问题
+//            if (headers != null) {
+//                String userAgent = headers.get("User-Agent");
+//                if (!TextUtils.isEmpty(userAgent)) {
+//                    mIjkPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
 //                }
-                mIjkPlayer.setDataSource(context, uri, null);
-            }
+//            }
+            Uri uri = Uri.parse(url);
+            mIjkPlayer.setDataSource(context, uri, null);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
             mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
@@ -306,7 +299,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setDataSource(AssetFileDescriptor fd) {
         try {
-            mIjkPlayer.setDataSource(new RawDataSourceProvider(fd));
+            mIjkPlayer.setDataSource(new IMediaDataSourceForRaw(fd));
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
