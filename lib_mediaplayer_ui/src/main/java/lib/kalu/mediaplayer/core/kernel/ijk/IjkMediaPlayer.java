@@ -360,7 +360,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
      * 调整进度
      */
     @Override
-    public void seekTo(long seek) {
+    public void seekTo(long seek, @NonNull boolean seekHelp) {
         MPLogUtil.log("IjkMediaPlayer => seekTo => seek = " + seek);
         setReadying(false);
         try {
@@ -632,7 +632,7 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
             MPLogUtil.log("IjkMediaPlayer => onPrepared => seek = " + mSeek);
             long seek = getSeek();
             if (seek > 0) {
-                seekTo(seek);
+                seekTo(seek, false);
             }
         }
     };

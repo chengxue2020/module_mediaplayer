@@ -222,7 +222,7 @@ public final class ExoMediaPlayer implements KernelApi {
                         if (seekHelp) {
                             seekHelp = false;
                             long seek = getSeek();
-                            seekTo(seek);
+                            seekTo(seek, false);
                         } else {
                             setReadying(true);
                             if (null != mEvent) {
@@ -262,11 +262,11 @@ public final class ExoMediaPlayer implements KernelApi {
             @Override
             public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
                 long seek = getSeek();
-                long position = getPosition();
-                MPLogUtil.log("ExoMediaPlayer => onVideoInputFormatChanged => seek = " + seek + ", position = " + position);
+//                long position = getPosition();
+                MPLogUtil.log("ExoMediaPlayer => onVideoInputFormatChanged => seek = " + seek);
                 // 快进 => begin
-                if (seek > 0 && seek != position) {
-                    seekTo(seek);
+                if (seek > 0) {
+                    seekTo(seek, false);
                 }
             }
 
@@ -370,10 +370,10 @@ public final class ExoMediaPlayer implements KernelApi {
     }
 
     @Override
-    public void seekTo(@NonNull long position) {
+    public void seekTo(@NonNull long position, @NonNull boolean help) {
         setReadying(false);
         try {
-            seekHelp = (position == 2);
+            seekHelp = help;
             mExoPlayer.seekTo(position);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);

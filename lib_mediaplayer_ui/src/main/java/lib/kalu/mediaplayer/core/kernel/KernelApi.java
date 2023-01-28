@@ -85,7 +85,7 @@ public interface KernelApi extends KernelEvent {
 
     void setSurface(@NonNull Surface surface);
 
-    void seekTo(@NonNull long position);
+    void seekTo(@NonNull long position, @NonNull boolean seekHelp);
 
     int getBufferedPercentage();
 

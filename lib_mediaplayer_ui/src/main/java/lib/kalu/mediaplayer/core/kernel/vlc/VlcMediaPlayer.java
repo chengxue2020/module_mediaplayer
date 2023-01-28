@@ -123,7 +123,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
                     long seek = getSeek();
                     if (seek > 0) {
-                        seekTo(seek);
+                        seekTo(seek, false);
                     }
                 }
                 // 解析开始
@@ -208,7 +208,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
      * 调整进度
      */
     @Override
-    public void seekTo(long seek) {
+    public void seekTo(long seek, @NonNull boolean seekHelp) {
         setReadying(false);
         try {
             mVlcPlayer.seekTo(seek);

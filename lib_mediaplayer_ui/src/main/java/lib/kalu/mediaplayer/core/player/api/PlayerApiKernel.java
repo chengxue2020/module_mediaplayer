@@ -7,6 +7,7 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
 import java.util.List;
+import java.util.Random;
 
 import lib.kalu.mediaplayer.config.buried.BuriedEvent;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
@@ -398,7 +399,7 @@ public interface PlayerApiKernel extends
             }
             // 3
             long seek = builder.getSeek();
-            seekToKernel(seek);
+            seekToKernel(seek, false);
         } catch (Exception e) {
         }
     }
@@ -526,14 +527,14 @@ public interface PlayerApiKernel extends
         }
     }
 
-    default void seekToKernel(long milliSeconds) {
+    default void seekToKernel(long milliSeconds, boolean seekHelp) {
         try {
             // 1
             checkKernel();
             // 2
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => seekToKernel => milliSeconds = " + milliSeconds + ", kernel = " + kernel);
-            kernel.seekTo(milliSeconds);
+            kernel.seekTo(milliSeconds, seekHelp);
             setScreenKeep(true);
             if (milliSeconds <= 0)
                 return;
@@ -693,7 +694,7 @@ public interface PlayerApiKernel extends
                             // step3
                             boolean seekHelp = config.isSeekHelp();
                             if (seekHelp) {
-                                seekToKernel(2);
+                                seekToKernel(1, true);
                             } else {
                                 seekTo(true);
                             }

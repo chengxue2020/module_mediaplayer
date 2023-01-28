@@ -213,7 +213,7 @@ public final class AndroidMediaPlayer implements KernelApi {
      * 调整进度
      */
     @Override
-    public void seekTo(long time) {
+    public void seekTo(long time, @NonNull boolean seekHelp) {
         setReadying(false);
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -370,7 +370,7 @@ public final class AndroidMediaPlayer implements KernelApi {
             start();
             long seek = getSeek();
             if (seek > 0) {
-                seekTo(seek);
+                seekTo(seek, false);
             }
 
             mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
