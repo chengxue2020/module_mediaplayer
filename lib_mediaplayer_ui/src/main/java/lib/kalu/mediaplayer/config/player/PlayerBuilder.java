@@ -13,6 +13,9 @@ import lib.kalu.mediaplayer.keycode.KeycodeApi;
 public final class PlayerBuilder {
 
     private boolean log;// 日志log
+    private boolean seekHelp = false; // 解决seek不准确
+    @PlayerType.SeekType.Value
+    private int seekParameters = PlayerType.SeekType.EXO_DEFAULT;
     @PlayerType.KernelType.Value
     private int kernel; // 播放器内核
     @PlayerType.RenderType.Value
@@ -32,6 +35,14 @@ public final class PlayerBuilder {
     private int cacheType = PlayerType.CacheType.NONE;
     private int cacheMax = 0;
     private String cacheDir = null;
+
+    public boolean isSeekHelp() {
+        return seekHelp;
+    }
+
+    public int getSeekParameters() {
+        return seekParameters;
+    }
 
     public int getCacheType() {
         return cacheType;
@@ -86,6 +97,8 @@ public final class PlayerBuilder {
 
     private PlayerBuilder(Builder builder) {
         log = builder.log;
+        seekHelp = builder.seekHelp;
+        seekParameters = builder.seekParameters;
         kernel = builder.kernel;
         render = builder.render;
         scaleType = builder.scaleType;
@@ -102,6 +115,8 @@ public final class PlayerBuilder {
     public Builder newBuilder() {
         Builder builder = new Builder();
         builder.setLog(this.log);
+        builder.setSeekHelp(this.seekHelp);
+        builder.setSeekParameters(this.seekParameters);
         builder.setKernel(this.kernel);
         builder.setRender(this.render);
         builder.setScaleType(this.scaleType);
@@ -120,6 +135,9 @@ public final class PlayerBuilder {
     public final static class Builder {
 
         private boolean log = false;// 日志log
+        private boolean seekHelp = false; // 解决seek不准确
+        @PlayerType.SeekType.Value
+        private int seekParameters = PlayerType.SeekType.EXO_DEFAULT;
         @PlayerType.KernelType.Value
         private int kernel = PlayerType.KernelType.ANDROID; // 播放器内核
         @PlayerType.RenderType.Value
@@ -139,6 +157,16 @@ public final class PlayerBuilder {
         private int cacheType = PlayerType.CacheType.NONE;
         private int cacheMax = 0;
         private String cacheDir = null;
+
+        public Builder setSeekHelp(boolean v) {
+            seekHelp = v;
+            return this;
+        }
+
+        public Builder setSeekParameters(@PlayerType.SeekType int v) {
+            seekParameters = v;
+            return this;
+        }
 
         public Builder setCacheType(@PlayerType.CacheType int v) {
             cacheType = v;

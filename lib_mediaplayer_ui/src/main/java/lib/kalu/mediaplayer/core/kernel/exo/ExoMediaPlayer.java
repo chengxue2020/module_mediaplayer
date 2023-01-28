@@ -43,6 +43,7 @@ import lib.kalu.mediaplayer.util.SpeedUtil;
 @Keep
 public final class ExoMediaPlayer implements KernelApi {
 
+    private boolean seekHelp = false;
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
     private boolean mLoop = false; // 循环播放
@@ -82,7 +83,7 @@ public final class ExoMediaPlayer implements KernelApi {
         if (null != mEvent) {
             long position = getPosition();
             long duration = getDuration();
-            if(position > 0 && duration > 0){
+            if (position > 0 && duration > 0) {
                 long seek = getSeek();
                 long max = getMax();
                 boolean looping = isLooping();
@@ -92,7 +93,7 @@ public final class ExoMediaPlayer implements KernelApi {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger, @NonNull int seekParameters) {
         ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
         builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
         builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
@@ -102,7 +103,18 @@ public final class ExoMediaPlayer implements KernelApi {
         builder.setRenderersFactory(new FFmpegDefaultRenderersFactory(context));
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
-        mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
+        MPLogUtil.log("ExoMediaPlayer => createDecoder => seekParameters = " + seekParameters);
+        // seek model
+        if (seekParameters == PlayerType.SeekType.EXO_CLOSEST_SYNC) {
+            mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
+        } else if (seekParameters == PlayerType.SeekType.EXO_PREVIOUS_SYNC) {
+            mExoPlayer.setSeekParameters(SeekParameters.PREVIOUS_SYNC);
+        } else if (seekParameters == PlayerType.SeekType.EXO_NEXT_SYNC) {
+            mExoPlayer.setSeekParameters(SeekParameters.NEXT_SYNC);
+        } else {
+            mExoPlayer.setSeekParameters(SeekParameters.DEFAULT);
+        }
+
         // log
         FfmpegLibrary.ffmpegLogger(logger);
 //        ExoLogUtil.setLogger(logger);
@@ -207,10 +219,16 @@ public final class ExoMediaPlayer implements KernelApi {
                             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         }
                     } else {
-                        setReadying(true);
-                        if (null != mEvent) {
-                            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
-                            mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
+                        if (seekHelp) {
+                            seekHelp = false;
+                            long seek = getSeek();
+                            seekTo(seek);
+                        } else {
+                            setReadying(true);
+                            if (null != mEvent) {
+                                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
+                                mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_START);
+                            }
                         }
                     }
                 }
@@ -243,7 +261,6 @@ public final class ExoMediaPlayer implements KernelApi {
 
             @Override
             public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-
                 long seek = getSeek();
                 long position = getPosition();
                 MPLogUtil.log("ExoMediaPlayer => onVideoInputFormatChanged => seek = " + seek + ", position = " + position);
@@ -356,6 +373,7 @@ public final class ExoMediaPlayer implements KernelApi {
     public void seekTo(@NonNull long position) {
         setReadying(false);
         try {
+            seekHelp = (position == 2);
             mExoPlayer.seekTo(position);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);

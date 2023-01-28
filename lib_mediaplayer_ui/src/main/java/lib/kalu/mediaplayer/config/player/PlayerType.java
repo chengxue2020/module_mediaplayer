@@ -12,6 +12,8 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Keep;
 import androidx.annotation.StringDef;
 
+import com.google.android.exoplayer2.SeekParameters;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -263,6 +265,30 @@ public @interface PlayerType {
         @IntDef({TEXTURE_VIEW,
                 SURFACE_VIEW})
         @Retention(RetentionPolicy.SOURCE)
+        @Keep
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @Keep
+    @interface SeekType {
+
+        int EXO_DEFAULT = 8_001;
+        int EXO_CLOSEST_SYNC = 8_002;
+        int EXO_PREVIOUS_SYNC = 8_003;
+        int EXO_NEXT_SYNC = 8_004;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                SeekType.EXO_DEFAULT,
+                SeekType.EXO_CLOSEST_SYNC,
+                SeekType.EXO_PREVIOUS_SYNC,
+                SeekType.EXO_NEXT_SYNC})
         @Keep
         @interface Value {
         }

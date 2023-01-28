@@ -76,8 +76,7 @@ public interface PlayerApiKernel extends
 
             // log
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            int type = config.getKernel();
-            MPLogUtil.setLogger(type, config.isLog());
+            MPLogUtil.setLogger(config);
             // step0
             callPlayerState(PlayerType.StateType.STATE_INIT);
             // step1
@@ -85,7 +84,7 @@ public interface PlayerApiKernel extends
             // 1
             createRender();
             // 2
-            createKernel(builder, config.isLog());
+            createKernel(builder, config);
             // 3
             updateKernel(builder, url);
             // 4
@@ -656,7 +655,7 @@ public interface PlayerApiKernel extends
         }
     }
 
-    default void createKernel(@NonNull StartBuilder builder, @NonNull boolean logger) {
+    default void createKernel(@NonNull StartBuilder builder, @NonNull PlayerBuilder config) {
 
         try {
             // 1
@@ -670,40 +669,39 @@ public interface PlayerApiKernel extends
                 @Override
                 public void onUpdateTimeMillis(@NonNull boolean isLooping, @NonNull long max, @NonNull long seek, @NonNull long position, @NonNull long duration) {
 
-                    boolean replay;
+                    boolean reset;
                     if (max > 0) {
                         long playTime = (position - seek);
                         if (playTime > max) {
-                            replay = true;
+                            reset = true;
                         } else {
-                            replay = false;
+                            reset = false;
                         }
                     } else {
-                        replay = false;
+                        reset = false;
                     }
 //                    MPLogUtil.log("PlayerApiKernel => onUpdateTimeMillis => replay = " + replay + ", isLooping = " + isLooping + ", max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
 
                     // end
-                    if (replay) {
-
+                    if (reset) {
                         // loop
                         if (isLooping) {
-
                             // step1
                             hideReal();
-
                             // step2
-                            // pause(true, true);
-
+                            pause();
                             // step3
-                            seekTo(true);
+                            boolean seekHelp = config.isSeekHelp();
+                            if (seekHelp) {
+                                seekToKernel(2);
+                            } else {
+                                seekTo(true);
+                            }
                         }
                         // stop
                         else {
-
                             // step1
                             pause(true);
-
                             // step2
                             playEnd();
                         }
@@ -889,7 +887,7 @@ public interface PlayerApiKernel extends
             setKernel(kernel);
             MPLogUtil.log("PlayerApiKernel => createKernel => kernel = " + getKernel());
             // 5
-            createDecoder(builder, logger);
+            createDecoder(builder, config);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => createKernel => " + e.getMessage());
         }
@@ -906,7 +904,7 @@ public interface PlayerApiKernel extends
         }
     }
 
-    default void createDecoder(@NonNull StartBuilder builder, @NonNull boolean logger) {
+    default void createDecoder(@NonNull StartBuilder builder, @NonNull PlayerBuilder config) {
         try {
             // 1
             checkKernel();
@@ -915,7 +913,9 @@ public interface PlayerApiKernel extends
             Context context = layout.getContext();
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => createDecoder => kernel = " + kernel);
-            kernel.createDecoder(context, builder.isMute(), logger);
+            boolean log = config.isLog();
+            int seekParameters = config.getSeekParameters();
+            kernel.createDecoder(context, builder.isMute(), log, seekParameters);
             MPLogUtil.log("PlayerApiKernel => createDecoder => succ");
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage(), e);
