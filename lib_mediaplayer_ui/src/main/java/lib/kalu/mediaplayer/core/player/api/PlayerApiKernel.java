@@ -593,6 +593,22 @@ public interface PlayerApiKernel extends
         }
     }
 
+    default void pauseExternalMusic() {
+        try {
+            KernelApi kernel = getKernel();
+            kernel.pauseExternalMusic();
+        } catch (Exception e) {
+        }
+    }
+
+    default void resumeExternalMusic() {
+        try {
+            KernelApi kernel = getKernel();
+            kernel.resumeExternalMusic();
+        } catch (Exception e) {
+        }
+    }
+
     default boolean isExternalMusicAuto() {
         try {
             KernelApi kernel = getKernel();
@@ -746,10 +762,12 @@ public interface PlayerApiKernel extends
                             break;
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
+                            pauseExternalMusic();
                             callPlayerState(PlayerType.StateType.STATE_BUFFERING_START);
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
+                            resumeExternalMusic();
                             callPlayerState(PlayerType.StateType.STATE_BUFFERING_STOP);
                             break;
                         // 播放开始-快进

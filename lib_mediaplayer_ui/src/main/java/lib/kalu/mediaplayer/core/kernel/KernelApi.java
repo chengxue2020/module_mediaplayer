@@ -283,5 +283,13 @@ public interface KernelApi extends KernelEvent {
         MusicPlayerManager.release();
     }
 
+    default void pauseExternalMusic() {
+        MusicPlayerManager.pause();
+    }
+
+    default void resumeExternalMusic() {
+        MusicPlayerManager.resume();
+    }
+
     /*************** 外部背景音乐 **************/
 }

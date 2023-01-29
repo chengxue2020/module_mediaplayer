@@ -49,6 +49,20 @@ public final class MusicPlayerManager {
 //        }
     }
 
+    public static void pause() {
+        MPLogUtil.log("MusicPlayerManager => release => mMediaPlayer = " + mMediaPlayer);
+        if (null == mMediaPlayer)
+            return;
+        mMediaPlayer.pause();
+    }
+
+    public static void resume() {
+        MPLogUtil.log("MusicPlayerManager => release => mMediaPlayer = " + mMediaPlayer);
+        if (null == mMediaPlayer)
+            return;
+        mMediaPlayer.start();
+    }
+
     public static void release() {
         MPLogUtil.log("MusicPlayerManager => release => mMediaPlayer = " + mMediaPlayer);
         if (null == mMediaPlayer)
