@@ -276,19 +276,41 @@ public @interface PlayerType {
     @Keep
     @interface SeekType {
 
-        int EXO_DEFAULT = 8_001;
-        int EXO_CLOSEST_SYNC = 8_002;
-        int EXO_PREVIOUS_SYNC = 8_003;
-        int EXO_NEXT_SYNC = 8_004;
+        int EXO_SEEK_DEFAULT = 8_001;
+        int EXO_SEEK_CLOSEST_SYNC = 8_002;
+        int EXO_SEEK_PREVIOUS_SYNC = 8_003;
+        int EXO_SEEK_NEXT_SYNC = 8_004;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                SeekType.EXO_DEFAULT,
-                SeekType.EXO_CLOSEST_SYNC,
-                SeekType.EXO_PREVIOUS_SYNC,
-                SeekType.EXO_NEXT_SYNC})
+                SeekType.EXO_SEEK_DEFAULT,
+                SeekType.EXO_SEEK_CLOSEST_SYNC,
+                SeekType.EXO_SEEK_PREVIOUS_SYNC,
+                SeekType.EXO_SEEK_NEXT_SYNC})
+        @Keep
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @Keep
+    @interface FFmpegType {
+
+        int EXO_EXT_FFPEMG_NULL = 9_001;
+        int EXO_EXT_FFPEMG_AUDIO = 9_002;
+        int EXO_EXT_FFPEMG_VIDEO = 9_003;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                FFmpegType.EXO_EXT_FFPEMG_NULL,
+                FFmpegType.EXO_EXT_FFPEMG_AUDIO,
+                FFmpegType.EXO_EXT_FFPEMG_VIDEO})
         @Keep
         @interface Value {
         }

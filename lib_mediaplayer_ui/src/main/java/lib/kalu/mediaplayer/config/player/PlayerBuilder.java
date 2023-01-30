@@ -15,7 +15,9 @@ public final class PlayerBuilder {
     private boolean log;// 日志log
     private boolean seekHelp = false; // 解决seek不准确
     @PlayerType.SeekType.Value
-    private int seekParameters = PlayerType.SeekType.EXO_DEFAULT;
+    private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
+    @PlayerType.FFmpegType.Value
+    private int exoFFmpeg = PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL;
     @PlayerType.KernelType.Value
     private int kernel; // 播放器内核
     @PlayerType.RenderType.Value
@@ -40,8 +42,12 @@ public final class PlayerBuilder {
         return seekHelp;
     }
 
-    public int getSeekParameters() {
-        return seekParameters;
+    public int getExoFFmpeg() {
+        return exoFFmpeg;
+    }
+
+    public int getExoSeekParameters() {
+        return exoSeekParameters;
     }
 
     public int getCacheType() {
@@ -98,7 +104,8 @@ public final class PlayerBuilder {
     private PlayerBuilder(Builder builder) {
         log = builder.log;
         seekHelp = builder.seekHelp;
-        seekParameters = builder.seekParameters;
+        exoSeekParameters = builder.exoSeekParameters;
+        exoFFmpeg = builder.exoFFmpeg;
         kernel = builder.kernel;
         render = builder.render;
         scaleType = builder.scaleType;
@@ -116,7 +123,8 @@ public final class PlayerBuilder {
         Builder builder = new Builder();
         builder.setLog(this.log);
         builder.setSeekHelp(this.seekHelp);
-        builder.setSeekParameters(this.seekParameters);
+        builder.setExoSeekParameters(this.exoSeekParameters);
+        builder.setExoFFmpeg(this.exoFFmpeg);
         builder.setKernel(this.kernel);
         builder.setRender(this.render);
         builder.setScaleType(this.scaleType);
@@ -137,7 +145,9 @@ public final class PlayerBuilder {
         private boolean log = false;// 日志log
         private boolean seekHelp = false; // 解决seek不准确
         @PlayerType.SeekType.Value
-        private int seekParameters = PlayerType.SeekType.EXO_DEFAULT;
+        private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
+        @PlayerType.FFmpegType.Value
+        private int exoFFmpeg = PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL;
         @PlayerType.KernelType.Value
         private int kernel = PlayerType.KernelType.ANDROID; // 播放器内核
         @PlayerType.RenderType.Value
@@ -163,8 +173,13 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setSeekParameters(@PlayerType.SeekType int v) {
-            seekParameters = v;
+        public Builder setExoFFmpeg(@PlayerType.FFmpegType int v) {
+            exoFFmpeg = v;
+            return this;
+        }
+
+        public Builder setExoSeekParameters(@PlayerType.SeekType int v) {
+            exoSeekParameters = v;
             return this;
         }
 
