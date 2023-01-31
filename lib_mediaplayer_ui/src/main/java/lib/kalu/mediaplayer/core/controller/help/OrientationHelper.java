@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.controller.help;
+package lib.kalu.mediaplayer.core.controller.help;
 
 import android.content.Context;
 import android.view.OrientationEventListener;

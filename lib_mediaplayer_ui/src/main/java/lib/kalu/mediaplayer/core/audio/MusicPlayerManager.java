@@ -113,12 +113,12 @@ public final class MusicPlayerManager {
         }
     }
 
-    public static void start(@NonNull Context context, @NonNull long position, @NonNull String musicUrl) {
-        start(context, position, musicUrl, null);
+    public static void start(@NonNull Context context, @NonNull long position, @NonNull boolean musicLooping, @NonNull String musicUrl) {
+        start(context, position, musicLooping, musicUrl, null);
     }
 
-    public static void start(@NonNull Context context, @NonNull long position, @NonNull String musicUrl, @NonNull OnMusicPlayerChangeListener listener) {
-        MPLogUtil.log("MusicPlayerManager => start => position = " + position + ", musicUrl = " + musicUrl + ", mMusicPlayer = " + mMusicPlayer + ", listener = " + listener);
+    public static void start(@NonNull Context context, @NonNull long position, @NonNull boolean musicLooping, @NonNull String musicUrl, @NonNull OnMusicPlayerChangeListener listener) {
+        MPLogUtil.log("MusicPlayerManager => start => position = " + position + ", musicLooping = " + musicLooping + ", musicUrl = " + musicUrl + ", mMusicPlayer = " + mMusicPlayer + ", listener = " + listener);
         // 1
         create();
         // 2
@@ -126,7 +126,7 @@ public final class MusicPlayerManager {
         // 3
         setMusicListener(listener);
         // 4
-        setLooping(null != listener);
+        setLooping(musicLooping);
         // 4
         start();
         // 5

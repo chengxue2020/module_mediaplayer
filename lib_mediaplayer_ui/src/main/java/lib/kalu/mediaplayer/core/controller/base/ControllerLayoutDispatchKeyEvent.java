@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.controller.base;
+package lib.kalu.mediaplayer.core.controller.base;
 
 import android.content.Context;
 import android.os.Build;

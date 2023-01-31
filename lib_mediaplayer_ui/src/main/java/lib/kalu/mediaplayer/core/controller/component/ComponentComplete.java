@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.controller.component;
+package lib.kalu.mediaplayer.core.controller.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.video.controller.impl.ComponentApi;
+import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentComplete extends RelativeLayout implements ComponentApi {

@@ -186,17 +186,17 @@ public interface KernelApi extends KernelEvent {
         MusicPlayerManager.release();
     }
 
-    default void startExternalMusic(Context context) {
+    default void startExternalMusic(Context context, boolean musicLooping, boolean musicEqual) {
 
         String musicUrl = getExternalMusicPath();
-        MPLogUtil.log("KernelApi => toggleExternalMusic => musicUrl = " + musicUrl);
+        MPLogUtil.log("KernelApi => startExternalMusic => musicUrl = " + musicUrl);
         if (null == musicUrl || musicUrl.length() <= 0)
             return;
 
         // 播放额外音频【每次都创建音频播放器】
-        boolean musicEqual = isExternalMusicEqualLength();
-        boolean musicLoop = isExternalMusicLooping();
-        MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => musicEqual = " + musicEqual + ", musicLoop = " + musicLoop);
+        setExternalMusicLooping(musicLooping);
+        setExternalMusicEqualLength(musicEqual);
+        MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => musicEqual = " + musicEqual + ", musicLooping = " + musicLooping);
 
         // 1 视频
         setVolume(0F, 0F);
@@ -209,28 +209,28 @@ public interface KernelApi extends KernelEvent {
                 position = 0;
             }
         }
-        MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => position = " + position);
+        MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => position = " + position);
 
         // 3
         OnMusicPlayerChangeListener l;
-        if (musicLoop) {
+        if (musicLooping) {
             l = null;
         } else {
             l = new OnMusicPlayerChangeListener() {
                 @Override
                 public void onComplete() {
-                    MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => onComplete");
+                    MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => onComplete");
                     setVolume(1F, 1F);
                 }
 
                 @Override
                 public void onError() {
-                    MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => onError");
+                    MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => onError");
                     setVolume(1F, 1F);
                 }
             };
         }
-        MusicPlayerManager.start(context, position, musicUrl, l);
+        MusicPlayerManager.start(context, position, musicLooping, musicUrl, l);
     }
 
     default void releaseExternalMusic() {

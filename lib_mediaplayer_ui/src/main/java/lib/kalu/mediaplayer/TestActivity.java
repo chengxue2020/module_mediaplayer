@@ -11,12 +11,12 @@ import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
-import lib.kalu.mediaplayer.core.video.controller.ControllerEmpty;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentComplete;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentError;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentLoading;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentSpeed;
+import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
+import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
+import lib.kalu.mediaplayer.core.controller.component.ComponentError;
+import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSpeed;
 import lib.kalu.mediaplayer.core.video.player.VideoLayout;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;

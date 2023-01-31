@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
-import lib.kalu.mediaplayer.core.video.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.video.kernel.KernelApi;
 import lib.kalu.mediaplayer.core.video.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.video.kernel.KernelFactoryManager;
@@ -453,7 +453,6 @@ public interface PlayerApiKernel extends
             } else {
                 callPlayerState(PlayerType.StateType.STATE_RESUME);
                 callPlayerState(PlayerType.StateType.STATE_KERNEL_RESUME);
-                callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
             }
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => resumeKernel => " + e.getMessage());
@@ -572,9 +571,7 @@ public interface PlayerApiKernel extends
     default void startExternalMusic(Context context, boolean musicLooping, boolean musicEqualLength) {
         try {
             KernelApi kernel = getKernel();
-            kernel.setExternalMusicLooping(musicLooping);
-            kernel.setExternalMusicEqualLength(musicEqualLength);
-            kernel.startExternalMusic(context);
+            kernel.startExternalMusic(context, musicLooping, musicEqualLength);
         } catch (Exception e) {
         }
     }
@@ -652,6 +649,10 @@ public interface PlayerApiKernel extends
     }
 
     default void checkExternalMusic(@NonNull Context context) {
+        boolean musicPlaying = isExternalMusicPlaying();
+        MPLogUtil.log("PlayerApiKernel => checkExternalMusic => musicPlaying = " + musicPlaying);
+        if (musicPlaying)
+            return;
         boolean ready = isExternalMusicPlayWhenReady();
         if (ready) {
             String musicPath = getExternalMusicPath();

@@ -1,6 +1,7 @@
 package com.kalu.mediaplayer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,12 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
@@ -93,13 +100,49 @@ public class MainActivity extends Activity {
             type = PlayerType.KernelType.IJK;
             Toast.makeText(getApplicationContext(), "default ijk init succ", Toast.LENGTH_SHORT).show();
         }
+
+        copy();
         init(type);
+    }
+
+    private void copy() {
+        String absolutePath = getApplicationContext().getCacheDir().getAbsolutePath();
+        List<String> list = Arrays.asList("video-h265.mkv", "video-test.rmvb");
+        for (int i = 0; i < list.size(); i++) {
+            String s = list.get(i);
+            boolean copyFile = copyFile(getApplicationContext(), s, absolutePath + "/" + s);
+            if (!copyFile) {
+                Toast.makeText(getApplicationContext(), "初始化资源文件 => 错误", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+    }
+
+    private boolean copyFile(Context context, String assetsPath, String savePath) {
+        // assetsPath 为空时即 /assets
+        try {
+            InputStream is = context.getAssets().open(assetsPath);
+            FileOutputStream fos = new FileOutputStream(new File(savePath));
+            byte[] buffer = new byte[1024];
+            int byteCount = 0;
+            while ((byteCount = is.read(buffer)) != -1) {// 循环从输入流读取
+                // buffer字节
+                fos.write(buffer, 0, byteCount);// 将读取的输入流写入到输出流
+            }
+            fos.flush();// 刷新缓冲区
+            is.close();
+            fos.close();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     private void init(@PlayerType.KernelType.Value int type) {
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
                 .setKernel(type)
+                .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL)
                 .setRender(PlayerType.RenderType.SURFACE_VIEW)
                 .setBuriedEvent(new Event())
                 .build();
@@ -123,6 +166,10 @@ public class MainActivity extends Activity {
                 s = radioButton.getTag().toString();
             }
         } catch (Exception e) {
+        }
+
+        if ("video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
+            s = getApplicationContext().getCacheDir().getAbsolutePath() + "/" + s;
         }
         return s;
     }

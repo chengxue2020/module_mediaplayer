@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.controller.base;
+package lib.kalu.mediaplayer.core.controller.base;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.controller.ControllerApi;
-import lib.kalu.mediaplayer.core.video.controller.help.OrientationHelper;
-import lib.kalu.mediaplayer.core.video.controller.impl.ComponentApi;
-import lib.kalu.mediaplayer.core.video.controller.impl.ComponentApi2;
+import lib.kalu.mediaplayer.core.controller.help.OrientationHelper;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
+import lib.kalu.mediaplayer.core.controller.impl.ComponentApi2;
+import lib.kalu.mediaplayer.core.controller.ControllerApi;
 import lib.kalu.mediaplayer.core.video.player.api.PlayerApi;
 import lib.kalu.mediaplayer.core.video.player.VideoLayout;
 import lib.kalu.mediaplayer.util.MPLogUtil;

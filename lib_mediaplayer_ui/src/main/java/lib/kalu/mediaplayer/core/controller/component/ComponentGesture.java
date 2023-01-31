@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.controller.component;
+package lib.kalu.mediaplayer.core.controller.component;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -15,9 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.video.controller.base.ControllerWrapper;
+import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.controller.impl.GestureApi;
+import lib.kalu.mediaplayer.core.controller.impl.GestureApi;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.MPLogUtil;

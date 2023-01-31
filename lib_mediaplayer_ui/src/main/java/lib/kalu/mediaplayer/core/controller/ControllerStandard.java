@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.controller;
+package lib.kalu.mediaplayer.core.controller;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -14,13 +14,13 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.controller.base.ControllerLayoutDispatchTouchEvent;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentComplete;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentError;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentGesture;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentLoading;
-import lib.kalu.mediaplayer.core.video.controller.component.ComponentTop;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayoutDispatchTouchEvent;
+import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
+import lib.kalu.mediaplayer.core.controller.component.ComponentError;
+import lib.kalu.mediaplayer.core.controller.component.ComponentGesture;
+import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.controller.component.ComponentTop;
 import lib.kalu.mediaplayer.util.BaseToast;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 

@@ -1,9 +1,9 @@
-package lib.kalu.mediaplayer.core.video.controller.base;
+package lib.kalu.mediaplayer.core.controller.base;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.core.video.controller.ControllerApi;
+import lib.kalu.mediaplayer.core.controller.ControllerApi;
 import lib.kalu.mediaplayer.core.video.player.api.PlayerApi;
 
 @Keep

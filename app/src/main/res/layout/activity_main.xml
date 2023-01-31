@@ -59,14 +59,14 @@
             android:id="@+id/main_radio1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="file:///android_asset/video-test.rmvb"
+            android:tag="video-test.rmvb"
             android:text="rmvb" />
 
         <RadioButton
             android:id="@+id/main_radio2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="file:///android_asset/video-h265.mkv"
+            android:tag="video-h265.mkv"
             android:text="h265" />
 
         <RadioButton

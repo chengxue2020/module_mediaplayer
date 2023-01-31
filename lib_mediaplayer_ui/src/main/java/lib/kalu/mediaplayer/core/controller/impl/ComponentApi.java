@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.controller.impl;
+package lib.kalu.mediaplayer.core.controller.impl;
 
 import android.util.TypedValue;
 import android.view.View;
@@ -15,7 +15,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import lib.kalu.mediaplayer.core.video.controller.base.ControllerWrapper;
+import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 

@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.controller.impl;
+package lib.kalu.mediaplayer.core.controller.impl;
 
 public interface GestureApi extends ComponentApi {
 
