@@ -95,6 +95,15 @@ public final class MusicPlayerManager {
         }
     }
 
+    public static boolean isNull() {
+        if (null != mMusicPlayer) {
+            MPLogUtil.log("MusicPlayerManager => isNull => mMusicPlayer = " + mMusicPlayer);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public static boolean isPlaying() {
         if (null != mMusicPlayer) {
             MPLogUtil.log("MusicPlayerManager => isPlaying => mMusicPlayer = " + mMusicPlayer);

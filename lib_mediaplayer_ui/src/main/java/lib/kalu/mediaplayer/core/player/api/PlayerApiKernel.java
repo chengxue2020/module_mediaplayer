@@ -650,6 +650,15 @@ public interface PlayerApiKernel extends
         }
     }
 
+    default boolean isExternalMusicNull() {
+        try {
+            KernelApi kernel = getKernel();
+            return kernel.isExternalMusicNull();
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
     default void setExternalMusic(@NonNull StartBuilder bundle) {
         try {
             KernelApi kernel = getKernel();
@@ -666,11 +675,24 @@ public interface PlayerApiKernel extends
         boolean musicEqualLength = isExternalMusicEqualLength();
         // 等长音频
         if (musicEqualLength) {
-            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true");
-            // 1
-            pauseExternalMusic();
-            // 2
-            resetExternalMusic();
+
+            String musicPath = getExternalMusicPath();
+            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true, musicPath = " + musicPath);
+            if (null == musicPath || musicPath.length() <= 0)
+                return;
+
+            boolean musicNull = isExternalMusicNull();
+            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true, musicNull = " + musicNull);
+            if (musicNull) {
+                boolean musicLoop = isExternalMusicLoop();
+                boolean musicEqual = isExternalMusicEqualLength();
+                startExternalMusic(context, musicLoop, musicEqual);
+            } else {
+                // 1
+                pauseExternalMusic();
+                // 2
+                resetExternalMusic();
+            }
         }
         // 片段音频
         else {

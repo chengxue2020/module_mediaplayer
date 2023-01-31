@@ -257,5 +257,9 @@ public interface KernelApi extends KernelEvent {
         return MusicPlayerManager.isPlaying();
     }
 
+    default boolean isExternalMusicNull() {
+        return MusicPlayerManager.isNull();
+    }
+
     /*************** 外部背景音乐 **************/
 }
