@@ -7,7 +7,7 @@ import android.view.View;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.video.player.VideoLayout;
+import lib.kalu.mediaplayer.core.player.VideoLayout;
 
 public class SeekActivity extends Activity {
 

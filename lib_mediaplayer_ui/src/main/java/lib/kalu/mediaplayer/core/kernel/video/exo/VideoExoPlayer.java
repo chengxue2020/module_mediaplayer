@@ -30,6 +30,10 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
 
+import lib.kalu.exoplayer2.ffmpeg.FFmpegAudioOnlyRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.FFmpegAudioRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.DefaultRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.FFmpegVideoOnlyRenderersFactory;
 import lib.kalu.exoplayer2.ffmpeg.FFmpegVideoRenderersFactory;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
@@ -100,7 +104,17 @@ public final class VideoExoPlayer implements KernelApi {
         builder.setTrackSelector(new DefaultTrackSelector(context));
         PlayerBuilder config = PlayerManager.getInstance().getConfig();
         int exoFFmpeg = config.getExoFFmpeg();
-        builder.setRenderersFactory(new FFmpegVideoRenderersFactory(context, exoFFmpeg));
+        if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_AUDIO_ONLY) {
+            builder.setRenderersFactory(new FFmpegAudioOnlyRenderersFactory(context));
+        } else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_AUDIO) {
+            builder.setRenderersFactory(new FFmpegAudioRenderersFactory(context));
+        } else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_VIDEO_ONLY) {
+            builder.setRenderersFactory(new FFmpegVideoOnlyRenderersFactory(context));
+        } else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_VIDEO) {
+            builder.setRenderersFactory(new FFmpegVideoRenderersFactory(context));
+        } else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL) {
+            builder.setRenderersFactory(new DefaultRenderersFactory(context));
+        }
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
         setVolume(1F, 1F);

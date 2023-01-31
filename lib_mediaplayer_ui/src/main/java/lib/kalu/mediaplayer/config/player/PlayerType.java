@@ -299,10 +299,11 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface FFmpegType {
-
         int EXO_EXT_FFPEMG_NULL = 9_001;
         int EXO_EXT_FFPEMG_AUDIO = 9_002;
-        int EXO_EXT_FFPEMG_VIDEO = 9_003;
+        int EXO_EXT_FFPEMG_AUDIO_ONLY = 9_004;
+        int EXO_EXT_FFPEMG_VIDEO = 9_005;
+        int EXO_EXT_FFPEMG_VIDEO_ONLY = 9_006;
 
         @Documented
         @Retention(CLASS)
@@ -310,7 +311,9 @@ public @interface PlayerType {
         @IntDef(value = {
                 FFmpegType.EXO_EXT_FFPEMG_NULL,
                 FFmpegType.EXO_EXT_FFPEMG_AUDIO,
-                FFmpegType.EXO_EXT_FFPEMG_VIDEO})
+                FFmpegType.EXO_EXT_FFPEMG_AUDIO_ONLY,
+                FFmpegType.EXO_EXT_FFPEMG_VIDEO,
+                FFmpegType.EXO_EXT_FFPEMG_VIDEO_ONLY})
         @Keep
         @interface Value {
         }

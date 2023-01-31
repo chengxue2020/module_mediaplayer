@@ -142,8 +142,8 @@ public class MainActivity extends Activity {
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
                 .setKernel(type)
-                .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL)
                 .setRender(PlayerType.RenderType.SURFACE_VIEW)
+                .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXT_FFPEMG_VIDEO)
                 .setBuriedEvent(new Event())
                 .build();
         PlayerManager.getInstance().setConfig(build);

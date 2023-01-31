@@ -14,10 +14,13 @@ import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 
+import lib.kalu.exoplayer2.ffmpeg.DefaultAudioOnlyRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.FFmpegAudioOnlyRenderersFactory;
 import lib.kalu.exoplayer2.ffmpeg.FFmpegAudioRenderersFactory;
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.audio.OnMusicPlayerChangeListener;
 import lib.kalu.mediaplayer.core.kernel.audio.MusicKernelApi;
 
@@ -53,7 +56,11 @@ public final class MusicExoPlayer implements MusicKernelApi {
             builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
             int exoFFmpeg = config.getExoFFmpeg();
-            builder.setRenderersFactory(new FFmpegAudioRenderersFactory(context, exoFFmpeg));
+            if (exoFFmpeg != PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL) {
+                builder.setRenderersFactory(new FFmpegAudioOnlyRenderersFactory(context));
+            } else {
+                builder.setRenderersFactory(new DefaultAudioOnlyRenderersFactory(context));
+            }
             mExoPlayer = builder.build();
             setVolume(1F);
             setLooping(false);
