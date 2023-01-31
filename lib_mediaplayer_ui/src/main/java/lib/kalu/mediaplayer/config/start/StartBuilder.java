@@ -18,7 +18,7 @@ public final class StartBuilder {
     // 外部背景音
     private String externalMusicUrl;
     private boolean externalMusicLoop;
-    private boolean externalMusicAuto;
+    private boolean externalMusicPlayWhenReady;
 
     public boolean isMute() {
         return mute;
@@ -60,8 +60,8 @@ public final class StartBuilder {
         return externalMusicLoop;
     }
 
-    public boolean isExternalMusicAuto() {
-        return externalMusicAuto;
+    public boolean isExternalMusicPlayWhenReady() {
+        return externalMusicPlayWhenReady;
     }
 
     public StartBuilder(StartBuilder.Builder builder) {
@@ -75,7 +75,7 @@ public final class StartBuilder {
         this.invisibleRelease = builder.invisibleRelease;
         this.externalMusicUrl = builder.externalMusicUrl;
         this.externalMusicLoop = builder.externalMusicLoop;
-        this.externalMusicAuto = builder.externalMusicAuto;
+        this.externalMusicPlayWhenReady = builder.externalMusicPlayWhenReady;
     }
 
     @Override
@@ -91,7 +91,7 @@ public final class StartBuilder {
                 ", invisibleRelease=" + invisibleRelease +
                 ", externalMusicUrl='" + externalMusicUrl + '\'' +
                 ", externalMusicLoop=" + externalMusicLoop +
-                ", externalMusicAuto=" + externalMusicAuto +
+                ", externalMusicPlayWhenReady=" + externalMusicPlayWhenReady +
                 '}';
     }
 
@@ -107,7 +107,7 @@ public final class StartBuilder {
         builder.invisibleRelease = invisibleRelease;
         builder.externalMusicUrl = externalMusicUrl;
         builder.externalMusicLoop = externalMusicLoop;
-        builder.externalMusicAuto = externalMusicAuto;
+        builder.externalMusicPlayWhenReady = externalMusicPlayWhenReady;
         return builder;
     }
 
@@ -126,14 +126,14 @@ public final class StartBuilder {
 
         private String externalMusicUrl = null;
         private boolean externalMusicLoop = false;
-        private boolean externalMusicAuto = false;
+        private boolean externalMusicPlayWhenReady = false;
 
 
         public Builder() {
         }
 
-        public Builder setExternalMusicAuto(boolean v) {
-            externalMusicAuto = v;
+        public Builder setExternalMusicPlayWhenReady(boolean v) {
+            externalMusicPlayWhenReady = v;
             return this;
         }
 

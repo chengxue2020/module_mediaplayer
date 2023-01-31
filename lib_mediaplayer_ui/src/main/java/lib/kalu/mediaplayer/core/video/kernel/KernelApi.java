@@ -73,10 +73,10 @@ public interface KernelApi extends KernelEvent {
         setExternalMusicPath(musicUrl);
         boolean musicLoop = bundle.isExternalMusicLoop();
         MPLogUtil.log("KernelApi => update => musicLoop = " + musicLoop);
-        setExternalMusicLoop(musicLoop);
-        boolean musicAuto = bundle.isExternalMusicAuto();
-        MPLogUtil.log("KernelApi => update => musicAuto = " + musicAuto);
-        setExternalMusicAuto(musicAuto);
+        setExternalMusicLooping(musicLoop);
+        boolean musicPlayWhenReady = bundle.isExternalMusicPlayWhenReady();
+        MPLogUtil.log("KernelApi => update => musicPlayWhenReady = " + musicPlayWhenReady);
+        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
 
         init(context, playUrl);
     }
@@ -157,17 +157,13 @@ public interface KernelApi extends KernelEvent {
 
     /*************** 外部背景音乐 **************/
 
-//    boolean isExternalMusicPrepared();
+    boolean isExternalMusicPlayWhenReady();
 
-//    void setExternalMusicPrepared(boolean v);
+    void setisExternalMusicPlayWhenReady(boolean v);
 
-    boolean isExternalMusicLoop();
+    boolean isExternalMusicLooping();
 
-    void setExternalMusicLoop(boolean loop);
-
-    boolean isExternalMusicAuto();
-
-    void setExternalMusicAuto(boolean auto);
+    void setExternalMusicLooping(boolean loop);
 
     boolean isExternalMusicEqualLength();
 
@@ -177,31 +173,50 @@ public interface KernelApi extends KernelEvent {
 
     String getExternalMusicPath();
 
-    default void toggleExternalMusic(Context context, boolean enableMusic) {
+    default void stopExternalMusic() {
+        MPLogUtil.log("KernelApi => stopExternalMusic[销毁额外音频-每次都销毁音频播放器] =>");
+
+        // 1 视频
+        boolean muteVideo = isMute(); //视频强制静音
+        MPLogUtil.log("KernelApi => stopExternalMusic[销毁额外音频-每次都销毁音频播放器] => muteVideo = " + muteVideo);
+        setVolume(muteVideo ? 0F : 1f, muteVideo ? 0F : 1f);
+
+        // 2 音频
+        MPLogUtil.log("KernelApi => stopExternalMusic[销毁额外音频-每次都销毁音频播放器] => release");
+        MusicPlayerManager.release();
+    }
+
+    default void startExternalMusic(Context context) {
 
         String musicUrl = getExternalMusicPath();
-        MPLogUtil.log("KernelApi => toggleExternalMusic => enableMusic = " + enableMusic + ", musicUrl = " + musicUrl);
+        MPLogUtil.log("KernelApi => toggleExternalMusic => musicUrl = " + musicUrl);
         if (null == musicUrl || musicUrl.length() <= 0)
             return;
 
         // 播放额外音频【每次都创建音频播放器】
-        if (enableMusic) {
-            MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] =>");
+        boolean musicEqual = isExternalMusicEqualLength();
+        boolean musicLoop = isExternalMusicLooping();
+        MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => musicEqual = " + musicEqual + ", musicLoop = " + musicLoop);
 
-            // 1 视频
-            setVolume(0F, 0F);
+        // 1 视频
+        setVolume(0F, 0F);
 
-            // 2 音频
-            long start = 0;
-            boolean equalLength = isExternalMusicEqualLength();
-            if (equalLength) {
-                start = getPosition() - getSeek();
-                if (start <= 0) {
-                    start = 0;
-                }
+        // 2 音频
+        long position = 0;
+        if (musicEqual) {
+            position = getPosition() - getSeek();
+            if (position <= 0) {
+                position = 0;
             }
-            MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => start");
-            MusicPlayerManager.start(context, start, musicUrl, new OnMusicPlayerChangeListener() {
+        }
+        MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => position = " + position);
+
+        // 3
+        OnMusicPlayerChangeListener l;
+        if (musicLoop) {
+            l = null;
+        } else {
+            l = new OnMusicPlayerChangeListener() {
                 @Override
                 public void onComplete() {
                     MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => onComplete");
@@ -213,36 +228,20 @@ public interface KernelApi extends KernelEvent {
                     MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => onError");
                     setVolume(1F, 1F);
                 }
-            });
+            };
         }
-        // 销毁额外音频
-        else {
-            MPLogUtil.log("KernelApi => toggleExternalMusic[销毁额外音频-每次都销毁音频播放器] =>");
-
-            // 1 视频
-            boolean muteVideo = isMute(); //视频强制静音
-            MPLogUtil.log("KernelApi => toggleExternalMusic[销毁额外音频-每次都销毁音频播放器] => muteVideo = " + muteVideo);
-            setVolume(muteVideo ? 0F : 1f, muteVideo ? 0F : 1f);
-
-            // 2 音频
-            MPLogUtil.log("KernelApi => toggleExternalMusic[销毁额外音频-每次都销毁音频播放器] => release");
-            MusicPlayerManager.release();
-        }
+        MusicPlayerManager.start(context, position, musicUrl, l);
     }
 
     default void releaseExternalMusic() {
         releaseExternalMusic(true);
     }
 
-    default void releaseExternalMusic(boolean clearExternalMusicData) {
-
-        // 1
-        if (clearExternalMusicData) {
+    default void releaseExternalMusic(boolean clear) {
+        if (clear) {
             setExternalMusicPath(null);
-            setExternalMusicLoop(false);
+            setExternalMusicLooping(false);
         }
-
-        // 2
         MusicPlayerManager.release();
     }
 

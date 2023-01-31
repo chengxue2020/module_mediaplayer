@@ -33,7 +33,7 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
 
     private String mExternalMusicPath = null;
     private boolean mExternalMusicLoop = false;
-    private boolean mExternalMusicAuto = false;
+    private boolean mExternalMusicPlayWhenReady = false;
     private boolean mExternalMusicEqualLength = true;
 
     //    private LibVLC mLibVLC;
@@ -344,6 +344,16 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
+    public boolean isExternalMusicPlayWhenReady() {
+        return mExternalMusicPlayWhenReady;
+    }
+
+    @Override
+    public void setisExternalMusicPlayWhenReady(boolean v) {
+        mExternalMusicPlayWhenReady = v;
+    }
+
+    @Override
     public boolean isMute() {
         return mMute;
     }
@@ -450,34 +460,14 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
     }
 
     /****************/
-
-//    @Override
-//    public boolean isExternalMusicPrepared() {
-//        return mExternalMusicPrepared;
-//    }
-//
-//    @Override
-//    public void setExternalMusicPrepared(boolean v) {
-//        this.mExternalMusicPrepared = v;
-//    }
     @Override
-    public boolean isExternalMusicLoop() {
+    public boolean isExternalMusicLooping() {
         return mExternalMusicLoop;
     }
 
     @Override
-    public void setExternalMusicLoop(boolean loop) {
+    public void setExternalMusicLooping(boolean loop) {
         this.mExternalMusicLoop = loop;
-    }
-
-    @Override
-    public boolean isExternalMusicAuto() {
-        return mExternalMusicAuto;
-    }
-
-    @Override
-    public void setExternalMusicAuto(boolean auto) {
-        this.mExternalMusicAuto = auto;
     }
 
     @Override

@@ -83,10 +83,10 @@ public final class MusicPlayerManager {
         }
     }
 
-    public static void seekTo(long postion) {
-        if (null != mMusicPlayer && postion > 0) {
-            MPLogUtil.log("MusicPlayerManager => seekTo => postion = " + postion + ", mMusicPlayer = " + mMusicPlayer);
-            mMusicPlayer.seekTo(postion);
+    public static void seekTo(long position) {
+        if (null != mMusicPlayer && position > 0) {
+            MPLogUtil.log("MusicPlayerManager => seekTo => position = " + position + ", mMusicPlayer = " + mMusicPlayer);
+            mMusicPlayer.seekTo(position);
         }
     }
 
@@ -106,8 +106,19 @@ public final class MusicPlayerManager {
         }
     }
 
-    public static void start(@NonNull Context context, @NonNull long seek, @NonNull String musicUrl, @NonNull OnMusicPlayerChangeListener listener) {
-        MPLogUtil.log("MusicPlayerManager => start => seek = " + seek + ", musicUrl = " + musicUrl + ", mMusicPlayer = " + mMusicPlayer + ", listener = " + listener);
+    public static void setLooping(@NonNull boolean v) {
+        if (null != mMusicPlayer) {
+            MPLogUtil.log("MusicPlayerManager => setLooping => v = " + v + ", mMusicPlayer = " + mMusicPlayer);
+            mMusicPlayer.setLooping(v);
+        }
+    }
+
+    public static void start(@NonNull Context context, @NonNull long position, @NonNull String musicUrl) {
+        start(context, position, musicUrl, null);
+    }
+
+    public static void start(@NonNull Context context, @NonNull long position, @NonNull String musicUrl, @NonNull OnMusicPlayerChangeListener listener) {
+        MPLogUtil.log("MusicPlayerManager => start => position = " + position + ", musicUrl = " + musicUrl + ", mMusicPlayer = " + mMusicPlayer + ", listener = " + listener);
         // 1
         create();
         // 2
@@ -115,8 +126,10 @@ public final class MusicPlayerManager {
         // 3
         setMusicListener(listener);
         // 4
+        setLooping(null != listener);
+        // 4
         start();
         // 5
-        seekTo(seek);
+        seekTo(position);
     }
 }
