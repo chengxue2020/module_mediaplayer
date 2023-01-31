@@ -12,6 +12,7 @@ import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.audio.MusicPlayerManager;
+import lib.kalu.mediaplayer.core.audio.OnMusicPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
@@ -27,11 +28,14 @@ public interface KernelApi extends KernelEvent {
     @NonNull
     <T extends Object> T getPlayer();
 
-    void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger, @NonNull int seekParameters);
+    void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters);
 
     void releaseDecoder();
 
     void init(@NonNull Context context, @NonNull String url);
+
+    default void setOptions() {
+    }
 
     default void update(@NonNull Context context, @NonNull StartBuilder bundle, @NonNull String playUrl) {
 
@@ -91,7 +95,7 @@ public interface KernelApi extends KernelEvent {
 
     int getBufferedPercentage();
 
-    void setOptions();
+//    void setOptions();
 
     void setSpeed(float speed);
 
@@ -165,15 +169,19 @@ public interface KernelApi extends KernelEvent {
 
     void setExternalMusicAuto(boolean auto);
 
+    boolean isExternalMusicEqualLength();
+
+    void setExternalMusicEqualLength(boolean equal);
+
     void setExternalMusicPath(@NonNull String musicPath);
 
     String getExternalMusicPath();
 
-    default void toggleExternalMusic(Context context, boolean enableMusic, boolean enableSeek) {
+    default void toggleExternalMusic(Context context, boolean enableMusic) {
 
-        String externalMusicPath = getExternalMusicPath();
-        MPLogUtil.log("KernelApi => toggleExternalMusic => enableMusic = " + enableMusic + ", enableSeek = " + enableSeek);
-        if (null == externalMusicPath || externalMusicPath.length() <= 0)
+        String musicUrl = getExternalMusicPath();
+        MPLogUtil.log("KernelApi => toggleExternalMusic => enableMusic = " + enableMusic + ", musicUrl = " + musicUrl);
+        if (null == musicUrl || musicUrl.length() <= 0)
             return;
 
         // 播放额外音频【每次都创建音频播放器】
@@ -181,20 +189,31 @@ public interface KernelApi extends KernelEvent {
             MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] =>");
 
             // 1 视频
-            boolean muteVideo = isMute(); //视频强制静音
-            MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => muteVideo = "+muteVideo);
-            setVolume(muteVideo ? 0F : 1f, muteVideo ? 0F : 1f);
+            setVolume(0F, 0F);
 
             // 2 音频
             long start = 0;
-            if (enableSeek) {
+            boolean equalLength = isExternalMusicEqualLength();
+            if (equalLength) {
                 start = getPosition() - getSeek();
                 if (start <= 0) {
                     start = 0;
                 }
             }
             MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => start");
-            MusicPlayerManager.start(context, start, externalMusicPath);
+            MusicPlayerManager.start(context, start, musicUrl, new OnMusicPlayerChangeListener() {
+                @Override
+                public void onComplete() {
+                    MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => onComplete");
+                    setVolume(1F, 1F);
+                }
+
+                @Override
+                public void onError() {
+                    MPLogUtil.log("KernelApi => toggleExternalMusic[播放额外音频-每次都创建音频播放器] => onError");
+                    setVolume(1F, 1F);
+                }
+            });
         }
         // 销毁额外音频
         else {
@@ -202,7 +221,7 @@ public interface KernelApi extends KernelEvent {
 
             // 1 视频
             boolean muteVideo = isMute(); //视频强制静音
-            MPLogUtil.log("KernelApi => toggleExternalMusic[销毁额外音频-每次都销毁音频播放器] => muteVideo = "+muteVideo);
+            MPLogUtil.log("KernelApi => toggleExternalMusic[销毁额外音频-每次都销毁音频播放器] => muteVideo = " + muteVideo);
             setVolume(muteVideo ? 0F : 1f, muteVideo ? 0F : 1f);
 
             // 2 音频

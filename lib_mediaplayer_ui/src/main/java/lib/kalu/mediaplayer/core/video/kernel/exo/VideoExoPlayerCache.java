@@ -10,7 +10,7 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 
 import java.io.File;
 
-public final class ExoSimpleCache {
+public final class VideoExoPlayerCache {
 
     private static SimpleCache mSimpleCache;
 

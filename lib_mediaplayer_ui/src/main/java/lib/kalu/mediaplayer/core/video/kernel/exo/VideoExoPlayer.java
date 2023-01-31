@@ -39,7 +39,7 @@ import lib.kalu.mediaplayer.core.video.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class ExoMediaPlayer implements KernelApi {
+public final class VideoExoPlayer implements KernelApi {
 
     private boolean seekHelp = false;
     private long mSeek = 0L; // 快进
@@ -55,9 +55,9 @@ public final class ExoMediaPlayer implements KernelApi {
     private boolean mInvisibleRelease = true; // 不可见生命周期自动销毁
 
     private String mExternalMusicPath = null;
-//    private boolean mExternalMusicPrepared = false;
     private boolean mExternalMusicLoop = false;
     private boolean mExternalMusicAuto = false;
+    private boolean mExternalMusicEqualLength = true;
 
     private PlaybackParameters mSpeedPlaybackParameters;
 
@@ -65,7 +65,7 @@ public final class ExoMediaPlayer implements KernelApi {
     private KernelEvent mEvent;
     private AnalyticsListener mAnalyticsListener;
 
-    public ExoMediaPlayer(@NonNull KernelEvent event) {
+    public VideoExoPlayer(@NonNull KernelEvent event) {
         setReadying(false);
         this.mEvent = event;
     }
@@ -91,7 +91,7 @@ public final class ExoMediaPlayer implements KernelApi {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
         builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
         builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
@@ -103,7 +103,8 @@ public final class ExoMediaPlayer implements KernelApi {
         builder.setRenderersFactory(new FFmpegVideoRenderersFactory(context, exoFFmpeg));
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
-        MPLogUtil.log("ExoMediaPlayer => createDecoder => seekParameters = " + seekParameters);
+        setVolume(1F, 1F);
+        MPLogUtil.log("VideoExoPlayer => createDecoder => seekParameters = " + seekParameters);
         // seek model
         if (seekParameters == PlayerType.SeekType.EXO_SEEK_CLOSEST_SYNC) {
             mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
@@ -125,12 +126,12 @@ public final class ExoMediaPlayer implements KernelApi {
         mAnalyticsListener = new AnalyticsListener() {
             @Override
             public void onPlayWhenReadyChanged(EventTime eventTime, boolean playWhenReady, int reason) {
-//        MPLogUtil.log("ExoMediaPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
+//        MPLogUtil.log("VideoExoPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
             }
 
             @Override
             public void onPlayerError(EventTime eventTime, PlaybackException error) {
-                MPLogUtil.log("ExoMediaPlayer => onPlayerError => error = " + error.getMessage() + ", mExoPlayer = " + mExoPlayer);
+                MPLogUtil.log("VideoExoPlayer => onPlayerError => error = " + error.getMessage() + ", mExoPlayer = " + mExoPlayer);
 
                 if (null == error)
                     return;
@@ -162,12 +163,12 @@ public final class ExoMediaPlayer implements KernelApi {
 
             @Override
             public void onTimelineChanged(EventTime eventTime, int reason) {
-                MPLogUtil.log("ExoMediaPlayer => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
+                MPLogUtil.log("VideoExoPlayer => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
             }
 
             @Override
             public void onEvents(Player player, Events events) {
-//                    MediaLogUtil.log("ExoMediaPlayer => onEvents => isPlaying = " + player.isPlaying());
+//                    MediaLogUtil.log("VideoExoPlayer => onEvents => isPlaying = " + player.isPlaying());
             }
 
             @Override
@@ -177,18 +178,18 @@ public final class ExoMediaPlayer implements KernelApi {
 
             @Override
             public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
-                MPLogUtil.log("ExoMediaPlayer => onIsPlayingChanged => isPlaying = " + isPlaying);
+                MPLogUtil.log("VideoExoPlayer => onIsPlayingChanged => isPlaying = " + isPlaying);
             }
 
             @Override
             public void onPlaybackStateChanged(EventTime eventTime, int state) {
-                MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
+                MPLogUtil.log("VideoExoPlayer => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
 
                 // 播放错误
                 if (state == Player.STATE_IDLE) {
                     String url = getUrl();
                     boolean readying = isReadying();
-                    MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放错误] => readying = " + readying + ", url = " + url);
+                    MPLogUtil.log("VideoExoPlayer => onPlaybackStateChanged[播放错误] => readying = " + readying + ", url = " + url);
                     if (null != mEvent) {
                         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
                     }
@@ -202,7 +203,7 @@ public final class ExoMediaPlayer implements KernelApi {
                 // 播放结束
                 else if (state == Player.STATE_ENDED) {
                     String url = getUrl();
-                    MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放结束] => url = " + url);
+                    MPLogUtil.log("VideoExoPlayer => onPlaybackStateChanged[播放结束] => url = " + url);
                     if (null != mEvent) {
                         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_END);
                     }
@@ -213,7 +214,7 @@ public final class ExoMediaPlayer implements KernelApi {
                     // 准备ok
                     String url = getUrl();
                     boolean readying = isReadying();
-                    MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放开始] => readying = " + readying + ", url = " + url);
+                    MPLogUtil.log("VideoExoPlayer => onPlaybackStateChanged[播放开始] => readying = " + readying + ", url = " + url);
                     if (readying) {
                         if (null != mEvent) {
                             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
@@ -236,7 +237,7 @@ public final class ExoMediaPlayer implements KernelApi {
                 else if (state == Player.STATE_BUFFERING) {
                     String url = getUrl();
                     boolean readying = isReadying();
-                    MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[播放缓冲] => readying = " + readying + ", url = " + url);
+                    MPLogUtil.log("VideoExoPlayer => onPlaybackStateChanged[播放缓冲] => readying = " + readying + ", url = " + url);
                     if (readying) {
                         if (null != mEvent) {
                             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_START);
@@ -250,20 +251,20 @@ public final class ExoMediaPlayer implements KernelApi {
                 // 未知??
                 else {
                     setReadying(false);
-                    MPLogUtil.log("ExoMediaPlayer => onPlaybackStateChanged[未知??] =>");
+                    MPLogUtil.log("VideoExoPlayer => onPlaybackStateChanged[未知??] =>");
                 }
             }
 
             @Override
             public void onRenderedFirstFrame(EventTime eventTime, Object output, long renderTimeMs) {
-                MPLogUtil.log("ExoMediaPlayer => onRenderedFirstFrame =>");
+                MPLogUtil.log("VideoExoPlayer => onRenderedFirstFrame =>");
             }
 
             @Override
             public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
                 long seek = getSeek();
 //                long position = getPosition();
-                MPLogUtil.log("ExoMediaPlayer => onVideoInputFormatChanged => seek = " + seek);
+                MPLogUtil.log("VideoExoPlayer => onVideoInputFormatChanged => seek = " + seek);
                 // 快进 => begin
                 if (seek > 0) {
                     seekTo(seek, false);
@@ -272,18 +273,10 @@ public final class ExoMediaPlayer implements KernelApi {
 
             @Override
             public void onAudioInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-                MPLogUtil.log("ExoMediaPlayer => onAudioInputFormatChanged =>");
-                // mute
-//        if (isMute()) {
-//            setVolume(0, 0);
-//        }
+                MPLogUtil.log("VideoExoPlayer => onAudioInputFormatChanged =>");
             }
         };
         mExoPlayer.addAnalyticsListener(mAnalyticsListener);
-        if (mute) {
-            setVolume(0f, 0f);
-        }
-        setOptions();
         //播放器日志
 //        if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
 //            mExoPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mExoPlayer.getTrackSelector(), "ExoPlayer"));
@@ -325,7 +318,7 @@ public final class ExoMediaPlayer implements KernelApi {
             if (isLive()) {
                 cacheType = PlayerType.CacheType.NONE;
             }
-            MediaSource mediaSource = ExoMediaSourceHelper.getInstance().createMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
+            MediaSource mediaSource = VideoExoPlayerHelper.getInstance().createMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
 //                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
@@ -340,6 +333,7 @@ public final class ExoMediaPlayer implements KernelApi {
 
             //准备播放
             mExoPlayer.setMediaSource(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
             mExoPlayer.prepare();
         }
     }
@@ -447,12 +441,6 @@ public final class ExoMediaPlayer implements KernelApi {
         }
     }
 
-    @Override
-    public void setOptions() {
-        //准备好就开始播放
-        start();
-    }
-
     /**
      * 设置播放速度
      */
@@ -480,11 +468,16 @@ public final class ExoMediaPlayer implements KernelApi {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            float value = Math.max(v1, v2);
-            if (value > 1f) {
-                value = 1f;
+            boolean videoMute = isMute();
+            if (videoMute) {
+                mExoPlayer.setVolume(0F);
+            } else {
+                float value = Math.max(v1, v2);
+                if (value > 1f) {
+                    value = 1f;
+                }
+                mExoPlayer.setVolume(value);
             }
-            mExoPlayer.setVolume(value);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -544,7 +537,7 @@ public final class ExoMediaPlayer implements KernelApi {
     @Override
     public void setReadying(boolean v) {
         mReadying = v;
-        MPLogUtil.log("ExoMediaPlayer => isReadying => readying = " + mReadying);
+        MPLogUtil.log("VideoExoPlayer => isReadying => readying = " + mReadying);
     }
 
     @Override
@@ -608,7 +601,6 @@ public final class ExoMediaPlayer implements KernelApi {
 //    public void setExternalMusicPrepared(boolean v) {
 //        this.mExternalMusicPrepared = v;
 //    }
-
     @Override
     public boolean isExternalMusicLoop() {
         return mExternalMusicLoop;
@@ -627,6 +619,16 @@ public final class ExoMediaPlayer implements KernelApi {
     @Override
     public void setExternalMusicAuto(boolean auto) {
         this.mExternalMusicAuto = auto;
+    }
+
+    @Override
+    public boolean isExternalMusicEqualLength() {
+        return mExternalMusicEqualLength;
+    }
+
+    @Override
+    public void setExternalMusicEqualLength(boolean equal) {
+        mExternalMusicEqualLength = equal;
     }
 
     @Override

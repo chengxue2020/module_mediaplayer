@@ -9,21 +9,21 @@ import lib.kalu.mediaplayer.core.video.kernel.KernelEvent;
 import lib.kalu.mediaplayer.core.video.kernel.KernelFactory;
 
 @Keep
-public class VlcFactory implements KernelFactory<VlcMediaPlayer> {
+public class VideoVlcPlayerFactory implements KernelFactory<VideoVlcPlayer> {
 
-    private VlcFactory() {
+    private VideoVlcPlayerFactory() {
     }
 
 //    private static class Holder {
 //        static final AndroidMediaPlayer mP = new AndroidMediaPlayer();
 //    }
 
-    public static VlcFactory build() {
-        return new VlcFactory();
+    public static VideoVlcPlayerFactory build() {
+        return new VideoVlcPlayerFactory();
     }
 
     @Override
-    public VlcMediaPlayer createKernel(@NonNull Context context, @NonNull KernelEvent event) {
-        return new VlcMediaPlayer(event);
+    public VideoVlcPlayer createKernel(@NonNull Context context, @NonNull KernelEvent event) {
+        return new VideoVlcPlayer(event);
     }
 }

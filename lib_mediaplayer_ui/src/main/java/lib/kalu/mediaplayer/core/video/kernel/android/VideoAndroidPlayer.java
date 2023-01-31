@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.core.video.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class AndroidMediaPlayer implements KernelApi {
+public final class VideoAndroidPlayer implements KernelApi {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -33,23 +33,23 @@ public final class AndroidMediaPlayer implements KernelApi {
 
 
     private String mExternalMusicPath = null;
-    private boolean mExternalMusicPrepared = false;
     private boolean mExternalMusicLoop = false;
     private boolean mExternalMusicAuto = false;
+    private boolean mExternalMusicEqualLength = true;
 
     private KernelEvent mEvent;
     private MediaPlayer mAndroidPlayer;
 
     private int mBufferedPercent;
 
-    public AndroidMediaPlayer(@NonNull KernelEvent event) {
+    public VideoAndroidPlayer(@NonNull KernelEvent event) {
         setReadying(false);
         this.mEvent = event;
     }
 
     @NonNull
     @Override
-    public AndroidMediaPlayer getPlayer() {
+    public VideoAndroidPlayer getPlayer() {
         return this;
     }
 
@@ -68,14 +68,11 @@ public final class AndroidMediaPlayer implements KernelApi {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         releaseDecoder();
         mAndroidPlayer = new MediaPlayer();
         mAndroidPlayer.setLooping(false);
-        if (mute) {
-            mAndroidPlayer.setVolume(0f, 0f);
-        }
-        setOptions();
+        setVolume(1F, 1F);
         initListener();
     }
 
@@ -262,10 +259,6 @@ public final class AndroidMediaPlayer implements KernelApi {
         }
     }
 
-    @Override
-    public void setOptions() {
-    }
-
     /**
      * 获取播放速度
      *
@@ -392,11 +385,17 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            float value = Math.max(v1, v2);
-            if (value > 1f) {
-                value = 1f;
+            boolean videoMute = isMute();
+            if (videoMute){
+                mAndroidPlayer.setVolume(0F, 0F);
             }
-            mAndroidPlayer.setVolume(value, value);
+            else{
+                float value = Math.max(v1, v2);
+                if (value > 1f) {
+                    value = 1f;
+                }
+                mAndroidPlayer.setVolume(value, value);
+            }
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -538,6 +537,16 @@ public final class AndroidMediaPlayer implements KernelApi {
     @Override
     public void setExternalMusicAuto(boolean auto) {
         this.mExternalMusicAuto = auto;
+    }
+
+    @Override
+    public boolean isExternalMusicEqualLength() {
+        return mExternalMusicEqualLength;
+    }
+
+    @Override
+    public void setExternalMusicEqualLength(boolean equal) {
+        mExternalMusicEqualLength = equal;
     }
 
     @Override

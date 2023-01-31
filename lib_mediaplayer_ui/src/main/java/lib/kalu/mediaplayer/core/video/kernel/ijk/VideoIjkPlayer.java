@@ -18,7 +18,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 
 @Keep
-public final class IjkMediaPlayer implements KernelApi, KernelEvent {
+public final class VideoIjkPlayer implements KernelApi, KernelEvent {
 
     private int mBufferedPercent;
 
@@ -35,31 +35,23 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     private boolean mInvisibleRelease = true; // 不可见生命周期自动销毁
 
     private String mExternalMusicPath = null;
-//    private boolean mExternalMusicPrepared = false;
     private boolean mExternalMusicLoop = false;
     private boolean mExternalMusicAuto = false;
+    private boolean mExternalMusicEqualLength = true;
 
     private KernelEvent mEvent;
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer;
 
-    public IjkMediaPlayer(@NonNull KernelEvent event) {
+    public VideoIjkPlayer(@NonNull KernelEvent event) {
         setReadying(false);
         this.mEvent = event;
     }
 
     @NonNull
     @Override
-    public IjkMediaPlayer getPlayer() {
+    public VideoIjkPlayer getPlayer() {
         return this;
     }
-
-//    @Override
-//    public void createKernel(@NonNull Context context) {
-//        // not null
-//        if (null != mIjkPlayer) {
-//            resetKernel();
-//        }
-//    }
 
     @Override
     public void onUpdateTimeMillis() {
@@ -76,18 +68,16 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         if (null == mIjkPlayer) {
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
             mIjkPlayer.setLooping(false);
-            if (mute) {
-                mIjkPlayer.setVolume(0f, 0f);
-            }
+            setVolume(1F, 1F);
+            setOptions();
+            initListener();
             // log
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO);
-            setOptions();
-            initListener();
         }
     }
 
@@ -436,11 +426,16 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            float value = Math.max(v1, v2);
-            if (value > 1f) {
-                value = 1f;
+            boolean videoMute = isMute();
+            if (videoMute) {
+                mIjkPlayer.setVolume(0F, 0F);
+            } else {
+                float value = Math.max(v1, v2);
+                if (value > 1f) {
+                    value = 1f;
+                }
+                mIjkPlayer.setVolume(value, value);
             }
-            mIjkPlayer.setVolume(value, value);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -682,7 +677,6 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
 //    public void setExternalMusicPrepared(boolean v) {
 //        this.mExternalMusicPrepared = v;
 //    }
-
     @Override
     public boolean isExternalMusicLoop() {
         return mExternalMusicLoop;
@@ -701,6 +695,16 @@ public final class IjkMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setExternalMusicAuto(boolean auto) {
         this.mExternalMusicAuto = auto;
+    }
+
+    @Override
+    public boolean isExternalMusicEqualLength() {
+        return mExternalMusicEqualLength;
+    }
+
+    @Override
+    public void setExternalMusicEqualLength(boolean equal) {
+        mExternalMusicEqualLength = equal;
     }
 
     @Override

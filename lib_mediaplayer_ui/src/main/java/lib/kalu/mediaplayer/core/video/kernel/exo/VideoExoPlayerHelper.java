@@ -30,16 +30,16 @@ import java.util.Arrays;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public final class ExoMediaSourceHelper {
+public final class VideoExoPlayerHelper {
 
-    private ExoMediaSourceHelper() {
+    private VideoExoPlayerHelper() {
     }
 
     private static final class Holder {
-        private final static ExoMediaSourceHelper mInstance = new ExoMediaSourceHelper();
+        private final static VideoExoPlayerHelper mInstance = new VideoExoPlayerHelper();
     }
 
-    public static ExoMediaSourceHelper getInstance() {
+    public static VideoExoPlayerHelper getInstance() {
         return Holder.mInstance;
     }
 
@@ -154,7 +154,7 @@ public final class ExoMediaSourceHelper {
             dataSource = new DefaultDataSource.Factory(context, httpFactory);
         } else {
             CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
-            SimpleCache cache = ExoSimpleCache.getSimpleCache(context, cacheMax, cacheDir);
+            SimpleCache cache = VideoExoPlayerCache.getSimpleCache(context, cacheMax, cacheDir);
             cacheFactory.setCache(cache);
             cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
             cacheFactory.setUpstreamDataSourceFactory(httpFactory);

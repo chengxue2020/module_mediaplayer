@@ -8,10 +8,13 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.audio.MusicPlayerManager;
+import lib.kalu.mediaplayer.core.audio.OnMusicPlayerChangeListener;
 
 
 @Keep
 public interface MusicKernelApi {
+
+    void setMusicListener(@NonNull OnMusicPlayerChangeListener listener);
 
     void createDecoder(@NonNull Context context);
 
@@ -19,13 +22,15 @@ public interface MusicKernelApi {
 
     void start();
 
-    void play();
-
     void stop();
 
     void pause();
 
     void release();
+
+    void addListener();
+
+    void removeListener();
 
     void setLooping(boolean v);
 

@@ -16,7 +16,7 @@ import lib.kalu.mediaplayer.core.video.kernel.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class VlcMediaPlayer implements KernelApi, KernelEvent {
+public final class VideoVlcPlayer implements KernelApi, KernelEvent {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -32,22 +32,22 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 
 
     private String mExternalMusicPath = null;
-//    private boolean mExternalMusicPrepared = false;
     private boolean mExternalMusicLoop = false;
     private boolean mExternalMusicAuto = false;
+    private boolean mExternalMusicEqualLength = true;
 
     //    private LibVLC mLibVLC;
     private KernelEvent mEvent;
     private org.videolan.libvlc.media.MediaPlayer mVlcPlayer;
 
-    public VlcMediaPlayer(@NonNull KernelEvent event) {
+    public VideoVlcPlayer(@NonNull KernelEvent event) {
         setReadying(false);
         this.mEvent = event;
     }
 
     @NonNull
     @Override
-    public VlcMediaPlayer getPlayer() {
+    public VideoVlcPlayer getPlayer() {
         return this;
     }
 
@@ -66,7 +66,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean mute, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         //        ArrayList args = new ArrayList<>();//VLC参数
 //        args.add("--rtsp-tcp");//强制rtsp-tcp，加快加载视频速度
 //        args.add("--aout=opensles");
@@ -75,10 +75,7 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //        mLibVLC = new LibVLC(context);
         mVlcPlayer = new org.videolan.libvlc.media.MediaPlayer(context);
         mVlcPlayer.setLooping(false);
-        if (mute) {
-            mVlcPlayer.setVolume(0f, 0f);
-        }
-        setOptions();
+        setVolume(1F, 1F);
         initListener();
     }
 
@@ -291,10 +288,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //
 //    }
 
-    @Override
-    public void setOptions() {
-    }
-
     /**
      * 获取播放速度
      *
@@ -335,11 +328,16 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            float value = Math.max(v1, v2);
-            if (value > 1f) {
-                value = 1f;
+            boolean videoMute = isMute();
+            if (videoMute) {
+                mVlcPlayer.getVLC().setVolume(0);
+            } else {
+                float value = Math.max(v1, v2);
+                if (value > 1f) {
+                    value = 1f;
+                }
+                mVlcPlayer.getVLC().setVolume((int) value);
             }
-            mVlcPlayer.getVLC().setVolume((int) value);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -462,7 +460,6 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
 //    public void setExternalMusicPrepared(boolean v) {
 //        this.mExternalMusicPrepared = v;
 //    }
-
     @Override
     public boolean isExternalMusicLoop() {
         return mExternalMusicLoop;
@@ -481,6 +478,16 @@ public final class VlcMediaPlayer implements KernelApi, KernelEvent {
     @Override
     public void setExternalMusicAuto(boolean auto) {
         this.mExternalMusicAuto = auto;
+    }
+
+    @Override
+    public boolean isExternalMusicEqualLength() {
+        return mExternalMusicEqualLength;
+    }
+
+    @Override
+    public void setExternalMusicEqualLength(boolean equal) {
+        mExternalMusicEqualLength = equal;
     }
 
     @Override

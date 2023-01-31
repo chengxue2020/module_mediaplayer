@@ -76,17 +76,17 @@ public final class MusicPlayerManager {
         }
     }
 
-    public static void play() {
+    public static void start() {
         if (null != mMusicPlayer) {
             MPLogUtil.log("MusicPlayerManager => play => mMusicPlayer = " + mMusicPlayer);
-            mMusicPlayer.play();
+            mMusicPlayer.start();
         }
     }
 
-    public static void seekTo(long v) {
-        if (null != mMusicPlayer) {
-            MPLogUtil.log("MusicPlayerManager => seekTo => v = " + v + ", mMusicPlayer = " + mMusicPlayer);
-            mMusicPlayer.play();
+    public static void seekTo(long postion) {
+        if (null != mMusicPlayer && postion > 0) {
+            MPLogUtil.log("MusicPlayerManager => seekTo => postion = " + postion + ", mMusicPlayer = " + mMusicPlayer);
+            mMusicPlayer.seekTo(postion);
         }
     }
 
@@ -99,19 +99,24 @@ public final class MusicPlayerManager {
         }
     }
 
-    public static void start(@NonNull Context context, @NonNull long seek, @NonNull String musicUrl) {
-        MPLogUtil.log("MusicPlayerManager => start => seek = " + seek + ", musicUrl = " + musicUrl + ", mMusicPlayer = " + mMusicPlayer);
+    public static void setMusicListener(@NonNull OnMusicPlayerChangeListener listener) {
+        if (null != mMusicPlayer) {
+            MPLogUtil.log("MusicPlayerManager => setMusicListener => listener = " + listener + ", mMusicPlayer = " + mMusicPlayer);
+            mMusicPlayer.setMusicListener(listener);
+        }
+    }
+
+    public static void start(@NonNull Context context, @NonNull long seek, @NonNull String musicUrl, @NonNull OnMusicPlayerChangeListener listener) {
+        MPLogUtil.log("MusicPlayerManager => start => seek = " + seek + ", musicUrl = " + musicUrl + ", mMusicPlayer = " + mMusicPlayer + ", listener = " + listener);
         // 1
-        MPLogUtil.log("MusicPlayerManager => start => create");
         create();
         // 2
-        MPLogUtil.log("MusicPlayerManager => start => setDataSource");
         setDataSource(context, musicUrl);
         // 3
-        MPLogUtil.log("MusicPlayerManager => start => play");
-        play();
+        setMusicListener(listener);
         // 4
-        MPLogUtil.log("MusicPlayerManager => start => seekTo");
+        start();
+        // 5
         seekTo(seek);
     }
 }

@@ -10,22 +10,22 @@ import lib.kalu.mediaplayer.core.video.kernel.KernelFactory;
 
 
 @Keep
-public class IjkFactory implements KernelFactory<IjkMediaPlayer> {
+public class VideoIjkPlayerFactory implements KernelFactory<VideoIjkPlayer> {
 
-    private IjkFactory() {
+    private VideoIjkPlayerFactory() {
     }
 
 //    private static class Holder {
 //        static final IjkMediaPlayer mP = new IjkMediaPlayer();
 //    }
 
-    public static IjkFactory build() {
-        return new IjkFactory();
+    public static VideoIjkPlayerFactory build() {
+        return new VideoIjkPlayerFactory();
     }
 
     @Override
-    public IjkMediaPlayer createKernel(@NonNull Context context, @NonNull KernelEvent event) {
+    public VideoIjkPlayer createKernel(@NonNull Context context, @NonNull KernelEvent event) {
 //        return Holder.mP;
-        return new IjkMediaPlayer(event);
+        return new VideoIjkPlayer(event);
     }
 }

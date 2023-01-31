@@ -394,7 +394,6 @@ public interface PlayerApiKernel extends
             // 2
             if (force) {
                 updateKernel(builder);
-                pause(true);
             }
             // 3
             long seek = builder.getSeek();
@@ -577,13 +576,12 @@ public interface PlayerApiKernel extends
 
     /***************************/
 
-    default void toggleExternalMusic(Context context, boolean enableExternalMusic, boolean autoExternalMusic, boolean seek) {
+    default void toggleExternalMusic(Context context, boolean musicRelease, boolean musicAuto, boolean musicEqualLength) {
         try {
             KernelApi kernel = getKernel();
-            if (autoExternalMusic) {
-                kernel.setExternalMusicAuto(true);
-            }
-            kernel.toggleExternalMusic(context, enableExternalMusic, seek);
+            kernel.setExternalMusicAuto(musicAuto);
+            kernel.setExternalMusicEqualLength(musicEqualLength);
+            kernel.toggleExternalMusic(context, musicRelease);
         } catch (Exception e) {
         }
     }
@@ -628,15 +626,6 @@ public interface PlayerApiKernel extends
             return false;
         }
     }
-
-//    default boolean isExternalMusicPrepared() {
-//        try {
-//            KernelApi kernel = getKernel();
-//            return kernel.isExternalMusicPrepared();
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
 
     default boolean isExternalMusicPlaying() {
         try {
@@ -707,11 +696,9 @@ public interface PlayerApiKernel extends
                     if (reset) {
                         // loop
                         if (isLooping) {
-                            // step1
+                            // 1
                             hideReal();
-                            // step2
-                            pause();
-                            // step3
+                            // 2
                             boolean seekHelp = config.isSeekHelp();
                             if (seekHelp) {
                                 seekToKernel(1, true);
@@ -934,7 +921,7 @@ public interface PlayerApiKernel extends
             MPLogUtil.log("PlayerApiKernel => createDecoder => kernel = " + kernel);
             boolean log = config.isLog();
             int seekParameters = config.getExoSeekParameters();
-            kernel.createDecoder(context, builder.isMute(), log, seekParameters);
+            kernel.createDecoder(context, log, seekParameters);
             MPLogUtil.log("PlayerApiKernel => createDecoder => succ");
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage(), e);
