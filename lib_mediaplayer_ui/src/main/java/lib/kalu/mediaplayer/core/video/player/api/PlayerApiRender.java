@@ -50,7 +50,7 @@ public interface PlayerApiRender extends PlayerApiBase {
             ViewGroup layout = getLayout();
             int count = layout.getChildCount();
             return count <= 0;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -92,6 +92,10 @@ public interface PlayerApiRender extends PlayerApiBase {
     }
 
     default void stopFull() {
+
+        boolean isFull = isFull();
+        if (!isFull)
+            return;
 
         ViewGroup layout = getLayout();
         if (null == layout)
@@ -196,6 +200,10 @@ public interface PlayerApiRender extends PlayerApiBase {
     }
 
     default void stopFloat() {
+
+        boolean isFloat = isFloat();
+        if (!isFloat)
+            return;
 
         ViewGroup layout = getLayout();
         if (null == layout)

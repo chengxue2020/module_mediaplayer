@@ -122,6 +122,7 @@ public interface PlayerApiKernel extends
             if (duration < 0L) {
                 duration = 0L;
             }
+            MPLogUtil.log("PlayerApiKernel => getDuration => duration = " + duration);
             return duration;
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
@@ -136,6 +137,7 @@ public interface PlayerApiKernel extends
             if (position < 0L) {
                 position = 0L;
             }
+            MPLogUtil.log("PlayerApiKernel => getPosition => position = " + position);
             return position;
         } catch (Exception e) {
             return 0L;
@@ -144,6 +146,7 @@ public interface PlayerApiKernel extends
 
     default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
         try {
+            MPLogUtil.log("PlayerApiKernel => setVolume => left = " + left + ", right = " + right);
             KernelApi kernel = getKernel();
             kernel.setVolume(left, right);
         } catch (Exception e) {
@@ -152,6 +155,7 @@ public interface PlayerApiKernel extends
 
     default void setMute(boolean enable) {
         try {
+            MPLogUtil.log("PlayerApiKernel => setMute => enable = " + enable);
             KernelApi kernel = getKernel();
             kernel.setMute(enable);
         } catch (Exception e) {
@@ -160,6 +164,7 @@ public interface PlayerApiKernel extends
 
     default void setLooping(boolean looping) {
         try {
+            MPLogUtil.log("PlayerApiKernel => setLooping => looping = " + looping);
             KernelApi kernel = getKernel();
             kernel.setLooping(looping);
         } catch (Exception e) {
@@ -167,52 +172,34 @@ public interface PlayerApiKernel extends
     }
 
     default void release() {
-        release(false);
-    }
-
-    default void release(@NonNull boolean onlyHandle) {
-//        MPLogUtil.log("onEvent => release => onlyHandle = " + onlyHandle + ", mKernel = " + mKernel);
-
-        KernelApi kernel = getKernel();
-        if (null == kernel)
-            return;
-
-        // step2
-        pause(!onlyHandle);
-
-        // step3
-        if (onlyHandle)
-            return;
-
-        boolean isFloat = isFloat();
-        if (isFloat) {
+        try {
+            // 1
+            checkKernel();
+            MPLogUtil.log("PlayerApiKernel => release =>");
+            //2
             stopFloat();
-        }
-
-        boolean isFull = isFull();
-        if (isFull) {
+            // 3
             stopFull();
+            // 4
+            clearRender();
+            // 5
+            releaseRender();
+            // 6
+            releaseKernel();
+        } catch (Exception e) {
         }
-
-        // step51
-        clearRender();
-
-        // step52
-        releaseRender();
-
-        // step7
-        releaseKernel();
     }
 
     default void toggle() {
         toggle(false);
     }
 
-    default void toggle(boolean cleanHandler) {
+    default void toggle(boolean ignore) {
         try {
+            MPLogUtil.log("PlayerApiKernel => toggle => ignore = " + ignore);
             boolean playing = isPlaying();
             if (playing) {
-                pause(cleanHandler);
+                pause(ignore);
             } else {
                 resume(true);
             }
@@ -224,13 +211,13 @@ public interface PlayerApiKernel extends
         pause(false);
     }
 
-    default void pause(boolean auto) {
+    default void pause(boolean ignore) {
         try {
             boolean playing = isPlaying();
-            MPLogUtil.log("pauseME => auto = " + auto + ", playing = " + playing);
+            MPLogUtil.log("PlayerApiKernel => pause => ignore = " + ignore + ", playing = " + playing);
             if (!playing)
                 return;
-            pauseKernel(!auto);
+            pauseKernel(ignore);
         } catch (Exception e) {
         }
     }
@@ -494,7 +481,7 @@ public interface PlayerApiKernel extends
         }
     }
 
-    default void pauseKernel(@NonNull boolean call) {
+    default void pauseKernel(@NonNull boolean ignore) {
         try {
             // 1
             checkKernel();
@@ -503,7 +490,7 @@ public interface PlayerApiKernel extends
             MPLogUtil.log("PlayerApiKernel => pauseKernel => kernel = " + kernel);
             kernel.pause();
             setScreenKeep(false);
-            callPlayerState(call ? PlayerType.StateType.STATE_PAUSE : PlayerType.StateType.STATE_PAUSE_IGNORE);
+            callPlayerState(ignore ? PlayerType.StateType.STATE_PAUSE_IGNORE : PlayerType.StateType.STATE_PAUSE);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => pauseKernel => " + e.getMessage());
         }
@@ -576,6 +563,10 @@ public interface PlayerApiKernel extends
 
     /***************************/
 
+    default void toggleExternalMusic(Context context, boolean musicRelease, boolean musicAuto) {
+        toggleExternalMusic(context, musicRelease, musicAuto, true);
+    }
+
     default void toggleExternalMusic(Context context, boolean musicRelease, boolean musicAuto, boolean musicEqualLength) {
         try {
             KernelApi kernel = getKernel();
@@ -622,6 +613,15 @@ public interface PlayerApiKernel extends
         try {
             KernelApi kernel = getKernel();
             return kernel.isExternalMusicLoop();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    default boolean isExternalMusicEqualLength() {
+        try {
+            KernelApi kernel = getKernel();
+            return kernel.isExternalMusicEqualLength();
         } catch (Exception e) {
             return false;
         }
@@ -772,15 +772,16 @@ public interface PlayerApiKernel extends
                             resume(false);
                             // step5
                             boolean externalMusicAuto1 = isExternalMusicAuto();
+                            boolean musicEqualLength = isExternalMusicEqualLength();
                             if (externalMusicAuto1) {
-                                boolean externalMusicLoop = isExternalMusicLoop();
-                                if (externalMusicLoop) {
-                                    toggleExternalMusic(context, true, true, seek);
+                                boolean musicLoop = isExternalMusicLoop();
+                                if (musicLoop) {
+                                    toggleExternalMusic(context, true, true, musicEqualLength);
                                 } else {
-                                    toggleExternalMusic(context, false, true, seek);
+                                    toggleExternalMusic(context, false, true, musicEqualLength);
                                 }
                             } else {
-                                toggleExternalMusic(context, false, false, seek);
+                                toggleExternalMusic(context, false, false, musicEqualLength);
                             }
 
                             break;
@@ -798,15 +799,16 @@ public interface PlayerApiKernel extends
                             checkReal();
                             // step4
                             boolean externalMusicAuto2 = isExternalMusicAuto();
+                            boolean musicEqualLength2 = isExternalMusicEqualLength();
                             if (externalMusicAuto2) {
-                                boolean externalMusicLoop = isExternalMusicLoop();
-                                if (externalMusicLoop) {
-                                    toggleExternalMusic(context, true, true, seek);
+                                boolean musicLoop = isExternalMusicLoop();
+                                if (musicLoop) {
+                                    toggleExternalMusic(context, true, true, musicEqualLength2);
                                 } else {
-                                    toggleExternalMusic(context, false, true, seek);
+                                    toggleExternalMusic(context, false, true, musicEqualLength2);
                                 }
                             } else {
-                                toggleExternalMusic(context, false, false, seek);
+                                toggleExternalMusic(context, false, false, musicEqualLength2);
                             }
 
                             // 埋点

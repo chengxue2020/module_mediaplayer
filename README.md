@@ -32,6 +32,10 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 #
 #### 更新
 ```
+2023-01-31
+1. 新增：音频播放器，可选exoplayer、mediaplayer
+```
+```
 2023-01-12
 1. 优化：libijkplayer-ffmpeg.so编译脚本
 ```

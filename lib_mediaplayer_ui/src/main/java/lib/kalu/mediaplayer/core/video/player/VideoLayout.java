@@ -62,9 +62,9 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
         MPLogUtil.log("VideoLayout => onDetachedFromWindow => invisibleStop = " + invisibleStop + ", invisibleIgnore = " + invisibleIgnore + ", invisibleRelease = " + invisibleRelease + ", this = " + this);
         if (invisibleIgnore) {
         } else if (invisibleStop) {
-            release(true);
+            pause(false);
         } else {
-            release(false);
+            release();
         }
     }
 
