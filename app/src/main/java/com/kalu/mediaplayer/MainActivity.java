@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
                 .setLog(true)
                 .setKernel(type)
                 .setRender(PlayerType.RenderType.SURFACE_VIEW)
-                .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXT_FFPEMG_VIDEO)
+                .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL)
                 .setBuriedEvent(new Event())
                 .build();
         PlayerManager.getInstance().setConfig(build);
