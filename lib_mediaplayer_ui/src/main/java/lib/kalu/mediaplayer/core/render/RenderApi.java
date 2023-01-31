@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep

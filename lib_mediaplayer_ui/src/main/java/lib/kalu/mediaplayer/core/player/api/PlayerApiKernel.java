@@ -14,9 +14,9 @@ import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.core.video.KernelApi;
-import lib.kalu.mediaplayer.core.video.KernelEvent;
-import lib.kalu.mediaplayer.core.video.KernelFactoryManager;
+import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.video.KernelEvent;
+import lib.kalu.mediaplayer.core.kernel.video.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -254,6 +254,9 @@ public interface PlayerApiKernel extends
         try {
             MPLogUtil.log("PlayerApiKernel => resume => ignore = " + ignore);
             checkKernel();
+            // 1
+            resumeExternalMusic();
+            // 2
             resumeKernel(ignore);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => resume => " + e.getMessage());
@@ -483,6 +486,8 @@ public interface PlayerApiKernel extends
             // 1
             checkKernel();
             // 2
+            pauseExternalMusic();
+            // 3
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => pauseKernel => kernel = " + kernel);
             kernel.pause();
@@ -584,6 +589,14 @@ public interface PlayerApiKernel extends
         }
     }
 
+    default void resetExternalMusic() {
+        try {
+            KernelApi kernel = getKernel();
+            kernel.resetExternalMusic();
+        } catch (Exception e) {
+        }
+    }
+
     default void resumeExternalMusic() {
         try {
             KernelApi kernel = getKernel();
@@ -649,22 +662,35 @@ public interface PlayerApiKernel extends
     }
 
     default void checkExternalMusic(@NonNull Context context) {
-        boolean musicPlaying = isExternalMusicPlaying();
-        MPLogUtil.log("PlayerApiKernel => checkExternalMusic => musicPlaying = " + musicPlaying);
-        if (musicPlaying)
-            return;
-        boolean ready = isExternalMusicPlayWhenReady();
-        if (ready) {
-            String musicPath = getExternalMusicPath();
-            if (null != musicPath && musicPath.length() > 0) {
-                boolean musicLoop = isExternalMusicLoop();
-                boolean musicEqual = isExternalMusicEqualLength();
-                startExternalMusic(context, musicLoop, musicEqual);
+
+        boolean musicEqualLength = isExternalMusicEqualLength();
+        // 等长音频
+        if (musicEqualLength) {
+            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true");
+            // 1
+            pauseExternalMusic();
+            // 2
+            resetExternalMusic();
+        }
+        // 片段音频
+        else {
+            boolean musicPlaying = isExternalMusicPlaying();
+            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = false, musicPlaying = " + musicPlaying);
+            if (musicPlaying)
+                return;
+            boolean ready = isExternalMusicPlayWhenReady();
+            if (ready) {
+                String musicPath = getExternalMusicPath();
+                if (null != musicPath && musicPath.length() > 0) {
+                    boolean musicLoop = isExternalMusicLoop();
+                    boolean musicEqual = isExternalMusicEqualLength();
+                    startExternalMusic(context, musicLoop, musicEqual);
+                } else {
+                    stopExternalMusic();
+                }
             } else {
                 stopExternalMusic();
             }
-        } else {
-            stopExternalMusic();
         }
     }
 
