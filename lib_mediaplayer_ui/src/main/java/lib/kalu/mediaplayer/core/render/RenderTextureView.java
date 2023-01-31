@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package lib.kalu.mediaplayer.core.video.render;
+package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,7 +24,7 @@ import android.view.TextureView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.core.video.kernel.KernelApi;
+import lib.kalu.mediaplayer.core.video.KernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 

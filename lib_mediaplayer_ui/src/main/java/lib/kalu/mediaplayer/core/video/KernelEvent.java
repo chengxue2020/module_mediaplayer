@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.kernel;
+package lib.kalu.mediaplayer.core.video;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;

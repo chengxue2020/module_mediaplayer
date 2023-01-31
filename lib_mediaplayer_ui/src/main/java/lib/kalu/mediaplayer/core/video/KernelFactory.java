@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.kernel;
+package lib.kalu.mediaplayer.core.video;
 
 import android.content.Context;
 

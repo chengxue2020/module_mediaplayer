@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.player.api;
+package lib.kalu.mediaplayer.core.player.api;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 

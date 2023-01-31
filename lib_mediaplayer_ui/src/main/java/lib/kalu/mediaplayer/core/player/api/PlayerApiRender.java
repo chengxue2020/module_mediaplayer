@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.player.api;
+package lib.kalu.mediaplayer.core.player.api;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,8 +13,8 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.render.RenderApi;
-import lib.kalu.mediaplayer.core.video.render.RenderFactoryManager;
+import lib.kalu.mediaplayer.core.render.RenderApi;
+import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
 import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 

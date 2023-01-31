@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.render;
+package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.kernel.KernelApi;
+import lib.kalu.mediaplayer.core.video.KernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep

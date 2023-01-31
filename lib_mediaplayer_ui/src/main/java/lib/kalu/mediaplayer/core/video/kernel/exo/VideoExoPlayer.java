@@ -34,8 +34,8 @@ import lib.kalu.exoplayer2.ffmpeg.FFmpegVideoRenderersFactory;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.kernel.KernelApi;
-import lib.kalu.mediaplayer.core.video.kernel.KernelEvent;
+import lib.kalu.mediaplayer.core.video.KernelApi;
+import lib.kalu.mediaplayer.core.video.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep

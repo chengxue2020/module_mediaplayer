@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.player.api;
+package lib.kalu.mediaplayer.core.player.api;
 
 import android.content.Context;
 import android.content.res.TypedArray;

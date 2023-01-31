@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 
 import tv.danmaku.ijk.media.player.misc.IMediaDataSourceForRaw;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.video.kernel.KernelApi;
-import lib.kalu.mediaplayer.core.video.kernel.KernelEvent;
+import lib.kalu.mediaplayer.core.video.KernelApi;
+import lib.kalu.mediaplayer.core.video.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;

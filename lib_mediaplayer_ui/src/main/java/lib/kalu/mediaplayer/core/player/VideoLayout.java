@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.player;
+package lib.kalu.mediaplayer.core.player;
 
 import android.content.Context;
 import android.os.Build;
@@ -15,9 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.video.kernel.KernelApi;
-import lib.kalu.mediaplayer.core.video.player.api.PlayerApi;
-import lib.kalu.mediaplayer.core.video.render.RenderApi;
+import lib.kalu.mediaplayer.core.video.KernelApi;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
+import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**

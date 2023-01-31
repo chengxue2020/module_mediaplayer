@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.video.kernel;
+package lib.kalu.mediaplayer.core.video;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -7,9 +7,6 @@ import android.view.Surface;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerManager;
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.audio.MusicPlayerManager;
 import lib.kalu.mediaplayer.core.audio.OnMusicPlayerChangeListener;

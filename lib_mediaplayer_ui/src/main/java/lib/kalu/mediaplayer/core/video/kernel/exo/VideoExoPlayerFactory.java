@@ -5,8 +5,8 @@ import android.content.Context;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.core.video.kernel.KernelEvent;
-import lib.kalu.mediaplayer.core.video.kernel.KernelFactory;
+import lib.kalu.mediaplayer.core.video.KernelEvent;
+import lib.kalu.mediaplayer.core.video.KernelFactory;
 
 @Keep
 public final class VideoExoPlayerFactory implements KernelFactory<VideoExoPlayer> {
