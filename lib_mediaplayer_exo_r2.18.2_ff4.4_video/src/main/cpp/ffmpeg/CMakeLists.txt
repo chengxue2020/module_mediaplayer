@@ -39,9 +39,6 @@ include_directories(
         include/config/${ANDROID_ABI}
 )
 
-find_library(log-lib log)
-find_library(android-lib android)
-
 #ffmpeg
 configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/jniLibs/${ANDROID_ABI}/libexoplayer-ffmpeg.so ${Project_BINARY_DIR}/libexoplayer-ffmpeg.so COPYONLY)
 add_library(ffmpeg-lib
@@ -56,7 +53,11 @@ add_library(exoplayer-ffmpeg-jni
         ffmpeg_log.c
         ffmpeg_jni.cc)
 
-target_link_libraries(exoplayer-ffmpeg-jni
+target_link_libraries( # Specifies the target library.
+        exoplayer-ffmpeg-jni
+
+        # Links the target library to the log library
+        # included in the NDK.
         ffmpeg-lib
-        ${log-lib}
-        ${android-lib})
+        log
+        android)

@@ -34,13 +34,10 @@ if (${ANDROID_ABI} MATCHES "arm64-v8a")
 endif ()
 
 include_directories(
-#        ffmpeg_log.h
+        #        ffmpeg_log.h
         include
         include/config/${ANDROID_ABI}
 )
-
-find_library(log-lib log)
-find_library(android-lib android)
 
 #ffmpeg
 configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/jniLibs/${ANDROID_ABI}/libexoplayer-ffmpeg.so ${Project_BINARY_DIR}/libexoplayer-ffmpeg.so COPYONLY)
@@ -53,10 +50,10 @@ set_target_properties(ffmpeg-lib
 
 add_library(exoplayer-ffmpeg-jni
         SHARED
-#        ffmpeg_log.c
+        ffmpeg_log.c
         ffmpeg_jni.cc)
 
 target_link_libraries(exoplayer-ffmpeg-jni
         ffmpeg-lib
-        ${log-lib}
-        ${android-lib})
+        log
+        android)

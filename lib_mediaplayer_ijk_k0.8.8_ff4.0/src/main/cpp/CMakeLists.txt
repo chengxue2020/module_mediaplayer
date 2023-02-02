@@ -206,15 +206,6 @@ set_target_properties(ijkplayer-ffmpeg-lib
         PROPERTIES IMPORTED_LOCATION
         libijkplayer-ffmpeg.so)
 
-find_library(log-lib log)
-find_library(m-lib m)
-find_library(z-lib z)
-find_library(android-lib android)
-find_library(EGL-lib EGL)
-find_library(jnigraphics-lib jnigraphics)
-find_library(GLES-lib GLESv2)
-find_library(OpenSLES-lib OpenSLES)
-
 include_directories(
         ffmpeginclude
         src/main/cpp/ffmpeginclude/config/${ANDROID_ABI}
@@ -234,9 +225,26 @@ include_directories(
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
+# find_library(log-lib log)
+# find_library(m-lib m)
+# find_library(z-lib z)
+# find_library(android-lib android)
+# find_library(EGL-lib EGL)
+# find_library(jnigraphics-lib jnigraphics)
+# find_library(GLES-lib GLESv2)
+# find_library(OpenSLES-lib OpenSLES)
+
 target_link_libraries( # Specifies the target library.
         ijkplayer-ffmpeg-jni
 
         # Links the target library to the log library
         # included in the NDK.
-        ijkplayer-ffmpeg-lib ${log-lib} ${m-lib} ${z-lib} ${android-lib} ${EGL-lib} ${GLES-lib} ${jnigraphics-lib} ${OpenSLES-lib})
+        ijkplayer-ffmpeg-lib
+        log
+        m
+        z
+        android
+        EGL
+        jnigraphics
+        GLESv2
+        OpenSLES)
