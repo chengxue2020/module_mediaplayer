@@ -17,7 +17,7 @@ public interface MusicKernelApi {
 
     void setDataSource(@NonNull Context context, @NonNull String musicUrl);
 
-    void start();
+    void start(long position, OnMusicPlayerChangeListener l);
 
     void stop();
 
@@ -25,9 +25,9 @@ public interface MusicKernelApi {
 
     void release();
 
-    void addListener();
+    void addListener(long position);
 
-    void removeListener();
+    void removeListener(boolean clear);
 
     void setLooping(boolean v);
 
@@ -38,6 +38,8 @@ public interface MusicKernelApi {
     void seekTo(long v);
 
     long getDuration();
+
+    long getPosition();
 
     default void setSeekParameters() {
     }

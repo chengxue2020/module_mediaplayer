@@ -59,11 +59,19 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
     }
 
     @Override
-    public void start() {
+    public void start(long position, OnMusicPlayerChangeListener l) {
         // 1
-        removeListener();
+        if (null == l) {
+            removeListener(true);
+        } else {
+            removeListener(false);
+        }
         // 2
-        addListener();
+        if (null != l) {
+            setMusicListener(l);
+        }
+        // 3
+        addListener(position);
         // 3
         setVolume(1F);
         // 4
@@ -91,7 +99,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
 
     @Override
     public void release() {
-        removeListener();
+        removeListener(true);
         if (null != mAndroidPlayer) {
             ExoLogUtil.log("MusicAndroidPlayer => release => mAndroidPlayer = " + mAndroidPlayer);
             mAndroidPlayer.release();
@@ -100,13 +108,13 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
     }
 
     @Override
-    public void addListener() {
-        // 1
+    public void addListener(long position) {
+// 1
         mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 if (null != mOnMusicPlayerChangeListener) {
-                    mOnMusicPlayerChangeListener.onComplete();
+                    mOnMusicPlayerChangeListener.onEnd();
                 }
             }
         };
@@ -122,23 +130,38 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
             }
         };
         mAndroidPlayer.setOnErrorListener(mOnErrorListener);
-//        // 3
-//        mOnInfoListener = new MediaPlayer.OnInfoListener() {
-//            @Override
-//            public boolean onInfo(MediaPlayer mp, int what, int extra) {
-//                // what：701 ---  加载中、702 --- 加载完成。
-//                if (what == 702) {
-//
-//                }
-//                return false;
-//            }
-//        };
+        // 3
+        final boolean[] status = {false};
+        mOnInfoListener = new MediaPlayer.OnInfoListener() {
+            @Override
+            public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                // what：701 ---  加载中、702 --- 加载完成。
+                if (what == 702) {
+                    if (!status[0] && position > 0) {
+                        long duration = getDuration();
+                        if (duration > 0 && position <= duration) {
+                            status[0] = true;
+                            seekTo(position);
+                        } else {
+                            if (null != mOnMusicPlayerChangeListener) {
+                                mOnMusicPlayerChangeListener.onStart();
+                            }
+                        }
+                    } else {
+                        if (null != mOnMusicPlayerChangeListener) {
+                            mOnMusicPlayerChangeListener.onStart();
+                        }
+                    }
+                }
+                return false;
+            }
+        };
         mAndroidPlayer.setOnInfoListener(mOnInfoListener);
     }
 
     @Override
-    public void removeListener() {
-        if (null != mOnMusicPlayerChangeListener) {
+    public void removeListener(boolean clear) {
+        if (clear && null != mOnMusicPlayerChangeListener) {
             setMusicListener(null);
             mOnMusicPlayerChangeListener = null;
         }
@@ -198,5 +221,13 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
         if (mAndroidPlayer == null)
             return 0L;
         return mAndroidPlayer.getDuration();
+    }
+
+    @Override
+    public long getPosition() {
+        ExoLogUtil.log("MusicAndroidPlayer => getPosition =>  mAndroidPlayer = " + mAndroidPlayer);
+        if (mAndroidPlayer == null)
+            return 0L;
+        return mAndroidPlayer.getCurrentPosition();
     }
 }

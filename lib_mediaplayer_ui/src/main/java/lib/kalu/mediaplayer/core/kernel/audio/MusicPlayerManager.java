@@ -25,7 +25,7 @@ public final class MusicPlayerManager {
             MPLogUtil.log("MusicPlayerManager => reset => mMusicPlayer = " + mMusicPlayer);
             pause();
             mMusicPlayer.seekTo(1);
-            start();
+            start(0, null);
         }
     }
 
@@ -39,7 +39,8 @@ public final class MusicPlayerManager {
     public static void resume() {
         if (null != mMusicPlayer) {
             MPLogUtil.log("MusicPlayerManager => resume => mMusicPlayer = " + mMusicPlayer);
-            mMusicPlayer.start();
+            long position = mMusicPlayer.getPosition();
+            mMusicPlayer.start(position, null);
         }
     }
 
@@ -81,10 +82,10 @@ public final class MusicPlayerManager {
         }
     }
 
-    public static void start() {
+    public static void start(long position, OnMusicPlayerChangeListener listener) {
         if (null != mMusicPlayer) {
             MPLogUtil.log("MusicPlayerManager => play => mMusicPlayer = " + mMusicPlayer);
-            mMusicPlayer.start();
+            mMusicPlayer.start(position, listener);
         }
     }
 
@@ -113,13 +114,6 @@ public final class MusicPlayerManager {
         }
     }
 
-    public static void setMusicListener(@NonNull OnMusicPlayerChangeListener listener) {
-        if (null != mMusicPlayer) {
-            MPLogUtil.log("MusicPlayerManager => setMusicListener => listener = " + listener + ", mMusicPlayer = " + mMusicPlayer);
-            mMusicPlayer.setMusicListener(listener);
-        }
-    }
-
     public static void start(@NonNull Context context, @NonNull long position, @NonNull String musicUrl) {
         start(context, position, musicUrl, null);
     }
@@ -131,10 +125,6 @@ public final class MusicPlayerManager {
         // 2
         setDataSource(context, musicUrl);
         // 3
-        setMusicListener(listener);
-        // 4
-        start();
-        // 5
-        seekTo(position);
+        start(position, listener);
     }
 }

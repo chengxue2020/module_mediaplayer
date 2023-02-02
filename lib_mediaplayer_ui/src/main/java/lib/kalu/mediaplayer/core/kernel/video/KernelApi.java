@@ -197,6 +197,7 @@ public interface KernelApi extends KernelEvent {
 
         // 1 视频
         setVolume(0F, 0F);
+        pause();
 
         // 2 音频
         long position = 0;
@@ -209,24 +210,25 @@ public interface KernelApi extends KernelEvent {
         MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => position = " + position);
 
         // 3
-        OnMusicPlayerChangeListener l;
-        if (musicLooping) {
-            l = null;
-        } else {
-            l = new OnMusicPlayerChangeListener() {
-                @Override
-                public void onComplete() {
-                    MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => onComplete");
-                    setVolume(1F, 1F);
-                }
+        OnMusicPlayerChangeListener l = new OnMusicPlayerChangeListener() {
+            @Override
+            public void onStart() {
+                MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => onStart");
+                start();
+            }
 
-                @Override
-                public void onError() {
-                    MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => onError");
-                    setVolume(1F, 1F);
-                }
-            };
-        }
+            @Override
+            public void onEnd() {
+                MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => onEnd");
+                setVolume(1F, 1F);
+            }
+
+            @Override
+            public void onError() {
+                MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => onError");
+                setVolume(1F, 1F);
+            }
+        };
         MusicPlayerManager.start(context, position, musicUrl, l);
     }
 
@@ -245,6 +247,7 @@ public interface KernelApi extends KernelEvent {
     default void pauseExternalMusic() {
         MusicPlayerManager.pause();
     }
+
     default void resetExternalMusic() {
         MusicPlayerManager.reset();
     }

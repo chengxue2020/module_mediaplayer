@@ -83,11 +83,19 @@ public final class MusicExoPlayer implements MusicKernelApi {
     }
 
     @Override
-    public void start() {
+    public void start(long position, OnMusicPlayerChangeListener l) {
         // 1
-        removeListener();
+        if (null == l) {
+            removeListener(true);
+        } else {
+            removeListener(false);
+        }
         // 2
-        addListener();
+        if (null != l) {
+            setMusicListener(l);
+        }
+        // 3
+        addListener(position);
         // 3
         setVolume(1F);
         // 4
@@ -115,7 +123,7 @@ public final class MusicExoPlayer implements MusicKernelApi {
 
     @Override
     public void release() {
-        removeListener();
+        removeListener(true);
         if (null != mExoPlayer) {
             ExoLogUtil.log("MusicExoPlayer => release => mExoPlayer = " + mExoPlayer);
             mExoPlayer.release();
@@ -124,10 +132,11 @@ public final class MusicExoPlayer implements MusicKernelApi {
     }
 
     @Override
-    public void addListener() {
+    public void addListener(long position) {
 
         if (null != mExoPlayer) {
             ExoLogUtil.log("MusicExoPlayer => addListener => mExoPlayer = " + mExoPlayer);
+            final boolean[] status = {false};
             mAnalyticsListener = new AnalyticsListener() {
 
                 @Override
@@ -140,11 +149,32 @@ public final class MusicExoPlayer implements MusicKernelApi {
 
                 @Override
                 public void onPlaybackStateChanged(EventTime eventTime, int state) {
-                    ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => state = " + state);
+                    ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => state = " + state + ", mOnMusicPlayerChangeListener = " + mOnMusicPlayerChangeListener);
                     // 播放结束
                     if (state == Player.STATE_ENDED) {
                         if (null != mOnMusicPlayerChangeListener) {
-                            mOnMusicPlayerChangeListener.onComplete();
+                            mOnMusicPlayerChangeListener.onEnd();
+                        }
+                    }
+                    // 播放开始
+                    else if (state == Player.STATE_READY) {
+                        if (!status[0] && position > 0) {
+                            long duration = getDuration();
+                            if (duration > 0 && position <= duration) {
+                                status[0] = true;
+                                seekTo(position);
+                                ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => seekTo => state = " + state);
+                            } else {
+                                if (null != mOnMusicPlayerChangeListener) {
+                                    ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => onStart => state = " + state);
+                                    mOnMusicPlayerChangeListener.onStart();
+                                }
+                            }
+                        } else {
+                            if (null != mOnMusicPlayerChangeListener) {
+                                ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => onStart => state = " + state);
+                                mOnMusicPlayerChangeListener.onStart();
+                            }
                         }
                     }
                 }
@@ -154,9 +184,9 @@ public final class MusicExoPlayer implements MusicKernelApi {
     }
 
     @Override
-    public void removeListener() {
+    public void removeListener(boolean clear) {
         ExoLogUtil.log("MusicExoPlayer => removeListener => mExoPlayer = " + mExoPlayer);
-        if (null != mOnMusicPlayerChangeListener) {
+        if (clear && null != mOnMusicPlayerChangeListener) {
             setMusicListener(null);
             mOnMusicPlayerChangeListener = null;
         }
@@ -210,6 +240,14 @@ public final class MusicExoPlayer implements MusicKernelApi {
         if (mExoPlayer == null)
             return 0L;
         return mExoPlayer.getDuration();
+    }
+
+    @Override
+    public long getPosition() {
+        ExoLogUtil.log("MusicExoPlayer => getPosition =>  mExoPlayer = " + mExoPlayer);
+        if (mExoPlayer == null)
+            return 0L;
+        return mExoPlayer.getCurrentPosition();
     }
 
     @Override
