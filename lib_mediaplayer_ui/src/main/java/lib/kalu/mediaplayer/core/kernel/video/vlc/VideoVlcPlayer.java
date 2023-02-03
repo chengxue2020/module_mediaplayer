@@ -2,13 +2,13 @@ package lib.kalu.mediaplayer.core.kernel.video.vlc;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-
-import org.videolan.libvlc.MediaPlayer;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
@@ -16,7 +16,7 @@ import lib.kalu.mediaplayer.core.kernel.video.KernelEvent;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class VideoVlcPlayer implements KernelApi, KernelEvent {
+public final class VideoVlcPlayer implements KernelApi {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -36,9 +36,10 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
     private boolean mExternalMusicPlayWhenReady = false;
     private boolean mExternalMusicEqualLength = true;
 
-    //    private LibVLC mLibVLC;
     private KernelEvent mEvent;
-    private org.videolan.libvlc.media.MediaPlayer mVlcPlayer;
+    private org.videolan.libvlc.media.MediaPlayer mPlayer;
+
+    private int mBufferedPercent;
 
     public VideoVlcPlayer(@NonNull KernelEvent event) {
         setReadying(false);
@@ -67,15 +68,11 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
-        //        ArrayList args = new ArrayList<>();//VLC参数
-//        args.add("--rtsp-tcp");//强制rtsp-tcp，加快加载视频速度
-//        args.add("--aout=opensles");
-//        args.add("--audio-time-stretch");
-//        args.add("-vvv");
-//        mLibVLC = new LibVLC(context);
-        mVlcPlayer = new org.videolan.libvlc.media.MediaPlayer(context);
-        mVlcPlayer.setLooping(false);
-        setVolume(1F, 1F);
+        releaseDecoder();
+        mPlayer = new org.videolan.libvlc.media.MediaPlayer(context);
+//        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mPlayer.setLooping(false);
+//        setVolume(1F, 1F);
         initListener();
     }
 
@@ -86,14 +83,55 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
         if (null != mEvent) {
             mEvent = null;
         }
-        if (null != mVlcPlayer) {
-            mVlcPlayer.getVLC().setEventListener(null);
-            mVlcPlayer.setSurface(null);
+        if (null != mPlayer) {
+            mPlayer.setOnErrorListener(null);
+            mPlayer.setOnCompletionListener(null);
+            mPlayer.setOnInfoListener(null);
+            mPlayer.setOnBufferingUpdateListener(null);
+            mPlayer.setOnPreparedListener(null);
+            mPlayer.setOnVideoSizeChangedListener(null);
+            mPlayer.setLooping(false);
+            mPlayer.setSurface(null);
         }
         stop();
-        if (null != mVlcPlayer) {
-            mVlcPlayer.release();
-            mVlcPlayer = null;
+        if (null != mPlayer) {
+            mPlayer.release();
+            mPlayer = null;
+        }
+
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                try {
+//                    mPlayer.release();
+//                } catch (Exception e) {
+//                    MediaLogUtil.log(e.getMessage(), e);
+//                }
+//            }
+//        }.start();
+    }
+
+    @Override
+    public void init(@NonNull Context context, @NonNull String url) {
+        // loading-start
+        mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+
+        // 设置dataSource
+        if (url == null || url.length() == 0) {
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
+            return;
+        }
+        try {
+            Uri uri = Uri.parse(url);
+            mPlayer.setDataSource(context, uri, null);
+        } catch (Exception e) {
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+        }
+        try {
+            mPlayer.prepareAsync();
+        } catch (IllegalStateException e) {
+            MPLogUtil.log(e.getMessage(), e);
         }
     }
 
@@ -101,42 +139,13 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
      * MediaPlayer视频播放器监听listener
      */
     private void initListener() {
-//        mVlcPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        mVlcPlayer.setOnErrorListener(onErrorListener);
-//        mVlcPlayer.setOnCompletionListener(onCompletionListener);
-//        mVlcPlayer.setOnInfoListener(onInfoListener);
-//        mVlcPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-//        mVlcPlayer.setOnPreparedListener(onPreparedListener);
-//        mVlcPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
-        mVlcPlayer.getVLC().setEventListener(new MediaPlayer.EventListener() {
-            @Override
-            public void onEvent(MediaPlayer.Event event) {
-                MPLogUtil.log("K_VLC => event = " + event.type);
-                // 首帧画面
-                if (event.type == MediaPlayer.Event.Vout) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_START);
-
-                    long seek = getSeek();
-                    if (seek > 0) {
-                        seekTo(seek, false);
-                    }
-                }
-                // 解析开始
-                else if (event.type == MediaPlayer.Event.MediaChanged) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
-                }
-                // 播放完成
-                else if (event.type == MediaPlayer.Event.EndReached) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_END);
-                }
-                // 错误
-                else if (event.type == MediaPlayer.Event.Stopped) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
-                }
-            }
-        });
+        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mPlayer.setOnErrorListener(onErrorListener);
+        mPlayer.setOnCompletionListener(onCompletionListener);
+        mPlayer.setOnInfoListener(onInfoListener);
+        mPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+        mPlayer.setOnPreparedListener(onPreparedListener);
+        mPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
     }
 
     /**
@@ -145,7 +154,7 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
     @Override
     public void setDataSource(AssetFileDescriptor fd) {
         try {
-            mVlcPlayer.setDataSource(fd.getFileDescriptor());
+            mPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -157,7 +166,7 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
     @Override
     public void start() {
         try {
-            mVlcPlayer.start();
+            mPlayer.start();
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -169,7 +178,7 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
     @Override
     public void pause() {
         try {
-            mVlcPlayer.pause();
+            mPlayer.pause();
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -181,8 +190,8 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
     @Override
     public void stop() {
         try {
-            mVlcPlayer.pause();
-            mVlcPlayer.stop();
+            mPlayer.pause();
+            mPlayer.stop();
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -193,21 +202,17 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public boolean isPlaying() {
-        try {
-            return mVlcPlayer.isPlaying();
-        } catch (Exception e) {
-            return false;
-        }
+        return mPlayer.isPlaying();
     }
 
     /**
      * 调整进度
      */
     @Override
-    public void seekTo(long seek, @NonNull boolean seekHelp) {
+    public void seekTo(long time, @NonNull boolean seekHelp) {
         setReadying(false);
         try {
-            mVlcPlayer.seekTo(seek);
+            mPlayer.seekTo((int) time);
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -218,7 +223,7 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public long getPosition() {
-        return mVlcPlayer.getCurrentPosition();
+        return mPlayer.getCurrentPosition();
     }
 
     /**
@@ -226,7 +231,7 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public long getDuration() {
-        return mVlcPlayer.getDuration();
+        return mPlayer.getDuration();
     }
 
     /**
@@ -236,57 +241,19 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
      */
     @Override
     public int getBufferedPercentage() {
-//        return mBufferedPercent;
-        return 0;
-    }
-
-    @Override
-    public void init(@NonNull Context context, @NonNull String url) {
-
-        // 设置dataSource
-        if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
-            return;
-        }
-        try {
-            mVlcPlayer.setDataSource(url);//
-
-        } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
-        }
-        try {
-            start();
-        } catch (IllegalStateException e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
+        return mBufferedPercent;
     }
 
     @Override
     public void setSurface(@NonNull Surface surface) {
-        if (null != surface && null != mVlcPlayer) {
+        if (null != surface && null != mPlayer) {
             try {
-                mVlcPlayer.setSurface(surface);
+                mPlayer.setSurface(surface);
             } catch (Exception e) {
                 MPLogUtil.log(e.getMessage(), e);
             }
         }
     }
-
-//    @Override
-//    public void setReal(@NonNull Surface surface, @NonNull SurfaceHolder holder) {
-//
-//        // 设置渲染视频的View,主要用于SurfaceView
-//        if (null != holder && null != mVlcPlayer) {
-//            try {
-//                mVlcPlayer.setDisplay(holder);
-//            } catch (Exception e) {
-//                MediaLogUtil.log(e.getMessage(), e);
-//            }
-//        }
-//
-//
-//    }
 
     /**
      * 获取播放速度
@@ -298,7 +265,7 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
         // only support above Android M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                return mVlcPlayer.getSpeed();
+                return mPlayer.getSpeed();
             } catch (Exception e) {
                 MPLogUtil.log(e.getMessage(), e);
             }
@@ -316,12 +283,102 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
         // only support above Android M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                mVlcPlayer.setSpeed(speed);
+                mPlayer.setSpeed(speed);
             } catch (Exception e) {
                 MPLogUtil.log(e.getMessage(), e);
             }
         }
     }
+
+    private org.videolan.libvlc.media.MediaPlayer.OnErrorListener onErrorListener = new org.videolan.libvlc.media.MediaPlayer.OnErrorListener() {
+        @Override
+        public boolean onError(org.videolan.libvlc.media.MediaPlayer mp, int what, int extra) {
+            MPLogUtil.log("VideoVlcPlayer => onError => what = " + what);
+            // ignore -38
+            if (what == -38) {
+
+            }
+            // ignore 1
+            else if (what == 1) {
+//                resetKernel();
+                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+            }
+            // next
+            else {
+//                resetKernel();
+                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            }
+            return false;
+        }
+
+    };
+
+    private org.videolan.libvlc.media.MediaPlayer.OnCompletionListener onCompletionListener = new org.videolan.libvlc.media.MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(org.videolan.libvlc.media.MediaPlayer mp) {
+            MPLogUtil.log("VideoVlcPlayer => onCompletion =>");
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
+        }
+    };
+
+    private org.videolan.libvlc.media.MediaPlayer.OnInfoListener onInfoListener = new org.videolan.libvlc.media.MediaPlayer.OnInfoListener() {
+        @Override
+        public boolean onInfo(org.videolan.libvlc.media.MediaPlayer mp, int what, int extra) {
+            MPLogUtil.log("VideoVlcPlayer => onInfo => what = "+what);
+            //解决MEDIA_INFO_VIDEO_RENDERING_START多次回调问题
+//            MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START
+            if (what == PlayerType.EventType.EVENT_VIDEO_START) {
+//                if (mIsPreparing) {
+//                    mIsPreparing = false;
+//                }
+            } else {
+                mEvent.onEvent(PlayerType.KernelType.ANDROID, what);
+            }
+            return true;
+        }
+    };
+
+    private org.videolan.libvlc.media.MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new org.videolan.libvlc.media.MediaPlayer.OnBufferingUpdateListener() {
+        @Override
+        public void onBufferingUpdate(org.videolan.libvlc.media.MediaPlayer mp, int percent) {
+            MPLogUtil.log("VideoVlcPlayer => onBufferingUpdate => percent = "+percent);
+            mBufferedPercent = percent;
+        }
+    };
+
+
+    private org.videolan.libvlc.media.MediaPlayer.OnPreparedListener onPreparedListener = new org.videolan.libvlc.media.MediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(org.videolan.libvlc.media.MediaPlayer mp) {
+            MPLogUtil.log("VideoVlcPlayer => onPrepared =>");
+
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+//            int position = mp.getCurrentPosition();
+//            long duration = getDuration();
+//            getVideoPlayerChangeListener().onPrepared(mSeek, duration);
+
+            start();
+            long seek = getSeek();
+            if (seek > 0) {
+                seekTo(seek, false);
+            }
+
+            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+        }
+    };
+
+    private org.videolan.libvlc.media.MediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new org.videolan.libvlc.media.MediaPlayer.OnVideoSizeChangedListener() {
+        @Override
+        public void onVideoSizeChanged(org.videolan.libvlc.media.MediaPlayer mp, int width, int height) {
+            MPLogUtil.log("VideoVlcPlayer => onVideoSizeChanged => width = "+width+", height = "+height);
+            int videoWidth = mp.getVideoWidth();
+            int videoHeight = mp.getVideoHeight();
+            if (videoWidth != 0 && videoHeight != 0) {
+                onChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, -1);
+            }
+        }
+    };
 
     /****************/
 
@@ -330,13 +387,13 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
         try {
             boolean videoMute = isMute();
             if (videoMute) {
-                mVlcPlayer.getVLC().setVolume(0);
+                mPlayer.setVolume(0F, 0F);
             } else {
                 float value = Math.max(v1, v2);
                 if (value > 1f) {
                     value = 1f;
                 }
-                mVlcPlayer.getVLC().setVolume((int) value);
+                mPlayer.setVolume(value, value);
             }
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
@@ -350,7 +407,17 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void setisExternalMusicPlayWhenReady(boolean v) {
-        mExternalMusicPlayWhenReady = v;
+        this.mExternalMusicPlayWhenReady = v;
+    }
+
+    @Override
+    public boolean isExternalMusicLooping() {
+        return mExternalMusicLoop;
+    }
+
+    @Override
+    public void setExternalMusicLooping(boolean v) {
+        mExternalMusicLoop = v;
     }
 
     @Override
@@ -460,15 +527,6 @@ public final class VideoVlcPlayer implements KernelApi, KernelEvent {
     }
 
     /****************/
-    @Override
-    public boolean isExternalMusicLooping() {
-        return mExternalMusicLoop;
-    }
-
-    @Override
-    public void setExternalMusicLooping(boolean loop) {
-        this.mExternalMusicLoop = loop;
-    }
 
     @Override
     public boolean isExternalMusicEqualLength() {

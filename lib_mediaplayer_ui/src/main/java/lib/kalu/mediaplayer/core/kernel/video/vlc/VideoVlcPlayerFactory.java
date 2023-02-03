@@ -14,10 +14,6 @@ public class VideoVlcPlayerFactory implements KernelFactory<VideoVlcPlayer> {
     private VideoVlcPlayerFactory() {
     }
 
-//    private static class Holder {
-//        static final AndroidMediaPlayer mP = new AndroidMediaPlayer();
-//    }
-
     public static VideoVlcPlayerFactory build() {
         return new VideoVlcPlayerFactory();
     }

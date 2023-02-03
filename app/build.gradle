@@ -39,21 +39,29 @@ android {
         buildTypes {
             release {
                 signingConfig signingConfigs.config
-                minifyEnabled true
-                zipAlignEnabled true
-                shrinkResources true
-                multiDexEnabled true
-//                consumerProguardFiles 'proguard.txt'
-                proguardFiles getDefaultProguardFile('proguard-android.txt')
+                minifyEnabled false
+                zipAlignEnabled false
+                shrinkResources false
+                multiDexEnabled false
+//                minifyEnabled true
+//                zipAlignEnabled true
+//                shrinkResources true
+//                multiDexEnabled true
+////                consumerProguardFiles 'proguard.txt'
+//                proguardFiles getDefaultProguardFile('proguard-android.txt')
             }
             debug {
                 signingConfig signingConfigs.config
-                minifyEnabled true
-                zipAlignEnabled true
-                shrinkResources true
-                multiDexEnabled true
-//                consumerProguardFiles 'proguard.txt'
-                proguardFiles getDefaultProguardFile('proguard-android.txt')
+                minifyEnabled false
+                zipAlignEnabled false
+                shrinkResources false
+                multiDexEnabled false
+//                minifyEnabled true
+//                zipAlignEnabled true
+//                shrinkResources true
+//                multiDexEnabled true
+////                consumerProguardFiles 'proguard.txt'
+//                proguardFiles getDefaultProguardFile('proguard-android.txt')
             }
         }
     }
@@ -79,8 +87,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    api files('libs/lib_mediaplayer_ui_release_20230202.aar')
-    api files('libs/lib_mediaplayer_vlc_r3.4.9_release_20221221.aar')
+    api files('libs/lib_mediaplayer_ui_release_20230203.aar')
+    api files('libs/lib_mediaplayer_vlc_r3.5.1_release_20230203.aar')
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.0_release_20230202.aar')
     api files('libs/lib_mediaplayer_exo_r2.18.2_ff4.4_audio_release_20230202.aar')
 //    api project(path: ':lib_mediaplayer_ui')
