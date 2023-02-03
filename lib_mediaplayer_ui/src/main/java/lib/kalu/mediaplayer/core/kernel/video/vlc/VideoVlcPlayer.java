@@ -121,7 +121,6 @@ public final class VideoVlcPlayer implements KernelApi {
 
         if (null != mPlayer) {
             mPlayer.setDataSource(Uri.parse(url));
-            mPlayer.prepare();
             mPlayer.play();
         } else {
             if (null != mEvent) {
@@ -246,7 +245,7 @@ public final class VideoVlcPlayer implements KernelApi {
     @Override
     public long getPosition() {
         if (null != mPlayer) {
-            return (long) mPlayer.getPosition();
+            return mPlayer.getPosition();
         } else {
             return 0L;
         }
@@ -258,7 +257,7 @@ public final class VideoVlcPlayer implements KernelApi {
     @Override
     public long getDuration() {
         if (null != mPlayer) {
-            return mPlayer.getLength();
+            return mPlayer.getDuration();
         } else {
             return 0L;
         }
@@ -280,7 +279,7 @@ public final class VideoVlcPlayer implements KernelApi {
     @Override
     public float getSpeed() {
         if (null != mPlayer) {
-            return mPlayer.getRate();
+            return mPlayer.getSpeed();
         } else {
             return 1F;
         }
@@ -294,7 +293,7 @@ public final class VideoVlcPlayer implements KernelApi {
     @Override
     public void setSpeed(float speed) {
         if (null != mPlayer) {
-            mPlayer.setRate(speed);
+            mPlayer.setSpeed(speed);
         }
     }
 
