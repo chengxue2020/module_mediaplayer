@@ -352,11 +352,6 @@ public final class VideoExoPlayer implements KernelApi {
         }
     }
 
-    @Override
-    public void setDataSource(AssetFileDescriptor fd) {
-        //no support
-    }
-
     /**
      * 是否正在播放
      */
@@ -414,13 +409,13 @@ public final class VideoExoPlayer implements KernelApi {
         return duration;
     }
 
-    /**
-     * 获取缓冲百分比
-     */
-    @Override
-    public int getBufferedPercentage() {
-        return mExoPlayer == null ? 0 : mExoPlayer.getBufferedPercentage();
-    }
+//    /**
+//     * 获取缓冲百分比
+//     */
+//    @Override
+//    public int getBufferedPercentage() {
+//        return mExoPlayer == null ? 0 : mExoPlayer.getBufferedPercentage();
+//    }
 
 //    @Override
 //    public void setReal(@NonNull Surface surface, @NonNull SurfaceHolder holder) {

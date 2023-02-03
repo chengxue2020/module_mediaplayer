@@ -40,7 +40,7 @@ public final class VideoAndroidPlayer implements KernelApi {
     private KernelEvent mEvent;
     private MediaPlayer mAndroidPlayer;
 
-    private int mBufferedPercent;
+//    private int mBufferedPercent;
 
     public VideoAndroidPlayer(@NonNull KernelEvent event) {
         setReadying(false);
@@ -143,22 +143,22 @@ public final class VideoAndroidPlayer implements KernelApi {
         mAndroidPlayer.setOnErrorListener(onErrorListener);
         mAndroidPlayer.setOnCompletionListener(onCompletionListener);
         mAndroidPlayer.setOnInfoListener(onInfoListener);
-        mAndroidPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+//        mAndroidPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
         mAndroidPlayer.setOnPreparedListener(onPreparedListener);
         mAndroidPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
     }
 
-    /**
-     * 用于播放raw和asset里面的视频文件
-     */
-    @Override
-    public void setDataSource(AssetFileDescriptor fd) {
-        try {
-            mAndroidPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
-    }
+//    /**
+//     * 用于播放raw和asset里面的视频文件
+//     */
+//    @Override
+//    public void setDataSource(AssetFileDescriptor fd) {
+//        try {
+//            mAndroidPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
+//        } catch (Exception e) {
+//            MPLogUtil.log(e.getMessage(), e);
+//        }
+//    }
 
     /**
      * 播放
@@ -238,15 +238,15 @@ public final class VideoAndroidPlayer implements KernelApi {
         return mAndroidPlayer.getDuration();
     }
 
-    /**
-     * 获取缓冲百分比
-     *
-     * @return 获取缓冲百分比
-     */
-    @Override
-    public int getBufferedPercentage() {
-        return mBufferedPercent;
-    }
+//    /**
+//     * 获取缓冲百分比
+//     *
+//     * @return 获取缓冲百分比
+//     */
+//    @Override
+//    public int getBufferedPercentage() {
+//        return mBufferedPercent;
+//    }
 
     @Override
     public void setSurface(@NonNull Surface surface) {
@@ -341,12 +341,12 @@ public final class VideoAndroidPlayer implements KernelApi {
         }
     };
 
-    private MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
-        @Override
-        public void onBufferingUpdate(MediaPlayer mp, int percent) {
-            mBufferedPercent = percent;
-        }
-    };
+//    private MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
+//        @Override
+//        public void onBufferingUpdate(MediaPlayer mp, int percent) {
+//            mBufferedPercent = percent;
+//        }
+//    };
 
 
     private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {

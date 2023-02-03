@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.vlc.util.VlcLogUtil;
 
 public final class MPLogUtil {
 
@@ -20,9 +21,9 @@ public final class MPLogUtil {
         log("setLogger => type = " + type);
         if (type == PlayerType.KernelType.VLC) {
             try {
-                Class<?> clazz = Class.forName("lib.kalu.vlcplayer.util.VlcLogUtil");
+                Class<?> clazz = Class.forName("lib.kalu.vlc.util.VlcLogUtil");
                 if (null != clazz) {
-                    lib.kalu.vlcplayer.util.VlcLogUtil.setLogger(log);
+                    VlcLogUtil.setLogger(log);
                     log("setLogger => vlc succ");
                 } else {
                     log("setLogger => vlc fail");

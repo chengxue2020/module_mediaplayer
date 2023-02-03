@@ -84,15 +84,9 @@ public interface KernelApi extends KernelEvent {
         setLooping(loop);
     }
 
-    void setDataSource(AssetFileDescriptor fd);
-
     void setSurface(@NonNull Surface surface);
 
     void seekTo(@NonNull long position, @NonNull boolean seekHelp);
-
-    int getBufferedPercentage();
-
-//    void setOptions();
 
     void setSpeed(float speed);
 

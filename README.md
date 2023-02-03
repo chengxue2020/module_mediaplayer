@@ -32,6 +32,10 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 #
 #### 更新
 ```
+2023-02-03
+1. 更新：vlc-3.5.1
+```
+```
 2023-01-31
 1. 新增：音频播放器，可选exoplayer、mediaplayer
 ```

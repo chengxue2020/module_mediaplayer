@@ -20,7 +20,7 @@ import tv.danmaku.ijk.media.player.IjkTimedText;
 @Keep
 public final class VideoIjkPlayer implements KernelApi, KernelEvent {
 
-    private int mBufferedPercent;
+//    private int mBufferedPercent;
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -265,7 +265,7 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
         // 设置视频信息监听器
         mIjkPlayer.setOnInfoListener(onInfoListener);
         // 设置视频缓冲更新监听事件
-        mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+//        mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
         // 设置准备视频播放监听事件
         mIjkPlayer.setOnPreparedListener(onPreparedListener);
         // 设置视频大小更改监听器
@@ -282,17 +282,17 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
         });
     }
 
-    /**
-     * 用于播放raw和asset里面的视频文件
-     */
-    @Override
-    public void setDataSource(AssetFileDescriptor fd) {
-        try {
-            mIjkPlayer.setDataSource(new IMediaDataSourceForRaw(fd));
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-        }
-    }
+//    /**
+//     * 用于播放raw和asset里面的视频文件
+//     */
+//    @Override
+//    public void setDataSource(AssetFileDescriptor fd) {
+//        try {
+//            mIjkPlayer.setDataSource(new IMediaDataSourceForRaw(fd));
+//        } catch (Exception e) {
+//            MPLogUtil.log(e.getMessage(), e);
+//        }
+//    }
 
     /**
      * 暂停
@@ -386,13 +386,13 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
         }
     }
 
-    /**
-     * 获取缓冲百分比
-     */
-    @Override
-    public int getBufferedPercentage() {
-        return mBufferedPercent;
-    }
+//    /**
+//     * 获取缓冲百分比
+//     */
+//    @Override
+//    public int getBufferedPercentage() {
+//        return mBufferedPercent;
+//    }
 
     @Override
     public void setSurface(@NonNull Surface surface) {
@@ -625,16 +625,16 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
         }
     };
 
-    /**
-     * 设置视频缓冲更新监听事件
-     */
-    private IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
-        @Override
-        public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
-            MPLogUtil.log("IjkMediaPlayer => onBufferingUpdate => percent = " + percent);
-            mBufferedPercent = percent;
-        }
-    };
+//    /**
+//     * 设置视频缓冲更新监听事件
+//     */
+//    private IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
+//        @Override
+//        public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
+//            MPLogUtil.log("IjkMediaPlayer => onBufferingUpdate => percent = " + percent);
+//            mBufferedPercent = percent;
+//        }
+//    };
 
 
     /**

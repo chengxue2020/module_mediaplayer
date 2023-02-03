@@ -326,15 +326,6 @@ public interface PlayerApiKernel extends
         }
     }
 
-    default int getBufferedPercentage() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.getBufferedPercentage();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
     default void seekTo(@NonNull boolean force) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setMax(getMax());
