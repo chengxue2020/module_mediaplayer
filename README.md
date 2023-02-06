@@ -11,6 +11,12 @@ https://github.com/kalu-github/exoplayer2-ff4.4.3
 ```
 
 #
+#### libvlcplayer-ffmpeg.so编译源码
+```
+https://github.com/kalu-github/
+```
+
+#
 ####  exoplayer-extensions
 ```
 - [x] av1 => 视频格式
