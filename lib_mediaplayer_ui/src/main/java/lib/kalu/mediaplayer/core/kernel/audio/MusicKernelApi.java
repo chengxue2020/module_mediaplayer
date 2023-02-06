@@ -35,6 +35,10 @@ public interface MusicKernelApi {
 
     boolean isPlaying();
 
+    boolean isEnable();
+
+    void setEnable(boolean v);
+
     void seekTo(long v);
 
     long getDuration();

@@ -84,7 +84,7 @@ public interface KernelApi extends KernelEvent {
         setLooping(loop);
     }
 
-    void setSurface(@NonNull Surface surface);
+    void setSurface(@NonNull Surface surface, int w, int h);
 
     void seekTo(@NonNull long position, @NonNull boolean seekHelp);
 
@@ -164,17 +164,16 @@ public interface KernelApi extends KernelEvent {
 
     String getExternalMusicPath();
 
-    default void stopExternalMusic() {
-        MPLogUtil.log("KernelApi => stopExternalMusic[销毁额外音频-每次都销毁音频播放器] =>");
+    default void stopExternalMusic(boolean release) {
+        MPLogUtil.log("KernelApi => stopExternalMusic[销毁额外音频-每次都销毁音频播放器] => release = " + release);
 
         // 1 视频
-        boolean muteVideo = isMute(); //视频强制静音
-        MPLogUtil.log("KernelApi => stopExternalMusic[销毁额外音频-每次都销毁音频播放器] => muteVideo = " + muteVideo);
-        setVolume(muteVideo ? 0F : 1f, muteVideo ? 0F : 1f);
+        setMute(false);
+        setVolume(1F, 1F);
 
         // 2 音频
         MPLogUtil.log("KernelApi => stopExternalMusic[销毁额外音频-每次都销毁音频播放器] => release");
-        MusicPlayerManager.release();
+        MusicPlayerManager.release(release);
     }
 
     default void startExternalMusic(Context context, boolean musicLooping, boolean musicEqual) {
@@ -190,6 +189,7 @@ public interface KernelApi extends KernelEvent {
         MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => musicEqual = " + musicEqual + ", musicLooping = " + musicLooping);
 
         // 1 视频
+        setMute(true);
         setVolume(0F, 0F);
         pause();
 
@@ -226,18 +226,6 @@ public interface KernelApi extends KernelEvent {
         MusicPlayerManager.start(context, position, musicUrl, l);
     }
 
-    default void releaseExternalMusic() {
-        releaseExternalMusic(true);
-    }
-
-    default void releaseExternalMusic(boolean clear) {
-        if (clear) {
-            setExternalMusicPath(null);
-            setExternalMusicLooping(false);
-        }
-        MusicPlayerManager.release();
-    }
-
     default void pauseExternalMusic() {
         MusicPlayerManager.pause();
     }
@@ -252,6 +240,10 @@ public interface KernelApi extends KernelEvent {
 
     default boolean isExternalMusicPlaying() {
         return MusicPlayerManager.isPlaying();
+    }
+
+    default boolean isExternalMusicEnable() {
+        return MusicPlayerManager.isEnable();
     }
 
     default boolean isExternalMusicNull() {

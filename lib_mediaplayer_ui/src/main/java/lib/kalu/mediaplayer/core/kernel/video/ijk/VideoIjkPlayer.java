@@ -83,7 +83,7 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void releaseDecoder() {
-        releaseExternalMusic();
+        stopExternalMusic(true);
         setReadying(false);
         if (null != mEvent) {
             mEvent = null;
@@ -395,7 +395,7 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
 //    }
 
     @Override
-    public void setSurface(@NonNull Surface surface) {
+    public void setSurface(@NonNull Surface surface, int w, int h) {
         if (null != surface && null != mIjkPlayer) {
             try {
                 mIjkPlayer.setSurface(surface);

@@ -67,7 +67,9 @@ public class RenderTextureView extends TextureView implements RenderApi {
                     mSurfaceTexture = surfaceTexture;
                     mSurface = new Surface(surfaceTexture);
                     if (mKernel != null) {
-                        mKernel.setSurface(mSurface);
+                        int w = getWidth();
+                        int h = getHeight();
+                        mKernel.setSurface(mSurface, w, h);
                     }
                 }
             }

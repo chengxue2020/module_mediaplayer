@@ -13,4 +13,6 @@ public interface OnVlcInfoChangeListener {
     void onEnd();
 
     void onError();
+
+//    void onNewVideoLayout();
 }

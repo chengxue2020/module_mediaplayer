@@ -556,10 +556,10 @@ public interface PlayerApiKernel extends
 
     /***************************/
 
-    default void stopExternalMusic() {
+    default void stopExternalMusic(boolean release) {
         try {
             KernelApi kernel = getKernel();
-            kernel.stopExternalMusic();
+            kernel.stopExternalMusic(release);
         } catch (Exception e) {
         }
     }
@@ -641,6 +641,15 @@ public interface PlayerApiKernel extends
         }
     }
 
+    default boolean isExternalMusicEnable() {
+        try {
+            KernelApi kernel = getKernel();
+            return kernel.isExternalMusicEnable();
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
     default boolean isExternalMusicNull() {
         try {
             KernelApi kernel = getKernel();
@@ -672,6 +681,11 @@ public interface PlayerApiKernel extends
             if (null == musicPath || musicPath.length() <= 0)
                 return;
 
+            boolean musicEnable = isExternalMusicEnable();
+            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEnable = " + musicEnable);
+            if (!musicEnable)
+                return;
+
             boolean musicNull = isExternalMusicNull();
             MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true, musicNull = " + musicNull);
             if (musicNull) {
@@ -699,10 +713,10 @@ public interface PlayerApiKernel extends
                     boolean musicEqual = isExternalMusicEqualLength();
                     startExternalMusic(context, musicLoop, musicEqual);
                 } else {
-                    stopExternalMusic();
+                    stopExternalMusic(true);
                 }
             } else {
-                stopExternalMusic();
+                stopExternalMusic(true);
             }
         }
     }
@@ -857,7 +871,7 @@ public interface PlayerApiKernel extends
                             }
 
                             break;
-                        // 播放结束
+                        // 播放错误
                         case PlayerType.EventType.EVENT_ERROR_URL:
                         case PlayerType.EventType.EVENT_ERROR_RETRY:
                         case PlayerType.EventType.EVENT_ERROR_SOURCE:
@@ -878,6 +892,7 @@ public interface PlayerApiKernel extends
                             } catch (Exception e) {
                             }
                             break;
+                        // 播放结束
                         case PlayerType.EventType.EVENT_VIDEO_END:
 
                             callPlayerState(PlayerType.StateType.STATE_END);
@@ -916,7 +931,6 @@ public interface PlayerApiKernel extends
                             }
 
                             break;
-                        // 播放错误
                     }
                 }
 

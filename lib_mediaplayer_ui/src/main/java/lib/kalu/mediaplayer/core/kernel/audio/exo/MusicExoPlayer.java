@@ -27,6 +27,7 @@ import lib.kalu.mediaplayer.core.kernel.audio.MusicKernelApi;
 @Keep
 public final class MusicExoPlayer implements MusicKernelApi {
 
+    private boolean mMusicEnable = true;
     private ExoPlayer mExoPlayer;
     private AnalyticsListener mAnalyticsListener;
     //
@@ -220,6 +221,16 @@ public final class MusicExoPlayer implements MusicKernelApi {
         if (mExoPlayer == null)
             return false;
         return mExoPlayer.isPlaying();
+    }
+
+    @Override
+    public boolean isEnable() {
+        return mMusicEnable;
+    }
+
+    @Override
+    public void setEnable(boolean v) {
+        mMusicEnable = v;
     }
 
     @Override

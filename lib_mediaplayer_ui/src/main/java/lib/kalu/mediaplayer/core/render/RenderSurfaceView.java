@@ -62,7 +62,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                 MPLogUtil.log("RenderSurfaceView => surfaceCreated => " + this);
                 if (mKernel != null) {
                     mSurface = holder.getSurface();
-                    mKernel.setSurface(mSurface);
+                    int width = getWidth();
+                    int height = getHeight();
+                    mKernel.setSurface(mSurface, width, height);
                 }
                 if (null == mHandler) {
                     mHandler = new Handler(Looper.myLooper()) {

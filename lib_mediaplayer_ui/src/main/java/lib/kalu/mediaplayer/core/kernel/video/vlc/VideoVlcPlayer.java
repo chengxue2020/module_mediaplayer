@@ -78,7 +78,7 @@ public final class VideoVlcPlayer implements KernelApi {
 
     @Override
     public void releaseDecoder() {
-        releaseExternalMusic();
+        stopExternalMusic(true);
         setReadying(false);
         if (null != mEvent) {
             mEvent = null;
@@ -90,7 +90,7 @@ public final class VideoVlcPlayer implements KernelApi {
             mPlayerListener = null;
         }
         if (null != mPlayer) {
-            mPlayer.setSurface(null);
+            mPlayer.setSurface(null, 0, 0);
         }
         stop();
         if (null != mPlayer) {
@@ -264,10 +264,10 @@ public final class VideoVlcPlayer implements KernelApi {
     }
 
     @Override
-    public void setSurface(@NonNull Surface sf) {
-        MPLogUtil.log("VideoVlcPlayer => setSurface => sf = " + sf + ", mPlayer = " + mPlayer);
+    public void setSurface(@NonNull Surface sf, int w, int h) {
+        MPLogUtil.log("VideoVlcPlayer => setSurface => sf = " + sf + ", mPlayer = " + mPlayer + ", w = " + w + ", h = " + h);
         if (null != sf && null != mPlayer) {
-            mPlayer.setSurface(sf);
+            mPlayer.setSurface(sf, w, h);
         }
     }
 

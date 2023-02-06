@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
+import org.videolan.libvlc.interfaces.IMedia;
 import org.videolan.libvlc.interfaces.IVLCVout;
 
 import java.io.File;
@@ -81,14 +82,21 @@ public final class VlcPlayer {
             mEventListener = null;
         }
 
-        if (null != mMediaPlayer) {
-            mMediaPlayer.pause();
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-        }
-
         if (null != mLibVLC) {
             mLibVLC.release();
+        }
+
+        if (null != mMediaPlayer) {
+
+            mMediaPlayer.pause();
+            mMediaPlayer.stop();
+
+            IMedia media = mMediaPlayer.getMedia();
+            if (null != media) {
+                media.release();
+            }
+
+            mMediaPlayer.release();
         }
     }
 
@@ -113,18 +121,20 @@ public final class VlcPlayer {
         }
     }
 
-    public void setSurface(Surface surface) {
+    public void setSurface(Surface surface, int w, int h) {
         try {
             mMediaPlayer.getVLCVout().setVideoSurface(surface, null);
-            mMediaPlayer.setVideoTrackEnabled(true);
-            mOnNewVideoLayoutListener = new IVLCVout.OnNewVideoLayoutListener() {
-                @Override
-                public void onNewVideoLayout(IVLCVout vlcVout, int width, int height, int visibleWidth, int visibleHeight, int sarNum, int sarDen) {
-
-                }
-            };
-            mMediaPlayer.getVLCVout().attachViews(mOnNewVideoLayoutListener);
-            VlcLogUtil.log("VlcPlayer => setSurface => surface = " + surface);
+            if (null != surface) {
+                mMediaPlayer.setVideoTrackEnabled(true);
+                mOnNewVideoLayoutListener = new IVLCVout.OnNewVideoLayoutListener() {
+                    @Override
+                    public void onNewVideoLayout(IVLCVout vlcVout, int width, int height, int visibleWidth, int visibleHeight, int sarNum, int sarDen) {
+                        mMediaPlayer.getVLCVout().setWindowSize(w, h);
+                    }
+                };
+                mMediaPlayer.getVLCVout().attachViews(mOnNewVideoLayoutListener);
+            }
+            VlcLogUtil.log("VlcPlayer => setSurface => surface = " + surface + ", w = " + w + ", h = " + h);
         } catch (Exception e) {
             VlcLogUtil.log("VlcPlayer => setSurface => surface = " + surface);
         }

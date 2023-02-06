@@ -63,7 +63,7 @@ public final class MusicPlayerManager {
         if (null != mMusicPlayer) {
             pause();
             stop();
-            release();
+            release(true);
         }
         MPLogUtil.log("MusicPlayerManager => create => step2");
         if (null == mMusicPlayer) {
@@ -74,11 +74,38 @@ public final class MusicPlayerManager {
         }
     }
 
-    public static void release() {
-        if (null != mMusicPlayer) {
+    public static void release(boolean release) {
+        setEnable(false);
+        pause();
+        if (release && null != mMusicPlayer) {
             MPLogUtil.log("MusicPlayerManager => release => mMusicPlayer = " + mMusicPlayer);
             mMusicPlayer.release();
             mMusicPlayer = null;
+        }
+    }
+
+    private static void setEnable(boolean v) {
+        if (null != mMusicPlayer) {
+            MPLogUtil.log("MusicPlayerManager => setEnable => v = " + v + ", mMusicPlayer = " + mMusicPlayer);
+            mMusicPlayer.setEnable(v);
+        }
+    }
+
+    public static boolean isEnable() {
+        if (null != mMusicPlayer) {
+            MPLogUtil.log("MusicPlayerManager => isEnable => mMusicPlayer = " + mMusicPlayer);
+            return mMusicPlayer.isEnable();
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean isNull() {
+        MPLogUtil.log("MusicPlayerManager => isNull => mMusicPlayer = " + mMusicPlayer);
+        if (null != mMusicPlayer) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -93,15 +120,6 @@ public final class MusicPlayerManager {
         if (null != mMusicPlayer && position > 0) {
             MPLogUtil.log("MusicPlayerManager => seekTo => position = " + position + ", mMusicPlayer = " + mMusicPlayer);
             mMusicPlayer.seekTo(position);
-        }
-    }
-
-    public static boolean isNull() {
-        if (null != mMusicPlayer) {
-            MPLogUtil.log("MusicPlayerManager => isNull => mMusicPlayer = " + mMusicPlayer);
-            return false;
-        } else {
-            return true;
         }
     }
 
@@ -125,6 +143,8 @@ public final class MusicPlayerManager {
         // 2
         setDataSource(context, musicUrl);
         // 3
+        setEnable(true);
+        // 4
         start(position, listener);
     }
 }

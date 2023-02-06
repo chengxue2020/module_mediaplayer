@@ -78,7 +78,7 @@ public final class VideoAndroidPlayer implements KernelApi {
 
     @Override
     public void releaseDecoder() {
-        releaseExternalMusic();
+        stopExternalMusic(true);
         setReadying(false);
         if (null != mEvent) {
             mEvent = null;
@@ -249,7 +249,7 @@ public final class VideoAndroidPlayer implements KernelApi {
 //    }
 
     @Override
-    public void setSurface(@NonNull Surface surface) {
+    public void setSurface(@NonNull Surface surface, int w, int h) {
         if (null != surface && null != mAndroidPlayer) {
             try {
                 mAndroidPlayer.setSurface(surface);

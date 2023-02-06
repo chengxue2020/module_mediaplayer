@@ -14,6 +14,7 @@ import lib.kalu.mediaplayer.core.kernel.audio.MusicKernelApi;
 @Keep
 public final class MusicAndroidPlayer implements MusicKernelApi {
 
+    private boolean mMusicEnable = true;
     private android.media.MediaPlayer mAndroidPlayer;
     private MediaPlayer.OnInfoListener mOnInfoListener;
     private MediaPlayer.OnErrorListener mOnErrorListener;
@@ -201,6 +202,16 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
         if (mAndroidPlayer == null)
             return false;
         return mAndroidPlayer.isPlaying();
+    }
+
+    @Override
+    public boolean isEnable() {
+        return mMusicEnable;
+    }
+
+    @Override
+    public void setEnable(boolean v) {
+        mMusicEnable = v;
     }
 
     @Override
