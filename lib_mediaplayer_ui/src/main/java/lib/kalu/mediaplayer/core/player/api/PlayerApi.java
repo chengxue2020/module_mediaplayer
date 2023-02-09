@@ -133,7 +133,7 @@ public interface PlayerApi extends PlayerApiBase,
         Context context = layout.getContext();
         layout.setBackgroundColor(Color.parseColor("#000000"));
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_player, layout, true);
-        layout.setFocusable(false);
+//        layout.setFocusable(false);
         setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
 //        BaseToast.init(context.getApplicationContext());
 

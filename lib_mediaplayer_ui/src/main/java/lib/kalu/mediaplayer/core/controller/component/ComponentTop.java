@@ -47,8 +47,6 @@ public class ComponentTop extends RelativeLayout implements ComponentApi {
 
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_top, this, true);
-        setFocusable(true);
-        setFocusableInTouchMode(true);
         setVisibility(View.INVISIBLE);
 
         // 监听

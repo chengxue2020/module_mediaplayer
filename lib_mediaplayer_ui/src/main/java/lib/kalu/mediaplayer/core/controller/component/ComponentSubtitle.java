@@ -37,8 +37,6 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_subtitle, this, true);
-        setFocusable(false);
-        setFocusableInTouchMode(false);
         setVisibility(View.VISIBLE);
     }
 

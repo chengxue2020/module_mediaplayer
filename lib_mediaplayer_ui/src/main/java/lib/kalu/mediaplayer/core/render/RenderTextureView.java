@@ -50,7 +50,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
 
     @Override
     public void init() {
-        setFocusable(false);
         mSurfaceTextureListener = new SurfaceTextureListener() {
             /**
              * SurfaceTexture准备就绪

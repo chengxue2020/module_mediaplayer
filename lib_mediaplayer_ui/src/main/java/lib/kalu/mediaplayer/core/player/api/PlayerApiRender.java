@@ -72,7 +72,7 @@ public interface PlayerApiRender extends PlayerApiBase {
 
         try {
             // 0
-            layout.setFocusable(true);
+//            layout.setFocusable(true);
             // 1
             View real = layout.getChildAt(0);
             layout.removeAllViews();
@@ -112,7 +112,7 @@ public interface PlayerApiRender extends PlayerApiBase {
 
         try {
             // 0
-            layout.setFocusable(false);
+//            layout.setFocusable(false);
             // 1
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             // 2

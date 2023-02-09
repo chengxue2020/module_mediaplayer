@@ -42,8 +42,6 @@ public class ComponentGesture extends RelativeLayout implements GestureApi {
 
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_gesture, this, true);
-        setFocusable(true);
-        setFocusableInTouchMode(true);
         setVisibility(INVISIBLE);
         initListener();
     }

@@ -46,7 +46,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Override
     public void init() {
         MPLogUtil.log("RenderSurfaceView => init => " + this);
-        setFocusable(false);
 //        mMeasureHelper = new MeasureHelper();
         SurfaceHolder holder = this.getHolder();
         //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);

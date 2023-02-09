@@ -89,10 +89,6 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
 
     @Override
     public void init() {
-        setFocusable(false);
-        setFocusableInTouchMode(false);
-        setClickable(false);
-        setLongClickable(false);
         try {
             LayoutInflater.from(getContext()).inflate(initLayout(), this, true);
         } catch (Exception e) {

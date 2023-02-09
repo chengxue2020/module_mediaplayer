@@ -41,9 +41,6 @@ abstract class ControllerLayoutDispatchKeyEvent extends ControllerLayout {
     @Override
     public void init() {
         super.init();
-        setClickable(true);
-        setFocusable(true);
-        setFocusableInTouchMode(true);
     }
 
     @Override
