@@ -29,31 +29,15 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
 
         // full
         if (isFull) {
-//            // volume_up
-//            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
-//                return false;
-//            }
-//            // volume_down
-//            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
-//                return false;
-//            }
-//            // volume_mute
-//            else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_MUTE) {
-//                return false;
-//            }
-//            // voice_assist
-//            else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOICE_ASSIST) {
-//                return false;
-//            }
             // stopFull
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEvent => stopFull =>");
-                stopFloat();
+                MPLogUtil.log("PlayerApi => dispatchEvent => stopFull =>");
+                stopFull();
                 return true;
             }
             // center
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEvent => toggle =>");
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                MPLogUtil.log("PlayerApi => dispatchEvent => toggle =>");
                 toggle();
                 return true;
             }
@@ -62,7 +46,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         if (isFloat) {
             // stopFloat
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEvent => stopFloat =>");
+                MPLogUtil.log("PlayerApi => dispatchEvent => stopFloat =>");
                 stopFloat();
                 return true;
             }
