@@ -50,56 +50,51 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setVisibility(int visibility) {
-        setFocusable(visibility == View.VISIBLE);
-        super.setVisibility(visibility);
-    }
-
-    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         return dispatchEvent(event) || super.dispatchKeyEvent(event);
     }
 
     private boolean dispatchEvent(@NonNull KeyEvent event) {
 
-        if (getVisibility() != View.VISIBLE)
-            return false;
-
         // seekForward
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            boolean live = false;
             if (null != mControllerWrapper) {
-                boolean live = mControllerWrapper.isLive();
-                MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardDown => live = " + live);
-                mControllerWrapper.seekForwardDown(!live);
-                return true;
+                live = mControllerWrapper.isLive();
             }
+            MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardDown => live = " + live);
+            seekForwardDown(!live);
+            return true;
         }
         // seekForward
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            boolean live = false;
             if (null != mControllerWrapper) {
-                boolean live = mControllerWrapper.isLive();
-                MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardUp => live = " + live);
-                mControllerWrapper.seekForwardUp(!live);
-                return true;
+                live = mControllerWrapper.isLive();
             }
+            MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardUp => live = " + live);
+            seekForwardUp(!live);
+            return true;
         }
         // seekRewind
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            boolean live = false;
             if (null != mControllerWrapper) {
-                boolean live = mControllerWrapper.isLive();
-                MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindDown => live = " + live);
-                mControllerWrapper.seekRewindDown(!live);
-                return true;
+                live = mControllerWrapper.isLive();
             }
+            MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindDown => live = " + live);
+            seekRewindDown(!live);
+            return true;
         }
         // seekRewind
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            boolean live = false;
             if (null != mControllerWrapper) {
-                boolean live = mControllerWrapper.isLive();
-                MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindUp => live = " + live);
-                mControllerWrapper.seekRewindUp(!live);
-                return true;
+                live = mControllerWrapper.isLive();
             }
+            MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindUp => live = " + live);
+            seekRewindUp(!live);
+            return true;
         }
         return false;
     }
@@ -251,7 +246,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onSeekForwardDown(boolean enable) {
+    public void seekForwardDown(boolean enable) {
         if (!enable) return;
         SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
         if (null == seek) return;
@@ -268,7 +263,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onSeekForwardUp(boolean enable) {
+    public void seekForwardUp(boolean enable) {
         if (!enable) return;
         SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
         if (null == seek) return;
@@ -280,7 +275,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onSeekRewindDown(boolean enable) {
+    public void seekRewindDown(boolean enable) {
         if (!enable) return;
         SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
         if (null == seek) return;
@@ -297,7 +292,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onSeekRewindUp(boolean enable) {
+    public void seekRewindUp(boolean enable) {
         if (!enable) return;
         SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
         if (null == seek) return;

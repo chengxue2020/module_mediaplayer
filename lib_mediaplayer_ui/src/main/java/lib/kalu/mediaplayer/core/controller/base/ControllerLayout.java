@@ -314,68 +314,6 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         return mIsLocked;
     }
 
-    /**********************/
-
-
-    @Override
-    public void seekForwardUp(boolean enable) {
-        if (null == mComponents)
-            return;
-        int size = mComponents.size();
-        if (size <= 0)
-            return;
-        for (int i = 0; i < size; i++) {
-            ComponentApi api = mComponents.get(i);
-            if (null == api)
-                continue;
-            api.onSeekForwardUp(enable);
-        }
-    }
-
-    @Override
-    public void seekForwardDown(boolean enable) {
-        if (null == mComponents)
-            return;
-        int size = mComponents.size();
-        if (size <= 0)
-            return;
-        for (int i = 0; i < size; i++) {
-            ComponentApi api = mComponents.get(i);
-            if (null == api)
-                continue;
-            api.onSeekForwardDown(enable);
-        }
-    }
-
-    @Override
-    public void seekRewindDown(boolean enable) {
-        if (null == mComponents)
-            return;
-        int size = mComponents.size();
-        if (size <= 0)
-            return;
-        for (int i = 0; i < size; i++) {
-            ComponentApi api = mComponents.get(i);
-            if (null == api)
-                continue;
-            api.onSeekRewindDown(enable);
-        }
-    }
-
-    @Override
-    public void seekRewindUp(boolean enable) {
-        if (null == mComponents)
-            return;
-        int size = mComponents.size();
-        if (size <= 0)
-            return;
-        for (int i = 0; i < size; i++) {
-            ComponentApi api = mComponents.get(i);
-            if (null == api)
-                continue;
-            api.onSeekRewindUp(enable);
-        }
-    }
 
     @Override
     public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {

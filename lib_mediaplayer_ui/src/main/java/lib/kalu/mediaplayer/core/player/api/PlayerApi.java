@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
@@ -58,11 +59,22 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
             // component
             else {
                 try {
-                    getControlLayout().dispatchKeyEvent(event);
+                    ControllerLayout layout = getControlLayout();
+                    if (null != layout) {
+                        int count = layout.getChildCount();
+                        for (int i = 0; i < count; i++) {
+                            View child = layout.getChildAt(i);
+                            if (null == child)
+                                continue;
+                            if (child instanceof ComponentSeek) {
+                                child.dispatchKeyEvent(event);
+                                break;
+                            }
+                        }
+                    }
                 } catch (Exception e) {
                 }
-            }
-            return true;
+            } return true;
         }
         // float
         else if (isFloat) {
@@ -72,8 +84,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
                 stopFloat();
                 return true;
             }
-        }
-        return false;
+        } return false;
     }
 
     default void checkOnWindowVisibilityChanged(int visibility) {

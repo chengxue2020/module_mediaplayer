@@ -70,13 +70,6 @@ public interface ControllerApi {
      */
     int getCutoutHeight();
 
-    void seekForwardDown(boolean enable);
-
-    void seekForwardUp(boolean enable);
-
-    void seekRewindDown(boolean enable);
-
-    void seekRewindUp(boolean enable);
 
     default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
     }

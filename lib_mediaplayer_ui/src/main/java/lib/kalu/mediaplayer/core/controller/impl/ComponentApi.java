@@ -196,16 +196,16 @@ public interface ComponentApi {
 
     /******************/
 
-    default void onSeekForwardDown(boolean enable) {
+    default void seekForwardDown(boolean enable) {
     }
 
-    default void onSeekForwardUp(boolean enable) {
+    default void seekForwardUp(boolean enable) {
     }
 
-    default void onSeekRewindDown(boolean enable) {
+    default void seekRewindDown(boolean enable) {
     }
 
-    default void onSeekRewindUp(boolean enable) {
+    default void seekRewindUp(boolean enable) {
     }
 
     default void onSeekProgressUpdate(@NonNull int position, @NonNull int duration) {
@@ -216,9 +216,6 @@ public interface ComponentApi {
 
     default void onSeekPlaying(@NonNull int position) {
     }
-
-//    default void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
-//    }
 
     default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
     }

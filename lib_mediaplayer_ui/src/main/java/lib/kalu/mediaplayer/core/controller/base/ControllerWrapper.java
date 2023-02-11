@@ -120,28 +120,4 @@ public final class ControllerWrapper {
     public int getCutoutHeight() {
         return 0;
     }
-
-    public void seekForwardUp(boolean enable) {
-        if (null == mController)
-            return;
-        mController.seekForwardUp(enable);
-    }
-
-    public void seekForwardDown(boolean enable) {
-        if (null == mController)
-            return;
-        mController.seekForwardDown(enable);
-    }
-
-    public void seekRewindDown(boolean enable) {
-        if (null == mController)
-            return;
-        mController.seekRewindDown(enable);
-    }
-
-    public void seekRewindUp(boolean enable) {
-        if (null == mController)
-            return;
-        mController.seekRewindUp(enable);
-    }
 }
