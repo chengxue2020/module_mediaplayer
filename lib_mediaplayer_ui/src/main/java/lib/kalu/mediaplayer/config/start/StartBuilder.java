@@ -11,7 +11,7 @@ public final class StartBuilder {
     private boolean loop;
     private boolean mute;
 
-    private boolean windowVisibilityChangedPause; // 不可见, pause
+    private boolean windowVisibilityChangedRelease; // 不可见, release
 
     // 外部背景音
     private String externalMusicUrl;
@@ -38,8 +38,8 @@ public final class StartBuilder {
         return loop;
     }
 
-    public boolean isWindowVisibilityChangedPause() {
-        return windowVisibilityChangedPause;
+    public boolean isWindowVisibilityChangedRelease() {
+        return windowVisibilityChangedRelease;
     }
 
     public String getExternalMusicUrl() {
@@ -60,7 +60,7 @@ public final class StartBuilder {
         this.mute = builder.mute;
         this.live = builder.live;
         this.loop = builder.loop;
-        this.windowVisibilityChangedPause = builder.windowVisibilityChangedPause;
+        this.windowVisibilityChangedRelease = builder.windowVisibilityChangedRelease;
         this.externalMusicUrl = builder.externalMusicUrl;
         this.externalMusicLoop = builder.externalMusicLoop;
         this.externalMusicPlayWhenReady = builder.externalMusicPlayWhenReady;
@@ -74,7 +74,7 @@ public final class StartBuilder {
                 ", live=" + live +
                 ", loop=" + loop +
                 ", mute=" + mute +
-                ", windowVisibilityChangedPause=" + windowVisibilityChangedPause +
+                ", windowVisibilityChangedRelease=" + windowVisibilityChangedRelease +
                 ", externalMusicUrl='" + externalMusicUrl + '\'' +
                 ", externalMusicLoop=" + externalMusicLoop +
                 ", externalMusicPlayWhenReady=" + externalMusicPlayWhenReady +
@@ -88,7 +88,7 @@ public final class StartBuilder {
         builder.mute = mute;
         builder.live = live;
         builder.loop = loop;
-        builder.windowVisibilityChangedPause = windowVisibilityChangedPause;
+        builder.windowVisibilityChangedRelease = windowVisibilityChangedRelease;
         builder.externalMusicUrl = externalMusicUrl;
         builder.externalMusicLoop = externalMusicLoop;
         builder.externalMusicPlayWhenReady = externalMusicPlayWhenReady;
@@ -104,7 +104,7 @@ public final class StartBuilder {
         private boolean loop = false;
         private boolean mute = false;
 
-        private boolean windowVisibilityChangedPause = true; // 不可见, pause
+        private boolean windowVisibilityChangedRelease = false; // 不可见, release
 
         private String externalMusicUrl = null;
         private boolean externalMusicLoop = false;
@@ -154,8 +154,8 @@ public final class StartBuilder {
             return this;
         }
 
-        public Builder setWindowVisibilityChangedPause(boolean v) {
-            this.windowVisibilityChangedPause = v;
+        public Builder setWindowVisibilityChangedRelease(boolean v) {
+            this.windowVisibilityChangedRelease = v;
             return this;
         }
 

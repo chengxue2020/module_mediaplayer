@@ -81,22 +81,22 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", this = " + this);
         if (null == url || url.length() <= 0) return;
 
-        boolean windowVisibilityChangedPause = isWindowVisibilityChangedPause();
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => windowVisibilityChangedPause = " + windowVisibilityChangedPause + ", this = " + this);
+        boolean windowVisibilityChangedRelease = isWindowVisibilityChangedRelease();
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", this = " + this);
         // show
         if (visibility == View.VISIBLE) {
-            if (windowVisibilityChangedPause) {
-                resume(false);
-            } else {
+            if (windowVisibilityChangedRelease) {
                 restart();
+            } else {
+                resume(false);
             }
         }
         // hide
         else {
-            if (windowVisibilityChangedPause) {
-                pause(true);
-            } else {
+            if (windowVisibilityChangedRelease) {
                 release();
+            } else {
+                pause(true);
             }
         }
     }

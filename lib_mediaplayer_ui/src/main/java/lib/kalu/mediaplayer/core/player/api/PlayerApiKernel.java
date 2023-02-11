@@ -95,10 +95,10 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
 
     default void updateIdRes(@NonNull StartBuilder bundle, @NonNull String playUrl) {
         try {
-            boolean windowVisibilityChangedPause = bundle.isWindowVisibilityChangedPause();
-            MPLogUtil.log("PlayerApiKernel => updateIdRes => windowVisibilityChangedPause = " + windowVisibilityChangedPause + ", playUrl = " + playUrl);
+            boolean windowVisibilityChangedRelease = bundle.isWindowVisibilityChangedRelease();
+            MPLogUtil.log("PlayerApiKernel => updateIdRes => windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", playUrl = " + playUrl);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_pause, windowVisibilityChangedPause);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, windowVisibilityChangedRelease);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => updateIdRes => " + e.getMessage(), e);
         }
@@ -116,7 +116,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
             builder.setLoop(isLooping());
             builder.setLive(isLive());
             builder.setMute(isMute());
-            builder.setWindowVisibilityChangedPause(isWindowVisibilityChangedPause());
+            builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
             return builder.build();
         } catch (Exception e) {
             return null;
@@ -278,9 +278,9 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
         }
     }
 
-    default boolean isWindowVisibilityChangedPause() {
+    default boolean isWindowVisibilityChangedRelease() {
         try {
-            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_window_visibility_changed_pause);
+            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release);
         } catch (Exception e) {
             return false;
         }
@@ -319,7 +319,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
         builder.setLoop(isLooping());
         builder.setLive(isLive());
         builder.setMute(isMute());
-        builder.setWindowVisibilityChangedPause(isWindowVisibilityChangedPause());
+        builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
         StartBuilder build = builder.build();
         seekTo(force, build);
     }
@@ -342,7 +342,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
         builder.setSeek(seek);
         builder.setLoop(loop);
         builder.setLive(isLive());
-        builder.setWindowVisibilityChangedPause(isWindowVisibilityChangedPause());
+        builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
         StartBuilder build = builder.build();
         seekTo(force, build);
     }
