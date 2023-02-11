@@ -81,17 +81,12 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", this = " + this);
         if (null == url || url.length() <= 0) return;
 
-        boolean playing = isPlaying();
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => playing = " + playing + ", this = " + this);
-
         boolean windowVisibilityChangedPause = isWindowVisibilityChangedPause();
         MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => windowVisibilityChangedPause = " + windowVisibilityChangedPause + ", this = " + this);
         // show
         if (visibility == View.VISIBLE) {
             if (windowVisibilityChangedPause) {
-                if (!playing) {
-                    resume(false);
-                }
+                resume(false);
             } else {
                 restart();
             }
@@ -99,9 +94,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         // hide
         else {
             if (windowVisibilityChangedPause) {
-                if (playing) {
-                    pause(true);
-                }
+                pause(true);
             } else {
                 release();
             }
