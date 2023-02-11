@@ -104,7 +104,7 @@ public final class StartBuilder {
         private boolean loop = false;
         private boolean mute = false;
 
-        private boolean windowVisibilityChangedPause = false; // 不可见, pause
+        private boolean windowVisibilityChangedPause = true; // 不可见, pause
 
         private String externalMusicUrl = null;
         private boolean externalMusicLoop = false;

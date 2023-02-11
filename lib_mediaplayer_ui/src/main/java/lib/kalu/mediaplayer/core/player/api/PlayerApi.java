@@ -89,7 +89,9 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         // show
         if (visibility == View.VISIBLE) {
             if (windowVisibilityChangedPause) {
-                resume(false);
+                if (!playing) {
+                    resume(false);
+                }
             } else {
                 restart();
             }
@@ -97,7 +99,9 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         // hide
         else {
             if (windowVisibilityChangedPause) {
-                pause(true);
+                if (playing) {
+                    pause(true);
+                }
             } else {
                 release();
             }
