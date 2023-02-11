@@ -55,21 +55,18 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        return dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+        return dispatchEvent(event) || super.dispatchKeyEvent(event);
     }
-
     @Override
     protected void onDetachedFromWindow() {
         checkOnDetachedFromWindow();
         super.onDetachedFromWindow();
     }
-
     @Override
     protected void onAttachedToWindow() {
         checkOnAttachedToWindow();
         super.onAttachedToWindow();
     }
-
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         checkOnWindowVisibilityChanged(visibility);
@@ -89,6 +86,7 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void setRender(@NonNull RenderApi render) {
+        MPLogUtil.log("VideoLayout => setRender => render = " + render);
         mRender = render;
     }
 
@@ -99,13 +97,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void setKernel(@NonNull KernelApi kernel) {
-        MPLogUtil.log("PlayerApiKernel => setKernel => kernel = " + kernel);
+        MPLogUtil.log("VideoLayout => setKernel => kernel = " + kernel);
         mKernel = kernel;
-    }
-
-    @Override
-    public void start(@NonNull StartBuilder builder, @NonNull String url) {
-        PlayerApi.super.start(builder, url);
     }
 
     @Override
@@ -115,8 +108,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     public void checkReal() {
-        int visibility = getWindowVisibility();
-        if (visibility == View.VISIBLE) return;
+        if (getVisibility() == View.VISIBLE)
+            return;
         pause();
     }
 

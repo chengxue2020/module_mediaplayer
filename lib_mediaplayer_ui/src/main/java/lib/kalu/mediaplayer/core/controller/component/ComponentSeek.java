@@ -62,7 +62,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     private boolean dispatchEvent(@NonNull KeyEvent event) {
 
-        if (getVisibility() == View.VISIBLE)
+        if (getVisibility() != View.VISIBLE)
             return false;
 
         // seekForward

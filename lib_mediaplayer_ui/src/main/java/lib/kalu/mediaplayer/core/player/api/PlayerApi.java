@@ -21,6 +21,55 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  */
 public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender {
 
+    default boolean dispatchEvent(@NonNull KeyEvent event) {
+
+        boolean isFull = isFull();
+        boolean isFloat = isFloat();
+        MPLogUtil.log("PlayerApi => dispatchEvent => isFloat = " + isFloat + ", isFull = " + isFull);
+
+        // full
+        if (isFull) {
+//            // volume_up
+//            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
+//                return false;
+//            }
+//            // volume_down
+//            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
+//                return false;
+//            }
+//            // volume_mute
+//            else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_MUTE) {
+//                return false;
+//            }
+//            // voice_assist
+//            else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOICE_ASSIST) {
+//                return false;
+//            }
+            // stopFull
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                MPLogUtil.log("PlayerApi => dispatchKeyEvent => stopFull =>");
+                stopFloat();
+                return true;
+            }
+            // center
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                MPLogUtil.log("PlayerApi => dispatchKeyEvent => toggle =>");
+                toggle();
+                return true;
+            }
+        }
+        // float
+        if (isFloat) {
+            // stopFloat
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                MPLogUtil.log("PlayerApi => dispatchKeyEvent => stopFloat =>");
+                stopFloat();
+                return true;
+            }
+        }
+        return false;
+    }
+
     default void checkOnWindowVisibilityChanged(int visibility) {
 
         boolean hideStop = isHideStop();
@@ -95,48 +144,6 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         } else {
             resume(false);
         }
-    }
-
-    default boolean dispatchKeyEvent(@NonNull KeyEvent event) {
-
-        boolean isFull = isFull();
-        boolean isFloat = isFloat();
-
-        // float
-        if (isFloat) {
-            // stopFloat
-            if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MPLogUtil.log("dispatchKeyEvent => stopFloat =>");
-                stopFloat();
-                return true;
-            }
-        }
-        // full
-        else if (isFull) {
-            // center
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                MPLogUtil.log("dispatchKeyEvent => toggle =>");
-                toggle();
-                return true;
-            }
-            // VOLUME_UP
-            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
-                return false;
-            }
-            // VOLUME_DOWN
-            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
-                return false;
-            }
-            // VOLUME_MUTE
-            else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_MUTE) {
-                return false;
-            }
-            // VOICE_ASSIST
-            else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOICE_ASSIST) {
-                return false;
-            }
-        }
-        return false;
     }
 
     default void onSaveBundle() {
