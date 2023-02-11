@@ -105,9 +105,8 @@ public interface PlayerApiKernel extends
             builder.setLoop(isLooping());
             builder.setLive(isLive());
             builder.setMute(isMute());
-            builder.setInvisibleStop(isInvisibleStop());
-            builder.setInvisibleIgnore(isInvisibleIgnore());
-            builder.setInvisibleRelease(isInvisibleRelease());
+            builder.setHideStop(isHideStop());
+            builder.setHideRelease(isHideRelease());
             return builder.build();
         } catch (Exception e) {
             return null;
@@ -272,28 +271,19 @@ public interface PlayerApiKernel extends
         }
     }
 
-    default boolean isInvisibleStop() {
+    default boolean isHideStop() {
         try {
             KernelApi kernel = getKernel();
-            return kernel.isInvisibleStop();
+            return kernel.isHideStop();
         } catch (Exception e) {
             return false;
         }
     }
 
-    default boolean isInvisibleIgnore() {
+    default boolean isHideRelease() {
         try {
             KernelApi kernel = getKernel();
-            return kernel.isInvisibleIgnore();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    default boolean isInvisibleRelease() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.isInvisibleRelease();
+            return kernel.isHideRelease();
         } catch (Exception e) {
             return false;
         }
@@ -333,9 +323,8 @@ public interface PlayerApiKernel extends
         builder.setLoop(isLooping());
         builder.setLive(isLive());
         builder.setMute(isMute());
-        builder.setInvisibleStop(isInvisibleStop());
-        builder.setInvisibleIgnore(isInvisibleIgnore());
-        builder.setInvisibleRelease(isInvisibleRelease());
+        builder.setHideStop(isHideStop());
+        builder.setHideRelease(isHideRelease());
         StartBuilder build = builder.build();
         seekTo(force, build);
     }
@@ -358,9 +347,8 @@ public interface PlayerApiKernel extends
         builder.setSeek(seek);
         builder.setLoop(loop);
         builder.setLive(isLive());
-        builder.setInvisibleStop(isInvisibleStop());
-        builder.setInvisibleIgnore(isInvisibleIgnore());
-        builder.setInvisibleRelease(isInvisibleRelease());
+        builder.setHideStop(isHideStop());
+        builder.setHideRelease(isHideRelease());
         StartBuilder build = builder.build();
         seekTo(force, build);
     }

@@ -26,10 +26,8 @@ public final class VideoVlcPlayer implements KernelApi {
     private String mUrl = null; // 视频串
     private boolean mReadying = false;
 
-    private boolean mInvisibleStop = false; // 不可见静音
-    private boolean mInvisibleIgnore = false; // 不可见忽略, 什么也不做
-    private boolean mInvisibleRelease = true; // 不可见生命周期自动销毁
-
+    private boolean hideStop; // 不可见, pause
+    private boolean hideRelease; // 不可见, release
 
     private String mExternalMusicPath = null;
     private boolean mExternalMusicLoop = false;
@@ -412,33 +410,23 @@ public final class VideoVlcPlayer implements KernelApi {
     }
 
     @Override
-    public boolean isInvisibleStop() {
-        return mInvisibleStop;
+    public boolean isHideStop() {
+        return hideStop;
     }
 
     @Override
-    public void setInvisibleStop(boolean v) {
-        mInvisibleStop = v;
+    public void setHideStop(boolean v) {
+        hideStop = v;
     }
 
     @Override
-    public boolean isInvisibleIgnore() {
-        return mInvisibleIgnore;
+    public boolean isHideRelease() {
+        return hideRelease;
     }
 
     @Override
-    public void setInvisibleIgnore(boolean v) {
-        mInvisibleIgnore = v;
-    }
-
-    @Override
-    public boolean isInvisibleRelease() {
-        return mInvisibleRelease;
-    }
-
-    @Override
-    public void setInvisibleRelease(boolean v) {
-        mInvisibleRelease = v;
+    public void setHideRelease(boolean v) {
+        hideRelease = v;
     }
 
     /****************/

@@ -26,6 +26,90 @@ public interface PlayerApi extends PlayerApiBase,
         PlayerApiCache,
         PlayerApiRender {
 
+    default void checkOnWindowVisibilityChanged(int visibility) {
+
+        boolean hideStop = isHideStop();
+        boolean hideRelease = isHideRelease();
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => hideStop = " + hideStop + ", hideRelease = " + hideRelease + ", this = " + this);
+        if (!hideStop && !hideRelease)
+            return;
+
+        String url = getUrl();
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", this = " + this);
+        if (null == url || url.length() <= 0)
+            return;
+
+        boolean playing = isPlaying();
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => playing = " + playing + ", this = " + this);
+
+        // show
+        if (visibility == View.VISIBLE) {
+            if (hideRelease) {
+                restart();
+            } else {
+                resume(false);
+            }
+        }
+        // hide
+        else {
+            if (hideRelease) {
+                release();
+            } else {
+                pause(true);
+            }
+        }
+    }
+
+    default void checkOnDetachedFromWindow() {
+
+        boolean hideStop = isHideStop();
+        boolean hideRelease = isHideRelease();
+        MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => hideStop = " + hideStop + ", hideRelease = " + hideRelease + ", this = " + this);
+        if (!hideStop && !hideRelease)
+            return;
+
+        String url = getUrl();
+        MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => url = " + url + ", this = " + this);
+        if (null == url || url.length() <= 0)
+            return;
+
+        boolean playing = isPlaying();
+        MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => playing = " + playing + ", this = " + this);
+        if (!playing)
+            return;
+
+        if (hideRelease) {
+            release();
+        } else {
+            pause(false);
+        }
+    }
+
+    default void checkOnAttachedToWindow() {
+
+        boolean hideStop = isHideStop();
+        boolean hideRelease = isHideRelease();
+        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => hideStop = " + hideStop + ", hideRelease = " + hideRelease + ", this = " + this);
+        if (!hideStop && !hideRelease)
+            return;
+
+        String url = getUrl();
+        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", this = " + this);
+        if (null == url || url.length() <= 0)
+            return;
+
+        boolean playing = isPlaying();
+        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => playing = " + playing + ", this = " + this);
+        if (playing)
+            return;
+
+        if (hideRelease) {
+            restart();
+        } else {
+            resume(false);
+        }
+    }
+
     default boolean dispatchKeyEvent(@NonNull View view, @NonNull KeyEvent event) {
 
         boolean focusable = view.isFocusable();

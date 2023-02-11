@@ -27,9 +27,8 @@ public final class VideoAndroidPlayer implements KernelApi {
     private String mUrl = null; // 视频串
     private boolean mReadying = false;
 
-    private boolean mInvisibleStop = false; // 不可见静音
-    private boolean mInvisibleIgnore = false; // 不可见忽略, 什么也不做
-    private boolean mInvisibleRelease = true; // 不可见生命周期自动销毁
+    private boolean hideStop; // 不可见, pause
+    private boolean hideRelease; // 不可见, release
 
 
     private String mExternalMusicPath = null;
@@ -58,7 +57,7 @@ public final class VideoAndroidPlayer implements KernelApi {
         if (null != mEvent) {
             long position = getPosition();
             long duration = getDuration();
-            if(position > 0 && duration > 0){
+            if (position > 0 && duration > 0) {
                 long seek = getSeek();
                 long max = getMax();
                 boolean looping = isLooping();
@@ -386,10 +385,9 @@ public final class VideoAndroidPlayer implements KernelApi {
     public void setVolume(float v1, float v2) {
         try {
             boolean videoMute = isMute();
-            if (videoMute){
+            if (videoMute) {
                 mAndroidPlayer.setVolume(0F, 0F);
-            }
-            else{
+            } else {
                 float value = Math.max(v1, v2);
                 if (value > 1f) {
                     value = 1f;
@@ -498,33 +496,23 @@ public final class VideoAndroidPlayer implements KernelApi {
     }
 
     @Override
-    public boolean isInvisibleStop() {
-        return mInvisibleStop;
+    public boolean isHideStop() {
+        return hideStop;
     }
 
     @Override
-    public void setInvisibleStop(boolean v) {
-        mInvisibleStop = v;
+    public void setHideStop(boolean v) {
+        hideStop = v;
     }
 
     @Override
-    public boolean isInvisibleIgnore() {
-        return mInvisibleIgnore;
+    public boolean isHideRelease() {
+        return hideRelease;
     }
 
     @Override
-    public void setInvisibleIgnore(boolean v) {
-        mInvisibleIgnore = v;
-    }
-
-    @Override
-    public boolean isInvisibleRelease() {
-        return mInvisibleRelease;
-    }
-
-    @Override
-    public void setInvisibleRelease(boolean v) {
-        mInvisibleRelease = v;
+    public void setHideRelease(boolean v) {
+        hideRelease = v;
     }
 
     /****************/

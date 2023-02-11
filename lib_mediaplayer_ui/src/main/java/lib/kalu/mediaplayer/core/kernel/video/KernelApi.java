@@ -52,15 +52,12 @@ public interface KernelApi extends KernelEvent {
         boolean live = bundle.isLive();
         MPLogUtil.log("KernelApi => update => live = " + live);
         setLive(live);
-        boolean invisibleStop = bundle.isInvisibleStop();
-        MPLogUtil.log("KernelApi => update => invisibleStop = " + invisibleStop);
-        setInvisibleStop(invisibleStop);
-        boolean invisibleIgnore = bundle.isInvisibleIgnore();
-        MPLogUtil.log("KernelApi => update => invisibleIgnore = " + invisibleIgnore);
-        setInvisibleIgnore(invisibleIgnore);
-        boolean invisibleRelease = bundle.isInvisibleRelease();
-        MPLogUtil.log("KernelApi => update => invisibleRelease = " + invisibleRelease);
-        setInvisibleRelease(invisibleRelease);
+        boolean hideStop = bundle.isHideStop();
+        MPLogUtil.log("KernelApi => update => hideStop = " + hideStop);
+        setHideStop(hideStop);
+        boolean hideRelease = bundle.isHideRelease();
+        MPLogUtil.log("KernelApi => update => hideRelease = " + hideRelease);
+        setHideRelease(hideRelease);
         if (null != playUrl && playUrl.length() > 0) {
             setUrl(playUrl);
         }
@@ -116,17 +113,13 @@ public interface KernelApi extends KernelEvent {
 
     boolean isLooping();
 
-    boolean isInvisibleStop();
+    boolean isHideStop();
 
-    void setInvisibleStop(boolean v);
+    void setHideStop(boolean v);
 
-    boolean isInvisibleIgnore();
+    boolean isHideRelease();
 
-    void setInvisibleIgnore(boolean v);
-
-    boolean isInvisibleRelease();
-
-    void setInvisibleRelease(boolean v);
+    void setHideRelease(boolean v);
 
     boolean isMute();
 

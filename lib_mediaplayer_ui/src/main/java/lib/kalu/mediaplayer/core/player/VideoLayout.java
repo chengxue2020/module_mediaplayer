@@ -55,35 +55,19 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        checkOnDetachedFromWindow();
+    }
 
-        boolean invisibleStop = isInvisibleStop();
-        boolean invisibleIgnore = isInvisibleIgnore();
-        boolean invisibleRelease = isInvisibleRelease();
-        MPLogUtil.log("VideoLayout => onDetachedFromWindow => invisibleStop = " + invisibleStop + ", invisibleIgnore = " + invisibleIgnore + ", invisibleRelease = " + invisibleRelease + ", this = " + this);
-        if (invisibleIgnore) {
-        } else if (invisibleStop) {
-            pause(false);
-        } else {
-            release();
-        }
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        checkOnAttachedToWindow();
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        boolean invisibleIgnore = isInvisibleIgnore();
-        MPLogUtil.log("VideoLayout => onWindowVisibilityChanged => visibility = " + visibility + ", invisibleIgnore =  " + invisibleIgnore + ", this = " + this);
-        if (invisibleIgnore) {
-        } else {
-            // visable
-            if (visibility == View.VISIBLE) {
-                resume(false);
-            }
-            // not visable
-            else {
-                pause(true);
-            }
-        }
         super.onWindowVisibilityChanged(visibility);
+        checkOnWindowVisibilityChanged(visibility);
     }
 
     @Override
