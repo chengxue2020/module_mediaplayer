@@ -51,7 +51,7 @@ public final class VideoExoPlayer implements KernelApi {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    private String mUrl = null; // 视频串
+//    private String mUrl = null; // 视频串
     private boolean mReadying = false;
 
     private boolean hideStop; // 不可见, pause
@@ -200,9 +200,9 @@ public final class VideoExoPlayer implements KernelApi {
 
                 // 播放错误
                 if (state == Player.STATE_IDLE) {
-                    String url = getUrl();
+//                    String url = getUrl();
                     boolean readying = isReadying();
-                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放错误] => readying = " + readying + ", url = " + url);
+                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放错误] => readying = " + readying);
                     if (null != mEvent) {
                         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_LOADING_STOP);
                     }
@@ -215,8 +215,8 @@ public final class VideoExoPlayer implements KernelApi {
                 }
                 // 播放结束
                 else if (state == Player.STATE_ENDED) {
-                    String url = getUrl();
-                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放结束] => url = " + url);
+//                    String url = getUrl();
+                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放结束] =>");
                     if (null != mEvent) {
                         mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_VIDEO_END);
                     }
@@ -225,9 +225,9 @@ public final class VideoExoPlayer implements KernelApi {
                 else if (state == Player.STATE_READY) {
 
                     // 准备ok
-                    String url = getUrl();
+//                    String url = getUrl();
                     boolean readying = isReadying();
-                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放开始] => readying = " + readying + ", url = " + url);
+                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放开始] => readying = " + readying);
                     if (readying) {
                         if (null != mEvent) {
                             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_STOP);
@@ -248,9 +248,9 @@ public final class VideoExoPlayer implements KernelApi {
                 }
                 // 播放缓冲
                 else if (state == Player.STATE_BUFFERING) {
-                    String url = getUrl();
+//                    String url = getUrl();
                     boolean readying = isReadying();
-                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放缓冲] => readying = " + readying + ", url = " + url);
+                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放缓冲] => readying = " + readying);
                     if (readying) {
                         if (null != mEvent) {
                             mEvent.onEvent(PlayerType.KernelType.EXO, PlayerType.EventType.EVENT_BUFFERING_START);
@@ -515,16 +515,16 @@ public final class VideoExoPlayer implements KernelApi {
         setVolume(v ? 0f : 1f, v ? 0f : 1f);
     }
 
-    @Override
-    public String getUrl() {
-        return mUrl;
-    }
-
-    @Override
-    public void setUrl(String url) {
-        setReadying(false);
-        this.mUrl = url;
-    }
+//    @Override
+//    public String getUrl() {
+//        return mUrl;
+//    }
+//
+//    @Override
+//    public void setUrl(String url) {
+//        setReadying(false);
+//        this.mUrl = url;
+//    }
 
     @Override
     public long getSeek() {
@@ -581,25 +581,25 @@ public final class VideoExoPlayer implements KernelApi {
         return mLoop;
     }
 
-    @Override
-    public boolean isHideStop() {
-        return hideStop;
-    }
-
-    @Override
-    public void setHideStop(boolean v) {
-        hideStop = v;
-    }
-
-    @Override
-    public boolean isHideRelease() {
-        return hideRelease;
-    }
-
-    @Override
-    public void setHideRelease(boolean v) {
-        hideRelease = v;
-    }
+//    @Override
+//    public boolean isHideStop() {
+//        return hideStop;
+//    }
+//
+//    @Override
+//    public void setHideStop(boolean v) {
+//        hideStop = v;
+//    }
+//
+//    @Override
+//    public boolean isHideRelease() {
+//        return hideRelease;
+//    }
+//
+//    @Override
+//    public void setHideRelease(boolean v) {
+//        hideRelease = v;
+//    }
 
     /****************/
 
@@ -649,6 +649,7 @@ public final class VideoExoPlayer implements KernelApi {
     }
 
     private void doStart() {
+        setReadying(false);
         try {
             boolean externalMusicPlaying = isExternalMusicPlaying();
             setVolume(externalMusicPlaying ? 0F : 1F, externalMusicPlaying ? 0F : 1F);

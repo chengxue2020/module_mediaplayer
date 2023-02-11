@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.player.api;
 
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.FloatRange;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.buried.BuriedEvent;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
@@ -88,7 +90,22 @@ public interface PlayerApiKernel extends
             updateKernel(builder, url);
             // 7
             attachRender();
+            // 8
+            updateIdRes(builder, url);
         } catch (Exception e) {
+        }
+    }
+
+    default void updateIdRes(@NonNull StartBuilder bundle, @NonNull String playUrl) {
+        try {
+            boolean hideStop = bundle.isHideStop();
+            boolean hideRelease = bundle.isHideRelease();
+            MPLogUtil.log("PlayerApiKernel => updateIdRes => hideStop = " + hideStop + ", hideRelease = " + hideRelease + ", playUrl = " + playUrl);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_hide_stop, hideStop);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_hide_release, hideRelease);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => updateIdRes => " + e.getMessage(), e);
         }
     }
 
@@ -273,8 +290,7 @@ public interface PlayerApiKernel extends
 
     default boolean isHideStop() {
         try {
-            KernelApi kernel = getKernel();
-            return kernel.isHideStop();
+            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_hide_stop);
         } catch (Exception e) {
             return false;
         }
@@ -282,8 +298,7 @@ public interface PlayerApiKernel extends
 
     default boolean isHideRelease() {
         try {
-            KernelApi kernel = getKernel();
-            return kernel.isHideRelease();
+            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_hide_release);
         } catch (Exception e) {
             return false;
         }
@@ -309,8 +324,7 @@ public interface PlayerApiKernel extends
 
     default String getUrl() {
         try {
-            KernelApi kernel = getKernel();
-            return kernel.getUrl();
+            return (String) ((View) this).getTag(R.id.module_mediaplayer_id_player_url);
         } catch (Exception e) {
             return null;
         }

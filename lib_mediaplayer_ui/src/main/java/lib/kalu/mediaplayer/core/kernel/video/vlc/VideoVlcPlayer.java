@@ -23,7 +23,7 @@ public final class VideoVlcPlayer implements KernelApi {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    private String mUrl = null; // 视频串
+//    private String mUrl = null; // 视频串
     private boolean mReadying = false;
 
     private boolean hideStop; // 不可见, pause
@@ -186,6 +186,7 @@ public final class VideoVlcPlayer implements KernelApi {
      */
     @Override
     public void start() {
+        setReadying(false);
         if (null != mPlayer) {
             mPlayer.play();
         }
@@ -344,16 +345,16 @@ public final class VideoVlcPlayer implements KernelApi {
         setVolume(v ? 0f : 1f, v ? 0f : 1f);
     }
 
-    @Override
-    public String getUrl() {
-        return mUrl;
-    }
-
-    @Override
-    public void setUrl(String url) {
-        setReadying(false);
-        this.mUrl = url;
-    }
+//    @Override
+//    public String getUrl() {
+//        return mUrl;
+//    }
+//
+//    @Override
+//    public void setUrl(String url) {
+//        setReadying(false);
+//        this.mUrl = url;
+//    }
 
     @Override
     public long getSeek() {
@@ -409,25 +410,25 @@ public final class VideoVlcPlayer implements KernelApi {
         return mLoop;
     }
 
-    @Override
-    public boolean isHideStop() {
-        return hideStop;
-    }
-
-    @Override
-    public void setHideStop(boolean v) {
-        hideStop = v;
-    }
-
-    @Override
-    public boolean isHideRelease() {
-        return hideRelease;
-    }
-
-    @Override
-    public void setHideRelease(boolean v) {
-        hideRelease = v;
-    }
+//    @Override
+//    public boolean isHideStop() {
+//        return hideStop;
+//    }
+//
+//    @Override
+//    public void setHideStop(boolean v) {
+//        hideStop = v;
+//    }
+//
+//    @Override
+//    public boolean isHideRelease() {
+//        return hideRelease;
+//    }
+//
+//    @Override
+//    public void setHideRelease(boolean v) {
+//        hideRelease = v;
+//    }
 
     /****************/
 

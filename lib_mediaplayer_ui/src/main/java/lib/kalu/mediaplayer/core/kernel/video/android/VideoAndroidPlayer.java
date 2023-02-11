@@ -24,11 +24,7 @@ public final class VideoAndroidPlayer implements KernelApi {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    private String mUrl = null; // 视频串
     private boolean mReadying = false;
-
-    private boolean hideStop; // 不可见, pause
-    private boolean hideRelease; // 不可见, release
 
 
     private String mExternalMusicPath = null;
@@ -78,7 +74,6 @@ public final class VideoAndroidPlayer implements KernelApi {
     @Override
     public void releaseDecoder() {
         stopExternalMusic(true);
-        setReadying(false);
         if (null != mEvent) {
             mEvent = null;
         }
@@ -164,6 +159,7 @@ public final class VideoAndroidPlayer implements KernelApi {
      */
     @Override
     public void start() {
+        setReadying(false);
         try {
             mAndroidPlayer.start();
         } catch (IllegalStateException e) {
@@ -431,17 +427,6 @@ public final class VideoAndroidPlayer implements KernelApi {
     }
 
     @Override
-    public String getUrl() {
-        return mUrl;
-    }
-
-    @Override
-    public void setUrl(String url) {
-        setReadying(false);
-        this.mUrl = url;
-    }
-
-    @Override
     public long getSeek() {
         return mSeek;
     }
@@ -493,26 +478,6 @@ public final class VideoAndroidPlayer implements KernelApi {
     @Override
     public boolean isLooping() {
         return mLoop;
-    }
-
-    @Override
-    public boolean isHideStop() {
-        return hideStop;
-    }
-
-    @Override
-    public void setHideStop(boolean v) {
-        hideStop = v;
-    }
-
-    @Override
-    public boolean isHideRelease() {
-        return hideRelease;
-    }
-
-    @Override
-    public void setHideRelease(boolean v) {
-        hideRelease = v;
     }
 
     /****************/

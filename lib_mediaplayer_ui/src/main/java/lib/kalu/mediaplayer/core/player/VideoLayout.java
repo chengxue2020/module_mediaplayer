@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.player.api.PlayerApi;
 import lib.kalu.mediaplayer.core.render.RenderApi;
@@ -54,20 +55,20 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         checkOnDetachedFromWindow();
+        super.onDetachedFromWindow();
     }
 
     @Override
     protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
         checkOnAttachedToWindow();
+        super.onAttachedToWindow();
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        super.onWindowVisibilityChanged(visibility);
         checkOnWindowVisibilityChanged(visibility);
+        super.onWindowVisibilityChanged(visibility);
     }
 
     @Override
@@ -95,6 +96,11 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     public void setKernel(@NonNull KernelApi kernel) {
         MPLogUtil.log("PlayerApiKernel => setKernel => kernel = " + kernel);
         mKernel = kernel;
+    }
+
+    @Override
+    public void start(@NonNull StartBuilder builder, @NonNull String url) {
+        PlayerApi.super.start(builder, url);
     }
 
     @Override
