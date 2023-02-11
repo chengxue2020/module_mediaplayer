@@ -377,21 +377,6 @@ public abstract class ControllerLayout extends RelativeLayout implements Control
         }
     }
 
-//    @Override
-//    public void seekProgress(@NonNull boolean fromUser, @NonNull long position, @NonNull long duration) {
-//        if (null == mComponents)
-//            return;
-//        int size = mComponents.size();
-//        if (size <= 0)
-//            return;
-//        for (int i = 0; i < size; i++) {
-//            ComponentApi api = mComponents.get(i);
-//            if (null == api)
-//                continue;
-//            api.seekProgress(fromUser, position, duration);
-//        }
-//    }
-
     @Override
     public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
         if (null == mComponents)

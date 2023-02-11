@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.controller.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -45,6 +47,61 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public ComponentSeek(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        setFocusable(visibility == View.VISIBLE);
+        super.setVisibility(visibility);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return dispatchEvent(event) || super.dispatchKeyEvent(event);
+    }
+
+    private boolean dispatchEvent(@NonNull KeyEvent event) {
+
+        if (getVisibility() == View.VISIBLE)
+            return false;
+
+        // seekForward
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            if (null != mControllerWrapper) {
+                boolean live = mControllerWrapper.isLive();
+                MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardDown => live = " + live);
+                mControllerWrapper.seekForwardDown(!live);
+                return true;
+            }
+        }
+        // seekForward
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            if (null != mControllerWrapper) {
+                boolean live = mControllerWrapper.isLive();
+                MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardUp => live = " + live);
+                mControllerWrapper.seekForwardUp(!live);
+                return true;
+            }
+        }
+        // seekRewind
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            if (null != mControllerWrapper) {
+                boolean live = mControllerWrapper.isLive();
+                MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindDown => live = " + live);
+                mControllerWrapper.seekRewindDown(!live);
+                return true;
+            }
+        }
+        // seekRewind
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            if (null != mControllerWrapper) {
+                boolean live = mControllerWrapper.isLive();
+                MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindUp => live = " + live);
+                mControllerWrapper.seekRewindUp(!live);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void enableBottomPB(boolean enable) {
@@ -177,16 +234,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
-        if (mTouch)
-            return;
-        if (position <= 0 || duration <= 0)
-            return;
+        if (mTouch) return;
+        if (position <= 0 || duration <= 0) return;
         SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seekBar)
-            return;
+        if (null == seekBar) return;
         int v = seekBar.getVisibility();
-        if (v != View.VISIBLE)
-            return;
+        if (v != View.VISIBLE) return;
         long timeMillis = System.currentTimeMillis();
         long i = timeMillis - mTimeMillis;
         if (i > 10000) { // 10s
@@ -199,15 +252,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onSeekForwardDown(boolean enable) {
-        if (!enable)
-            return;
+        if (!enable) return;
         SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seek)
-            return;
+        if (null == seek) return;
         int max = seek.getMax();
         int progress = seek.getProgress();
-        if (progress >= max)
-            return;
+        if (progress >= max) return;
         mTouch = true;
         int next = progress + Math.abs(max) / 200;
         if (next > max) {
@@ -219,30 +269,24 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onSeekForwardUp(boolean enable) {
-        if (!enable)
-            return;
+        if (!enable) return;
         SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seek)
-            return;
+        if (null == seek) return;
         int max = seek.getMax();
         int progress = seek.getProgress();
-        if (max <= 0 || progress <= 0 && progress > max)
-            return;
+        if (max <= 0 || progress <= 0 && progress > max) return;
         mTouch = false;
         onSeekPlaying(progress);
     }
 
     @Override
     public void onSeekRewindDown(boolean enable) {
-        if (!enable)
-            return;
+        if (!enable) return;
         SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seek)
-            return;
+        if (null == seek) return;
         int max = seek.getMax();
         int progress = seek.getProgress();
-        if (progress >= max)
-            return;
+        if (progress >= max) return;
         mTouch = true;
         int next = progress - Math.abs(max) / 200;
         if (next < 0) {
@@ -254,15 +298,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onSeekRewindUp(boolean enable) {
-        if (!enable)
-            return;
+        if (!enable) return;
         SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seek)
-            return;
+        if (null == seek) return;
         int max = seek.getMax();
         int progress = seek.getProgress();
-        if (max <= 0 || progress <= 0 && progress > max)
-            return;
+        if (max <= 0 || progress <= 0 && progress > max) return;
         mTouch = false;
         onSeekPlaying(progress);
     }

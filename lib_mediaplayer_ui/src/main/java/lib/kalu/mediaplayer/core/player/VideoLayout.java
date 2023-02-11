@@ -39,18 +39,23 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
 
     public VideoLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initAttribute(null);
+        initAttribute(attrs);
     }
 
     public VideoLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttribute(null);
+        initAttribute(attrs);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public VideoLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initAttribute(null);
+        initAttribute(attrs);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
     }
 
     @Override
@@ -111,14 +116,8 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     @Override
     public void checkReal() {
         int visibility = getWindowVisibility();
-        if (visibility == View.VISIBLE)
-            return;
+        if (visibility == View.VISIBLE) return;
         pause();
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return dispatchKeyEvent(this, event) || super.dispatchKeyEvent(event);
     }
 
     @Override
