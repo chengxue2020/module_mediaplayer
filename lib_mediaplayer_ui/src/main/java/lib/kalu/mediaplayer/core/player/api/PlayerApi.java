@@ -77,12 +77,16 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
     default void checkOnWindowVisibilityChanged(int visibility) {
 
         String url = getUrl();
+        boolean playing = isPlaying();
         boolean windowVisibilityChangedRelease = isWindowVisibilityChangedRelease();
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", visibility = " + visibility + ", windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", this = " + this);
-        if (null == url || url.length() <= 0) return;
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", playing = " + playing + ", visibility = " + visibility + ", windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", this = " + this);
+        if (null == url || url.length() <= 0)
+            return;
 
         // show
         if (visibility == View.VISIBLE) {
+            if (playing)
+                return;
             if (windowVisibilityChangedRelease) {
                 restart();
             } else {
@@ -113,8 +117,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         String url = getUrl();
         boolean playing = isPlaying();
         MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
-        if (null == url || url.length() <= 0 || playing)
-            return;
+        if (null == url || url.length() <= 0 || playing) return;
 
         restart();
     }
