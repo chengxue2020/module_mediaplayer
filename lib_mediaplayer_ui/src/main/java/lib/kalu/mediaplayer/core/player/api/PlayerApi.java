@@ -39,11 +39,11 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
                 return false;
             }
             // volume_mute
-            else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_MUTE) {
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_MUTE) {
                 return false;
             }
             // voice_assist
-            else if (isFull() && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOICE_ASSIST) {
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOICE_ASSIST) {
                 return false;
             }
             // stopFull
@@ -58,23 +58,9 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
             }
             // component
             else {
-                try {
-                    ControllerLayout layout = getControlLayout();
-                    if (null != layout) {
-                        int count = layout.getChildCount();
-                        for (int i = 0; i < count; i++) {
-                            View child = layout.getChildAt(i);
-                            if (null == child)
-                                continue;
-                            if (child instanceof ComponentSeek) {
-                                child.dispatchKeyEvent(event);
-                                break;
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                }
-            } return true;
+                dispatchEventComponent(event);
+            }
+            return true;
         }
         // float
         else if (isFloat) {
@@ -84,7 +70,8 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
                 stopFloat();
                 return true;
             }
-        } return false;
+        }
+        return false;
     }
 
     default void checkOnWindowVisibilityChanged(int visibility) {
