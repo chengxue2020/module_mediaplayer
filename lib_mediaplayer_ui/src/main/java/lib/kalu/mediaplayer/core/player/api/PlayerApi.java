@@ -76,13 +76,11 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
 
     default void checkOnWindowVisibilityChanged(int visibility) {
 
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => visibility = " + visibility + ", this = " + this);
         String url = getUrl();
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", this = " + this);
+        boolean windowVisibilityChangedRelease = isWindowVisibilityChangedRelease();
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", visibility = " + visibility + ", windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", this = " + this);
         if (null == url || url.length() <= 0) return;
 
-        boolean windowVisibilityChangedRelease = isWindowVisibilityChangedRelease();
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", this = " + this);
         // show
         if (visibility == View.VISIBLE) {
             if (windowVisibilityChangedRelease) {
@@ -107,22 +105,16 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => url = " + url + ", this = " + this);
         if (null == url || url.length() <= 0) return;
 
-        boolean playing = isPlaying();
-        MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => playing = " + playing + ", this = " + this);
-        if (!playing) return;
-
         release();
     }
 
     default void checkOnAttachedToWindow() {
 
         String url = getUrl();
-        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", this = " + this);
-        if (null == url || url.length() <= 0) return;
-
         boolean playing = isPlaying();
-        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => playing = " + playing + ", this = " + this);
-        if (playing) return;
+        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
+        if (null == url || url.length() <= 0 || playing)
+            return;
 
         restart();
     }
