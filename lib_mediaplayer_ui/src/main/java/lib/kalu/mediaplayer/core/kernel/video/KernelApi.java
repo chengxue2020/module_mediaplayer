@@ -52,16 +52,7 @@ public interface KernelApi extends KernelEvent {
         boolean live = bundle.isLive();
         MPLogUtil.log("KernelApi => update => live = " + live);
         setLive(live);
-//        boolean hideStop = bundle.isHideStop();
-//        MPLogUtil.log("KernelApi => update => hideStop = " + hideStop);
-//        setHideStop(hideStop);
-//        boolean hideRelease = bundle.isHideRelease();
-//        MPLogUtil.log("KernelApi => update => hideRelease = " + hideRelease);
-//        setHideRelease(hideRelease);
-//        if (null != playUrl && playUrl.length() > 0) {
-//            setUrl(playUrl);
-//        }
-        // 2
+
         String musicUrl = bundle.getExternalMusicUrl();
         MPLogUtil.log("KernelApi => update => musicUrl = " + musicUrl);
         setExternalMusicPath(musicUrl);
