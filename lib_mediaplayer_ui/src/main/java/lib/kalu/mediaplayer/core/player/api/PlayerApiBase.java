@@ -22,6 +22,10 @@ public interface PlayerApiBase {
 
     List<OnChangeListener> mListeners = new LinkedList<>();
 
+    default ViewGroup getLayout() {
+        return (ViewGroup) this;
+    }
+
     default List<OnChangeListener> getOnChangeListener() {
         return mListeners;
     }
@@ -46,36 +50,30 @@ public interface PlayerApiBase {
     default void callPlayerState(@PlayerType.StateType.Value int playerState) {
         List<OnChangeListener> listener = getOnChangeListener();
         MPLogUtil.log("PlayerApiBase => callPlayerState => listener = " + listener);
-        if (null == listener)
-            return;
+        if (null == listener) return;
         ControllerLayout layout = getControlLayout();
         MPLogUtil.log("PlayerApiBase => callPlayerState => layout = " + layout);
-        if (null == layout)
-            return;
+        if (null == layout) return;
         layout.setPlayState(playerState);
         for (OnChangeListener l : listener) {
-            if (null == l)
-                continue;
+            if (null == l) continue;
             l.onChange(playerState);
         }
     }
 
     default void callWindowState(@PlayerType.WindowType.Value int windowState) {
         List<OnChangeListener> listener = getOnChangeListener();
-        if (null == listener)
-            return;
+        if (null == listener) return;
         ControllerLayout layout = getControlLayout();
-        if (null == layout)
-            return;
+        if (null == layout) return;
         layout.setWindowState(windowState);
         for (OnChangeListener l : listener) {
-            if (null == l)
-                continue;
+            if (null == l) continue;
             l.onWindow(windowState);
         }
     }
 
-    ControllerLayout getControlLayout() ;
+    ControllerLayout getControlLayout();
 
     default ControllerLayout getControlLayout(boolean isFull) {
 
@@ -123,13 +121,11 @@ public interface PlayerApiBase {
             // 1
             ViewGroup layout = getLayout();
             MPLogUtil.log("PlayerApiBase => setControllerLayout => layout = " + layout);
-            if (null == layout)
-                return;
+            if (null == layout) return;
             // 2
             ViewGroup group = layout.findViewById(R.id.module_mediaplayer_control);
             MPLogUtil.log("PlayerApiBase => setControllerLayout => group = " + group);
-            if (null == group)
-                return;
+            if (null == group) return;
             // 3
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             controller.setLayoutParams(params);
@@ -141,6 +137,4 @@ public interface PlayerApiBase {
             MPLogUtil.log("PlayerApiBase => setControllerLayout => " + e.getMessage(), e);
         }
     }
-
-    ViewGroup getLayout();
 }

@@ -11,8 +11,7 @@ public final class StartBuilder {
     private boolean loop;
     private boolean mute;
 
-    private boolean hideStop; // 不可见, pause
-    private boolean hideRelease; // 不可见, release
+    private boolean hidePause; // 不可见, pause
 
     // 外部背景音
     private String externalMusicUrl;
@@ -39,12 +38,8 @@ public final class StartBuilder {
         return loop;
     }
 
-    public boolean isHideStop() {
-        return hideStop;
-    }
-
-    public boolean isHideRelease() {
-        return hideRelease;
+    public boolean isHidePause() {
+        return hidePause;
     }
 
     public String getExternalMusicUrl() {
@@ -65,8 +60,7 @@ public final class StartBuilder {
         this.mute = builder.mute;
         this.live = builder.live;
         this.loop = builder.loop;
-        this.hideStop = builder.hideStop;
-        this.hideRelease = builder.hideRelease;
+        this.hidePause = builder.hidePause;
         this.externalMusicUrl = builder.externalMusicUrl;
         this.externalMusicLoop = builder.externalMusicLoop;
         this.externalMusicPlayWhenReady = builder.externalMusicPlayWhenReady;
@@ -80,8 +74,7 @@ public final class StartBuilder {
                 ", live=" + live +
                 ", loop=" + loop +
                 ", mute=" + mute +
-                ", hideStop=" + hideStop +
-                ", hideRelease=" + hideRelease +
+                ", hidePause=" + hidePause +
                 ", externalMusicUrl='" + externalMusicUrl + '\'' +
                 ", externalMusicLoop=" + externalMusicLoop +
                 ", externalMusicPlayWhenReady=" + externalMusicPlayWhenReady +
@@ -95,8 +88,7 @@ public final class StartBuilder {
         builder.mute = mute;
         builder.live = live;
         builder.loop = loop;
-        builder.hideStop = hideStop;
-        builder.hideRelease = hideRelease;
+        builder.hidePause = hidePause;
         builder.externalMusicUrl = externalMusicUrl;
         builder.externalMusicLoop = externalMusicLoop;
         builder.externalMusicPlayWhenReady = externalMusicPlayWhenReady;
@@ -112,8 +104,7 @@ public final class StartBuilder {
         private boolean loop = false;
         private boolean mute = false;
 
-        private boolean hideStop = true; // 不可见, pause
-        private boolean hideRelease = false; // 不可见, release
+        private boolean hidePause = false; // 不可见, pause
 
         private String externalMusicUrl = null;
         private boolean externalMusicLoop = false;
@@ -163,13 +154,8 @@ public final class StartBuilder {
             return this;
         }
 
-        public Builder setHideStop(boolean v) {
-            this.hideStop = v;
-            return this;
-        }
-
-        public Builder setHideRelease(boolean v) {
-            this.hideRelease = v;
+        public Builder setHidePause(boolean v) {
+            this.hidePause = v;
             return this;
         }
 

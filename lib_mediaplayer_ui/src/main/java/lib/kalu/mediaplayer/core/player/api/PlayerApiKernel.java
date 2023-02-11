@@ -98,12 +98,10 @@ public interface PlayerApiKernel extends
 
     default void updateIdRes(@NonNull StartBuilder bundle, @NonNull String playUrl) {
         try {
-            boolean hideStop = bundle.isHideStop();
-            boolean hideRelease = bundle.isHideRelease();
-            MPLogUtil.log("PlayerApiKernel => updateIdRes => hideStop = " + hideStop + ", hideRelease = " + hideRelease + ", playUrl = " + playUrl);
+            boolean hidePause = bundle.isHidePause();
+            MPLogUtil.log("PlayerApiKernel => updateIdRes => hidePause = " + hidePause + ", playUrl = " + playUrl);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_hide_stop, hideStop);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_hide_release, hideRelease);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_hide_pause, hidePause);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => updateIdRes => " + e.getMessage(), e);
         }
@@ -122,8 +120,7 @@ public interface PlayerApiKernel extends
             builder.setLoop(isLooping());
             builder.setLive(isLive());
             builder.setMute(isMute());
-            builder.setHideStop(isHideStop());
-            builder.setHideRelease(isHideRelease());
+            builder.setHidePause(isHidePause());
             return builder.build();
         } catch (Exception e) {
             return null;
@@ -288,17 +285,9 @@ public interface PlayerApiKernel extends
         }
     }
 
-    default boolean isHideStop() {
+    default boolean isHidePause() {
         try {
-            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_hide_stop);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    default boolean isHideRelease() {
-        try {
-            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_hide_release);
+            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_hide_pause);
         } catch (Exception e) {
             return false;
         }
@@ -337,8 +326,7 @@ public interface PlayerApiKernel extends
         builder.setLoop(isLooping());
         builder.setLive(isLive());
         builder.setMute(isMute());
-        builder.setHideStop(isHideStop());
-        builder.setHideRelease(isHideRelease());
+        builder.setHidePause(isHidePause());
         StartBuilder build = builder.build();
         seekTo(force, build);
     }
@@ -361,8 +349,7 @@ public interface PlayerApiKernel extends
         builder.setSeek(seek);
         builder.setLoop(loop);
         builder.setLive(isLive());
-        builder.setHideStop(isHideStop());
-        builder.setHideRelease(isHideRelease());
+        builder.setHidePause(isHidePause());
         StartBuilder build = builder.build();
         seekTo(force, build);
     }

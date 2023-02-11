@@ -2,6 +2,5 @@
     <!-- string -->
     <item name="module_mediaplayer_id_player_url" type="id" />
     <!-- boolean -->
-    <item name="module_mediaplayer_id_player_hide_stop" type="id" />
-    <item name="module_mediaplayer_id_player_hide_release" type="id" />
+    <item name="module_mediaplayer_id_player_hide_pause" type="id" />
 </resources>

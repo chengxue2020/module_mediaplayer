@@ -76,11 +76,6 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
 
     default void checkOnWindowVisibilityChanged(int visibility) {
 
-        boolean hideStop = isHideStop();
-        boolean hideRelease = isHideRelease();
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => hideStop = " + hideStop + ", hideRelease = " + hideRelease + ", this = " + this);
-        if (!hideStop && !hideRelease) return;
-
         String url = getUrl();
         MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", this = " + this);
         if (null == url || url.length() <= 0) return;
@@ -88,30 +83,27 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         boolean playing = isPlaying();
         MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => playing = " + playing + ", this = " + this);
 
+        boolean hidePause = isHidePause();
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => hidePause = " + hidePause + ", this = " + this);
         // show
         if (visibility == View.VISIBLE) {
-            if (hideRelease) {
-                restart();
-            } else {
+            if (hidePause) {
                 resume(false);
+            } else {
+                restart();
             }
         }
         // hide
         else {
-            if (hideRelease) {
-                release();
-            } else {
+            if (hidePause) {
                 pause(true);
+            } else {
+                release();
             }
         }
     }
 
     default void checkOnDetachedFromWindow() {
-
-        boolean hideStop = isHideStop();
-        boolean hideRelease = isHideRelease();
-        MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => hideStop = " + hideStop + ", hideRelease = " + hideRelease + ", this = " + this);
-        if (!hideStop && !hideRelease) return;
 
         String url = getUrl();
         MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => url = " + url + ", this = " + this);
@@ -121,19 +113,16 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => playing = " + playing + ", this = " + this);
         if (!playing) return;
 
-        if (hideRelease) {
-            release();
-        } else {
+        boolean hidePause = isHidePause();
+        MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => hidePause = " + hidePause + ", this = " + this);
+        if (hidePause) {
             pause(false);
+        } else {
+            release();
         }
     }
 
     default void checkOnAttachedToWindow() {
-
-        boolean hideStop = isHideStop();
-        boolean hideRelease = isHideRelease();
-        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => hideStop = " + hideStop + ", hideRelease = " + hideRelease + ", this = " + this);
-        if (!hideStop && !hideRelease) return;
 
         String url = getUrl();
         MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", this = " + this);
@@ -143,10 +132,12 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => playing = " + playing + ", this = " + this);
         if (playing) return;
 
-        if (hideRelease) {
-            restart();
-        } else {
+        boolean hidePause = isHidePause();
+        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => hidePause = " + hidePause + ", this = " + this);
+        if (hidePause) {
             resume(false);
+        } else {
+            restart();
         }
     }
 

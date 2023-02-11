@@ -102,11 +102,6 @@ public class VideoLayout extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public ViewGroup getLayout() {
-        return this;
-    }
-
-    @Override
     public void checkReal() {
         if (getVisibility() == View.VISIBLE)
             return;
