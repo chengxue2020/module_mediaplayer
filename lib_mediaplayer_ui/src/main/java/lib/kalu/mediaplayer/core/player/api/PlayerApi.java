@@ -76,6 +76,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
 
     default void checkOnWindowVisibilityChanged(int visibility) {
 
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => visibility = " + visibility + ", this = " + this);
         String url = getUrl();
         MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", this = " + this);
         if (null == url || url.length() <= 0) return;
@@ -83,11 +84,11 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         boolean playing = isPlaying();
         MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => playing = " + playing + ", this = " + this);
 
-        boolean hidePause = isHidePause();
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => hidePause = " + hidePause + ", this = " + this);
+        boolean windowVisibilityChangedPause = isWindowVisibilityChangedPause();
+        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => windowVisibilityChangedPause = " + windowVisibilityChangedPause + ", this = " + this);
         // show
         if (visibility == View.VISIBLE) {
-            if (hidePause) {
+            if (windowVisibilityChangedPause) {
                 resume(false);
             } else {
                 restart();
@@ -95,7 +96,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         }
         // hide
         else {
-            if (hidePause) {
+            if (windowVisibilityChangedPause) {
                 pause(true);
             } else {
                 release();
@@ -113,13 +114,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => playing = " + playing + ", this = " + this);
         if (!playing) return;
 
-        boolean hidePause = isHidePause();
-        MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => hidePause = " + hidePause + ", this = " + this);
-        if (hidePause) {
-            pause(false);
-        } else {
-            release();
-        }
+        release();
     }
 
     default void checkOnAttachedToWindow() {
@@ -132,13 +127,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => playing = " + playing + ", this = " + this);
         if (playing) return;
 
-        boolean hidePause = isHidePause();
-        MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => hidePause = " + hidePause + ", this = " + this);
-        if (hidePause) {
-            resume(false);
-        } else {
-            restart();
-        }
+        restart();
     }
 
     default void onSaveBundle() {

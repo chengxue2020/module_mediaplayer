@@ -24,9 +24,7 @@ import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
-public interface PlayerApiKernel extends
-        PlayerApiRender,
-        PlayerApiDevice {
+public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
 
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
@@ -71,8 +69,7 @@ public interface PlayerApiKernel extends
 
         String s = builder.toString();
         MPLogUtil.log("PlayerApiKernel => start => url = " + url + ", data = " + s);
-        if (null == url || url.length() <= 0)
-            return;
+        if (null == url || url.length() <= 0) return;
 
         try {
             // 1
@@ -98,10 +95,10 @@ public interface PlayerApiKernel extends
 
     default void updateIdRes(@NonNull StartBuilder bundle, @NonNull String playUrl) {
         try {
-            boolean hidePause = bundle.isHidePause();
-            MPLogUtil.log("PlayerApiKernel => updateIdRes => hidePause = " + hidePause + ", playUrl = " + playUrl);
+            boolean windowVisibilityChangedPause = bundle.isWindowVisibilityChangedPause();
+            MPLogUtil.log("PlayerApiKernel => updateIdRes => windowVisibilityChangedPause = " + windowVisibilityChangedPause + ", playUrl = " + playUrl);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_hide_pause, hidePause);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_pause, windowVisibilityChangedPause);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => updateIdRes => " + e.getMessage(), e);
         }
@@ -112,15 +109,14 @@ public interface PlayerApiKernel extends
     default StartBuilder getStartBuilder() {
         try {
             String url = getUrl();
-            if (null == url || url.length() <= 0)
-                throw new Exception();
+            if (null == url || url.length() <= 0) throw new Exception();
             StartBuilder.Builder builder = new StartBuilder.Builder();
             builder.setMax(getMax());
             builder.setSeek(getSeek());
             builder.setLoop(isLooping());
             builder.setLive(isLive());
             builder.setMute(isMute());
-            builder.setHidePause(isHidePause());
+            builder.setWindowVisibilityChangedPause(isWindowVisibilityChangedPause());
             return builder.build();
         } catch (Exception e) {
             return null;
@@ -227,8 +223,7 @@ public interface PlayerApiKernel extends
         try {
             boolean playing = isPlaying();
             MPLogUtil.log("PlayerApiKernel => pause => ignore = " + ignore + ", playing = " + playing);
-            if (!playing)
-                return;
+            if (!playing) return;
             pauseKernel(ignore);
         } catch (Exception e) {
         }
@@ -237,8 +232,7 @@ public interface PlayerApiKernel extends
     default void stop() {
         try {
             boolean playing = isPlaying();
-            if (!playing)
-                return;
+            if (!playing) return;
             stopKernel(true);
         } catch (Exception e) {
         }
@@ -249,8 +243,7 @@ public interface PlayerApiKernel extends
         try {
             StartBuilder builder = getStartBuilder();
             MPLogUtil.log("PlayerApiKernel => restart => builder = " + builder);
-            if (null == builder)
-                return;
+            if (null == builder) return;
             callPlayerState(PlayerType.StateType.STATE_RESTAER);
             String url = getUrl();
             start(builder, url);
@@ -285,9 +278,9 @@ public interface PlayerApiKernel extends
         }
     }
 
-    default boolean isHidePause() {
+    default boolean isWindowVisibilityChangedPause() {
         try {
-            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_hide_pause);
+            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_window_visibility_changed_pause);
         } catch (Exception e) {
             return false;
         }
@@ -326,7 +319,7 @@ public interface PlayerApiKernel extends
         builder.setLoop(isLooping());
         builder.setLive(isLive());
         builder.setMute(isMute());
-        builder.setHidePause(isHidePause());
+        builder.setWindowVisibilityChangedPause(isWindowVisibilityChangedPause());
         StartBuilder build = builder.build();
         seekTo(force, build);
     }
@@ -349,7 +342,7 @@ public interface PlayerApiKernel extends
         builder.setSeek(seek);
         builder.setLoop(loop);
         builder.setLive(isLive());
-        builder.setHidePause(isHidePause());
+        builder.setWindowVisibilityChangedPause(isWindowVisibilityChangedPause());
         StartBuilder build = builder.build();
         seekTo(force, build);
     }
@@ -418,8 +411,7 @@ public interface PlayerApiKernel extends
 
     default void checkKernel() throws Exception {
         KernelApi kernel = getKernel();
-        if (null == kernel)
-            throw new Exception("check kernel is null");
+        if (null == kernel) throw new Exception("check kernel is null");
     }
 
     default void resumeKernel(@NonNull boolean ignore) {
@@ -451,8 +443,7 @@ public interface PlayerApiKernel extends
             MPLogUtil.log("PlayerApiKernel => stopKernel => kernel = " + kernel);
             kernel.stop();
             setScreenKeep(false);
-            if (!call)
-                return;
+            if (!call) return;
 //            callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
             callPlayerState(PlayerType.StateType.STATE_KERNEL_STOP);
             callPlayerState(PlayerType.StateType.STATE_CLOSE);
@@ -503,8 +494,7 @@ public interface PlayerApiKernel extends
             MPLogUtil.log("PlayerApiKernel => seekToKernel => milliSeconds = " + milliSeconds + ", kernel = " + kernel);
             kernel.seekTo(milliSeconds, seekHelp);
             setScreenKeep(true);
-            if (milliSeconds <= 0)
-                return;
+            if (milliSeconds <= 0) return;
             callPlayerState(PlayerType.StateType.STATE_LOADING_START);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => seekToKernel => " + e.getMessage());
@@ -667,13 +657,11 @@ public interface PlayerApiKernel extends
 
             String musicPath = getExternalMusicPath();
             MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true, musicPath = " + musicPath);
-            if (null == musicPath || musicPath.length() <= 0)
-                return;
+            if (null == musicPath || musicPath.length() <= 0) return;
 
             boolean musicEnable = isExternalMusicEnable();
             MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEnable = " + musicEnable);
-            if (!musicEnable)
-                return;
+            if (!musicEnable) return;
 
             boolean musicNull = isExternalMusicNull();
             MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true, musicNull = " + musicNull);
@@ -692,8 +680,7 @@ public interface PlayerApiKernel extends
         else {
             boolean musicPlaying = isExternalMusicPlaying();
             MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = false, musicPlaying = " + musicPlaying);
-            if (musicPlaying)
-                return;
+            if (musicPlaying) return;
             boolean ready = isExternalMusicPlayWhenReady();
             if (ready) {
                 String musicPath = getExternalMusicPath();
@@ -788,8 +775,7 @@ public interface PlayerApiKernel extends
                         List<OnChangeListener> listener = getOnChangeListener();
                         if (null != listener) {
                             for (OnChangeListener l : listener) {
-                                if (null == l)
-                                    continue;
+                                if (null == l) continue;
                                 l.onProgress(position, duration);
                             }
                         }
