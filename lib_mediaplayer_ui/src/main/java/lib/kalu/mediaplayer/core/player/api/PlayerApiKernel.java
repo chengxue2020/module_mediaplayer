@@ -223,7 +223,6 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
         try {
             boolean playing = isPlaying();
             MPLogUtil.log("PlayerApiKernel => pause => ignore = " + ignore + ", playing = " + playing);
-            if (!playing) return;
             pauseKernel(ignore);
         } catch (Exception e) {
         }
