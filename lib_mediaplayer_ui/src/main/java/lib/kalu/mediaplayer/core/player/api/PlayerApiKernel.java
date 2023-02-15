@@ -96,8 +96,10 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
     default void updateIdRes(@NonNull StartBuilder bundle, @NonNull String playUrl) {
         try {
             boolean windowVisibilityChangedRelease = bundle.isWindowVisibilityChangedRelease();
-            MPLogUtil.log("PlayerApiKernel => updateIdRes => windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", playUrl = " + playUrl);
+            boolean loop = bundle.isLoop();
+            MPLogUtil.log("PlayerApiKernel => updateIdRes => loop = " + loop + ", windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", playUrl = " + playUrl);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, loop);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, windowVisibilityChangedRelease);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => updateIdRes => " + e.getMessage(), e);
@@ -277,7 +279,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
             KernelApi kernel = getKernel();
             return kernel.isLooping();
         } catch (Exception e) {
-            return false;
+            return (boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_looping);
         }
     }
 
@@ -883,6 +885,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
                             }
 
                             boolean looping = isLooping();
+                            MPLogUtil.log("PlayerApiKernel => onEvent = 播放结束 => looping = " + looping);
                             // loop
                             if (looping) {
 
