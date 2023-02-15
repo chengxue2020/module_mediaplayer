@@ -12,6 +12,7 @@ import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
 import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -30,7 +31,7 @@ public final class VideoIjkPlayer extends BasePlayer {
 
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer;
 
-    public VideoIjkPlayer(@NonNull PlayerApiExternalMusic musicApi, @NonNull KernelApiEvent eventApi) {
+    public VideoIjkPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
         setReadying(false);
     }

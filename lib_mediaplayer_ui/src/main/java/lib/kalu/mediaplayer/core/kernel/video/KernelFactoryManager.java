@@ -40,7 +40,7 @@ public final class KernelFactoryManager {
         }
     }
 
-    public static KernelApi getKernel(@NonNull PlayerApiExternalMusic playerApi, @PlayerType.KernelType.Value int type, @NonNull KernelApiEvent event) {
+    public static KernelApi getKernel(@NonNull PlayerApi playerApi, @PlayerType.KernelType.Value int type, @NonNull KernelApiEvent event) {
         return getFactory(type).createKernel(playerApi, event);
     }
 }

@@ -40,6 +40,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
 import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -60,7 +61,7 @@ public final class VideoExoPlayer extends BasePlayer {
     private ExoPlayer mExoPlayer;
     private AnalyticsListener mAnalyticsListener;
 
-    public VideoExoPlayer(@NonNull PlayerApiExternalMusic musicApi, @NonNull KernelApiEvent eventApi) {
+    public VideoExoPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
         setReadying(false);
     }

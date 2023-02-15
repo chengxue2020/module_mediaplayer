@@ -2,28 +2,35 @@ package lib.kalu.mediaplayer.core.kernel.video.base;
 
 import androidx.annotation.NonNull;
 
+import java.lang.ref.WeakReference;
+
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
+import lib.kalu.mediaplayer.core.player.api.PlayerApiBase;
 import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public abstract class BasePlayer implements KernelApi {
 
     private KernelApiEvent eventApi;
-    private PlayerApiExternalMusic musicApi;
+    private PlayerApi musicApi;
 
-    public BasePlayer(@NonNull PlayerApiExternalMusic musicApi, @NonNull KernelApiEvent eventApi) {
+    public BasePlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         setReadying(false);
-        this.eventApi = eventApi;
         this.musicApi = musicApi;
+        this.eventApi = eventApi;
     }
 
     @Override
     public void onUpdateTimeMillis() {
+        MPLogUtil.log("BasePlayer => onUpdateTimeMillis => eventApi = "+eventApi);
         if (null == eventApi)
             return;
         long position = getPosition();
         long duration = getDuration();
+        MPLogUtil.log("BasePlayer => onUpdateTimeMillis => position = "+position+", duration = "+duration);
         if (position > 0 && duration > 0) {
             long seek = getSeek();
             long max = getMax();
@@ -73,7 +80,7 @@ public abstract class BasePlayer implements KernelApi {
     }
 
     public final void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
-        if (null == eventApi)
+        if (null == eventApi || null == eventApi)
             return;
         eventApi.onEvent(kernel, event);
     }

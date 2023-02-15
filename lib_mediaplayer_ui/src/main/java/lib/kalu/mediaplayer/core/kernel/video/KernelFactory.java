@@ -15,5 +15,5 @@ import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
  */
 @Keep
 public interface KernelFactory<T extends KernelApi> {
-    T createKernel(@NonNull PlayerApiExternalMusic playerApi, @NonNull KernelApiEvent event);
+    T createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event);
 }

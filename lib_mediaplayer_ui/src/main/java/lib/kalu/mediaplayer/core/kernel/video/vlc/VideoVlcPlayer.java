@@ -11,6 +11,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
 import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
@@ -29,7 +30,7 @@ public final class VideoVlcPlayer extends BasePlayer {
     private lib.kalu.vlc.widget.VlcPlayer mPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mPlayerListener;
 
-    public VideoVlcPlayer(@NonNull PlayerApiExternalMusic musicApi, @NonNull KernelApiEvent eventApi) {
+    public VideoVlcPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
         setReadying(false);
     }

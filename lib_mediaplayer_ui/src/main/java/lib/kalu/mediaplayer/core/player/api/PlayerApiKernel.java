@@ -688,7 +688,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
             ViewGroup layout = getLayout();
             Context context = layout.getContext();
             int type = PlayerManager.getInstance().getConfig().getKernel();
-            KernelApi kernel = KernelFactoryManager.getKernel(this, type, new KernelApiEvent() {
+            KernelApi kernel = KernelFactoryManager.getKernel((PlayerApi) this, type, new KernelApiEvent() {
 
                 @Override
                 public void onUpdateTimeMillis(@NonNull boolean isLooping, @NonNull long max, @NonNull long seek, @NonNull long position, @NonNull long duration) {

@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.KernelFactory;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
 import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 
 @Keep
@@ -18,7 +19,7 @@ public class VideoVlcPlayerFactory implements KernelFactory<VideoVlcPlayer> {
     }
 
     @Override
-    public VideoVlcPlayer createKernel(@NonNull PlayerApiExternalMusic playerApi, @NonNull KernelApiEvent event) {
+    public VideoVlcPlayer createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event) {
         return new VideoVlcPlayer(playerApi, event);
     }
 }

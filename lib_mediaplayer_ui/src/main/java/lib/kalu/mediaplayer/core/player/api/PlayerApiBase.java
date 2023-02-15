@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.player.api;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -137,4 +138,22 @@ public interface PlayerApiBase {
             MPLogUtil.log("PlayerApiBase => setControllerLayout => " + e.getMessage(), e);
         }
     }
+
+//
+//    default void setEventRelease(boolean v) {
+//        try {
+//            ((View) this).setTag(R.id.module_mediaplayer_id_player_event_release, v);
+//            MPLogUtil.log("PlayerApiKernel => setEventRelease => " + v);
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default boolean isEventRelease() {
+//        try {
+//            MPLogUtil.log("PlayerApiKernel => isEventRelease => ");
+//            return (boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_event_release);
+//        } catch (Exception e) {
+//            return true;
+//        }
+//    }
 }
