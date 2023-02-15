@@ -74,7 +74,7 @@ public interface PlayerApiExternalMusic {
         }
     }
 
-    default void setPlayerExternalMusicData(@NonNull StartBuilder bundle) {
+    default void setExternalMusicData(@NonNull StartBuilder bundle) {
         try {
             // 1
             String musicUrl = bundle.getExternalMusicUrl();

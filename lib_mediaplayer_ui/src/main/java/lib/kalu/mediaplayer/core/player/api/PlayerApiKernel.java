@@ -90,7 +90,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
             // 8
             setPlayerData(builder, url);
             // 9
-            setPlayerExternalMusicData(builder);
+            setExternalMusicData(builder);
         } catch (Exception e) {
         }
     }
@@ -118,6 +118,10 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
             builder.setLoop(isLooping());
             builder.setLive(isLive());
             builder.setMute(isMute());
+            builder.setExternalMusicUrl(getExternalMusicPath());
+            builder.setExternalMusicLooping(isExternalMusicLooping());
+            builder.setExternalMusicEqualLength(isExternalMusicEqualLength());
+            builder.setExternalMusicPlayWhenReady(isExternalMusicPlayWhenReady());
             builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
             return builder.build();
         } catch (Exception e) {
@@ -582,48 +586,12 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
         }
     }
 
-    default boolean isExternalMusicLoop() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.isExternalMusicLooping();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    default boolean isExternalMusicEqualLength() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.isExternalMusicEqualLength();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     default boolean isExternalMusicPlaying() {
         try {
             KernelApi kernel = getKernel();
             return kernel.isExternalMusicPlaying();
         } catch (Exception e) {
             return false;
-        }
-    }
-
-    default boolean isExternalMusicPlayWhenReady() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.isExternalMusicPlayWhenReady();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    default String getExternalMusicPath() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.getExternalMusicPath();
-        } catch (Exception e) {
-            return null;
         }
     }
 
@@ -662,7 +630,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
             boolean musicNull = isExternalMusicNull();
             MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true, musicNull = " + musicNull);
             if (musicNull) {
-                boolean musicLoop = isExternalMusicLoop();
+                boolean musicLoop = isExternalMusicLooping();
                 boolean musicEqual = isExternalMusicEqualLength();
                 startExternalMusic(context, musicLoop, musicEqual);
             } else {
@@ -681,7 +649,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
             if (ready) {
                 String musicPath = getExternalMusicPath();
                 if (null != musicPath && musicPath.length() > 0) {
-                    boolean musicLoop = isExternalMusicLoop();
+                    boolean musicLoop = isExternalMusicLooping();
                     boolean musicEqual = isExternalMusicEqualLength();
                     startExternalMusic(context, musicLoop, musicEqual);
                 } else {

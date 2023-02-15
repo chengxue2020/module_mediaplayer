@@ -17,6 +17,7 @@ public final class StartBuilder {
     private String externalMusicUrl;
     private boolean externalMusicLoop;
     private boolean externalMusicPlayWhenReady;
+    private boolean externalMusicEqualLength;
 
     public boolean isMute() {
         return mute;
@@ -54,6 +55,10 @@ public final class StartBuilder {
         return externalMusicPlayWhenReady;
     }
 
+    public boolean isExternalMusicEqualLength() {
+        return externalMusicEqualLength;
+    }
+
     public StartBuilder(StartBuilder.Builder builder) {
         this.max = builder.max;
         this.seek = builder.seek;
@@ -64,6 +69,7 @@ public final class StartBuilder {
         this.externalMusicUrl = builder.externalMusicUrl;
         this.externalMusicLoop = builder.externalMusicLoop;
         this.externalMusicPlayWhenReady = builder.externalMusicPlayWhenReady;
+        this.externalMusicEqualLength = builder.externalMusicEqualLength;
     }
 
     @Override
@@ -78,6 +84,7 @@ public final class StartBuilder {
                 ", externalMusicUrl='" + externalMusicUrl + '\'' +
                 ", externalMusicLoop=" + externalMusicLoop +
                 ", externalMusicPlayWhenReady=" + externalMusicPlayWhenReady +
+                ", externalMusicEqualLength=" + externalMusicEqualLength +
                 '}';
     }
 
@@ -92,6 +99,7 @@ public final class StartBuilder {
         builder.externalMusicUrl = externalMusicUrl;
         builder.externalMusicLoop = externalMusicLoop;
         builder.externalMusicPlayWhenReady = externalMusicPlayWhenReady;
+        builder.externalMusicEqualLength = externalMusicEqualLength;
         return builder;
     }
 
@@ -109,7 +117,7 @@ public final class StartBuilder {
         private String externalMusicUrl = null;
         private boolean externalMusicLoop = false;
         private boolean externalMusicPlayWhenReady = false;
-
+        private boolean externalMusicEqualLength = true;
 
         public Builder() {
         }
@@ -119,8 +127,12 @@ public final class StartBuilder {
             return this;
         }
 
-        public Builder setExternalMusicLoop(boolean v) {
+        public Builder setExternalMusicLooping(boolean v) {
             externalMusicLoop = v;
+            return this;
+        }
+        public Builder setExternalMusicEqualLength(boolean v) {
+            externalMusicEqualLength = v;
             return this;
         }
 
