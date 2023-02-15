@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
 public class MediaProgressBar extends View {
@@ -78,9 +79,24 @@ public class MediaProgressBar extends View {
     }
 
     @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        MPLogUtil.log("MediaProgressBar => onVisibilityChanged => visibility = " + visibility);
+    }
+
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        MPLogUtil.log("MediaProgressBar => onWindowVisibilityChanged => visibility = " + visibility);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
+
+        int visibility = getVisibility();
+        MPLogUtil.log("MediaProgressBar => onDraw => visibility = " + visibility);
         // show
-        if (View.VISIBLE == getVisibility()) {
+        if (View.VISIBLE == visibility) {
             // 循环次数
             if (mLoop + 1 >= mCount) {
                 mLoop = 0;
