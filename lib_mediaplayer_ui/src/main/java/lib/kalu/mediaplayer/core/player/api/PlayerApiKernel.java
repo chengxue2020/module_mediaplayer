@@ -223,7 +223,11 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
         try {
             boolean playing = isPlaying();
             MPLogUtil.log("PlayerApiKernel => pause => ignore = " + ignore + ", playing = " + playing);
-            pauseKernel(ignore);
+            if (playing) {
+                pauseKernel(ignore);
+            } else {
+                callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
+            }
         } catch (Exception e) {
         }
     }
@@ -871,9 +875,6 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
 
                             callPlayerState(PlayerType.StateType.STATE_END);
 
-                            // step2
-                            pause(true);
-
                             // 埋点
                             try {
                                 BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
@@ -889,17 +890,11 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
                                 callPlayerState(PlayerType.StateType.STATE_LOADING_START);
                                 hideReal();
 
-                                // step2
-                                pause(true);
-
                                 // step3
                                 seekTo(true, builder);
                             }
                             // sample
                             else {
-                                // step1
-                                pause(true);
-
                                 // step2
                                 playEnd();
                             }
