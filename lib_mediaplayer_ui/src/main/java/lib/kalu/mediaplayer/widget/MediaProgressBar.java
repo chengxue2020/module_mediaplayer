@@ -21,6 +21,7 @@ import lib.kalu.mediaplayer.R;
 @Keep
 public class MediaProgressBar extends View {
 
+    private boolean mPause;
     private int mLoop = 0;
     private final Paint mPaint = new Paint();
 
@@ -78,78 +79,75 @@ public class MediaProgressBar extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
-
-        if (View.VISIBLE != getVisibility())
-            return;
-
-        // 循环次数
-        if (mLoop + 1 >= mCount) {
-            mLoop = 0;
-        }
-
-        // 画笔
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaint.setAntiAlias(true);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeWidth(0f);
-        mPaint.setFakeBoldText(true);
-
-        float cx = getWidth() * 0.5f;
-        float cy = getHeight() * 0.2f;
-        float radius;
-        if (mRadius == 0f) {
-            radius = Math.max(cx, cy) / 6;
-        } else {
-            radius = mRadius;
-        }
-        float angle = 360 / mCount;
-
-        // init
-//        paint.setColor(Color.WHITE);
-        canvas.drawColor(mColorCanvas);
-//        canvas.drawColor(mColorCanvas, PorterDuff.Mode.CLEAR);
-        mPaint.setColor(mColorBackground);
-        canvas.drawCircle(cx, cy, Math.min(cx, cy), mPaint);
-
-        // 椭圆
-        int length = mLoop + mCount;
-        for (int i = mLoop; i < length; i++) {
-//            MediaLogUtil.log("MediaProgressBar => onDraw => i = " + i + ", mLoop = " + mLoop + ", mCount = " + mCount);
-            if (i == mLoop) {
-                if (mLoop != 0) {
-                    canvas.save();
-                    canvas.rotate(angle * (i % mCount), cx, cx);
-                }
-//                int color = Color.parseColor("#FFA7A7A7");
-                mPaint.setColor(mColorRound);
-            } else {
-                try {
-                    float r = ((mColorRound >> 16) & 0xff) / 255.0f;
-                    float g = ((mColorRound >> 8) & 0xff) / 255.0f;
-                    float b = ((mColorRound) & 0xff) / 255.0f;
-//                    float a = ((mColorRound >> 24) & 0xff) / 255.0f;
-                    int a = (255 / 11) * (i - mLoop);
-                    int color = ((int) (a * 255.0f + 0.5f) << 24) |
-                            ((int) (r * 255.0f + 0.5f) << 16) |
-                            ((int) (g * 255.0f + 0.5f) << 8) |
-                            (int) (b * 255.0f + 0.5f);
-                    mPaint.setColor(color);
-                } catch (Exception e) {
-                }
+        // show
+        if (View.VISIBLE == getVisibility()) {
+            // 循环次数
+            if (mLoop + 1 >= mCount) {
+                mLoop = 0;
             }
+            // 画笔
+            mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            mPaint.setAntiAlias(true);
+            mPaint.setStrokeCap(Paint.Cap.ROUND);
+            mPaint.setStrokeJoin(Paint.Join.ROUND);
+            mPaint.setStrokeWidth(0f);
+            mPaint.setFakeBoldText(true);
+
+            float cx = getWidth() * 0.5f;
+            float cy = getHeight() * 0.2f;
+            float radius;
+            if (mRadius == 0f) {
+                radius = Math.max(cx, cy) / 6;
+            } else {
+                radius = mRadius;
+            }
+            float angle = 360 / mCount;
+
+            // init
+//        paint.setColor(Color.WHITE);
+            canvas.drawColor(mColorCanvas);
+//        canvas.drawColor(mColorCanvas, PorterDuff.Mode.CLEAR);
+            mPaint.setColor(mColorBackground);
+            canvas.drawCircle(cx, cy, Math.min(cx, cy), mPaint);
+
+            // 椭圆
+            int length = mLoop + mCount;
+            for (int i = mLoop; i < length; i++) {
+//            MediaLogUtil.log("MediaProgressBar => onDraw => i = " + i + ", mLoop = " + mLoop + ", mCount = " + mCount);
+                if (i == mLoop) {
+                    if (mLoop != 0) {
+                        canvas.save();
+                        canvas.rotate(angle * (i % mCount), cx, cx);
+                    }
+//                int color = Color.parseColor("#FFA7A7A7");
+                    mPaint.setColor(mColorRound);
+                } else {
+                    try {
+                        float r = ((mColorRound >> 16) & 0xff) / 255.0f;
+                        float g = ((mColorRound >> 8) & 0xff) / 255.0f;
+                        float b = ((mColorRound) & 0xff) / 255.0f;
+//                    float a = ((mColorRound >> 24) & 0xff) / 255.0f;
+                        int a = (255 / 11) * (i - mLoop);
+                        int color = ((int) (a * 255.0f + 0.5f) << 24) |
+                                ((int) (r * 255.0f + 0.5f) << 16) |
+                                ((int) (g * 255.0f + 0.5f) << 8) |
+                                (int) (b * 255.0f + 0.5f);
+                        mPaint.setColor(color);
+                    } catch (Exception e) {
+                    }
+                }
 //            RectF rectF = new RectF(left, top, right, bottom);
 //            canvas.drawRoundRect(rectF, rx, ry, paint);
 //            MediaLogUtil.log("MediaProgressBar => onDraw => radius = " + radius + ", mRate = " + mRate);
-            radius = radius * mRate;
-            canvas.drawCircle(cx, cy, radius, mPaint);
-            canvas.save();
-            canvas.rotate(angle, cx, cx);
-        }
+                radius = radius * mRate;
+                canvas.drawCircle(cx, cy, radius, mPaint);
+                canvas.save();
+                canvas.rotate(angle, cx, cx);
+            }
 
-        // delay
-        mLoop = mLoop + 1;
+            // delay
+            mLoop = mLoop + 1;
+        }
         postInvalidateDelayed(120);
     }
 
