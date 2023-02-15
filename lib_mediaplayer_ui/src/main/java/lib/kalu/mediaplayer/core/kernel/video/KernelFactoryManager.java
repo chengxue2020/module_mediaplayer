@@ -10,6 +10,9 @@ import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
+import lib.kalu.mediaplayer.core.player.api.PlayerApi;
+import lib.kalu.mediaplayer.core.player.api.PlayerApiBase;
+import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 
 /**
  * @description: 工具类
@@ -37,7 +40,7 @@ public final class KernelFactoryManager {
         }
     }
 
-    public static KernelApi getKernel(@NonNull Context context, @PlayerType.KernelType.Value int type, @NonNull KernelEvent event) {
-        return getFactory(type).createKernel(context, event);
+    public static KernelApi getKernel(@NonNull PlayerApiExternalMusic playerApi, @PlayerType.KernelType.Value int type, @NonNull KernelApiEvent event) {
+        return getFactory(type).createKernel(playerApi, event);
     }
 }

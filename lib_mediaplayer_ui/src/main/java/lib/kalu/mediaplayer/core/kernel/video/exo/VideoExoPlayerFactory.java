@@ -5,8 +5,9 @@ import android.content.Context;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.core.kernel.video.KernelEvent;
+import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.KernelFactory;
+import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 
 @Keep
 public final class VideoExoPlayerFactory implements KernelFactory<VideoExoPlayer> {
@@ -19,7 +20,7 @@ public final class VideoExoPlayerFactory implements KernelFactory<VideoExoPlayer
     }
 
     @Override
-    public VideoExoPlayer createKernel(@NonNull Context context, @NonNull KernelEvent event) {
-        return new VideoExoPlayer(event);
+    public VideoExoPlayer createKernel(@NonNull PlayerApiExternalMusic playerApi, @NonNull KernelApiEvent event) {
+        return new VideoExoPlayer(playerApi, event);
     }
 }

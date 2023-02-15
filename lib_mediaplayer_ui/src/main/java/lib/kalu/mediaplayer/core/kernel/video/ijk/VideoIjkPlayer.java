@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel.video.ijk;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Surface;
@@ -10,60 +9,36 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.kernel.video.KernelEvent;
-import tv.danmaku.ijk.media.player.misc.IMediaDataSourceForRaw;
+import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
+import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 
 @Keep
-public final class VideoIjkPlayer implements KernelApi, KernelEvent {
-
-//    private int mBufferedPercent;
+public final class VideoIjkPlayer extends BasePlayer {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-//    private String mUrl = null; // 视频串
+    //    private String mUrl = null; // 视频串
     private boolean mReadying = false;
 
-    private boolean hideStop; // 不可见, pause
-    private boolean hideRelease; // 不可见, release
-
-    private String mExternalMusicPath = null;
-    private boolean mExternalMusicLoop = false;
-    private boolean mExternalMusicPlayWhenReady = false;
-    private boolean mExternalMusicEqualLength = true;
-
-    private KernelEvent mEvent;
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer;
 
-    public VideoIjkPlayer(@NonNull KernelEvent event) {
+    public VideoIjkPlayer(@NonNull PlayerApiExternalMusic musicApi, @NonNull KernelApiEvent eventApi) {
+        super(musicApi, eventApi);
         setReadying(false);
-        this.mEvent = event;
     }
 
     @NonNull
     @Override
     public VideoIjkPlayer getPlayer() {
         return this;
-    }
-
-    @Override
-    public void onUpdateTimeMillis() {
-        if (null != mEvent) {
-            long position = getPosition();
-            long duration = getDuration();
-            if (position > 0 && duration > 0) {
-                long seek = getSeek();
-                long max = getMax();
-                boolean looping = isLooping();
-                mEvent.onUpdateTimeMillis(looping, max, seek, position, duration);
-            }
-        }
     }
 
     @Override
@@ -82,11 +57,9 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
 
     @Override
     public void releaseDecoder() {
+        setEvent(null);
         stopExternalMusic(true);
         setReadying(false);
-        if (null != mEvent) {
-            mEvent = null;
-        }
         if (null != mIjkPlayer) {
             // 设置视频错误监听器
             mIjkPlayer.setOnErrorListener(null);
@@ -119,8 +92,8 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
         try {
@@ -135,7 +108,7 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
             mIjkPlayer.setDataSource(context, uri, null);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
 
         try {
@@ -353,7 +326,7 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
         MPLogUtil.log("IjkMediaPlayer => seekTo => seek = " + seek);
         setReadying(false);
         try {
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mIjkPlayer.seekTo(seek);
         } catch (IllegalStateException e) {
             MPLogUtil.log(e.getMessage(), e);
@@ -442,26 +415,6 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
     }
 
     @Override
-    public boolean isExternalMusicPlayWhenReady() {
-        return mExternalMusicPlayWhenReady;
-    }
-
-    @Override
-    public void setisExternalMusicPlayWhenReady(boolean v) {
-        mExternalMusicPlayWhenReady = v;
-    }
-
-    @Override
-    public boolean isExternalMusicLooping() {
-        return mExternalMusicLoop;
-    }
-
-    @Override
-    public void setExternalMusicLooping(boolean loop) {
-        mExternalMusicLoop = loop;
-    }
-
-    @Override
     public boolean isMute() {
         return mMute;
     }
@@ -471,17 +424,6 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
         mMute = v;
         setVolume(v ? 0f : 1f, v ? 0f : 1f);
     }
-
-//    @Override
-//    public String getUrl() {
-//        return mUrl;
-//    }
-//
-//    @Override
-//    public void setUrl(String url) {
-//        setReadying(false);
-//        this.mUrl = url;
-//    }
 
     @Override
     public long getSeek() {
@@ -573,8 +515,8 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             MPLogUtil.log("IjkMediaPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
             return true;
         }
     };
@@ -586,7 +528,7 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             MPLogUtil.log("IjkMediaPlayer => onCompletion =>");
-            mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -600,16 +542,16 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
             MPLogUtil.log("IjkMediaPlayer => onInfo => what = " + what + ", extra = " + extra);
             // loading-start
             if (what == IMediaPlayer.MEDIA_INFO_OPEN_INPUT) {
-                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             }
             // 首帧画面
             else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                mEvent.onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-                mEvent.onEvent(PlayerType.KernelType.IJK, what);
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.IJK, what);
             }
             // 事件通知
             else {
-                mEvent.onEvent(PlayerType.KernelType.IJK, what);
+                onEvent(PlayerType.KernelType.IJK, what);
             }
             return true;
         }
@@ -675,26 +617,4 @@ public final class VideoIjkPlayer implements KernelApi, KernelEvent {
             MPLogUtil.log("IjkMediaPlayer => onSeekComplete => ");
         }
     };
-
-    /****************/
-
-    @Override
-    public boolean isExternalMusicEqualLength() {
-        return mExternalMusicEqualLength;
-    }
-
-    @Override
-    public void setExternalMusicEqualLength(boolean equal) {
-        mExternalMusicEqualLength = equal;
-    }
-
-    @Override
-    public void setExternalMusicPath(@NonNull String musicPath) {
-        this.mExternalMusicPath = musicPath;
-    }
-
-    @Override
-    public String getExternalMusicPath() {
-        return this.mExternalMusicPath;
-    }
 }

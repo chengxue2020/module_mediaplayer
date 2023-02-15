@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.core.kernel.video.vlc;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.view.Surface;
 
 import androidx.annotation.Keep;
@@ -10,58 +9,36 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.kernel.video.KernelEvent;
+import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
+import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
+import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
 import lib.kalu.vlc.widget.VlcPlayer;
 
 @Keep
-public final class VideoVlcPlayer implements KernelApi {
+public final class VideoVlcPlayer extends BasePlayer {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-//    private String mUrl = null; // 视频串
     private boolean mReadying = false;
 
-    private boolean hideStop; // 不可见, pause
-    private boolean hideRelease; // 不可见, release
-
-    private String mExternalMusicPath = null;
-    private boolean mExternalMusicLoop = false;
-    private boolean mExternalMusicPlayWhenReady = false;
-    private boolean mExternalMusicEqualLength = true;
-
-    private KernelEvent mEvent;
     private lib.kalu.vlc.widget.VlcPlayer mPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mPlayerListener;
 
-    public VideoVlcPlayer(@NonNull KernelEvent event) {
+    public VideoVlcPlayer(@NonNull PlayerApiExternalMusic musicApi, @NonNull KernelApiEvent eventApi) {
+        super(musicApi, eventApi);
         setReadying(false);
-        this.mEvent = event;
-        MPLogUtil.log("VideoVlcPlayer =>");
     }
+
 
     @NonNull
     @Override
     public VideoVlcPlayer getPlayer() {
         return this;
-    }
-
-    @Override
-    public void onUpdateTimeMillis() {
-        if (null != mEvent) {
-            long position = getPosition();
-            long duration = getDuration();
-            if (position > 0 && duration > 0) {
-                long seek = getSeek();
-                long max = getMax();
-                boolean looping = isLooping();
-                mEvent.onUpdateTimeMillis(looping, max, seek, position, duration);
-            }
-        }
     }
 
     @Override
@@ -76,11 +53,9 @@ public final class VideoVlcPlayer implements KernelApi {
 
     @Override
     public void releaseDecoder() {
+        setEvent(null);
         stopExternalMusic(true);
         setReadying(false);
-        if (null != mEvent) {
-            mEvent = null;
-        }
         if (null != mPlayerListener) {
             if (null != mPlayer) {
                 mPlayer.setOnVlcInfoChangeListener(null);
@@ -102,7 +77,7 @@ public final class VideoVlcPlayer implements KernelApi {
     public void init(@NonNull Context context, @NonNull String url) {
         // loading-start
 //        if (null != mEvent) {
-//            mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
+//            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
 //        }
 
         MPLogUtil.log("VideoVlcPlayer => init => url = " + url);
@@ -110,10 +85,8 @@ public final class VideoVlcPlayer implements KernelApi {
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            if (null != mEvent) {
-                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
-            }
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
 
@@ -121,9 +94,7 @@ public final class VideoVlcPlayer implements KernelApi {
             mPlayer.setDataSource(Uri.parse(url));
             mPlayer.play();
         } else {
-            if (null != mEvent) {
-                mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
-            }
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
     }
 
@@ -135,17 +106,13 @@ public final class VideoVlcPlayer implements KernelApi {
         mPlayerListener = new OnVlcInfoChangeListener() {
             @Override
             public void onStart() {
-                if (null != mEvent) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
-                }
+                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
             }
 
             @Override
             public void onPlay() {
-                if (null != mEvent) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_START);
-                }
+                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_START);
 
                 long seek = getSeek();
                 if (seek > 0) {
@@ -165,17 +132,13 @@ public final class VideoVlcPlayer implements KernelApi {
 
             @Override
             public void onEnd() {
-                if (null != mEvent) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_END);
-                }
+                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_VIDEO_END);
             }
 
             @Override
             public void onError() {
-                if (null != mEvent) {
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
-                    mEvent.onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
-                }
+                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
             }
         };
         mPlayer.setOnVlcInfoChangeListener(mPlayerListener);
@@ -315,26 +278,6 @@ public final class VideoVlcPlayer implements KernelApi {
     }
 
     @Override
-    public boolean isExternalMusicPlayWhenReady() {
-        return mExternalMusicPlayWhenReady;
-    }
-
-    @Override
-    public void setisExternalMusicPlayWhenReady(boolean v) {
-        this.mExternalMusicPlayWhenReady = v;
-    }
-
-    @Override
-    public boolean isExternalMusicLooping() {
-        return mExternalMusicLoop;
-    }
-
-    @Override
-    public void setExternalMusicLooping(boolean v) {
-        mExternalMusicLoop = v;
-    }
-
-    @Override
     public boolean isMute() {
         return mMute;
     }
@@ -344,17 +287,6 @@ public final class VideoVlcPlayer implements KernelApi {
         mMute = v;
         setVolume(v ? 0f : 1f, v ? 0f : 1f);
     }
-
-//    @Override
-//    public String getUrl() {
-//        return mUrl;
-//    }
-//
-//    @Override
-//    public void setUrl(String url) {
-//        setReadying(false);
-//        this.mUrl = url;
-//    }
 
     @Override
     public long getSeek() {
@@ -408,47 +340,5 @@ public final class VideoVlcPlayer implements KernelApi {
     @Override
     public boolean isLooping() {
         return mLoop;
-    }
-
-//    @Override
-//    public boolean isHideStop() {
-//        return hideStop;
-//    }
-//
-//    @Override
-//    public void setHideStop(boolean v) {
-//        hideStop = v;
-//    }
-//
-//    @Override
-//    public boolean isHideRelease() {
-//        return hideRelease;
-//    }
-//
-//    @Override
-//    public void setHideRelease(boolean v) {
-//        hideRelease = v;
-//    }
-
-    /****************/
-
-    @Override
-    public boolean isExternalMusicEqualLength() {
-        return mExternalMusicEqualLength;
-    }
-
-    @Override
-    public void setExternalMusicEqualLength(boolean equal) {
-        mExternalMusicEqualLength = equal;
-    }
-
-    @Override
-    public void setExternalMusicPath(@NonNull String musicPath) {
-        this.mExternalMusicPath = musicPath;
-    }
-
-    @Override
-    public String getExternalMusicPath() {
-        return this.mExternalMusicPath;
     }
 }

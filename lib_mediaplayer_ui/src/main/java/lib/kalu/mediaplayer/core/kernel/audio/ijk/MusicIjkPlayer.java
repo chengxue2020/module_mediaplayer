@@ -1,21 +1,12 @@
 package lib.kalu.mediaplayer.core.kernel.audio.ijk;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.Surface;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.audio.MusicKernelApi;
 import lib.kalu.mediaplayer.core.kernel.audio.OnMusicPlayerChangeListener;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.kernel.video.KernelEvent;
-import lib.kalu.mediaplayer.util.MPLogUtil;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
-import tv.danmaku.ijk.media.player.IjkTimedText;
 
 @Keep
 public final class MusicIjkPlayer implements MusicKernelApi {

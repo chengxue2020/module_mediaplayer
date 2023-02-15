@@ -4,4 +4,14 @@
     <!-- boolean -->
     <item name="module_mediaplayer_id_player_looping" type="id" />
     <item name="module_mediaplayer_id_player_window_visibility_changed_release" type="id" />
+
+    <!-- external music -->
+    <!-- string -->
+    <item name="module_mediaplayer_id_player_external_music_url" type="id" />
+    <!-- boolean -->
+    <item name="module_mediaplayer_id_player_external_music_looping" type="id" />
+    <item name="module_mediaplayer_id_player_external_music_equal_length" type="id" />
+    <item name="module_mediaplayer_id_player_external_music_play_when_ready" type="id" />
+
+
 </resources>

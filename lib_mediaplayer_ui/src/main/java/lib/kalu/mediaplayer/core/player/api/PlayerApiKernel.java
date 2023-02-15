@@ -17,14 +17,14 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.kernel.video.KernelEvent;
+import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
-public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
+public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, PlayerApiExternalMusic {
 
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
@@ -88,12 +88,14 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
             // 7
             attachRender();
             // 8
-            updateIdRes(builder, url);
+            setPlayerData(builder, url);
+            // 9
+            setPlayerExternalMusicData(builder);
         } catch (Exception e) {
         }
     }
 
-    default void updateIdRes(@NonNull StartBuilder bundle, @NonNull String playUrl) {
+    default void setPlayerData(@NonNull StartBuilder bundle, @NonNull String playUrl) {
         try {
             boolean windowVisibilityChangedRelease = bundle.isWindowVisibilityChangedRelease();
             boolean loop = bundle.isLoop();
@@ -105,8 +107,6 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
             MPLogUtil.log("PlayerApiKernel => updateIdRes => " + e.getMessage(), e);
         }
     }
-
-    /**********/
 
     default StartBuilder getStartBuilder() {
         try {
@@ -550,8 +550,10 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
 
     default void startExternalMusic(Context context, boolean musicLooping, boolean musicEqualLength) {
         try {
+            setExternalMusicLooping(musicLooping);
+            setExternalMusicEqualLength(musicLooping);
             KernelApi kernel = getKernel();
-            kernel.startExternalMusic(context, musicLooping, musicEqualLength);
+            kernel.startExternalMusic(context);
         } catch (Exception e) {
         }
     }
@@ -643,17 +645,6 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
         }
     }
 
-    default void setExternalMusic(@NonNull StartBuilder bundle) {
-        try {
-            KernelApi kernel = getKernel();
-            String url = bundle.getExternalMusicUrl();
-            kernel.setExternalMusicPath(url);
-            boolean loop = bundle.isExternalMusicLoop();
-            kernel.setExternalMusicLooping(loop);
-        } catch (Exception e) {
-        }
-    }
-
     default void checkExternalMusic(@NonNull Context context) {
 
         boolean musicEqualLength = isExternalMusicEqualLength();
@@ -729,7 +720,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice {
             ViewGroup layout = getLayout();
             Context context = layout.getContext();
             int type = PlayerManager.getInstance().getConfig().getKernel();
-            KernelApi kernel = KernelFactoryManager.getKernel(context, type, new KernelEvent() {
+            KernelApi kernel = KernelFactoryManager.getKernel(this, type, new KernelApiEvent() {
 
                 @Override
                 public void onUpdateTimeMillis(@NonNull boolean isLooping, @NonNull long max, @NonNull long seek, @NonNull long position, @NonNull long duration) {

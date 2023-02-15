@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel.video.android;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -12,12 +11,13 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.kernel.video.KernelEvent;
+import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
+import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
+import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class VideoAndroidPlayer implements KernelApi {
+public final class VideoAndroidPlayer extends BasePlayer {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -26,40 +26,17 @@ public final class VideoAndroidPlayer implements KernelApi {
     private boolean mMute = false;
     private boolean mReadying = false;
 
-
-    private String mExternalMusicPath = null;
-    private boolean mExternalMusicLoop = false;
-    private boolean mExternalMusicPlayWhenReady = false;
-    private boolean mExternalMusicEqualLength = true;
-
-    private KernelEvent mEvent;
     private MediaPlayer mAndroidPlayer;
 
-//    private int mBufferedPercent;
-
-    public VideoAndroidPlayer(@NonNull KernelEvent event) {
+    public VideoAndroidPlayer(@NonNull PlayerApiExternalMusic musicApi, @NonNull KernelApiEvent eventApi) {
+        super(musicApi, eventApi);
         setReadying(false);
-        this.mEvent = event;
     }
 
     @NonNull
     @Override
     public VideoAndroidPlayer getPlayer() {
         return this;
-    }
-
-    @Override
-    public void onUpdateTimeMillis() {
-        if (null != mEvent) {
-            long position = getPosition();
-            long duration = getDuration();
-            if (position > 0 && duration > 0) {
-                long seek = getSeek();
-                long max = getMax();
-                boolean looping = isLooping();
-                mEvent.onUpdateTimeMillis(looping, max, seek, position, duration);
-            }
-        }
     }
 
     @Override
@@ -73,10 +50,8 @@ public final class VideoAndroidPlayer implements KernelApi {
 
     @Override
     public void releaseDecoder() {
+        setEvent(null);
         stopExternalMusic(true);
-        if (null != mEvent) {
-            mEvent = null;
-        }
         if (null != mAndroidPlayer) {
             mAndroidPlayer.setOnErrorListener(null);
             mAndroidPlayer.setOnCompletionListener(null);
@@ -108,19 +83,19 @@ public final class VideoAndroidPlayer implements KernelApi {
     @Override
     public void init(@NonNull Context context, @NonNull String url) {
         // loading-start
-        mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
 
         // 设置dataSource
         if (url == null || url.length() == 0) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
             return;
         }
         try {
             Uri uri = Uri.parse(url);
             mAndroidPlayer.setDataSource(context, uri, null);
         } catch (Exception e) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
         try {
             mAndroidPlayer.prepareAsync();
@@ -300,13 +275,13 @@ public final class VideoAndroidPlayer implements KernelApi {
             // ignore 1
             else if (what == 1) {
 //                resetKernel();
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
             }
             // next
             else {
 //                resetKernel();
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             }
             return true;
         }
@@ -315,7 +290,7 @@ public final class VideoAndroidPlayer implements KernelApi {
     private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -330,7 +305,7 @@ public final class VideoAndroidPlayer implements KernelApi {
 //                    mIsPreparing = false;
 //                }
             } else {
-                mEvent.onEvent(PlayerType.KernelType.ANDROID, what);
+                onEvent(PlayerType.KernelType.ANDROID, what);
             }
             return true;
         }
@@ -349,7 +324,7 @@ public final class VideoAndroidPlayer implements KernelApi {
         public void onPrepared(MediaPlayer mp) {
             MPLogUtil.log("K_ANDROID => onPrepared => ");
 
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
 //            int position = mp.getCurrentPosition();
 //            long duration = getDuration();
 //            getVideoPlayerChangeListener().onPrepared(mSeek, duration);
@@ -360,7 +335,7 @@ public final class VideoAndroidPlayer implements KernelApi {
                 seekTo(seek, false);
             }
 
-            mEvent.onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
         }
     };
 
@@ -393,26 +368,6 @@ public final class VideoAndroidPlayer implements KernelApi {
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
-    }
-
-    @Override
-    public boolean isExternalMusicPlayWhenReady() {
-        return mExternalMusicPlayWhenReady;
-    }
-
-    @Override
-    public void setisExternalMusicPlayWhenReady(boolean v) {
-        this.mExternalMusicPlayWhenReady = v;
-    }
-
-    @Override
-    public boolean isExternalMusicLooping() {
-        return mExternalMusicLoop;
-    }
-
-    @Override
-    public void setExternalMusicLooping(boolean v) {
-        mExternalMusicLoop = v;
     }
 
     @Override
@@ -478,27 +433,5 @@ public final class VideoAndroidPlayer implements KernelApi {
     @Override
     public boolean isLooping() {
         return mLoop;
-    }
-
-    /****************/
-
-    @Override
-    public boolean isExternalMusicEqualLength() {
-        return mExternalMusicEqualLength;
-    }
-
-    @Override
-    public void setExternalMusicEqualLength(boolean equal) {
-        mExternalMusicEqualLength = equal;
-    }
-
-    @Override
-    public void setExternalMusicPath(@NonNull String musicPath) {
-        this.mExternalMusicPath = musicPath;
-    }
-
-    @Override
-    public String getExternalMusicPath() {
-        return this.mExternalMusicPath;
     }
 }
