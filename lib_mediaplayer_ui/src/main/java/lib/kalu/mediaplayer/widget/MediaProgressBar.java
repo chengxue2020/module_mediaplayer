@@ -81,20 +81,23 @@ public class MediaProgressBar extends View {
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        MPLogUtil.log("MediaProgressBar => onVisibilityChanged => visibility = " + visibility);
+        if (visibility == View.VISIBLE) {
+            invalidate();
+        }
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
-        MPLogUtil.log("MediaProgressBar => onWindowVisibilityChanged => visibility = " + visibility);
+        if (visibility == View.VISIBLE) {
+            invalidate();
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
 
         int visibility = getVisibility();
-        MPLogUtil.log("MediaProgressBar => onDraw => visibility = " + visibility);
         // show
         if (View.VISIBLE == visibility) {
             // 循环次数
