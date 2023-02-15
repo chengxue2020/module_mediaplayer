@@ -82,7 +82,10 @@ public class MediaProgressBar extends View {
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
         if (visibility == View.VISIBLE) {
-            invalidate();
+            if (mPause) {
+                mPause = false;
+                invalidate();
+            }
         }
     }
 
@@ -90,7 +93,10 @@ public class MediaProgressBar extends View {
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
         if (visibility == View.VISIBLE) {
-            invalidate();
+            if (mPause) {
+                mPause = false;
+                invalidate();
+            }
         }
     }
 
@@ -98,8 +104,10 @@ public class MediaProgressBar extends View {
     protected void onDraw(Canvas canvas) {
 
         int visibility = getVisibility();
-        if (View.VISIBLE != visibility)
+        if (View.VISIBLE != visibility) {
+            mPause = true;
             return;
+        }
 
         // 循环次数
         if (mLoop + 1 >= mCount) {
@@ -167,6 +175,7 @@ public class MediaProgressBar extends View {
 
         // delay
         mLoop = mLoop + 1;
+        clearAnimation();
         postInvalidateDelayed(120);
     }
 
