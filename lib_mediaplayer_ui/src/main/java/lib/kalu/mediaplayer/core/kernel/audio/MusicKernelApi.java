@@ -35,9 +35,9 @@ public interface MusicKernelApi {
 
     boolean isPlaying();
 
-    boolean isEnable();
-
-    void setEnable(boolean v);
+//    boolean isEnable();
+//
+//    void setEnable(boolean v);
 
     void seekTo(long v);
 

@@ -15,6 +15,7 @@ import java.util.List;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
 import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -139,21 +140,7 @@ public interface PlayerApiBase {
         }
     }
 
-//
-//    default void setEventRelease(boolean v) {
-//        try {
-//            ((View) this).setTag(R.id.module_mediaplayer_id_player_event_release, v);
-//            MPLogUtil.log("PlayerApiKernel => setEventRelease => " + v);
-//        } catch (Exception e) {
-//        }
-//    }
-//
-//    default boolean isEventRelease() {
-//        try {
-//            MPLogUtil.log("PlayerApiKernel => isEventRelease => ");
-//            return (boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_event_release);
-//        } catch (Exception e) {
-//            return true;
-//        }
-//    }
+    KernelApi getKernel();
+
+    void setKernel(@NonNull KernelApi kernel);
 }

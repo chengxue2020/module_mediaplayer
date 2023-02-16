@@ -88,23 +88,23 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
             // 7
             attachRender();
             // 8
-            setPlayerData(builder, url);
+            updatePlayerData(builder, url);
             // 9
-            setExternalMusicData(builder);
+            updateExternalMusicData(builder);
         } catch (Exception e) {
         }
     }
 
-    default void setPlayerData(@NonNull StartBuilder bundle, @NonNull String playUrl) {
+    default void updatePlayerData(@NonNull StartBuilder bundle, @NonNull String playUrl) {
         try {
             boolean windowVisibilityChangedRelease = bundle.isWindowVisibilityChangedRelease();
             boolean loop = bundle.isLoop();
-            MPLogUtil.log("PlayerApiKernel => updateIdRes => loop = " + loop + ", windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", playUrl = " + playUrl);
+            MPLogUtil.log("PlayerApiKernel => updatePlayerData => loop = " + loop + ", windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", playUrl = " + playUrl);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, loop);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, windowVisibilityChangedRelease);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => updateIdRes => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiKernel => updatePlayerData => " + e.getMessage(), e);
         }
     }
 
@@ -120,7 +120,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
             builder.setMute(isMute());
             builder.setExternalMusicUrl(getExternalMusicPath());
             builder.setExternalMusicLooping(isExternalMusicLooping());
-            builder.setExternalMusicEqualLength(isExternalMusicEqualLength());
+            builder.setExternalMusicSeek(isExternalMusicSeek());
             builder.setExternalMusicPlayWhenReady(isExternalMusicPlayWhenReady());
             builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
             return builder.build();
@@ -542,125 +542,6 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
         }
     }
 
-    /***************************/
-
-    default void stopExternalMusic(boolean release) {
-        try {
-            KernelApi kernel = getKernel();
-            kernel.stopExternalMusic(release);
-        } catch (Exception e) {
-        }
-    }
-
-    default void startExternalMusic(Context context, boolean musicLooping, boolean musicEqualLength) {
-        try {
-            setExternalMusicLooping(musicLooping);
-            setExternalMusicEqualLength(musicLooping);
-            KernelApi kernel = getKernel();
-            kernel.startExternalMusic(context);
-        } catch (Exception e) {
-        }
-    }
-
-    default void pauseExternalMusic() {
-        try {
-            KernelApi kernel = getKernel();
-            kernel.pauseExternalMusic();
-        } catch (Exception e) {
-        }
-    }
-
-    default void resetExternalMusic() {
-        try {
-            KernelApi kernel = getKernel();
-            kernel.resetExternalMusic();
-        } catch (Exception e) {
-        }
-    }
-
-    default void resumeExternalMusic() {
-        try {
-            KernelApi kernel = getKernel();
-            kernel.resumeExternalMusic();
-        } catch (Exception e) {
-        }
-    }
-
-    default boolean isExternalMusicPlaying() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.isExternalMusicPlaying();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    default boolean isExternalMusicEnable() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.isExternalMusicEnable();
-        } catch (Exception e) {
-            return true;
-        }
-    }
-
-    default boolean isExternalMusicNull() {
-        try {
-            KernelApi kernel = getKernel();
-            return kernel.isExternalMusicNull();
-        } catch (Exception e) {
-            return true;
-        }
-    }
-
-    default void checkExternalMusic(@NonNull Context context) {
-
-        boolean musicEqualLength = isExternalMusicEqualLength();
-        // 等长音频
-        if (musicEqualLength) {
-
-            String musicPath = getExternalMusicPath();
-            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true, musicPath = " + musicPath);
-            if (null == musicPath || musicPath.length() <= 0) return;
-
-            boolean musicEnable = isExternalMusicEnable();
-            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEnable = " + musicEnable);
-            if (!musicEnable) return;
-
-            boolean musicNull = isExternalMusicNull();
-            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = true, musicNull = " + musicNull);
-            if (musicNull) {
-                boolean musicLoop = isExternalMusicLooping();
-                boolean musicEqual = isExternalMusicEqualLength();
-                startExternalMusic(context, musicLoop, musicEqual);
-            } else {
-                // 1
-                pauseExternalMusic();
-                // 2
-                resetExternalMusic();
-            }
-        }
-        // 片段音频
-        else {
-            boolean musicPlaying = isExternalMusicPlaying();
-            MPLogUtil.log("PlayerApiKernel => checkExternalMusic[等长音频] => musicEqualLength = false, musicPlaying = " + musicPlaying);
-            if (musicPlaying) return;
-            boolean ready = isExternalMusicPlayWhenReady();
-            if (ready) {
-                String musicPath = getExternalMusicPath();
-                if (null != musicPath && musicPath.length() > 0) {
-                    boolean musicLoop = isExternalMusicLooping();
-                    boolean musicEqual = isExternalMusicEqualLength();
-                    startExternalMusic(context, musicLoop, musicEqual);
-                } else {
-                    stopExternalMusic(true);
-                }
-            } else {
-                stopExternalMusic(true);
-            }
-        }
-    }
-
     default void playEnd() {
         hideReal();
         setScreenKeep(false);
@@ -912,8 +793,4 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
             MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage(), e);
         }
     }
-
-    KernelApi getKernel();
-
-    void setKernel(@NonNull KernelApi kernel);
 }

@@ -25,7 +25,6 @@ public final class MusicPlayerManager {
             MPLogUtil.log("MusicPlayerManager => reset => mMusicPlayer = " + mMusicPlayer);
             pause();
             mMusicPlayer.seekTo(1);
-            start(0, null);
         }
     }
 
@@ -58,16 +57,16 @@ public final class MusicPlayerManager {
         }
     }
 
-    private static void create() {
-        MPLogUtil.log("MusicPlayerManager => create => step1");
+    private static void check() {
+        MPLogUtil.log("MusicPlayerManager => check => step1");
         if (null != mMusicPlayer) {
             pause();
             stop();
             release(true);
         }
-        MPLogUtil.log("MusicPlayerManager => create => step2");
+        MPLogUtil.log("MusicPlayerManager => check => step2");
         if (null == mMusicPlayer) {
-            MPLogUtil.log("MusicPlayerManager => create => mMusicPlayer = " + mMusicPlayer);
+            MPLogUtil.log("MusicPlayerManager => check => mMusicPlayer = " + mMusicPlayer);
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
             int kernel = config.getKernel();
             mMusicPlayer = MusicKernelFactoryManager.getKernel(kernel);
@@ -75,8 +74,8 @@ public final class MusicPlayerManager {
     }
 
     public static void release(boolean release) {
-        setEnable(false);
         pause();
+        reset();
         if (release && null != mMusicPlayer) {
             MPLogUtil.log("MusicPlayerManager => release => mMusicPlayer = " + mMusicPlayer);
             mMusicPlayer.release();
@@ -84,23 +83,7 @@ public final class MusicPlayerManager {
         }
     }
 
-    private static void setEnable(boolean v) {
-        if (null != mMusicPlayer) {
-            MPLogUtil.log("MusicPlayerManager => setEnable => v = " + v + ", mMusicPlayer = " + mMusicPlayer);
-            mMusicPlayer.setEnable(v);
-        }
-    }
-
-    public static boolean isEnable() {
-        if (null != mMusicPlayer) {
-            MPLogUtil.log("MusicPlayerManager => isEnable => mMusicPlayer = " + mMusicPlayer);
-            return mMusicPlayer.isEnable();
-        } else {
-            return true;
-        }
-    }
-
-    public static boolean isNull() {
+    public static boolean isRelease() {
         MPLogUtil.log("MusicPlayerManager => isNull => mMusicPlayer = " + mMusicPlayer);
         if (null != mMusicPlayer) {
             return false;
@@ -139,12 +122,10 @@ public final class MusicPlayerManager {
     public static void start(@NonNull Context context, @NonNull long position, @NonNull String musicUrl, @NonNull OnMusicPlayerChangeListener listener) {
         MPLogUtil.log("MusicPlayerManager => start => position = " + position + ", musicUrl = " + musicUrl + ", mMusicPlayer = " + mMusicPlayer + ", listener = " + listener);
         // 1
-        create();
+        check();
         // 2
         setDataSource(context, musicUrl);
         // 3
-        setEnable(true);
-        // 4
         start(position, listener);
     }
 }

@@ -12,7 +12,7 @@ public interface KernelApiExternalMusic extends KernelApiBase {
 
     boolean isExternalMusicLooping();
 
-    boolean isExternalMusicEqualLength();
+    boolean isExternalMusicSeek();
 
     String getExternalMusicPath();
 
@@ -36,9 +36,9 @@ public interface KernelApiExternalMusic extends KernelApiBase {
             return;
 
         // 播放额外音频【每次都创建音频播放器】
-        boolean musicEqual = isExternalMusicEqualLength();
+        boolean musicSeek = isExternalMusicSeek();
         boolean musicLooping = isExternalMusicLooping();
-        MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => musicEqual = " + musicEqual + ", musicLooping = " + musicLooping);
+        MPLogUtil.log("KernelApi => startExternalMusic[播放额外音频-每次都创建音频播放器] => musicSeek = " + musicSeek + ", musicLooping = " + musicLooping);
 
         // 1 视频
         setMute(true);
@@ -47,7 +47,7 @@ public interface KernelApiExternalMusic extends KernelApiBase {
 
         // 2 音频
         long position = 0;
-        if (musicEqual) {
+        if (musicSeek) {
             position = getPosition() - getSeek();
             if (position <= 0) {
                 position = 0;
@@ -94,11 +94,11 @@ public interface KernelApiExternalMusic extends KernelApiBase {
         return MusicPlayerManager.isPlaying();
     }
 
-    default boolean isExternalMusicEnable() {
-        return MusicPlayerManager.isEnable();
+    default boolean isExternalMusicRelease() {
+        return MusicPlayerManager.isRelease();
     }
 
-    default boolean isExternalMusicNull() {
-        return MusicPlayerManager.isNull();
-    }
+//    default boolean isExternalMusicNull() {
+//        return MusicPlayerManager.isNull();
+//    }
 }

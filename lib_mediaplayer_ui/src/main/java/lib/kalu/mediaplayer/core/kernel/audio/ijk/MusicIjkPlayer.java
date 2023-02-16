@@ -87,15 +87,15 @@ public final class MusicIjkPlayer implements MusicKernelApi {
         return false;
     }
 
-    @Override
-    public boolean isEnable() {
-        return false;
-    }
-
-    @Override
-    public void setEnable(boolean v) {
-
-    }
+//    @Override
+//    public boolean isEnable() {
+//        return false;
+//    }
+//
+//    @Override
+//    public void setEnable(boolean v) {
+//
+//    }
 
     @Override
     public void seekTo(long v) {

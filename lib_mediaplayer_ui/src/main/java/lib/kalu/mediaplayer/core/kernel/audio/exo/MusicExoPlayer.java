@@ -223,15 +223,15 @@ public final class MusicExoPlayer implements MusicKernelApi {
         return mExoPlayer.isPlaying();
     }
 
-    @Override
-    public boolean isEnable() {
-        return mMusicEnable;
-    }
-
-    @Override
-    public void setEnable(boolean v) {
-        mMusicEnable = v;
-    }
+//    @Override
+//    public boolean isEnable() {
+//        return mMusicEnable;
+//    }
+//
+//    @Override
+//    public void setEnable(boolean v) {
+//        mMusicEnable = v;
+//    }
 
     @Override
     public void seekTo(long v) {

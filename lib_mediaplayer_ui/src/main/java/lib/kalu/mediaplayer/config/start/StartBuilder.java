@@ -17,7 +17,7 @@ public final class StartBuilder {
     private String externalMusicUrl;
     private boolean externalMusicLoop;
     private boolean externalMusicPlayWhenReady;
-    private boolean externalMusicEqualLength;
+    private boolean externalMusicSeek;
 
     public boolean isMute() {
         return mute;
@@ -55,8 +55,8 @@ public final class StartBuilder {
         return externalMusicPlayWhenReady;
     }
 
-    public boolean isExternalMusicEqualLength() {
-        return externalMusicEqualLength;
+    public boolean isExternalMusicSeek() {
+        return externalMusicSeek;
     }
 
     public StartBuilder(StartBuilder.Builder builder) {
@@ -69,7 +69,7 @@ public final class StartBuilder {
         this.externalMusicUrl = builder.externalMusicUrl;
         this.externalMusicLoop = builder.externalMusicLoop;
         this.externalMusicPlayWhenReady = builder.externalMusicPlayWhenReady;
-        this.externalMusicEqualLength = builder.externalMusicEqualLength;
+        this.externalMusicSeek = builder.externalMusicSeek;
     }
 
     @Override
@@ -84,7 +84,7 @@ public final class StartBuilder {
                 ", externalMusicUrl='" + externalMusicUrl + '\'' +
                 ", externalMusicLoop=" + externalMusicLoop +
                 ", externalMusicPlayWhenReady=" + externalMusicPlayWhenReady +
-                ", externalMusicEqualLength=" + externalMusicEqualLength +
+                ", externalMusicSeek=" + externalMusicSeek +
                 '}';
     }
 
@@ -99,7 +99,7 @@ public final class StartBuilder {
         builder.externalMusicUrl = externalMusicUrl;
         builder.externalMusicLoop = externalMusicLoop;
         builder.externalMusicPlayWhenReady = externalMusicPlayWhenReady;
-        builder.externalMusicEqualLength = externalMusicEqualLength;
+        builder.externalMusicSeek = externalMusicSeek;
         return builder;
     }
 
@@ -117,7 +117,7 @@ public final class StartBuilder {
         private String externalMusicUrl = null;
         private boolean externalMusicLoop = false;
         private boolean externalMusicPlayWhenReady = false;
-        private boolean externalMusicEqualLength = true;
+        private boolean externalMusicSeek = true;
 
         public Builder() {
         }
@@ -131,8 +131,8 @@ public final class StartBuilder {
             externalMusicLoop = v;
             return this;
         }
-        public Builder setExternalMusicEqualLength(boolean v) {
-            externalMusicEqualLength = v;
+        public Builder setExternalMusicSeek(boolean v) {
+            externalMusicSeek = v;
             return this;
         }
 

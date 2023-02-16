@@ -58,11 +58,11 @@ public abstract class BasePlayer implements KernelApi {
     }
 
     @Override
-    public boolean isExternalMusicEqualLength() {
+    public boolean isExternalMusicSeek() {
         try {
-            return musicApi.isExternalMusicEqualLength();
+            return musicApi.isExternalMusicSeek();
         } catch (Exception e) {
-            return false;
+            return true;
         }
     }
 
