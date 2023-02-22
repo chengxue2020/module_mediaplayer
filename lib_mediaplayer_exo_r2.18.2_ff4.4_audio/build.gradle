@@ -34,7 +34,7 @@ android {
         variant.outputs.all {
             def type = new String(buildType.name).toLowerCase()
             def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
-            outputFileName = "lib_mediaplayer_exo_r2.18.3_ff4.4_audio_" + type + "_" + time + ".aar"
+            outputFileName = "lib_mediaplayer_exo_r2.18.2_ff4.4_audio_" + type + "_" + time + ".aar"
         }
     }
 

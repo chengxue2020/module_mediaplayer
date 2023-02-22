@@ -74,6 +74,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  *       commands} to indicate which {@link Player} methods are supported.
  *   <li>All setter-like player methods (for example, {@link #setPlayWhenReady}) forward to
  *       overridable methods (for example, {@link #handleSetPlayWhenReady}) that can be used to
+ *       handle these requests. These methods return a {@link ListenableFuture2} to indicate when the
  *       request has been handled and is fully reflected in the values returned from {@link
  *       #getState}. This class will automatically request a state update once the request is done.
  *       If the state changes can be handled synchronously, these methods can return Guava's {@link
@@ -2802,6 +2803,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_PLAY_PAUSE} is available.
    *
    * @param playWhenReady The requested {@link State#playWhenReady}
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2814,6 +2816,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * <p>Will only be called if {@link Player#COMMAND_PREPARE} is available.
    *
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2826,6 +2829,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * <p>Will only be called if {@link Player#COMMAND_STOP} is available.
    *
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2836,6 +2840,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
   /**
    * Handles calls to {@link Player#release}.
    *
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   // TODO(b/261158047): Add that this method will only be called if COMMAND_RELEASE is available.
@@ -2850,6 +2855,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_REPEAT_MODE} is available.
    *
    * @param repeatMode The requested {@link RepeatMode}.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2863,6 +2869,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_SHUFFLE_MODE} is available.
    *
    * @param shuffleModeEnabled Whether shuffle mode was requested to be enabled.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2876,6 +2883,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_SPEED_AND_PITCH} is available.
    *
    * @param playbackParameters The requested {@link PlaybackParameters}.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2889,6 +2897,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_TRACK_SELECTION_PARAMETERS} is available.
    *
    * @param trackSelectionParameters The requested {@link TrackSelectionParameters}.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2904,6 +2913,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_MEDIA_ITEMS_METADATA} is available.
    *
    * @param playlistMetadata The requested {@linkplain MediaMetadata playlist metadata}.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2919,6 +2929,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * @param volume The requested audio volume, with 0 being silence and 1 being unity gain (signal
    *     unchanged).
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2932,6 +2943,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_DEVICE_VOLUME} is available.
    *
    * @param deviceVolume The requested device volume.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2944,6 +2956,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * <p>Will only be called if {@link Player#COMMAND_ADJUST_DEVICE_VOLUME} is available.
    *
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2957,6 +2970,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * <p>Will only be called if {@link Player#COMMAND_ADJUST_DEVICE_VOLUME} is available.
    *
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2971,6 +2985,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_ADJUST_DEVICE_VOLUME} is available.
    *
    * @param muted Whether the device was requested to be muted.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -2986,6 +3001,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * @param videoOutput The requested video output. This is either a {@link Surface}, {@link
    *     SurfaceHolder}, {@link TextureView} or {@link SurfaceView}.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -3002,7 +3018,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *     non-null, the output should only be cleared if it matches the provided argument. This is
    *     either a {@link Surface}, {@link SurfaceHolder}, {@link TextureView} or {@link
    *     SurfaceView}.
-   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -3022,6 +3038,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *     at the default item.
    * @param startPositionMs The position in milliseconds to start playback from, or {@link
    *     C#TIME_UNSET} to start at the default position in the media item.
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -3038,7 +3055,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * @param index The index at which to add the items. The index is in the range 0 &lt;= {@code
    *     index} &lt;= {@link #getMediaItemCount()}.
    * @param mediaItems The media items to add.
-   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -3058,7 +3075,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *     #getMediaItemCount()}.
    * @param newIndex The new index of the first moved item. The index is in the range {@code 0}
    *     &lt;= {@code newIndex} &lt; {@link #getMediaItemCount() - (toIndex - fromIndex)}.
-   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -3075,7 +3092,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *     &lt;= {@code fromIndex} &lt; {@link #getMediaItemCount()}.
    * @param toIndex The index of the first item to be kept (exclusive). The index is in the range
    *     {@code fromIndex} &lt; {@code toIndex} &lt;= {@link #getMediaItemCount()}.
-   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
@@ -3095,7 +3112,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * @param positionMs The position in milliseconds to start playback from, or {@link C#TIME_UNSET}
    *     to start at the default position in the media item.
    * @param seekCommand The {@link Player.Command} used to trigger the seek.
-   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride

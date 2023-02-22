@@ -200,6 +200,7 @@ public final class Util {
 
   /**
    * Registers a {@link BroadcastReceiver} that's not intended to receive broadcasts from other
+   * apps. This will be enforced by specifying {@link Context#RECEIVER_NOT_EXPORTED} if {@link
    * #SDK_INT} is 33 or above.
    *
    * @param context The context on which {@link Context#registerReceiver} will be called.
@@ -213,12 +214,13 @@ public final class Util {
     if (SDK_INT < 33) {
       return context.registerReceiver(receiver, filter);
     } else {
-      return context.registerReceiver(receiver, filter);
+      return context.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
     }
   }
 
   /**
    * Registers a {@link BroadcastReceiver} that's not intended to receive broadcasts from other
+   * apps. This will be enforced by specifying {@link Context#RECEIVER_NOT_EXPORTED} if {@link
    * #SDK_INT} is 33 or above.
    *
    * @param context The context on which {@link Context#registerReceiver} will be called.
@@ -237,7 +239,8 @@ public final class Util {
           receiver,
           filter,
           /* broadcastPermission= */ null,
-          handler);
+          handler,
+          Context.RECEIVER_NOT_EXPORTED);
     }
   }
 
@@ -611,11 +614,14 @@ public final class Util {
   /**
    * Posts the {@link Runnable} if the calling thread differs with the {@link Looper} of the {@link
    * Handler}. Otherwise, runs the {@link Runnable} directly. Also returns a {@link
+   * ListenableFuture2} for when the {@link Runnable} has run.
    *
    * @param handler The handler to which the {@link Runnable} will be posted.
    * @param runnable The runnable to either post or run.
+   * @param successValue The value to set in the {@link ListenableFuture2} once the runnable
    *     completes.
    * @param <T> The type of {@code successValue}.
+   * @return A {@link ListenableFuture2} for when the {@link Runnable} has run.
    */
   public static <T> ListenableFuture2<T> postOrRunWithCompletion(
       Handler handler, Runnable runnable, T successValue) {
@@ -637,6 +643,7 @@ public final class Util {
   }
 
   /**
+   * Asynchronously transforms the result of a {@link ListenableFuture2}.
    *
    * <p>The transformation function is called using a {@linkplain MoreExecutors#directExecutor()
    * direct executor}.
@@ -647,9 +654,11 @@ public final class Util {
    * cancelled, the returned Future will also be cancelled. All forwarded cancellations will not
    * attempt to interrupt.
    *
+   * @param future The input {@link ListenableFuture2}.
    * @param transformFunction The function transforming the result of the input future.
    * @param <T> The result type of the input future.
    * @param <U> The result type of the transformation function.
+   * @return A {@link ListenableFuture2} for the transformed result.
    */
   public static <T, U> ListenableFuture2<T> transformFutureAsync(
       ListenableFuture2<U> future, AsyncFunction<U, T> transformFunction) {
