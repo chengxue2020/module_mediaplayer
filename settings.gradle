@@ -3,6 +3,7 @@ include ':app'
 include ':lib_mediaplayer_ui'
 // exo
 //include ':lib_mediaplayer_core_exo_common'
+include ':lib_mediaplayer_exo_r2.18.3_ff4.4_audio'
 include ':lib_mediaplayer_exo_r2.18.2_ff4.4_audio'
 include ':lib_mediaplayer_exo_r2.18.2_ff4.4_video'
 // ijk
