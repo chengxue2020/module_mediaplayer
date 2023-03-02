@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
-import lib.kalu.mediaplayer.util.BaseToast;
+import lib.kalu.mediaplayer.util.ToastUtils;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 public class ComponentOnce extends RelativeLayout implements ComponentApi {
@@ -70,10 +70,10 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
                     if (PlayerUtils.isConnected(mContext)) {
                         mControllerWrapper.restart();
                     } else {
-                        BaseToast.showRoundRectToast(v.getContext(), "请查看网络是否连接");
+                        ToastUtils.showRoundRectToast(v.getContext(), "请查看网络是否连接");
                     }
                 } else {
-                    BaseToast.showRoundRectToast(v.getContext(), "时间还未到，请稍后再试");
+                    ToastUtils.showRoundRectToast(v.getContext(), "时间还未到，请稍后再试");
                 }
             }
         });

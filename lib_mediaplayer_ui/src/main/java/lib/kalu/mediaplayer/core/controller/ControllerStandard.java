@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.core.controller.component.ComponentGesture;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.controller.component.ComponentTop;
-import lib.kalu.mediaplayer.util.BaseToast;
+import lib.kalu.mediaplayer.util.ToastUtils;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
 @Keep
@@ -124,7 +124,7 @@ public class ControllerStandard extends ControllerLayoutDispatchTouchEvent {
         View view = findViewById(R.id.module_mediaplayer_controller_center_lock);
         view.setSelected(isLocked ? true : false);
         String string = getContext().getResources().getString(isLocked ? R.string.module_mediaplayer_string_locked : R.string.module_mediaplayer_string_unlocked);
-        BaseToast.showRoundRectToast(getContext(), string);
+        ToastUtils.showRoundRectToast(getContext(), string);
     }
 
     @Override

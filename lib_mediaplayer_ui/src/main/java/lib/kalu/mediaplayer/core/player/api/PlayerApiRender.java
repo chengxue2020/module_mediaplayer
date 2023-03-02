@@ -15,7 +15,6 @@ import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
-import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface PlayerApiRender extends PlayerApiBase {
@@ -62,7 +61,7 @@ public interface PlayerApiRender extends PlayerApiBase {
             return;
 
         Context context = layout.getContext();
-        Activity activity = ActivityUtils.getActivity(context);
+        Activity activity = getWrapperActivity(context);
         if (null == activity)
             return;
 
@@ -102,7 +101,7 @@ public interface PlayerApiRender extends PlayerApiBase {
             return;
 
         Context context = layout.getContext();
-        Activity activity = ActivityUtils.getActivity(context);
+        Activity activity = getWrapperActivity(context);
         if (null == activity)
             return;
 
@@ -143,7 +142,7 @@ public interface PlayerApiRender extends PlayerApiBase {
             int count = layout.getChildCount();
             if (count <= 0) {
                 Context context = layout.getContext();
-                Activity activity = ActivityUtils.getActivity(context);
+                Activity activity = getWrapperActivity(context);
                 View decorView = activity.getWindow().getDecorView();
                 View v = decorView.findViewById(R.id.module_mediaplayer_root);
                 if (null != v) {
@@ -168,7 +167,7 @@ public interface PlayerApiRender extends PlayerApiBase {
             return;
 
         Context context = layout.getContext();
-        Activity activity = ActivityUtils.getActivity(context);
+        Activity activity = getWrapperActivity(context);
         if (null == activity)
             return;
 
@@ -210,7 +209,7 @@ public interface PlayerApiRender extends PlayerApiBase {
             return;
 
         Context context = layout.getContext();
-        Activity activity = ActivityUtils.getActivity(context);
+        Activity activity = getWrapperActivity(context);
         if (null == activity)
             return;
 

@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.player.api;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -17,12 +18,23 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.listener.OnChangeListener;
-import lib.kalu.mediaplayer.util.ActivityUtils;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface PlayerApiBase {
 
     List<OnChangeListener> mListeners = new LinkedList<>();
+
+    default Activity getWrapperActivity(Context context) {
+        if (context == null) {
+            return null;
+        }
+        if (context instanceof Activity) {
+            return (Activity) context;
+        } else if (context instanceof ContextWrapper) {
+            return getWrapperActivity(((ContextWrapper) context).getBaseContext());
+        }
+        return null;
+    }
 
     default ViewGroup getLayout() {
         return (ViewGroup) this;
@@ -88,7 +100,7 @@ public interface PlayerApiBase {
         ViewGroup group;
         if (isFull) {
             Context context = layout.getContext();
-            Activity activity = ActivityUtils.getActivity(context);
+            Activity activity = getWrapperActivity(context);
             ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             int index = decorView.getChildCount();
             group = decorView.getChildAt(index - 1).findViewById(R.id.module_mediaplayer_control);

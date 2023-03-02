@@ -26,7 +26,7 @@ import java.lang.reflect.Field;
 import lib.kalu.mediaplayer.R;
 
 @Keep
-public final class BaseToast {
+public final class ToastUtils {
 
     @SuppressLint("StaticFieldLeak")
     private static int toastBackColor;
@@ -48,7 +48,7 @@ public final class BaseToast {
     /**
      * 私有构造
      */
-    private BaseToast() {
+    private ToastUtils() {
         //避免初始化
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
