@@ -5,6 +5,7 @@ import androidx.annotation.Keep;
 @Keep
 public final class StartBuilder {
 
+    private int delay;
     private long max;
     private long seek;
     private boolean live;
@@ -59,7 +60,12 @@ public final class StartBuilder {
         return externalMusicSeek;
     }
 
+    public int getDelay() {
+        return delay;
+    }
+
     public StartBuilder(StartBuilder.Builder builder) {
+        this.delay = builder.delay;
         this.max = builder.max;
         this.seek = builder.seek;
         this.mute = builder.mute;
@@ -75,7 +81,8 @@ public final class StartBuilder {
     @Override
     public String toString() {
         return "StartBuilder{" +
-                "max=" + max +
+                "delay=" + delay +
+                ", max=" + max +
                 ", seek=" + seek +
                 ", live=" + live +
                 ", loop=" + loop +
@@ -90,6 +97,7 @@ public final class StartBuilder {
 
     public Builder newBuilder() {
         Builder builder = new Builder();
+        builder.delay = delay;
         builder.max = max;
         builder.seek = seek;
         builder.mute = mute;
@@ -106,6 +114,7 @@ public final class StartBuilder {
     @Keep
     public final static class Builder {
 
+        private int delay = 0;
         private long max = 0;
         private long seek = 0;
         private boolean live = false;
@@ -122,6 +131,11 @@ public final class StartBuilder {
         public Builder() {
         }
 
+        public Builder setDelay(int v) {
+            delay = v;
+            return this;
+        }
+
         public Builder setExternalMusicPlayWhenReady(boolean v) {
             externalMusicPlayWhenReady = v;
             return this;
@@ -131,6 +145,7 @@ public final class StartBuilder {
             externalMusicLoop = v;
             return this;
         }
+
         public Builder setExternalMusicSeek(boolean v) {
             externalMusicSeek = v;
             return this;

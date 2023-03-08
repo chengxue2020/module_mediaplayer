@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.core.player.api;
 
+import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -26,6 +27,25 @@ public interface PlayerApiComponent extends PlayerApiBase {
     default void showComponentLoading() {
         callPlayerState(PlayerType.StateType.STATE_LOADING_START);
     }
+
+    default <T extends android.view.View> T findComponent(java.lang.Class<?> cls) {
+        try {
+            ControllerLayout layout = getControlLayout();
+            if (null != layout) {
+                int count = layout.getChildCount();
+                for (int i = 0; i < count; i++) {
+                    View child = layout.getChildAt(i);
+                    if (child.getClass() == cls) {
+                        return (T) child;
+                    }
+                }
+            }
+            throw new Exception("not find");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     default void dispatchEventComponent(@NonNull KeyEvent event) {
         try {

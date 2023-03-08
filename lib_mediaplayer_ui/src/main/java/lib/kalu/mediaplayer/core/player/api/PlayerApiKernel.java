@@ -1,6 +1,8 @@
 package lib.kalu.mediaplayer.core.player.api;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -69,29 +71,58 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
 
         String s = builder.toString();
         MPLogUtil.log("PlayerApiKernel => start => url = " + url + ", data = " + s);
-        if (null == url || url.length() <= 0) return;
+        if (null == url || url.length() <= 0)
+            return;
 
-        try {
-            // 1
-            PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            MPLogUtil.setLogger(config);
-            // 2
-            callPlayerState(PlayerType.StateType.STATE_INIT);
-            // 3
-            callPlayerState(PlayerType.StateType.STATE_LOADING_START);
-            // 4
-            createRender();
-            // 5
-            createKernel(builder, config);
-            // 6
-            updateKernel(builder, url);
-            // 7
-            attachRender();
-            // 8
-            updatePlayerData(builder, url);
-            // 9
-            updateExternalMusicData(builder);
-        } catch (Exception e) {
+        callPlayerState(PlayerType.StateType.STATE_INIT);
+        int delay = builder.getDelay();
+        if (delay <= 0) {
+            try {
+                // 1
+                PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                MPLogUtil.setLogger(config);
+                // 3
+                callPlayerState(PlayerType.StateType.STATE_LOADING_START);
+                // 4
+                createRender();
+                // 5
+                createKernel(builder, config);
+                // 6
+                updateKernel(builder, url);
+                // 7
+                attachRender();
+                // 8
+                updatePlayerData(builder, url);
+                // 9
+                updateExternalMusicData(builder);
+            } catch (Exception e) {
+            }
+        } else {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // 1
+                        PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                        MPLogUtil.setLogger(config);
+                        // 3
+                        callPlayerState(PlayerType.StateType.STATE_LOADING_START);
+                        // 4
+                        createRender();
+                        // 5
+                        createKernel(builder, config);
+                        // 6
+                        updateKernel(builder, url);
+                        // 7
+                        attachRender();
+                        // 8
+                        updatePlayerData(builder, url);
+                        // 9
+                        updateExternalMusicData(builder);
+                    } catch (Exception e) {
+                    }
+                }
+            }, delay);
         }
     }
 

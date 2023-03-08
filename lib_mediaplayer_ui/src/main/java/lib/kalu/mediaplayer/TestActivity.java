@@ -14,6 +14,7 @@ import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
 import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.controller.component.ComponentError;
+import lib.kalu.mediaplayer.core.controller.component.ComponentInit;
 import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.controller.component.ComponentSpeed;
@@ -89,6 +90,10 @@ public final class TestActivity extends Activity {
         // 网速ui
         ComponentSpeed speed = new ComponentSpeed(this);
         controller.addComponent(speed);
+
+        // 初始化ui
+        ComponentInit init = new ComponentInit(this);
+        controller.addComponent(init);
 
         // control
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
@@ -220,6 +225,7 @@ public final class TestActivity extends Activity {
         builder.setSeek(seek);
         builder.setMax(max);
         builder.setLive(live);
+        builder.setDelay(4000);
         VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
         videoLayout.start(builder.build(), url);
     }
