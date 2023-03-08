@@ -746,8 +746,6 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
                         // 播放结束
                         case PlayerType.EventType.EVENT_VIDEO_END:
 
-                            callPlayerState(PlayerType.StateType.STATE_END);
-
                             // 埋点
                             try {
                                 BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
@@ -760,6 +758,7 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
                             // loop
                             if (looping) {
 
+                                callPlayerState(PlayerType.StateType.STATE_END);
                                 // step1
                                 callPlayerState(PlayerType.StateType.STATE_LOADING_START);
                                 hideReal();
