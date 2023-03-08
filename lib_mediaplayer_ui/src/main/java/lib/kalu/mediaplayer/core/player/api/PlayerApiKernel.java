@@ -753,6 +753,16 @@ public interface PlayerApiKernel extends PlayerApiRender, PlayerApiDevice, Playe
                             } catch (Exception e) {
                             }
 
+                            boolean aFloat = isFloat();
+                            if (aFloat) {
+                                startFloat();
+                            }
+
+                            boolean aFull = isFull();
+                            if (aFull) {
+                                stopFull();
+                            }
+
                             boolean looping = isLooping();
                             MPLogUtil.log("PlayerApiKernel => onEvent = 播放结束 => looping = " + looping);
                             // loop

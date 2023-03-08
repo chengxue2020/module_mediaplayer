@@ -70,7 +70,9 @@ public interface PlayerApiBase {
         if (null == layout) return;
         layout.setPlayState(playerState);
         for (OnChangeListener l : listener) {
-            if (null == l) continue;
+            MPLogUtil.log("PlayerApiBase => callPlayerState => l = " + l);
+            if (null == l)
+                continue;
             l.onChange(playerState);
         }
     }
