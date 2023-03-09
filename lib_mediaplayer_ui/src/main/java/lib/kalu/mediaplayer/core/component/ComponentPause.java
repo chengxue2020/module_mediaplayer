@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.controller.component;
+package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,13 +13,9 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentPause extends RelativeLayout implements ComponentApi {
-
-    private ControllerWrapper mControllerWrapper;
 
     public ComponentPause(@NonNull Context context) {
         super(context);
@@ -50,23 +46,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
         super.onAttachedToWindow();
     }
 
-    @Override
-    public void attach(@NonNull ControllerWrapper controllerWrapper) {
-        mControllerWrapper = controllerWrapper;
-    }
 
     @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public void onVisibilityChanged(boolean isVisible, Animation anim) {
-
-    }
-
-    @Override
-    public void onPlayStateChanged(int playState) {
+    public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSE:
                 MPLogUtil.log("ComponentPause[show] => playState = " + playState);
@@ -82,14 +64,6 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 gone();
                 break;
         }
-    }
-
-    @Override
-    public void onWindowStateChanged(int playerState) {
-    }
-
-    @Override
-    public void onLockStateChanged(boolean isLocked) {
     }
 
     @Override

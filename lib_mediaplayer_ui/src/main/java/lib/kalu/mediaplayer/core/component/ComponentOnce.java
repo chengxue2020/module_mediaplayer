@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.controller.component;
+package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -14,9 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.ToastUtils;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
@@ -28,7 +26,6 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
     private TextView mTvMessage;
     private TextView mTvRetry;
     private int playState;
-    private ControllerWrapper mControllerWrapper;
 
     public ComponentOnce(Context context) {
         super(context);
@@ -68,7 +65,7 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
                 if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
                     //即将开播
                     if (PlayerUtils.isConnected(mContext)) {
-                        mControllerWrapper.restart();
+//                        mControllerWrapper.restart();
                     } else {
                         ToastUtils.showRoundRectToast(v.getContext(), "请查看网络是否连接");
                     }
@@ -80,22 +77,7 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void attach(@NonNull ControllerWrapper controllerWrapper) {
-        mControllerWrapper = controllerWrapper;
-    }
-
-    @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public void onVisibilityChanged(boolean isVisible, Animation anim) {
-
-    }
-
-    @Override
-    public void onPlayStateChanged(int playState) {
+    public void callPlayerEvent(int playState) {
         this.playState = playState;
         if (playState == PlayerType.StateType.STATE_ONCE_LIVE) {
             //即将开播
@@ -103,16 +85,6 @@ public class ComponentOnce extends RelativeLayout implements ComponentApi {
         } else {
             setVisibility(GONE);
         }
-    }
-
-    @Override
-    public void onWindowStateChanged(int playerState) {
-
-    }
-
-    @Override
-    public void onLockStateChanged(boolean isLock) {
-
     }
 
     @Override

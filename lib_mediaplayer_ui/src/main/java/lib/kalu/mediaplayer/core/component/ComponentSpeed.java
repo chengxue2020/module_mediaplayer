@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.controller.component;
+package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.os.Handler;
@@ -14,8 +14,6 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ComponentSpeed extends RelativeLayout implements ComponentApi {
@@ -30,22 +28,6 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_speed, this, true);
-    }
-
-    private ControllerWrapper mControllerWrapper;
-
-    @Override
-    public void attach(@NonNull ControllerWrapper wrapper) {
-        mControllerWrapper = wrapper;
-    }
-
-    @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public void onVisibilityChanged(boolean isVisible, Animation anim) {
     }
 
     @Override
@@ -64,7 +46,7 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void onPlayStateChanged(int playState) {
+    public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
                 MPLogUtil.log("ComponentSpeed => onPlayStateChanged => playState = " + playState);
@@ -80,7 +62,7 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
                             super.handleMessage(msg);
                             if (null != msg && msg.what == 7677) {
                                 try {
-                                    String speed = mControllerWrapper.getTcpSpeed();
+                                    String speed = getPlayerApi().getTcpSpeed();
                                     int length = speed.length();
                                     int start = length - 4;
                                     String unit = speed.substring(start, length);
@@ -113,14 +95,5 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onWindowStateChanged(int playerState) {
-    }
-
-    @Override
-    public void onLockStateChanged(boolean isLocked) {
-
     }
 }

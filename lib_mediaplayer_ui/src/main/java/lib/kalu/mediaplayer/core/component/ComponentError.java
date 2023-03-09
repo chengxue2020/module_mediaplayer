@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.controller.component;
+package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -16,8 +16,6 @@ import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ComponentError extends RelativeLayout implements ComponentApi {
@@ -42,21 +40,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void attach(@NonNull ControllerWrapper controllerWrapper) {
-    }
-
-    @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public void onVisibilityChanged(boolean isVisible, Animation anim) {
-        MPLogUtil.log("ComponentError => onVisibilityChanged => isVisible = " + isVisible);
-    }
-
-    @Override
-    public void onPlayStateChanged(int playState) {
+    public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR_NET:
             case PlayerType.StateType.STATE_ERROR:
@@ -78,14 +62,6 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
                 findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
                 break;
         }
-    }
-
-    @Override
-    public void onWindowStateChanged(int playerState) {
-    }
-
-    @Override
-    public void onLockStateChanged(boolean isLock) {
     }
 
 //    @Override

@@ -53,15 +53,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-        findViewById(R.id.main_button2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), FullActivity.class);
-                intent.putExtra(FullActivity.INTENT_URL, getUrl());
-//                intent.putExtra(FullActivity.INTENT_LIVE, true);
-                startActivity(intent);
-            }
-        });
         findViewById(R.id.main_button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,9 +133,9 @@ public class MainActivity extends Activity {
 
     private void init(@PlayerType.KernelType.Value int type) {
         PlayerBuilder build = new PlayerBuilder.Builder()
-                .setLog(true)
+                .setLog(false)
                 .setKernel(type)
-                .setRender(PlayerType.RenderType.SURFACE_VIEW)
+                .setRender(PlayerType.RenderType.TEXTURE_VIEW)
                 .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL)
                 .setBuriedEvent(new Event())
                 .build();

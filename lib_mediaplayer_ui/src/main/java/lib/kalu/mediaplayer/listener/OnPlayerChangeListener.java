@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 
 @Keep
-public interface OnChangeListener {
+public interface OnPlayerChangeListener {
 
     /**
      * 播放模式

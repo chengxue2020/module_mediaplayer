@@ -1,25 +1,25 @@
 package lib.kalu.mediaplayer;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 
 import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
-import lib.kalu.mediaplayer.core.controller.ControllerEmpty;
-import lib.kalu.mediaplayer.core.controller.component.ComponentComplete;
-import lib.kalu.mediaplayer.core.controller.component.ComponentError;
-import lib.kalu.mediaplayer.core.controller.component.ComponentInit;
-import lib.kalu.mediaplayer.core.controller.component.ComponentLoading;
-import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.controller.component.ComponentSpeed;
-import lib.kalu.mediaplayer.core.player.VideoLayout;
-import lib.kalu.mediaplayer.listener.OnChangeListener;
+import lib.kalu.mediaplayer.core.component.ComponentComplete;
+import lib.kalu.mediaplayer.core.component.ComponentError;
+import lib.kalu.mediaplayer.core.component.ComponentInit;
+import lib.kalu.mediaplayer.core.component.ComponentLoading;
+import lib.kalu.mediaplayer.core.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.component.ComponentSpeed;
+import lib.kalu.mediaplayer.core.player.PlayerLayout;
+import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
@@ -49,75 +49,100 @@ public final class TestActivity extends Activity {
     @Keep
     public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
 
-    @SuppressLint("ResourceType")
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        // back
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+            boolean full = playerLayout.isFull();
+            Log.e("TestActivity", "dispatchKeyEvent => isFull = " + full);
+            if (full) {
+                stopFull();
+                return true;
+            } else {
+                boolean floats = playerLayout.isFloat();
+                Log.e("TestActivity", "dispatchKeyEvent => isFloat = " + floats);
+                if (floats) {
+                    stopFloat();
+                    return true;
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.module_mediaplayer_test);
 
-        findViewById(R.id.module_mediaplayer_switch).setOnClickListener(new View.OnClickListener() {
+        initPlayer();
+        startPlayer();
+
+        // 换台
+        findViewById(R.id.module_mediaplayer_test_button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlay();
+                startPlayer();
             }
         });
+        // 全屏
+        findViewById(R.id.module_mediaplayer_test_button2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startFull();
+            }
+        });
+        // 浮动
+        findViewById(R.id.module_mediaplayer_test_button3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startFloat();
+            }
+        });
+    }
 
-        // component
-        ControllerEmpty controller = new ControllerEmpty(this);
+
+    private void initPlayer() {
+        // control
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+        videoLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
 
         // 加载ui
         ComponentLoading loading = new ComponentLoading(this);
         loading.setMessage("加载中...");
         int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, 0);
         loading.setBackgroundResource(resId);
-        controller.addComponent(loading);
+        videoLayout.addComponent(loading);
 
         // 结束ui
         ComponentComplete end = new ComponentComplete(this);
 //        loading.setMessage("加载中...");
-        controller.addComponent(end);
+        videoLayout.addComponent(end);
 
         // 错误ui
         ComponentError error = new ComponentError(this);
         error.setMessage("发生错误");
-        controller.addComponent(error);
+        videoLayout.addComponent(error);
 
         // 进度条ui
         ComponentSeek bottom = new ComponentSeek(this);
-        controller.addComponent(bottom);
+        videoLayout.addComponent(bottom);
 
         // 网速ui
         ComponentSpeed speed = new ComponentSpeed(this);
-        controller.addComponent(speed);
+        videoLayout.addComponent(speed);
 
         // 初始化ui
         ComponentInit init = new ComponentInit(this);
-        controller.addComponent(init);
+        videoLayout.addComponent(init);
 
-        // control
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
-        videoLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
-        videoLayout.setControllerLayout(controller);
-
-        // 设置视频播放链接地址
-//        videoLayout.showNetWarning();
-        // 全屏
-//        videoLayout.startFullScreen();
-        videoLayout.setOnChangeListener(new OnChangeListener() {
-            /**
-             * 播放模式
-             * 普通模式，小窗口模式，正常模式三种其中一种
-             * MODE_NORMAL              普通模式
-             * MODE_FULL_SCREEN         全屏模式
-             * MODE_TINY_WINDOW         小屏模式
-             * @param playerState                       播放模式
-             */
+        videoLayout.setPlayerChangeListener(new OnPlayerChangeListener() {
             @Override
             public void onWindow(int playerState) {
                 switch (playerState) {
                     case PlayerType.WindowType.NORMAL:
-                        onBackPressed();
                         //普通模式
                         break;
                     case PlayerType.WindowType.FULL:
@@ -203,12 +228,9 @@ public final class TestActivity extends Activity {
                 }
             }
         });
-
-        // 开始播放
-        startPlay();
     }
 
-    private void startPlay() {
+    private void startPlayer() {
 
         String url = getIntent().getStringExtra(INTENT_URL);
         if (null == url || url.length() == 0) {
@@ -225,15 +247,35 @@ public final class TestActivity extends Activity {
         builder.setSeek(seek);
         builder.setMax(max);
         builder.setLive(live);
-        builder.setDelay(4000);
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
+        builder.setDelay(100);
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
         videoLayout.start(builder.build(), url);
+    }
+
+    private void startFull() {
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.startFull();
+    }
+
+    private void stopFull() {
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.stopFull();
+    }
+
+    private void startFloat() {
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.startFloat();
+    }
+
+    private void stopFloat() {
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.stopFloat();
     }
 
     @Override
     public void finish() {
 
-        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
         long browsing = videoLayout.getPosition() / 1000;
         if (browsing < 0) {
             browsing = 0;

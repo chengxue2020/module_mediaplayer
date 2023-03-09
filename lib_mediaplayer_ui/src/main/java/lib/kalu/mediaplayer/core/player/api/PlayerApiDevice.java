@@ -12,9 +12,7 @@ public interface PlayerApiDevice extends PlayerApiBase {
 
     default String getTcpSpeed() {
         try {
-            ViewGroup layout = getLayout();
-            Context context = layout.getContext();
-            String speed = SpeedUtil.getNetSpeed(context);
+            String speed = SpeedUtil.getNetSpeed(getBaseContext());
             MPLogUtil.log("PlayerApiDevice => getTcpSpeed => speed = " + speed);
             return speed;
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.controller.component;
+package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -12,13 +12,9 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentComplete extends RelativeLayout implements ComponentApi {
-
-    private ControllerWrapper mControllerWrapper;
 
     public ComponentComplete(@NonNull Context context) {
         super(context);
@@ -43,28 +39,13 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
         findViewById(R.id.module_mediaplayer_component_complete_message).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                restart(mControllerWrapper);
+//                restart(mControllerWrapper);
             }
         });
     }
 
     @Override
-    public void attach(@NonNull ControllerWrapper controllerWrapper) {
-        mControllerWrapper = controllerWrapper;
-    }
-
-    @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public void onVisibilityChanged(boolean isVisible, Animation anim) {
-
-    }
-
-    @Override
-    public void onPlayStateChanged(int playState) {
+    public void callPlayerEvent(int playState) {
 
         switch (playState) {
             case PlayerType.StateType.STATE_END:
@@ -85,7 +66,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onWindowStateChanged(int playerState) {
+    public void callWindowEvent(int playerState) {
 //        if (playerState == PlayerType.WindowType.FULL) {
 //            View view = findViewById(R.id.controller_complete_back);
 //            view.setVisibility(VISIBLE);
@@ -109,10 +90,4 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
 //            }
 //        }
     }
-
-    @Override
-    public void onLockStateChanged(boolean isLock) {
-
-    }
-
 }

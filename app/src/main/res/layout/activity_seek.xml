@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:ignore="MissingDefaultResource">
 
-    <lib.kalu.mediaplayer.core.player.VideoLayout
+    <lib.kalu.mediaplayer.core.player.PlayerLayout
         android:id="@+id/seek_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

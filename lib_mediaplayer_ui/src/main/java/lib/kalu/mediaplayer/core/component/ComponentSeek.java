@@ -1,11 +1,10 @@
-package lib.kalu.mediaplayer.core.controller.component;
+package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -17,22 +16,14 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-/**
- * description: 底部控制栏视图
- * created by kalu on 2021/11/23
- */
 @Keep
 public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     private long mTimeMillis = 0L;
     private boolean mTouch = false;
     protected boolean mShowBottomPB = false;
-    protected ControllerWrapper mControllerWrapper;
 
     public ComponentSeek(@NonNull Context context) {
         super(context);
@@ -59,8 +50,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         // seekForward
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             boolean live = false;
-            if (null != mControllerWrapper) {
-                live = mControllerWrapper.isLive();
+            if (null != getPlayerApi()) {
+                live = getPlayerApi().isLive();
             }
             MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardDown => live = " + live);
             seekForwardDown(!live);
@@ -69,8 +60,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         // seekForward
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             boolean live = false;
-            if (null != mControllerWrapper) {
-                live = mControllerWrapper.isLive();
+            if (null != getPlayerApi()) {
+                live = getPlayerApi().isLive();
             }
             MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardUp => live = " + live);
             seekForwardUp(!live);
@@ -79,8 +70,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         // seekRewind
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             boolean live = false;
-            if (null != mControllerWrapper) {
-                live = mControllerWrapper.isLive();
+            if (null != getPlayerApi()) {
+                live = getPlayerApi().isLive();
             }
             MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindDown => live = " + live);
             seekRewindDown(!live);
@@ -89,8 +80,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         // seekRewind
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             boolean live = false;
-            if (null != mControllerWrapper) {
-                live = mControllerWrapper.isLive();
+            if (null != getPlayerApi()) {
+                live = getPlayerApi().isLive();
             }
             MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindUp => live = " + live);
             seekRewindUp(!live);
@@ -138,24 +129,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         }
     }
 
-    @Override
-    public void attach(@NonNull ControllerWrapper controllerWrapper) {
-        mControllerWrapper = controllerWrapper;
-    }
 
     @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public void onVisibilityChanged(boolean isVisible, Animation anim) {
-    }
-
-    @Override
-    public void onPlayStateChanged(int playState) {
-        boolean isLive = mControllerWrapper.isLive();
-        boolean isFull = mControllerWrapper.isFull();
+    public void callPlayerEvent(int playState) {
+        boolean isLive = getPlayerApi().isLive();
+        boolean isFull = getPlayerApi().isFull();
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_STOP:
                 MPLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
@@ -175,9 +153,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onWindowStateChanged(int windowState) {
-        boolean isLive = mControllerWrapper.isLive();
-        boolean isFull = mControllerWrapper.isFull();
+    public void callWindowEvent(int windowState) {
+        boolean isLive = getPlayerApi().isLive();
+        boolean isFull = getPlayerApi().isFull();
         switch (windowState) {
             case PlayerType.WindowType.FULL:
                 MPLogUtil.log("ComponentSeek22[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
@@ -210,7 +188,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public void gone() {
         MPLogUtil.log("ComponentSeek => gone =>");
         mTimeMillis = 0L;
-        boolean isFull = mControllerWrapper.isFull();
+        boolean isFull = getPlayerApi().isFull();
         if (mShowBottomPB) {
             findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(isFull ? View.VISIBLE : View.GONE);
         }
@@ -218,11 +196,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.GONE);
         findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.GONE);
         findViewById(R.id.module_mediaplayer_component_seek_max).setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onLockStateChanged(boolean isLocked) {
-        onVisibilityChanged(!isLocked, null);
     }
 
     /****************************************/
@@ -374,8 +347,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onSeekPlaying(@NonNull int position) {
-        if (null != mControllerWrapper) {
-            mControllerWrapper.seekTo(true, position);
+        if (null != getPlayerApi()) {
+            getPlayerApi().seekTo(true, position);
         }
     }
 }

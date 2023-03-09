@@ -128,12 +128,6 @@
         android:text="播放" />
 
     <Button
-        android:id="@+id/main_button2"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="测试：大小屏切换" />
-
-    <Button
         android:id="@+id/main_button3"
         android:layout_width="match_parent"
         android:layout_height="60dp"

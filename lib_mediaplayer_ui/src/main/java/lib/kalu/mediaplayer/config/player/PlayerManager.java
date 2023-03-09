@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 
-import lib.kalu.mediaplayer.core.player.VideoLayout;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
@@ -22,7 +21,7 @@ public class PlayerManager {
     /**
      * 保存VideoView的容器
      */
-    private LinkedHashMap<String, VideoLayout> mVideoViews = new LinkedHashMap<>();
+//    private LinkedHashMap<String, PlayerView> mVideoViews = new LinkedHashMap<>();
 
     /**
      * 是否在移动网络下直接播放视频
@@ -110,59 +109,59 @@ public class PlayerManager {
         return sInstance;
     }
 
-    /**
-     * 添加VideoView
-     *
-     * @param tag 相同tag的VideoView只会保存一个，如果tag相同则会release并移除前一个
-     */
-    public void add(VideoLayout videoView, String tag) {
-        if (!(videoView.getContext() instanceof Application)) {
-            MPLogUtil.log("The Context of this VideoView is not an Application Context," +
-                    "you must remove it after release,or it will lead to memory leek.");
-        }
-        VideoLayout old = get(tag);
-        if (old != null) {
-            old.release();
-            remove(tag);
-        }
-        mVideoViews.put(tag, videoView);
-    }
-
-    public VideoLayout get(String tag) {
-        return mVideoViews.get(tag);
-    }
-
-    public void remove(String tag) {
-        mVideoViews.remove(tag);
-    }
-
-    public void removeAll() {
-        mVideoViews.clear();
-    }
-
-    /**
-     * 释放掉和tag关联的VideoView，并将其从VideoViewManager中移除
-     */
-    public void releaseByTag(String tag) {
-        releaseByTag(tag, true);
-    }
-
-    public void releaseByTag(String tag, boolean isRemove) {
-        VideoLayout videoView = get(tag);
-        if (videoView != null) {
-            videoView.release();
-            if (isRemove) {
-                remove(tag);
-            }
-        }
-    }
-
-//    public boolean onBackPress(String tag) {
-//        VideoLayout videoView = get(tag);
-//        if (videoView == null) {
-//            return false;
+//    /**
+//     * 添加VideoView
+//     *
+//     * @param tag 相同tag的VideoView只会保存一个，如果tag相同则会release并移除前一个
+//     */
+//    public void add(PlayerView videoView, String tag) {
+//        if (!(videoView.getContext() instanceof Application)) {
+//            MPLogUtil.log("The Context of this VideoView is not an Application Context," +
+//                    "you must remove it after release,or it will lead to memory leek.");
 //        }
-//        return videoView.onBackPressed();
+//        PlayerView old = get(tag);
+//        if (old != null) {
+//            old.release();
+//            remove(tag);
+//        }
+//        mVideoViews.put(tag, videoView);
 //    }
+//
+//    public PlayerView get(String tag) {
+//        return mVideoViews.get(tag);
+//    }
+//
+//    public void remove(String tag) {
+//        mVideoViews.remove(tag);
+//    }
+//
+//    public void removeAll() {
+//        mVideoViews.clear();
+//    }
+//
+//    /**
+//     * 释放掉和tag关联的VideoView，并将其从VideoViewManager中移除
+//     */
+//    public void releaseByTag(String tag) {
+//        releaseByTag(tag, true);
+//    }
+//
+//    public void releaseByTag(String tag, boolean isRemove) {
+//        PlayerView videoView = get(tag);
+//        if (videoView != null) {
+//            videoView.release();
+//            if (isRemove) {
+//                remove(tag);
+//            }
+//        }
+//    }
+//
+////    public boolean onBackPress(String tag) {
+////        VideoLayout videoView = get(tag);
+////        if (videoView == null) {
+////            return false;
+////        }
+////        return videoView.onBackPressed();
+////    }
 
 }

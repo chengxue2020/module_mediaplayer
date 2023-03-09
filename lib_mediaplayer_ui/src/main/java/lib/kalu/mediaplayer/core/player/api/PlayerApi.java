@@ -13,8 +13,6 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
@@ -124,48 +122,13 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
 
     default void onSaveBundle() {
         try {
-            ViewGroup layout = getLayout();
-            if (null == layout) return;
             String url = getUrl();
-            if (null == url || url.length() <= 0) return;
-            Context context = layout.getContext();
+            if (null == url || url.length() <= 0)
+                return;
             long position = getPosition();
             long duration = getDuration();
-            saveBundle(context, url, position, duration);
+            saveBundle(getBaseContext(), url, position, duration);
         } catch (Exception e) {
         }
-    }
-
-    default void initAttribute(@NonNull AttributeSet attrs) {
-
-        ViewGroup layout = getLayout();
-        if (null == layout) return;
-
-        Context context = layout.getContext();
-        layout.setBackgroundColor(Color.parseColor("#000000"));
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_player, layout, true);
-//        layout.setFocusable(false);
-        setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
-//        BaseToast.init(context.getApplicationContext());
-
-        //读取xml中的配置，并综合全局配置
-        TypedArray typed = null;
-        try {
-            typed = context.obtainStyledAttributes(attrs, R.styleable.VideoPlayer);
-            int v = typed.getInt(R.styleable.VideoPlayer_screenScaleType, -110);
-            if (v != -110) {
-                setScaleType(v);
-            }
-        } catch (Exception e) {
-        }
-        if (null != typed) {
-            typed.recycle();
-        }
-    }
-
-    @Override
-    default ControllerLayout getControlLayout() {
-        boolean isFull = isFull();
-        return getControlLayout(isFull);
     }
 }

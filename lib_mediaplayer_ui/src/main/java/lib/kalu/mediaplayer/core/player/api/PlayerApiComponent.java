@@ -1,47 +1,112 @@
 package lib.kalu.mediaplayer.core.player.api;
 
-import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
+import java.util.LinkedList;
+
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
-import lib.kalu.mediaplayer.core.controller.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface PlayerApiComponent extends PlayerApiBase {
 
     default void showComponentError() {
-        callPlayerState(PlayerType.StateType.STATE_ERROR_IGNORE);
+        callPlayerEvent(PlayerType.StateType.STATE_ERROR_IGNORE);
     }
 
     default void showComponentSeek() {
-        callPlayerState(PlayerType.StateType.STATE_COMPONENT_SEEK_SHOW);
+        callPlayerEvent(PlayerType.StateType.STATE_COMPONENT_SEEK_SHOW);
     }
 
     default void hideComponentLoading() {
-        callPlayerState(PlayerType.StateType.STATE_LOADING_STOP);
+        callPlayerEvent(PlayerType.StateType.STATE_LOADING_STOP);
     }
 
     default void showComponentLoading() {
-        callPlayerState(PlayerType.StateType.STATE_LOADING_START);
+        callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
+    }
+
+    default void clearAllComponent() {
+        try {
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).attachPlayerApi(null);
+            }
+            viewGroup.removeAllViews();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiComponent => clearAllComponent => " + e.getMessage());
+        }
+    }
+
+    default void clearComponent(java.lang.Class<?> cls) {
+        try {
+            LinkedList<View> views = new LinkedList<>();
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                if (childAt.getClass() == cls) {
+                    ((ComponentApi) childAt).attachPlayerApi(null);
+                    views.add(childAt);
+                }
+            }
+            for (View v : views) {
+                viewGroup.removeView(v);
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiComponent => clearComponent => " + e.getMessage());
+        }
+    }
+
+    default void addComponent(ComponentApi componentApi) {
+        try {
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            componentApi.attachPlayerApi((PlayerApi) this);
+            ((View) componentApi).setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+            viewGroup.addView((View) componentApi);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiComponent => addComponent => " + e.getMessage());
+        }
     }
 
     default <T extends android.view.View> T findComponent(java.lang.Class<?> cls) {
         try {
-            ControllerLayout layout = getControlLayout();
-            if (null != layout) {
-                int count = layout.getChildCount();
-                for (int i = 0; i < count; i++) {
-                    View child = layout.getChildAt(i);
-                    if (child.getClass() == cls) {
-                        return (T) child;
-                    }
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                if (childAt.getClass() == cls) {
+                    return (T) childAt;
                 }
             }
             throw new Exception("not find");
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiComponent => callWindowEvent => " + e.getMessage());
             return null;
         }
     }
@@ -49,21 +114,39 @@ public interface PlayerApiComponent extends PlayerApiBase {
 
     default void dispatchEventComponent(@NonNull KeyEvent event) {
         try {
-            ControllerLayout layout = getControlLayout();
-            if (null != layout) {
-                int count = layout.getChildCount();
-                for (int i = 0; i < count; i++) {
-                    View child = layout.getChildAt(i);
-                    if (null == child) continue;
-                    if (child instanceof ComponentSeek) {
-                        child.dispatchKeyEvent(event);
-                        break;
-                    }
-                }
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                childAt.dispatchKeyEvent(event);
             }
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiComponent => dispatchEventComponent => " + e.getMessage());
         }
     }
 
-    void clearComponent();
+    default void callUpdateTimeMillis(long seek, long position, long duration) {
+        try {
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateTimeMillis(seek, position, duration);
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiComponent => callUpdateTimeMillis => " + e.getMessage());
+        }
+    }
 }

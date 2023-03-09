@@ -3,26 +3,27 @@ package lib.kalu.mediaplayer.core.player.api;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.controller.base.ControllerLayout;
+import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.listener.OnChangeListener;
+import lib.kalu.mediaplayer.core.player.PlayerLayout;
+import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface PlayerApiBase {
 
-    List<OnChangeListener> mListeners = new LinkedList<>();
+    List<OnPlayerChangeListener> mListeners = new LinkedList<>();
 
     default Activity getWrapperActivity(Context context) {
         if (context == null) {
@@ -36,121 +37,281 @@ public interface PlayerApiBase {
         return null;
     }
 
-    default ViewGroup getLayout() {
+    default Context getBaseContext() {
+        return ((View) this).getContext();
+    }
+
+    default ViewGroup getBaseViewGroup() {
         return (ViewGroup) this;
     }
 
-    default List<OnChangeListener> getOnChangeListener() {
+    default boolean isParentPlayerLayout() {
+        try {
+            ViewGroup playerGroup = getBaseViewGroup();
+            ViewGroup parentGroup = (ViewGroup) playerGroup.getParent();
+            return parentGroup instanceof PlayerLayout;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    default boolean isFull() {
+        try {
+            boolean isFrom = isParentPlayerLayout();
+            if (isFrom)
+                throw new Exception("not from PlayerLayout");
+            ViewGroup playerGroup = getBaseViewGroup();
+            if (null == playerGroup)
+                throw new Exception("playerGroup is null");
+            ViewGroup.LayoutParams layoutParams = playerGroup.getLayoutParams();
+            if (null == layoutParams)
+                throw new Exception("layoutParams is null");
+            if (layoutParams.width == ViewGroup.LayoutParams.MATCH_PARENT && layoutParams.height == ViewGroup.LayoutParams.MATCH_PARENT) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => isFull => " + e.getMessage(), e);
+            return false;
+        }
+    }
+
+    default boolean isFloat() {
+        try {
+            boolean isFrom = isParentPlayerLayout();
+            if (isFrom)
+                throw new Exception("not from PlayerLayout");
+            ViewGroup playerGroup = getBaseViewGroup();
+            if (null == playerGroup)
+                throw new Exception("playerGroup is null");
+            ViewGroup.LayoutParams layoutParams = playerGroup.getLayoutParams();
+            if (null == layoutParams)
+                throw new Exception("layoutParams is null");
+            return layoutParams.width != ViewGroup.LayoutParams.MATCH_PARENT || layoutParams.height != ViewGroup.LayoutParams.MATCH_PARENT;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => isFloat => " + e.getMessage(), e);
+            return false;
+        }
+    }
+
+    default View removeFromPlayerLayout() {
+        try {
+            boolean isFrom = isParentPlayerLayout();
+            if (!isFrom)
+                throw new Exception("not from PlayerViewGroup");
+            ViewGroup playerGroup = getBaseViewGroup();
+            ViewGroup parentGroup = (ViewGroup) playerGroup.getParent();
+            int parentId = parentGroup.getId();
+            playerGroup.setTag(R.id.module_mediaplayer_root, parentId);
+            parentGroup.removeAllViews();
+            return playerGroup;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => removeBasePlayerViewGroupFromParent => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default View removePlayerViewFromDecorView() {
+        try {
+            Activity activity = getWrapperActivity(getBaseContext());
+            if (null == activity)
+                throw new Exception("activity is null");
+            View playerView = null;
+            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            int childCount = decorView.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = decorView.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (childAt.getId() == R.id.module_mediaplayer_root) {
+                    playerView = childAt;
+                    break;
+                }
+            }
+            if (null == playerView)
+                throw new Exception("not find playerView from decorView");
+            decorView.removeView(playerView);
+            return playerView;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => removePlayerViewFromDecorView => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default boolean switchToDecorView(boolean isFull) {
+        try {
+            Activity activity = getWrapperActivity(getBaseContext());
+            if (null == activity)
+                throw new Exception("activity is null");
+            // 1
+            View playerView = removeFromPlayerLayout();
+            if (null == playerView)
+                throw new Exception("not find playerView");
+            // 2
+            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            int index = decorView.getChildCount();
+            if (isFull) {
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                playerView.setLayoutParams(layoutParams);
+            } else {
+                int width = getBaseContext().getResources().getDimensionPixelOffset(R.dimen.module_mediaplayer_dimen_float_width);
+                int height = width * 9 / 16;
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+                layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                playerView.setLayoutParams(layoutParams);
+            }
+            //
+
+            decorView.addView(playerView, index);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => switchToDecorView => " + e.getMessage(), e);
+            return false;
+        }
+    }
+
+
+    default boolean switchToPlayerLayout() {
+        try {
+            Activity activity = getWrapperActivity(getBaseContext());
+            if (null == activity)
+                throw new Exception("activity is null");
+            View playerView = removePlayerViewFromDecorView();
+            if (null == playerView)
+                throw new Exception("not find playerView");
+            int paerntId = (int) playerView.getTag(R.id.module_mediaplayer_root);
+            ViewGroup viewGroup = activity.findViewById(paerntId);
+            if (null == viewGroup)
+                throw new Exception("not find module_mediaplayer_parent");
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            playerView.setLayoutParams(layoutParams);
+            viewGroup.addView(playerView);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => switchToPlayerLayout => " + e.getMessage(), e);
+            return false;
+        }
+    }
+
+    default ViewGroup getBaseVideoViewGroup() {
+        try {
+            ViewGroup playerGroup = getBaseViewGroup();
+            return playerGroup.findViewById(R.id.module_mediaplayer_video);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getBaseVideoGroup => " + e.getMessage(), e);
+            return null;
+        }
+    }
+
+    default ViewGroup getBaseControlViewGroup() {
+
+        try {
+            ViewGroup playerGroup = getBaseViewGroup();
+            return playerGroup.findViewById(R.id.module_mediaplayer_control);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getBaseControlViewGroup => " + e.getMessage(), e);
+            return null;
+        }
+    }
+
+    default boolean hasPlayerChangeListener() {
+        return null != mListeners && mListeners.size() > 0;
+    }
+
+    default List<OnPlayerChangeListener> getPlayerChangeListener() {
         return mListeners;
     }
 
-    default void clearListener() {
+    default void clearPlayerListener() {
         mListeners.clear();
     }
 
-    default boolean removeOnChangeListener(@NonNull OnChangeListener l) {
+    default boolean removePlayerChangeListener(@NonNull OnPlayerChangeListener l) {
         return mListeners.remove(l);
     }
 
-    default void addOnChangeListener(@NonNull OnChangeListener l) {
+    default void addPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
         mListeners.add(l);
     }
 
-    default void setOnChangeListener(@NonNull OnChangeListener l) {
-        clearListener();
-        addOnChangeListener(l);
+    default void setPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
+        clearPlayerListener();
+        addPlayerChangeListener(l);
     }
 
-    default void callPlayerState(@PlayerType.StateType.Value int playerState) {
-        List<OnChangeListener> listener = getOnChangeListener();
-        MPLogUtil.log("PlayerApiBase => callPlayerState => listener = " + listener);
-        if (null == listener) return;
-        ControllerLayout layout = getControlLayout();
-        MPLogUtil.log("PlayerApiBase => callPlayerState => layout = " + layout);
-        if (null == layout) return;
-        layout.setPlayState(playerState);
-        for (OnChangeListener l : listener) {
-            MPLogUtil.log("PlayerApiBase => callPlayerState => l = " + l);
-            if (null == l)
-                continue;
-            l.onChange(playerState);
-        }
-    }
+    default void callPlayerEvent(@PlayerType.StateType.Value int state) {
 
-    default void callWindowState(@PlayerType.WindowType.Value int windowState) {
-        List<OnChangeListener> listener = getOnChangeListener();
-        if (null == listener) return;
-        ControllerLayout layout = getControlLayout();
-        if (null == layout) return;
-        layout.setWindowState(windowState);
-        for (OnChangeListener l : listener) {
-            if (null == l) continue;
-            l.onWindow(windowState);
-        }
-    }
-
-    ControllerLayout getControlLayout();
-
-    default ControllerLayout getControlLayout(boolean isFull) {
-
-        ViewGroup layout = getLayout();
-        MPLogUtil.log("PlayerApiBase => getControlLayout => isFull = " + isFull + ", layout = " + layout);
-        if (null == layout) {
-            return null;
-        }
-
-        ViewGroup group;
-        if (isFull) {
-            Context context = layout.getContext();
-            Activity activity = getWrapperActivity(context);
-            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-            int index = decorView.getChildCount();
-            group = decorView.getChildAt(index - 1).findViewById(R.id.module_mediaplayer_control);
-        } else {
-            group = layout.findViewById(R.id.module_mediaplayer_control);
-        }
-        MPLogUtil.log("PlayerApiBase => getControlLayout => isFull = " + isFull + ", group = " + group);
-
+        // listener
         try {
-            return (ControllerLayout) group.getChildAt(0);
+            boolean hasListener = hasPlayerChangeListener();
+            if (!hasListener)
+                throw new Exception("not find PlayerChangeListener");
+            List<OnPlayerChangeListener> listener = getPlayerChangeListener();
+            for (OnPlayerChangeListener l : listener) {
+                MPLogUtil.log("PlayerApiBase => callPlayerEvent => l = " + l);
+                if (null == l)
+                    continue;
+                l.onChange(state);
+            }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => getControlLayout => " + e.getMessage(), e);
-            return null;
+            MPLogUtil.log("PlayerApiBase => callPlayerEvent => " + e.getMessage());
+        }
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).callPlayerEvent(state);
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => callPlayerEvent => " + e.getMessage());
         }
     }
 
-    default void clearControllerLayout() {
-        try {
-            ViewGroup layout = getLayout();
-            ViewGroup group = layout.findViewById(R.id.module_mediaplayer_control);
-            MPLogUtil.log("PlayerApiBase => clearControllerLayout => group = " + group);
-            group.removeAllViews();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => clearControllerLayout => " + e.getMessage(), e);
-        }
-    }
+    default void callWindowEvent(@PlayerType.WindowType.Value int state) {
 
-    default void setControllerLayout(@Nullable ControllerLayout controller) {
+        // listener
         try {
-            // 0
-            clearControllerLayout();
-            // 1
-            ViewGroup layout = getLayout();
-            MPLogUtil.log("PlayerApiBase => setControllerLayout => layout = " + layout);
-            if (null == layout) return;
-            // 2
-            ViewGroup group = layout.findViewById(R.id.module_mediaplayer_control);
-            MPLogUtil.log("PlayerApiBase => setControllerLayout => group = " + group);
-            if (null == group) return;
-            // 3
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            controller.setLayoutParams(params);
-            group.addView(controller, 0);
-            controller.setMediaPlayer((PlayerApi) layout);
-            // 4
-//            callWindowState(PlayerType.WindowType.NORMAL);
+            boolean hasListener = hasPlayerChangeListener();
+            if (!hasListener)
+                throw new Exception("not find PlayerChangeListener");
+            List<OnPlayerChangeListener> listener = getPlayerChangeListener();
+            for (OnPlayerChangeListener l : listener) {
+                MPLogUtil.log("PlayerApiBase => callWindowEvent => l = " + l);
+                if (null == l)
+                    continue;
+                l.onWindow(state);
+            }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => setControllerLayout => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiBase => callWindowEvent => " + e.getMessage());
+        }
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).callWindowEvent(state);
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => callWindowEvent => " + e.getMessage());
         }
     }
 

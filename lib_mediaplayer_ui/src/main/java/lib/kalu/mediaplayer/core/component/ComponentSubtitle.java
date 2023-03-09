@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.controller.component;
+package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,13 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-import lib.kalu.mediaplayer.core.controller.impl.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
-
-    private ControllerWrapper mControllerWrapper;
 
     public ComponentSubtitle(@NonNull Context context) {
         super(context);
@@ -41,21 +37,7 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void attach(@NonNull ControllerWrapper controllerWrapper) {
-        mControllerWrapper = controllerWrapper;
-    }
-
-    @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public void onVisibilityChanged(boolean isVisible, Animation anim) {
-    }
-
-    @Override
-    public void onPlayStateChanged(int playState) {
+    public void callPlayerEvent(int playState) {
         MPLogUtil.log("ComponentPrepare => onPlayStateChanged => playState = " + playState);
 //        switch (playState) {
 //            case PlayerType.StateType.STATE_SUBTITLE_START:
@@ -68,13 +50,5 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 //                setVisibility(GONE);
 //                break;
 //        }
-    }
-
-    @Override
-    public void onWindowStateChanged(int playerState) {
-    }
-
-    @Override
-    public void onLockStateChanged(boolean isLocked) {
     }
 }
