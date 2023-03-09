@@ -102,9 +102,8 @@ public interface PlayerApiBase {
                 throw new Exception("not from PlayerViewGroup");
             ViewGroup playerGroup = getBaseViewGroup();
             ViewGroup parentGroup = (ViewGroup) playerGroup.getParent();
-            int parentId = parentGroup.getId();
-            playerGroup.setTag(R.id.module_mediaplayer_root, parentId);
             parentGroup.removeAllViews();
+            playerGroup.setTag(R.id.module_mediaplayer_root, parentGroup);
             return playerGroup;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiBase => removeBasePlayerViewGroupFromParent => " + e.getMessage());
@@ -162,8 +161,6 @@ public interface PlayerApiBase {
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 playerView.setLayoutParams(layoutParams);
             }
-            //
-
             decorView.addView(playerView, index);
             return true;
         } catch (Exception e) {
@@ -175,19 +172,16 @@ public interface PlayerApiBase {
 
     default boolean switchToPlayerLayout() {
         try {
-            Activity activity = getWrapperActivity(getBaseContext());
-            if (null == activity)
-                throw new Exception("activity is null");
             View playerView = removePlayerViewFromDecorView();
             if (null == playerView)
                 throw new Exception("not find playerView");
-            int paerntId = (int) playerView.getTag(R.id.module_mediaplayer_root);
-            ViewGroup viewGroup = activity.findViewById(paerntId);
-            if (null == viewGroup)
-                throw new Exception("not find module_mediaplayer_parent");
+            ViewGroup playerGroup = (ViewGroup) playerView.getTag(R.id.module_mediaplayer_root);
+            if (null == playerGroup)
+                throw new Exception("not find playerGroup");
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             playerView.setLayoutParams(layoutParams);
-            viewGroup.addView(playerView);
+            playerGroup.setTag(R.id.module_mediaplayer_root, null);
+            playerGroup.addView(playerView);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiBase => switchToPlayerLayout => " + e.getMessage(), e);

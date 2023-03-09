@@ -49,7 +49,7 @@ public class PlayerLayout extends RelativeLayout {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         try {
-            return getPlayerView().dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+            return getPlayerView().dispatchEvent(event) || super.dispatchKeyEvent(event);
         } catch (Exception e) {
             return super.dispatchKeyEvent(event);
         }

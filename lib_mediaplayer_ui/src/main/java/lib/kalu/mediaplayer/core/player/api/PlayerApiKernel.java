@@ -219,10 +219,10 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
             // 1
             checkKernel();
             MPLogUtil.log("PlayerApiKernel => release =>");
-            //2
-            stopFloat();
-            // 3
-            stopFull();
+//            //2
+//            stopFloat();
+//            // 3
+//            stopFull();
             // 4
             clearRender();
             // 5
