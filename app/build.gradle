@@ -88,7 +88,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     api files('libs/lib_mediaplayer_ui_release_20230310.aar')
-    api files('libs/lib_mediaplayer_vlc_r3.5.1_release_202302310.aar')
+    api files('libs/lib_mediaplayer_vlc_r3.5.1_release_20230310.aar')
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.0_release_20230310.aar')
     api files('libs/lib_mediaplayer_exo_r2.18.3_ff4.4_audio_release_20230310.aar')
 //    api project(path: ':lib_mediaplayer_ui')
