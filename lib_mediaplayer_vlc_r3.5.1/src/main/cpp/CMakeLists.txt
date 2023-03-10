@@ -21,6 +21,14 @@ add_library(vlc-record
         #   src/main/cpp/yyl_fixsurface.c
         )
 
+#libc++_shared.so
+configure_file(${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libc++_shared.so ${Project_BINARY_DIR}/libc++_shared.so COPYONLY)
+add_library(c++_shared-lib
+        SHARED
+        IMPORTED)
+set_target_properties(c++_shared-lib
+        PROPERTIES IMPORTED_LOCATION
+        libc++_shared.so)
 #libvlc.so
 configure_file(${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libvlc.so ${Project_BINARY_DIR}/libvlc.so COPYONLY)
 add_library(vlc-lib
@@ -44,4 +52,5 @@ target_link_libraries(vlc-record
         log
         vlc-lib
         vlcjni-lib
+        c++_shared-lib
         )

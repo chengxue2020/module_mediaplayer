@@ -38,6 +38,10 @@ https://github.com/kalu-github/
 #
 #### 更新
 ```
+2023-03-10
+1. 更新：vlcplayer-r3.5.1
+```
+```
 2023-02-22
 1. 更新：exoplayer-r2.18.3
 ```

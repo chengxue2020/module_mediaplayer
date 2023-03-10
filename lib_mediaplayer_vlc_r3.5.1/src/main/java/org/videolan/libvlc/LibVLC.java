@@ -32,11 +32,23 @@ import org.videolan.libvlc.util.HWDecoderUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused, JniMissingFunction")
+import lib.kalu.vlc.util.VlcLogUtil;
+
 public class LibVLC extends VLCObject<ILibVLC.Event> implements ILibVLC {
-    private static final String TAG = "VLC/LibVLC";
 
     final Context mAppContext;
+
+    static {
+        try {
+            System.loadLibrary("c++_shared");
+            System.loadLibrary("vlc");
+            System.loadLibrary("vlcjni");
+        } catch (UnsatisfiedLinkError ule) {
+            VlcLogUtil.log("LibVLC => Can't load vlcjni library: " + ule);
+        } catch (SecurityException se) {
+            VlcLogUtil.log("LibVLC => Encountered a security issue when loading vlcjni library: " + se);
+        }
+    }
 
     public static class Event extends AbstractVLCEvent {
         protected Event(int type) {
@@ -44,14 +56,8 @@ public class LibVLC extends VLCObject<ILibVLC.Event> implements ILibVLC {
         }
     }
 
-    /**
-     * Create a LibVLC withs options
-     *
-     * @param options
-     */
     public LibVLC(Context context, List<String> options) {
         mAppContext = context.getApplicationContext();
-        loadLibraries();
 
         if (options == null)
             options = new ArrayList<>();
@@ -90,6 +96,32 @@ public class LibVLC extends VLCObject<ILibVLC.Event> implements ILibVLC {
         this(context, null);
     }
 
+    @Override
+    protected ILibVLC.Event onEventNative(int eventType, long arg1, long arg2, float argf1, @Nullable String args1) {
+        return null;
+    }
+
+    @Override
+    public Context getAppContext() {
+        return mAppContext;
+    }
+
+    @Override
+    protected void onReleaseNative() {
+        nativeRelease();
+    }
+
+    public void setUserAgent(String name, String http) {
+        nativeSetUserAgent(name, http);
+    }
+
+    /* JNI */
+    private native void nativeNew(String[] options, String homePath);
+
+    private native void nativeRelease();
+
+    private native void nativeSetUserAgent(String name, String http);
+
     /**
      * Get the libVLC version
      *
@@ -117,59 +149,4 @@ public class LibVLC extends VLCObject<ILibVLC.Event> implements ILibVLC {
      * @return the libVLC changeset string
      */
     public static native String changeset();
-
-    @Override
-    protected ILibVLC.Event onEventNative(int eventType, long arg1, long arg2, float argf1, @Nullable String args1) {
-        return null;
-    }
-
-    @Override
-    public Context getAppContext() {
-        return mAppContext;
-    }
-
-    @Override
-    protected void onReleaseNative() {
-        nativeRelease();
-    }
-
-    /**
-     * Sets the application name. LibVLC passes this as the user agent string
-     * when a protocol requires it.
-     *
-     * @param name human-readable application name, e.g. "FooBar player 1.2.3"
-     * @param http HTTP User Agent, e.g. "FooBar/1.2.3 Python/2.6.0"
-     */
-    public void setUserAgent(String name, String http) {
-        nativeSetUserAgent(name, http);
-    }
-
-    /* JNI */
-    private native void nativeNew(String[] options, String homePath);
-
-    private native void nativeRelease();
-
-    private native void nativeSetUserAgent(String name, String http);
-
-    private static boolean sLoaded = false;
-
-    public static synchronized void loadLibraries() {
-        if (sLoaded)
-            return;
-        sLoaded = true;
-
-        try {
-            System.loadLibrary("c++_shared");
-            System.loadLibrary("vlc");
-            System.loadLibrary("vlcjni");
-        } catch (UnsatisfiedLinkError ule) {
-            Log.e(TAG, "Can't load vlcjni library: " + ule);
-            /// FIXME Alert user
-            System.exit(1);
-        } catch (SecurityException se) {
-            Log.e(TAG, "Encountered a security issue when loading vlcjni library: " + se);
-            /// FIXME Alert user
-            System.exit(1);
-        }
-    }
 }
