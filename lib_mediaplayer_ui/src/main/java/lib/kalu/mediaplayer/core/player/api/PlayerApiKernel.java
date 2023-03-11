@@ -24,7 +24,7 @@ import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
-public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, PlayerApiRender, PlayerApiDevice, PlayerApiExternalMusic {
+public interface PlayerApiKernel extends PlayerApiHanlder, PlayerApiListener, PlayerApiComponent, PlayerApiRender, PlayerApiDevice, PlayerApiExternalMusic {
 
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
@@ -96,7 +96,7 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
             } catch (Exception e) {
             }
         } else {
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            postDelayedHanlder(delay, new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -120,7 +120,7 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
                     } catch (Exception e) {
                     }
                 }
-            }, delay);
+            });
         }
     }
 

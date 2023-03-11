@@ -1,24 +1,16 @@
 package lib.kalu.mediaplayer.core.player.api;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
  * revise: 播放器基础属性获取和设置属性接口
  */
-public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
+public interface PlayerApi extends PlayerApiHanlder, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
 
     default boolean dispatchEvent(@NonNull KeyEvent event) {
 
@@ -81,6 +73,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         if (null == url || url.length() <= 0)
             return;
 
+        removeCallbacksAndMessagesHanlder();
         // show
         if (visibility == View.VISIBLE) {
             if (playing)
@@ -107,6 +100,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => url = " + url + ", this = " + this);
         if (null == url || url.length() <= 0) return;
 
+        removeCallbacksAndMessagesHanlder();
         release();
     }
 
@@ -117,6 +111,7 @@ public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevi
         MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
         if (null == url || url.length() <= 0 || playing) return;
 
+        removeCallbacksAndMessagesHanlder();
         restart();
     }
 
