@@ -38,17 +38,18 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
         int delay = builder.getDelay();
         MPLogUtil.log("PlayerApiKernel => start => delay = " + delay);
 
+        // 1
+        PlayerBuilder config = PlayerManager.getInstance().getConfig();
+        MPLogUtil.setLogger(config);
+        // 5
+        createKernel(builder, config);
+
         if (delay <= 0) {
             try {
-                // 1
-                PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                MPLogUtil.setLogger(config);
                 // 3
                 callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
                 // 4
                 createRender();
-                // 5
-                createKernel(builder, config);
                 // 6
                 updateKernel(builder, url);
                 // 7
@@ -67,16 +68,10 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
                     try {
                         // 0
                         checkKernel();
-                        checkReal();
-                        // 1
-                        PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                        MPLogUtil.setLogger(config);
                         // 3
                         callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
                         // 4
                         createRender();
-                        // 5
-                        createKernel(builder, config);
                         // 6
                         updateKernel(builder, url);
                         // 7
