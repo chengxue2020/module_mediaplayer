@@ -30,31 +30,32 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
 
     default void start(@NonNull StartBuilder builder, @NonNull String url) {
 
-        String s = builder.toString();
-        MPLogUtil.log("PlayerApiKernel => start => url = " + url + ", data = " + s);
+        MPLogUtil.log("PlayerApiKernel => start => url = " + url);
         if (null == url || url.length() <= 0)
             return;
 
-        PlayerBuilder config = PlayerManager.getInstance().getConfig();
-        MPLogUtil.setLogger(config);
-        // 1
-        callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
-        // 2
-        createRender();
-        // 3
-        createKernel(builder, config);
-
+        callPlayerEvent(PlayerType.StateType.STATE_INIT);
         int delay = builder.getDelay();
+        MPLogUtil.log("PlayerApiKernel => start => delay = " + delay);
+
         if (delay <= 0) {
             try {
-                callPlayerEvent(PlayerType.StateType.STATE_INIT);
+                // 1
+                PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                MPLogUtil.setLogger(config);
+                // 3
+                callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
                 // 4
-                updateKernel(builder, url);
+                createRender();
                 // 5
-                attachRender();
+                createKernel(builder, config);
                 // 6
-                updatePlayerData(builder, url);
+                updateKernel(builder, url);
                 // 7
+                attachRender();
+                // 8
+                updatePlayerData(builder, url);
+                // 9
                 updateExternalMusicData(builder);
             } catch (Exception e) {
                 MPLogUtil.log("PlayerApiKernel => start => " + e.getMessage());
@@ -64,16 +65,25 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
                 @Override
                 public void run() {
                     try {
+                        // 0
                         checkKernel();
                         checkReal();
-                        callPlayerEvent(PlayerType.StateType.STATE_INIT);
+                        // 1
+                        PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                        MPLogUtil.setLogger(config);
+                        // 3
+                        callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
                         // 4
-                        updateKernel(builder, url);
+                        createRender();
                         // 5
-                        attachRender();
+                        createKernel(builder, config);
                         // 6
-                        updatePlayerData(builder, url);
+                        updateKernel(builder, url);
                         // 7
+                        attachRender();
+                        // 8
+                        updatePlayerData(builder, url);
+                        // 9
                         updateExternalMusicData(builder);
                     } catch (Exception e) {
                         MPLogUtil.log("PlayerApiKernel => start => " + e.getMessage());
