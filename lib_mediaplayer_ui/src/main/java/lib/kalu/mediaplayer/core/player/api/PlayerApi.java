@@ -10,7 +10,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 /**
  * revise: 播放器基础属性获取和设置属性接口
  */
-public interface PlayerApi extends PlayerApiHanlder, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
+public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
 
     default boolean dispatchEvent(@NonNull KeyEvent event) {
 
@@ -73,7 +73,6 @@ public interface PlayerApi extends PlayerApiHanlder, PlayerApiBase, PlayerApiKer
         if (null == url || url.length() <= 0)
             return;
 
-        removeCallbacksAndMessagesHanlder();
         // show
         if (visibility == View.VISIBLE) {
             if (playing)
@@ -98,9 +97,9 @@ public interface PlayerApi extends PlayerApiHanlder, PlayerApiBase, PlayerApiKer
 
         String url = getUrl();
         MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => url = " + url + ", this = " + this);
-        if (null == url || url.length() <= 0) return;
+        if (null == url || url.length() <= 0)
+            return;
 
-        removeCallbacksAndMessagesHanlder();
         release();
     }
 
@@ -111,7 +110,6 @@ public interface PlayerApi extends PlayerApiHanlder, PlayerApiBase, PlayerApiKer
         MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
         if (null == url || url.length() <= 0 || playing) return;
 
-        removeCallbacksAndMessagesHanlder();
         restart();
     }
 

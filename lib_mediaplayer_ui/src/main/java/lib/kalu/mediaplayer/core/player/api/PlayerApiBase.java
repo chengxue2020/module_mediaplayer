@@ -15,6 +15,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.player.PlayerLayout;
@@ -169,7 +170,6 @@ public interface PlayerApiBase {
         }
     }
 
-
     default boolean switchToPlayerLayout() {
         try {
             View playerView = removePlayerViewFromDecorView();
@@ -312,4 +312,8 @@ public interface PlayerApiBase {
     KernelApi getKernel();
 
     void setKernel(@NonNull KernelApi kernel);
+
+    void start(@NonNull String url);
+
+    void start(@NonNull StartBuilder builder, @NonNull String url);
 }

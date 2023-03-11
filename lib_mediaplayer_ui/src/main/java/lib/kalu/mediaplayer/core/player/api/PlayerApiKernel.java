@@ -1,15 +1,10 @@
 package lib.kalu.mediaplayer.core.player.api;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
-
-import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.buried.BuriedEvent;
@@ -24,43 +19,10 @@ import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.PlayerUtils;
 
-public interface PlayerApiKernel extends PlayerApiHanlder, PlayerApiListener, PlayerApiComponent, PlayerApiRender, PlayerApiDevice, PlayerApiExternalMusic {
+public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, PlayerApiRender, PlayerApiDevice, PlayerApiExternalMusic {
 
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
-        StartBuilder build = builder.build();
-        start(build, url);
-    }
-
-    default void startSeek(@NonNull long seek, @NonNull String url) {
-        StartBuilder.Builder builder = new StartBuilder.Builder();
-        builder.setSeek(seek);
-        StartBuilder build = builder.build();
-        start(build, url);
-    }
-
-    default void startLive(@NonNull String url) {
-        StartBuilder.Builder builder = new StartBuilder.Builder();
-        builder.setLive(true);
-        builder.setLoop(false);
-        StartBuilder build = builder.build();
-        start(build, url);
-    }
-
-    default void startLoop(@NonNull String url) {
-        StartBuilder.Builder builder = new StartBuilder.Builder();
-        builder.setLive(false);
-        builder.setLoop(true);
-        StartBuilder build = builder.build();
-        start(build, url);
-    }
-
-    default void startLoop(@NonNull long seek, @NonNull long max, @NonNull String url) {
-        StartBuilder.Builder builder = new StartBuilder.Builder();
-        builder.setLive(false);
-        builder.setLoop(true);
-        builder.setSeek(seek);
-        builder.setMax(max);
         StartBuilder build = builder.build();
         start(build, url);
     }
@@ -72,55 +34,50 @@ public interface PlayerApiKernel extends PlayerApiHanlder, PlayerApiListener, Pl
         if (null == url || url.length() <= 0)
             return;
 
-        callPlayerEvent(PlayerType.StateType.STATE_INIT);
+        PlayerBuilder config = PlayerManager.getInstance().getConfig();
+        MPLogUtil.setLogger(config);
+        // 1
+        callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
+        // 2
+        createRender();
+        // 3
+        createKernel(builder, config);
+
         int delay = builder.getDelay();
         if (delay <= 0) {
             try {
-                // 1
-                PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                MPLogUtil.setLogger(config);
-                // 3
-                callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
+                callPlayerEvent(PlayerType.StateType.STATE_INIT);
                 // 4
-                createRender();
-                // 5
-                createKernel(builder, config);
-                // 6
                 updateKernel(builder, url);
-                // 7
+                // 5
                 attachRender();
-                // 8
+                // 6
                 updatePlayerData(builder, url);
-                // 9
+                // 7
                 updateExternalMusicData(builder);
             } catch (Exception e) {
+                MPLogUtil.log("PlayerApiKernel => start => " + e.getMessage());
             }
         } else {
-            postDelayedHanlder(delay, new Runnable() {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        // 1
-                        PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                        MPLogUtil.setLogger(config);
-                        // 3
-                        callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
+                        checkKernel();
+                        callPlayerEvent(PlayerType.StateType.STATE_INIT);
                         // 4
-                        createRender();
-                        // 5
-                        createKernel(builder, config);
-                        // 6
                         updateKernel(builder, url);
-                        // 7
+                        // 5
                         attachRender();
-                        // 8
+                        // 6
                         updatePlayerData(builder, url);
-                        // 9
+                        // 7
                         updateExternalMusicData(builder);
                     } catch (Exception e) {
+                        MPLogUtil.log("PlayerApiKernel => start => " + e.getMessage());
                     }
                 }
-            });
+            }, delay);
         }
     }
 
