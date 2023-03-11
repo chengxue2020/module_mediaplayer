@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.player.api;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
@@ -64,6 +65,7 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
                 public void run() {
                     try {
                         checkKernel();
+                        checkReal();
                         callPlayerEvent(PlayerType.StateType.STATE_INIT);
                         // 4
                         updateKernel(builder, url);
