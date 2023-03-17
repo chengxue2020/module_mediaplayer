@@ -1,11 +1,9 @@
-package lib.kalu.mediaplayer.core.player;
+package lib.kalu.mediaplayer.widget.player;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -16,7 +14,7 @@ import androidx.annotation.RequiresApi;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.player.api.PlayerApi;
+import lib.kalu.mediaplayer.core.api.PlayerApi;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 

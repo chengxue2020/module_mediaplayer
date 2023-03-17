@@ -1,7 +1,5 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
-import android.content.Context;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -10,9 +8,7 @@ import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
-import lib.kalu.mediaplayer.core.player.api.PlayerApi;
-import lib.kalu.mediaplayer.core.player.api.PlayerApiBase;
-import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
+import lib.kalu.mediaplayer.core.api.PlayerApi;
 
 /**
  * @description: 工具类

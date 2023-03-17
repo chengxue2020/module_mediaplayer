@@ -1,24 +1,16 @@
-package lib.kalu.mediaplayer.core.player.api;
+package lib.kalu.mediaplayer.core.api;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import java.util.List;
-
-import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
-import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface PlayerApiRender extends PlayerApiBase {

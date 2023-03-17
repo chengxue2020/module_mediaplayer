@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.core.component.ComponentInit;
 import lib.kalu.mediaplayer.core.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSpeed;
-import lib.kalu.mediaplayer.core.player.PlayerLayout;
+import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 

@@ -1,7 +1,4 @@
-package lib.kalu.mediaplayer.core.player.api;
-
-import android.content.Context;
-import android.view.ViewGroup;
+package lib.kalu.mediaplayer.core.api;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;

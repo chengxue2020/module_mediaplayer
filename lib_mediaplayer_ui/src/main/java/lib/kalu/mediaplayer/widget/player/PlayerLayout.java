@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.player;
+package lib.kalu.mediaplayer.widget.player;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.ContextWrapper;
 import android.os.Build;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;

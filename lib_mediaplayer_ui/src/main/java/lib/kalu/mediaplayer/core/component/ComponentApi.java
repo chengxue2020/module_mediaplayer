@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer.core.component;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +14,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import lib.kalu.mediaplayer.core.player.api.PlayerApi;
+import lib.kalu.mediaplayer.core.api.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 

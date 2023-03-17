@@ -17,7 +17,7 @@
         android:padding="4dp"
         android:visibility="invisible" />
 
-    <lib.kalu.mediaplayer.widget.MediaProgressBar
+    <lib.kalu.mediaplayer.widget.loading.MediaProgressBar
         android:id="@+id/module_mediaplayer_controller_center_loading"
         android:layout_width="50dp"
         android:layout_height="50dp"

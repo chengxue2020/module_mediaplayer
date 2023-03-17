@@ -14,7 +14,7 @@
         android:visibility="gone"/>
 
     <!-- 转圈 -->
-    <lib.kalu.mediaplayer.widget.MediaProgressBar
+    <lib.kalu.mediaplayer.widget.loading.MediaProgressBar
         android:id="@+id/module_mediaplayer_component_loading_pb"
         android:layout_width="80dp"
         android:layout_height="80dp"

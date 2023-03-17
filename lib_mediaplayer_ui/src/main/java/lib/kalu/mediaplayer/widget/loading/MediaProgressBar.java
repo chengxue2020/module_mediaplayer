@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.widget;
+package lib.kalu.mediaplayer.widget.loading;
 
 import android.content.Context;
 import android.content.res.TypedArray;

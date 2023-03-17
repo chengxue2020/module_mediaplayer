@@ -1,13 +1,9 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
-import android.content.Context;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.core.player.api.PlayerApi;
-import lib.kalu.mediaplayer.core.player.api.PlayerApiBase;
-import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
+import lib.kalu.mediaplayer.core.api.PlayerApi;
 
 /**
  * @description: 1.继承{@link VideoPlayerImpl}扩展自己的播放器。

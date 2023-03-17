@@ -2,14 +2,10 @@ package lib.kalu.mediaplayer.core.kernel.video.base;
 
 import androidx.annotation.NonNull;
 
-import java.lang.ref.WeakReference;
-
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
-import lib.kalu.mediaplayer.core.player.api.PlayerApi;
-import lib.kalu.mediaplayer.core.player.api.PlayerApiBase;
-import lib.kalu.mediaplayer.core.player.api.PlayerApiExternalMusic;
+import lib.kalu.mediaplayer.core.api.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public abstract class BasePlayer implements KernelApi {

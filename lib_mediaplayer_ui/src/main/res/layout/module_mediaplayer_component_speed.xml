@@ -20,7 +20,7 @@
         android:focusable="false" />
 
     <!-- 转圈 -->
-    <lib.kalu.mediaplayer.widget.MediaProgressBar
+    <lib.kalu.mediaplayer.widget.loading.MediaProgressBar
         android:id="@+id/module_mediaplayer_component_speed_pb"
         android:layout_width="34dp"
         android:layout_height="34dp"
