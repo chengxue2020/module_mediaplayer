@@ -38,6 +38,10 @@ https://github.com/kalu-github/
 #
 #### 更新
 ```
+2023-03-22
+1. 更新：exoplayer-2.18.5
+```
+```
 2023-03-14
 1. 新增：ffplayer_1.0
 ```
