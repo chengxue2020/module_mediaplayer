@@ -56,29 +56,20 @@ public class PlayerLayout extends RelativeLayout {
 
     @Override
     protected void onDetachedFromWindow() {
-        try {
-            getPlayerView().checkOnDetachedFromWindow();
-            super.onDetachedFromWindow();
-        } catch (Exception e) {
-        }
+        checkOnDetachedFromWindow();
+        super.onDetachedFromWindow();
     }
 
     @Override
     protected void onAttachedToWindow() {
-        try {
-            getPlayerView().checkOnAttachedToWindow();
-            super.onAttachedToWindow();
-        } catch (Exception e) {
-        }
+        checkOnAttachedToWindow();
+        super.onAttachedToWindow();
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        try {
-            getPlayerView().checkOnWindowVisibilityChanged(visibility);
-            super.onWindowVisibilityChanged(visibility);
-        } catch (Exception e) {
-        }
+        checkOnWindowVisibilityChanged(visibility);
+        super.onWindowVisibilityChanged(visibility);
     }
 
     @Override
@@ -140,6 +131,29 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiBase => getPlayerView => " + e.getMessage());
             return null;
+        }
+    }
+
+    /**********/
+
+    protected void checkOnWindowVisibilityChanged(int visibility) {
+        try {
+            getPlayerView().checkOnWindowVisibilityChanged(visibility);
+        } catch (Exception e) {
+        }
+    }
+
+    protected void checkOnDetachedFromWindow() {
+        try {
+            getPlayerView().checkOnDetachedFromWindow();
+        } catch (Exception e) {
+        }
+    }
+
+    protected void checkOnAttachedToWindow() {
+        try {
+            getPlayerView().checkOnAttachedToWindow();
+        } catch (Exception e) {
         }
     }
 
@@ -269,9 +283,25 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final boolean isPlaying() {
+        try {
+            return getPlayerView().isPlaying();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public final String getUrl() {
         try {
             return getPlayerView().getUrl();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public final StartBuilder getStartBuilder() {
+        try {
+            return getPlayerView().getStartBuilder();
         } catch (Exception e) {
             return null;
         }
