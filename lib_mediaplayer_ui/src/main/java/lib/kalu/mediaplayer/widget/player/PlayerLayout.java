@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.R;
@@ -26,23 +27,28 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public class PlayerLayout extends RelativeLayout {
     public PlayerLayout(Context context) {
         super(context);
-        init();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        PlayerView playerView = new PlayerView(getContext());
+        playerView.setId(R.id.module_mediaplayer_root);
+        playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        addView(playerView);
     }
 
     @Override
@@ -79,13 +85,6 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
         }
         return super.onSaveInstanceState();
-    }
-
-    private final void init() {
-        PlayerView playerView = new PlayerView(getContext());
-        playerView.setId(R.id.module_mediaplayer_root);
-        playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-        addView(playerView);
     }
 
     private final Activity getWrapperActivity(Context context) {
@@ -255,6 +254,13 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final void toggle() {
+        try {
+            getPlayerView().toggle();
+        } catch (Exception e) {
+        }
+    }
+
     public final void resume() {
         try {
             getPlayerView().resume();
@@ -262,9 +268,23 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final void resume(boolean ignore) {
+        try {
+            getPlayerView().resume(ignore);
+        } catch (Exception e) {
+        }
+    }
+
     public final void pause() {
         try {
             getPlayerView().pause();
+        } catch (Exception e) {
+        }
+    }
+
+    public final void pause(boolean ignore) {
+        try {
+            getPlayerView().pause(ignore);
         } catch (Exception e) {
         }
     }
@@ -299,6 +319,56 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public void start(@NonNull String playerUrl) {
+        try {
+            getPlayerView().start(playerUrl);
+        } catch (Exception e) {
+        }
+    }
+
+    public void start(@NonNull StartBuilder data, @NonNull String playerUrl) {
+        try {
+            getPlayerView().start(data, playerUrl);
+        } catch (Exception e) {
+        }
+    }
+
+    /**********/
+    public final void stopExternalMusic(@NonNull boolean release) {
+        try {
+            getPlayerView().stopExternalMusic(release);
+        } catch (Exception e) {
+        }
+    }
+
+    public final void startExternalMusic(@NonNull Context context) {
+        try {
+            getPlayerView().startExternalMusic(context);
+        } catch (Exception e) {
+        }
+    }
+
+    public final void startExternalMusic(@NonNull Context context, @Nullable StartBuilder bundle) {
+        try {
+            getPlayerView().startExternalMusic(context, bundle);
+        } catch (Exception e) {
+        }
+    }
+
+    public final void setVolume(@NonNull float left, @NonNull float right) {
+        try {
+            getPlayerView().setVolume(left, right);
+        } catch (Exception e) {
+        }
+    }
+
+    public final void setMute(@NonNull boolean enable) {
+        try {
+            getPlayerView().setMute(enable);
+        } catch (Exception e) {
+        }
+    }
+
     public final StartBuilder getStartBuilder() {
         try {
             return getPlayerView().getStartBuilder();
@@ -307,16 +377,25 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void start(@NonNull String playerUrl) {
+    public final long getSeek() {
         try {
-            getPlayerView().start(playerUrl);
+            return getStartBuilder().getSeek();
         } catch (Exception e) {
+            return 0;
         }
     }
 
-    public final void start(@NonNull StartBuilder data, @NonNull String playerUrl) {
+    public final long getMax() {
         try {
-            getPlayerView().start(data, playerUrl);
+            return getStartBuilder().getMax();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public final void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+        try {
+            getPlayerView().seekTo(force, seek, max, loop);
         } catch (Exception e) {
         }
     }
