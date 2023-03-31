@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.core.api;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -17,28 +15,29 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 public interface PlayerApiBase {
 
     List<OnPlayerChangeListener> mListeners = new LinkedList<>();
 
-    default Activity getWrapperActivity(Context context) {
-        if (context == null) {
-            return null;
+    default ViewGroup findDecorView(View view) {
+        try {
+            View parent = (View) view.getParent();
+            if (null == parent) {
+                return (ViewGroup) view;
+            } else {
+                return findDecorView(parent);
+            }
+        } catch (Exception e) {
+            return (ViewGroup) view;
         }
-        if (context instanceof Activity) {
-            return (Activity) context;
-        } else if (context instanceof ContextWrapper) {
-            return getWrapperActivity(((ContextWrapper) context).getBaseContext());
-        }
-        return null;
     }
 
     default Context getBaseContext() {
-        return ((View) this).getContext();
+        return ((View) this).getContext().getApplicationContext();
     }
 
     default ViewGroup getBaseViewGroup() {
@@ -113,11 +112,10 @@ public interface PlayerApiBase {
 
     default View removePlayerViewFromDecorView() {
         try {
-            Activity activity = getWrapperActivity(getBaseContext());
-            if (null == activity)
-                throw new Exception("activity is null");
+            ViewGroup decorView = findDecorView((View) this);
+            if (null == decorView)
+                throw new Exception("decorView is null");
             View playerView = null;
-            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             int childCount = decorView.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View childAt = decorView.getChildAt(i);
@@ -140,15 +138,14 @@ public interface PlayerApiBase {
 
     default boolean switchToDecorView(boolean isFull) {
         try {
-            Activity activity = getWrapperActivity(getBaseContext());
-            if (null == activity)
-                throw new Exception("activity is null");
+            ViewGroup decorView = findDecorView((View) this);
+            if (null == decorView)
+                throw new Exception("decorView is null");
             // 1
             View playerView = removeFromPlayerLayout();
             if (null == playerView)
                 throw new Exception("not find playerView");
             // 2
-            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
             int index = decorView.getChildCount();
             if (isFull) {
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
