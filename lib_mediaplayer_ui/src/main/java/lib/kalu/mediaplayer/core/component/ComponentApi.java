@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
@@ -14,7 +15,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import lib.kalu.mediaplayer.core.api.PlayerApi;
+import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
@@ -108,7 +109,7 @@ public interface ComponentApi {
         }
     }
 
-    default void setBackgroundColor(@NonNull View layout, @IdRes int id, @ColorInt int value) {
+    default void setBackgroundColorInt(@NonNull View layout, @IdRes int id, @ColorInt int value) {
         try {
             View view = layout.findViewById(id);
             view.setBackgroundColor(value);
@@ -117,10 +118,20 @@ public interface ComponentApi {
         }
     }
 
-    default void setBackgroundResource(@NonNull View layout, @IdRes int id, @DrawableRes int resid) {
+    default void setBackgroundColorRes(@NonNull View layout, @IdRes int id, @ColorRes int resId) {
         try {
             View view = layout.findViewById(id);
-            view.setBackgroundResource(resid);
+            int color = view.getResources().getColor(resId);
+            view.setBackgroundColor(color);
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+        }
+    }
+
+    default void setBackgroundDrawableRes(@NonNull View layout, @IdRes int id, @DrawableRes int resId) {
+        try {
+            View view = layout.findViewById(id);
+            view.setBackgroundResource(resId);
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }

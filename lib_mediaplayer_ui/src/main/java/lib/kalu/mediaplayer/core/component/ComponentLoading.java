@@ -4,11 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DimenRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -83,12 +83,11 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
         setTextColor(this, R.id.module_mediaplayer_component_loading_message, color);
     }
 
-    public void setBackgroundColor(@ColorInt int value) {
-        setBackgroundColor(this, R.id.module_mediaplayer_component_loading_bg, value);
+    public void setComponentBackgroundColorInt(@ColorInt int value) {
+        setBackgroundColorInt(this, R.id.module_mediaplayer_component_loading_bg, value);
     }
 
-    @Override
-    public void setBackgroundResource(int resid) {
-        setBackgroundResource(this, R.id.module_mediaplayer_component_loading_bg, resid);
+    public void setComponentBackgroundResource(@DrawableRes int resid) {
+        setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_loading_bg, resid);
     }
 }

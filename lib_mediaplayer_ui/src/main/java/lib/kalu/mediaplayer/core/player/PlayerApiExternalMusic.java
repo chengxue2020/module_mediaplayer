@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.api;
+package lib.kalu.mediaplayer.core.player;
 
 import android.content.Context;
 import android.view.View;

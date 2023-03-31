@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.widget.player;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.os.Build;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -25,30 +23,39 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
 public class PlayerLayout extends RelativeLayout {
+
     public PlayerLayout(Context context) {
         super(context);
+        init();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        PlayerView playerView = new PlayerView(getContext());
-        playerView.setId(R.id.module_mediaplayer_root);
-        playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-        addView(playerView);
+    private final void init() {
+        try {
+            int childCount = getChildCount();
+            if (childCount > 0)
+                throw new Exception("childCount warning: " + childCount);
+            PlayerView playerView = new PlayerView(getContext());
+            playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+            addView(playerView);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => init => " + e.getMessage());
+        }
     }
 
     @Override
@@ -83,52 +90,67 @@ public class PlayerLayout extends RelativeLayout {
         try {
             getPlayerView().onSaveBundle();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => onSaveInstanceState => " + e.getMessage());
         }
         return super.onSaveInstanceState();
     }
 
-    private final Activity getWrapperActivity(Context context) {
-        if (context == null) {
-            return null;
+    /**********/
+
+    private final ViewGroup findDecorView(View view) {
+        try {
+            View parent = (View) view.getParent();
+            if (null == parent) {
+                return (ViewGroup) view;
+            } else {
+                return findDecorView(parent);
+            }
+        } catch (Exception e) {
+            return (ViewGroup) view;
         }
-        if (context instanceof Activity) {
-            return (Activity) context;
-        } else if (context instanceof ContextWrapper) {
-            return getWrapperActivity(((ContextWrapper) context).getBaseContext());
-        }
-        return null;
     }
 
     private final PlayerView getPlayerView() {
         try {
-            PlayerView playerView = null;
             int childCount = getChildCount();
+            MPLogUtil.log("PlayerLayout => getPlayerView => childCount = " + childCount);
             // sample
             if (childCount == 1) {
-                playerView = (PlayerView) getChildAt(0);
+                return (PlayerView) getChildAt(0);
             }
             // not
             else {
-                Activity activity = getWrapperActivity(getContext());
-                if (null == activity)
-                    throw new Exception("activity is null");
-                ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-                int length = decorView.getChildCount();
-                for (int i = 0; i < length; i++) {
+                ViewGroup decorView = findDecorView(this);
+                MPLogUtil.log("PlayerLayout => getPlayerView => decorView = " + decorView);
+                if (null == decorView)
+                    throw new Exception("decorView error: null");
+                int decorChildCount = decorView.getChildCount();
+                MPLogUtil.log("PlayerLayout => getPlayerView => decorChildCount = " + decorChildCount);
+                for (int i = 0; i < decorChildCount; i++) {
                     View childAt = decorView.getChildAt(i);
+                    MPLogUtil.log("PlayerLayout => getPlayerView => childAt = " + childAt);
                     if (null == childAt)
                         continue;
                     if (childAt.getId() == R.id.module_mediaplayer_root) {
-                        playerView = (PlayerView) childAt;
-                        break;
+                        return (PlayerView) childAt;
                     }
                 }
             }
-            if (null == playerView)
-                throw new Exception("not find playerView from decorView");
-            return playerView;
+            throw new Exception("not find");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => getPlayerView => " + e.getMessage());
+            MPLogUtil.log("PlayerLayout => getPlayerView => " + e.getMessage());
+            return null;
+        }
+    }
+
+    private final StartBuilder getStartBuilder() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getStartBuilder();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getStartBuilder => " + e.getMessage());
             return null;
         }
     }
@@ -137,22 +159,34 @@ public class PlayerLayout extends RelativeLayout {
 
     protected void checkOnWindowVisibilityChanged(int visibility) {
         try {
-            getPlayerView().checkOnWindowVisibilityChanged(visibility);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.checkOnWindowVisibilityChanged(visibility);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => checkOnWindowVisibilityChanged => " + e.getMessage());
         }
     }
 
     protected void checkOnDetachedFromWindow() {
         try {
-            getPlayerView().checkOnDetachedFromWindow();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.checkOnDetachedFromWindow();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => checkOnDetachedFromWindow => " + e.getMessage());
         }
     }
 
     protected void checkOnAttachedToWindow() {
         try {
-            getPlayerView().checkOnAttachedToWindow();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.checkOnAttachedToWindow();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => checkOnAttachedToWindow => " + e.getMessage());
         }
     }
 
@@ -160,243 +194,378 @@ public class PlayerLayout extends RelativeLayout {
 
     public final boolean isFull() {
         try {
-            return getPlayerView().isFull();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isFull();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => isFull => " + e.getMessage());
             return false;
         }
     }
 
     public final boolean isFloat() {
         try {
-            return getPlayerView().isFloat();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isFloat();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => isFloat => " + e.getMessage());
             return false;
         }
     }
 
     public final void startFull() {
         try {
-            getPlayerView().startFull();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.startFull();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => startFull => " + e.getMessage());
         }
     }
 
     public final void stopFull() {
         try {
-            getPlayerView().stopFull();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.stopFull();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => stopFull => " + e.getMessage());
         }
     }
 
     public final void startFloat() {
         try {
-            getPlayerView().startFloat();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.startFloat();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => startFloat => " + e.getMessage());
         }
     }
 
     public final void stopFloat() {
         try {
-            getPlayerView().stopFloat();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.stopFloat();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => stopFloat => " + e.getMessage());
         }
     }
 
     public long getPosition() {
         try {
-            return getPlayerView().getPosition();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getPosition();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getPosition => " + e.getMessage());
             return 0;
         }
     }
 
     public long getDuration() {
         try {
-            return getPlayerView().getDuration();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getDuration();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getDuration => " + e.getMessage());
             return 0;
         }
     }
 
     public final void setScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
-            getPlayerView().setScaleType(scaleType);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setScaleType(scaleType);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => setScaleType => " + e.getMessage());
         }
     }
 
     public final void addComponent(@NonNull ComponentApi componentApi) {
         try {
-            getPlayerView().addComponent(componentApi);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.addComponent(componentApi);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => addComponent => " + e.getMessage());
         }
     }
 
     public final <T extends android.view.View> T findComponent(java.lang.Class<?> cls) {
         try {
-            return getPlayerView().findComponent(cls);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.findComponent(cls);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => findComponent => " + e.getMessage());
             return null;
         }
     }
 
-    public final void showComponentSeek() {
+    public final boolean showComponent(java.lang.Class<?> cls) {
         try {
-            getPlayerView().showComponentSeek();
+            View component = findComponent(cls);
+            if (null == component)
+                throw new Exception("component error: null");
+            component.setVisibility(View.VISIBLE);
+            return true;
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => showComponent => " + e.getMessage());
+            return false;
+        }
+    }
+
+    public final boolean hideComponent(java.lang.Class<?> cls) {
+        try {
+            View component = findComponent(cls);
+            if (null == component)
+                throw new Exception("component error: null");
+            component.setVisibility(View.GONE);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => hideComponent => " + e.getMessage());
+            return false;
         }
     }
 
     public final void setPlayerChangeListener(@NonNull OnPlayerChangeListener listener) {
         try {
-            getPlayerView().setPlayerChangeListener(listener);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setPlayerChangeListener(listener);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => setPlayerChangeListener => " + e.getMessage());
         }
     }
 
     public final void toggle() {
         try {
-            getPlayerView().toggle();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.toggle();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => toggle => " + e.getMessage());
         }
     }
 
     public final void resume() {
         try {
-            getPlayerView().resume();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.resume();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => resume => " + e.getMessage());
         }
     }
 
     public final void resume(boolean ignore) {
         try {
-            getPlayerView().resume(ignore);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.resume(ignore);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => resume => " + e.getMessage());
         }
     }
 
     public final void pause() {
         try {
-            getPlayerView().pause();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.pause();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => pause => " + e.getMessage());
         }
     }
 
     public final void pause(boolean ignore) {
         try {
-            getPlayerView().pause(ignore);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.pause(ignore);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => pause => " + e.getMessage());
         }
     }
 
     public final void release() {
         try {
-            getPlayerView().release();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.release();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => release => " + e.getMessage());
         }
     }
 
     public final void stop() {
         try {
-            getPlayerView().stop();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.stop();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => stop => " + e.getMessage());
         }
     }
 
     public final boolean isPlaying() {
         try {
-            return getPlayerView().isPlaying();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isPlaying();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => isPlaying => " + e.getMessage());
             return false;
         }
     }
 
     public final String getUrl() {
         try {
-            return getPlayerView().getUrl();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getUrl();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getUrl => " + e.getMessage());
             return null;
         }
     }
 
     public void start(@NonNull String playerUrl) {
         try {
-            getPlayerView().start(playerUrl);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.start(playerUrl);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => start => " + e.getMessage());
         }
     }
 
     public void start(@NonNull StartBuilder data, @NonNull String playerUrl) {
         try {
-            getPlayerView().start(data, playerUrl);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.start(data, playerUrl);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => start => " + e.getMessage());
         }
     }
 
     /**********/
     public final void stopExternalMusic(@NonNull boolean release) {
         try {
-            getPlayerView().stopExternalMusic(release);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.stopExternalMusic(release);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => stopExternalMusic => " + e.getMessage());
         }
     }
 
     public final void startExternalMusic(@NonNull Context context) {
         try {
-            getPlayerView().startExternalMusic(context);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.startExternalMusic(context);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => startExternalMusic => " + e.getMessage());
         }
     }
 
     public final void startExternalMusic(@NonNull Context context, @Nullable StartBuilder bundle) {
         try {
-            getPlayerView().startExternalMusic(context, bundle);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.startExternalMusic(context, bundle);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => startExternalMusic => " + e.getMessage());
         }
     }
 
     public final void setVolume(@NonNull float left, @NonNull float right) {
         try {
-            getPlayerView().setVolume(left, right);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setVolume(left, right);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => setVolume => " + e.getMessage());
         }
     }
 
     public final void setMute(@NonNull boolean enable) {
         try {
-            getPlayerView().setMute(enable);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setMute(enable);
         } catch (Exception e) {
-        }
-    }
-
-    public final StartBuilder getStartBuilder() {
-        try {
-            return getPlayerView().getStartBuilder();
-        } catch (Exception e) {
-            return null;
+            MPLogUtil.log("PlayerApiBase => setMute => " + e.getMessage());
         }
     }
 
     public final long getSeek() {
         try {
-            return getStartBuilder().getSeek();
+            StartBuilder startBuilder = getStartBuilder();
+            if (null == startBuilder)
+                throw new Exception("startBuilder error: null");
+            return startBuilder.getSeek();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getSeek => " + e.getMessage());
             return 0;
         }
     }
 
     public final long getMax() {
         try {
-            return getStartBuilder().getMax();
+            StartBuilder startBuilder = getStartBuilder();
+            if (null == startBuilder)
+                throw new Exception("startBuilder error: null");
+            return startBuilder.getMax();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getMax => " + e.getMessage());
             return 0;
         }
     }
 
     public final void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
         try {
-            getPlayerView().seekTo(force, seek, max, loop);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.seekTo(force, seek, max, loop);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => seekTo => " + e.getMessage());
         }
     }
 }

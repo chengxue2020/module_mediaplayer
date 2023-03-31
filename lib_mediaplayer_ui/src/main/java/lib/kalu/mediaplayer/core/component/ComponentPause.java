@@ -4,9 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,14 +70,26 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     @Override
     public void gone() {
         findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.GONE);
+        findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
+        findViewById(R.id.module_mediaplayer_component_pause_ad).setVisibility(View.GONE);
     }
 
     @Override
     public void show() {
         findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
+        findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.VISIBLE);
+        findViewById(R.id.module_mediaplayer_component_pause_ad).setVisibility(View.GONE);
     }
 
     public final void setPauseImageResource(@DrawableRes int res) {
         setImageResource(this, R.id.module_mediaplayer_component_pause_img, res);
+    }
+
+    public final void setComponentBackgroundColorRes(@ColorRes int color) {
+        setBackgroundColorRes(this, R.id.module_mediaplayer_component_pause_bg, color);
+    }
+
+    public final void setComponentBackgroundColorInt(@ColorInt int color) {
+        setBackgroundColorInt(this, R.id.module_mediaplayer_component_pause_bg, color);
     }
 }

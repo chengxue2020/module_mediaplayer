@@ -8,7 +8,7 @@ import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
-import lib.kalu.mediaplayer.core.api.PlayerApi;
+import lib.kalu.mediaplayer.core.player.PlayerApi;
 
 /**
  * @description: 工具类

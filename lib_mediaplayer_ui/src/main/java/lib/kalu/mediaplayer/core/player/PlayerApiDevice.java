@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.api;
+package lib.kalu.mediaplayer.core.player;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;

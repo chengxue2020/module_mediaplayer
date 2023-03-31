@@ -5,9 +5,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -71,5 +72,13 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     public void show() {
         findViewById(R.id.module_mediaplayer_component_init_txt).setVisibility(View.VISIBLE);
         findViewById(R.id.module_mediaplayer_component_init_bg).setVisibility(View.VISIBLE);
+    }
+
+    public final void setComponentBackgroundColorRes(@ColorRes int color) {
+        setBackgroundColorRes(this, R.id.module_mediaplayer_component_init_bg, color);
+    }
+
+    public final void setComponentBackgroundColorInt(@ColorInt int color) {
+        setBackgroundColorInt(this, R.id.module_mediaplayer_component_init_bg, color);
     }
 }

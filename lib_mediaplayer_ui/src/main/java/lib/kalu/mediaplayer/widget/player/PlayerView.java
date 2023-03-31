@@ -1,20 +1,16 @@
 package lib.kalu.mediaplayer.widget.player;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.api.PlayerApi;
+import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -31,36 +27,27 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
         init();
     }
 
-    public PlayerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public PlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public PlayerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
     private void init() {
-        setId(R.id.module_mediaplayer_root);
-        setBackgroundColor(Color.parseColor("#000000"));
-        setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
-        // player
-        RelativeLayout layoutPlayer = new RelativeLayout(getContext());
-        layoutPlayer.setId(R.id.module_mediaplayer_video);
-        layoutPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-        addView(layoutPlayer);
-        // control
-        RelativeLayout controlPlayer = new RelativeLayout(getContext());
-        controlPlayer.setId(R.id.module_mediaplayer_control);
-        controlPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-        addView(controlPlayer);
+        try {
+            int childCount = getChildCount();
+            if (childCount > 0)
+                throw new Exception("childCount warning: " + childCount);
+            // id
+            setId(R.id.module_mediaplayer_root);
+            setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
+            // player
+            RelativeLayout layoutPlayer = new RelativeLayout(getContext());
+            layoutPlayer.setId(R.id.module_mediaplayer_video);
+            layoutPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+            addView(layoutPlayer);
+            // control
+            RelativeLayout controlPlayer = new RelativeLayout(getContext());
+            controlPlayer.setId(R.id.module_mediaplayer_control);
+            controlPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+            addView(controlPlayer);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerView => init => " + e.getMessage());
+        }
     }
 
     @Override

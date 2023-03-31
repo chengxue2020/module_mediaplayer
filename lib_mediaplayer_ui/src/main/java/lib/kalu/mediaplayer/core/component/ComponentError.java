@@ -101,7 +101,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
         this.setTextSize(this, R.id.module_mediaplayer_component_error_message, value);
     }
 
-    public void setBackgroundColor(@ColorInt int value) {
-        setBackgroundColor(this, R.id.module_mediaplayer_component_error_bg, value);
+    public void setComponentBackgroundColorInt(@ColorInt int value) {
+        setBackgroundColorInt(this, R.id.module_mediaplayer_component_error_bg, value);
     }
 }

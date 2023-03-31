@@ -1,5 +1,5 @@
 
-package lib.kalu.mediaplayer.core.api;
+package lib.kalu.mediaplayer.core.player;
 
 import java.util.List;
 

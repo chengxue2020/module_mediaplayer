@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.KernelFactory;
-import lib.kalu.mediaplayer.core.api.PlayerApi;
+import lib.kalu.mediaplayer.core.player.PlayerApi;
 
 @Keep
 public class VideoAndroidPlayerFactory implements KernelFactory<VideoAndroidPlayer> {
