@@ -311,8 +311,7 @@ public class DefaultRenderersFactory implements RenderersFactory {
                 allowedVideoJoiningTimeMs,
                 renderersList);
         @Nullable
-        AudioSink audioSink =
-                buildAudioSink(context, enableFloatOutput, enableAudioTrackPlaybackParams, enableOffload);
+        AudioSink audioSink = buildAudioSink(context, enableFloatOutput, enableAudioTrackPlaybackParams, enableOffload);
         if (audioSink != null) {
             buildAudioRenderers(
                     context,
