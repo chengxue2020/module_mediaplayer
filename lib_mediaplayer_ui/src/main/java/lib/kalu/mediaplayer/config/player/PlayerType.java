@@ -12,8 +12,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Keep;
 import androidx.annotation.StringDef;
 
-import com.google.android.exoplayer2.SeekParameters;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -299,21 +297,25 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface FFmpegType {
-        int EXO_EXT_FFPEMG_NULL = 9_001;
-        int EXO_EXT_FFPEMG_AUDIO = 9_002;
-        int EXO_EXT_FFPEMG_AUDIO_ONLY = 9_004;
-        int EXO_EXT_FFPEMG_VIDEO = 9_005;
-        int EXO_EXT_FFPEMG_VIDEO_ONLY = 9_006;
+        int EXO_EXTENSION_RENDERER_ON_HIGH_ALL = 9_001;
+        int EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO = 9_002;
+        int EXO_EXTENSION_RENDERER_ON_LOW_ALL = 9_003;
+        int EXO_EXTENSION_RENDERER_ON_LOW_AUDIO = 9_004;
+        int EXO_EXTENSION_RENDERER_OFF = 9_005;
+        int EXO_EXTENSION_RENDERER_OFF_ONLY_AUDIO = 9_006;
+        int EXO_EXTENSION_RENDERER_OFF_ONLY_VIDEO = 9_007;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                FFmpegType.EXO_EXT_FFPEMG_NULL,
-                FFmpegType.EXO_EXT_FFPEMG_AUDIO,
-                FFmpegType.EXO_EXT_FFPEMG_AUDIO_ONLY,
-                FFmpegType.EXO_EXT_FFPEMG_VIDEO,
-                FFmpegType.EXO_EXT_FFPEMG_VIDEO_ONLY})
+                FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_ALL,
+                FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO,
+                FFmpegType.EXO_EXTENSION_RENDERER_ON_LOW_ALL,
+                FFmpegType.EXO_EXTENSION_RENDERER_ON_LOW_AUDIO,
+                FFmpegType.EXO_EXTENSION_RENDERER_OFF,
+                FFmpegType.EXO_EXTENSION_RENDERER_OFF_ONLY_AUDIO,
+                FFmpegType.EXO_EXTENSION_RENDERER_OFF_ONLY_VIDEO})
         @Keep
         @interface Value {
         }

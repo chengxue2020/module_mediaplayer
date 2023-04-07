@@ -1,7 +1,6 @@
 package com.kalu.mediaplayer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,13 +11,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import lib.kalu.mediaplayer.TestActivity;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -63,8 +60,36 @@ public class MainActivity extends Activity {
         });
     }
 
+    private final boolean isLive() {
+        String url = getUrl();
+        return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
+    }
+
+    private final String getUrl() {
+        String s = null;
+        try {
+            EditText editText = findViewById(R.id.main_edit);
+            s = editText.getText().toString();
+            if (null == s || s.length() <= 0) {
+                RadioGroup radioGroup = findViewById(R.id.main_radio);
+                int id = radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton = radioGroup.findViewById(id);
+                s = radioButton.getTag().toString();
+            }
+        } catch (Exception e) {
+        }
+
+        if ("video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
+            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
+        } else if ("video-h264-adts.m3u8".equals(s)) {
+            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
+        }
+        return s;
+    }
+
     private void init() {
 
+        // 1
         int type;
         try {
             RadioGroup radioGroup = findViewById(R.id.main_kernel);
@@ -94,76 +119,42 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(), "default ijk init succ", Toast.LENGTH_SHORT).show();
         }
 
-        copy();
-        init(type);
-    }
-
-    private void copy() {
-        String absolutePath = getApplicationContext().getCacheDir().getAbsolutePath();
-        List<String> list = Arrays.asList("video-h265.mkv", "video-test.rmvb");
+        // 2
+        List<String> list = Arrays.asList("video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts");
         for (int i = 0; i < list.size(); i++) {
-            String s = list.get(i);
-            boolean copyFile = copyFile(getApplicationContext(), s, absolutePath + "/" + s);
-            if (!copyFile) {
+            String fromPath = list.get(i);
+            String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;
+            try {
+                InputStream is = getApplicationContext().getAssets().open(fromPath);
+                FileOutputStream fos = new FileOutputStream(savePath);
+                byte[] buffer = new byte[1024];
+                int byteCount = 0;
+                while ((byteCount = is.read(buffer)) != -1) {// 循环从输入流读取
+                    // buffer字节
+                    fos.write(buffer, 0, byteCount);// 将读取的输入流写入到输出流
+                }
+                fos.flush();// 刷新缓冲区
+                is.close();
+                fos.close();
+            } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "初始化资源文件 => 错误", Toast.LENGTH_SHORT).show();
-                return;
+                break;
             }
         }
-    }
+        Toast.makeText(getApplicationContext(), "初始化资源文件 => 成功", Toast.LENGTH_SHORT).show();
 
-    private boolean copyFile(Context context, String assetsPath, String savePath) {
-        // assetsPath 为空时即 /assets
-        try {
-            InputStream is = context.getAssets().open(assetsPath);
-            FileOutputStream fos = new FileOutputStream(new File(savePath));
-            byte[] buffer = new byte[1024];
-            int byteCount = 0;
-            while ((byteCount = is.read(buffer)) != -1) {// 循环从输入流读取
-                // buffer字节
-                fos.write(buffer, 0, byteCount);// 将读取的输入流写入到输出流
-            }
-            fos.flush();// 刷新缓冲区
-            is.close();
-            fos.close();
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+        // 3
+        init(type);
     }
 
     private void init(@PlayerType.KernelType.Value int type) {
         PlayerBuilder build = new PlayerBuilder.Builder()
-                .setLog(false)
+                .setLog(true)
                 .setKernel(type)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
-                .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL)
+                .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO)
                 .setBuriedEvent(new Event())
                 .build();
         PlayerManager.getInstance().setConfig(build);
-    }
-
-    private final boolean isLive() {
-        String url = getUrl();
-        return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
-    }
-
-    private final String getUrl() {
-        String s = null;
-        try {
-            EditText editText = findViewById(R.id.main_edit);
-            s = editText.getText().toString();
-            if (null == s || s.length() <= 0) {
-                RadioGroup radioGroup = findViewById(R.id.main_radio);
-                int id = radioGroup.getCheckedRadioButtonId();
-                RadioButton radioButton = radioGroup.findViewById(id);
-                s = radioButton.getTag().toString();
-            }
-        } catch (Exception e) {
-        }
-
-        if ("video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
-            s = getApplicationContext().getCacheDir().getAbsolutePath() + "/" + s;
-        }
-        return s;
     }
 }

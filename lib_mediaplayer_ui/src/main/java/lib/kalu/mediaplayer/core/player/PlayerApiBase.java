@@ -71,7 +71,7 @@ public interface PlayerApiBase {
                 return false;
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => isFull => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiBase => isFull => " + e.getMessage());
             return false;
         }
     }
@@ -89,7 +89,7 @@ public interface PlayerApiBase {
                 throw new Exception("layoutParams is null");
             return layoutParams.width != ViewGroup.LayoutParams.MATCH_PARENT || layoutParams.height != ViewGroup.LayoutParams.MATCH_PARENT;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => isFloat => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiBase => isFloat => " + e.getMessage());
             return false;
         }
     }
@@ -161,7 +161,7 @@ public interface PlayerApiBase {
             decorView.addView(playerView, index);
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => switchToDecorView => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiBase => switchToDecorView => " + e.getMessage());
             return false;
         }
     }
@@ -180,7 +180,7 @@ public interface PlayerApiBase {
             playerGroup.addView(playerView);
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => switchToPlayerLayout => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiBase => switchToPlayerLayout => " + e.getMessage());
             return false;
         }
     }
@@ -190,7 +190,7 @@ public interface PlayerApiBase {
             ViewGroup playerGroup = getBaseViewGroup();
             return playerGroup.findViewById(R.id.module_mediaplayer_video);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => getBaseVideoGroup => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiBase => getBaseVideoGroup => " + e.getMessage());
             return null;
         }
     }
@@ -201,7 +201,7 @@ public interface PlayerApiBase {
             ViewGroup playerGroup = getBaseViewGroup();
             return playerGroup.findViewById(R.id.module_mediaplayer_control);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => getBaseControlViewGroup => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiBase => getBaseControlViewGroup => " + e.getMessage());
             return null;
         }
     }

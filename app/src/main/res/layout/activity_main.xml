@@ -21,7 +21,7 @@
             android:id="@+id/main_kernel_button1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:checked="true"
+            android:checked="false"
             android:enabled="true"
             android:text="ijk" />
 
@@ -29,6 +29,7 @@
             android:id="@+id/main_kernel_button2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:checked="true"
             android:enabled="true"
             android:text="exo" />
 
@@ -118,6 +119,13 @@
             android:layout_height="match_parent"
             android:tag="https://media.w3.org/2010/05/sintel/trailer.mp4"
             android:text="https" />
+
+        <RadioButton
+            android:id="@+id/main_radio10"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="video-h264-adts.m3u8"
+            android:text="m3u8-h264-adts" />
 
     </RadioGroup>
 

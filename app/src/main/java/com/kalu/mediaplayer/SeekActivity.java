@@ -22,7 +22,7 @@ public class SeekActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PlayerLayout view = findViewById(R.id.seek_video);
-                view.showComponentSeek();
+                view.showComponent(ComponentSeek.class);
             }
         });
 

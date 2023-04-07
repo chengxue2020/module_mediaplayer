@@ -420,6 +420,16 @@ public class PlayerLayout extends RelativeLayout {
             MPLogUtil.log("PlayerApiBase => release => " + e.getMessage());
         }
     }
+    public final void pauseKernel(boolean ignore) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.pauseKernel(ignore);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => pauseKernel => " + e.getMessage());
+        }
+    }
 
     public final void stop() {
         try {
@@ -566,6 +576,16 @@ public class PlayerLayout extends RelativeLayout {
             playerView.seekTo(force, seek, max, loop);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiBase => seekTo => " + e.getMessage());
+        }
+    }
+    public final void callPlayerEvent(@PlayerType.StateType.Value int state) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.callPlayerEvent(state);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => callPlayerEvent => " + e.getMessage());
         }
     }
 }

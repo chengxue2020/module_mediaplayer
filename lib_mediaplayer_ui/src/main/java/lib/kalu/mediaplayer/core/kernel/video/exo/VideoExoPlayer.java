@@ -17,6 +17,7 @@ import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
@@ -29,11 +30,11 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
 
-import lib.kalu.exoplayer2.ffmpeg.FFmpegAudioOnlyRenderersFactory;
-import lib.kalu.exoplayer2.ffmpeg.FFmpegAudioRenderersFactory;
-import lib.kalu.exoplayer2.ffmpeg.DefaultRenderersFactory;
-import lib.kalu.exoplayer2.ffmpeg.FFmpegVideoOnlyRenderersFactory;
-import lib.kalu.exoplayer2.ffmpeg.FFmpegVideoRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.BaseOnlyAudioRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.BaseOnlyVideoRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.BaseRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.FFmpegHighAudioRenderersFactory;
+import lib.kalu.exoplayer2.ffmpeg.FFmpegLowAudioRenderersFactory;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -80,17 +81,38 @@ public final class VideoExoPlayer extends BasePlayer {
         builder.setTrackSelector(new DefaultTrackSelector(context));
         PlayerBuilder config = PlayerManager.getInstance().getConfig();
         int exoFFmpeg = config.getExoFFmpeg();
-        if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_AUDIO_ONLY) {
-            builder.setRenderersFactory(new FFmpegAudioOnlyRenderersFactory(context));
-        } else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_AUDIO) {
-            builder.setRenderersFactory(new FFmpegAudioRenderersFactory(context));
-        } else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_VIDEO_ONLY) {
-            builder.setRenderersFactory(new FFmpegVideoOnlyRenderersFactory(context));
-        } else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_VIDEO) {
-            builder.setRenderersFactory(new FFmpegVideoRenderersFactory(context));
-        } else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXT_FFPEMG_NULL) {
-            builder.setRenderersFactory(new DefaultRenderersFactory(context));
+        MPLogUtil.log("VideoExoPlayer => createDecoder => exoFFmpeg = " + exoFFmpeg);
+        RenderersFactory renderersFactory;
+        // on_high_all
+        if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_ALL) {
+            renderersFactory = new BaseRenderersFactory(context);
         }
+        // on_high_audio
+        else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO) {
+            renderersFactory = new FFmpegHighAudioRenderersFactory(context);
+        }
+        // on_low_all
+        else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_ON_LOW_ALL) {
+            renderersFactory = new BaseRenderersFactory(context);
+        }
+        // on_low_audio
+        else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_ON_LOW_AUDIO) {
+            renderersFactory = new FFmpegLowAudioRenderersFactory(context);
+        }
+        // off_only_audio
+        else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_OFF_ONLY_AUDIO) {
+            renderersFactory = new BaseOnlyAudioRenderersFactory(context);
+        }
+        // off_only_video
+        else if (exoFFmpeg == PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_OFF_ONLY_VIDEO) {
+            renderersFactory = new BaseOnlyVideoRenderersFactory(context);
+        }
+        // off
+        else {
+            renderersFactory = new BaseRenderersFactory(context);
+        }
+        MPLogUtil.log("VideoExoPlayer => createDecoder => renderersFactory = " + renderersFactory);
+        builder.setRenderersFactory(renderersFactory);
         mExoPlayer = builder.build();
         mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
         setVolume(1F, 1F);
