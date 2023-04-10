@@ -49,6 +49,29 @@
 
     </RadioGroup>
 
+    <RadioGroup
+        android:id="@+id/main_exo_ffmpeg"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_exo_ffmpeg_yes_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:enabled="true"
+            android:text="ffmpg_yes_audio" />
+
+        <RadioButton
+            android:id="@+id/main_exo_ffmpeg_no"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:enabled="true"
+            android:text="ffmpg_no" />
+
+    </RadioGroup>
 
     <RadioGroup
         android:id="@+id/main_radio"
@@ -125,7 +148,13 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:tag="video-h264-adts.m3u8"
-            android:text="m3u8-h264-adts" />
+            android:text="aac-adts" />
+        <RadioButton
+            android:id="@+id/main_radio11"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="video-sxgd.mpeg"
+            android:text="sxgd-db" />
 
     </RadioGroup>
 

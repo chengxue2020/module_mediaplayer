@@ -217,7 +217,16 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void startFull() {
+        startFull(false);
+    }
+
+    public final void startFull(boolean checkUrl) {
         try {
+            if (checkUrl) {
+                String url = getUrl();
+                if (null == url || url.length() <= 0)
+                    throw new Exception("url error: null");
+            }
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -239,7 +248,16 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void startFloat() {
+        startFloat(false);
+    }
+
+    public final void startFloat(boolean checkUrl) {
         try {
+            if (checkUrl) {
+                String url = getUrl();
+                if (null == url || url.length() <= 0)
+                    throw new Exception("url error: null");
+            }
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
@@ -420,6 +438,7 @@ public class PlayerLayout extends RelativeLayout {
             MPLogUtil.log("PlayerApiBase => release => " + e.getMessage());
         }
     }
+
     public final void pauseKernel(boolean ignore) {
         try {
             PlayerView playerView = getPlayerView();
@@ -578,6 +597,7 @@ public class PlayerLayout extends RelativeLayout {
             MPLogUtil.log("PlayerApiBase => seekTo => " + e.getMessage());
         }
     }
+
     public final void callPlayerEvent(@PlayerType.StateType.Value int state) {
         try {
             PlayerView playerView = getPlayerView();

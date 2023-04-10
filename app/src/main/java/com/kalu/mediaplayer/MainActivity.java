@@ -32,8 +32,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         init();
-        RadioGroup radioGroup = findViewById(R.id.main_kernel);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        ((RadioGroup) findViewById(R.id.main_kernel)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                init();
+            }
+        });
+
+        ((RadioGroup) findViewById(R.id.main_exo_ffmpeg)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 init();
@@ -83,6 +89,8 @@ public class MainActivity extends Activity {
             s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
         } else if ("video-h264-adts.m3u8".equals(s)) {
             s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
+        } else if ("video-sxgd.mpeg".equals(s)) {
+            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
         }
         return s;
     }
@@ -120,7 +128,7 @@ public class MainActivity extends Activity {
         }
 
         // 2
-        List<String> list = Arrays.asList("video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts");
+        List<String> list = Arrays.asList("video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
         for (int i = 0; i < list.size(); i++) {
             String fromPath = list.get(i);
             String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;
@@ -148,11 +156,23 @@ public class MainActivity extends Activity {
     }
 
     private void init(@PlayerType.KernelType.Value int type) {
+
+        int exoFFmpeg;
+        RadioGroup radioGroup = findViewById(R.id.main_exo_ffmpeg);
+        int buttonId = radioGroup.getCheckedRadioButtonId();
+        switch (buttonId) {
+            case R.id.main_exo_ffmpeg_yes_audio:
+                exoFFmpeg = PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO;
+                break;
+            default:
+                exoFFmpeg = PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_OFF;
+                break;
+        }
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
                 .setKernel(type)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
-                .setExoFFmpeg(PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO)
+                .setExoFFmpeg(exoFFmpeg)
                 .setBuriedEvent(new Event())
                 .build();
         PlayerManager.getInstance().setConfig(build);
