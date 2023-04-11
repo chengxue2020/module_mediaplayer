@@ -229,6 +229,11 @@ public final class VideoAndroidPlayer extends BasePlayer {
         }
     }
 
+    @Override
+    public void setPlayWhenReady(boolean playWhenReady) {
+
+    }
+
     /**
      * 获取播放速度
      *

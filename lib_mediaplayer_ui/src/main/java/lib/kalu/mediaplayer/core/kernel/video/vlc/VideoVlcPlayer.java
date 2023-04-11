@@ -232,6 +232,11 @@ public final class VideoVlcPlayer extends BasePlayer {
         }
     }
 
+    @Override
+    public void setPlayWhenReady(boolean playWhenReady) {
+
+    }
+
     /**
      * 获取播放速度
      *

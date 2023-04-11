@@ -1,9 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel.video.exo;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Surface;
 
 import androidx.annotation.Keep;
@@ -52,9 +49,8 @@ public final class VideoExoPlayer extends BasePlayer {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    //    private String mUrl = null; // 视频串
     private boolean mReadying = false;
-
+    private boolean mPlayWhenReady = true;
     private PlaybackParameters mSpeedPlaybackParameters;
 
     private ExoPlayer mExoPlayer;
@@ -184,7 +180,10 @@ public final class VideoExoPlayer extends BasePlayer {
 
             @Override
             public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
-                MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onIsPlayingChanged => isPlaying = " + isPlaying);
+                MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPlayWhenReady = " + mPlayWhenReady);
+                if (isPlaying && !mPlayWhenReady) {
+                    pause();
+                }
             }
 
             @Override
@@ -383,38 +382,8 @@ public final class VideoExoPlayer extends BasePlayer {
         return duration;
     }
 
-//    /**
-//     * 获取缓冲百分比
-//     */
-//    @Override
-//    public int getBufferedPercentage() {
-//        return mExoPlayer == null ? 0 : mExoPlayer.getBufferedPercentage();
-//    }
-
-//    @Override
-//    public void setReal(@NonNull Surface surface, @NonNull SurfaceHolder holder) {
-//
-//        // 设置渲染视频的View,主要用于SurfaceView
-//        if (null != holder && null != mExoPlayer) {
-//            try {
-//                mExoPlayer.setVideoSurface(holder.getSurface());
-//            } catch (Exception e) {
-//                MediaLogUtil.log(e.getMessage(), e);
-//            }
-//        }
-//
-//        if (null != surface && null != mExoPlayer) {
-//            try {
-//                mExoPlayer.setVideoSurface(surface);
-//            } catch (Exception e) {
-//                MediaLogUtil.log(e.getMessage(), e);
-//            }
-//        }
-//    }
-
     @Override
     public void setSurface(@NonNull Surface surface, int w, int h) {
-//        MediaLogUtil.log("setSurface => surface = " + surface + ", mExoPlayer = " + mExoPlayer);
         if (null != surface && null != mExoPlayer) {
             try {
                 mExoPlayer.setVideoSurface(surface);
@@ -422,6 +391,11 @@ public final class VideoExoPlayer extends BasePlayer {
                 MPLogUtil.log("VideoExoPlayer => " + e.getMessage(), e);
             }
         }
+    }
+
+    @Override
+    public void setPlayWhenReady(boolean playWhenReady) {
+        this.mPlayWhenReady = playWhenReady;
     }
 
     /**
@@ -469,16 +443,6 @@ public final class VideoExoPlayer extends BasePlayer {
         }
     }
 
-//    @Override
-//    public boolean isExternalMusicPlayWhenReady() {
-//        return mExternalMusicPlayWhenReady;
-//    }
-//
-//    @Override
-//    public void setisExternalMusicPlayWhenReady(boolean v) {
-//        this.mExternalMusicPlayWhenReady = v;
-//    }
-
     @Override
     public boolean isMute() {
         return mMute;
@@ -489,17 +453,6 @@ public final class VideoExoPlayer extends BasePlayer {
         mMute = v;
         setVolume(v ? 0f : 1f, v ? 0f : 1f);
     }
-
-//    @Override
-//    public String getUrl() {
-//        return mUrl;
-//    }
-//
-//    @Override
-//    public void setUrl(String url) {
-//        setReadying(false);
-//        this.mUrl = url;
-//    }
 
     @Override
     public long getSeek() {
@@ -556,81 +509,18 @@ public final class VideoExoPlayer extends BasePlayer {
         return mLoop;
     }
 
-//    @Override
-//    public boolean isHideStop() {
-//        return hideStop;
-//    }
-//
-//    @Override
-//    public void setHideStop(boolean v) {
-//        hideStop = v;
-//    }
-//
-//    @Override
-//    public boolean isHideRelease() {
-//        return hideRelease;
-//    }
-//
-//    @Override
-//    public void setHideRelease(boolean v) {
-//        hideRelease = v;
-//    }
-
-    /****************/
-
-//    @Override
-//    public boolean isExternalMusicLooping() {
-//        return mExternalMusicLoop;
-//    }
-//
-//    @Override
-//    public void setExternalMusicLooping(boolean loop) {
-//        this.mExternalMusicLoop = loop;
-//    }
-//
-//    @Override
-//    public boolean isExternalMusicEqualLength() {
-//        return mExternalMusicEqualLength;
-//    }
-//
-//    @Override
-//    public void setExternalMusicEqualLength(boolean equal) {
-//        mExternalMusicEqualLength = equal;
-//    }
-//
-//    @Override
-//    public void setExternalMusicPath(@NonNull String musicPath) {
-//        this.mExternalMusicPath = musicPath;
-//    }
-//
-//    @Override
-//    public String getExternalMusicPath() {
-//        return this.mExternalMusicPath;
-//    }
-
-    /************************/
-
-
     /**
      * 播放
      */
     @Override
     public void start() {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doStart();
-        } else {
-            mHandler.sendEmptyMessage(99991);
-        }
-    }
-
-    private void doStart() {
         setReadying(false);
         try {
             boolean externalMusicPlaying = isExternalMusicPlaying();
             setVolume(externalMusicPlaying ? 0F : 1F, externalMusicPlaying ? 0F : 1F);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.play();
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => " + e.getMessage(), e);
+            MPLogUtil.log("VideoExoPlayer => start => " + e.getMessage());
         }
     }
 
@@ -639,19 +529,10 @@ public final class VideoExoPlayer extends BasePlayer {
      */
     @Override
     public void pause() {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doPause();
-        } else {
-            mHandler.sendEmptyMessage(99992);
-        }
-    }
-
-    private void doPause() {
         try {
             mExoPlayer.pause();
-//            mExoPlayer.setPlayWhenReady(false);
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => " + e.getMessage(), e);
+            MPLogUtil.log("VideoExoPlayer => pause => " + e.getMessage());
         }
     }
 
@@ -660,87 +541,39 @@ public final class VideoExoPlayer extends BasePlayer {
      */
     @Override
     public void stop() {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doStop();
-        } else {
-            mHandler.sendEmptyMessage(99993);
-        }
-    }
-
-    private void doStop() {
         try {
             mExoPlayer.pause();
             mExoPlayer.stop();
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => " + e.getMessage(), e);
+            MPLogUtil.log("VideoExoPlayer => stop => " + e.getMessage());
         }
     }
 
     @Override
     public void releaseDecoder() {
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            doReleaseDecoder();
-        } else {
-            mHandler.sendEmptyMessage(99995);
+        try {
+            setEvent(null);
+            stopExternalMusic(true);
+            setReadying(false);
+            if (null != mExoPlayer) {
+                if (null != mAnalyticsListener) {
+                    mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+                    mAnalyticsListener = null;
+                }
+                mExoPlayer.setVideoSurface(null);
+            }
+            stop();
+
+            // 同步释放
+            if (null != mExoPlayer) {
+                mExoPlayer.release();
+                mExoPlayer = null;
+            }
+            mSpeedPlaybackParameters = null;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
         }
     }
-
-    private void doReleaseDecoder() {
-
-        setEvent(null);
-        stopExternalMusic(true);
-        setReadying(false);
-        if (null != mExoPlayer) {
-            if (null != mAnalyticsListener) {
-                mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
-                mAnalyticsListener = null;
-            }
-            mExoPlayer.setVideoSurface(null);
-        }
-        stop();
-        if (null != mExoPlayer) {
-            mExoPlayer.release();
-            mExoPlayer = null;
-        }
-
-        // TODO: 2021-05-21  同步释放，防止卡顿
-//            new Thread() {
-//                @Override
-//                public void run() {
-//                    //异步释放，防止卡顿
-//                    player.release();
-//                }
-//            }.start();
-
-//        mIsPreparing = false;
-//        mIsBuffering = false;
-//        mLastReportedPlaybackState = Player.STATE_IDLE;
-//        mLastReportedPlayWhenReady = false;
-        mSpeedPlaybackParameters = null;
-    }
-
-    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            // start
-            if (msg.what == 99991) {
-                doStart();
-            }
-            // pause
-            else if (msg.what == 99992) {
-                doPause();
-            }
-            // stop
-            else if (msg.what == 99993) {
-                doStop();
-            }
-            // release
-            else if (msg.what == 99995) {
-                doReleaseDecoder();
-            }
-        }
-    };
 
     /************************/
 }

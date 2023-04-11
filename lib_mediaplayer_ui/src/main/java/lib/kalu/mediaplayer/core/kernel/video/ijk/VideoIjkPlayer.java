@@ -377,6 +377,11 @@ public final class VideoIjkPlayer extends BasePlayer {
         }
     }
 
+    @Override
+    public void setPlayWhenReady(boolean playWhenReady) {
+
+    }
+
     /**
      * 设置播放速度
      */

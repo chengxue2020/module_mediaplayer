@@ -574,7 +574,6 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
                     } else {
                         reset = false;
                     }
-//                    MPLogUtil.log("PlayerApiKernel => onUpdateTimeMillis => replay = " + replay + ", isLooping = " + isLooping + ", max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
 
                     // end
                     if (reset) {
