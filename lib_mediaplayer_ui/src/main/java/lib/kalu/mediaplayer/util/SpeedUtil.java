@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.TrafficStats;
 
-public class SpeedUtil {
+public final class SpeedUtil {
 
     private static String UNIT_DOT = ".";
     private static String UNIT_KB = "Kb/s";

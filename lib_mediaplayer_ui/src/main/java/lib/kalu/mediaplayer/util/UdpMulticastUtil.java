@@ -9,7 +9,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 
-public class UdpMulticastUtils {
+public final class UdpMulticastUtil {
 
     public static boolean checkUdpJoinGroup(@NonNull String s) {
         try {

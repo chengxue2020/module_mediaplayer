@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.mediaplayer.util.PlayerUtils;
+import lib.kalu.mediaplayer.util.NetworkUtil;
 
 public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, PlayerApiRender, PlayerApiDevice, PlayerApiExternalMusic {
 
@@ -677,7 +677,7 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
                         case PlayerType.EventType.EVENT_ERROR_PARSE:
                         case PlayerType.EventType.EVENT_ERROR_NET:
 
-                            boolean connected = PlayerUtils.isConnected(getBaseContext());
+                            boolean connected = NetworkUtil.isConnected(getBaseContext());
                             setScreenKeep(false);
                             callPlayerEvent(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
 
