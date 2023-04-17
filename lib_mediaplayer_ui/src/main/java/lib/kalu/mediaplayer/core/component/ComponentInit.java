@@ -52,7 +52,6 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
         switch (playState) {
             case PlayerType.StateType.STATE_INIT:
                 MPLogUtil.log("ComponentInit[show] => playState = " + playState);
-                bringToFront();
                 show();
                 break;
             default:
@@ -64,14 +63,21 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
 
     @Override
     public void gone() {
-        findViewById(R.id.module_mediaplayer_component_init_txt).setVisibility(View.GONE);
-        findViewById(R.id.module_mediaplayer_component_init_bg).setVisibility(View.GONE);
+        try {
+            findViewById(R.id.module_mediaplayer_component_init_txt).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_init_bg).setVisibility(View.GONE);
+        }catch (Exception e){
+        }
     }
 
     @Override
     public void show() {
-        findViewById(R.id.module_mediaplayer_component_init_txt).setVisibility(View.VISIBLE);
-        findViewById(R.id.module_mediaplayer_component_init_bg).setVisibility(View.VISIBLE);
+        try {
+            bringToFront();
+            findViewById(R.id.module_mediaplayer_component_init_txt).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_init_bg).setVisibility(View.VISIBLE);
+        }catch (Exception e){
+        }
     }
 
     public final void setComponentBackgroundColorRes(@ColorRes int color) {

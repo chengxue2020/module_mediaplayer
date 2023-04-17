@@ -53,7 +53,6 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSE:
                 MPLogUtil.log("ComponentPause[show] => playState = " + playState);
-                bringToFront();
                 show();
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
@@ -69,16 +68,23 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 
     @Override
     public void gone() {
-        findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.GONE);
-        findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
-        findViewById(R.id.module_mediaplayer_component_pause_ad).setVisibility(View.GONE);
+       try {
+           findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.GONE);
+           findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
+           findViewById(R.id.module_mediaplayer_component_pause_ad).setVisibility(View.GONE);
+       }catch (Exception e){
+       }
     }
 
     @Override
     public void show() {
-        findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
-        findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.VISIBLE);
-        findViewById(R.id.module_mediaplayer_component_pause_ad).setVisibility(View.GONE);
+        try {
+            bringToFront();
+            findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_pause_ad).setVisibility(View.GONE);
+        }catch (Exception e){
+        }
     }
 
     public final void setPauseImageResource(@DrawableRes int res) {

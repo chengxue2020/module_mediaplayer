@@ -50,18 +50,34 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
         switch (playState) {
             case PlayerType.StateType.STATE_END:
                 MPLogUtil.log("ComponentEnd[show] => playState = " + playState);
-                bringToFront();
-                findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.VISIBLE);
+               show();
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_RESTAER:
             case PlayerType.StateType.STATE_INIT:
                 MPLogUtil.log("ComponentEnd[gone] => playState = " + playState);
-                findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.GONE);
+                gone();
                 break;
+        }
+    }
+
+    @Override
+    public void show() {
+        try {
+            bringToFront();
+            findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.VISIBLE);
+        }catch (Exception e){
+        }
+    }
+
+    @Override
+    public void gone() {
+        try {
+            findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.GONE);
+        }catch (Exception e){
         }
     }
 

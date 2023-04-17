@@ -37,14 +37,31 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
                 MPLogUtil.log("ComponentSpeed => onPlayStateChanged => playState = " + playState);
-                startSpeed();
+                show();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_LOADING_START:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
                 MPLogUtil.log("ComponentSpeed => onPlayStateChanged => playState = " + playState);
-                cleanSpeed();
+                gone();
                 break;
+        }
+    }
+
+    @Override
+    public void gone() {
+        try {
+            findViewById(R.id.module_mediaplayer_component_speed).setVisibility(View.GONE);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void show() {
+        try {
+            bringToFront();
+            findViewById(R.id.module_mediaplayer_component_speed).setVisibility(View.VISIBLE);
+        } catch (Exception e) {
         }
     }
 
@@ -68,21 +85,6 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
             return findViewById(R.id.module_mediaplayer_component_speed).getVisibility() == View.VISIBLE;
         } catch (Exception e) {
             return false;
-        }
-    }
-
-    private void cleanSpeed() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_speed).setVisibility(View.GONE);
-        } catch (Exception e) {
-        }
-    }
-
-    private void startSpeed() {
-        try {
-            bringToFront();
-            findViewById(R.id.module_mediaplayer_component_speed).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
         }
     }
 }

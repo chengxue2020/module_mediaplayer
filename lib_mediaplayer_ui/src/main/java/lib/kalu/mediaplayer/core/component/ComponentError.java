@@ -46,9 +46,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_IGNORE:
                 MPLogUtil.log("ComponentError[show] => playState = " + playState);
-                bringToFront();
-                findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
+                show();
                 break;
             case PlayerType.StateType.STATE_KERNEL_STOP:
             case PlayerType.StateType.STATE_INIT:
@@ -58,32 +56,29 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
             case PlayerType.StateType.STATE_RESUME_IGNORE:
             case PlayerType.StateType.STATE_RESTAER:
                 MPLogUtil.log("ComponentError[gone] => playState = " + playState);
-                findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
+                gone();
                 break;
         }
     }
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                mDownX = ev.getX();
-//                mDownY = ev.getY();
-//                getParent().requestDisallowInterceptTouchEvent(true);
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                float absDeltaX = Math.abs(ev.getX() - mDownX);
-//                float absDeltaY = Math.abs(ev.getY() - mDownY);
-//                if (absDeltaX > ViewConfiguration.get(getContext()).getScaledTouchSlop() ||
-//                        absDeltaY > ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
-//                    getParent().requestDisallowInterceptTouchEvent(false);
-//                }
-//            case MotionEvent.ACTION_UP:
-//                break;
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
+    @Override
+    public void show() {
+        try {
+            bringToFront();
+            findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
+        }catch (Exception e){
+        }
+    }
+
+    @Override
+    public void gone() {
+        try {
+            findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
+        }catch (Exception e){
+        }
+    }
 
     public void setImage(@DrawableRes int res) {
         this.setCompoundDrawablesWithIntrinsicBounds(this, R.id.module_mediaplayer_component_error_message, 0, res, 0, 0);

@@ -43,27 +43,46 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSE_IGNORE:
                 MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
-                bringToFront();
-                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
+                try {
+                    bringToFront();
+                    findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
+                    findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
+                    findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
+                } catch (Exception e) {
+                }
                 break;
             case PlayerType.StateType.STATE_LOADING_START:
                 MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
-                bringToFront();
-                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
-                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
+                show();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_NET:
             case PlayerType.StateType.STATE_LOADING_STOP:
                 MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
-                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
-                findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
+                gone();
                 break;
+        }
+    }
+
+    @Override
+    public void show() {
+        try {
+            bringToFront();
+            findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void gone() {
+        try {
+            findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
+        } catch (Exception e) {
         }
     }
 
