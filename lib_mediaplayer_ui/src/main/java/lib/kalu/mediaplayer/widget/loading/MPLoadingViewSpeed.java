@@ -12,22 +12,22 @@ import androidx.annotation.RequiresApi;
 
 @SuppressLint("AppCompatCustomView")
 @Keep
-public class MPLoadingView2 extends MPLoadingView {
+public class MPLoadingViewSpeed extends MPLoadingView {
 
-    public MPLoadingView2(Context context) {
+    public MPLoadingViewSpeed(Context context) {
         super(context);
     }
 
-    public MPLoadingView2(Context context, @Nullable AttributeSet attrs) {
+    public MPLoadingViewSpeed(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MPLoadingView2(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public MPLoadingViewSpeed(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public MPLoadingView2(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public MPLoadingViewSpeed(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

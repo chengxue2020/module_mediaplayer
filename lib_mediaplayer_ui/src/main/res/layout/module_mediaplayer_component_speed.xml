@@ -20,7 +20,7 @@
         android:visibility="gone">
 
         <!-- 转圈 -->
-        <lib.kalu.mediaplayer.widget.loading.MPLoadingView2
+        <lib.kalu.mediaplayer.widget.loading.MPLoadingViewSpeed
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
