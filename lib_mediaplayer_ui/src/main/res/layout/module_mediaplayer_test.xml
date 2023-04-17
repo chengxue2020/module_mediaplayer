@@ -6,8 +6,8 @@
 
     <lib.kalu.mediaplayer.widget.player.PlayerLayout
         android:id="@+id/module_mediaplayer_test_video"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="160dp"
+        android:layout_height="90dp"
         android:layout_centerInParent="true" />
 
     <LinearLayout

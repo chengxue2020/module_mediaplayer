@@ -11,22 +11,22 @@
         android:id="@+id/module_mediaplayer_component_loading_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <!-- 转圈 -->
-    <lib.kalu.mediaplayer.widget.loading.MediaProgressBar
+    <lib.kalu.mediaplayer.widget.loading.MPLoadingView
         android:id="@+id/module_mediaplayer_component_loading_pb"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_centerInParent="true"
         android:focusable="false"
-        android:visibility="gone"
         android:indeterminateDuration="2000"
         android:longClickable="false"
-        app:mpb_color_round="#ffffff"
-        app:mpb_count="8"
-        app:mpb_radius="10dp"
-        app:mpb_rate="0.9" />
+        android:visibility="gone"
+        app:lv_color_round="#ffffff"
+        app:lv_count="8"
+        app:lv_radius="10dp"
+        app:lv_rate="0.9" />
 
     <!-- 提示 -->
     <TextView
@@ -36,8 +36,8 @@
         android:layout_below="@id/module_mediaplayer_component_loading_pb"
         android:layout_centerHorizontal="true"
         android:focusable="false"
-        android:visibility="gone"
         android:textColor="@color/module_mediaplayer_color_ffffff"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

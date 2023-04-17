@@ -9,3 +9,5 @@ include ':lib_mediaplayer_exo_r2.18.5_ff4.4_audio'
 include ':lib_mediaplayer_ijk_k0.8.8_ff4.0'
 // vlc
 include ':lib_mediaplayer_vlc_r3.5.1'
+// ffplayer
+include ':lib_mediaplayer_ffplayer_r6.0'
