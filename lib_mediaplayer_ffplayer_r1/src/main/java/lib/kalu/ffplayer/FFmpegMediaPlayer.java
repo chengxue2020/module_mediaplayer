@@ -3,6 +3,9 @@ package lib.kalu.ffplayer;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.SurfaceTexture;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,498 +15,50 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.graphics.Bitmap;
-import android.graphics.SurfaceTexture;
-import android.media.AudioManager;
+
+import androidx.annotation.Keep;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.lang.ref.WeakReference;
 
-/**
- * MediaPlayer class can be used to control playback
- * of audio/video files and streams. An example on how to use the methods in
- * this class can be found in {@link android.widget.VideoView}.
- *
- * <p>Topics covered here are:
- * <ol>
- * <li><a href="#StateDiagram">State Diagram</a>
- * <li><a href="#Valid_and_Invalid_States">Valid and Invalid States</a>
- * <li><a href="#Permissions">Permissions</a>
- * <li><a href="#Callbacks">Register informational and error callbacks</a>
- * </ol>
- *
- * <div class="special reference">
- * <h3>Developer Guides</h3>
- * <p>For more information about how to use MediaPlayer, read the
- * <a href="{@docRoot}guide/topics/media/mediaplayer.html">Media Playback</a> developer guide.</p>
- * </div>
- *
- * <a name="StateDiagram"></a>
- * <h3>State Diagram</h3>
- *
- * <p>Playback control of audio/video files and streams is managed as a state
- * machine. The following diagram shows the life cycle and the states of a
- * MediaPlayer object driven by the supported playback control operations.
- * The ovals represent the states a MediaPlayer object may reside
- * in. The arcs represent the playback control operations that drive the object
- * state transition. There are two types of arcs. The arcs with a single arrow
- * head represent synchronous method calls, while those with
- * a double arrow head represent asynchronous method calls.</p>
- *
- * <p><img src="../../../images/mediaplayer_state_diagram.gif"
- *         alt="MediaPlayer State diagram"
- *         border="0" /></p>
- *
- * <p>From this state diagram, one can see that a MediaPlayer object has the
- *    following states:</p>
- * <ul>
- *     <li>When a MediaPlayer object is just created using <code>new</code> or
- *         after {@link #reset()} is called, it is in the <em>Idle</em> state; and after
- *         {@link #release()} is called, it is in the <em>End</em> state. Between these
- *         two states is the life cycle of the MediaPlayer object.
- *         <ul>
- *         <li>There is a subtle but important difference between a newly constructed
- *         MediaPlayer object and the MediaPlayer object after {@link #reset()}
- *         is called. It is a programming error to invoke methods such
- *         as {@link #getCurrentPosition()},
- *         {@link #getDuration()}, {@link #getVideoHeight()},
- *         {@link #getVideoWidth()}, {@link #setAudioStreamType(int)},
- *         {@link #setLooping(boolean)},
- *         {@link #setVolume(float, float)}, {@link #pause()}, {@link #start()},
- *         {@link #stop()}, {@link #seekTo(int)}, {@link #prepare()} or
- *         {@link #prepareAsync()} in the <em>Idle</em> state for both cases. If any of these
- *         methods is called right after a MediaPlayer object is constructed,
- *         the user supplied callback method OnErrorListener.onError() won't be
- *         called by the internal player engine and the object state remains
- *         unchanged; but if these methods are called right after {@link #reset()},
- *         the user supplied callback method OnErrorListener.onError() will be
- *         invoked by the internal player engine and the object will be
- *         transfered to the <em>Error</em> state. </li>
- *         <li>It is also recommended that once
- *         a MediaPlayer object is no longer being used, call {@link #release()} immediately
- *         so that resources used by the internal player engine associated with the
- *         MediaPlayer object can be released immediately. Resource may include
- *         singleton resources such as hardware acceleration components and
- *         failure to call {@link #release()} may cause subsequent instances of
- *         MediaPlayer objects to fallback to software implementations or fail
- *         altogether. Once the MediaPlayer
- *         object is in the <em>End</em> state, it can no longer be used and
- *         there is no way to bring it back to any other state. </li>
- *         <li>Furthermore,
- *         the MediaPlayer objects created using <code>new</code> is in the
- *         <em>Idle</em> state, while those created with one
- *         of the overloaded convenient <code>create</code> methods are <em>NOT</em>
- *         in the <em>Idle</em> state. In fact, the objects are in the <em>Prepared</em>
- *         state if the creation using <code>create</code> method is successful.
- *         </li>
- *         </ul>
- *         </li>
- *     <li>In general, some playback control operation may fail due to various
- *         reasons, such as unsupported audio/video format, poorly interleaved
- *         audio/video, resolution too high, streaming timeout, and the like.
- *         Thus, error reporting and recovery is an important concern under
- *         these circumstances. Sometimes, due to programming errors, invoking a playback
- *         control operation in an invalid state may also occur. Under all these
- *         error conditions, the internal player engine invokes a user supplied
- *         OnErrorListener.onError() method if an OnErrorListener has been
- *         registered beforehand via
- *         {@link #setOnErrorListener(OnErrorListener)}.
- *         <ul>
- *         <li>It is important to note that once an error occurs, the
- *         MediaPlayer object enters the <em>Error</em> state (except as noted
- *         above), even if an error listener has not been registered by the application.</li>
- *         <li>In order to reuse a MediaPlayer object that is in the <em>
- *         Error</em> state and recover from the error,
- *         {@link #reset()} can be called to restore the object to its <em>Idle</em>
- *         state.</li>
- *         <li>It is good programming practice to have your application
- *         register a OnErrorListener to look out for error notifications from
- *         the internal player engine.</li>
- *         <li>IllegalStateException is
- *         thrown to prevent programming errors such as calling {@link #prepare()},
- *         {@link #prepareAsync()}, or one of the overloaded <code>setDataSource
- *         </code> methods in an invalid state. </li>
- *         </ul>
- *         </li>
- *     <li>Calling
- *         {@link #setDataSource(FileDescriptor)}, or
- *         {@link #setDataSource(String)}, or
- *         {@link #setDataSource(Context, Uri)}, or
- *         {@link #setDataSource(FileDescriptor, long, long)} transfers a
- *         MediaPlayer object in the <em>Idle</em> state to the
- *         <em>Initialized</em> state.
- *         <ul>
- *         <li>An IllegalStateException is thrown if
- *         setDataSource() is called in any other state.</li>
- *         <li>It is good programming
- *         practice to always look out for <code>IllegalArgumentException</code>
- *         and <code>IOException</code> that may be thrown from the overloaded
- *         <code>setDataSource</code> methods.</li>
- *         </ul>
- *         </li>
- *     <li>A MediaPlayer object must first enter the <em>Prepared</em> state
- *         before playback can be started.
- *         <ul>
- *         <li>There are two ways (synchronous vs.
- *         asynchronous) that the <em>Prepared</em> state can be reached:
- *         either a call to {@link #prepare()} (synchronous) which
- *         transfers the object to the <em>Prepared</em> state once the method call
- *         returns, or a call to {@link #prepareAsync()} (asynchronous) which
- *         first transfers the object to the <em>Preparing</em> state after the
- *         call returns (which occurs almost right way) while the internal
- *         player engine continues working on the rest of preparation work
- *         until the preparation work completes. When the preparation completes or when {@link #prepare()} call returns,
- *         the internal player engine then calls a user supplied callback method,
- *         onPrepared() of the OnPreparedListener interface, if an
- *         OnPreparedListener is registered beforehand via {@link
- *         #setOnPreparedListener(OnPreparedListener)}.</li>
- *         <li>It is important to note that
- *         the <em>Preparing</em> state is a transient state, and the behavior
- *         of calling any method with side effect while a MediaPlayer object is
- *         in the <em>Preparing</em> state is undefined.</li>
- *         <li>An IllegalStateException is
- *         thrown if {@link #prepare()} or {@link #prepareAsync()} is called in
- *         any other state.</li>
- *         <li>While in the <em>Prepared</em> state, properties
- *         such as audio/sound volume, screenOnWhilePlaying, looping can be
- *         adjusted by invoking the corresponding set methods.</li>
- *         </ul>
- *         </li>
- *     <li>To start the playback, {@link #start()} must be called. After
- *         {@link #start()} returns successfully, the MediaPlayer object is in the
- *         <em>Started</em> state. {@link #isPlaying()} can be called to test
- *         whether the MediaPlayer object is in the <em>Started</em> state.
- *         <ul>
- *         <li>While in the <em>Started</em> state, the internal player engine calls
- *         a user supplied OnBufferingUpdateListener.onBufferingUpdate() callback
- *         method if a OnBufferingUpdateListener has been registered beforehand
- *         via {@link #setOnBufferingUpdateListener(OnBufferingUpdateListener)}.
- *         This callback allows applications to keep track of the buffering status
- *         while streaming audio/video.</li>
- *         <li>Calling {@link #start()} has not effect
- *         on a MediaPlayer object that is already in the <em>Started</em> state.</li>
- *         </ul>
- *         </li>
- *     <li>Playback can be paused and stopped, and the current playback position
- *         can be adjusted. Playback can be paused via {@link #pause()}. When the call to
- *         {@link #pause()} returns, the MediaPlayer object enters the
- *         <em>Paused</em> state. Note that the transition from the <em>Started</em>
- *         state to the <em>Paused</em> state and vice versa happens
- *         asynchronously in the player engine. It may take some time before
- *         the state is updated in calls to {@link #isPlaying()}, and it can be
- *         a number of seconds in the case of streamed content.
- *         <ul>
- *         <li>Calling {@link #start()} to resume playback for a paused
- *         MediaPlayer object, and the resumed playback
- *         position is the same as where it was paused. When the call to
- *         {@link #start()} returns, the paused MediaPlayer object goes back to
- *         the <em>Started</em> state.</li>
- *         <li>Calling {@link #pause()} has no effect on
- *         a MediaPlayer object that is already in the <em>Paused</em> state.</li>
- *         </ul>
- *         </li>
- *     <li>Calling  {@link #stop()} stops playback and causes a
- *         MediaPlayer in the <em>Started</em>, <em>Paused</em>, <em>Prepared
- *         </em> or <em>PlaybackCompleted</em> state to enter the
- *         <em>Stopped</em> state.
- *         <ul>
- *         <li>Once in the <em>Stopped</em> state, playback cannot be started
- *         until {@link #prepare()} or {@link #prepareAsync()} are called to set
- *         the MediaPlayer object to the <em>Prepared</em> state again.</li>
- *         <li>Calling {@link #stop()} has no effect on a MediaPlayer
- *         object that is already in the <em>Stopped</em> state.</li>
- *         </ul>
- *         </li>
- *     <li>The playback position can be adjusted with a call to
- *         {@link #seekTo(int)}.
- *         <ul>
- *         <li>Although the asynchronuous {@link #seekTo(int)}
- *         call returns right way, the actual seek operation may take a while to
- *         finish, especially for audio/video being streamed. When the actual
- *         seek operation completes, the internal player engine calls a user
- *         supplied OnSeekComplete.onSeekComplete() if an OnSeekCompleteListener
- *         has been registered beforehand via
- *         {@link #setOnSeekCompleteListener(OnSeekCompleteListener)}.</li>
- *         <li>Please
- *         note that {@link #seekTo(int)} can also be called in the other states,
- *         such as <em>Prepared</em>, <em>Paused</em> and <em>PlaybackCompleted
- *         </em> state.</li>
- *         <li>Furthermore, the actual current playback position
- *         can be retrieved with a call to {@link #getCurrentPosition()}, which
- *         is helpful for applications such as a Music player that need to keep
- *         track of the playback progress.</li>
- *         </ul>
- *         </li>
- *     <li>When the playback reaches the end of stream, the playback completes.
- *         <ul>
- *         <li>If the looping mode was being set to <var>true</var>with
- *         {@link #setLooping(boolean)}, the MediaPlayer object shall remain in
- *         the <em>Started</em> state.</li>
- *         <li>If the looping mode was set to <var>false
- *         </var>, the player engine calls a user supplied callback method,
- *         OnCompletion.onCompletion(), if a OnCompletionListener is registered
- *         beforehand via {@link #setOnCompletionListener(OnCompletionListener)}.
- *         The invoke of the callback signals that the object is now in the <em>
- *         PlaybackCompleted</em> state.</li>
- *         <li>While in the <em>PlaybackCompleted</em>
- *         state, calling {@link #start()} can restart the playback from the
- *         beginning of the audio/video source.</li>
- * </ul>
- *
- *
- * <a name="Valid_and_Invalid_States"></a>
- * <h3>Valid and invalid states</h3>
- *
- * <table border="0" cellspacing="0" cellpadding="0">
- * <tr><td>Method Name </p></td>
- *     <td>Valid Sates </p></td>
- *     <td>Invalid States </p></td>
- *     <td>Comments </p></td></tr>
- * <tr><td>attachAuxEffect </p></td>
- *     <td>{Initialized, Prepared, Started, Paused, Stopped, PlaybackCompleted} </p></td>
- *     <td>{Idle, Error} </p></td>
- *     <td>This method must be called after setDataSource.
- *     Calling it does not change the object state. </p></td></tr>
- * <tr><td>getAudioSessionId </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>getCurrentPosition </p></td>
- *     <td>{Idle, Initialized, Prepared, Started, Paused, Stopped,
- *         PlaybackCompleted} </p></td>
- *     <td>{Error}</p></td>
- *     <td>Successful invoke of this method in a valid state does not change the
- *         state. Calling this method in an invalid state transfers the object
- *         to the <em>Error</em> state. </p></td></tr>
- * <tr><td>getDuration </p></td>
- *     <td>{Prepared, Started, Paused, Stopped, PlaybackCompleted} </p></td>
- *     <td>{Idle, Initialized, Error} </p></td>
- *     <td>Successful invoke of this method in a valid state does not change the
- *         state. Calling this method in an invalid state transfers the object
- *         to the <em>Error</em> state. </p></td></tr>
- * <tr><td>getVideoHeight </p></td>
- *     <td>{Idle, Initialized, Prepared, Started, Paused, Stopped,
- *         PlaybackCompleted}</p></td>
- *     <td>{Error}</p></td>
- *     <td>Successful invoke of this method in a valid state does not change the
- *         state. Calling this method in an invalid state transfers the object
- *         to the <em>Error</em> state.  </p></td></tr>
- * <tr><td>getVideoWidth </p></td>
- *     <td>{Idle, Initialized, Prepared, Started, Paused, Stopped,
- *         PlaybackCompleted}</p></td>
- *     <td>{Error}</p></td>
- *     <td>Successful invoke of this method in a valid state does not change
- *         the state. Calling this method in an invalid state transfers the
- *         object to the <em>Error</em> state. </p></td></tr>
- * <tr><td>isPlaying </p></td>
- *     <td>{Idle, Initialized, Prepared, Started, Paused, Stopped,
- *          PlaybackCompleted}</p></td>
- *     <td>{Error}</p></td>
- *     <td>Successful invoke of this method in a valid state does not change
- *         the state. Calling this method in an invalid state transfers the
- *         object to the <em>Error</em> state. </p></td></tr>
- * <tr><td>pause </p></td>
- *     <td>{Started, Paused}</p></td>
- *     <td>{Idle, Initialized, Prepared, Stopped, PlaybackCompleted, Error}</p></td>
- *     <td>Successful invoke of this method in a valid state transfers the
- *         object to the <em>Paused</em> state. Calling this method in an
- *         invalid state transfers the object to the <em>Error</em> state.</p></td></tr>
- * <tr><td>prepare </p></td>
- *     <td>{Initialized, Stopped} </p></td>
- *     <td>{Idle, Prepared, Started, Paused, PlaybackCompleted, Error} </p></td>
- *     <td>Successful invoke of this method in a valid state transfers the
- *         object to the <em>Prepared</em> state. Calling this method in an
- *         invalid state throws an IllegalStateException.</p></td></tr>
- * <tr><td>prepareAsync </p></td>
- *     <td>{Initialized, Stopped} </p></td>
- *     <td>{Idle, Prepared, Started, Paused, PlaybackCompleted, Error} </p></td>
- *     <td>Successful invoke of this method in a valid state transfers the
- *         object to the <em>Preparing</em> state. Calling this method in an
- *         invalid state throws an IllegalStateException.</p></td></tr>
- * <tr><td>release </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>After {@link #release()}, the object is no longer available. </p></td></tr>
- * <tr><td>reset </p></td>
- *     <td>{Idle, Initialized, Prepared, Started, Paused, Stopped,
- *         PlaybackCompleted, Error}</p></td>
- *     <td>{}</p></td>
- *     <td>After {@link #reset()}, the object is like being just created.</p></td></tr>
- * <tr><td>seekTo </p></td>
- *     <td>{Prepared, Started, Paused, PlaybackCompleted} </p></td>
- *     <td>{Idle, Initialized, Stopped, Error}</p></td>
- *     <td>Successful invoke of this method in a valid state does not change
- *         the state. Calling this method in an invalid state transfers the
- *         object to the <em>Error</em> state. </p></td></tr>
- * <tr><td>setAudioSessionId </p></td>
- *     <td>{Idle} </p></td>
- *     <td>{Initialized, Prepared, Started, Paused, Stopped, PlaybackCompleted,
- *          Error} </p></td>
- *     <td>This method must be called in idle state as the audio session ID must be known before
- *         calling setDataSource. Calling it does not change the object state. </p></td></tr>
- * <tr><td>setAudioStreamType </p></td>
- *     <td>{Idle, Initialized, Stopped, Prepared, Started, Paused,
- *          PlaybackCompleted}</p></td>
- *     <td>{Error}</p></td>
- *     <td>Successful invoke of this method does not change the state. In order for the
- *         target audio stream type to become effective, this method must be called before
- *         prepare() or prepareAsync().</p></td></tr>
- * <tr><td>setAuxEffectSendLevel </p></td>
- *     <td>any</p></td>
- *     <td>{} </p></td>
- *     <td>Calling this method does not change the object state. </p></td></tr>
- * <tr><td>setDataSource </p></td>
- *     <td>{Idle} </p></td>
- *     <td>{Initialized, Prepared, Started, Paused, Stopped, PlaybackCompleted,
- *          Error} </p></td>
- *     <td>Successful invoke of this method in a valid state transfers the
- *         object to the <em>Initialized</em> state. Calling this method in an
- *         invalid state throws an IllegalStateException.</p></td></tr>
- * <tr><td>setDisplay </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>setSurface </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>setLooping </p></td>
- *     <td>{Idle, Initialized, Stopped, Prepared, Started, Paused,
- *         PlaybackCompleted}</p></td>
- *     <td>{Error}</p></td>
- *     <td>Successful invoke of this method in a valid state does not change
- *         the state. Calling this method in an
- *         invalid state transfers the object to the <em>Error</em> state.</p></td></tr>
- * <tr><td>isLooping </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>setOnBufferingUpdateListener </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>setOnCompletionListener </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>setOnErrorListener </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>setOnPreparedListener </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>setOnSeekCompleteListener </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state. </p></td></tr>
- * <tr><td>setScreenOnWhilePlaying</></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state.  </p></td></tr>
- * <tr><td>setVolume </p></td>
- *     <td>{Idle, Initialized, Stopped, Prepared, Started, Paused,
- *          PlaybackCompleted}</p></td>
- *     <td>{Error}</p></td>
- *     <td>Successful invoke of this method does not change the state.
- * <tr><td>setWakeMode </p></td>
- *     <td>any </p></td>
- *     <td>{} </p></td>
- *     <td>This method can be called in any state and calling it does not change
- *         the object state.</p></td></tr>
- * <tr><td>start </p></td>
- *     <td>{Prepared, Started, Paused, PlaybackCompleted}</p></td>
- *     <td>{Idle, Initialized, Stopped, Error}</p></td>
- *     <td>Successful invoke of this method in a valid state transfers the
- *         object to the <em>Started</em> state. Calling this method in an
- *         invalid state transfers the object to the <em>Error</em> state.</p></td></tr>
- * <tr><td>stop </p></td>
- *     <td>{Prepared, Started, Stopped, Paused, PlaybackCompleted}</p></td>
- *     <td>{Idle, Initialized, Error}</p></td>
- *     <td>Successful invoke of this method in a valid state transfers the
- *         object to the <em>Stopped</em> state. Calling this method in an
- *         invalid state transfers the object to the <em>Error</em> state.</p></td></tr>
- *
- * </table>
- *
- * <a name="Permissions"></a>
- * <h3>Permissions</h3>
- * <p>One may need to declare a corresponding WAKE_LOCK permission {@link
- * android.R.styleable#AndroidManifestUsesPermission &lt;uses-permission&gt;}
- * element.
- *
- * <p>This class requires the {@link android.Manifest.permission#INTERNET} permission
- * when used with network-based content.
- *
- * <a name="Callbacks"></a>
- * <h3>Callbacks</h3>
- * <p>Applications may want to register for informational and error
- * events in order to be informed of some internal state update and
- * possible runtime errors during playback or streaming. Registration for
- * these events is done by properly setting the appropriate listeners (via calls
- * to
- * {@link #setOnPreparedListener(OnPreparedListener)}setOnPreparedListener,
- * {@link #setOnVideoSizeChangedListener(OnVideoSizeChangedListener)}setOnVideoSizeChangedListener,
- * {@link #setOnSeekCompleteListener(OnSeekCompleteListener)}setOnSeekCompleteListener,
- * {@link #setOnCompletionListener(OnCompletionListener)}setOnCompletionListener,
- * {@link #setOnBufferingUpdateListener(OnBufferingUpdateListener)}setOnBufferingUpdateListener,
- * {@link #setOnInfoListener(OnInfoListener)}setOnInfoListener,
- * {@link #setOnErrorListener(OnErrorListener)}setOnErrorListener, etc).
- * In order to receive the respective callback
- * associated with these listeners, applications are required to create
- * MediaPlayer objects on a thread with its own Looper running (main UI
- * thread by default has a Looper running).
- *
- */
-public class FFmpegMediaPlayer
-{
-	
+@Keep
+public class FFmpegMediaPlayer {
+
     /**
-       Constant to retrieve only the new metadata since the last
-       call.
-       // FIXME: unhide.
-       // FIXME: add link to getMetadata(boolean, boolean)
-       {@hide}
+     * Constant to retrieve only the new metadata since the last
+     * call.
+     * // FIXME: unhide.
+     * // FIXME: add link to getMetadata(boolean, boolean)
+     * {@hide}
      */
     public static final boolean METADATA_UPDATE_ONLY = true;
 
     /**
-       Constant to retrieve all the metadata.
-       // FIXME: unhide.
-       // FIXME: add link to getMetadata(boolean, boolean)
-       {@hide}
+     * Constant to retrieve all the metadata.
+     * // FIXME: unhide.
+     * // FIXME: add link to getMetadata(boolean, boolean)
+     * {@hide}
      */
     public static final boolean METADATA_ALL = false;
 
     /**
-       Constant to enable the metadata filter during retrieval.
-       // FIXME: unhide.
-       // FIXME: add link to getMetadata(boolean, boolean)
-       {@hide}
+     * Constant to enable the metadata filter during retrieval.
+     * // FIXME: unhide.
+     * // FIXME: add link to getMetadata(boolean, boolean)
+     * {@hide}
      */
     public static final boolean APPLY_METADATA_FILTER = true;
 
     /**
-       Constant to disable the metadata filter during retrieval.
-       // FIXME: unhide.
-       // FIXME: add link to getMetadata(boolean, boolean)
-       {@hide}
+     * Constant to disable the metadata filter during retrieval.
+     * // FIXME: unhide.
+     * // FIXME: add link to getMetadata(boolean, boolean)
+     * {@hide}
      */
     public static final boolean BYPASS_METADATA_FILTER = false;
 
@@ -511,29 +66,26 @@ public class FFmpegMediaPlayer
         System.loadLibrary("media_jni");
         native_init();
     }*/
-    
-    private final static String TAG = "FFmpegMediaPlayer";
-    
-	private static final String [] JNI_LIBRARIES = {
-            "crypto",
-            "ssl",
-            "avutil",
-            "swscale",
-            "swresample",
-            "avcodec",
-            "avformat",
-            "ffplayer_sdl2",
-            "ffplayer_jni"
-	};
-    
-    static {
-        for (String jniLibrary : JNI_LIBRARIES) {
-            System.loadLibrary(jniLibrary);
-        }
 
-        native_init();
+    private final static String TAG = "FFmpegMediaPlayer";
+
+    static {
+        try {
+//            System.loadLibrary("crypto");
+//            System.loadLibrary("ssl");
+//            System.loadLibrary("avutil");
+//            System.loadLibrary("swscale");
+//            System.loadLibrary("swresample");
+//            System.loadLibrary("avcodec");
+//            System.loadLibrary("avformat");
+            System.loadLibrary("ijkplayer-ffmpeg");
+            System.loadLibrary("ffplayer_jni");
+            native_init();
+        } catch (Exception e) {
+            throw e;
+        }
     }
-    
+
     // Name of the remote interface for the media player. Must be kept
     // in sync with the 2nd parameter of the IMPLEMENT_META_INTERFACE
     // macro invocation in IMediaPlayer.cpp
@@ -603,11 +155,9 @@ public class FFmpegMediaPlayer
      * exists.
      *
      * @param request Parcel with the data for the extension. The
-     * caller must use {@link #newRequest()} to get one.
-     *
-     * @param reply Output parcel with the data returned by the
-     * native player.
-     *
+     *                caller must use {@link #newRequest()} to get one.
+     * @param reply   Output parcel with the data returned by the
+     *                native player.
      * @return The status code see utils/Errors.h
      * {@hide}
      */
@@ -620,7 +170,7 @@ public class FFmpegMediaPlayer
     /**
      * Sets the {@link SurfaceHolder} to use for displaying the video
      * portion of the media.
-     *
+     * <p>
      * Either a surface holder or surface must be set if a display or video sink
      * is needed.  Not calling this method or {@link #setSurface(Surface)}
      * when playing back a video will result in only the audio track being played.
@@ -647,7 +197,7 @@ public class FFmpegMediaPlayer
      * does not support {@link #setScreenOnWhilePlaying(boolean)}.  Setting a
      * Surface will un-set any Surface or SurfaceHolder that was previously set.
      * A null surface will result in only the audio track being played.
-     *
+     * <p>
      * If the Surface sends frames to a {@link SurfaceTexture}, the timestamps
      * returned from {@link SurfaceTexture#getTimestamp()} will have an
      * unspecified zero point.  These timestamps cannot be directly compared
@@ -657,7 +207,7 @@ public class FFmpegMediaPlayer
      * but it is reset when the position is set.
      *
      * @param surface The {@link Surface} to be used for the video portion of
-     * the media.
+     *                the media.
      */
     public void setSurface(Surface surface) {
         if (mScreenOnWhilePlaying && surface != null) {
@@ -676,11 +226,11 @@ public class FFmpegMediaPlayer
      * result in an exception.</p>
      *
      * @param context the Context to use
-     * @param uri the Uri from which to get the datasource
+     * @param uri     the Uri from which to get the datasource
      * @return a MediaPlayer object, or null if creation failed
      */
     public static FFmpegMediaPlayer create(Context context, Uri uri) {
-        return create (context, uri, null);
+        return create(context, uri, null);
     }
 
     /**
@@ -691,8 +241,8 @@ public class FFmpegMediaPlayer
      * result in an exception.</p>
      *
      * @param context the Context to use
-     * @param uri the Uri from which to get the datasource
-     * @param holder the SurfaceHolder to use for displaying the video
+     * @param uri     the Uri from which to get the datasource
+     * @param holder  the SurfaceHolder to use for displaying the video
      * @return a MediaPlayer object, or null if creation failed
      */
     public static FFmpegMediaPlayer create(Context context, Uri uri, SurfaceHolder holder) {
@@ -729,8 +279,8 @@ public class FFmpegMediaPlayer
      * result in an exception.</p>
      *
      * @param context the Context to use
-     * @param resid the raw resource id (<var>R.raw.&lt;something></var>) for
-     *              the resource to use as the datasource
+     * @param resid   the raw resource id (<var>R.raw.&lt;something></var>) for
+     *                the resource to use as the datasource
      * @return a MediaPlayer object, or null if creation failed
      */
     public static FFmpegMediaPlayer create(Context context, int resid) {
@@ -748,7 +298,7 @@ public class FFmpegMediaPlayer
             // fall through
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "create failed:", ex);
-           // fall through
+            // fall through
         } catch (SecurityException ex) {
             Log.d(TAG, "create failed:", ex);
             // fall through
@@ -760,11 +310,10 @@ public class FFmpegMediaPlayer
      * Sets the data source as a content Uri.
      *
      * @param context the Context to use when resolving the Uri
-     * @param uri the Content URI of the data you want to play
+     * @param uri     the Content URI of the data you want to play
      * @throws IllegalStateException if it is called in an invalid state
      */
-    public void setDataSource(Context context, Uri uri)
-        throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         setDataSource(context, uri, null);
     }
 
@@ -772,15 +321,14 @@ public class FFmpegMediaPlayer
      * Sets the data source as a content Uri.
      *
      * @param context the Context to use when resolving the Uri
-     * @param uri the Content URI of the data you want to play
+     * @param uri     the Content URI of the data you want to play
      * @param headers the headers to be sent together with the request for the data
      * @throws IllegalStateException if it is called in an invalid state
      */
-    public void setDataSource(Context context, Uri uri, Map<String, String> headers)
-        throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(Context context, Uri uri, Map<String, String> headers) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
 
         String scheme = uri.getScheme();
-        if(scheme == null || scheme.equals("file")) {
+        if (scheme == null || scheme.equals("file")) {
             setDataSource(uri.getPath());
             return;
         }
@@ -819,29 +367,26 @@ public class FFmpegMediaPlayer
      * @param path the path of the file, or the http/rtsp URL of the stream you want to play
      * @throws IllegalStateException if it is called in an invalid state
      *
-     * <p>When <code>path</code> refers to a local file, the file may actually be opened by a
-     * process other than the calling application.  This implies that the pathname
-     * should be an absolute path (as any other process runs with unspecified current working
-     * directory), and that the pathname should reference a world-readable file.
-     * As an alternative, the application could first open the file for reading,
-     * and then use the file descriptor form {@link #setDataSource(FileDescriptor)}.
+     *                               <p>When <code>path</code> refers to a local file, the file may actually be opened by a
+     *                               process other than the calling application.  This implies that the pathname
+     *                               should be an absolute path (as any other process runs with unspecified current working
+     *                               directory), and that the pathname should reference a world-readable file.
+     *                               As an alternative, the application could first open the file for reading,
+     *                               and then use the file descriptor form {@link #setDataSource(FileDescriptor)}.
      */
-    public void setDataSource(String path)
-            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         setDataSource(path, null, null);
     }
 
     /**
      * Sets the data source (file-path or http/rtsp URL) to use.
      *
-     * @param path the path of the file, or the http/rtsp URL of the stream you want to play
+     * @param path    the path of the file, or the http/rtsp URL of the stream you want to play
      * @param headers the headers associated with the http request for the stream you want to play
      * @throws IllegalStateException if it is called in an invalid state
      * @hide pending API council
      */
-    public void setDataSource(String path, Map<String, String> headers)
-            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException
-    {
+    public void setDataSource(String path, Map<String, String> headers) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         String[] keys = null;
         String[] values = null;
 
@@ -850,7 +395,7 @@ public class FFmpegMediaPlayer
             values = new String[headers.size()];
 
             int i = 0;
-            for (Map.Entry<String, String> entry: headers.entrySet()) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
                 keys[i] = entry.getKey();
                 values[i] = entry.getValue();
                 ++i;
@@ -859,8 +404,7 @@ public class FFmpegMediaPlayer
         setDataSource(path, keys, values);
     }
 
-    private void setDataSource(String path, String[] keys, String[] values)
-            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    private void setDataSource(String path, String[] keys, String[] values) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
 
         final Uri uri = Uri.parse(path);
         if ("file".equals(uri.getScheme())) {
@@ -880,9 +424,7 @@ public class FFmpegMediaPlayer
         }
     }
 
-    private native void _setDataSource(
-        String path, String[] keys, String[] values)
-        throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
+    private native void _setDataSource(String path, String[] keys, String[] values) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
     /**
      * Sets the data source (FileDescriptor) to use. It is the caller's responsibility
@@ -891,8 +433,7 @@ public class FFmpegMediaPlayer
      * @param fd the FileDescriptor for the file you want to play
      * @throws IllegalStateException if it is called in an invalid state
      */
-    public void setDataSource(FileDescriptor fd)
-            throws IOException, IllegalArgumentException, IllegalStateException {
+    public void setDataSource(FileDescriptor fd) throws IOException, IllegalArgumentException, IllegalStateException {
         // intentionally less than LONG_MAX
         setDataSource(fd, 0, 0x7ffffffffffffffL);
     }
@@ -902,24 +443,22 @@ public class FFmpegMediaPlayer
      * seekable (N.B. a LocalSocket is not seekable). It is the caller's responsibility
      * to close the file descriptor. It is safe to do so as soon as this call returns.
      *
-     * @param fd the FileDescriptor for the file you want to play
+     * @param fd     the FileDescriptor for the file you want to play
      * @param offset the offset into the file where the data to be played starts, in bytes
      * @param length the length in bytes of the data to be played
      * @throws IllegalStateException if it is called in an invalid state
      */
-    public void setDataSource(FileDescriptor fd, long offset, long length)
-            throws IOException, IllegalArgumentException, IllegalStateException {
+    public void setDataSource(FileDescriptor fd, long offset, long length) throws IOException, IllegalArgumentException, IllegalStateException {
         //disableProxyListener();
         _setDataSource(fd, offset, length);
     }
 
-    private native void _setDataSource(FileDescriptor fd, long offset, long length)
-            throws IOException, IllegalArgumentException, IllegalStateException;
+    private native void _setDataSource(FileDescriptor fd, long offset, long length) throws IOException, IllegalArgumentException, IllegalStateException;
 
 
     /**
      * Prepares the player for playback, synchronously.
-     *
+     * <p>
      * After setting the datasource and the display surface, you need to either
      * call prepare() or prepareAsync(). For files, it is OK to call prepare(),
      * which blocks until MediaPlayer is ready for playback.
@@ -930,7 +469,7 @@ public class FFmpegMediaPlayer
 
     /**
      * Prepares the player for playback, asynchronously.
-     *
+     * <p>
      * After setting the datasource and the display surface, you need to either
      * call prepare() or prepareAsync(). For streams, you should call prepareAsync(),
      * which returns immediately, rather than blocking until enough data has been
@@ -948,7 +487,7 @@ public class FFmpegMediaPlayer
      *
      * @throws IllegalStateException if it is called in an invalid state
      */
-    public  void start() throws IllegalStateException {
+    public void start() throws IllegalStateException {
         stayAwake(true);
         _start();
     }
@@ -959,7 +498,7 @@ public class FFmpegMediaPlayer
      * Stops playback after playback has been stopped or paused.
      *
      * @throws IllegalStateException if the internal player engine has not been
-     * initialized.
+     *                               initialized.
      */
     public void stop() throws IllegalStateException {
         stayAwake(false);
@@ -972,7 +511,7 @@ public class FFmpegMediaPlayer
      * Pauses playback. Call start() to resume.
      *
      * @throws IllegalStateException if the internal player engine has not been
-     * initialized.
+     *                               initialized.
      */
     public void pause() throws IllegalStateException {
         stayAwake(false);
@@ -1008,8 +547,8 @@ public class FFmpegMediaPlayer
             mWakeLock = null;
         }
 
-        PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(mode|PowerManager.ON_AFTER_RELEASE, FFmpegMediaPlayer.class.getName());
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        mWakeLock = pm.newWakeLock(mode | PowerManager.ON_AFTER_RELEASE, FFmpegMediaPlayer.class.getName());
         mWakeLock.setReferenceCounted(false);
         if (washeld) {
             mWakeLock.acquire();
@@ -1024,7 +563,7 @@ public class FFmpegMediaPlayer
      * access.
      *
      * @param screenOn Supply true to keep the screen on, false to allow it
-     * to turn off.
+     *                 to turn off.
      */
     public void setScreenOnWhilePlaying(boolean screenOn) {
         if (mScreenOnWhilePlaying != screenOn) {
@@ -1088,7 +627,7 @@ public class FFmpegMediaPlayer
      *
      * @param msec the offset in milliseconds from the start to seek to
      * @throws IllegalStateException if the internal player engine has not been
-     * initialized
+     *                               initialized
      */
     public native void seekTo(int msec) throws IllegalStateException;
 
@@ -1109,36 +648,34 @@ public class FFmpegMediaPlayer
     /**
      * Gets the media metadata.
      *
-     * @param update_only controls whether the full set of available
-     * metadata is returned or just the set that changed since the
-     * last call. See {@see #METADATA_UPDATE_ONLY} and {@see
-     * #METADATA_ALL}.
-     *
+     * @param update_only  controls whether the full set of available
+     *                     metadata is returned or just the set that changed since the
+     *                     last call. See {@see #METADATA_UPDATE_ONLY} and {@see
+     *                     #METADATA_ALL}.
      * @param apply_filter if true only metadata that matches the
-     * filter is returned. See {@see #APPLY_METADATA_FILTER} and {@see
-     * #BYPASS_METADATA_FILTER}.
-     *
+     *                     filter is returned. See {@see #APPLY_METADATA_FILTER} and {@see
+     *                     #BYPASS_METADATA_FILTER}.
      * @return The metadata, possibly empty. null if an error occured.
-     // FIXME: unhide.
+     * // FIXME: unhide.
      * {@hide}
      */
     public Metadata getMetadata() {//final boolean update_only,
-    	//	final boolean apply_filter) {
-    	boolean update_only = false;
-    	boolean apply_filter = false;
-    	
-    	Metadata data = new Metadata();
-    	HashMap<String, String> metadata = null;
+        //	final boolean apply_filter) {
+        boolean update_only = false;
+        boolean apply_filter = false;
+
+        Metadata data = new Metadata();
+        HashMap<String, String> metadata = null;
         if ((metadata = native_getMetadata(update_only, apply_filter, metadata)) == null) {
             return null;
         }
 
         // Metadata takes over the parcel, don't recycle it unless
         // there is an error.
-    	if (!data.parse(metadata)) {
-    		return null;
-    	}
-    	return data;
+        if (!data.parse(metadata)) {
+            return null;
+        }
+        return data;
     }
 
     /**
@@ -1148,7 +685,7 @@ public class FFmpegMediaPlayer
      * allowed one.
      * Metadata.MATCH_ALL and Metadata.MATCH_NONE are 2 sets available as
      * shorthands to allow/block all or no metadata.
-     *
+     * <p>
      * By default, there is no filter set.
      *
      * @param allow Is the set of metadata the client is interested
@@ -1156,28 +693,28 @@ public class FFmpegMediaPlayer
      * @param block Is the set of metadata the client is not interested
      *              in receiving new notifications for.
      * @return The call status code.
-     *
-     // FIXME: unhide.
+     * <p>
+     * // FIXME: unhide.
      * {@hide}
      */
     public int setMetadataFilter(Set<String> allow, Set<String> block) {
-    	int i = 0;
-    	
-    	String [] allowed = new String[allow.size()];
-    	String [] blocked = new String[block.size()];
-    	
-    	for (String s : allow) {
-    		allowed[i] = s;
-    	    i++;
-    	}
-    	
-    	i = 0;
-    	
-    	for (String s : block) {
-    		blocked[i] = s;
-    	    i++;
-    	}
-    	
+        int i = 0;
+
+        String[] allowed = new String[allow.size()];
+        String[] blocked = new String[block.size()];
+
+        for (String s : allow) {
+            allowed[i] = s;
+            i++;
+        }
+
+        i = 0;
+
+        for (String s : block) {
+            blocked[i] = s;
+            i++;
+        }
+
         return native_setMetadataFilter(allowed, blocked);
     }
 
@@ -1196,7 +733,6 @@ public class FFmpegMediaPlayer
      * player will not be started.
      *
      * @param next the player to start after this one completes playback.
-     *
      */
     public native void setNextMediaPlayer(FFmpegMediaPlayer next);
 
@@ -1236,7 +772,7 @@ public class FFmpegMediaPlayer
     public void reset() {
         stayAwake(false);
         _reset();
-        
+
         // make sure none of the listeners get called anymore
         mEventHandler.removeCallbacksAndMessages(null);
     }
@@ -1277,15 +813,16 @@ public class FFmpegMediaPlayer
      * a particular type. Note that the passed volume values are raw scalars.
      * UI controls should be scaled logarithmically.
      *
-     * @param leftVolume left volume scalar
+     * @param leftVolume  left volume scalar
      * @param rightVolume right volume scalar
      */
     public native void setVolume(float leftVolume, float rightVolume);
 
     /**
      * Currently not implemented, returns null.
-     * @deprecated
+     *
      * @hide
+     * @deprecated
      */
     public native Bitmap getFrameAt(int msec) throws IllegalStateException;
 
@@ -1293,19 +830,19 @@ public class FFmpegMediaPlayer
      * Sets the audio session ID.
      *
      * @param sessionId the audio session ID.
-     * The audio session ID is a system wide unique identifier for the audio stream played by
-     * this MediaPlayer instance.
-     * The primary use of the audio session ID  is to associate audio effects to a particular
-     * instance of MediaPlayer: if an audio session ID is provided when creating an audio effect,
-     * this effect will be applied only to the audio content of media players within the same
-     * audio session and not to the output mix.
-     * When created, a MediaPlayer instance automatically generates its own audio session ID.
-     * However, it is possible to force this player to be part of an already existing audio session
-     * by calling this method.
-     * This method must be called before one of the overloaded <code> setDataSource </code> methods.
+     *                  The audio session ID is a system wide unique identifier for the audio stream played by
+     *                  this MediaPlayer instance.
+     *                  The primary use of the audio session ID  is to associate audio effects to a particular
+     *                  instance of MediaPlayer: if an audio session ID is provided when creating an audio effect,
+     *                  this effect will be applied only to the audio content of media players within the same
+     *                  audio session and not to the output mix.
+     *                  When created, a MediaPlayer instance automatically generates its own audio session ID.
+     *                  However, it is possible to force this player to be part of an already existing audio session
+     *                  by calling this method.
+     *                  This method must be called before one of the overloaded <code> setDataSource </code> methods.
      * @throws IllegalStateException if it is called in an invalid state
      */
-    public native void setAudioSessionId(int sessionId)  throws IllegalArgumentException, IllegalStateException;
+    public native void setAudioSessionId(int sessionId) throws IllegalArgumentException, IllegalStateException;
 
     /**
      * Returns the audio session ID.
@@ -1327,6 +864,7 @@ public class FFmpegMediaPlayer
      * <p>To detach the effect from the player, call this method with a null effect id.
      * <p>This method must be called after one of the overloaded <code> setDataSource </code>
      * methods.
+     *
      * @param effectId system wide unique id of the effect to attach
      */
     public native void attachAuxEffect(int effectId);
@@ -1358,7 +896,8 @@ public class FFmpegMediaPlayer
 
     /**
      * Sets the parameter indicated by key.
-     * @param key key indicates the parameter to be set.
+     *
+     * @param key   key indicates the parameter to be set.
      * @param value value of the parameter to be set.
      * @return true if the parameter is set successfully, false otherwise
      * {@hide}
@@ -1367,7 +906,8 @@ public class FFmpegMediaPlayer
 
     /**
      * Sets the parameter indicated by key.
-     * @param key key indicates the parameter to be set.
+     *
+     * @param key   key indicates the parameter to be set.
      * @param value value of the parameter to be set.
      * @return true if the parameter is set successfully, false otherwise
      * {@hide}
@@ -1382,7 +922,8 @@ public class FFmpegMediaPlayer
 
     /**
      * Sets the parameter indicated by key.
-     * @param key key indicates the parameter to be set.
+     *
+     * @param key   key indicates the parameter to be set.
      * @param value value of the parameter to be set.
      * @return true if the parameter is set successfully, false otherwise
      * {@hide}
@@ -1397,7 +938,8 @@ public class FFmpegMediaPlayer
 
     /**
      * Gets the value of the parameter indicated by key.
-     * @param key key indicates the parameter to get.
+     *
+     * @param key   key indicates the parameter to get.
      * @param reply value of the parameter to get.
      */
     private native void getParameter(int key, Parcel reply);
@@ -1405,6 +947,7 @@ public class FFmpegMediaPlayer
     /**
      * Gets the value of the parameter indicated by key.
      * The caller is responsible for recycling the returned parcel.
+     *
      * @param key key indicates the parameter to get.
      * @return value of the parameter.
      * {@hide}
@@ -1417,6 +960,7 @@ public class FFmpegMediaPlayer
 
     /**
      * Gets the value of the parameter indicated by key.
+     *
      * @param key key indicates the parameter to get.
      * @return value of the parameter.
      * {@hide}
@@ -1431,6 +975,7 @@ public class FFmpegMediaPlayer
 
     /**
      * Gets the value of the parameter indicated by key.
+     *
      * @param key key indicates the parameter to get.
      * @return value of the parameter.
      * {@hide}
@@ -1453,14 +998,15 @@ public class FFmpegMediaPlayer
      * so an appropriate conversion from linear UI input x to level is:
      * x == 0 -> level = 0
      * 0 < x <= R -> level = 10^(72*(x-R)/20/R)
+     *
      * @param level send level scalar
      */
     public native void setAuxEffectSendLevel(float level);
 
     /**
-     * @param request Parcel destinated to the media player. The
-     *                Interface token must be set to the IMediaPlayer
-     *                one to be routed correctly through the system.
+     * @param request    Parcel destinated to the media player. The
+     *                   Interface token must be set to the IMediaPlayer
+     *                   one to be routed correctly through the system.
      * @param reply[out] Parcel that will contain the reply.
      * @return The status code.
      */
@@ -1468,21 +1014,19 @@ public class FFmpegMediaPlayer
 
 
     /**
-     * @param update_only If true fetch only the set of metadata that have
-     *                    changed since the last invocation of getMetadata.
-     *                    The set is built using the unfiltered
-     *                    notifications the native player sent to the
-     *                    MediaPlayerService during that period of
-     *                    time. If false, all the metadatas are considered.
-     * @param apply_filter  If true, once the metadata set has been built based on
+     * @param update_only  If true fetch only the set of metadata that have
+     *                     changed since the last invocation of getMetadata.
+     *                     The set is built using the unfiltered
+     *                     notifications the native player sent to the
+     *                     MediaPlayerService during that period of
+     *                     time. If false, all the metadatas are considered.
+     * @param apply_filter If true, once the metadata set has been built based on
      *                     the value update_only, the current filter is applied.
-     * @param reply[out] On return contains the serialized
-     *                   metadata. Valid only if the call was successful.
+     * @param reply[out]   On return contains the serialized
+     *                     metadata. Valid only if the call was successful.
      * @return The status code.
      */
-    private native final HashMap<String, String> native_getMetadata(boolean update_only,
-                                                    boolean apply_filter,
-                                                    HashMap<String, String> reply);
+    private native final HashMap<String, String> native_getMetadata(boolean update_only, boolean apply_filter, HashMap<String, String> reply);
 
     /**
      * @param request Parcel with the 2 serialized lists of allowed
@@ -1491,10 +1035,12 @@ public class FFmpegMediaPlayer
      *                indicating the number of metadata type elements.
      * @return The status code.
      */
-    private native final int native_setMetadataFilter(String [] allowed, String [] blocked);
+    private native final int native_setMetadataFilter(String[] allowed, String[] blocked);
 
     private static native final void native_init();
+
     private native final void native_setup(Object mediaplayer_this);
+
     private native final void native_finalize();
 
     /**
@@ -1511,6 +1057,7 @@ public class FFmpegMediaPlayer
 
     /**
      * Enables the first timed text track if any.
+     *
      * @return true if the text track is enabled successfully
      * {@hide}
      */
@@ -1520,6 +1067,7 @@ public class FFmpegMediaPlayer
 
     /**
      * Disables timed text display.
+     *
      * @return true if the text track is disabled successfully.
      * {@hide}
      */
@@ -1529,14 +1077,16 @@ public class FFmpegMediaPlayer
 
     /**
      * @param reply Parcel with audio/video duration info for battery
-                    tracking usage
+     *              tracking usage
      * @return The status code.
      * {@hide}
      */
     public native static int native_pullBatteryData(Parcel reply);
 
     @Override
-    protected void finalize() { native_finalize(); }
+    protected void finalize() {
+        native_finalize();
+    }
 
     /* Do not change these values without updating their counterparts
      * in include/media/mediaplayer.h!
@@ -1551,8 +1101,7 @@ public class FFmpegMediaPlayer
     private static final int MEDIA_ERROR = 100;
     private static final int MEDIA_INFO = 200;
 
-    private class EventHandler extends Handler
-    {
+    private class EventHandler extends Handler {
         private FFmpegMediaPlayer mMediaPlayer;
 
         public EventHandler(FFmpegMediaPlayer mp, Looper looper) {
@@ -1566,75 +1115,74 @@ public class FFmpegMediaPlayer
                 Log.w(TAG, "mediaplayer went away with unhandled events");
                 return;
             }
-            switch(msg.what) {
-            case MEDIA_PREPARED:
-                if (mOnPreparedListener != null)
-                    mOnPreparedListener.onPrepared(mMediaPlayer);
-                return;
+            switch (msg.what) {
+                case MEDIA_PREPARED:
+                    if (mOnPreparedListener != null) mOnPreparedListener.onPrepared(mMediaPlayer);
+                    return;
 
-            case MEDIA_PLAYBACK_COMPLETE:
-                if (mOnCompletionListener != null)
-                    mOnCompletionListener.onCompletion(mMediaPlayer);
-                stayAwake(false);
-                return;
+                case MEDIA_PLAYBACK_COMPLETE:
+                    if (mOnCompletionListener != null)
+                        mOnCompletionListener.onCompletion(mMediaPlayer);
+                    stayAwake(false);
+                    return;
 
-            case MEDIA_BUFFERING_UPDATE:
-                if (mOnBufferingUpdateListener != null)
-                    mOnBufferingUpdateListener.onBufferingUpdate(mMediaPlayer, msg.arg1);
-                return;
+                case MEDIA_BUFFERING_UPDATE:
+                    if (mOnBufferingUpdateListener != null)
+                        mOnBufferingUpdateListener.onBufferingUpdate(mMediaPlayer, msg.arg1);
+                    return;
 
-            case MEDIA_SEEK_COMPLETE:
-              if (mOnSeekCompleteListener != null)
-                  mOnSeekCompleteListener.onSeekComplete(mMediaPlayer);
-              return;
+                case MEDIA_SEEK_COMPLETE:
+                    if (mOnSeekCompleteListener != null)
+                        mOnSeekCompleteListener.onSeekComplete(mMediaPlayer);
+                    return;
 
-            case MEDIA_SET_VIDEO_SIZE:
-              if (mOnVideoSizeChangedListener != null)
-                  mOnVideoSizeChangedListener.onVideoSizeChanged(mMediaPlayer, msg.arg1, msg.arg2);
-              return;
+                case MEDIA_SET_VIDEO_SIZE:
+                    if (mOnVideoSizeChangedListener != null)
+                        mOnVideoSizeChangedListener.onVideoSizeChanged(mMediaPlayer, msg.arg1, msg.arg2);
+                    return;
 
-            case MEDIA_ERROR:
-                // For PV specific error values (msg.arg2) look in
-                // opencore/pvmi/pvmf/include/pvmf_return_codes.h
-                Log.e(TAG, "Error (" + msg.arg1 + "," + msg.arg2 + ")");
-                boolean error_was_handled = false;
-                if (mOnErrorListener != null) {
-                    error_was_handled = mOnErrorListener.onError(mMediaPlayer, msg.arg1, msg.arg2);
-                }
-                if (mOnCompletionListener != null && ! error_was_handled) {
-                    mOnCompletionListener.onCompletion(mMediaPlayer);
-                }
-                stayAwake(false);
-                return;
+                case MEDIA_ERROR:
+                    // For PV specific error values (msg.arg2) look in
+                    // opencore/pvmi/pvmf/include/pvmf_return_codes.h
+                    Log.e(TAG, "Error (" + msg.arg1 + "," + msg.arg2 + ")");
+                    boolean error_was_handled = false;
+                    if (mOnErrorListener != null) {
+                        error_was_handled = mOnErrorListener.onError(mMediaPlayer, msg.arg1, msg.arg2);
+                    }
+                    if (mOnCompletionListener != null && !error_was_handled) {
+                        mOnCompletionListener.onCompletion(mMediaPlayer);
+                    }
+                    stayAwake(false);
+                    return;
 
-            case MEDIA_INFO:
-                if (msg.arg1 != MEDIA_INFO_VIDEO_TRACK_LAGGING) {
-                    Log.i(TAG, "Info (" + msg.arg1 + "," + msg.arg2 + ")");
-                }
-                if (mOnInfoListener != null) {
-                    mOnInfoListener.onInfo(mMediaPlayer, msg.arg1, msg.arg2);
-                }
-                // No real default action so far.
-                return;
-            case MEDIA_TIMED_TEXT:
-                if (mOnTimedTextListener != null) {
-                    if (msg.obj == null) {
-                        mOnTimedTextListener.onTimedText(mMediaPlayer, null);
-                    } else {
-                        if (msg.obj instanceof byte[]) {
-                            TimedText text = new TimedText((byte[])(msg.obj));
-                            mOnTimedTextListener.onTimedText(mMediaPlayer, text);
+                case MEDIA_INFO:
+                    if (msg.arg1 != MEDIA_INFO_VIDEO_TRACK_LAGGING) {
+                        Log.i(TAG, "Info (" + msg.arg1 + "," + msg.arg2 + ")");
+                    }
+                    if (mOnInfoListener != null) {
+                        mOnInfoListener.onInfo(mMediaPlayer, msg.arg1, msg.arg2);
+                    }
+                    // No real default action so far.
+                    return;
+                case MEDIA_TIMED_TEXT:
+                    if (mOnTimedTextListener != null) {
+                        if (msg.obj == null) {
+                            mOnTimedTextListener.onTimedText(mMediaPlayer, null);
+                        } else {
+                            if (msg.obj instanceof byte[]) {
+                                TimedText text = new TimedText((byte[]) (msg.obj));
+                                mOnTimedTextListener.onTimedText(mMediaPlayer, text);
+                            }
                         }
                     }
-                }
-                return;
+                    return;
 
-            case MEDIA_NOP: // interface test message - ignore
-                break;
+                case MEDIA_NOP: // interface test message - ignore
+                    break;
 
-            default:
-                Log.e(TAG, "Unknown message type " + msg.what);
-                return;
+                default:
+                    Log.e(TAG, "Unknown message type " + msg.what);
+                    return;
             }
         }
     }
@@ -1646,10 +1194,8 @@ public class FFmpegMediaPlayer
      * code is safe from the object disappearing from underneath it.  (This is
      * the cookie passed to native_setup().)
      */
-    private static void postEventFromNative(Object mediaplayer_ref,
-                                            int what, int arg1, int arg2, Object obj)
-    {
-        FFmpegMediaPlayer mp = (FFmpegMediaPlayer)((WeakReference)mediaplayer_ref).get();
+    private static void postEventFromNative(Object mediaplayer_ref, int what, int arg1, int arg2, Object obj) {
+        FFmpegMediaPlayer mp = (FFmpegMediaPlayer) ((WeakReference) mediaplayer_ref).get();
         if (mp == null) {
             return;
         }
@@ -1664,8 +1210,7 @@ public class FFmpegMediaPlayer
      * Interface definition for a callback to be invoked when the media
      * source is ready for playback.
      */
-    public interface OnPreparedListener
-    {
+    public interface OnPreparedListener {
         /**
          * Called when the media file is ready for playback.
          *
@@ -1680,8 +1225,7 @@ public class FFmpegMediaPlayer
      *
      * @param listener the callback that will be run
      */
-    public void setOnPreparedListener(OnPreparedListener listener)
-    {
+    public void setOnPreparedListener(OnPreparedListener listener) {
         mOnPreparedListener = listener;
     }
 
@@ -1691,8 +1235,7 @@ public class FFmpegMediaPlayer
      * Interface definition for a callback to be invoked when playback of
      * a media source has completed.
      */
-    public interface OnCompletionListener
-    {
+    public interface OnCompletionListener {
         /**
          * Called when the end of a media source is reached during playback.
          *
@@ -1707,8 +1250,7 @@ public class FFmpegMediaPlayer
      *
      * @param listener the callback that will be run
      */
-    public void setOnCompletionListener(OnCompletionListener listener)
-    {
+    public void setOnCompletionListener(OnCompletionListener listener) {
         mOnCompletionListener = listener;
     }
 
@@ -1718,8 +1260,7 @@ public class FFmpegMediaPlayer
      * Interface definition of a callback to be invoked indicating buffering
      * status of a media resource being streamed over the network.
      */
-    public interface OnBufferingUpdateListener
-    {
+    public interface OnBufferingUpdateListener {
         /**
          * Called to update status in buffering a media stream received through
          * progressive HTTP download. The received buffering percentage
@@ -1741,8 +1282,7 @@ public class FFmpegMediaPlayer
      *
      * @param listener the callback that will be run.
      */
-    public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener)
-    {
+    public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener) {
         mOnBufferingUpdateListener = listener;
     }
 
@@ -1752,8 +1292,7 @@ public class FFmpegMediaPlayer
      * Interface definition of a callback to be invoked indicating
      * the completion of a seek operation.
      */
-    public interface OnSeekCompleteListener
-    {
+    public interface OnSeekCompleteListener {
         /**
          * Called to indicate the completion of a seek operation.
          *
@@ -1768,8 +1307,7 @@ public class FFmpegMediaPlayer
      *
      * @param listener the callback that will be run
      */
-    public void setOnSeekCompleteListener(OnSeekCompleteListener listener)
-    {
+    public void setOnSeekCompleteListener(OnSeekCompleteListener listener) {
         mOnSeekCompleteListener = listener;
     }
 
@@ -1779,14 +1317,13 @@ public class FFmpegMediaPlayer
      * Interface definition of a callback to be invoked when the
      * video size is first known or updated
      */
-    public interface OnVideoSizeChangedListener
-    {
+    public interface OnVideoSizeChangedListener {
         /**
          * Called to indicate the video size
          *
-         * @param mp        the MediaPlayer associated with this callback
-         * @param width     the width of the video
-         * @param height    the height of the video
+         * @param mp     the MediaPlayer associated with this callback
+         * @param width  the width of the video
+         * @param height the height of the video
          */
         void onVideoSizeChanged(FFmpegMediaPlayer mp, int width, int height);
     }
@@ -1797,8 +1334,7 @@ public class FFmpegMediaPlayer
      *
      * @param listener the callback that will be run
      */
-    public void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener)
-    {
+    public void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener) {
         mOnVideoSizeChangedListener = listener;
     }
 
@@ -1809,15 +1345,14 @@ public class FFmpegMediaPlayer
      * timed text is available for display.
      * {@hide}
      */
-    public interface OnTimedTextListener
-    {
+    public interface OnTimedTextListener {
         /**
          * Called to indicate an avaliable timed text
          *
-         * @param mp             the MediaPlayer associated with this callback
-         * @param text           the timed text sample which contains the text
-         *                       needed to be displayed and the display format.
-         * {@hide}
+         * @param mp   the MediaPlayer associated with this callback
+         * @param text the timed text sample which contains the text
+         *             needed to be displayed and the display format.
+         *             {@hide}
          */
         public void onTimedText(FFmpegMediaPlayer mp, TimedText text);
     }
@@ -1827,10 +1362,9 @@ public class FFmpegMediaPlayer
      * for display.
      *
      * @param listener the callback that will be run
-     * {@hide}
+     *                 {@hide}
      */
-    public void setOnTimedTextListener(OnTimedTextListener listener)
-    {
+    public void setOnTimedTextListener(OnTimedTextListener listener) {
         mOnTimedTextListener = listener;
     }
 
@@ -1840,20 +1374,26 @@ public class FFmpegMediaPlayer
     /* Do not change these values without updating their counterparts
      * in include/media/mediaplayer.h!
      */
-    /** Unspecified media player error.
+    /**
+     * Unspecified media player error.
+     *
      * @see android.media.MediaPlayer.OnErrorListener
      */
     public static final int MEDIA_ERROR_UNKNOWN = 1;
 
-    /** Media server died. In this case, the application must release the
+    /**
+     * Media server died. In this case, the application must release the
      * MediaPlayer object and instantiate a new one.
+     *
      * @see android.media.MediaPlayer.OnErrorListener
      */
     public static final int MEDIA_ERROR_SERVER_DIED = 100;
 
-    /** The video is streamed and its container is not valid for progressive
+    /**
+     * The video is streamed and its container is not valid for progressive
      * playback i.e the video's index (e.g moov atom) is not at the start of the
      * file.
+     *
      * @see android.media.MediaPlayer.OnErrorListener
      */
     public static final int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;
@@ -1863,19 +1403,18 @@ public class FFmpegMediaPlayer
      * has been an error during an asynchronous operation (other errors
      * will throw exceptions at method call time).
      */
-    public interface OnErrorListener
-    {
+    public interface OnErrorListener {
         /**
          * Called to indicate an error.
          *
-         * @param mp      the MediaPlayer the error pertains to
-         * @param what    the type of error that has occurred:
-         * <ul>
-         * <li>{@link #MEDIA_ERROR_UNKNOWN}
-         * <li>{@link #MEDIA_ERROR_SERVER_DIED}
-         * </ul>
+         * @param mp    the MediaPlayer the error pertains to
+         * @param what  the type of error that has occurred:
+         *              <ul>
+         *              <li>{@link #MEDIA_ERROR_UNKNOWN}
+         *              <li>{@link #MEDIA_ERROR_SERVER_DIED}
+         *              </ul>
          * @param extra an extra code, specific to the error. Typically
-         * implementation dependant.
+         *              implementation dependant.
          * @return True if the method handled the error, false if it didn't.
          * Returning false, or not having an OnErrorListener at all, will
          * cause the OnCompletionListener to be called.
@@ -1889,8 +1428,7 @@ public class FFmpegMediaPlayer
      *
      * @param listener the callback that will be run
      */
-    public void setOnErrorListener(OnErrorListener listener)
-    {
+    public void setOnErrorListener(OnErrorListener listener) {
         mOnErrorListener = listener;
     }
 
@@ -1900,41 +1438,55 @@ public class FFmpegMediaPlayer
     /* Do not change these values without updating their counterparts
      * in include/media/mediaplayer.h!
      */
-    /** Unspecified media player info.
+    /**
+     * Unspecified media player info.
+     *
      * @see android.media.MediaPlayer.OnInfoListener
      */
     public static final int MEDIA_INFO_UNKNOWN = 1;
 
-    /** The video is too complex for the decoder: it can't decode frames fast
-     *  enough. Possibly only the audio plays fine at this stage.
+    /**
+     * The video is too complex for the decoder: it can't decode frames fast
+     * enough. Possibly only the audio plays fine at this stage.
+     *
      * @see android.media.MediaPlayer.OnInfoListener
      */
     public static final int MEDIA_INFO_VIDEO_TRACK_LAGGING = 700;
 
-    /** MediaPlayer is temporarily pausing playback internally in order to
+    /**
+     * MediaPlayer is temporarily pausing playback internally in order to
      * buffer more data.
+     *
      * @see android.media.MediaPlayer.OnInfoListener
      */
     public static final int MEDIA_INFO_BUFFERING_START = 701;
 
-    /** MediaPlayer is resuming playback after filling buffers.
+    /**
+     * MediaPlayer is resuming playback after filling buffers.
+     *
      * @see android.media.MediaPlayer.OnInfoListener
      */
     public static final int MEDIA_INFO_BUFFERING_END = 702;
 
-    /** Bad interleaving means that a media has been improperly interleaved or
+    /**
+     * Bad interleaving means that a media has been improperly interleaved or
      * not interleaved at all, e.g has all the video samples first then all the
      * audio ones. Video is playing but a lot of disk seeks may be happening.
+     *
      * @see android.media.MediaPlayer.OnInfoListener
      */
     public static final int MEDIA_INFO_BAD_INTERLEAVING = 800;
 
-    /** The media cannot be seeked (e.g live stream)
+    /**
+     * The media cannot be seeked (e.g live stream)
+     *
      * @see android.media.MediaPlayer.OnInfoListener
      */
     public static final int MEDIA_INFO_NOT_SEEKABLE = 801;
 
-    /** A new set of metadata is available.
+    /**
+     * A new set of metadata is available.
+     *
      * @see android.media.MediaPlayer.OnInfoListener
      */
     public static final int MEDIA_INFO_METADATA_UPDATE = 802;
@@ -1943,29 +1495,29 @@ public class FFmpegMediaPlayer
      * Interface definition of a callback to be invoked to communicate some
      * info and/or warning about the media or its playback.
      */
-    public interface OnInfoListener
-    {
+    public interface OnInfoListener {
         /**
          * Called to indicate an info or a warning.
          *
-         * @param mp      the MediaPlayer the info pertains to.
-         * @param what    the type of info or warning.
-         * <ul>
-         * <li>{@link #MEDIA_INFO_UNKNOWN}
-         * <li>{@link #MEDIA_INFO_VIDEO_TRACK_LAGGING}
-         * <li>{@link #MEDIA_INFO_BUFFERING_START}
-         * <li>{@link #MEDIA_INFO_BUFFERING_END}
-         * <li>{@link #MEDIA_INFO_BAD_INTERLEAVING}
-         * <li>{@link #MEDIA_INFO_NOT_SEEKABLE}
-         * <li>{@link #MEDIA_INFO_METADATA_UPDATE}
-         * </ul>
+         * @param mp    the MediaPlayer the info pertains to.
+         * @param what  the type of info or warning.
+         *              <ul>
+         *              <li>{@link #MEDIA_INFO_UNKNOWN}
+         *              <li>{@link #MEDIA_INFO_VIDEO_TRACK_LAGGING}
+         *              <li>{@link #MEDIA_INFO_BUFFERING_START}
+         *              <li>{@link #MEDIA_INFO_BUFFERING_END}
+         *              <li>{@link #MEDIA_INFO_BAD_INTERLEAVING}
+         *              <li>{@link #MEDIA_INFO_NOT_SEEKABLE}
+         *              <li>{@link #MEDIA_INFO_METADATA_UPDATE}
+         *              </ul>
          * @param extra an extra code, specific to the info. Typically
-         * implementation dependant.
+         *              implementation dependant.
          * @return True if the method handled the info, false if it didn't.
          * Returning false, or not having an OnErrorListener at all, will
          * cause the info to be discarded.
          */
         boolean onInfo(FFmpegMediaPlayer mp, int what, int extra);
+
     }
 
     /**
@@ -1973,16 +1525,15 @@ public class FFmpegMediaPlayer
      *
      * @param listener the callback that will be run
      */
-    public void setOnInfoListener(OnInfoListener listener)
-    {
+    public void setOnInfoListener(OnInfoListener listener) {
         mOnInfoListener = listener;
     }
 
     private OnInfoListener mOnInfoListener;
-    
+
     private int attachAuxEffectCompat(int effectId) {
-    	int ret = -3;
-        
+        int ret = -3;
+
         return ret;
     }
 }
