@@ -137,7 +137,7 @@ public class MPLoadingView extends View {
             float cy = getHeight() * 0.2f;
             float radius;
             if (mRadius == 0f) {
-                radius = Math.max(cx, cy) / 6;
+                radius = Math.max(cx, cy) / 5;
             } else {
                 radius = mRadius;
             }

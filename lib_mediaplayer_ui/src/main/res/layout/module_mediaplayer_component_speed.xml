@@ -29,7 +29,6 @@
             android:indeterminateDuration="2000"
             app:lv_color_round="#ffffff"
             app:lv_count="8"
-            app:lv_radius="4dp"
             app:lv_rate="0.9" />
 
         <LinearLayout
