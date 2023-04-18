@@ -1,13 +1,11 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -24,16 +22,6 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     @Override
     public void callPlayerEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_PAUSE_IGNORE:
-                MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
-                try {
-                    bringToFront();
-                    findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
-                    findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
-                    findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
-                } catch (Exception e) {
-                }
-                break;
             case PlayerType.StateType.STATE_LOADING_START:
                 MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
                 show();
@@ -41,6 +29,10 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_LOADING_STOP:
+            case PlayerType.StateType.STATE_PAUSE:
+            case PlayerType.StateType.STATE_PAUSE_IGNORE:
+            case PlayerType.StateType.STATE_RESUME:
+            case PlayerType.StateType.STATE_RESUME_IGNORE:
                 MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
                 gone();
                 break;
