@@ -15,6 +15,7 @@ import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentLoading extends RelativeLayout implements ComponentApi {
@@ -66,13 +67,43 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public void callWindowEvent(int state) {
+        switch (state) {
+            case PlayerType.WindowType.FLOAT:
+            case PlayerType.WindowType.NORMAL:
+            case PlayerType.WindowType.FULL:
+                try {
+                    int visibility = findViewById(R.id.module_mediaplayer_component_loading_pb).getVisibility();
+                    if (visibility == View.VISIBLE) {
+                        try {
+                            PlayerApi playerApi = getPlayerApi();
+                            boolean full = playerApi.isFull();
+                            findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(full ? View.VISIBLE : View.INVISIBLE);
+                        } catch (Exception e) {
+                            findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.INVISIBLE);
+                        }
+                    }
+                } catch (Exception e) {
+                }
+                break;
+        }
+    }
+
+    @Override
     public void show() {
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.VISIBLE);
         } catch (Exception e) {
+        }
+
+        try {
+            PlayerApi playerApi = getPlayerApi();
+            boolean full = playerApi.isFull();
+            findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(full ? View.VISIBLE : View.INVISIBLE);
+        } catch (Exception e) {
+            findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.INVISIBLE);
         }
     }
 

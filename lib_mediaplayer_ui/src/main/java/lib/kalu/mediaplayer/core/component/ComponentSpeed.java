@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public final class ComponentSpeed extends RelativeLayout implements ComponentApi {
@@ -49,6 +50,31 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
     }
 
     @Override
+    public void callWindowEvent(int state) {
+        switch (state) {
+            case PlayerType.WindowType.FLOAT:
+            case PlayerType.WindowType.NORMAL:
+            case PlayerType.WindowType.FULL:
+                try {
+                    int visibility = findViewById(R.id.module_mediaplayer_component_speed).getVisibility();
+                    if (visibility == View.VISIBLE) {
+                        try {
+                            PlayerApi playerApi = getPlayerApi();
+                            boolean full = playerApi.isFull();
+                            TextView v1 = findViewById(R.id.module_mediaplayer_component_speed_txt);
+                            v1.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
+                            TextView v2 = findViewById(R.id.module_mediaplayer_component_speed_unit);
+                            v2.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
+                        } catch (Exception e) {
+                        }
+                    }
+                } catch (Exception e) {
+                }
+                break;
+        }
+    }
+
+    @Override
     public void gone() {
         try {
             findViewById(R.id.module_mediaplayer_component_speed).setVisibility(View.GONE);
@@ -61,6 +87,15 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_speed).setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+        }
+        try {
+            PlayerApi playerApi = getPlayerApi();
+            boolean full = playerApi.isFull();
+            TextView v1 = findViewById(R.id.module_mediaplayer_component_speed_txt);
+            v1.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
+            TextView v2 = findViewById(R.id.module_mediaplayer_component_speed_unit);
+            v2.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
         } catch (Exception e) {
         }
     }
