@@ -15,8 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
-
-public interface PlayerApiCache {
+ interface PlayerApiCache {
 
     default boolean setCache(Context context, String key, String value) {
         FileOutputStream out = null;

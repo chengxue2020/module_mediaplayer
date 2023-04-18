@@ -7,10 +7,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-/**
- * revise: 播放器基础属性获取和设置属性接口
- */
-public interface PlayerApi extends PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
+public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
 
     default boolean dispatchEvent(@NonNull KeyEvent event) {
 

@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.config.player;
 
 import androidx.annotation.Keep;
 
-import lib.kalu.mediaplayer.config.buried.BuriedEvent;
+import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 
 /**

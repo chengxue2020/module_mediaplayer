@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.core.render.RenderFactoryManager;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public interface PlayerApiRender extends PlayerApiBase {
+interface PlayerApiRender extends PlayerApiBase {
 
     default void clearSuface() {
         try {

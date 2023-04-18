@@ -173,7 +173,7 @@ public class MainActivity extends Activity {
                 .setKernel(type)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
                 .setExoFFmpeg(exoFFmpeg)
-                .setBuriedEvent(new Event())
+                .setBuriedEvent(new LogBuriedEvent())
                 .build();
         PlayerManager.getInstance().setConfig(build);
     }

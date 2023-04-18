@@ -6,7 +6,7 @@ import lib.kalu.mediaplayer.core.kernel.audio.MusicPlayerManager;
 import lib.kalu.mediaplayer.core.kernel.audio.OnMusicPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public interface KernelApiExternalMusic extends KernelApiBase {
+ interface KernelApiExternalMusic extends KernelApiBase {
 
     boolean isExternalMusicPlayWhenReady();
 

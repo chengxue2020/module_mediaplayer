@@ -96,10 +96,9 @@ public @interface PlayerType {
         int STATE_START_ABORT = 3_018; // 开始播放中止
         int STATE_ONCE_LIVE = 3_019; // 即将开播
 
-        int STATE_ERROR = 3_020; // 错误1
-        int STATE_ERROR_NET = 3_021; // 错误2
-        int STATE_ERROR_IGNORE = 3_022; // 错误3
-        int STATE_COMPONENT_SEEK_SHOW = 3_023; // 显示进度条
+        int STATE_ERROR = 3_020; // 错误
+        int STATE_ERROR_IGNORE = 3_021; // 错误
+        int STATE_COMPONENT_SEEK_SHOW = 3_022; // 显示进度条
 
         @Documented
         @Retention(CLASS)
@@ -125,7 +124,6 @@ public @interface PlayerType {
                 STATE_LOADING_START,
                 STATE_ONCE_LIVE,
                 STATE_ERROR,
-                STATE_ERROR_NET,
                 STATE_ERROR_IGNORE,
                 STATE_COMPONENT_SEEK_SHOW})
         @Keep

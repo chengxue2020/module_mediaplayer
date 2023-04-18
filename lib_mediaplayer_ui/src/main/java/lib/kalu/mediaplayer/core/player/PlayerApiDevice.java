@@ -2,8 +2,7 @@ package lib.kalu.mediaplayer.core.player;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;
-
-public interface PlayerApiDevice extends PlayerApiBase {
+ interface PlayerApiDevice extends PlayerApiBase {
 
     void setScreenKeep(boolean enable);
 

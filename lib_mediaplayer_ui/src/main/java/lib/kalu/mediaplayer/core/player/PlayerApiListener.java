@@ -5,7 +5,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 
-public interface PlayerApiListener extends PlayerApiBase {
+ interface PlayerApiListener extends PlayerApiBase {
 
     default void callProgressListener(long position, long duration) {
         List<OnPlayerChangeListener> listener = getPlayerChangeListener();

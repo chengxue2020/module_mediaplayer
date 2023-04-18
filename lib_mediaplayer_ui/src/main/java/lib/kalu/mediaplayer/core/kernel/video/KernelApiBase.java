@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
  * @date: 2021-05-12 09:40
  */
 @Keep
-public interface KernelApiBase {
+interface KernelApiBase {
 
     void setVolume(float left, float right);
 

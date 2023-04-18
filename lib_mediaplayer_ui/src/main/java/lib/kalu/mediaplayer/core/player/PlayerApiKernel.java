@@ -8,7 +8,7 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.buried.BuriedEvent;
+import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -18,9 +18,13 @@ import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.mediaplayer.util.NetworkUtil;
 
-public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, PlayerApiRender, PlayerApiDevice, PlayerApiExternalMusic {
+interface PlayerApiKernel extends PlayerApiListener,
+        PlayerApiBuriedEvent,
+        PlayerApiComponent,
+        PlayerApiRender,
+        PlayerApiDevice,
+        PlayerApiExternalMusic {
 
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
@@ -652,6 +656,8 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
 
+                            // 埋点
+                            onBuriedEventPlaying();
 
                             callPlayerEvent(PlayerType.StateType.STATE_START);
 
@@ -662,13 +668,6 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
                             // step4
                             checkExternalMusic(getBaseContext());
 
-                            // 埋点
-                            try {
-                                BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
-                                buriedEvent.playerIn(getUrl());
-                            } catch (Exception e) {
-                            }
-
                             break;
                         // 播放错误
                         case PlayerType.EventType.EVENT_ERROR_URL:
@@ -677,29 +676,21 @@ public interface PlayerApiKernel extends PlayerApiListener, PlayerApiComponent, 
                         case PlayerType.EventType.EVENT_ERROR_PARSE:
                         case PlayerType.EventType.EVENT_ERROR_NET:
 
-                            boolean connected = NetworkUtil.isConnected(getBaseContext());
+                            // 埋点
+                            onBuriedEventError();
+
                             setScreenKeep(false);
-                            callPlayerEvent(connected ? PlayerType.StateType.STATE_ERROR : PlayerType.StateType.STATE_ERROR_NET);
+                            callPlayerEvent(PlayerType.StateType.STATE_ERROR);
 
                             // step2
                             pause(true);
 
-                            // 埋点
-                            try {
-                                BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
-                                buriedEvent.playerError(getUrl(), connected);
-                            } catch (Exception e) {
-                            }
                             break;
                         // 播放结束
                         case PlayerType.EventType.EVENT_VIDEO_END:
 
                             // 埋点
-                            try {
-                                BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
-                                buriedEvent.playerCompletion(getUrl());
-                            } catch (Exception e) {
-                            }
+                            onBuriedEventCompletion();
 
                             boolean looping = isLooping();
                             MPLogUtil.log("PlayerApiKernel => onEvent = 播放结束 => looping = " + looping);

@@ -10,8 +10,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-
-public interface PlayerApiExternalMusic extends PlayerApiBase {
+ interface PlayerApiExternalMusic extends PlayerApiBase {
 
     default boolean isExternalMusicPlayWhenReady() {
         try {

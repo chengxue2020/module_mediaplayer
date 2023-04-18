@@ -19,7 +19,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
-public interface PlayerApiBase {
+interface PlayerApiBase {
 
     List<OnPlayerChangeListener> mListeners = new LinkedList<>();
 

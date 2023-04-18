@@ -12,8 +12,7 @@ import java.util.LinkedList;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-
-public interface PlayerApiComponent extends PlayerApiBase {
+ interface PlayerApiComponent extends PlayerApiBase {
 
     default void showComponentError() {
         callPlayerEvent(PlayerType.StateType.STATE_ERROR_IGNORE);
