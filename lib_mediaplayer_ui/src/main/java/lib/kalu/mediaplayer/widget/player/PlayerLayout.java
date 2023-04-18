@@ -324,7 +324,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final <T extends android.view.View> T findComponent(java.lang.Class<?> cls) {
+    public final <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -338,10 +338,10 @@ public class PlayerLayout extends RelativeLayout {
 
     public final boolean showComponent(java.lang.Class<?> cls) {
         try {
-            View component = findComponent(cls);
+            ComponentApi component = findComponent(cls);
             if (null == component)
                 throw new Exception("component error: null");
-            component.setVisibility(View.VISIBLE);
+            component.show();
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => showComponent => " + e.getMessage());
@@ -351,10 +351,10 @@ public class PlayerLayout extends RelativeLayout {
 
     public final boolean hideComponent(java.lang.Class<?> cls) {
         try {
-            View component = findComponent(cls);
+            ComponentApi component = findComponent(cls);
             if (null == component)
                 throw new Exception("component error: null");
-            component.setVisibility(View.GONE);
+            component.gone();
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => hideComponent => " + e.getMessage());
@@ -608,6 +608,7 @@ public class PlayerLayout extends RelativeLayout {
             MPLogUtil.log("PlayerLayout => callPlayerEvent => " + e.getMessage());
         }
     }
+
     public final void setPlayWhenReady(@NonNull boolean playWhenReady) {
         try {
             PlayerView playerView = getPlayerView();

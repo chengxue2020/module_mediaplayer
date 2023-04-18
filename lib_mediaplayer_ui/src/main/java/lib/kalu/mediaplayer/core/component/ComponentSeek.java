@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +11,13 @@ import android.widget.TextView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public class ComponentSeek extends RelativeLayout implements ComponentApi {
+public final class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     private long mTimeMillis = 0L;
     private boolean mTouch = false;
@@ -27,17 +25,40 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     public ComponentSeek(@NonNull Context context) {
         super(context);
-        init();
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
     }
 
-    public ComponentSeek(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+//            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek_pb);
+//            progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//        }
 
-    public ComponentSeek(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
+        try {
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    MPLogUtil.log("ComponentSeek => onProgressChanged => fromUser = " + fromUser + ", progress = " + progress);
+                    if (fromUser) {
+                        onSeekPlaying(progress);
+                    } else if (!mTouch) {
+                        onSeekProgressUpdate(progress, 0);
+                    }
+                }
+            });
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -93,42 +114,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public void enableBottomPB(boolean enable) {
         this.mShowBottomPB = enable;
     }
-
-    private void init() {
-        // step1
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
-
-        // step2, 5.1以下系统SeekBar高度需要设置成WRAP_CONTENT
-//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-//            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek_pb);
-//            progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//        }
-
-        // step3
-        SeekBar sb = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null != sb) {
-            sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    MPLogUtil.log("ComponentSeek => onProgressChanged => fromUser = " + fromUser + ", progress = " + progress);
-                    if (fromUser) {
-                        onSeekPlaying(progress);
-                    } else if (!mTouch) {
-                        onSeekProgressUpdate(progress, 0);
-                    }
-                }
-            });
-        }
-    }
-
 
     @Override
     public void callPlayerEvent(int playState) {

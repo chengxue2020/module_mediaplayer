@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.core.component;
 
+import android.net.Uri;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,17 @@ public interface ComponentApi {
 
     default void setImageResource(@NonNull View layout, @IdRes int id, @DrawableRes int value) {
         try {
-            ImageView view = layout.findViewById(id);
-            view.setImageResource(value);
+            ImageView imageView = layout.findViewById(id);
+            imageView.setImageResource(value);
+        } catch (Exception e) {
+            MPLogUtil.log(e.getMessage(), e);
+        }
+    }
+
+    default void setImageUrl(@NonNull View layout, @IdRes int id, @NonNull String url) {
+        try {
+            ImageView imageView = layout.findViewById(id);
+            imageView.setImageURI(Uri.parse(url));
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
@@ -135,6 +145,34 @@ public interface ComponentApi {
         } catch (Exception e) {
             MPLogUtil.log(e.getMessage(), e);
         }
+    }
+
+    /******************/
+
+    default void setComponentBackgroundColorInt(@ColorInt int value) {
+    }
+
+    default void setComponentBackgroundResource(@DrawableRes int resid) {
+    }
+
+    default void setComponentImageResource(@DrawableRes int resid) {
+    }
+
+    default void setComponentImageUrl(@NonNull String url) {
+    }
+
+    /******************/
+
+    default void setComponentText(@NonNull String value) {
+    }
+
+    default void setComponentText(@StringRes int value) {
+    }
+
+    default void setComponentTextSize(@DimenRes int value) {
+    }
+
+    default void setComponentTextColor(@ColorInt int color) {
     }
 
     /******************/

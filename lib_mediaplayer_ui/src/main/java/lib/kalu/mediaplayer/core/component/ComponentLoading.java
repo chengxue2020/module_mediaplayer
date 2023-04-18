@@ -6,36 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.DimenRes;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public class ComponentLoading extends RelativeLayout implements ComponentApi {
+public final class ComponentLoading extends RelativeLayout implements ComponentApi {
 
     public ComponentLoading(@NonNull Context context) {
         super(context);
-        init();
-    }
-
-    public ComponentLoading(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public ComponentLoading(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_loading, this, true);
     }
 
@@ -116,27 +98,69 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
         }
     }
 
-    public void setMessage(@NonNull String value) {
-        setText(this, R.id.module_mediaplayer_component_loading_message, value);
+    /*************/
+
+    @Override
+    public void setComponentBackgroundColorInt(int value) {
+        try {
+            setBackgroundColorInt(this, R.id.module_mediaplayer_component_loading_bg, value);
+        } catch (Exception e) {
+        }
     }
 
-    public void setMessage(@StringRes int value) {
-        setText(this, R.id.module_mediaplayer_component_loading_message, value);
+    @Override
+    public void setComponentBackgroundResource(int resid) {
+        try {
+            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_loading_bg, resid);
+        } catch (Exception e) {
+        }
     }
 
-    public void setMessageSize(@DimenRes int value) {
-        setTextSize(this, R.id.module_mediaplayer_component_loading_message, value);
+    @Override
+    public void setComponentImageResource(int resid) {
+        try {
+            setImageResource(this, R.id.module_mediaplayer_component_loading_bg, resid);
+        } catch (Exception e) {
+        }
     }
 
-    public void setMessageColor(@ColorInt int color) {
-        setTextColor(this, R.id.module_mediaplayer_component_loading_message, color);
+    @Override
+    public void setComponentImageUrl(@NonNull String url) {
+        try {
+            setImageUrl(this, R.id.module_mediaplayer_component_loading_bg, url);
+        } catch (Exception e) {
+        }
     }
 
-    public void setComponentBackgroundColorInt(@ColorInt int value) {
-        setBackgroundColorInt(this, R.id.module_mediaplayer_component_loading_bg, value);
+    @Override
+    public void setComponentText(int value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_loading_message, value);
+        } catch (Exception e) {
+        }
     }
 
-    public void setComponentBackgroundResource(@DrawableRes int resid) {
-        setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_loading_bg, resid);
+    @Override
+    public void setComponentText(@NonNull String value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_loading_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextSize(int value) {
+        try {
+            setTextSize(this, R.id.module_mediaplayer_component_loading_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextColor(int color) {
+        try {
+            setTextColor(this, R.id.module_mediaplayer_component_loading_message, color);
+        } catch (Exception e) {
+        }
     }
 }

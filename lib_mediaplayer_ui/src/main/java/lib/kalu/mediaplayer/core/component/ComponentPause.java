@@ -16,37 +16,12 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public class ComponentPause extends RelativeLayout implements ComponentApi {
+public final class ComponentPause extends RelativeLayout implements ComponentApi {
 
     public ComponentPause(@NonNull Context context) {
         super(context);
-        init(context);
-    }
-
-    public ComponentPause(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
-
-    public ComponentPause(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_pause, this, true);
     }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
-
 
     @Override
     public void callPlayerEvent(int playState) {
@@ -69,9 +44,8 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     @Override
     public void gone() {
        try {
-           findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.GONE);
            findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
-           findViewById(R.id.module_mediaplayer_component_pause_ad).setVisibility(View.GONE);
+           findViewById(R.id.module_mediaplayer_component_pause_message).setVisibility(View.GONE);
        }catch (Exception e){
        }
     }
@@ -80,22 +54,75 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     public void show() {
         try {
             bringToFront();
-            findViewById(R.id.module_mediaplayer_component_pause_img).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_pause_ad).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_pause_message).setVisibility(View.GONE);
         }catch (Exception e){
         }
     }
 
-    public final void setPauseImageResource(@DrawableRes int res) {
-        setImageResource(this, R.id.module_mediaplayer_component_pause_img, res);
+    /*************/
+
+    @Override
+    public void setComponentBackgroundColorInt(int value) {
+        try {
+            setBackgroundColorInt(this, R.id.module_mediaplayer_component_pause_bg, value);
+        } catch (Exception e) {
+        }
     }
 
-    public final void setComponentBackgroundColorRes(@ColorRes int color) {
-        setBackgroundColorRes(this, R.id.module_mediaplayer_component_pause_bg, color);
+    @Override
+    public void setComponentBackgroundResource(int resid) {
+        try {
+            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_pause_bg, resid);
+        } catch (Exception e) {
+        }
     }
 
-    public final void setComponentBackgroundColorInt(@ColorInt int color) {
-        setBackgroundColorInt(this, R.id.module_mediaplayer_component_pause_bg, color);
+    @Override
+    public void setComponentImageResource(int resid) {
+        try {
+            setImageResource(this, R.id.module_mediaplayer_component_pause_bg, resid);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentImageUrl(@NonNull String url) {
+        try {
+            setImageUrl(this, R.id.module_mediaplayer_component_pause_bg, url);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentText(int value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_pause_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentText(@NonNull String value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_pause_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextSize(int value) {
+        try {
+            setTextSize(this, R.id.module_mediaplayer_component_pause_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextColor(int color) {
+        try {
+            setTextColor(this, R.id.module_mediaplayer_component_pause_message, color);
+        } catch (Exception e) {
+        }
     }
 }

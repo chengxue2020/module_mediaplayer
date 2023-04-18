@@ -5,24 +5,23 @@
     android:background="#00000000"
     android:focusable="false">
 
-    <View
+    <ImageView
         android:id="@+id/module_mediaplayer_component_pause_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="false"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/module_mediaplayer_component_pause_ad"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="center"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/module_mediaplayer_component_pause_img"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
+    <!-- 提示 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_component_pause_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:focusable="false"
+        android:text="@string/module_mediaplayer_string_pause"
+        android:textColor="@color/module_mediaplayer_color_ffffff"
+        android:textSize="22sp"
         android:visibility="gone" />
 
 </RelativeLayout>

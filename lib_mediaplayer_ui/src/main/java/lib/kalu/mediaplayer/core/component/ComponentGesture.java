@@ -1,77 +1,20 @@
-//package lib.kalu.mediaplayer.core.component;
-//
-//import android.animation.Animator;
-//import android.animation.AnimatorListenerAdapter;
-//import android.content.Context;
-//import android.util.AttributeSet;
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.animation.Animation;
-//import android.widget.ProgressBar;
-//import android.widget.RelativeLayout;
-//import android.widget.TextView;
-//
-//import androidx.annotation.NonNull;
-//import androidx.annotation.Nullable;
-//
-//import lib.kalu.mediaplayer.R;
-//import lib.kalu.mediaplayer.core.controller.base.ControllerWrapper;
-//import lib.kalu.mediaplayer.config.player.PlayerType;
-//import lib.kalu.mediaplayer.core.controller.impl.GestureApi;
-//import lib.kalu.mediaplayer.util.PlayerUtils;
-//import lib.kalu.mediaplayer.util.MPLogUtil;
-//
-//public class ComponentGesture extends RelativeLayout implements GestureApi {
-//
-//    private ControllerWrapper mControllerWrapper;
-//
-//    public ComponentGesture(@NonNull Context context) {
-//        super(context);
-//        init(context);
-//    }
-//
-//    public ComponentGesture(@NonNull Context context, @Nullable AttributeSet attrs) {
-//        super(context, attrs);
-//        init(context);
-//    }
-//
-//    public ComponentGesture(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-//        super(context, attrs, defStyleAttr);
-//        init(context);
-//    }
-//
-//    private void init(Context context) {
-//        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_gesture, this, true);
-//        setVisibility(INVISIBLE);
-//        initListener();
-//    }
-//
-//    private void initListener() {
-//    }
-//
-//    @Override
-//    public void attach(@NonNull ControllerWrapper controllerWrapper) {
-//        mControllerWrapper = controllerWrapper;
-//    }
-//
-//    @Override
-//    public View getView() {
-//        return this;
-//    }
-//
-//    @Override
-//    public void onVisibilityChanged(boolean isVisible, Animation anim) {
-//
-//    }
-//
-//    @Override
-//    public void onWindowStateChanged(int playerState) {
-//
-//    }
-//
-//    /**
-//     * 开始滑动
-//     */
+package lib.kalu.mediaplayer.core.component;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+
+import lib.kalu.mediaplayer.R;
+
+public final class ComponentGesture extends RelativeLayout implements ComponentApi {
+
+    public ComponentGesture(@NonNull Context context) {
+        super(context);
+        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_gesture, this, true);
+    }
+
 //    @Override
 //    public void onStartSlide() {
 //        mControllerWrapper.hide();
@@ -171,5 +114,4 @@
 //    public void onLockStateChanged(boolean isLock) {
 //
 //    }
-//
-//}
+}

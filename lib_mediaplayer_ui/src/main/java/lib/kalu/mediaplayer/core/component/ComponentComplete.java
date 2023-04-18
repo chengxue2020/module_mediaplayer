@@ -18,45 +18,21 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
 
     public ComponentComplete(@NonNull Context context) {
         super(context);
-        init();
-    }
-
-    public ComponentComplete(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public ComponentComplete(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-
-    private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_complete, this, true);
-
-        // 重试
-        findViewById(R.id.module_mediaplayer_component_complete_message).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                restart(mControllerWrapper);
-            }
-        });
     }
 
     @Override
     public void callPlayerEvent(int playState) {
-
         switch (playState) {
             case PlayerType.StateType.STATE_END:
-                MPLogUtil.log("ComponentEnd[show] => playState = " + playState);
+                MPLogUtil.log("ComponentComplete[show] => playState = " + playState);
                show();
                 break;
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_RESTAER:
             case PlayerType.StateType.STATE_INIT:
-                MPLogUtil.log("ComponentEnd[gone] => playState = " + playState);
+                MPLogUtil.log("ComponentComplete[gone] => playState = " + playState);
                 gone();
                 break;
         }
@@ -81,29 +57,69 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
         }
     }
 
+    /*************/
+
     @Override
-    public void callWindowEvent(int playerState) {
-//        if (playerState == PlayerType.WindowType.FULL) {
-//            View view = findViewById(R.id.controller_complete_back);
-//            view.setVisibility(VISIBLE);
-//        } else if (playerState == PlayerType.WindowType.NORMAL) {
-//            View view = findViewById(R.id.controller_complete_back);
-//            view.setVisibility(GONE);
-//        }
-//
-//        Activity activity = PlayerUtils.scanForActivity(getContext());
-//        if (activity != null && mControllerWrapper.hasCutout()) {
-//            int orientation = activity.getRequestedOrientation();
-//            int cutoutHeight = mControllerWrapper.getCutoutHeight();
-//            View view = findViewById(R.id.controller_complete_back);
-//            FrameLayout.LayoutParams sflp = (FrameLayout.LayoutParams) view.getLayoutParams();
-//            if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-//                sflp.setMargins(0, 0, 0, 0);
-//            } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-//                sflp.setMargins(cutoutHeight, 0, 0, 0);
-//            } else if (orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-//                sflp.setMargins(0, 0, 0, 0);
-//            }
-//        }
+    public void setComponentBackgroundColorInt(int value) {
+        try {
+            setBackgroundColorInt(this, R.id.module_mediaplayer_component_complete_bg, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentBackgroundResource(int resid) {
+        try {
+            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_complete_bg, resid);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentImageResource(int resid) {
+        try {
+            setImageResource(this, R.id.module_mediaplayer_component_complete_bg, resid);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentImageUrl(@NonNull String url) {
+        try {
+            setImageUrl(this, R.id.module_mediaplayer_component_complete_bg, url);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentText(int value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_complete_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentText(@NonNull String value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_complete_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextSize(int value) {
+        try {
+            setTextSize(this, R.id.module_mediaplayer_component_complete_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextColor(int color) {
+        try {
+            setTextColor(this, R.id.module_mediaplayer_component_complete_message, color);
+        } catch (Exception e) {
+        }
     }
 }

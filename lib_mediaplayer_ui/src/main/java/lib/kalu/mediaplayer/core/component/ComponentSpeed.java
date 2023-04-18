@@ -17,10 +17,6 @@ public final class ComponentSpeed extends RelativeLayout implements ComponentApi
 
     public ComponentSpeed(Context context) {
         super(context);
-        init();
-    }
-
-    private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_speed, this, true);
     }
 

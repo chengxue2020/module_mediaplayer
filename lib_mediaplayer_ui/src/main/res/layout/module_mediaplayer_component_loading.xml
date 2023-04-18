@@ -7,10 +7,11 @@
     android:focusable="false">
 
     <!-- 背景 -->
-    <View
+    <ImageView
         android:id="@+id/module_mediaplayer_component_loading_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="false"
         android:visibility="gone" />
 
     <!-- 转圈 -->

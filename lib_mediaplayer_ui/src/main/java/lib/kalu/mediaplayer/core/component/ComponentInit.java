@@ -16,35 +16,11 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public class ComponentInit extends RelativeLayout implements ComponentApi {
+public final class ComponentInit extends RelativeLayout implements ComponentApi {
 
     public ComponentInit(@NonNull Context context) {
         super(context);
-        init(context);
-    }
-
-    public ComponentInit(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
-
-    public ComponentInit(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_init, this, true);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
     }
 
     @Override
@@ -80,11 +56,69 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
         }
     }
 
-    public final void setComponentBackgroundColorRes(@ColorRes int color) {
-        setBackgroundColorRes(this, R.id.module_mediaplayer_component_init_bg, color);
+    /*************/
+
+    @Override
+    public void setComponentBackgroundColorInt(int value) {
+        try {
+            setBackgroundColorInt(this, R.id.module_mediaplayer_component_init_bg, value);
+        } catch (Exception e) {
+        }
     }
 
-    public final void setComponentBackgroundColorInt(@ColorInt int color) {
-        setBackgroundColorInt(this, R.id.module_mediaplayer_component_init_bg, color);
+    @Override
+    public void setComponentBackgroundResource(int resid) {
+        try {
+            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_init_bg, resid);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentImageResource(int resid) {
+        try {
+            setImageResource(this, R.id.module_mediaplayer_component_init_bg, resid);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentImageUrl(@NonNull String url) {
+        try {
+            setImageUrl(this, R.id.module_mediaplayer_component_init_bg, url);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentText(int value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_init_txt, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentText(@NonNull String value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_init_txt, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextSize(int value) {
+        try {
+            setTextSize(this, R.id.module_mediaplayer_component_init_txt, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextColor(int color) {
+        try {
+            setTextColor(this, R.id.module_mediaplayer_component_init_txt, color);
+        } catch (Exception e) {
+        }
     }
 }

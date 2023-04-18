@@ -87,7 +87,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
         }
     }
 
-    default <T extends android.view.View> T findComponent(java.lang.Class<?> cls) {
+    default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();

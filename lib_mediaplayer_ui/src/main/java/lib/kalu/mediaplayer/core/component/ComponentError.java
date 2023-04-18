@@ -22,20 +22,6 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
 
     public ComponentError(Context context) {
         super(context);
-        init();
-    }
-
-    public ComponentError(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public ComponentError(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_error, this, true);
     }
 
@@ -79,23 +65,69 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
         }
     }
 
-    public void setImage(@DrawableRes int res) {
-        this.setCompoundDrawablesWithIntrinsicBounds(this, R.id.module_mediaplayer_component_error_message, 0, res, 0, 0);
+    /*************/
+
+    @Override
+    public void setComponentBackgroundColorInt(int value) {
+        try {
+            setBackgroundColorInt(this, R.id.module_mediaplayer_component_error_bg, value);
+        } catch (Exception e) {
+        }
     }
 
-    public void setMessage(@NonNull String value) {
-        this.setText(this, R.id.module_mediaplayer_component_error_message, value);
+    @Override
+    public void setComponentBackgroundResource(int resid) {
+        try {
+            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_error_bg, resid);
+        } catch (Exception e) {
+        }
     }
 
-    public void setMessage(@StringRes int value) {
-        this.setText(this, R.id.module_mediaplayer_component_error_message, value);
+    @Override
+    public void setComponentImageResource(int resid) {
+        try {
+            setImageResource(this, R.id.module_mediaplayer_component_error_bg, resid);
+        } catch (Exception e) {
+        }
     }
 
-    public void setMessageSize(@DimenRes int value) {
-        this.setTextSize(this, R.id.module_mediaplayer_component_error_message, value);
+    @Override
+    public void setComponentImageUrl(@NonNull String url) {
+        try {
+            setImageUrl(this, R.id.module_mediaplayer_component_error_bg, url);
+        } catch (Exception e) {
+        }
     }
 
-    public void setComponentBackgroundColorInt(@ColorInt int value) {
-        setBackgroundColorInt(this, R.id.module_mediaplayer_component_error_bg, value);
+    @Override
+    public void setComponentText(int value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_error_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentText(@NonNull String value) {
+        try {
+            setText(this, R.id.module_mediaplayer_component_error_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextSize(int value) {
+        try {
+            setTextSize(this, R.id.module_mediaplayer_component_error_message, value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setComponentTextColor(int color) {
+        try {
+            setTextColor(this, R.id.module_mediaplayer_component_error_message, color);
+        } catch (Exception e) {
+        }
     }
 }
