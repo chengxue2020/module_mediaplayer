@@ -18,9 +18,9 @@ import lib.kalu.mediaplayer.core.component.ComponentInit;
 import lib.kalu.mediaplayer.core.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSpeed;
-import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 /**
  * @description: 横屏全屏视频播放器
@@ -101,6 +101,20 @@ public final class TestActivity extends Activity {
                 startFloat();
             }
         });
+        findViewById(R.id.module_mediaplayer_test_button4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                playerLayout.showComponent(ComponentSpeed.class);
+            }
+        });
+        findViewById(R.id.module_mediaplayer_test_button5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                playerLayout.hideComponent(ComponentSpeed.class);
+            }
+        });
     }
 
 
@@ -111,7 +125,7 @@ public final class TestActivity extends Activity {
 
         // 加载ui
         ComponentLoading loading = new ComponentLoading(this);
-        loading.setMessage("加载中...");
+        loading.setComponentText("加载中...");
         int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, 0);
         loading.setBackgroundResource(resId);
         videoLayout.addComponent(loading);
@@ -123,7 +137,7 @@ public final class TestActivity extends Activity {
 
         // 错误ui
         ComponentError error = new ComponentError(this);
-        error.setMessage("发生错误");
+        error.setComponentText("发生错误");
         videoLayout.addComponent(error);
 
         // 进度条ui

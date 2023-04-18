@@ -8,7 +8,6 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -210,8 +209,12 @@ interface PlayerApiKernel extends PlayerApiListener,
             MPLogUtil.log("PlayerApiKernel => toggle => ignore = " + ignore);
             boolean playing = isPlaying();
             if (playing) {
+                // 埋点
+                onBuriedEventPause();
                 pause(ignore);
             } else {
+                // 埋点
+                onBuriedEventResume();
                 resume();
             }
         } catch (Exception e) {

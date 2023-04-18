@@ -41,6 +41,22 @@
             android:layout_centerInParent="true"
             android:text="浮动" />
 
+        <Button
+            android:id="@+id/module_mediaplayer_test_button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:text="show-component" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:text="gone-component" />
+
     </LinearLayout>
 
 </RelativeLayout>

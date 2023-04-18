@@ -22,6 +22,38 @@ interface PlayerApiBuriedEvent {
         }
     }
 
+    default void onBuriedEventPause() {
+        try {
+            if (!(this instanceof PlayerApi))
+                throw new Exception("this not this instanceof PlayerApi");
+            BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
+            if (null == buriedEvent)
+                throw new Exception("buriedEvent warning: null");
+            String url = ((PlayerApi) this).getUrl();
+            long position = ((PlayerApi) this).getPosition();
+            long duration = ((PlayerApi) this).getDuration();
+            buriedEvent.onPause(url, position, duration);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBuriedEvent => onBuriedEventPause => " + e.getMessage());
+        }
+    }
+
+    default void onBuriedEventResume() {
+        try {
+            if (!(this instanceof PlayerApi))
+                throw new Exception("this not this instanceof PlayerApi");
+            BuriedEvent buriedEvent = PlayerManager.getInstance().getConfig().getBuriedEvent();
+            if (null == buriedEvent)
+                throw new Exception("buriedEvent warning: null");
+            String url = ((PlayerApi) this).getUrl();
+            long position = ((PlayerApi) this).getPosition();
+            long duration = ((PlayerApi) this).getDuration();
+            buriedEvent.onResume(url, position, duration);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBuriedEvent => onBuriedEventResume => " + e.getMessage());
+        }
+    }
+
     default void onBuriedEventError() {
         try {
             if (!(this instanceof PlayerApi))
