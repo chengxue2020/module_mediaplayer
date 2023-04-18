@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,8 +31,6 @@ public final class TestActivity extends Activity {
 
     @Keep
     public static final int RESULT_CODE = 31001;
-    @Keep
-    public static final String INTENT_PREPARE_IMAGE_RESOURCE = "intent_prepare_image_resource"; // loading image
     @Keep
     public static final String INTENT_LIVE = "intent_live"; // live
     @Keep
@@ -126,18 +125,15 @@ public final class TestActivity extends Activity {
         // 加载ui
         ComponentLoading loading = new ComponentLoading(this);
         loading.setComponentText("加载中...");
-        int resId = getIntent().getIntExtra(INTENT_PREPARE_IMAGE_RESOURCE, 0);
-        loading.setBackgroundResource(resId);
+        loading.setComponentBackgroundColorInt(Color.parseColor("#000000"));
         videoLayout.addComponent(loading);
 
         // 结束ui
         ComponentComplete end = new ComponentComplete(this);
-//        loading.setMessage("加载中...");
         videoLayout.addComponent(end);
 
         // 错误ui
         ComponentError error = new ComponentError(this);
-        error.setComponentText("发生错误");
         videoLayout.addComponent(error);
 
         // 进度条ui
