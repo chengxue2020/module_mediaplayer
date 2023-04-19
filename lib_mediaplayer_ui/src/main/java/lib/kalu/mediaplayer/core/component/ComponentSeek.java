@@ -19,9 +19,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 @Keep
 public final class ComponentSeek extends RelativeLayout implements ComponentApi {
 
-    private long mTimeMillis = 0L;
     private boolean mTouch = false;
-    protected boolean mShowBottomPB = false;
 
     public ComponentSeek(@NonNull Context context) {
         super(context);
@@ -111,27 +109,17 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
         return false;
     }
 
-    public void enableBottomPB(boolean enable) {
-        this.mShowBottomPB = enable;
-    }
-
     @Override
     public void callPlayerEvent(int playState) {
-        boolean isLive = getPlayerApi().isLive();
-        boolean isFull = getPlayerApi().isFull();
         switch (playState) {
-            case PlayerType.StateType.STATE_LOADING_STOP:
-                MPLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
-                if (!isLive && isFull) {
-                    show();
-                }
-                break;
-            case PlayerType.StateType.STATE_COMPONENT_SEEK_SHOW:
-                MPLogUtil.log("ComponentSeek22[show] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
+            case PlayerType.StateType.STATE_START:
+                MPLogUtil.log("ComponentSeek22[show] => callPlayerEvent => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_LOADING_START:
-                MPLogUtil.log("ComponentSeek22[gone] => playState = " + playState + ", isLive = " + isLive + ", isFull = " + isFull);
+            case PlayerType.StateType.STATE_INIT:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR_IGNORE:
+                MPLogUtil.log("ComponentSeek22[gone] => callPlayerEvent => playState = " + playState);
                 gone();
                 break;
         }
@@ -139,18 +127,20 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
 
     @Override
     public void callWindowEvent(int windowState) {
-        boolean isLive = getPlayerApi().isLive();
-        boolean isFull = getPlayerApi().isFull();
         switch (windowState) {
             case PlayerType.WindowType.FULL:
-                MPLogUtil.log("ComponentSeek22[show] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
-                if (!isLive && isFull) {
-                    show();
+                MPLogUtil.log("ComponentSeek22[show] => callWindowEvent => windowState = " + windowState);
+                try {
+                    findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.VISIBLE);
+                } catch (Exception e) {
                 }
                 break;
             default:
-                MPLogUtil.log("ComponentSeek22[gone] => onWindowStateChanged => windowState = " + windowState + ", isLive = " + isLive + ", isFull = " + isFull);
-                gone();
+                MPLogUtil.log("ComponentSeek22[gone] => callWindowEvent => windowState = " + windowState);
+                try {
+                    findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.GONE);
+                } catch (Exception e) {
+                }
                 break;
         }
     }
@@ -158,44 +148,56 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     @Override
     public void show() {
         MPLogUtil.log("ComponentSeek => show =>");
-        mTimeMillis = System.currentTimeMillis();
-        bringToFront();
-        if (mShowBottomPB) {
-            findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.GONE);
+        try {
+            boolean full = getPlayerApi().isFull();
+            if (!full)
+                throw new Exception();
+            bringToFront();
+            findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_seek_max).setVisibility(View.VISIBLE);
+        } catch (Exception e) {
         }
-        findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
-        findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.VISIBLE);
-        findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.VISIBLE);
-        findViewById(R.id.module_mediaplayer_component_seek_max).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void gone() {
         MPLogUtil.log("ComponentSeek => gone =>");
-        mTimeMillis = 0L;
-        boolean isFull = getPlayerApi().isFull();
-        if (mShowBottomPB) {
-            findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(isFull ? View.VISIBLE : View.GONE);
+        try {
+            findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_seek_max).setVisibility(View.GONE);
+        } catch (Exception e) {
         }
-        findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
-        findViewById(R.id.module_mediaplayer_component_seek_sb).setVisibility(View.GONE);
-        findViewById(R.id.module_mediaplayer_component_seek_position).setVisibility(View.GONE);
-        findViewById(R.id.module_mediaplayer_component_seek_max).setVisibility(View.GONE);
     }
-
-    /****************************************/
 
     @Override
     public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
-        if (mTouch) return;
+        if (mTouch)
+            return;
         if (position <= 0 || duration <= 0) return;
         SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seekBar) return;
+        if (null == seekBar)
+            return;
         int v = seekBar.getVisibility();
-        if (v != View.VISIBLE) return;
-        long timeMillis = System.currentTimeMillis();
-        long i = timeMillis - mTimeMillis;
+        if (v != View.VISIBLE)
+            return;
+        long oldTimeMillis;
+        long newTimeMillis = System.currentTimeMillis();
+        try {
+            Object tag = seekBar.getTag(R.id.module_mediaplayer_component_seek_sb);
+            if (null == tag)
+                throw new Exception();
+            oldTimeMillis = (long) tag;
+        } catch (Exception e) {
+            oldTimeMillis = newTimeMillis;
+            seekBar.setTag(R.id.module_mediaplayer_component_seek_sb, newTimeMillis);
+        }
+        long i = newTimeMillis - oldTimeMillis;
         if (i > 10000) { // 10s
+            seekBar.setTag(R.id.module_mediaplayer_component_seek_sb, null);
             gone();
         } else {
             onSeekProgressUpdate((int) position, (int) duration);
@@ -276,14 +278,12 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
             }
         }
         // 2
-        if (mShowBottomPB) {
-            ProgressBar progress = findViewById(R.id.module_mediaplayer_component_seek_pb);
-            if (null == progress) {
-                progress.setProgress(position);
-                progress.setSecondaryProgress(position);
-                if (duration > 0) {
-                    progress.setMax(duration);
-                }
+        ProgressBar progress = findViewById(R.id.module_mediaplayer_component_seek_pb);
+        if (null == progress) {
+            progress.setProgress(position);
+            progress.setSecondaryProgress(position);
+            if (duration > 0) {
+                progress.setMax(duration);
             }
         }
     }
@@ -321,8 +321,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
         }
         builderDuration.append(d2);
         String strDuration = builderDuration.toString();
-
-        MPLogUtil.log("ComponentSeek => refreshText => position = " + position + ", strPosition = " + strPosition + ", duration = " + duration + ", strDuration = " + strDuration);
 
         TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
         viewMax.setText(strDuration);
