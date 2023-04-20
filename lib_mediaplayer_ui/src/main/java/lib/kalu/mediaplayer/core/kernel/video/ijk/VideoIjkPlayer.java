@@ -120,131 +120,125 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public void setOptions() {
 
-        // player
-        try {
-            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
-            // 硬解 1：开启 O:关闭
-            mIjkPlayer.setOption(player, "mediacodec", 0);
-            mIjkPlayer.setOption(player, "mediacodec-hevc", 0);
-            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
-            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
-            mIjkPlayer.setOption(player, "videotoolbox", 0);
-            // soundtouch倍速 1：开启 O:关闭
-            mIjkPlayer.setOption(player, "soundtouch", 1);
-            // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
-            mIjkPlayer.setOption(player, "framedrop", 4); // 4
-            // sdl渲染
-            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-            // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
-            mIjkPlayer.setOption(player, "opensles", 0);
-            // 直播场景时实时推流，可以开启无限制buffer，这样可以尽可能快的读取数据，避免出现网络拥塞恢复后延迟累积的情况。
-            // 是否无限读(如果设置了该属性infbuf为1，则设置max-buffer-size无效)
-            mIjkPlayer.setOption(player, "infbuf", 0);
-            // 视频帧处理不过来的时候丢弃一些帧达到同步的效果
-            mIjkPlayer.setOption(player, "framedrop", 5);
-            // 播放重连次数
-            mIjkPlayer.setOption(player, "reconnect", 1);
-            // 默认最小帧数
-            mIjkPlayer.setOption(player, "min-frames", 2);
-            // 最大缓存时长
-            mIjkPlayer.setOption(player, "max_cached_duration", 3);
-            // 自动旋屏 1显示。0禁止
-            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
-            // 处理分辨率变化 1显示。0禁止
-            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
-            // 不额外优化（使能非规范兼容优化，默认值0 ）
-            mIjkPlayer.setOption(player, "fast", 1);
-            // 是否开启预缓冲，通常直播项目会开启，达到秒开的效果，不过带来了播放丢帧卡顿的体验
-            mIjkPlayer.setOption(player, "packet-buffering", 0);
-            // 须要准备好后自动播放
-            mIjkPlayer.setOption(player, "start-on-prepared", 1);
-            // 字幕; 1显示。0禁止
-            mIjkPlayer.setOption(player, "subtitle", 0);
-            // 视频, 1黑屏 0原画面
-            mIjkPlayer.setOption(player, "vn", 0);
-            // 音频, 1静音 0原音
-            mIjkPlayer.setOption(player, "an", 0);
-        } catch (Exception e) {
-        }
-
-        // format
-        try {
-            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
-            // 不清楚 1、允许 0、不允许
-            mIjkPlayer.setOption(format, "http-detect-range-support", 0);
-            // 开启|关闭播放器缓冲 1、允许 0、不允许
-            // buffering逻辑不适合低延迟直播场景，可以关闭。
-            // 快直播传输层SDK是基于webrtc增强的半可靠传输协议，在一般弱网（20%）下能保证音视频正常播放，极端弱网（50%丢包）场景下，也可以保证音频正常播放，视频低帧率播放。
-            mIjkPlayer.setOption(format, "packet-buffering", 1);
-            // 探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
-            mIjkPlayer.setOption(format, "probesize", 2 * 1024 * 1024);// 2M
-            // 增加rtmp打开速度. 没有缓存会黑屏1s.
-            mIjkPlayer.setOption(format, "buffer_size", 4 * 1024);//4KB
-            // 最大缓冲大小,单位kb
-            mIjkPlayer.setOption(format, "max-buffer-size", 4 * 1024); // 4KB
-            // 最大帧率 20
-            mIjkPlayer.setOption(format, "max-fps", 0);
-            // 设置播放前的探测时间 1,达到首屏秒开效果
-            mIjkPlayer.setOption(format, "analyzeduration", 1000);
-            // 设置播放前的最大探测时间 （100未测试是否是最佳值）
-            mIjkPlayer.setOption(format, "analyzemaxduration", 1000);
-            // 清空dns，因为多种协议播放会缓存协议导致播放h264后无法播放h265.
-            mIjkPlayer.setOption(format, "dns_cache_clear", 1);
-            // 若是是rtsp协议，能够优先用tcp(默认是用udp)
-            mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-            // 每处理一个packet以后刷新io上下文
-            mIjkPlayer.setOption(format, "flush_packets", 1);
-            // 缩短播放的rtmp视频延迟在1s内
-            mIjkPlayer.setOption(format, "fflags", "nobuffer");
-            // 超时时间
-            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
-        } catch (Exception e) {
-        }
-
-        // codec
-        try {
-            // IJK_AVDISCARD_NONE    =-16, ///< discard nothing
-            // IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，责抛弃无效的包
-            // IJK_AVDISCARD_NONREF  =  8, ///< 抛弃非参考帧（I帧）
-            // IJK_AVDISCARD_BIDIR   = 16, ///< 抛弃B帧
-            // IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
-            // IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
-            int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
-            // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
-            mIjkPlayer.setOption(codec, "skip_loop_filter", 48L);
-            // 跳过帧
-            mIjkPlayer.setOption(codec, "skip_frame", 0);
-        } catch (Exception e) {
-        }
-
-        // 未知1
-        try {
-            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
-            // 根据媒体类型来配置 => bug => resp aac音频无声音
-            mIjkPlayer.setOption(format, "allowed_media_types", "video");
-            // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
-            mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
-            mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-        } catch (Exception e) {
-        }
-
-        // 未知2
-        try {
-            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
-            // seek超级慢
-            // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-            mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
-        } catch (Exception e) {
-        }
-
-//            // 3、缓冲相关
-//            // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
-//            mIjkPlayer.setOption(format, "fflags", "fastseek");
-//    //        mIjkPlayer.setOption(format, "fflags", "nobuffer");
+//        // player
+//        try {
+//            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
+//            // 硬解 1：开启 O:关闭
+//            mIjkPlayer.setOption(player, "mediacodec", 0);
+//            mIjkPlayer.setOption(player, "mediacodec-hevc", 0);
+//            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+//            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
+//            mIjkPlayer.setOption(player, "videotoolbox", 0);
+//            // soundtouch倍速 1：开启 O:关闭
+//            mIjkPlayer.setOption(player, "soundtouch", 0);
+//            // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
+//            mIjkPlayer.setOption(player, "framedrop", 4); // 4
+//            // sdl渲染
+//            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
+//            // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
+//            mIjkPlayer.setOption(player, "opensles", 0);
+//            // 直播场景时实时推流，可以开启无限制buffer，这样可以尽可能快的读取数据，避免出现网络拥塞恢复后延迟累积的情况。
+//            // 是否无限读(如果设置了该属性infbuf为1，则设置max-buffer-size无效)
+//            mIjkPlayer.setOption(player, "infbuf", 0);
+//            // 视频帧处理不过来的时候丢弃一些帧达到同步的效果
+//            mIjkPlayer.setOption(player, "framedrop", 5);
+//            // 播放重连次数
+//            mIjkPlayer.setOption(player, "reconnect", 1);
+//            // 默认最小帧数
+//            mIjkPlayer.setOption(player, "min-frames", 2);
+//            // 最大缓存时长
+//            mIjkPlayer.setOption(player, "max_cached_duration", 3);
+//            // 自动旋屏 1显示。0禁止
+//            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+//            // 处理分辨率变化 1显示。0禁止
+//            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
+//            // 不额外优化（使能非规范兼容优化，默认值0 ）
+//            mIjkPlayer.setOption(player, "fast", 1);
+//            // 是否开启预缓冲，通常直播项目会开启，达到秒开的效果，不过带来了播放丢帧卡顿的体验
+//            mIjkPlayer.setOption(player, "packet-buffering", 0);
+//            // 须要准备好后自动播放
+//            mIjkPlayer.setOption(player, "start-on-prepared", 1);
+//            // 字幕; 1显示。0禁止
+//            mIjkPlayer.setOption(player, "subtitle", 0);
+//            // 视频, 1黑屏 0原画面
+//            mIjkPlayer.setOption(player, "vn", 0);
+//            // 音频, 1静音 0原音
+//            mIjkPlayer.setOption(player, "an", 0);
+//            // 最大缓冲大小,单位kb
+//            mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024); // 4KB
+//        } catch (Exception e) {
+//        }
 //
-//            // 2、 网络相关
-//            // 23、设置播放前的最大探测时间
-//            mIjkPlayer.setOption(format, "rtbufsize", 60);
+//        // format
+//        try {
+//            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
+//            // 不清楚 1、允许 0、不允许
+//            mIjkPlayer.setOption(format, "http-detect-range-support", 0);
+//            // 探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
+//            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 2M
+//            // 最大帧率 20
+//            mIjkPlayer.setOption(format, "max-fps", 0);
+//            // 设置播放前的探测时间 1,达到首屏秒开效果
+//            mIjkPlayer.setOption(format, "analyzeduration", 100);
+//            // 设置播放前的最大探测时间 （100未测试是否是最佳值）
+//            mIjkPlayer.setOption(format, "analyzemaxduration", 100);
+//            // 清空dns，因为多种协议播放会缓存协议导致播放h264后无法播放h265.
+//            mIjkPlayer.setOption(format, "dns_cache_clear", 1);
+//            // 若是是rtsp协议，能够优先用tcp(默认是用udp)
+//            mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
+//            // 每处理一个packet以后刷新io上下文
+//            mIjkPlayer.setOption(format, "flush_packets", 1);
+//            // 缩短播放的rtmp视频延迟在1s内
+//            mIjkPlayer.setOption(format, "fflags", "nobuffer");
+//            // 超时时间
+//            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
+//        } catch (Exception e) {
+//        }
+//
+//        // codec
+//        try {
+//            // IJK_AVDISCARD_NONE    =-16, ///< discard nothing
+//            // IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，责抛弃无效的包
+//            // IJK_AVDISCARD_NONREF  =  8, ///< 抛弃非参考帧（I帧）
+//            // IJK_AVDISCARD_BIDIR   = 16, ///< 抛弃B帧
+//            // IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
+//            // IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
+//            int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
+//            // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
+//            mIjkPlayer.setOption(codec, "skip_loop_filter", 48L);
+//            // 跳过帧
+//            mIjkPlayer.setOption(codec, "skip_frame", 0);
+//        } catch (Exception e) {
+//        }
+//
+//        // 未知1
+//        try {
+//            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
+//            // 根据媒体类型来配置 => bug => resp aac音频无声音
+//            mIjkPlayer.setOption(format, "allowed_media_types", "video");
+//            // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
+//            mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
+//            mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
+//        } catch (Exception e) {
+//        }
+//
+//        // 未知2
+//        try {
+//            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
+//            // seek超级慢
+//            // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+//            mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
+//        } catch (Exception e) {
+//        }
+//
+////            // 3、缓冲相关
+////            // 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
+////            mIjkPlayer.setOption(format, "fflags", "fastseek");
+////    //        mIjkPlayer.setOption(format, "fflags", "nobuffer");
+////
+////            // 2、 网络相关
+////            // 23、设置播放前的最大探测时间
+////            mIjkPlayer.setOption(format, "rtbufsize", 60);
     }
 
     /**

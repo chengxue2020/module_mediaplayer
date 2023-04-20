@@ -72,16 +72,16 @@ static const AVOption ffp_context_options[] = {
         OPTION_OFFSET(startup_volume),   OPTION_INT(100, 0, 100) },
     // FFP_MERGE: f, pix_fmt, stats
     { "fast",                           "non spec compliant optimizations",
-        OPTION_OFFSET(fast),            OPTION_INT(0, 0, 1) },
+        OPTION_OFFSET(fast),            OPTION_INT(1, 0, 1) },
     // FFP_MERGE: genpts, drp, lowres, sync, autoexit, exitonkeydown, exitonmousedown
     { "loop",                           "set number of times the playback shall be looped",
-        OPTION_OFFSET(loop),            OPTION_INT(1, INT_MIN, INT_MAX) },
+        OPTION_OFFSET(loop),            OPTION_INT(0, INT_MIN, INT_MAX) },
     { "infbuf",                         "don't limit the input buffer size (useful with realtime streams)",
         OPTION_OFFSET(infinite_buffer), OPTION_INT(0, 0, 1) },
     { "framedrop",                      "drop frames when cpu is too slow",
-        OPTION_OFFSET(framedrop),       OPTION_INT(0, -1, 120) },
+        OPTION_OFFSET(framedrop),       OPTION_INT(30, -1, 120) },
     { "seek-at-start",                  "set offset of player should be seeked",
-        OPTION_OFFSET(seek_at_start),       OPTION_INT64(0, 0, INT_MAX) },
+        OPTION_OFFSET(seek_at_start),       OPTION_INT64(1, 0, INT_MAX) },
     { "subtitle",                       "decode subtitle stream",
         OPTION_OFFSET(subtitle),        OPTION_INT(0, 0, 1) },
     // FFP_MERGE: window_title
@@ -142,7 +142,7 @@ static const AVOption ffp_context_options[] = {
                    DEFAULT_LAST_HIGH_WATER_MARK_IN_MS) },
 
     { "packet-buffering",                   "pause output until enough packets have been read after stalling",
-        OPTION_OFFSET(packet_buffering),    OPTION_INT(1, 0, 1) },
+        OPTION_OFFSET(packet_buffering),    OPTION_INT(0, 0, 1) },
     { "sync-av-start",                      "synchronise a/v start time",
         OPTION_OFFSET(sync_av_start),       OPTION_INT(1, 0, 1) },
     { "iformat",                            "force format",
