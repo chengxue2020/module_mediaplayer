@@ -44,7 +44,7 @@
             android:id="@+id/main_kernel_button4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:enabled="false"
+            android:enabled="true"
             android:text="android" />
 
     </RadioGroup>
@@ -155,6 +155,18 @@
             android:layout_height="match_parent"
             android:tag="video-sxgd.mpeg"
             android:text="sxgd-db" />
+        <RadioButton
+            android:id="@+id/main_radio12"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="video-sxgd-1"
+            android:tag="http://10.43.111.13/wh7f454c46tw3461919331_-155233356/88888888/16/20230328/269568359/index.m3u8?servicetype=0" />
+        <RadioButton
+            android:id="@+id/main_radio13"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="video-sxgd-2"
+            android:tag="http://10.43.111.4/88888888/16/20220919/269433886/index.m3u8?servicetype=0" />
 
     </RadioGroup>
 
