@@ -9,6 +9,11 @@ https://github.com/kalu-github/ijkplayer-k0.8.8-ff4.0
 ```
 https://github.com/kalu-github/exoplayer2-ff4.4.3
 ```
+#
+#### libffplayer-ffmpeg.so编译源码
+```
+https://github.com/kalu-github/ffplayer-ff4.0
+```
 
 #
 #### libvlcplayer-ffmpeg.so编译源码
