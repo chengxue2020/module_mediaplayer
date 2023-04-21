@@ -1,6 +1,4 @@
 include ':app'
-include ':ijkplayer-example'
-include ':exoplayer-example'
 // ui
 include ':lib_mediaplayer_ui'
 // exo
