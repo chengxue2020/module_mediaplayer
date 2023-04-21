@@ -108,14 +108,18 @@ public class MainActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.main_kernel_button2:
-                    type = PlayerType.KernelType.EXO;
+                    type = PlayerType.KernelType.EXO1;
                     Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.main_kernel_button3:
+                    type = PlayerType.KernelType.EXO2;
+                    Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.main_kernel_button4:
                     type = PlayerType.KernelType.VLC;
                     Toast.makeText(getApplicationContext(), "vlc init succ", Toast.LENGTH_SHORT).show();
                     break;
-                case R.id.main_kernel_button4:
+                case R.id.main_kernel_button5:
                     type = PlayerType.KernelType.ANDROID;
                     Toast.makeText(getApplicationContext(), "android init succ", Toast.LENGTH_SHORT).show();
                     break;

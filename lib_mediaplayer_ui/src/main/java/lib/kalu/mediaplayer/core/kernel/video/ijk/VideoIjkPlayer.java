@@ -120,6 +120,26 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public void setOptions() {
 
+        try {
+            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
+            mIjkPlayer.setOption(player, "mediacodec", 0);
+            mIjkPlayer.setOption(player, "opensles", 0);
+            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
+            mIjkPlayer.setOption(player, "framedrop", 1);
+            mIjkPlayer.setOption(player, "start-on-prepared", 1);
+        } catch (Exception e) {
+        }
+        try {
+            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
+            mIjkPlayer.setOption(format, "http-detect-range-support", 0);
+        } catch (Exception e) {
+        }
+        try {
+            int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
+            mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
+        } catch (Exception e) {
+        }
+
 //        // player
 //        try {
 //            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;

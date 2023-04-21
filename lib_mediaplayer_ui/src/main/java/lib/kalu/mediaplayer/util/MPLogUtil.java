@@ -43,7 +43,7 @@ public final class MPLogUtil {
             } catch (Exception e) {
                 log("setLogger => ijk exception");
             }
-        } else if (type == PlayerType.KernelType.EXO) {
+        } else if (type == PlayerType.KernelType.EXO2) {
             try {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.util.ExoLogUtil");
                 if (null != clazz) {

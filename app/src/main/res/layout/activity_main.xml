@@ -21,7 +21,7 @@
             android:id="@+id/main_kernel_button1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:checked="false"
+            android:checked="true"
             android:enabled="true"
             android:text="ijk" />
 
@@ -29,22 +29,32 @@
             android:id="@+id/main_kernel_button2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:checked="true"
+            android:checked="false"
             android:enabled="true"
-            android:text="exo" />
+            android:text="exo1" />
 
         <RadioButton
             android:id="@+id/main_kernel_button3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:checked="false"
             android:enabled="true"
-            android:text="vlc" />
+            android:text="exo2" />
 
         <RadioButton
             android:id="@+id/main_kernel_button4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:enabled="false"
+            android:checked="false"
+            android:text="vlc" />
+
+        <RadioButton
+            android:id="@+id/main_kernel_button5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:enabled="true"
+            android:checked="false"
             android:text="android" />
 
     </RadioGroup>
@@ -126,7 +136,7 @@
             android:id="@+id/main_radio7"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="udp://@224.255.0.128:10000"
+            android:tag="udp://@200.100.200.100:10000"
             android:text="udp" />
 
         <RadioButton
@@ -167,6 +177,18 @@
             android:layout_height="match_parent"
             android:text="video-sxgd-2"
             android:tag="http://10.43.111.4/88888888/16/20220919/269433886/index.m3u8?servicetype=0" />
+        <RadioButton
+            android:id="@+id/main_radio14"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="video-sxgd-3"
+            android:tag="http://10.43.111.4/88888888/16/20230421/269580464/index.m3u8?servicetype=0" />
+        <RadioButton
+            android:id="@+id/main_radio15"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="video-sxgd-4"
+            android:tag="http://10.43.111.4/88888888/16/20230421/269580379/index.m3u8?servicetype=0" />
 
     </RadioGroup>
 
@@ -181,6 +203,5 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="测试：进度条" />
-
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Keep;
 
@@ -21,6 +22,7 @@ import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSpeed;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.UdpMulticastUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 /**
@@ -246,6 +248,11 @@ public final class TestActivity extends Activity {
         if (null == url || url.length() == 0) {
             onBackPressed();
             return;
+        }
+
+        if (url.startsWith("udp")) {
+            boolean checkUdpJoinGroup = UdpMulticastUtil.checkUdpJoinGroup(url);
+            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup => " + checkUdpJoinGroup, Toast.LENGTH_SHORT).show();
         }
 
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);

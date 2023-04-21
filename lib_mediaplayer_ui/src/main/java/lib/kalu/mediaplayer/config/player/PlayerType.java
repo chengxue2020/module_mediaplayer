@@ -166,14 +166,15 @@ public @interface PlayerType {
     @Keep
     @interface KernelType {
         int ANDROID = 5_001; // MediaPlayer，基于原生自带的播放器控件
-        int EXO = 5_002; // exo
-        int IJK = 5_003; // ijk
-        int VLC = 5_004; // vlc
+        int EXO1 = 5_002; // exo
+        int EXO2 = 5_003; // exo
+        int IJK = 5_004; // ijk
+        int VLC = 5_005; // vlc
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({IJK, ANDROID, EXO, VLC})
+        @IntDef({IJK, ANDROID, EXO1, EXO2, VLC})
         @Keep
         @interface Value {
         }
