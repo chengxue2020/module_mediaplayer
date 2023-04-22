@@ -70,6 +70,7 @@ dependencies {
     api project(path: ':lib_mediaplayer_exo_r1.5.15')
     api project(path: ':lib_mediaplayer_exo_r2.18.5_ff4.4_audio')
     api project(path: ':lib_mediaplayer_vlc_r3.5.1')
-    api project(path: ':lib_mediaplayer_ijk_k0.8.8_ff4.0')
+    api project(path: ':lib_mediaplayer_ijk_k0.8.8_ff3.4')
+//    api project(path: ':lib_mediaplayer_ijk_k0.8.8_ff4.0')
 //    api project(path: ':lib_mediaplayer_ijk_sxgd')
 }

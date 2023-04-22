@@ -24,11 +24,11 @@ public final class KernelFactoryManager {
             return VideoIjkPlayerFactory.build();
         }
         // exo1
-        else if (type == PlayerType.KernelType.EXO1) {
+        else if (type == PlayerType.KernelType.EXO_V1) {
             return VideoExoPlayerFactory.build();
         }
         // exo2
-        else if (type == PlayerType.KernelType.EXO2) {
+        else if (type == PlayerType.KernelType.EXO_V2) {
             return VideoExoPlayer2Factory.build();
         }
         // vlc

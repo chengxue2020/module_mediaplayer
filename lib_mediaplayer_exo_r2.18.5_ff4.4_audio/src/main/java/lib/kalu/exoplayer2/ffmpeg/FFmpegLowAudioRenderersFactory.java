@@ -5,7 +5,6 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.Renderer;
 import com.google.android.exoplayer2.audio.AudioRendererEventListener;
 import com.google.android.exoplayer2.audio.AudioSink;
@@ -26,7 +25,7 @@ public final class FFmpegLowAudioRenderersFactory extends BaseRenderersFactory {
 
     @Override
     protected int initRendererMode() {
-        return DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER;
+        return EXTENSION_RENDERER_MODE_PREFER;
     }
 
     public FFmpegLowAudioRenderersFactory(Context context) {

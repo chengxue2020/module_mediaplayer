@@ -3,7 +3,6 @@ package lib.kalu.exoplayer2.ffmpeg;
 import android.content.Context;
 import android.os.Handler;
 
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.Renderer;
 import com.google.android.exoplayer2.audio.AudioRendererEventListener;
 import com.google.android.exoplayer2.audio.AudioSink;
@@ -21,7 +20,7 @@ public final class FFmpegHighAllRenderersFactory extends BaseRenderersFactory {
 
     public FFmpegHighAllRenderersFactory(Context context) {
         super(context);
-        setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+        setExtensionRendererMode(EXTENSION_RENDERER_MODE_ON);
     }
 
     @Override

@@ -55,12 +55,12 @@ public final class VideoExoPlayer extends BasePlayer {
     @Override
     public void init(@NonNull Context context, @NonNull String url) {
         // loading-start
-        onEvent(PlayerType.KernelType.EXO2, PlayerType.EventType.EVENT_LOADING_START);
+        onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
 
         // fail
         if (null == url || url.length() <= 0) {
-            onEvent(PlayerType.KernelType.EXO2, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.EXO2, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_URL);
         }
         // next
         else {
@@ -121,8 +121,8 @@ public final class VideoExoPlayer extends BasePlayer {
                                     mIsBuffering = true;
                                     break;
                                 case ExoPlayer.STATE_READY:
-                                    onEvent(PlayerType.KernelType.EXO1, PlayerType.EventType.EVENT_LOADING_STOP);
-                                    onEvent(PlayerType.KernelType.EXO1, PlayerType.EventType.EVENT_VIDEO_START);
+                                    onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
+                                    onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_VIDEO_START);
                                     break;
                                 case ExoPlayer.STATE_ENDED:
                                     break;

@@ -173,7 +173,7 @@ public class MainActivity extends Activity {
                 break;
         }
         PlayerBuilder build = new PlayerBuilder.Builder()
-                .setLog(true)
+                .setLog(false)
                 .setKernel(type)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
                 .setExoFFmpeg(exoFFmpeg)

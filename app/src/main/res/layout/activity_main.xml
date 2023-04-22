@@ -136,7 +136,7 @@
             android:id="@+id/main_radio7"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="udp://@200.100.200.100:10000"
+            android:tag="udp://@127.0.127.1:1234"
             android:text="udp" />
 
         <RadioButton

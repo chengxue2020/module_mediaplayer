@@ -7,7 +7,7 @@ import android.net.Uri;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.exoplayer2.util.ExoLogUtil;
+import lib.kalu.exoplayer.util.ExoLogUtil;
 import lib.kalu.mediaplayer.core.kernel.audio.OnMusicPlayerChangeListener;
 import lib.kalu.mediaplayer.core.kernel.audio.MusicKernelApi;
 
