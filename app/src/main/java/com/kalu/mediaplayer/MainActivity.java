@@ -108,11 +108,11 @@ public class MainActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.main_kernel_button2:
-                    type = PlayerType.KernelType.EXO1;
+                    type = PlayerType.KernelType.EXO_V1;
                     Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.main_kernel_button3:
-                    type = PlayerType.KernelType.EXO2;
+                    type = PlayerType.KernelType.EXO_V2;
                     Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.main_kernel_button4:
