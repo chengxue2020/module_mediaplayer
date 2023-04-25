@@ -41,9 +41,10 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
-        releaseDecoder();
-        mAndroidPlayer = new MediaPlayer();
-        mAndroidPlayer.setLooping(false);
+        if (null == mAndroidPlayer) {
+            mAndroidPlayer = new MediaPlayer();
+            mAndroidPlayer.setLooping(false);
+        }
         setVolume(1F, 1F);
         initListener();
     }
@@ -53,6 +54,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
         setEvent(null);
         stopExternalMusic(true);
         if (null != mAndroidPlayer) {
+            stop();
             mAndroidPlayer.setOnErrorListener(null);
             mAndroidPlayer.setOnCompletionListener(null);
             mAndroidPlayer.setOnInfoListener(null);
@@ -61,23 +63,9 @@ public final class VideoAndroidPlayer extends BasePlayer {
             mAndroidPlayer.setOnVideoSizeChangedListener(null);
             mAndroidPlayer.setLooping(false);
             mAndroidPlayer.setSurface(null);
-        }
-        stop();
-        if (null != mAndroidPlayer) {
             mAndroidPlayer.release();
             mAndroidPlayer = null;
         }
-
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//                    mAndroidPlayer.release();
-//                } catch (Exception e) {
-//                    MediaLogUtil.log(e.getMessage(), e);
-//                }
-//            }
-//        }.start();
     }
 
     @Override
@@ -100,7 +88,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             mAndroidPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
         }
     }
 
@@ -125,7 +113,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 //        try {
 //            mAndroidPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
 //        } catch (Exception e) {
-//            MPLogUtil.log(e.getMessage(), e);
+//            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
 //        }
 //    }
 
@@ -138,7 +126,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             mAndroidPlayer.start();
         } catch (IllegalStateException e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
         }
     }
 
@@ -150,7 +138,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             mAndroidPlayer.pause();
         } catch (IllegalStateException e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
         }
     }
 
@@ -163,7 +151,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             mAndroidPlayer.pause();
             mAndroidPlayer.stop();
         } catch (IllegalStateException e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
         }
     }
 
@@ -188,7 +176,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 mAndroidPlayer.seekTo((int) time);
             }
         } catch (IllegalStateException e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
         }
     }
 
@@ -208,24 +196,16 @@ public final class VideoAndroidPlayer extends BasePlayer {
         return mAndroidPlayer.getDuration();
     }
 
-//    /**
-//     * 获取缓冲百分比
-//     *
-//     * @return 获取缓冲百分比
-//     */
-//    @Override
-//    public int getBufferedPercentage() {
-//        return mBufferedPercent;
-//    }
-
     @Override
     public void setSurface(@NonNull Surface surface, int w, int h) {
-        if (null != surface && null != mAndroidPlayer) {
-            try {
-                mAndroidPlayer.setSurface(surface);
-            } catch (Exception e) {
-                MPLogUtil.log(e.getMessage(), e);
-            }
+        try {
+            if (null == surface)
+                throw new Exception("surface error: null");
+            if (null == mAndroidPlayer)
+                throw new Exception("mAndroidPlayer error: null");
+            mAndroidPlayer.setSurface(surface);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
         }
     }
 
@@ -234,59 +214,45 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     }
 
-    /**
-     * 获取播放速度
-     *
-     * @return 播放速度
-     */
     @Override
     public float getSpeed() {
-        // only support above Android M
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                return mAndroidPlayer.getPlaybackParams().getSpeed();
-            } catch (Exception e) {
-                MPLogUtil.log(e.getMessage(), e);
-            }
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                throw new Exception("only support above Android M");
+            if (null == mAndroidPlayer)
+                throw new Exception("mAndroidPlayer error: null");
+            return mAndroidPlayer.getPlaybackParams().getSpeed();
+        } catch (Exception e) {
+            MPLogUtil.log("getSpeed => " + e.getMessage());
+            return 1f;
         }
-        return 1f;
     }
 
-    /**
-     * 设置播放速度
-     *
-     * @param speed 速度
-     */
     @Override
     public void setSpeed(float speed) {
-        // only support above Android M
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                mAndroidPlayer.setPlaybackParams(mAndroidPlayer.getPlaybackParams().setSpeed(speed));
-            } catch (Exception e) {
-                MPLogUtil.log(e.getMessage(), e);
-            }
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                throw new Exception("only support above Android M");
+            if (null == mAndroidPlayer)
+                throw new Exception("mAndroidPlayer error: null");
+            mAndroidPlayer.setPlaybackParams(mAndroidPlayer.getPlaybackParams().setSpeed(speed));
+        } catch (Exception e) {
+            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
         }
     }
 
     private MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            MPLogUtil.log("K_ANDROID => onError => what = " + what);
+            MPLogUtil.log("VideoAndroidPlayer => onError => what = " + what);
             // ignore -38
             if (what == -38) {
 
             }
-            // ignore 1
-            else if (what == 1) {
-//                resetKernel();
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
-            }
-            // next
+            // error
             else {
-//                resetKernel();
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
             }
             return true;
         }
@@ -295,6 +261,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
+            MPLogUtil.log("VideoAndroidPlayer => onCompletion =>");
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
@@ -302,37 +269,27 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private MediaPlayer.OnInfoListener onInfoListener = new MediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(MediaPlayer mp, int what, int extra) {
-            MPLogUtil.log("K_ANDROID => onInfo => what = " + what);
-            //解决MEDIA_INFO_VIDEO_RENDERING_START多次回调问题
-//            MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START
-            if (what == PlayerType.EventType.EVENT_VIDEO_START) {
-//                if (mIsPreparing) {
-//                    mIsPreparing = false;
-//                }
-            } else {
-                onEvent(PlayerType.KernelType.ANDROID, what);
+            MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what);
+            // 缓冲开始
+            if (what == PlayerType.EventType.EVENT_BUFFERING_START) {
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
+            }
+            // 缓冲结束
+            else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            }
+            // 3
+            else if (what == 3) {
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             }
             return true;
         }
     };
 
-//    private MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
-//        @Override
-//        public void onBufferingUpdate(MediaPlayer mp, int percent) {
-//            mBufferedPercent = percent;
-//        }
-//    };
-
-
     private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-            MPLogUtil.log("K_ANDROID => onPrepared => ");
-
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-//            int position = mp.getCurrentPosition();
-//            long duration = getDuration();
-//            getVideoPlayerChangeListener().onPrepared(mSeek, duration);
+            MPLogUtil.log("VideoAndroidPlayer => onPrepared =>");
 
             start();
             long seek = getSeek();
@@ -360,18 +317,20 @@ public final class VideoAndroidPlayer extends BasePlayer {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            boolean videoMute = isMute();
-            if (videoMute) {
-                mAndroidPlayer.setVolume(0F, 0F);
+            if (null == mAndroidPlayer)
+                throw new Exception("mAndroidPlayer error: null");
+            float value;
+            if (isMute()) {
+                value = 0F;
             } else {
-                float value = Math.max(v1, v2);
-                if (value > 1f) {
-                    value = 1f;
-                }
-                mAndroidPlayer.setVolume(value, value);
+                value = Math.max(v1, v2);
             }
+            if (value > 1f) {
+                value = 1f;
+            }
+            mAndroidPlayer.setVolume(value, value);
         } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
         }
     }
 

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Keep;
 
@@ -19,10 +18,9 @@ import lib.kalu.mediaplayer.core.component.ComponentError;
 import lib.kalu.mediaplayer.core.component.ComponentInit;
 import lib.kalu.mediaplayer.core.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.component.ComponentSpeed;
+import lib.kalu.mediaplayer.core.component.ComponentNet;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.mediaplayer.util.UdpMulticastUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 /**
@@ -106,14 +104,14 @@ public final class TestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.showComponent(ComponentSpeed.class);
+                playerLayout.showComponent(ComponentNet.class);
             }
         });
         findViewById(R.id.module_mediaplayer_test_button5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.hideComponent(ComponentSpeed.class);
+                playerLayout.hideComponent(ComponentNet.class);
             }
         });
     }
@@ -143,7 +141,7 @@ public final class TestActivity extends Activity {
         videoLayout.addComponent(bottom);
 
         // 网速ui
-        ComponentSpeed speed = new ComponentSpeed(this);
+        ComponentNet speed = new ComponentNet(this);
         videoLayout.addComponent(speed);
 
         // 初始化ui
@@ -248,11 +246,6 @@ public final class TestActivity extends Activity {
         if (null == url || url.length() == 0) {
             onBackPressed();
             return;
-        }
-
-        if (url.startsWith("udp")) {
-            boolean checkUdpJoinGroup = UdpMulticastUtil.checkUdpJoinGroup(url);
-            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup => " + checkUdpJoinGroup, Toast.LENGTH_SHORT).show();
         }
 
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);

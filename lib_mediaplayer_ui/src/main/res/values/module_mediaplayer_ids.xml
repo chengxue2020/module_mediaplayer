@@ -18,5 +18,6 @@
     <item name="module_mediaplayer_root" type="id" />
     <item name="module_mediaplayer_video" type="id" />
     <item name="module_mediaplayer_control" type="id" />
+    <item name="module_mediaplayer_window_id" type="id" />
 
 </resources>

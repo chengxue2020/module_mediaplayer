@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -40,11 +41,41 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
+    default void requestFocusFull() {
+        try {
+            ViewGroup decorView = findDecorView((View) this);
+            if (null == decorView)
+                throw new Exception("decorView error: null");
+            View focus = decorView.findFocus();
+            if (null == focus)
+                throw new Exception("focus error: null");
+            ((View) this).setTag(R.id.module_mediaplayer_window_id, focus);
+            ((View) this).setFocusable(true);
+            ((View) this).requestFocus();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => requestFocusFull => " + e.getMessage());
+        }
+    }
+
+    default void cleanFocusFull() {
+        try {
+            Object tag = ((View) this).getTag(R.id.module_mediaplayer_window_id);
+            if (null == tag)
+                throw new Exception("tag error: null");
+            ((View) this).setTag(R.id.module_mediaplayer_window_id, null);
+            ((View) this).setFocusable(false);
+            ((View) tag).requestFocus();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => cleanFocusFull => " + e.getMessage());
+        }
+    }
+
     default void startFull() {
         try {
             boolean isParent = isParentPlayerLayout();
             if (!isParent)
                 throw new Exception("always full");
+            requestFocusFull();
             boolean b = switchToDecorView(true);
             if (b) {
                 callWindowEvent(PlayerType.WindowType.FULL);
@@ -62,6 +93,7 @@ interface PlayerApiRender extends PlayerApiBase {
             boolean b = switchToPlayerLayout();
             if (b) {
                 callWindowEvent(PlayerType.WindowType.NORMAL);
+                cleanFocusFull();
             }
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => stopFull => " + e.getMessage());

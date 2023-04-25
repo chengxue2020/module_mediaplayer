@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.component;
 
 import android.net.Uri;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -207,5 +208,9 @@ public interface ComponentApi {
     }
 
     default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
+    }
+
+    default boolean dispatchKeyEventComponent(KeyEvent event) {
+        return false;
     }
 }

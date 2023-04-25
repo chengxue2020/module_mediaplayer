@@ -12,16 +12,119 @@
         android:focusable="false"
         android:visibility="gone" />
 
-    <!-- 提示 -->
+    <!-- 标题 -->
     <TextView
-        android:id="@+id/module_mediaplayer_component_pause_message"
+        android:id="@+id/module_mediaplayer_component_pause_title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/module_mediaplayer_shape_shandow_up_to_down"
+        android:ellipsize="end"
+        android:focusable="false"
+        android:gravity="center_vertical|left"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:saveEnabled="false"
+        android:textColor="#ffffff"
+        android:textSize="24sp"
+        android:visibility="gone" />
+
+    <!-- 暂停icon -->
+    <LinearLayout
+        android:id="@+id/module_mediaplayer_component_pause_ui"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:focusable="false"
-        android:text="@string/module_mediaplayer_string_pause"
-        android:textColor="@color/module_mediaplayer_color_ffffff"
-        android:textSize="22sp"
-        android:visibility="gone" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:saveEnabled="false"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/module_mediaplayer_component_pause_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:focusable="false"
+            android:saveEnabled="false"
+            android:scaleType="fitCenter"
+            android:src="@drawable/module_mediaplayer_ic_player_pause" />
+
+        <TextView
+            android:id="@+id/module_mediaplayer_component_pause_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:focusable="false"
+            android:saveEnabled="false"
+            android:text="@string/module_mediaplayer_string_pause"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+    <!-- 快进快退 -->
+    <RelativeLayout
+        android:id="@+id/module_mediaplayer_component_pause_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
+        android:focusable="false"
+        android:saveEnabled="false"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/module_mediaplayer_component_pause_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:background="#00000000"
+            android:focusable="false"
+            android:gravity="center_vertical|left"
+            android:saveEnabled="false"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <!-- 时长 -->
+        <TextView
+            android:id="@+id/module_mediaplayer_component_pause_max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:background="#00000000"
+            android:focusable="false"
+            android:gravity="center_vertical|right"
+            android:saveEnabled="false"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <SeekBar
+            android:id="@+id/module_mediaplayer_component_pause_sb"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_alignParentTop="true"
+            android:background="#00000000"
+            android:focusable="false"
+            android:maxHeight="5dp"
+            android:minHeight="5dp"
+            android:paddingStart="0dp"
+            android:paddingLeft="0dp"
+            android:paddingEnd="0dp"
+            android:paddingRight="0dp"
+            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
+            android:saveEnabled="false"
+            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

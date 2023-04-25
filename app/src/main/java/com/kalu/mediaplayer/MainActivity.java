@@ -19,6 +19,7 @@ import java.util.List;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.util.UdpMulticastUtil;
 
 /**
  * description:
@@ -92,6 +93,12 @@ public class MainActivity extends Activity {
         } else if ("video-sxgd.mpeg".equals(s)) {
             s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
         }
+
+        if (s.startsWith("udp")) {
+            boolean checkUdpJoinGroup = UdpMulticastUtil.checkUdpJoinGroup(s);
+            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + s, Toast.LENGTH_SHORT).show();
+        }
+
         return s;
     }
 
@@ -173,7 +180,7 @@ public class MainActivity extends Activity {
                 break;
         }
         PlayerBuilder build = new PlayerBuilder.Builder()
-                .setLog(false)
+                .setLog(true)
                 .setKernel(type)
                 .setRender(PlayerType.RenderType.TEXTURE_VIEW)
                 .setExoFFmpeg(exoFFmpeg)

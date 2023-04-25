@@ -1,8 +1,8 @@
 package lib.kalu.mediaplayer.widget.player;
 
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Keep;
@@ -26,6 +26,11 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
     public PlayerView(Context context) {
         super(context);
         init();
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return dispatchKeyEventPlayer(event) || super.dispatchKeyEvent(event);
     }
 
     private void init() {

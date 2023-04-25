@@ -5,91 +5,77 @@
     android:background="#00000000"
     android:focusable="false">
 
-    <!-- 背景 -->
-    <View
+    <ImageView
         android:id="@+id/module_mediaplayer_component_seek_bg"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:background="#990a0d0f"
+        android:layout_height="match_parent"
         android:focusable="false"
         android:visibility="gone" />
 
-    <!-- 进度条 -->
-    <SeekBar
-        android:id="@+id/module_mediaplayer_component_seek_sb"
+    <!-- 快进快退 -->
+    <RelativeLayout
+        android:id="@+id/module_mediaplayer_component_seek_seekbar"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="40dp"
-        android:background="#00000000"
-        android:focusable="false"
-        android:maxHeight="5dp"
-        android:minHeight="5dp"
-        android:paddingStart="0dp"
-        android:paddingLeft="0dp"
-        android:paddingEnd="0dp"
-        android:paddingRight="0dp"
-        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
-        android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
-        android:visibility="gone" />
+        android:layout_marginBottom="24dp"
+        android:visibility="gone">
 
-    <!-- 进度 -->
-    <TextView
-        android:id="@+id/module_mediaplayer_component_seek_position"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="24dp"
-        android:layout_marginBottom="20dp"
-        android:background="#00000000"
-        android:focusable="false"
-        android:gravity="center_vertical|left"
-        android:text="-"
-        android:textColor="#ffffff"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/module_mediaplayer_component_seek_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:background="#00000000"
+            android:focusable="false"
+            android:gravity="center_vertical|left"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
 
-    <!-- 时长 -->
-    <TextView
-        android:id="@+id/module_mediaplayer_component_seek_max"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="20dp"
-        android:background="#00000000"
-        android:focusable="false"
-        android:gravity="center_vertical|right"
-        android:text="-"
-        android:textColor="#ffffff"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        <!-- 时长 -->
+        <TextView
+            android:id="@+id/module_mediaplayer_component_seek_max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:background="#00000000"
+            android:focusable="false"
+            android:gravity="center_vertical|right"
+            android:text="00:00"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/module_mediaplayer_component_seek_timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/module_mediaplayer_component_seek_sb"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:focusable="false"
-        android:gravity="center_vertical|left"
-        android:textColor="#00000000"
-        android:textSize="1sp" />
+        <SeekBar
+            android:id="@+id/module_mediaplayer_component_seek_sb"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_alignParentTop="true"
+            android:background="#00000000"
+            android:focusable="false"
+            android:maxHeight="5dp"
+            android:minHeight="5dp"
+            android:paddingStart="0dp"
+            android:paddingLeft="0dp"
+            android:paddingEnd="0dp"
+            android:paddingRight="0dp"
+            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_rectangle"
+            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb" />
 
-    <!-- 进度条 -->
-    <ProgressBar
-        android:id="@+id/module_mediaplayer_component_seek_pb"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_round"
-        android:visibility="gone" />
+    </RelativeLayout>
+
+    <!--    &lt;!&ndash; 进度条 &ndash;&gt;-->
+    <!--    <ProgressBar-->
+    <!--        android:id="@+id/module_mediaplayer_component_seek_pb"-->
+    <!--        style="?android:attr/progressBarStyleHorizontal"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0.5dp"-->
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress_round"-->
+    <!--        android:visibility="gone" />-->
 
 </RelativeLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="module_mediaplayer_string_pause">暂停</string>
+    <string name="module_mediaplayer_string_pause">节目暂停中</string>
     <string name="module_mediaplayer_string_start">播放</string>
     <string name="module_mediaplayer_string_lock_tip">请先解锁屏幕</string>
     <string name="module_mediaplayer_string_unlocked">已解锁</string>

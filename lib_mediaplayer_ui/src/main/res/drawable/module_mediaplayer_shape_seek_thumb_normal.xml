@@ -3,7 +3,7 @@
 
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/module_mediaplayer_color_5ad03e49" />
+            <solid android:color="#ffffff" />
             <size
                 android:width="8dp"
                 android:height="8dp" />
@@ -15,7 +15,7 @@
         android:right="1dp"
         android:top="1dp">
         <shape android:shape="oval">
-            <solid android:color="@color/module_mediaplayer_color_d03e49" />
+            <solid android:color="#ffffff" />
             <size
                 android:width="8dp"
                 android:height="8dp" />

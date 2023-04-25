@@ -9,14 +9,10 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
 
-    default boolean dispatchEvent(@NonNull KeyEvent event) {
-
-        boolean isFull = isFull();
-        boolean isFloat = isFloat();
-        MPLogUtil.log("PlayerApi => dispatchEvent => isFloat = " + isFloat + ", isFull = " + isFull);
+    default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
 
         // full
-        if (isFull) {
+        if (isFull()) {
             // volume_up
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
                 return false;
@@ -35,12 +31,12 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             }
             // stopFull
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MPLogUtil.log("PlayerApi => dispatchEvent => stopFull =>");
+                MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => stopFull =>");
                 stopFull();
             }
             // center
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                MPLogUtil.log("PlayerApi => dispatchEvent => toggle =>");
+                MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => toggle =>");
                 toggle();
             }
             // component
@@ -50,10 +46,10 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             return true;
         }
         // float
-        else if (isFloat) {
+        else if (isFloat()) {
             // stopFloat
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MPLogUtil.log("PlayerApi => dispatchEvent => stopFloat =>");
+                MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => stopFloat =>");
                 stopFloat();
                 return true;
             }
