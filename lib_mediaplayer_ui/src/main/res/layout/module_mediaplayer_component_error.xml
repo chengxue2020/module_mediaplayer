@@ -15,17 +15,30 @@
         android:visibility="gone" />
 
     <!-- 提示 -->
-    <TextView
-        android:id="@+id/module_mediaplayer_component_error_message"
+    <LinearLayout
+        android:id="@+id/module_mediaplayer_component_error_ui"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:clickable="false"
         android:focusable="false"
-        android:longClickable="false"
-        android:text="@string/module_mediaplayer_string_error_message"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/module_mediaplayer_component_error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="140dp"
+            android:focusable="false" />
+
+        <TextView
+            android:id="@+id/module_mediaplayer_component_error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:text="@string/module_mediaplayer_string_error_message"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

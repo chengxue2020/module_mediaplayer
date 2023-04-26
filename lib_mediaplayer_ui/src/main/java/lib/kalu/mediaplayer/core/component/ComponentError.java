@@ -51,7 +51,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.VISIBLE);
         }catch (Exception e){
         }
     }
@@ -60,7 +60,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     public void gone() {
         try {
             findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_error_message).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.GONE);
         }catch (Exception e){
         }
     }
@@ -86,7 +86,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     @Override
     public void setComponentImageResource(int resid) {
         try {
-            setImageResource(this, R.id.module_mediaplayer_component_error_bg, resid);
+            setImageResource(this, R.id.module_mediaplayer_component_error_icon, resid);
         } catch (Exception e) {
         }
     }
@@ -94,7 +94,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     @Override
     public void setComponentImageUrl(@NonNull String url) {
         try {
-            setImageUrl(this, R.id.module_mediaplayer_component_error_bg, url);
+            setImageUrl(this, R.id.module_mediaplayer_component_error_icon, url);
         } catch (Exception e) {
         }
     }

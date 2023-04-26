@@ -98,7 +98,7 @@ public final class ComponentNet extends RelativeLayout implements ComponentApi {
 
     private void updateSpeed() {
         try {
-            String speed = getPlayerApi().getTcpSpeed();
+            String speed = getPlayerApi().getNetSpeed();
             int length = speed.length();
             int start = length - 4;
             String unit = speed.substring(start, length);
