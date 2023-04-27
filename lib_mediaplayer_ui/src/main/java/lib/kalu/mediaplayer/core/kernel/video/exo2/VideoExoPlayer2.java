@@ -274,7 +274,10 @@ public final class VideoExoPlayer2 extends BasePlayer {
                 // 播放缓冲
                 else if (state == Player.STATE_BUFFERING) {
                     MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放缓冲] =>");
-                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
+                    long position = getPosition();
+                    if (position > 0) {
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
+                    }
                 }
                 // 未知??
                 else {
