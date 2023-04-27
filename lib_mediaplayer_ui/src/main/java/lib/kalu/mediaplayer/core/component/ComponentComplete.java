@@ -1,14 +1,11 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -26,11 +23,8 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
         switch (playState) {
             case PlayerType.StateType.STATE_END:
                 MPLogUtil.log("ComponentComplete[show] => playState = " + playState);
-               show();
+                show();
                 break;
-            case PlayerType.StateType.STATE_START:
-            case PlayerType.StateType.STATE_RESUME:
-            case PlayerType.StateType.STATE_RESTAER:
             case PlayerType.StateType.STATE_INIT:
                 MPLogUtil.log("ComponentComplete[gone] => playState = " + playState);
                 gone();
@@ -44,7 +38,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.VISIBLE);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
@@ -53,7 +47,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
         try {
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.GONE);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
