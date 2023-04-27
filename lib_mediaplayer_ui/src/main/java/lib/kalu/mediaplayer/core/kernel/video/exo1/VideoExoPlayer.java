@@ -33,13 +33,11 @@ public final class VideoExoPlayer extends BasePlayer {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    private boolean mReadying = false;
     private boolean mPlayWhenReady = true;
     private DemoPlayer mExoPlayer;
 
     public VideoExoPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
-        setReadying(false);
     }
 
     @NonNull
@@ -173,7 +171,6 @@ public final class VideoExoPlayer extends BasePlayer {
 
     @Override
     public void seekTo(@NonNull long position, @NonNull boolean help) {
-        setReadying(false);
         try {
             seekHelp = help;
             mExoPlayer.seekTo(position);
@@ -305,17 +302,6 @@ public final class VideoExoPlayer extends BasePlayer {
     }
 
     @Override
-    public boolean isReadying() {
-        return mReadying;
-    }
-
-    @Override
-    public void setReadying(boolean v) {
-        mReadying = v;
-        MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => isReadying => readying = " + mReadying);
-    }
-
-    @Override
     public boolean isLive() {
         return mLive;
     }
@@ -340,7 +326,6 @@ public final class VideoExoPlayer extends BasePlayer {
      */
     @Override
     public void start() {
-        setReadying(false);
         try {
             boolean externalMusicPlaying = isExternalMusicPlaying();
             setVolume(externalMusicPlaying ? 0F : 1F, externalMusicPlaying ? 0F : 1F);
@@ -380,7 +365,6 @@ public final class VideoExoPlayer extends BasePlayer {
         try {
             setEvent(null);
             stopExternalMusic(true);
-            setReadying(false);
             if (null != mExoPlayer) {
 //                if (null != mAnalyticsListener) {
 //                    mExoPlayer.removeAnalyticsListener(mAnalyticsListener);

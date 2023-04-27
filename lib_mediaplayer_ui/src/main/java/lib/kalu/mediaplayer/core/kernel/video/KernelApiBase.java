@@ -32,9 +32,9 @@ interface KernelApiBase {
 
     void setMax(long max);
 
-    boolean isReadying();
-
-    void setReadying(boolean v);
+//    boolean isReadying();
+//
+//    void setReadying(boolean v);
 
     boolean isLive();
 

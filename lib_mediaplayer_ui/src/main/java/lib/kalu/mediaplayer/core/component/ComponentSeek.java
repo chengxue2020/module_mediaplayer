@@ -49,7 +49,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     MPLogUtil.log("ComponentSeek => onProgressChanged => fromUser = " + fromUser + ", progress = " + progress);
                     if (fromUser) {
-                        onSeekPlaying(progress);
+                        onSeekTo(progress);
                     } else if (!mTouch) {
                         onSeekProgressUpdate(progress, 0);
                     }
@@ -258,7 +258,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
         int progress = seek.getProgress();
         if (max <= 0 || progress <= 0 && progress > max) return;
         mTouch = false;
-        onSeekPlaying(progress);
+        onSeekTo(progress);
     }
 
     @Override
@@ -287,7 +287,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
         int progress = seek.getProgress();
         if (max <= 0 || progress <= 0 && progress > max) return;
         mTouch = false;
-        onSeekPlaying(progress);
+        onSeekTo(progress);
     }
 
     @Override
@@ -356,9 +356,15 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void onSeekPlaying(@NonNull int position) {
-        if (null != getPlayerApi()) {
-            getPlayerApi().seekTo(true, position);
+    public void onSeekTo(@NonNull int position) {
+        try {
+            MPLogUtil.log("ComponentSeek => onSeekTo => 1");
+            PlayerApi playerApi = getPlayerApi();
+            if (null == playerApi)
+                throw new Exception("playerApi error null");
+            playerApi.seekTo(true, position);
+        } catch (Exception e) {
+            MPLogUtil.log("ComponentSeek => onSeekTo => " + e.getMessage());
         }
     }
 }

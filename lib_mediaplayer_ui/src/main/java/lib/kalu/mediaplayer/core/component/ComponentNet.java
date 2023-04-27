@@ -38,6 +38,7 @@ public final class ComponentNet extends RelativeLayout implements ComponentApi {
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_LOADING_START:
+            case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
                 MPLogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
                 gone();

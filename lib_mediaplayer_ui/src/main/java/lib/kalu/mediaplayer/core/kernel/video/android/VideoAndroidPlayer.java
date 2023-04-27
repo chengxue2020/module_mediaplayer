@@ -24,13 +24,11 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    private boolean mReadying = false;
 
     private MediaPlayer mAndroidPlayer;
 
     public VideoAndroidPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
-        setReadying(false);
     }
 
     @NonNull
@@ -122,7 +120,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
      */
     @Override
     public void start() {
-        setReadying(false);
         try {
             mAndroidPlayer.start();
         } catch (IllegalStateException e) {
@@ -168,7 +165,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
      */
     @Override
     public void seekTo(long time, @NonNull boolean seekHelp) {
-        setReadying(false);
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 mAndroidPlayer.seekTo(time, MediaPlayer.SEEK_CLOSEST);
@@ -367,16 +363,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
         if (max < 0)
             return;
         mMax = max;
-    }
-
-    @Override
-    public boolean isReadying() {
-        return mReadying;
-    }
-
-    @Override
-    public void setReadying(boolean v) {
-        mReadying = v;
     }
 
     @Override

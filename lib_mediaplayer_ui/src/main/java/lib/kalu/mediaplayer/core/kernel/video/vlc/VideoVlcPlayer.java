@@ -23,14 +23,12 @@ public final class VideoVlcPlayer extends BasePlayer {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    private boolean mReadying = false;
 
     private lib.kalu.vlc.widget.VlcPlayer mPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mPlayerListener;
 
     public VideoVlcPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
-        setReadying(false);
     }
 
 
@@ -54,7 +52,6 @@ public final class VideoVlcPlayer extends BasePlayer {
     public void releaseDecoder() {
         setEvent(null);
         stopExternalMusic(true);
-        setReadying(false);
         if (null != mPlayerListener) {
             if (null != mPlayer) {
                 mPlayer.setOnVlcInfoChangeListener(null);
@@ -148,7 +145,6 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public void start() {
-        setReadying(false);
         if (null != mPlayer) {
             mPlayer.play();
         }
@@ -314,16 +310,6 @@ public final class VideoVlcPlayer extends BasePlayer {
         if (max < 0)
             return;
         mMax = max;
-    }
-
-    @Override
-    public boolean isReadying() {
-        return mReadying;
-    }
-
-    @Override
-    public void setReadying(boolean v) {
-        mReadying = v;
     }
 
     @Override

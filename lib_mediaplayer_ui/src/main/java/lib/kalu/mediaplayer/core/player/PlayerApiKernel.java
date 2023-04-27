@@ -183,18 +183,11 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void release() {
         try {
-            // 1
             checkKernel();
             MPLogUtil.log("PlayerApiKernel => release =>");
-//            //2
-//            stopFloat();
-//            // 3
-//            stopFull();
-            // 4
             clearRender();
-            // 5
+            releaseTag();
             releaseRender();
-            // 6
             releaseKernel();
         } catch (Exception e) {
         }
@@ -318,6 +311,19 @@ interface PlayerApiKernel extends PlayerApiListener,
             return (String) ((View) this).getTag(R.id.module_mediaplayer_id_player_url);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    default void releaseTag() {
+        try {
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_url, null);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, null);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, null);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_url, null);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_looping, null);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_seek, null);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_play_when_ready, null);
+        } catch (Exception e) {
         }
     }
 
@@ -503,8 +509,9 @@ interface PlayerApiKernel extends PlayerApiListener,
             MPLogUtil.log("PlayerApiKernel => seekToKernel => milliSeconds = " + milliSeconds + ", kernel = " + kernel);
             kernel.seekTo(milliSeconds, seekHelp);
             setScreenKeep(true);
-            if (milliSeconds <= 0) return;
-            callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
+            if (milliSeconds <= 0)
+                return;
+            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => seekToKernel => " + e.getMessage());
         }

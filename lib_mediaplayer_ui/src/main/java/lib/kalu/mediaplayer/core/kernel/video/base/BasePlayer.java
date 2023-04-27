@@ -14,7 +14,6 @@ public abstract class BasePlayer implements KernelApi {
     private PlayerApi musicApi;
 
     public BasePlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
-        setReadying(false);
         this.musicApi = musicApi;
         this.eventApi = eventApi;
     }

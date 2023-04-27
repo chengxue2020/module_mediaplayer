@@ -61,7 +61,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    private boolean mReadying = false;
     private boolean mPlayWhenReady = true;
     private PlaybackParameters mSpeedPlaybackParameters;
 
@@ -70,7 +69,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
     public VideoExoPlayer2(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
-        setReadying(false);
     }
 
     @NonNull
@@ -249,14 +247,9 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
                 // 播放错误
                 if (state == Player.STATE_IDLE) {
-//                    String url = getUrl();
-                    boolean readying = isReadying();
-                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放错误] => readying = " + readying);
+                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放错误] =>");
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
-                    if (readying) {
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
-                    }
-                    setReadying(false);
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
                 }
                 // 播放结束
                 else if (state == Player.STATE_ENDED) {
@@ -267,38 +260,24 @@ public final class VideoExoPlayer2 extends BasePlayer {
                 // 播放开始
                 else if (state == Player.STATE_READY) {
 
-                    // 准备ok
-//                    String url = getUrl();
-                    boolean readying = isReadying();
-                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放开始] => readying = " + readying);
-                    if (readying) {
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放开始] =>");
+                    if (seekHelp) {
+                        seekHelp = false;
+                        long seek = getSeek();
+                        seekTo(seek, false);
                     } else {
-                        if (seekHelp) {
-                            seekHelp = false;
-                            long seek = getSeek();
-                            seekTo(seek, false);
-                        } else {
-                            setReadying(true);
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
-                        }
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
                     }
                 }
                 // 播放缓冲
                 else if (state == Player.STATE_BUFFERING) {
-//                    String url = getUrl();
-                    boolean readying = isReadying();
-                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放缓冲] => readying = " + readying);
-                    if (readying) {
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
-                    } else {
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
-                    }
+                    MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[播放缓冲] =>");
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
                 }
                 // 未知??
                 else {
-                    setReadying(false);
                     MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onPlaybackStateChanged[未知??] =>");
                 }
             }
@@ -404,7 +383,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
     @Override
     public void seekTo(@NonNull long position, @NonNull boolean help) {
-        setReadying(false);
         try {
             seekHelp = help;
             mExoPlayer.seekTo(position);
@@ -536,17 +514,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
     }
 
     @Override
-    public boolean isReadying() {
-        return mReadying;
-    }
-
-    @Override
-    public void setReadying(boolean v) {
-        mReadying = v;
-        MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => isReadying => readying = " + mReadying);
-    }
-
-    @Override
     public boolean isLive() {
         return mLive;
     }
@@ -571,7 +538,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
      */
     @Override
     public void start() {
-        setReadying(false);
         try {
             boolean externalMusicPlaying = isExternalMusicPlaying();
             setVolume(externalMusicPlaying ? 0F : 1F, externalMusicPlaying ? 0F : 1F);
@@ -611,7 +577,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
         try {
             setEvent(null);
             stopExternalMusic(true);
-            setReadying(false);
             if (null != mExoPlayer) {
                 if (null != mAnalyticsListener) {
                     mExoPlayer.removeAnalyticsListener(mAnalyticsListener);

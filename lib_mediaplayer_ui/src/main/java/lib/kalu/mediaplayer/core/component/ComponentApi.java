@@ -204,7 +204,7 @@ public interface ComponentApi {
     default void onSeekTimeUpdate(@NonNull int position, @NonNull int duration) {
     }
 
-    default void onSeekPlaying(@NonNull int position) {
+    default void onSeekTo(@NonNull int position) {
     }
 
     default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {

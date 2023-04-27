@@ -25,13 +25,11 @@ public final class VideoIjkPlayer extends BasePlayer {
     private boolean mLive = false;
     private boolean mMute = false;
     //    private String mUrl = null; // 视频串
-    private boolean mReadying = false;
 
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer;
 
     public VideoIjkPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
-        setReadying(false);
     }
 
     @NonNull
@@ -58,7 +56,6 @@ public final class VideoIjkPlayer extends BasePlayer {
     public void releaseDecoder() {
         setEvent(null);
         stopExternalMusic(true);
-        setReadying(false);
         if (null != mIjkPlayer) {
             // 设置视频错误监听器
             mIjkPlayer.setOnErrorListener(null);
@@ -319,7 +316,6 @@ public final class VideoIjkPlayer extends BasePlayer {
      */
     @Override
     public void start() {
-        setReadying(false);
         try {
             mIjkPlayer.start();
         } catch (IllegalStateException e) {
@@ -360,7 +356,6 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public void seekTo(long seek, @NonNull boolean seekHelp) {
         MPLogUtil.log("IjkMediaPlayer => seekTo => seek = " + seek);
-        setReadying(false);
         try {
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mIjkPlayer.seekTo(seek);
@@ -488,16 +483,6 @@ public final class VideoIjkPlayer extends BasePlayer {
         if (max < 0)
             return;
         mMax = max;
-    }
-
-    @Override
-    public boolean isReadying() {
-        return mReadying;
-    }
-
-    @Override
-    public void setReadying(boolean v) {
-        mReadying = v;
     }
 
     @Override
