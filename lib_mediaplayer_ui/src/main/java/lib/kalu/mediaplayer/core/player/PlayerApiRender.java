@@ -50,6 +50,7 @@ interface PlayerApiRender extends PlayerApiBase {
             if (null == focus)
                 throw new Exception("focus error: null");
             ((View) this).setTag(R.id.module_mediaplayer_window_id, focus);
+            ((View) ((View) this).getParent()).setFocusable(true);
             ((View) this).setFocusable(true);
             ((View) this).requestFocus();
         } catch (Exception e) {
@@ -63,6 +64,7 @@ interface PlayerApiRender extends PlayerApiBase {
             if (null == tag)
                 throw new Exception("tag error: null");
             ((View) this).setTag(R.id.module_mediaplayer_window_id, null);
+            ((View) ((View) this).getParent()).setFocusable(false);
             ((View) this).setFocusable(false);
             ((View) tag).requestFocus();
         } catch (Exception e) {
