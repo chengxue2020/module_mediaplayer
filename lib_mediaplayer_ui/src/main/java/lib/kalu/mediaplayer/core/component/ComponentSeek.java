@@ -156,21 +156,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     @Override
     public void callWindowEvent(int windowState) {
         switch (windowState) {
-            case PlayerType.WindowType.FULL:
-                show();
-//                MPLogUtil.log("ComponentSeek22[show] => callWindowEvent => windowState = " + windowState);
-//                try {
-//                    findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.VISIBLE);
-//                } catch (Exception e) {
-//                }
-                break;
             default:
                 gone();
-//                MPLogUtil.log("ComponentSeek22[gone] => callWindowEvent => windowState = " + windowState);
-//                try {
-//                    findViewById(R.id.module_mediaplayer_component_seek_pb).setVisibility(View.GONE);
-//                } catch (Exception e) {
-//                }
                 break;
         }
     }
