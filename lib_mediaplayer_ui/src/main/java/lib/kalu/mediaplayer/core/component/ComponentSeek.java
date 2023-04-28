@@ -66,7 +66,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
 
     @Override
     public boolean dispatchKeyEventComponent(KeyEvent event) {
-        MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => action = " + event.getAction() + ", keycode = " + event.getKeyCode());
         // seekForward 快进
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
@@ -141,13 +140,13 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
         switch (playState) {
             case PlayerType.StateType.STATE_USER_FAST_FORWARD:
             case PlayerType.StateType.STATE_USER_FAST_REWIND:
-                MPLogUtil.log("ComponentSeek22[show] => callPlayerEvent => playState = " + playState);
+                MPLogUtil.log("ComponentSeek => callPlayerEvent => show => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_IGNORE:
-                MPLogUtil.log("ComponentSeek22[gone] => callPlayerEvent => playState = " + playState);
+                MPLogUtil.log("ComponentSeek => callPlayerEvent => gone => playState = " + playState);
                 gone();
                 break;
         }
