@@ -694,6 +694,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
                             // step2
                             pause(true);
+                            release();
 
                             break;
                         // 播放结束
@@ -717,6 +718,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                             }
                             // sample
                             else {
+                                pause(true);
                                 release();
                                 playEnd();
                             }
