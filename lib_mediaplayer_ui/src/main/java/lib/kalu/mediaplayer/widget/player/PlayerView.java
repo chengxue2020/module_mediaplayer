@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.widget.player;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -40,6 +41,7 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
                 throw new Exception("childCount warning: " + childCount);
             // id
             setId(R.id.module_mediaplayer_root);
+            setBackgroundColor(Color.BLACK);
             setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
             // player
             RelativeLayout layoutPlayer = new RelativeLayout(getContext());
