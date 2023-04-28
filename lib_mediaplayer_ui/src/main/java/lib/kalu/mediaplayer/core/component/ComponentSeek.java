@@ -229,7 +229,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (next > max) {
                     next = max;
                 }
-                onSeekUpdateProgress(next, max, false);
+                onSeekUpdateProgress(next, max, true);
             }
             // action_up
             else if (action == KeyEvent.ACTION_UP) {
@@ -268,7 +268,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (next < 0) {
                     next = 0;
                 }
-                onSeekUpdateProgress(next, max, false);
+                onSeekUpdateProgress(next, max, true);
             }
             // action_up
             else if (action == KeyEvent.ACTION_UP) {
