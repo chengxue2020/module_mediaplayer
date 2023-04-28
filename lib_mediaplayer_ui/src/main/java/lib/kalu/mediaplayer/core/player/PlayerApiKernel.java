@@ -511,7 +511,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             setScreenKeep(true);
             if (milliSeconds <= 0)
                 return;
-            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+            callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => seekToKernel => " + e.getMessage());
         }
