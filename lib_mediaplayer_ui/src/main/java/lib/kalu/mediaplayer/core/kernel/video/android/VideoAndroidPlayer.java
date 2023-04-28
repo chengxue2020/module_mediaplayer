@@ -268,7 +268,12 @@ public final class VideoAndroidPlayer extends BasePlayer {
             MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what);
             // 缓冲开始
             if (what == PlayerType.EventType.EVENT_BUFFERING_START) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
+                long position = getPosition();
+                long seek = getSeek();
+                long duration = getDuration();
+                if (duration > 0 && position > seek) {
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
+                }
             }
             // 缓冲结束
             else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
