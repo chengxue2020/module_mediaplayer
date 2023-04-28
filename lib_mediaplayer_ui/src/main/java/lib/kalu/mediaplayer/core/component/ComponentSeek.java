@@ -139,7 +139,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     @Override
     public void callPlayerEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_USER_FAST_FORWARD:
             case PlayerType.StateType.STATE_USER_FAST_REWIND:
                 MPLogUtil.log("ComponentSeek22[show] => callPlayerEvent => playState = " + playState);
