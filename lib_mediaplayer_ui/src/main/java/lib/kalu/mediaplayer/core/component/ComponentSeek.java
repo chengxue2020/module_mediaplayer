@@ -19,8 +19,6 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 @Keep
 public final class ComponentSeek extends RelativeLayout implements ComponentApi {
 
-    private boolean mTouch = false;
-
     public ComponentSeek(@NonNull Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
@@ -48,11 +46,11 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     MPLogUtil.log("ComponentSeek => onProgressChanged => fromUser = " + fromUser + ", progress = " + progress);
-                    if (fromUser) {
-                        onSeekTo(progress);
-                    } else if (!mTouch) {
-                        onSeekProgressUpdate(progress, 0);
-                    }
+//                    if (fromUser) {
+//                        onSeekTo(progress);
+//                    } else if (!mTouch) {
+//                        onSeekProgressUpdate(progress, 0);
+//                    }
                 }
             });
         } catch (Exception e) {
@@ -66,69 +64,69 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
 
     @Override
     public boolean dispatchKeyEventComponent(KeyEvent event) {
-        // seekForward 快进
+        // seekForward => start
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
                 PlayerApi playerApi = getPlayerApi();
-                playerApi.callPlayerEvent(PlayerType.StateType.STATE_USER_FAST_FORWARD);
+                if (null == playerApi)
+                    throw new Exception("playerApi error: null");
+                playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
+                if (getPlayerApi().isLive())
+                    throw new Exception("living error: true");
+                seekForward(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
+                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
             }
-            boolean live = false;
-            if (null != getPlayerApi()) {
-                live = getPlayerApi().isLive();
-            }
-            MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardDown => live = " + live);
-            seekForwardDown(!live);
             return true;
         }
-        // seekRewind快退
+        // seekRewind => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
                 PlayerApi playerApi = getPlayerApi();
-                playerApi.callPlayerEvent(PlayerType.StateType.STATE_USER_FAST_REWIND);
+                if (null == playerApi)
+                    throw new Exception("playerApi error: null");
+                playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
+                if (getPlayerApi().isLive())
+                    throw new Exception("living error: true");
+                seekRewind(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
+                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
             }
-            boolean live = false;
-            if (null != getPlayerApi()) {
-                live = getPlayerApi().isLive();
-            }
-            MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindDown => live = " + live);
-            seekRewindDown(!live);
             return true;
         }
-        // seekForward
+        // seekForward => complete
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean live = false;
-            if (null != getPlayerApi()) {
-                live = getPlayerApi().isLive();
-            }
-            MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekForwardUp => live = " + live);
-            seekForwardUp(!live);
             try {
                 PlayerApi playerApi = getPlayerApi();
-                boolean playing = playerApi.isPlaying();
-                if (!playing) {
-                    playerApi.resume();
-                }
+                if (null == playerApi)
+                    throw new Exception("playerApi error: null");
+                playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+                if (playerApi.isLive())
+                    throw new Exception("living error: true");
+                seekForward(KeyEvent.ACTION_DOWN);
+                if (playerApi.isPlaying())
+                    throw new Exception("playing error: true");
+                playerApi.resume();
             } catch (Exception e) {
+                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
             }
             return true;
         }
-        // seekRewind
+        // seekRewind => complete
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            boolean live = false;
-            if (null != getPlayerApi()) {
-                live = getPlayerApi().isLive();
-            }
-            MPLogUtil.log("ComponentSeek => dispatchKeyEvent => seekRewindUp => live = " + live);
-            seekRewindUp(!live);
             try {
                 PlayerApi playerApi = getPlayerApi();
-                boolean playing = playerApi.isPlaying();
-                if (!playing) {
-                    playerApi.resume();
-                }
+                if (null == playerApi)
+                    throw new Exception("playerApi error: null");
+                playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                if (playerApi.isLive())
+                    throw new Exception("living error: true");
+                seekForward(KeyEvent.ACTION_DOWN);
+                if (playerApi.isPlaying())
+                    throw new Exception("playing error: true");
+                playerApi.resume();
             } catch (Exception e) {
+                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
             }
             return true;
         }
@@ -138,14 +136,18 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     @Override
     public void callPlayerEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_USER_FAST_FORWARD:
-            case PlayerType.StateType.STATE_USER_FAST_REWIND:
+            case PlayerType.StateType.STATE_FAST_FORWARD_START:
+            case PlayerType.StateType.STATE_FAST_REWIND_START:
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => show => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_IGNORE:
+            case PlayerType.StateType.STATE_LOADING_STOP:
+            case PlayerType.StateType.STATE_BUFFERING_STOP:
+            case PlayerType.StateType.STATE_FAST_FORWARD_STOP:
+            case PlayerType.StateType.STATE_FAST_REWIND_STOP:
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => gone => playState = " + playState);
                 gone();
                 break;
@@ -164,8 +166,10 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     @Override
     public void show() {
         try {
-            boolean full = getPlayerApi().isFull();
-            if (!full)
+            PlayerApi playerApi = getPlayerApi();
+            if (null == playerApi)
+                throw new Exception("playerApi error: null");
+            if (!playerApi.isFull())
                 throw new Exception("full error: true");
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
@@ -187,117 +191,105 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
 
     @Override
     public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
-        if (mTouch)
-            return;
-        if (position <= 0 || duration <= 0) return;
-        SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seekBar)
-            return;
-        int v = seekBar.getVisibility();
-        if (v != View.VISIBLE)
-            return;
-        long oldTimeMillis;
-        long newTimeMillis = System.currentTimeMillis();
+
         try {
-            Object tag = seekBar.getTag(R.id.module_mediaplayer_component_seek_sb);
-            if (null == tag)
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            if (null == seekBar)
                 throw new Exception();
-            oldTimeMillis = (long) tag;
-        } catch (Exception e) {
-            oldTimeMillis = newTimeMillis;
-            seekBar.setTag(R.id.module_mediaplayer_component_seek_sb, newTimeMillis);
-        }
-        long i = newTimeMillis - oldTimeMillis;
-        if (i > 10000) { // 10s
-            seekBar.setTag(R.id.module_mediaplayer_component_seek_sb, null);
-            gone();
-        } else {
+            if (position <= 0 || duration <= 0)
+                throw new Exception();
             onSeekProgressUpdate((int) position, (int) duration);
             onSeekTimeUpdate((int) position, (int) duration);
+        } catch (Exception e) {
         }
     }
 
     @Override
-    public void seekForwardDown(boolean enable) {
-        if (!enable) return;
-        SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seek) return;
-        int max = seek.getMax();
-        int progress = seek.getProgress();
-        if (progress >= max) return;
-        mTouch = true;
-        int next = progress + Math.abs(max) / 200;
-        if (next > max) {
-            next = max;
+    public void seekForward(int action) {
+        try {
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            if (null == seekBar)
+                throw new Exception();
+            if (seekBar.getVisibility() != View.VISIBLE)
+                throw new Exception();
+            int max = seekBar.getMax();
+            int progress = seekBar.getProgress();
+            // action_down
+            if (action == KeyEvent.ACTION_DOWN) {
+                if (progress >= max)
+                    throw new Exception();
+                int next = progress + Math.abs(max) / 200;
+                if (next > max) {
+                    next = max;
+                }
+                onSeekProgressUpdate(next, 0);
+            }
+            // action_up
+            else if (action == KeyEvent.ACTION_UP) {
+                if (max <= 0 || progress <= 0 && progress > max)
+                    throw new Exception();
+                onSeekTo(progress);
+            }
+            // error
+            else {
+                throw new Exception();
+            }
+
+        } catch (Exception e) {
         }
-        show();
-        onSeekProgressUpdate(next, 0);
     }
 
-    @Override
-    public void seekForwardUp(boolean enable) {
-        if (!enable) return;
-        SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seek) return;
-        int max = seek.getMax();
-        int progress = seek.getProgress();
-        if (max <= 0 || progress <= 0 && progress > max) return;
-        mTouch = false;
-        onSeekTo(progress);
-    }
 
     @Override
-    public void seekRewindDown(boolean enable) {
-        if (!enable) return;
-        SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seek) return;
-        int max = seek.getMax();
-        int progress = seek.getProgress();
-        if (progress >= max) return;
-        mTouch = true;
-        int next = progress - Math.abs(max) / 200;
-        if (next < 0) {
-            next = 0;
+    public void seekRewind(int action) {
+        try {
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            if (null == seekBar)
+                throw new Exception();
+            if (seekBar.getVisibility() != View.VISIBLE)
+                throw new Exception();
+            int max = seekBar.getMax();
+            int progress = seekBar.getProgress();
+            // action_down
+            if (action == KeyEvent.ACTION_DOWN) {
+                if (progress >= max)
+                    throw new Exception();
+                int next = progress - Math.abs(max) / 200;
+                if (next < 0) {
+                    next = 0;
+                }
+                onSeekProgressUpdate(next, 0);
+            }
+            // action_up
+            else if (action == KeyEvent.ACTION_UP) {
+                if (max <= 0 || progress <= 0 && progress > max)
+                    throw new Exception();
+                onSeekTo(progress);
+            }
+            // error
+            else {
+                throw new Exception();
+            }
+
+        } catch (Exception e) {
         }
-        show();
-        onSeekProgressUpdate(next, 0);
-    }
-
-    @Override
-    public void seekRewindUp(boolean enable) {
-        if (!enable) return;
-        SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null == seek) return;
-        int max = seek.getMax();
-        int progress = seek.getProgress();
-        if (max <= 0 || progress <= 0 && progress > max) return;
-        mTouch = false;
-        onSeekTo(progress);
     }
 
     @Override
     public void onSeekProgressUpdate(@NonNull int position, @NonNull int duration) {
-        // 1
-        SeekBar seek = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        if (null != seek) {
-            int v = seek.getVisibility();
-            if (v == View.VISIBLE) {
-                seek.setProgress(position);
-                seek.setSecondaryProgress(position);
-                if (duration > 0) {
-                    seek.setMax(duration);
-                }
-            }
+        try {
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            if (null == seekBar)
+                throw new Exception();
+            if (seekBar.getVisibility() != View.VISIBLE)
+                throw new Exception();
+            seekBar.setProgress(position);
+            seekBar.setSecondaryProgress(position);
+            if (duration < 0)
+                throw new Exception();
+            seekBar.setMax(duration);
+        } catch (Exception e) {
         }
-//        // 2
-//        ProgressBar progress = findViewById(R.id.module_mediaplayer_component_seek_pb);
-//        if (null == progress) {
-//            progress.setProgress(position);
-//            progress.setSecondaryProgress(position);
-//            if (duration > 0) {
-//                progress.setMax(duration);
-//            }
-//        }
     }
 
     @Override

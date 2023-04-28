@@ -186,16 +186,10 @@ public interface ComponentApi {
 
     /******************/
 
-    default void seekForwardDown(boolean enable) {
+    default void seekForward(int action) {
     }
 
-    default void seekForwardUp(boolean enable) {
-    }
-
-    default void seekRewindDown(boolean enable) {
-    }
-
-    default void seekRewindUp(boolean enable) {
+    default void seekRewind(int action) {
     }
 
     default void onSeekProgressUpdate(@NonNull int position, @NonNull int duration) {

@@ -95,19 +95,23 @@ public @interface PlayerType {
         int STATE_BUFFERING_STOP = 3_017; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
         int STATE_START_ABORT = 3_018; // 开始播放中止
         int STATE_ONCE_LIVE = 3_019; // 即将开播
-        int STATE_USER_FAST_FORWARD = 3_020; // 快进
-        int STATE_USER_FAST_REWIND = 3_021; // 快进
+        int STATE_FAST_FORWARD_START = 3_020; // 快进
+        int STATE_FAST_FORWARD_STOP = 3_021; // 快进
+        int STATE_FAST_REWIND_START = 3_022; // 快进
+        int STATE_FAST_REWIND_STOP = 3_023; // 快进
 
-        int STATE_ERROR = 3_022; // 错误
-        int STATE_ERROR_IGNORE = 3_023; // 错误
-        int STATE_COMPONENT_SEEK_SHOW = 3_024; // 显示进度条
+        int STATE_ERROR = 3_024; // 错误
+        int STATE_ERROR_IGNORE = 3_025; // 错误
+        int STATE_COMPONENT_SEEK_SHOW = 3_026; // 显示进度条
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
-                STATE_USER_FAST_FORWARD,
-                STATE_USER_FAST_REWIND,
+                STATE_FAST_FORWARD_START,
+                STATE_FAST_FORWARD_STOP,
+                STATE_FAST_REWIND_START,
+                STATE_FAST_REWIND_STOP,
                 STATE_INIT,
                 STATE_CLEAN,
                 STATE_KERNEL_STOP,

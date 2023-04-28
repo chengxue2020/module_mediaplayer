@@ -32,8 +32,8 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
             case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_RESUME_IGNORE:
             case PlayerType.StateType.STATE_RESTAER:
-            case PlayerType.StateType.STATE_USER_FAST_FORWARD:
-            case PlayerType.StateType.STATE_USER_FAST_REWIND:
+            case PlayerType.StateType.STATE_FAST_FORWARD_START:
+            case PlayerType.StateType.STATE_FAST_REWIND_START:
                 MPLogUtil.log("ComponentPause[gone] => playState = " + playState);
                 gone();
                 break;
