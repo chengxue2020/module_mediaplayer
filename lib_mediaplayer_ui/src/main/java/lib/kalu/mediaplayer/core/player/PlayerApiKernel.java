@@ -717,7 +717,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                             }
                             // sample
                             else {
-                                // step2
+                                release();
                                 playEnd();
                             }
 
