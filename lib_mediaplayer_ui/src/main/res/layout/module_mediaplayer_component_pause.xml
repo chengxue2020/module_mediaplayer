@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/module_mediaplayer_component_pause_title"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:background="@drawable/module_mediaplayer_shape_shandow_up_to_down"
         android:ellipsize="end"
         android:focusable="false"
@@ -69,13 +69,13 @@
     <RelativeLayout
         android:id="@+id/module_mediaplayer_component_pause_seekbar"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="64dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="24dp"
-        android:focusable="false"
-        android:saveEnabled="false"
+        android:background="@drawable/module_mediaplayer_shape_shandow_down_to_up"
+        android:paddingLeft="24dp"
+        android:paddingTop="14dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="24dp"
         android:visibility="gone">
 
         <TextView

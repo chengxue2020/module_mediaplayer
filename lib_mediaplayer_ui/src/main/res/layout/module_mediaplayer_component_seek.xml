@@ -22,7 +22,8 @@
         android:paddingLeft="24dp"
         android:paddingTop="14dp"
         android:paddingRight="24dp"
-        android:paddingBottom="24dp">
+        android:paddingBottom="24dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/module_mediaplayer_component_seek_position"

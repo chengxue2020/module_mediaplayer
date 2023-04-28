@@ -192,10 +192,7 @@ public interface ComponentApi {
     default void seekRewind(int action) {
     }
 
-    default void onSeekProgressUpdate(@NonNull int position, @NonNull int duration) {
-    }
-
-    default void onSeekTimeUpdate(@NonNull int position, @NonNull int duration) {
+    default void onSeekUpdateProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
     }
 
     default void onSeekTo(@NonNull int position) {

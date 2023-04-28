@@ -27,6 +27,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        setTag(R.id.module_mediaplayer_component_seek_sb, false);
 //        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
 //            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek_pb);
 //            progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -73,6 +74,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 if (getPlayerApi().isLive())
                     throw new Exception("living error: true");
+                setTag(R.id.module_mediaplayer_component_seek_sb, true);
                 seekForward(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
                 MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
@@ -88,6 +90,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
                 if (getPlayerApi().isLive())
                     throw new Exception("living error: true");
+                setTag(R.id.module_mediaplayer_component_seek_sb, true);
                 seekRewind(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
                 MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
@@ -103,9 +106,10 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 if (playerApi.isLive())
                     throw new Exception("living error: true");
-                seekForward(KeyEvent.ACTION_DOWN);
+                setTag(R.id.module_mediaplayer_component_seek_sb, false);
+                seekForward(KeyEvent.ACTION_UP);
                 if (playerApi.isPlaying())
-                    throw new Exception("playing error: true");
+                    throw new Exception("playing waining: true");
                 playerApi.resume();
             } catch (Exception e) {
                 MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
@@ -121,9 +125,10 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 if (playerApi.isLive())
                     throw new Exception("living error: true");
-                seekForward(KeyEvent.ACTION_DOWN);
+                setTag(R.id.module_mediaplayer_component_seek_sb, false);
+                seekForward(KeyEvent.ACTION_UP);
                 if (playerApi.isPlaying())
-                    throw new Exception("playing error: true");
+                    throw new Exception("playing waining: true");
                 playerApi.resume();
             } catch (Exception e) {
                 MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
@@ -191,16 +196,16 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
 
     @Override
     public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
-
         try {
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
-                throw new Exception();
-            if (position <= 0 || duration <= 0)
-                throw new Exception();
-            onSeekProgressUpdate((int) position, (int) duration);
-            onSeekTimeUpdate((int) position, (int) duration);
+                throw new Exception("seekbar error: null");
+            Object tag = getTag(R.id.module_mediaplayer_component_seek_sb);
+            if (null != tag && (boolean) tag)
+                throw new Exception("tag error: null");
+            onSeekUpdateProgress(position, duration, true);
         } catch (Exception e) {
+            MPLogUtil.log("ComponentSeek => onUpdateTimeMillis => " + e.getMessage());
         }
     }
 
@@ -209,33 +214,36 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
         try {
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
-                throw new Exception();
+                throw new Exception("seekbar error: null");
             if (seekBar.getVisibility() != View.VISIBLE)
-                throw new Exception();
+                throw new Exception("visabliity error: show");
             int max = seekBar.getMax();
             int progress = seekBar.getProgress();
+            if (max <= 0 || progress <= 0)
+                throw new Exception("max error: " + max + ", progress error: " + progress);
             // action_down
             if (action == KeyEvent.ACTION_DOWN) {
                 if (progress >= max)
-                    throw new Exception();
+                    throw new Exception("error: not progress>=max");
                 int next = progress + Math.abs(max) / 200;
                 if (next > max) {
                     next = max;
                 }
-                onSeekProgressUpdate(next, 0);
+                onSeekUpdateProgress(next, max, false);
             }
             // action_up
             else if (action == KeyEvent.ACTION_UP) {
                 if (max <= 0 || progress <= 0 && progress > max)
-                    throw new Exception();
+                    throw new Exception("error: not max <= 0 || progress <= 0 && progress > max");
                 onSeekTo(progress);
             }
             // error
             else {
-                throw new Exception();
+                throw new Exception("error: not find");
             }
 
         } catch (Exception e) {
+            MPLogUtil.log("ComponentSeek => seekForward => " + e.getMessage());
         }
     }
 
@@ -245,97 +253,100 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
         try {
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
-                throw new Exception();
+                throw new Exception("seekbar error: null");
             if (seekBar.getVisibility() != View.VISIBLE)
-                throw new Exception();
+                throw new Exception("visibility error: show");
             int max = seekBar.getMax();
             int progress = seekBar.getProgress();
+            if (max <= 0 || progress <= 0)
+                throw new Exception("error: max <= 0 || progress <= 0");
             // action_down
             if (action == KeyEvent.ACTION_DOWN) {
                 if (progress >= max)
-                    throw new Exception();
+                    throw new Exception("error: not progress >= max");
                 int next = progress - Math.abs(max) / 200;
                 if (next < 0) {
                     next = 0;
                 }
-                onSeekProgressUpdate(next, 0);
+                onSeekUpdateProgress(next, max, false);
             }
             // action_up
             else if (action == KeyEvent.ACTION_UP) {
                 if (max <= 0 || progress <= 0 && progress > max)
-                    throw new Exception();
+                    throw new Exception("error: not max <= 0 || progress <= 0 && progress > max");
                 onSeekTo(progress);
             }
             // error
             else {
-                throw new Exception();
+                throw new Exception("error: not find");
             }
 
         } catch (Exception e) {
+            MPLogUtil.log("ComponentSeek => seekForward => " + e.getMessage());
         }
     }
 
     @Override
-    public void onSeekProgressUpdate(@NonNull int position, @NonNull int duration) {
+    public void onSeekUpdateProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
         try {
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
                 throw new Exception();
             if (seekBar.getVisibility() != View.VISIBLE)
                 throw new Exception();
-            seekBar.setProgress(position);
-            seekBar.setSecondaryProgress(position);
-            if (duration < 0)
+            seekBar.setProgress((int) position);
+            seekBar.setSecondaryProgress((int) position);
+            if (duration <= 0)
                 throw new Exception();
-            seekBar.setMax(duration);
+            seekBar.setMax((int) duration);
+        } catch (Exception e) {
+        }
+
+        try {
+            if (!updateTime)
+                throw new Exception();
+            long c = position / 1000;
+            long c1 = c / 60;
+            long c2 = c % 60;
+            StringBuilder builderPosition = new StringBuilder();
+            if (c1 < 10) {
+                builderPosition.append("0");
+            }
+            builderPosition.append(c1);
+            builderPosition.append(":");
+            if (c2 < 10) {
+                builderPosition.append("0");
+            }
+            builderPosition.append(c2);
+            String strPosition = builderPosition.toString();
+
+            // ms => s
+            StringBuilder builderDuration = new StringBuilder();
+            long d = duration / 1000;
+            long d1 = d / 60;
+            long d2 = d % 60;
+            if (d1 < 10) {
+                builderDuration.append("0");
+            }
+            builderDuration.append(d1);
+            builderDuration.append(":");
+            if (d2 < 10) {
+                builderDuration.append("0");
+            }
+            builderDuration.append(d2);
+            String strDuration = builderDuration.toString();
+
+            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
+            viewMax.setText(strDuration);
+            TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
+            viewPosition.setText(strPosition);
         } catch (Exception e) {
         }
     }
 
     @Override
-    public void onSeekTimeUpdate(@NonNull int position, @NonNull int duration) {
-        // ms => s
-        long c = position / 1000;
-        long c1 = c / 60;
-        long c2 = c % 60;
-        StringBuilder builderPosition = new StringBuilder();
-        if (c1 < 10) {
-            builderPosition.append("0");
-        }
-        builderPosition.append(c1);
-        builderPosition.append(":");
-        if (c2 < 10) {
-            builderPosition.append("0");
-        }
-        builderPosition.append(c2);
-        String strPosition = builderPosition.toString();
-
-        // ms => s
-        StringBuilder builderDuration = new StringBuilder();
-        long d = duration / 1000;
-        long d1 = d / 60;
-        long d2 = d % 60;
-        if (d1 < 10) {
-            builderDuration.append("0");
-        }
-        builderDuration.append(d1);
-        builderDuration.append(":");
-        if (d2 < 10) {
-            builderDuration.append("0");
-        }
-        builderDuration.append(d2);
-        String strDuration = builderDuration.toString();
-
-        TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
-        viewMax.setText(strDuration);
-        TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
-        viewPosition.setText(strPosition);
-    }
-
-    @Override
     public void onSeekTo(@NonNull int position) {
         try {
-            MPLogUtil.log("ComponentSeek => onSeekTo => 1");
             PlayerApi playerApi = getPlayerApi();
             if (null == playerApi)
                 throw new Exception("playerApi error null");
