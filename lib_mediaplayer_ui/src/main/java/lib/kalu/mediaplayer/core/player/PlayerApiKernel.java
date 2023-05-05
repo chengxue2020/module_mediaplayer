@@ -49,6 +49,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
         if (delay <= 0) {
             try {
+
                 // 3
                 callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
                 // 4
@@ -69,6 +70,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                 @Override
                 public void run() {
                     try {
+
                         // 0
                         checkKernel();
                         // 3

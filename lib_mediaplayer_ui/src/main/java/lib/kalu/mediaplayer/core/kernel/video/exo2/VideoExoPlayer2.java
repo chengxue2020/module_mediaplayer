@@ -357,9 +357,10 @@ public final class VideoExoPlayer2 extends BasePlayer {
 //                }
 //            });
 
+            MPLogUtil.log("VideoExoPlayer => init => mPlayWhenReady = " + mPlayWhenReady);
             //准备播放
             mExoPlayer.setMediaSource(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             mExoPlayer.prepare();
         }
     }
@@ -542,6 +543,8 @@ public final class VideoExoPlayer2 extends BasePlayer {
     @Override
     public void start() {
         try {
+            if (null == mExoPlayer)
+                throw new Exception();
             boolean externalMusicPlaying = isExternalMusicPlaying();
             setVolume(externalMusicPlaying ? 0F : 1F, externalMusicPlaying ? 0F : 1F);
             mExoPlayer.play();
