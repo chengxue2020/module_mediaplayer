@@ -33,6 +33,8 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
             case PlayerType.StateType.STATE_PAUSE_IGNORE:
             case PlayerType.StateType.STATE_RESUME:
             case PlayerType.StateType.STATE_RESUME_IGNORE:
+            case PlayerType.StateType.STATE_KERNEL_STOP:
+            case PlayerType.StateType.STATE_CLOSE:
                 MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
                 gone();
                 break;

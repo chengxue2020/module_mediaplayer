@@ -233,8 +233,6 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void stop() {
         try {
-            boolean playing = isPlaying();
-            if (!playing) return;
             stopKernel(true);
         } catch (Exception e) {
         }
