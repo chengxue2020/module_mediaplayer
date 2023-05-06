@@ -26,6 +26,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private boolean mMute = false;
 
     private MediaPlayer mAndroidPlayer;
+    private boolean mPlayWhenReady = true;
 
     public VideoAndroidPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
@@ -207,7 +208,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void setPlayWhenReady(boolean playWhenReady) {
-
+        this.mPlayWhenReady = playWhenReady;
     }
 
     @Override
@@ -279,9 +280,10 @@ public final class VideoAndroidPlayer extends BasePlayer {
             else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
             }
-            // 3
-            else if (what == 3) {
+            // 开始播放
+            else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
             }
             return true;
         }
@@ -290,15 +292,16 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-            MPLogUtil.log("VideoAndroidPlayer => onPrepared =>");
-
-            start();
             long seek = getSeek();
+            MPLogUtil.log("VideoAndroidPlayer => onPrepared => seek = " + seek);
             if (seek > 0) {
                 seekTo(seek, false);
             }
-
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+            if (mPlayWhenReady) {
+                start();
+            } else {
+                pause();
+            }
         }
     };
 
