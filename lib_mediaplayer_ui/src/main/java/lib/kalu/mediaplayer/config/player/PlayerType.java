@@ -88,8 +88,8 @@ public @interface PlayerType {
         int STATE_END = 3_010; // 播放完成
         int STATE_PAUSE = 3_011; // 暂停播放
         int STATE_PAUSE_IGNORE = 3_012; // 暂停播放
-        int STATE_RESUME = 3_013; // 暂停播放
-        int STATE_RESUME_IGNORE = 3_014; // 暂停播放
+        int STATE_RESUME = 3_013; // 恢复播放
+        int STATE_RESUME_IGNORE = 3_014; // 恢复播放
         int STATE_RESTAER = 3_015; // 重播一次
         int STATE_CLOSE = 3_016; // 暂停播放
         int STATE_BUFFERING_START = 3_017; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)

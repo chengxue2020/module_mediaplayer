@@ -284,6 +284,9 @@ public final class VideoAndroidPlayer extends BasePlayer {
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                if (!mPlayWhenReady) {
+                    pause();
+                }
             }
             return true;
         }
@@ -297,11 +300,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             if (seek > 0) {
                 seekTo(seek, false);
             }
-            if (mPlayWhenReady) {
-                start();
-            } else {
-                pause();
-            }
+            start();
         }
     };
 
