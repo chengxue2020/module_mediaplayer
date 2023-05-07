@@ -485,6 +485,21 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public void restart() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            String url = playerView.getUrl();
+            if (null == url || url.length() <= 0)
+                throw new Exception("url error: " + url);
+            StartBuilder builder = getStartBuilder();
+            start(builder, url);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => restart => " + e.getMessage());
+        }
+    }
+
     public void start(@NonNull String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
@@ -617,6 +632,19 @@ public class PlayerLayout extends RelativeLayout {
             playerView.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => setPlayWhenReady => " + e.getMessage());
+        }
+    }
+
+    public final boolean containsKernel() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.checkKernel();
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => containsKernel => " + e.getMessage());
+            return false;
         }
     }
 }
