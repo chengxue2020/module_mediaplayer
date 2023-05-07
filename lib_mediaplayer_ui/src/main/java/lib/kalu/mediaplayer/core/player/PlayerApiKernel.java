@@ -183,12 +183,19 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
+
     default void release() {
+        release(true);
+    }
+
+    default void release(@NonNull boolean releaseTag) {
         try {
             checkKernel();
             MPLogUtil.log("PlayerApiKernel => release =>");
             clearRender();
-            releaseTag();
+            if (releaseTag) {
+                releaseTag();
+            }
             releaseRender();
             releaseKernel();
         } catch (Exception e) {
@@ -243,11 +250,13 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void restart() {
         try {
-            StartBuilder builder = getStartBuilder();
-            MPLogUtil.log("PlayerApiKernel => restart => builder = " + builder);
-            if (null == builder) return;
-            callPlayerEvent(PlayerType.StateType.STATE_RESTAER);
             String url = getUrl();
+            if (null == url || url.length() <= 0)
+                throw new Exception("url error: " + url);
+            StartBuilder builder = getStartBuilder();
+            if (null == builder)
+                throw new Exception("builder error: null");
+            callPlayerEvent(PlayerType.StateType.STATE_RESTAER);
             start(builder, url);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => restart => " + e.getMessage());

@@ -69,19 +69,19 @@ public class PlayerLayout extends RelativeLayout {
 
     @Override
     protected void onDetachedFromWindow() {
-        checkOnDetachedFromWindow();
+        onDetachedFromWindowTodo();
         super.onDetachedFromWindow();
     }
 
     @Override
     protected void onAttachedToWindow() {
-        checkOnAttachedToWindow();
+        onAttachedToWindowTodo();
         super.onAttachedToWindow();
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        checkOnWindowVisibilityChanged(visibility);
+        onWindowVisibilityChangedTodo(visibility);
         super.onWindowVisibilityChanged(visibility);
     }
 
@@ -157,36 +157,62 @@ public class PlayerLayout extends RelativeLayout {
 
     /**********/
 
-    protected void checkOnWindowVisibilityChanged(int visibility) {
+    protected boolean enableDetachedFromWindowTodo() {
+        return true;
+    }
+
+    protected boolean enableDetachedFromWindowReleaseTag() {
+        return true;
+    }
+
+    private final void onDetachedFromWindowTodo() {
         try {
+            boolean enableDetachedFromWindowTodo = enableDetachedFromWindowTodo();
+            if (!enableDetachedFromWindowTodo)
+                throw new Exception("enableDetachedFromWindowTodo warning: false");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            boolean releaseTag = enableDetachedFromWindowReleaseTag();
+            playerView.checkOnDetachedFromWindow(releaseTag);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => onDetachedFromWindowTodo => " + e.getMessage());
+        }
+    }
+
+    protected boolean enableWindowVisibilityChangedTodo() {
+        return true;
+    }
+
+    protected final void onWindowVisibilityChangedTodo(int visibility) {
+        try {
+            boolean enableWindowVisibilityChangedTodo = enableWindowVisibilityChangedTodo();
+            if (!enableWindowVisibilityChangedTodo)
+                throw new Exception("enableWindowVisibilityChangedTodo warning: false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
             playerView.checkOnWindowVisibilityChanged(visibility);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => checkOnWindowVisibilityChanged => " + e.getMessage());
+            MPLogUtil.log("PlayerLayout => onWindowVisibilityChangedTodo => " + e.getMessage());
         }
     }
 
-    protected void checkOnDetachedFromWindow() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.checkOnDetachedFromWindow();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => checkOnDetachedFromWindow => " + e.getMessage());
-        }
+    protected boolean enableAttachedToWindowTodo() {
+        return true;
     }
 
-    protected void checkOnAttachedToWindow() {
+    private final void onAttachedToWindowTodo() {
         try {
+            boolean enableAttachedToWindowTodo = enableAttachedToWindowTodo();
+            if (!enableAttachedToWindowTodo)
+                throw new Exception("enableAttachedToWindowTodo warning: false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
             playerView.checkOnAttachedToWindow();
         } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => checkOnAttachedToWindow => " + e.getMessage());
+            MPLogUtil.log("PlayerLayout => onAttachedToWindowTodo => " + e.getMessage());
         }
     }
 
@@ -490,11 +516,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            String url = playerView.getUrl();
-            if (null == url || url.length() <= 0)
-                throw new Exception("url error: " + url);
-            StartBuilder builder = getStartBuilder();
-            start(builder, url);
+            playerView.restart();
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => restart => " + e.getMessage());
         }

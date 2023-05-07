@@ -86,14 +86,15 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         }
     }
 
-    default void checkOnDetachedFromWindow() {
-
-        String url = getUrl();
-        MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => url = " + url + ", this = " + this);
-        if (null == url || url.length() <= 0)
-            return;
-
-        release();
+    default void checkOnDetachedFromWindow(@NonNull boolean releaseTag) {
+        try {
+            String url = getUrl();
+            if (null == url || url.length() <= 0)
+                throw new Exception("url error: " + url);
+            release(releaseTag);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => " + e.getMessage());
+        }
     }
 
     default void checkOnAttachedToWindow() {
