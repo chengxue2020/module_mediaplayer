@@ -180,13 +180,13 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    protected boolean enableWindowVisibilityChangedTodo() {
+    protected boolean enableWindowVisibilityChangedTodo(int visibility) {
         return true;
     }
 
     protected final void onWindowVisibilityChangedTodo(int visibility) {
         try {
-            boolean enableWindowVisibilityChangedTodo = enableWindowVisibilityChangedTodo();
+            boolean enableWindowVisibilityChangedTodo = enableWindowVisibilityChangedTodo(visibility);
             if (!enableWindowVisibilityChangedTodo)
                 throw new Exception("enableWindowVisibilityChangedTodo warning: false");
             PlayerView playerView = getPlayerView();
