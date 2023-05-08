@@ -76,7 +76,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean releaseTag = enableDetachedFromWindowReleaseTag();
+            boolean releaseTag = enableReleaseTag();
             playerView.checkOnDetachedFromWindow(releaseTag);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => onDetachedFromWindow => " + e.getMessage());
@@ -188,11 +188,11 @@ public class PlayerLayout extends RelativeLayout {
 
     /**********/
 
-    protected boolean enableDetachedFromWindowTodo() {
+    protected boolean enableReleaseTag() {
         return true;
     }
 
-    protected boolean enableDetachedFromWindowReleaseTag() {
+    protected boolean enableDetachedFromWindowTodo() {
         return true;
     }
 
@@ -447,7 +447,19 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release();
+            boolean releaseTag = enableReleaseTag();
+            playerView.release(releaseTag);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => release => " + e.getMessage());
+        }
+    }
+
+    public final void release(boolean releaseTag) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.release(releaseTag);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => release => " + e.getMessage());
         }

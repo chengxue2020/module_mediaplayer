@@ -81,7 +81,7 @@ public @interface PlayerType {
         int STATE_CLEAN = 3_003; //
         int STATE_LOADING_START = 3_004; // 开始转圈
         int STATE_LOADING_STOP = 3_005; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_KERNEL_STOP = 3_006; // 开始播放
+        int STATE_KERNEL_STOP = 3_006;
         int STATE_KERNEL_RESUME = 3_007; // 开始播放
         int STATE_START = 3_008; // 开始播放
         int STATE_START_SEEK = 3_009; // 开始播放
@@ -104,6 +104,7 @@ public @interface PlayerType {
         int STATE_ERROR = 3_025; // 错误
         int STATE_ERROR_IGNORE = 3_026; // 错误
         int STATE_COMPONENT_SEEK_SHOW = 3_027; // 显示进度条
+        int STATE_RELEASE = 3_028;
 
         @Documented
         @Retention(CLASS)
@@ -135,6 +136,7 @@ public @interface PlayerType {
                 STATE_ONCE_LIVE,
                 STATE_ERROR,
                 STATE_ERROR_IGNORE,
+                STATE_RELEASE,
                 STATE_COMPONENT_SEEK_SHOW})
         @Keep
         @interface Value {

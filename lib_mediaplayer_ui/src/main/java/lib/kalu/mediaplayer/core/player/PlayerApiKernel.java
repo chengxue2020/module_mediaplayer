@@ -155,12 +155,15 @@ interface PlayerApiKernel extends PlayerApiListener,
         try {
             checkKernel();
             MPLogUtil.log("PlayerApiKernel => release =>");
+            pause();
+            stop();
             clearRender();
             if (releaseTag) {
                 releaseTag();
             }
             releaseRender();
             releaseKernel();
+            callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
         }
     }
@@ -263,6 +266,10 @@ interface PlayerApiKernel extends PlayerApiListener,
     default long getSeek() {
         try {
             KernelApi kernel = getKernel();
+            Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_player_position);
+            if (null != tag) {
+                kernel.setSeek((Long) tag);
+            }
             return kernel.getSeek();
         } catch (Exception e) {
             return 0L;
@@ -289,6 +296,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void releaseTag() {
         try {
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, null);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_position, null);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, null);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, null);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_url, null);
@@ -448,7 +456,11 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 3
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => pauseKernel => kernel = " + kernel);
+            // 4
             kernel.pause();
+            // 5
+            long position = kernel.getPosition();
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_position, position);
             setScreenKeep(false);
             callPlayerEvent(ignore ? PlayerType.StateType.STATE_PAUSE_IGNORE : PlayerType.StateType.STATE_PAUSE);
         } catch (Exception e) {
