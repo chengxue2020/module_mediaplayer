@@ -119,7 +119,7 @@ public final class StartBuilder {
         private boolean live = false;
         private boolean loop = false;
         private boolean mute = false;
-        private boolean playWhenReady;
+        private boolean playWhenReady = true;
 
         private boolean windowVisibilityChangedRelease = false; // 不可见, release
 
