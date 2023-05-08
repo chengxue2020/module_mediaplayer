@@ -69,19 +69,50 @@ public class PlayerLayout extends RelativeLayout {
 
     @Override
     protected void onDetachedFromWindow() {
-        onDetachedFromWindowTodo();
+        try {
+            boolean enableDetachedFromWindowTodo = enableDetachedFromWindowTodo();
+            if (!enableDetachedFromWindowTodo)
+                throw new Exception("enableDetachedFromWindowTodo warning: false");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            boolean releaseTag = enableDetachedFromWindowReleaseTag();
+            playerView.checkOnDetachedFromWindow(releaseTag);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => onDetachedFromWindow => " + e.getMessage());
+        }
         super.onDetachedFromWindow();
     }
 
     @Override
     protected void onAttachedToWindow() {
-        onAttachedToWindowTodo();
+        try {
+            boolean enableAttachedToWindowTodo = enableAttachedToWindowTodo();
+            if (!enableAttachedToWindowTodo)
+                throw new Exception("enableAttachedToWindowTodo warning: false");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.checkOnAttachedToWindow();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => onAttachedToWindow => " + e.getMessage());
+        }
         super.onAttachedToWindow();
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        onWindowVisibilityChangedTodo(visibility);
+        try {
+            boolean enableWindowVisibilityChangedTodo = enableWindowVisibilityChangedTodo(visibility);
+            if (!enableWindowVisibilityChangedTodo)
+                throw new Exception("enableWindowVisibilityChangedTodo warning: false");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.checkOnWindowVisibilityChanged(visibility);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => onWindowVisibilityChanged => " + e.getMessage());
+        }
         super.onWindowVisibilityChanged(visibility);
     }
 
@@ -165,55 +196,12 @@ public class PlayerLayout extends RelativeLayout {
         return true;
     }
 
-    private final void onDetachedFromWindowTodo() {
-        try {
-            boolean enableDetachedFromWindowTodo = enableDetachedFromWindowTodo();
-            if (!enableDetachedFromWindowTodo)
-                throw new Exception("enableDetachedFromWindowTodo warning: false");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            boolean releaseTag = enableDetachedFromWindowReleaseTag();
-            playerView.checkOnDetachedFromWindow(releaseTag);
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => onDetachedFromWindowTodo => " + e.getMessage());
-        }
-    }
-
     protected boolean enableWindowVisibilityChangedTodo(int visibility) {
         return true;
     }
 
-    protected final void onWindowVisibilityChangedTodo(int visibility) {
-        try {
-            boolean enableWindowVisibilityChangedTodo = enableWindowVisibilityChangedTodo(visibility);
-            if (!enableWindowVisibilityChangedTodo)
-                throw new Exception("enableWindowVisibilityChangedTodo warning: false");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.checkOnWindowVisibilityChanged(visibility);
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => onWindowVisibilityChangedTodo => " + e.getMessage());
-        }
-    }
-
     protected boolean enableAttachedToWindowTodo() {
         return true;
-    }
-
-    private final void onAttachedToWindowTodo() {
-        try {
-            boolean enableAttachedToWindowTodo = enableAttachedToWindowTodo();
-            if (!enableAttachedToWindowTodo)
-                throw new Exception("enableAttachedToWindowTodo warning: false");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.checkOnAttachedToWindow();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => onAttachedToWindowTodo => " + e.getMessage());
-        }
     }
 
     /**********/

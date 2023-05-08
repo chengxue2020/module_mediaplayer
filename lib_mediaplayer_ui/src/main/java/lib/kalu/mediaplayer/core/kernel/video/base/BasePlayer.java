@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.core.kernel.video.base;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
@@ -20,17 +19,32 @@ public abstract class BasePlayer implements KernelApi {
 
     @Override
     public void onUpdateTimeMillis() {
-        MPLogUtil.log("BasePlayer => onUpdateTimeMillis => eventApi = "+eventApi);
-        if (null == eventApi)
-            return;
-        long position = getPosition();
-        long duration = getDuration();
-        MPLogUtil.log("BasePlayer => onUpdateTimeMillis => position = "+position+", duration = "+duration);
-        if (position > 0 && duration > 0) {
+        try {
+            if (null == eventApi)
+                throw new Exception("eventApi error: null");
+            long position = getPosition();
+            if (position <= 0)
+                throw new Exception("position error: " + position);
+            long duration = getDuration();
+            if (duration <= 0)
+                throw new Exception("duration error: " + duration);
             long seek = getSeek();
             long max = getMax();
             boolean looping = isLooping();
             eventApi.onUpdateTimeMillis(looping, max, seek, position, duration);
+        } catch (Exception e) {
+            MPLogUtil.log("BasePlayer => onUpdateTimeMillis => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onEvent(int kernel, int event) {
+        try {
+            if (null == eventApi || null == eventApi)
+                throw new Exception("eventApi error: null");
+            eventApi.onEvent(kernel, event);
+        } catch (Exception e) {
+            MPLogUtil.log("BasePlayer => onEvent => " + e.getMessage());
         }
     }
 
@@ -72,11 +86,5 @@ public abstract class BasePlayer implements KernelApi {
 
     public final void setEvent(@NonNull KernelApiEvent eventApi) {
         this.eventApi = eventApi;
-    }
-
-    public final void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
-        if (null == eventApi || null == eventApi)
-            return;
-        eventApi.onEvent(kernel, event);
     }
 }

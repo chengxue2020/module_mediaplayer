@@ -235,7 +235,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
             @Override
             public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
-                MPLogUtil.log("VideoExoPlayer => " + "VideoExoPlayer => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPlayWhenReady = " + mPlayWhenReady);
+                MPLogUtil.log("VideoExoPlayer => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPlayWhenReady = " + mPlayWhenReady);
                 if (isPlaying && !mPlayWhenReady) {
                     pause();
                 }
