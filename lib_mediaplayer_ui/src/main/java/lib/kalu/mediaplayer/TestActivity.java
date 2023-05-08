@@ -257,7 +257,6 @@ public final class TestActivity extends Activity {
         builder.setSeek(seek);
         builder.setMax(max);
         builder.setLive(live);
-        builder.setDelay(100);
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
         videoLayout.start(builder.build(), url);
     }

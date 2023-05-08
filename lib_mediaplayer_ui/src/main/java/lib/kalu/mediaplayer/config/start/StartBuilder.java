@@ -5,12 +5,12 @@ import androidx.annotation.Keep;
 @Keep
 public final class StartBuilder {
 
-    private int delay;
     private long max;
     private long seek;
     private boolean live;
     private boolean loop;
     private boolean mute;
+    private boolean playWhenReady;
 
     private boolean windowVisibilityChangedRelease; // 不可见, release
 
@@ -40,6 +40,10 @@ public final class StartBuilder {
         return loop;
     }
 
+    public boolean isPlayWhenReady() {
+        return playWhenReady;
+    }
+
     public boolean isWindowVisibilityChangedRelease() {
         return windowVisibilityChangedRelease;
     }
@@ -60,17 +64,13 @@ public final class StartBuilder {
         return externalMusicSeek;
     }
 
-    public int getDelay() {
-        return delay;
-    }
-
     public StartBuilder(StartBuilder.Builder builder) {
-        this.delay = builder.delay;
         this.max = builder.max;
         this.seek = builder.seek;
         this.mute = builder.mute;
         this.live = builder.live;
         this.loop = builder.loop;
+        this.playWhenReady = builder.playWhenReady;
         this.windowVisibilityChangedRelease = builder.windowVisibilityChangedRelease;
         this.externalMusicUrl = builder.externalMusicUrl;
         this.externalMusicLoop = builder.externalMusicLoop;
@@ -81,7 +81,7 @@ public final class StartBuilder {
     @Override
     public String toString() {
         return "StartBuilder{" +
-                "delay=" + delay +
+                "playWhenReady=" + playWhenReady +
                 ", max=" + max +
                 ", seek=" + seek +
                 ", live=" + live +
@@ -97,12 +97,12 @@ public final class StartBuilder {
 
     public Builder newBuilder() {
         Builder builder = new Builder();
-        builder.delay = delay;
         builder.max = max;
         builder.seek = seek;
         builder.mute = mute;
         builder.live = live;
         builder.loop = loop;
+        builder.playWhenReady = playWhenReady;
         builder.windowVisibilityChangedRelease = windowVisibilityChangedRelease;
         builder.externalMusicUrl = externalMusicUrl;
         builder.externalMusicLoop = externalMusicLoop;
@@ -114,12 +114,12 @@ public final class StartBuilder {
     @Keep
     public final static class Builder {
 
-        private int delay = 0;
         private long max = 0;
         private long seek = 0;
         private boolean live = false;
         private boolean loop = false;
         private boolean mute = false;
+        private boolean playWhenReady;
 
         private boolean windowVisibilityChangedRelease = false; // 不可见, release
 
@@ -131,8 +131,8 @@ public final class StartBuilder {
         public Builder() {
         }
 
-        public Builder setDelay(int v) {
-            delay = v;
+        public Builder setPlayWhenReady(boolean v) {
+            playWhenReady = v;
             return this;
         }
 

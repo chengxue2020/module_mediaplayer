@@ -51,6 +51,9 @@ public interface KernelApi extends KernelApiBase,
         boolean live = bundle.isLive();
         MPLogUtil.log("KernelApi => update => live = " + live);
         setLive(live);
+        boolean playWhenReady = bundle.isPlayWhenReady();
+        MPLogUtil.log("KernelApi => update => playWhenReady = " + playWhenReady);
+        setPlayWhenReady(playWhenReady);
 
 //        String musicUrl = bundle.getExternalMusicUrl();
 //        MPLogUtil.log("KernelApi => update => musicUrl = " + musicUrl);
