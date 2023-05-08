@@ -24,7 +24,7 @@ public final class VideoIjkPlayer extends BasePlayer {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
-    //    private String mUrl = null; // 视频串
+    private boolean mPlayWhenReady = true;
 
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer;
 
@@ -44,7 +44,6 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
             mIjkPlayer.setLooping(false);
             setVolume(1F, 1F);
-            setOptions();
             initListener();
             // log
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
@@ -86,13 +85,11 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public void init(@NonNull Context context, @NonNull String url) {
 
-        // 设置dataSource
-        if (url == null || url.length() == 0) {
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
-            return;
-        }
         try {
+            if (url == null || url.length() == 0)
+                throw new Exception("url error: " + url);
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
             //处理UA问题
             //            if (headers != null) {
             //                String userAgent = headers.get("User-Agent");
@@ -100,17 +97,14 @@ public final class VideoIjkPlayer extends BasePlayer {
             //                    mIjkPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
             //                }
             //            }
+            setOptions();
             Uri uri = Uri.parse(url);
             mIjkPlayer.setDataSource(context, uri, null);
-        } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
-        }
-
-        try {
             mIjkPlayer.prepareAsync();
-        } catch (IllegalStateException e) {
-            MPLogUtil.log(e.getMessage(), e);
+        } catch (Exception e) {
+            MPLogUtil.log("IjkMediaPlayer => init => " + e.getMessage());
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
         }
     }
 
@@ -123,7 +117,11 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(player, "opensles", 0);
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
             mIjkPlayer.setOption(player, "framedrop", 1);
-            mIjkPlayer.setOption(player, "start-on-prepared", 1);
+            if (mPlayWhenReady) {
+                mIjkPlayer.setOption(player, "start-on-prepared", 1);
+            } else {
+                mIjkPlayer.setOption(player, "start-on-prepared", 0);
+            }
         } catch (Exception e) {
         }
         try {
@@ -355,7 +353,6 @@ public final class VideoIjkPlayer extends BasePlayer {
      */
     @Override
     public void seekTo(long seek, @NonNull boolean seekHelp) {
-        MPLogUtil.log("IjkMediaPlayer => seekTo => seek = " + seek);
         try {
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
             mIjkPlayer.seekTo(seek);
@@ -411,7 +408,7 @@ public final class VideoIjkPlayer extends BasePlayer {
 
     @Override
     public void setPlayWhenReady(boolean playWhenReady) {
-
+        this.mPlayWhenReady = playWhenReady;
     }
 
     /**
