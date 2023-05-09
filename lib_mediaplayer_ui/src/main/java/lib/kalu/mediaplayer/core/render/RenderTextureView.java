@@ -81,7 +81,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
              */
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                MPLogUtil.log("RenderTextureView => onSurfaceTextureSizeChanged => " + this);
             }
 
             /**
@@ -90,7 +89,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
              */
             @Override
             public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
-                MPLogUtil.log("RenderTextureView => onSurfaceTextureDestroyed => " + this);
                 return false;
             }
 
@@ -100,9 +98,12 @@ public class RenderTextureView extends TextureView implements RenderApi {
              */
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-                MPLogUtil.log("RenderTextureView => onSurfaceTextureUpdated => " + this);
-                if (null != mKernel) {
+                try {
+                    if (null == mKernel)
+                        throw new Exception("mKernel error: null");
                     mKernel.onUpdateTimeMillis();
+                } catch (Exception e) {
+                    MPLogUtil.log("RenderTextureView => onSurfaceTextureUpdated => " + e.getMessage());
                 }
             }
         };
