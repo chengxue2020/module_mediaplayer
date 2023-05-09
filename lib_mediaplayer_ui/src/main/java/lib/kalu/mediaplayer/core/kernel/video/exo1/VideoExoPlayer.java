@@ -47,105 +47,120 @@ public final class VideoExoPlayer extends BasePlayer {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void releaseDecoder(boolean isFromUser) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            if (isFromUser) {
+                setEvent(null);
+            }
+            stopExternalMusic(true);
+            mExoPlayer.setSurface(null);
+            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.release();
+            mExoPlayer = null;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
+        }
     }
 
     @Override
-    public void init(@NonNull Context context, @NonNull String url) {
-        // loading-start
-        onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
+    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+//        try {
+//            Uri contentUri = Uri.parse(url);
+//            String lastPathSegment = contentUri.getLastPathSegment();
+//            int contentType = Util.inferContentType(lastPathSegment);
+//            String userAgent = Util.getUserAgent(context, "ExoPlayerDemo");
+//            switch (contentType) {
+//                case Util.TYPE_SS:
+//                    mExoPlayer = new DemoPlayer(new SmoothStreamingRendererBuilder(context, userAgent, contentUri.toString(), new SmoothStreamingTestMediaDrmCallback()));
+//                case Util.TYPE_DASH:
+//                    mExoPlayer = new DemoPlayer(new DashRendererBuilder(context, userAgent, contentUri.toString(), new WidevineTestMediaDrmCallback("content_id", "provider")));
+//                case Util.TYPE_HLS:
+//                    mExoPlayer = new DemoPlayer(new HlsRendererBuilder(context, userAgent, contentUri.toString()));
+//                case Util.TYPE_OTHER:
+//                    mExoPlayer = new DemoPlayer(new ExtractorRendererBuilder(context, userAgent, contentUri));
+//                    break;
+//                default:
+//                    break;
+//            }
+//
+//            mExoPlayer.addListener(new DemoPlayer.Listener() {
+//
+//                private boolean mIsPrepareing = false;
+//                private boolean mDidPrepare = false;
+//                private boolean mIsBuffering = false;
+//
+//                @Override
+//                public void onStateChanged(boolean playWhenReady, int playbackState) {
+//                    if (mIsBuffering) {
+//                        switch (playbackState) {
+//                            case ExoPlayer.STATE_ENDED:
+//                            case ExoPlayer.STATE_READY:
+//                                mIsBuffering = false;
+//                                break;
+//                        }
+//                    }
+//
+//                    if (mIsPrepareing) {
+//                        switch (playbackState) {
+//                            case ExoPlayer.STATE_READY:
+//                                mIsPrepareing = false;
+//                                mDidPrepare = false;
+//                                break;
+//                        }
+//                    }
+//
+//                    switch (playbackState) {
+//                        case ExoPlayer.STATE_IDLE:
+//                            break;
+//                        case ExoPlayer.STATE_PREPARING:
+//                            mIsPrepareing = true;
+//                            break;
+//                        case ExoPlayer.STATE_BUFFERING:
+//                            mIsBuffering = true;
+//                            break;
+//                        case ExoPlayer.STATE_READY:
+//                            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
+//                            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_VIDEO_START);
+//                            break;
+//                        case ExoPlayer.STATE_ENDED:
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
+//
+//                @Override
+//                public void onError(Exception e) {
+//
+//                }
+//
+//                @Override
+//                public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+//
+//                }
+//            });
+//            setVolume(1F, 1F);
+//        } catch (Exception e) {
+//            MPLogUtil.log("VideoExoPlayer => createDecoder => " + e.getMessage());
+//        }
+    }
 
-        // fail
-        if (null == url || url.length() <= 0) {
+    @Override
+    public void startDecoder(@NonNull Context context, @NonNull String url) {
+        try {
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
+            mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+            mExoPlayer.prepare();
+        } catch (IllegalArgumentException e) {
+            MPLogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_URL);
-        }
-        // next
-        else {
-
-            if (null == mExoPlayer) {
-                Uri contentUri = Uri.parse(url);
-                String lastPathSegment = contentUri.getLastPathSegment();
-                int contentType = Util.inferContentType(lastPathSegment);
-                String userAgent = Util.getUserAgent(context, "ExoPlayerDemo");
-                switch (contentType) {
-                    case Util.TYPE_SS:
-                        mExoPlayer = new DemoPlayer(new SmoothStreamingRendererBuilder(context, userAgent, contentUri.toString(), new SmoothStreamingTestMediaDrmCallback()));
-                    case Util.TYPE_DASH:
-                        mExoPlayer = new DemoPlayer(new DashRendererBuilder(context, userAgent, contentUri.toString(), new WidevineTestMediaDrmCallback("content_id", "provider")));
-                    case Util.TYPE_HLS:
-                        mExoPlayer = new DemoPlayer(new HlsRendererBuilder(context, userAgent, contentUri.toString()));
-                    case Util.TYPE_OTHER:
-                        mExoPlayer = new DemoPlayer(new ExtractorRendererBuilder(context, userAgent, contentUri));
-                        break;
-                    default:
-                        break;
-                }
-
-                if (null != mExoPlayer) {
-                    mExoPlayer.addListener(new DemoPlayer.Listener() {
-
-                        private boolean mIsPrepareing = false;
-                        private boolean mDidPrepare = false;
-                        private boolean mIsBuffering = false;
-
-                        @Override
-                        public void onStateChanged(boolean playWhenReady, int playbackState) {
-                            if (mIsBuffering) {
-                                switch (playbackState) {
-                                    case ExoPlayer.STATE_ENDED:
-                                    case ExoPlayer.STATE_READY:
-                                        mIsBuffering = false;
-                                        break;
-                                }
-                            }
-
-                            if (mIsPrepareing) {
-                                switch (playbackState) {
-                                    case ExoPlayer.STATE_READY:
-                                        mIsPrepareing = false;
-                                        mDidPrepare = false;
-                                        break;
-                                }
-                            }
-
-                            switch (playbackState) {
-                                case ExoPlayer.STATE_IDLE:
-                                    break;
-                                case ExoPlayer.STATE_PREPARING:
-                                    mIsPrepareing = true;
-                                    break;
-                                case ExoPlayer.STATE_BUFFERING:
-                                    mIsBuffering = true;
-                                    break;
-                                case ExoPlayer.STATE_READY:
-                                    onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
-                                    onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_VIDEO_START);
-                                    break;
-                                case ExoPlayer.STATE_ENDED:
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-
-                        }
-
-                        @Override
-                        public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-
-                        }
-                    });
-                    setVolume(1F, 1F);
-                }
-            }
-
-            //准备播放
-            mExoPlayer.setPlayWhenReady(true);
-            mExoPlayer.prepare();
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
     }
 
@@ -359,30 +374,4 @@ public final class VideoExoPlayer extends BasePlayer {
             MPLogUtil.log("VideoExoPlayer => stop => " + e.getMessage());
         }
     }
-
-    @Override
-    public void releaseDecoder() {
-        try {
-            setEvent(null);
-            stopExternalMusic(true);
-            if (null != mExoPlayer) {
-//                if (null != mAnalyticsListener) {
-//                    mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
-//                    mAnalyticsListener = null;
-//                }
-                mExoPlayer.setSurface(null);
-            }
-            stop();
-
-            // 同步释放
-            if (null != mExoPlayer) {
-                mExoPlayer.release();
-                mExoPlayer = null;
-            }
-        } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
-        }
-    }
-
-    /************************/
 }

@@ -23,6 +23,7 @@ public final class VideoVlcPlayer extends BasePlayer {
     private boolean mLoop = false; // 循环播放
     private boolean mLive = false;
     private boolean mMute = false;
+    private boolean mPlayWhenReady = true;
 
     private lib.kalu.vlc.widget.VlcPlayer mPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mPlayerListener;
@@ -38,59 +39,56 @@ public final class VideoVlcPlayer extends BasePlayer {
         return this;
     }
 
-    @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
-        releaseDecoder();
-        mPlayer = new VlcPlayer(context);
-        MPLogUtil.log("VideoVlcPlayer => createDecoder => mPlayer = " + mPlayer);
-        setLooping(false);
-        setVolume(1F, 1F);
-        initListener();
-    }
 
     @Override
-    public void releaseDecoder() {
-        setEvent(null);
-        stopExternalMusic(true);
-        if (null != mPlayerListener) {
-            if (null != mPlayer) {
-                mPlayer.setOnVlcInfoChangeListener(null);
+    public void releaseDecoder(boolean isFromUser) {
+        try {
+            if (null == mPlayer)
+                throw new Exception("mPlayer error: null");
+            if (isFromUser) {
+                setEvent(null);
+            }
+            stopExternalMusic(true);
+            if (null != mPlayerListener) {
+                if (null != mPlayer) {
+                    mPlayer.setOnVlcInfoChangeListener(null);
+                }
             }
             mPlayerListener = null;
-        }
-        if (null != mPlayer) {
             mPlayer.setSurface(null, 0, 0);
-        }
-        stop();
-        if (null != mPlayer) {
-            MPLogUtil.log("VideoVlcPlayer => releaseDecoder => mPlayer = " + mPlayer);
+            mPlayer.pause();
+            mPlayer.stop();
             mPlayer.release();
             mPlayer = null;
+        } catch (Exception e) {
         }
     }
 
     @Override
-    public void init(@NonNull Context context, @NonNull String url) {
-        // loading-start
-//        if (null != mEvent) {
-//            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
-//        }
+    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+        try {
+            releaseDecoder(false);
+            mPlayer = new VlcPlayer(context);
+            setLooping(false);
+            setVolume(1F, 1F);
+            initListener();
+        } catch (Exception e) {
+        }
+    }
 
-        MPLogUtil.log("VideoVlcPlayer => init => url = " + url);
-        MPLogUtil.log("VideoVlcPlayer => init => mPlayer = " + mPlayer);
-
-        // 设置dataSource
-        if (url == null || url.length() == 0) {
+    @Override
+    public void startDecoder(@NonNull Context context, @NonNull String url) {
+        try {
+            if (null == mPlayer)
+                throw new Exception("mPlayer error: null");
+            if (url == null || url.length() == 0)
+                throw new Exception("url error: " + url);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
+            mPlayer.setDataSource(Uri.parse(url), mPlayWhenReady);
+            mPlayer.play();
+        } catch (Exception e) {
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
-            return;
-        }
-
-        if (null != mPlayer) {
-            mPlayer.setDataSource(Uri.parse(url));
-            mPlayer.play();
-        } else {
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
     }
 
@@ -230,7 +228,7 @@ public final class VideoVlcPlayer extends BasePlayer {
 
     @Override
     public void setPlayWhenReady(boolean playWhenReady) {
-
+        this.mPlayWhenReady = playWhenReady;
     }
 
     /**

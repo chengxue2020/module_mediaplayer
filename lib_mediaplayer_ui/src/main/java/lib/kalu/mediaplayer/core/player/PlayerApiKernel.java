@@ -29,10 +29,10 @@ interface PlayerApiKernel extends PlayerApiListener,
         start(build, url);
     }
 
-    default void start(@NonNull StartBuilder builder, @NonNull String url) {
+    default void start(@NonNull StartBuilder builder, @NonNull String playUrl) {
         try {
-            if (null == url || url.length() <= 0)
-                throw new Exception("url error: " + url);
+            if (null == playUrl || playUrl.length() <= 0)
+                throw new Exception("playUrl error: " + playUrl);
             callPlayerEvent(PlayerType.StateType.STATE_INIT);
             // 1
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
@@ -44,11 +44,11 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 4
             createRender();
             // 6
-            updateKernel(builder, url);
+            updateKernel(builder, playUrl);
             // 7
             attachRender();
             // 8
-            updatePlayerData(builder, url);
+            updatePlayerData(builder, playUrl);
             // 9
             updateExternalMusicData(builder);
         } catch (Exception e) {
@@ -406,7 +406,8 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void checkKernel() throws Exception {
         KernelApi kernel = getKernel();
-        if (null == kernel) throw new Exception("check kernel is null");
+        if (null == kernel)
+            throw new Exception("check kernel is null");
     }
 
     default void resumeKernel(@NonNull boolean ignore) {
@@ -475,7 +476,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 2
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => releaseKernel => kernel = " + kernel);
-            kernel.releaseDecoder();
+            kernel.releaseDecoder(true);
             setKernel(null);
             setScreenKeep(false);
             MPLogUtil.log("PlayerApiKernel => releaseKernel => succ");
@@ -524,7 +525,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 2
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => updateKernel => kernel = " + kernel);
-            kernel.update(getBaseContext(), bundle, playUrl);
+            kernel.update(getBaseContext(), playUrl, bundle);
             setScreenKeep(true);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => updateKernel => " + e.getMessage());
@@ -551,10 +552,16 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void createKernel(@NonNull StartBuilder builder, @NonNull PlayerBuilder config) {
 
+        // 1
         try {
-            // 1
-            releaseKernel();
-            // 2
+            checkKernel();
+            release(false);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => createKernel => keenel warning: null");
+        }
+
+        // 2
+        try {
             int type = PlayerManager.getInstance().getConfig().getKernel();
             KernelApi kernel = KernelFactoryManager.getKernel((PlayerApi) this, type, new KernelApiEvent() {
 
@@ -607,7 +614,6 @@ interface PlayerApiKernel extends PlayerApiListener,
 
                 @Override
                 public void onEvent(int kernel, int event) {
-
                     MPLogUtil.log("PlayerApiKernel => onEvent = " + kernel + ", event = " + event);
                     switch (event) {
                         // 网络拉流开始
@@ -719,12 +725,10 @@ interface PlayerApiKernel extends PlayerApiListener,
                     setVideoRotation(rotation);
                 }
             });
-            MPLogUtil.log("PlayerApiKernel => createKernel => kernel = " + kernel);
             // 4
             setKernel(kernel);
-            MPLogUtil.log("PlayerApiKernel => createKernel => kernel = " + getKernel());
             // 5
-            createDecoder(builder, config);
+            createDecoder(config);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => createKernel => " + e.getMessage());
         }
@@ -741,7 +745,7 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
-    default void createDecoder(@NonNull StartBuilder builder, @NonNull PlayerBuilder config) {
+    default void createDecoder(@NonNull PlayerBuilder config) {
         try {
             // 1
             checkKernel();

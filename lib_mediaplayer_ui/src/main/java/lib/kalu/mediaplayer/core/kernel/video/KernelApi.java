@@ -24,16 +24,16 @@ public interface KernelApi extends KernelApiBase,
     @NonNull
     <T extends Object> T getPlayer();
 
+    void releaseDecoder(boolean isFromUser);
+
     void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters);
 
-    void releaseDecoder();
-
-    void init(@NonNull Context context, @NonNull String url);
+    void startDecoder(@NonNull Context context, @NonNull String url);
 
     default void setOptions() {
     }
 
-    default void update(@NonNull Context context, @NonNull StartBuilder bundle, @NonNull String playUrl) {
+    default void update(@NonNull Context context, @NonNull String playUrl, @NonNull StartBuilder bundle) {
 
         MPLogUtil.log("KernelApi => update => playUrl = " + playUrl);
         long seek = bundle.getSeek();
@@ -55,6 +55,9 @@ public interface KernelApi extends KernelApiBase,
         MPLogUtil.log("KernelApi => update => playWhenReady = " + playWhenReady);
         setPlayWhenReady(playWhenReady);
 
+        // 2
+        startDecoder(context, playUrl);
+
 //        String musicUrl = bundle.getExternalMusicUrl();
 //        MPLogUtil.log("KernelApi => update => musicUrl = " + musicUrl);
 //        setExternalMusicPath(musicUrl);
@@ -64,8 +67,7 @@ public interface KernelApi extends KernelApiBase,
 //        boolean musicPlayWhenReady = bundle.isExternalMusicPlayWhenReady();
 //        MPLogUtil.log("KernelApi => update => musicPlayWhenReady = " + musicPlayWhenReady);
 //        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
-
-        init(context, playUrl);
+//        startDecoder(context);
     }
 
     default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
