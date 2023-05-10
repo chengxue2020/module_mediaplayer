@@ -146,8 +146,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => show => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_ERROR_IGNORE:
             case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
             case PlayerType.StateType.STATE_FAST_FORWARD_STOP:
@@ -156,6 +154,9 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 gone();
                 break;
             case PlayerType.StateType.STATE_INIT:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR_IGNORE:
+            case PlayerType.StateType.STATE_END:
                 onUpdateTimeMillis(0, 0, 0);
                 gone();
                 break;
