@@ -170,8 +170,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
             PlayerApi playerApi = getPlayerApi();
             if (null == playerApi)
                 throw new Exception("playerApi error: null");
-//            if (!playerApi.isFull())
-//                throw new Exception("full error: true");
+            if (!playerApi.isFull())
+                throw new Exception("full error: true");
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_seek_seekbar).setVisibility(View.VISIBLE);

@@ -17,6 +17,7 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 interface PlayerApiBase {
 
@@ -46,15 +47,16 @@ interface PlayerApiBase {
     default boolean isParentEqualsPhoneWindow() {
         try {
             ViewGroup playerGroup = getBaseViewGroup();
+            MPLogUtil.log("PlayerApiBase => isParentEqualsPhoneWindow => playerGroup = " + playerGroup);
             if (null == playerGroup)
                 throw new Exception("playerGroup error: null");
             ViewGroup rootGroup = (ViewGroup) playerGroup.getParent();
+            MPLogUtil.log("PlayerApiBase => isParentEqualsPhoneWindow => rootGroup = " + rootGroup);
             if (null == rootGroup)
                 throw new Exception("rootGroup error: null");
-            MPLogUtil.log("PlayerApiBase => isParentPlayerLayout => rootGroup = " + rootGroup);
-            String name = rootGroup.getClass().getName();
-            if (!name.startsWith("com.android.internal.policy.impl"))
-                throw new Exception("rootGroup error: not com.android.internal.policy.impl...");
+            Class<?> superclass = rootGroup.getClass().getSuperclass();
+            if (superclass.equals(PlayerLayout.class))
+                throw new Exception("superclass error: " + superclass);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiBase => isParentEqualsPhoneWindow => " + e.getMessage());
