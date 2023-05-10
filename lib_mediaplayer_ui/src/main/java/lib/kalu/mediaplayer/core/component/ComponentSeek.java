@@ -71,10 +71,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 PlayerApi playerApi = getPlayerApi();
                 if (null == playerApi)
                     throw new Exception("playerApi error: null");
-                playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 if (getPlayerApi().isLive())
                     throw new Exception("living error: true");
-                setTag(R.id.module_mediaplayer_component_seek_sb, true);
                 seekForward(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
                 MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
@@ -87,10 +85,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 PlayerApi playerApi = getPlayerApi();
                 if (null == playerApi)
                     throw new Exception("playerApi error: null");
-                playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
                 if (getPlayerApi().isLive())
                     throw new Exception("living error: true");
-                setTag(R.id.module_mediaplayer_component_seek_sb, true);
                 seekRewind(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
                 MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
@@ -103,10 +99,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 PlayerApi playerApi = getPlayerApi();
                 if (null == playerApi)
                     throw new Exception("playerApi error: null");
-                playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 if (playerApi.isLive())
                     throw new Exception("living error: true");
-                setTag(R.id.module_mediaplayer_component_seek_sb, false);
                 seekForward(KeyEvent.ACTION_UP);
                 if (playerApi.isPlaying())
                     throw new Exception("playing waining: true");
@@ -122,10 +116,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 PlayerApi playerApi = getPlayerApi();
                 if (null == playerApi)
                     throw new Exception("playerApi error: null");
-                playerApi.callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 if (playerApi.isLive())
                     throw new Exception("living error: true");
-                setTag(R.id.module_mediaplayer_component_seek_sb, false);
                 seekForward(KeyEvent.ACTION_UP);
                 if (playerApi.isPlaying())
                     throw new Exception("playing waining: true");
@@ -233,6 +225,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (next > max) {
                     next = max;
                 }
+                setTag(R.id.module_mediaplayer_component_seek_sb, true);
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 onSeekUpdateProgress(next, max, true);
             }
             // action_up
@@ -240,10 +234,14 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (progress >= max) {
                     progress = max;
                 }
+                setTag(R.id.module_mediaplayer_component_seek_sb, false);
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 onSeekTo(progress);
             }
             // error
             else {
+                setTag(R.id.module_mediaplayer_component_seek_sb, false);
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 throw new Exception("error: not find");
             }
 
@@ -273,6 +271,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (next < 0) {
                     next = 0;
                 }
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
+                setTag(R.id.module_mediaplayer_component_seek_sb, true);
                 onSeekUpdateProgress(next, max, true);
             }
             // action_up
@@ -280,10 +280,14 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (progress < 0) {
                     progress = 0;
                 }
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                setTag(R.id.module_mediaplayer_component_seek_sb, false);
                 onSeekTo(progress);
             }
             // error
             else {
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                setTag(R.id.module_mediaplayer_component_seek_sb, false);
                 throw new Exception("error: not find");
             }
 
