@@ -181,16 +181,6 @@ else ()
 endif ()
 
 
-##ffmpeg
-#configure_file(${CMAKE_SOURCE_DIR}/ffmpeg3/${ANDROID_ABI}/lib/libijkplayer-ffmpeg.so ${Project_BINARY_DIR}/libijkplayer-ffmpeg.so COPYONLY)
-#add_library(ffmpeg-lib
-#        SHARED
-#        IMPORTED)
-#set_target_properties(ffmpeg-lib
-#        PROPERTIES IMPORTED_LOCATION
-#        libijkplayer-ffmpeg.so)
-
-
 # ffmpeg-avcodec-lib
 configure_file(${CMAKE_SOURCE_DIR}/ffmpeg3/${ANDROID_ABI}/lib/libavcodec.a ${Project_BINARY_DIR}/libavcodec.a COPYONLY)
 add_library(ffmpeg-avcodec-lib
@@ -236,28 +226,8 @@ set_target_properties(ffmpeg-swscale-lib
         PROPERTIES IMPORTED_LOCATION
         libswscale.a)
 
-# open-ssl-lib
-configure_file(${CMAKE_SOURCE_DIR}/openssl/${ANDROID_ABI}/lib/libssl.a ${Project_BINARY_DIR}/libssl.a COPYONLY)
-add_library(open-ssl-lib STATIC IMPORTED)
-set_target_properties(
-        open-ssl-lib
-        PROPERTIES IMPORTED_LOCATION
-        libssl.a)
-
-# open-crypto-lib
-configure_file(${CMAKE_SOURCE_DIR}/openssl/${ANDROID_ABI}/lib/libcrypto.a ${Project_BINARY_DIR}/libcrypto.a COPYONLY)
-add_library(open-crypto-lib
-        STATIC
-        IMPORTED)
-set_target_properties(
-        open-crypto-lib
-        PROPERTIES IMPORTED_LOCATION
-        libcrypto.a)
-
-
 include_directories(
         ffmpeg3/${ANDROID_ABI}/include
-        openssl/${ANDROID_ABI}/include
         ijkmedia
         ijkmedia/ijkplayer
         ijkmedia/ijklog
@@ -274,16 +244,11 @@ target_link_libraries(
         ijkplayer
 
         # ffmpeg
-#        ffmpeg-lib
         ffmpeg-avcodec-lib
         ffmpeg-avformat-lib
         ffmpeg-avutil-lib
         ffmpeg-swresample-lib
         ffmpeg-swscale-lib
-
-        # openssl
-        open-ssl-lib
-        open-crypto-lib
 
         # Links the target library to the log library
         log

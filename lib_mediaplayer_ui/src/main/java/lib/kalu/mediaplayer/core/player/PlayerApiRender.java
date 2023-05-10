@@ -74,8 +74,8 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default void startFull() {
         try {
-            boolean isParent = isParentPlayerLayout();
-            if (!isParent)
+            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+            if (isPhoneWindow)
                 throw new Exception("always full");
             requestFocusFull();
             boolean b = switchToDecorView(true);
@@ -104,8 +104,8 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default void startFloat() {
         try {
-            boolean isParent = isParentPlayerLayout();
-            if (!isParent)
+            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+            if (isPhoneWindow)
                 throw new Exception("always Float");
             // 1
             switchToDecorView(false);

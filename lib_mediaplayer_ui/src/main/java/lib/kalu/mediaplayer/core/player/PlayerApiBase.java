@@ -17,7 +17,6 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 interface PlayerApiBase {
 
@@ -44,21 +43,30 @@ interface PlayerApiBase {
         return (ViewGroup) this;
     }
 
-    default boolean isParentPlayerLayout() {
+    default boolean isParentEqualsPhoneWindow() {
         try {
             ViewGroup playerGroup = getBaseViewGroup();
-            ViewGroup parentGroup = (ViewGroup) playerGroup.getParent();
-            return parentGroup instanceof PlayerLayout;
+            if (null == playerGroup)
+                throw new Exception("playerGroup error: null");
+            ViewGroup rootGroup = (ViewGroup) playerGroup.getParent();
+            if (null == rootGroup)
+                throw new Exception("rootGroup error: null");
+            MPLogUtil.log("PlayerApiBase => isParentPlayerLayout => rootGroup = " + rootGroup);
+            String name = rootGroup.getClass().getName();
+            if (!name.startsWith("com.android.internal.policy.impl"))
+                throw new Exception("rootGroup error: not com.android.internal.policy.impl...");
+            return true;
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => isParentEqualsPhoneWindow => " + e.getMessage());
             return false;
         }
     }
 
     default boolean isFull() {
         try {
-            boolean isFrom = isParentPlayerLayout();
-            if (isFrom)
-                throw new Exception("not from PlayerLayout");
+            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+            if (!isPhoneWindow)
+                throw new Exception("isPhoneWindow error: false");
             ViewGroup playerGroup = getBaseViewGroup();
             if (null == playerGroup)
                 throw new Exception("playerGroup is null");
@@ -78,9 +86,9 @@ interface PlayerApiBase {
 
     default boolean isFloat() {
         try {
-            boolean isFrom = isParentPlayerLayout();
-            if (isFrom)
-                throw new Exception("not from PlayerLayout");
+            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+            if (!isPhoneWindow)
+                throw new Exception("isPhoneWindow error: false");
             ViewGroup playerGroup = getBaseViewGroup();
             if (null == playerGroup)
                 throw new Exception("playerGroup is null");
@@ -96,9 +104,9 @@ interface PlayerApiBase {
 
     default View removeFromPlayerLayout() {
         try {
-            boolean isFrom = isParentPlayerLayout();
-            if (!isFrom)
-                throw new Exception("not from PlayerViewGroup");
+            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+            if (isPhoneWindow)
+                throw new Exception("isPhoneWindow error: true");
             ViewGroup playerGroup = getBaseViewGroup();
             ViewGroup parentGroup = (ViewGroup) playerGroup.getParent();
             parentGroup.removeAllViews();
