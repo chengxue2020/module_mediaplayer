@@ -146,7 +146,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => show => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_IGNORE:
             case PlayerType.StateType.STATE_LOADING_STOP:
@@ -154,6 +153,10 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
             case PlayerType.StateType.STATE_FAST_FORWARD_STOP:
             case PlayerType.StateType.STATE_FAST_REWIND_STOP:
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => gone => playState = " + playState);
+                gone();
+                break;
+            case PlayerType.StateType.STATE_INIT:
+                onUpdateTimeMillis(0, 0, 0);
                 gone();
                 break;
         }
@@ -298,8 +301,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 throw new Exception();
             seekBar.setProgress((int) position);
             seekBar.setSecondaryProgress((int) position);
-            if (duration <= 0)
-                throw new Exception();
             seekBar.setMax((int) duration);
         } catch (Exception e) {
         }
@@ -343,6 +344,10 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
             TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
             viewPosition.setText(strPosition);
         } catch (Exception e) {
+            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
+            viewMax.setText("00:00");
+            TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
+            viewPosition.setText("00:00");
         }
     }
 
