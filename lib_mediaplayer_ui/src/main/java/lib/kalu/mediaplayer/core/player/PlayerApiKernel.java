@@ -56,14 +56,14 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
-    default void updatePlayerData(@NonNull StartBuilder bundle, @NonNull String playUrl) {
+    default void updatePlayerData(@NonNull StartBuilder data, @NonNull String playUrl) {
         try {
-            boolean windowVisibilityChangedRelease = bundle.isWindowVisibilityChangedRelease();
-            boolean loop = bundle.isLoop();
-            MPLogUtil.log("PlayerApiKernel => updatePlayerData => loop = " + loop + ", windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", playUrl = " + playUrl);
+            if (null == data)
+                throw new Exception("data error: null");
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, loop);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, windowVisibilityChangedRelease);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_enable, data.isExternalEnable());
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, data.isLoop());
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, data.isWindowVisibilityChangedRelease());
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => updatePlayerData => " + e.getMessage(), e);
         }

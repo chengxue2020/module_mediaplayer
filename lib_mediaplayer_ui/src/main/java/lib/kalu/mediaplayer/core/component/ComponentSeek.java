@@ -219,8 +219,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 throw new Exception("visabliity error: show");
             int max = seekBar.getMax();
             int progress = seekBar.getProgress();
-            if (max <= 0 || progress <= 0)
-                throw new Exception("max error: " + max + ", progress error: " + progress);
+            if (max <= 0)
+                throw new Exception("max error: " + max);
             // action_down
             if (action == KeyEvent.ACTION_DOWN) {
                 if (progress >= max)
@@ -233,8 +233,9 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
             }
             // action_up
             else if (action == KeyEvent.ACTION_UP) {
-                if (max <= 0 || progress <= 0 && progress > max)
-                    throw new Exception("error: not max <= 0 || progress <= 0 && progress > max");
+                if (progress >= max) {
+                    progress = max;
+                }
                 onSeekTo(progress);
             }
             // error
@@ -258,12 +259,12 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 throw new Exception("visibility error: show");
             int max = seekBar.getMax();
             int progress = seekBar.getProgress();
-            if (max <= 0 || progress <= 0)
+            if (max <= 0)
                 throw new Exception("error: max <= 0 || progress <= 0");
             // action_down
             if (action == KeyEvent.ACTION_DOWN) {
-                if (progress >= max)
-                    throw new Exception("error: not progress >= max");
+                if (progress <= 0)
+                    throw new Exception("progress warning: " + progress);
                 int next = progress - Math.abs(max) / 200;
                 if (next < 0) {
                     next = 0;
@@ -272,8 +273,9 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
             }
             // action_up
             else if (action == KeyEvent.ACTION_UP) {
-                if (max <= 0 || progress <= 0 && progress > max)
-                    throw new Exception("error: not max <= 0 || progress <= 0 && progress > max");
+                if (progress < 0) {
+                    progress = 0;
+                }
                 onSeekTo(progress);
             }
             // error
