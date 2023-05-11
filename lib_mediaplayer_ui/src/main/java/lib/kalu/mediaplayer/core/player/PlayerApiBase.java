@@ -67,6 +67,7 @@ interface PlayerApiBase {
     default boolean isFull() {
         try {
             boolean isPhoneWindow = isParentEqualsPhoneWindow();
+            MPLogUtil.log("PlayerApiBase => isFull => isPhoneWindow = " + isPhoneWindow);
             if (!isPhoneWindow)
                 throw new Exception("isPhoneWindow error: false");
             ViewGroup playerGroup = getBaseViewGroup();
