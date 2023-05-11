@@ -47,11 +47,9 @@ interface PlayerApiBase {
     default boolean isParentEqualsPhoneWindow() {
         try {
             ViewGroup playerGroup = getBaseViewGroup();
-            MPLogUtil.log("PlayerApiBase => isParentEqualsPhoneWindow => playerGroup = " + playerGroup);
             if (null == playerGroup)
                 throw new Exception("playerGroup error: null");
             ViewGroup rootGroup = (ViewGroup) playerGroup.getParent();
-            MPLogUtil.log("PlayerApiBase => isParentEqualsPhoneWindow => rootGroup = " + rootGroup);
             if (null == rootGroup)
                 throw new Exception("rootGroup error: null");
             if (rootGroup instanceof PlayerLayout)
