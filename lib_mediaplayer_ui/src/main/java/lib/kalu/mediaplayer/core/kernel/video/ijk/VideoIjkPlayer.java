@@ -120,6 +120,7 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             mIjkPlayer.setOption(player, "mediacodec", 0);
+            // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
             mIjkPlayer.setOption(player, "opensles", 0);
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
             mIjkPlayer.setOption(player, "framedrop", 1);
@@ -128,22 +129,45 @@ public final class VideoIjkPlayer extends BasePlayer {
             } else {
                 mIjkPlayer.setOption(player, "start-on-prepared", 0);
             }
+            // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+            mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
+            // soundtouch倍速 1：开启 O:关闭
+            mIjkPlayer.setOption(player, "soundtouch", 0);
+            // 播放重连次数
+            mIjkPlayer.setOption(player, "reconnect", 1);
+            // 字幕; 1显示。0禁止
+            mIjkPlayer.setOption(player, "subtitle", 0);
+            // 视频, 1黑屏 0原画面
+            mIjkPlayer.setOption(player, "vn", 0);
+            // 音频, 1静音 0原音
+            mIjkPlayer.setOption(player, "an", 0);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setOptions => " + e.getMessage());
+            MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_PLAYER => " + e.getMessage());
         }
         try {
             int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
             // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
             mIjkPlayer.setOption(format, "dns_cache_clear", 1);
+            // 若是是rtsp协议，能够优先用tcp(默认是用udp)
+            mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
+            // 每处理一个packet以后刷新io上下文
+            mIjkPlayer.setOption(format, "flush_packets", 1);
+            // 超时时间
+            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
+            // 根据媒体类型来配置 => bug => resp aac音频无声音
+            mIjkPlayer.setOption(format, "allowed_media_types", "video");
+            // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
+            mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
+            mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setOptions => " + e.getMessage());
+            MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
         try {
             int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
             mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setOptions => " + e.getMessage());
+            MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_CODEC => " + e.getMessage());
         }
 
 //        // player
@@ -155,21 +179,15 @@ public final class VideoIjkPlayer extends BasePlayer {
 //            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
 //            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
 //            mIjkPlayer.setOption(player, "videotoolbox", 0);
-//            // soundtouch倍速 1：开启 O:关闭
-//            mIjkPlayer.setOption(player, "soundtouch", 0);
 //            // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
 //            mIjkPlayer.setOption(player, "framedrop", 4); // 4
 //            // sdl渲染
 //            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-//            // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
-//            mIjkPlayer.setOption(player, "opensles", 0);
 //            // 直播场景时实时推流，可以开启无限制buffer，这样可以尽可能快的读取数据，避免出现网络拥塞恢复后延迟累积的情况。
 //            // 是否无限读(如果设置了该属性infbuf为1，则设置max-buffer-size无效)
 //            mIjkPlayer.setOption(player, "infbuf", 0);
 //            // 视频帧处理不过来的时候丢弃一些帧达到同步的效果
 //            mIjkPlayer.setOption(player, "framedrop", 5);
-//            // 播放重连次数
-//            mIjkPlayer.setOption(player, "reconnect", 1);
 //            // 默认最小帧数
 //            mIjkPlayer.setOption(player, "min-frames", 2);
 //            // 最大缓存时长
@@ -184,12 +202,6 @@ public final class VideoIjkPlayer extends BasePlayer {
 //            mIjkPlayer.setOption(player, "packet-buffering", 0);
 //            // 须要准备好后自动播放
 //            mIjkPlayer.setOption(player, "start-on-prepared", 1);
-//            // 字幕; 1显示。0禁止
-//            mIjkPlayer.setOption(player, "subtitle", 0);
-//            // 视频, 1黑屏 0原画面
-//            mIjkPlayer.setOption(player, "vn", 0);
-//            // 音频, 1静音 0原音
-//            mIjkPlayer.setOption(player, "an", 0);
 //            // 最大缓冲大小,单位kb
 //            mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024); // 4KB
 //        } catch (Exception e) {
@@ -208,16 +220,8 @@ public final class VideoIjkPlayer extends BasePlayer {
 //            mIjkPlayer.setOption(format, "analyzeduration", 100);
 //            // 设置播放前的最大探测时间 （100未测试是否是最佳值）
 //            mIjkPlayer.setOption(format, "analyzemaxduration", 100);
-//            // 清空dns，因为多种协议播放会缓存协议导致播放h264后无法播放h265.
-//            mIjkPlayer.setOption(format, "dns_cache_clear", 1);
-//            // 若是是rtsp协议，能够优先用tcp(默认是用udp)
-//            mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-//            // 每处理一个packet以后刷新io上下文
-//            mIjkPlayer.setOption(format, "flush_packets", 1);
 //            // 缩短播放的rtmp视频延迟在1s内
 //            mIjkPlayer.setOption(format, "fflags", "nobuffer");
-//            // 超时时间
-//            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
 //        } catch (Exception e) {
 //        }
 //
@@ -234,26 +238,6 @@ public final class VideoIjkPlayer extends BasePlayer {
 //            mIjkPlayer.setOption(codec, "skip_loop_filter", 48L);
 //            // 跳过帧
 //            mIjkPlayer.setOption(codec, "skip_frame", 0);
-//        } catch (Exception e) {
-//        }
-//
-//        // 未知1
-//        try {
-//            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
-//            // 根据媒体类型来配置 => bug => resp aac音频无声音
-//            mIjkPlayer.setOption(format, "allowed_media_types", "video");
-//            // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
-//            mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
-//            mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-//        } catch (Exception e) {
-//        }
-//
-//        // 未知2
-//        try {
-//            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
-//            // seek超级慢
-//            // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-//            mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
 //        } catch (Exception e) {
 //        }
 //
