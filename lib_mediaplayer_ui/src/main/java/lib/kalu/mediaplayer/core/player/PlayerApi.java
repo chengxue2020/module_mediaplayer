@@ -11,6 +11,8 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
 
     default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
 
+        MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => action = " + event.getAction() + ", keycode = " + event.getKeyCode() + ", this = " + this);
+
         // full
         if (isFull()) {
             // volume_up
@@ -31,12 +33,10 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             }
             // stopFull
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => stopFull =>");
                 stopFull();
             }
             // center
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => toggle =>");
                 toggle();
             }
             // component
@@ -49,7 +49,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         else if (isFloat()) {
             // stopFloat
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => stopFloat =>");
                 stopFloat();
                 return true;
             }
@@ -58,31 +57,32 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
     }
 
     default void checkOnWindowVisibilityChanged(int visibility) {
-
-        String url = getUrl();
-        boolean playing = isPlaying();
-        boolean windowVisibilityChangedRelease = isWindowVisibilityChangedRelease();
-        MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => url = " + url + ", playing = " + playing + ", visibility = " + visibility + ", windowVisibilityChangedRelease = " + windowVisibilityChangedRelease + ", this = " + this);
-        if (null == url || url.length() <= 0)
-            return;
-
-        // show
-        if (visibility == View.VISIBLE) {
-            if (playing)
-                return;
-            if (windowVisibilityChangedRelease) {
-                restart();
-            } else {
-                resume(false);
+        try {
+            String url = getUrl();
+            if (null == url || url.length() <= 0)
+                throw new Exception("url error: " + url);
+            boolean playing = isPlaying();
+            boolean windowVisibilityChangedRelease = isWindowVisibilityChangedRelease();
+            // show
+            if (visibility == View.VISIBLE) {
+                if (playing)
+                    return;
+                if (windowVisibilityChangedRelease) {
+                    restart();
+                } else {
+                    resume(false);
+                }
             }
-        }
-        // hide
-        else {
-            if (windowVisibilityChangedRelease) {
-                release();
-            } else {
-                pause(true);
+            // hide
+            else {
+                if (windowVisibilityChangedRelease) {
+                    release();
+                } else {
+                    pause(true);
+                }
             }
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => " + e.getMessage());
         }
     }
 

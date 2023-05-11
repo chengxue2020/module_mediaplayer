@@ -27,7 +27,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        setTag(R.id.module_mediaplayer_component_seek_sb, false);
 //        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
 //            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek_pb);
 //            progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -171,7 +170,8 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
             if (null == playerApi)
                 throw new Exception("playerApi error: null");
             if (!playerApi.isFull())
-                throw new Exception("full error: true");
+                throw new Exception("full error: false");
+            setTag(R.id.module_mediaplayer_component_seek_sb, true);
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_seek_seekbar).setVisibility(View.VISIBLE);
@@ -183,6 +183,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     @Override
     public void gone() {
         try {
+            setTag(R.id.module_mediaplayer_component_seek_sb, false);
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_seek_seekbar).setVisibility(View.GONE);
         } catch (Exception e) {
@@ -225,7 +226,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (next > max) {
                     next = max;
                 }
-                setTag(R.id.module_mediaplayer_component_seek_sb, true);
                 getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 onSeekUpdateProgress(next, max, true);
             }
@@ -234,7 +234,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (progress >= max) {
                     progress = max;
                 }
-                setTag(R.id.module_mediaplayer_component_seek_sb, false);
                 getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 onSeekTo(progress);
             }
@@ -270,7 +269,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (next < 0) {
                     next = 0;
                 }
-                setTag(R.id.module_mediaplayer_component_seek_sb, true);
                 getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
                 onSeekUpdateProgress(next, max, true);
             }
@@ -279,7 +277,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (progress < 0) {
                     progress = 0;
                 }
-                setTag(R.id.module_mediaplayer_component_seek_sb, false);
                 getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 onSeekTo(progress);
             }
