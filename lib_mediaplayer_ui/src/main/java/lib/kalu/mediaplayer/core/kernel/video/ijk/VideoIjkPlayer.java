@@ -87,9 +87,9 @@ public final class VideoIjkPlayer extends BasePlayer {
             //                    mIjkPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
             //                }
             //            }
-            setOptions();
-            setVolume(1F, 1F);
             initListener();
+            setVolume(1F, 1F);
+            setOptions();
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO);
         } catch (Exception e) {

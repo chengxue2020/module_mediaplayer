@@ -33,7 +33,6 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
                 MPLogUtil.log("ComponentError[show] => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_KERNEL_STOP:
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_START:
             case PlayerType.StateType.STATE_START_SEEK:
