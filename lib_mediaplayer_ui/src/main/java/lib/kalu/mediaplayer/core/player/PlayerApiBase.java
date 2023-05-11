@@ -54,6 +54,8 @@ interface PlayerApiBase {
             MPLogUtil.log("PlayerApiBase => isParentEqualsPhoneWindow => rootGroup = " + rootGroup);
             if (null == rootGroup)
                 throw new Exception("rootGroup error: null");
+            if (rootGroup instanceof PlayerLayout)
+                throw new Exception("rootGroup warning: not phoneWindow");
             Class<?> superclass = rootGroup.getClass().getSuperclass();
             if (superclass.equals(PlayerLayout.class))
                 throw new Exception("superclass error: " + superclass);
@@ -67,20 +69,9 @@ interface PlayerApiBase {
     default boolean isFull() {
         try {
             boolean isPhoneWindow = isParentEqualsPhoneWindow();
-            MPLogUtil.log("PlayerApiBase => isFull => isPhoneWindow = " + isPhoneWindow);
             if (!isPhoneWindow)
                 throw new Exception("isPhoneWindow error: false");
-            ViewGroup playerGroup = getBaseViewGroup();
-            if (null == playerGroup)
-                throw new Exception("playerGroup is null");
-            ViewGroup.LayoutParams layoutParams = playerGroup.getLayoutParams();
-            if (null == layoutParams)
-                throw new Exception("layoutParams is null");
-            if (layoutParams.width == ViewGroup.LayoutParams.MATCH_PARENT && layoutParams.height == ViewGroup.LayoutParams.MATCH_PARENT) {
-                return true;
-            } else {
-                return false;
-            }
+            return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiBase => isFull => " + e.getMessage());
             return false;
