@@ -33,6 +33,7 @@ interface PlayerApiKernel extends PlayerApiListener,
         try {
             if (null == playUrl || playUrl.length() <= 0)
                 throw new Exception("playUrl error: " + playUrl);
+            MPLogUtil.log("PlayerApiKernel => start = > playUrl = " + playUrl);
             callPlayerEvent(PlayerType.StateType.STATE_INIT);
             // 1
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
@@ -712,7 +713,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                 public void onChanged(int kernel, int width, int height, int rotation) {
                     int scaleType = PlayerManager.getInstance().getConfig().getScaleType();
                     setScaleType(scaleType);
-//                    setVideoSize(width, height);
+                    setVideoSize(width, height);
                     setVideoRotation(rotation);
                 }
             });

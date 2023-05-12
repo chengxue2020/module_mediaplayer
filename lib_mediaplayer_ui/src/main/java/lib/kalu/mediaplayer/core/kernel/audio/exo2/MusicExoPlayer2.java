@@ -24,12 +24,12 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 
 import lib.kalu.exoplayer2.ffmpeg.BaseRenderersFactory;
 import lib.kalu.exoplayer2.ffmpeg.FFmpegHighAudioRenderersFactory;
-import lib.kalu.exoplayer.util.ExoLogUtil;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.audio.MusicKernelApi;
 import lib.kalu.mediaplayer.core.kernel.audio.OnMusicPlayerChangeListener;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
 public final class MusicExoPlayer2 implements MusicKernelApi {
@@ -45,7 +45,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
 
     @Override
     public void setMusicListener(@NonNull OnMusicPlayerChangeListener listener) {
-        ExoLogUtil.log("MusicExoPlayer => setMusicListener => mExoPlayer = " + mExoPlayer + ", listener = " + listener);
+        MPLogUtil.log("MusicExoPlayer => setMusicListener => mExoPlayer = " + mExoPlayer + ", listener = " + listener);
         mOnMusicPlayerChangeListener = listener;
     }
 
@@ -55,7 +55,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
             release();
         }
         if (null == mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => createDecoder => mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => createDecoder => mExoPlayer = " + mExoPlayer);
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
 //            builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
 //        builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
@@ -82,7 +82,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
         createDecoder(context);
         // 3
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => setDataSource => musicUrl = " + musicUrl + ", mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => setDataSource => musicUrl = " + musicUrl + ", mExoPlayer = " + mExoPlayer);
 
             // 2
             MediaItem.Builder builder = new MediaItem.Builder();
@@ -130,7 +130,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
         setVolume(1F);
         // 4
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => start => mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => start => mExoPlayer = " + mExoPlayer);
             mExoPlayer.setPlayWhenReady(true);
         }
     }
@@ -138,7 +138,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
     @Override
     public void stop() {
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => stop => mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => stop => mExoPlayer = " + mExoPlayer);
             mExoPlayer.stop();
         }
     }
@@ -146,7 +146,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
     @Override
     public void pause() {
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => pause => mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => pause => mExoPlayer = " + mExoPlayer);
             mExoPlayer.pause();
         }
     }
@@ -155,7 +155,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
     public void release() {
         removeListener(true);
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => release => mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => release => mExoPlayer = " + mExoPlayer);
             mExoPlayer.release();
             mExoPlayer = null;
         }
@@ -165,13 +165,13 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
     public void addListener(long position) {
 
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => addListener => mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => addListener => mExoPlayer = " + mExoPlayer);
             final boolean[] status = {false};
             mAnalyticsListener = new AnalyticsListener() {
 
                 @Override
                 public void onPlayerError(EventTime eventTime, PlaybackException error) {
-                    ExoLogUtil.log("MusicExoPlayer => onPlayerError => " + error.getMessage(), error);
+                    MPLogUtil.log("MusicExoPlayer => onPlayerError => " + error.getMessage(), error);
                     if (null != mOnMusicPlayerChangeListener) {
                         mOnMusicPlayerChangeListener.onError();
                     }
@@ -179,7 +179,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
 
                 @Override
                 public void onPlaybackStateChanged(EventTime eventTime, int state) {
-                    ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => state = " + state + ", mOnMusicPlayerChangeListener = " + mOnMusicPlayerChangeListener);
+                    MPLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => state = " + state + ", mOnMusicPlayerChangeListener = " + mOnMusicPlayerChangeListener);
                     // 播放结束
                     if (state == Player.STATE_ENDED) {
                         if (null != mOnMusicPlayerChangeListener) {
@@ -193,16 +193,16 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
                             if (duration > 0 && position <= duration) {
                                 status[0] = true;
                                 seekTo(position);
-                                ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => seekTo => state = " + state);
+                                MPLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => seekTo => state = " + state);
                             } else {
                                 if (null != mOnMusicPlayerChangeListener) {
-                                    ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => onStart => state = " + state);
+                                    MPLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => onStart => state = " + state);
                                     mOnMusicPlayerChangeListener.onStart();
                                 }
                             }
                         } else {
                             if (null != mOnMusicPlayerChangeListener) {
-                                ExoLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => onStart => state = " + state);
+                                MPLogUtil.log("MusicExoPlayer => onPlaybackStateChanged => onStart => state = " + state);
                                 mOnMusicPlayerChangeListener.onStart();
                             }
                         }
@@ -215,7 +215,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
 
     @Override
     public void removeListener(boolean clear) {
-        ExoLogUtil.log("MusicExoPlayer => removeListener => mExoPlayer = " + mExoPlayer);
+        MPLogUtil.log("MusicExoPlayer => removeListener => mExoPlayer = " + mExoPlayer);
         if (clear && null != mOnMusicPlayerChangeListener) {
             setMusicListener(null);
             mOnMusicPlayerChangeListener = null;
@@ -231,7 +231,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
     @Override
     public void setLooping(boolean v) {
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => setLooping => v = " + v + ", mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => setLooping => v = " + v + ", mExoPlayer = " + mExoPlayer);
             mExoPlayer.setRepeatMode(v ? Player.REPEAT_MODE_ALL : Player.REPEAT_MODE_OFF);
         }
     }
@@ -239,14 +239,14 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
     @Override
     public void setVolume(float v) {
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => setVolume => v = " + v + ", mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => setVolume => v = " + v + ", mExoPlayer = " + mExoPlayer);
             mExoPlayer.setVolume(v);
         }
     }
 
     @Override
     public boolean isPlaying() {
-        ExoLogUtil.log("MusicExoPlayer => isPlaying => mExoPlayer = " + mExoPlayer);
+        MPLogUtil.log("MusicExoPlayer => isPlaying => mExoPlayer = " + mExoPlayer);
         if (mExoPlayer == null)
             return false;
         return mExoPlayer.isPlaying();
@@ -265,9 +265,9 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
     @Override
     public void seekTo(long v) {
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => seekTo => v = " + v + ", mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => seekTo => v = " + v + ", mExoPlayer = " + mExoPlayer);
             long duration = getDuration();
-            ExoLogUtil.log("MusicExoPlayer => seekTo =>  duration = " + duration);
+            MPLogUtil.log("MusicExoPlayer => seekTo =>  duration = " + duration);
             if (v < duration) {
                 mExoPlayer.seekTo(v);
             }
@@ -276,7 +276,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
 
     @Override
     public long getDuration() {
-        ExoLogUtil.log("MusicExoPlayer => getDuration =>  mExoPlayer = " + mExoPlayer);
+        MPLogUtil.log("MusicExoPlayer => getDuration =>  mExoPlayer = " + mExoPlayer);
         if (mExoPlayer == null)
             return 0L;
         return mExoPlayer.getDuration();
@@ -284,7 +284,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
 
     @Override
     public long getPosition() {
-        ExoLogUtil.log("MusicExoPlayer => getPosition =>  mExoPlayer = " + mExoPlayer);
+        MPLogUtil.log("MusicExoPlayer => getPosition =>  mExoPlayer = " + mExoPlayer);
         if (mExoPlayer == null)
             return 0L;
         return mExoPlayer.getCurrentPosition();
@@ -293,7 +293,7 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
     @Override
     public void setSeekParameters() {
         if (null != mExoPlayer) {
-            ExoLogUtil.log("MusicExoPlayer => setSeekParameters => mExoPlayer = " + mExoPlayer);
+            MPLogUtil.log("MusicExoPlayer => setSeekParameters => mExoPlayer = " + mExoPlayer);
             mExoPlayer.setSeekParameters(SeekParameters.DEFAULT);
         }
     }

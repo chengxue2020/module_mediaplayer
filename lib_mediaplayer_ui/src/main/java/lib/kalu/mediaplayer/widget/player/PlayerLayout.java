@@ -26,26 +26,24 @@ public class PlayerLayout extends RelativeLayout {
 
     public PlayerLayout(Context context) {
         super(context);
-        init();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
     }
 
-    private final void init() {
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
         try {
             int childCount = getChildCount();
             if (childCount > 0)
@@ -54,8 +52,12 @@ public class PlayerLayout extends RelativeLayout {
             playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             addView(playerView);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => init => " + e.getMessage());
+            MPLogUtil.log("PlayerLayout => onFinishInflate => " + e.getMessage());
         }
+    }
+
+    private final void init() {
+
     }
 
     @Override
@@ -144,7 +146,7 @@ public class PlayerLayout extends RelativeLayout {
     private final PlayerView getPlayerView() {
         try {
             int childCount = getChildCount();
-            MPLogUtil.log("PlayerLayout => getPlayerView => childCount = " + childCount);
+            MPLogUtil.log("PlayerLayout => getPlayerView => childCount = " + childCount + ", this = " + this);
             // sample
             if (childCount == 1) {
                 return (PlayerView) getChildAt(0);
@@ -189,19 +191,19 @@ public class PlayerLayout extends RelativeLayout {
     /**********/
 
     protected boolean enableReleaseTag() {
-        return true;
+        return false;
     }
 
     protected boolean enableDetachedFromWindowTodo() {
-        return true;
+        return false;
     }
 
     protected boolean enableWindowVisibilityChangedTodo(int visibility) {
-        return true;
+        return false;
     }
 
     protected boolean enableAttachedToWindowTodo() {
-        return true;
+        return false;
     }
 
     /**********/

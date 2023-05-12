@@ -7,9 +7,9 @@ import android.net.Uri;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.exoplayer.util.ExoLogUtil;
 import lib.kalu.mediaplayer.core.kernel.audio.OnMusicPlayerChangeListener;
 import lib.kalu.mediaplayer.core.kernel.audio.MusicKernelApi;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
 public final class MusicAndroidPlayer implements MusicKernelApi {
@@ -49,7 +49,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
         createDecoder(context);
         // 3
         if (null != mAndroidPlayer) {
-            ExoLogUtil.log("MusicAndroidPlayer => setDataSource => musicUrl = " + musicUrl + ", mAndroidPlayer = " + mAndroidPlayer);
+            MPLogUtil.log("MusicAndroidPlayer => setDataSource => musicUrl = " + musicUrl + ", mAndroidPlayer = " + mAndroidPlayer);
             try {
                 mAndroidPlayer.setDataSource(context, Uri.parse(musicUrl));
                 mAndroidPlayer.prepare();
@@ -77,7 +77,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
         setVolume(1F);
         // 4
         if (null != mAndroidPlayer) {
-            ExoLogUtil.log("MusicAndroidPlayer => start => mAndroidPlayer = " + mAndroidPlayer);
+            MPLogUtil.log("MusicAndroidPlayer => start => mAndroidPlayer = " + mAndroidPlayer);
             mAndroidPlayer.start();
         }
     }
@@ -85,7 +85,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
     @Override
     public void stop() {
         if (null != mAndroidPlayer) {
-            ExoLogUtil.log("MusicAndroidPlayer => stop => mAndroidPlayer = " + mAndroidPlayer);
+            MPLogUtil.log("MusicAndroidPlayer => stop => mAndroidPlayer = " + mAndroidPlayer);
             mAndroidPlayer.stop();
         }
     }
@@ -93,7 +93,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
     @Override
     public void pause() {
         if (null != mAndroidPlayer) {
-            ExoLogUtil.log("MusicAndroidPlayer => pause => mAndroidPlayer = " + mAndroidPlayer);
+            MPLogUtil.log("MusicAndroidPlayer => pause => mAndroidPlayer = " + mAndroidPlayer);
             mAndroidPlayer.pause();
         }
     }
@@ -102,7 +102,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
     public void release() {
         removeListener(true);
         if (null != mAndroidPlayer) {
-            ExoLogUtil.log("MusicAndroidPlayer => release => mAndroidPlayer = " + mAndroidPlayer);
+            MPLogUtil.log("MusicAndroidPlayer => release => mAndroidPlayer = " + mAndroidPlayer);
             mAndroidPlayer.release();
             mAndroidPlayer = null;
         }
@@ -183,7 +183,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
     @Override
     public void setLooping(boolean v) {
         if (null != mAndroidPlayer) {
-            ExoLogUtil.log("MusicAndroidPlayer => setLooping => v = " + v + ", mAndroidPlayer = " + mAndroidPlayer);
+            MPLogUtil.log("MusicAndroidPlayer => setLooping => v = " + v + ", mAndroidPlayer = " + mAndroidPlayer);
             mAndroidPlayer.setLooping(v);
         }
     }
@@ -191,14 +191,14 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
     @Override
     public void setVolume(float v) {
         if (null != mAndroidPlayer) {
-            ExoLogUtil.log("MusicAndroidPlayer => setVolume => v = " + v + ", mAndroidPlayer = " + mAndroidPlayer);
+            MPLogUtil.log("MusicAndroidPlayer => setVolume => v = " + v + ", mAndroidPlayer = " + mAndroidPlayer);
             mAndroidPlayer.setVolume(v, v);
         }
     }
 
     @Override
     public boolean isPlaying() {
-        ExoLogUtil.log("MusicAndroidPlayer => isPlaying => mAndroidPlayer = " + mAndroidPlayer);
+        MPLogUtil.log("MusicAndroidPlayer => isPlaying => mAndroidPlayer = " + mAndroidPlayer);
         if (mAndroidPlayer == null)
             return false;
         return mAndroidPlayer.isPlaying();
@@ -217,9 +217,9 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
     @Override
     public void seekTo(long v) {
         if (null != mAndroidPlayer) {
-            ExoLogUtil.log("MusicAndroidPlayer => seekTo => v = " + v + ", mAndroidPlayer = " + mAndroidPlayer);
+            MPLogUtil.log("MusicAndroidPlayer => seekTo => v = " + v + ", mAndroidPlayer = " + mAndroidPlayer);
             long duration = getDuration();
-            ExoLogUtil.log("MusicAndroidPlayer => seekTo =>  duration = " + duration);
+            MPLogUtil.log("MusicAndroidPlayer => seekTo =>  duration = " + duration);
             if (v < duration) {
                 mAndroidPlayer.seekTo((int) v);
             }
@@ -228,7 +228,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
 
     @Override
     public long getDuration() {
-        ExoLogUtil.log("MusicAndroidPlayer => getDuration =>  mAndroidPlayer = " + mAndroidPlayer);
+        MPLogUtil.log("MusicAndroidPlayer => getDuration =>  mAndroidPlayer = " + mAndroidPlayer);
         if (mAndroidPlayer == null)
             return 0L;
         return mAndroidPlayer.getDuration();
@@ -236,7 +236,7 @@ public final class MusicAndroidPlayer implements MusicKernelApi {
 
     @Override
     public long getPosition() {
-        ExoLogUtil.log("MusicAndroidPlayer => getPosition =>  mAndroidPlayer = " + mAndroidPlayer);
+        MPLogUtil.log("MusicAndroidPlayer => getPosition =>  mAndroidPlayer = " + mAndroidPlayer);
         if (mAndroidPlayer == null)
             return 0L;
         return mAndroidPlayer.getCurrentPosition();

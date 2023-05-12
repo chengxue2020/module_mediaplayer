@@ -9,20 +9,13 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.android.exoplayer.ExoPlayer;
-import com.google.android.exoplayer.util.Util;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import tv.kalu.android.exoplayer.SmoothStreamingTestMediaDrmCallback;
-import tv.kalu.android.exoplayer.WidevineTestMediaDrmCallback;
-import tv.kalu.android.exoplayer.player.DashRendererBuilder;
 import tv.kalu.android.exoplayer.player.DemoPlayer;
-import tv.kalu.android.exoplayer.player.ExtractorRendererBuilder;
-import tv.kalu.android.exoplayer.player.HlsRendererBuilder;
-import tv.kalu.android.exoplayer.player.SmoothStreamingRendererBuilder;
 
 @Keep
 public final class VideoExoPlayer extends BasePlayer {

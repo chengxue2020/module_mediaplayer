@@ -170,20 +170,6 @@ public final class TestActivity extends Activity {
                 }
             }
 
-            /**
-             * 播放状态
-             * -1               播放错误
-             * 0                播放未开始
-             * 1                播放准备中
-             * 2                播放准备就绪
-             * 3                正在播放
-             * 4                暂停播放
-             * 5                正在缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-             * 6                暂停缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-             * 7                播放完成
-             * 8                开始播放中止
-             * @param playState                         播放状态，主要是指播放器的各种状态
-             */
             @Override
             public void onChange(int playState) {
                 MPLogUtil.log("onPlayStateChanged => playState = " + playState);
@@ -199,14 +185,6 @@ public final class TestActivity extends Activity {
                         //播放准备中
                         break;
                     case PlayerType.StateType.STATE_LOADING_STOP:
-
-//                        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
-//                        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
-//                        ControllerLayout controller = videoLayout.getControlLayout();
-//                        SimpleSubtitleView subtitle = controller.findSubtitle();
-//                        subtitle.bindToMediaPlayer(videoLayout);
-//                        subtitle.start();
-
                         //播放准备就绪
                         break;
                     case PlayerType.StateType.STATE_ERROR:
@@ -216,20 +194,6 @@ public final class TestActivity extends Activity {
                         //正在缓冲
                         break;
                     case PlayerType.StateType.STATE_START:
-
-//                        SimpleSubtitleView subtitleView = findViewById(R.id.module_mediaplayer_subtitle);
-                        // 绑定MediaPlayer
-//                        subtitleView.bindToMediaPlayer(mp);
-                        // 设置字幕
-//                        String subtitle = getIntent().getStringExtra(INTENT_SRT);
-//                        subtitleView.setSubtitlePath(subtitle);
-
-//                        Toast.makeText(getApplicationContext(), "start", Toast.LENGTH_SHORT).show();
-//                        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_video);
-//                        ControllerLayout controller = videoLayout.getVideoController();
-//                        SimpleSubtitleView subtitle = controller.findSubtitle();
-//                        subtitle.start();
-
                         //正在播放
                         break;
                     case PlayerType.StateType.STATE_PAUSE:
@@ -312,27 +276,24 @@ public final class TestActivity extends Activity {
         super.finish();
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
-//        videoLayout.resume();
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        VideoLayout videoLayout = findViewById(R.id.module_mediaplayer_test);
-//        videoLayout.pause();
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+        videoLayout.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+        videoLayout.pause();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        try {
-//            android.os.Process.killProcess(android.os.Process.myPid());
-//        } catch (Exception e) {
-//            System.exit(0);
-//        }
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+        videoLayout.release();
     }
 }

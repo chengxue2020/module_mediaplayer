@@ -26,36 +26,29 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
 
     public PlayerView(Context context) {
         super(context);
-        init();
+        // id
+        setId(R.id.module_mediaplayer_root);
+        setBackgroundColor(Color.BLACK);
+        // player
+        RelativeLayout layoutPlayer = new RelativeLayout(getContext());
+        layoutPlayer.setId(R.id.module_mediaplayer_video);
+        layoutPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        addView(layoutPlayer);
+        // control
+        RelativeLayout controlPlayer = new RelativeLayout(getContext());
+        controlPlayer.setId(R.id.module_mediaplayer_control);
+        controlPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        addView(controlPlayer);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         return dispatchKeyEventPlayer(event) || super.dispatchKeyEvent(event);
-    }
-
-    private void init() {
-        try {
-            int childCount = getChildCount();
-            if (childCount > 0)
-                throw new Exception("childCount warning: " + childCount);
-            // id
-            setId(R.id.module_mediaplayer_root);
-            setBackgroundColor(Color.BLACK);
-            setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
-            // player
-            RelativeLayout layoutPlayer = new RelativeLayout(getContext());
-            layoutPlayer.setId(R.id.module_mediaplayer_video);
-            layoutPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-            addView(layoutPlayer);
-            // control
-            RelativeLayout controlPlayer = new RelativeLayout(getContext());
-            controlPlayer.setId(R.id.module_mediaplayer_control);
-            controlPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-            addView(controlPlayer);
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerView => init => " + e.getMessage());
-        }
     }
 
     @Override
