@@ -17,8 +17,9 @@ import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
 import lib.kalu.mediaplayer.core.component.ComponentInit;
 import lib.kalu.mediaplayer.core.component.ComponentLoading;
-import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentNet;
+import lib.kalu.mediaplayer.core.component.ComponentPause;
+import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
@@ -79,6 +80,15 @@ public final class TestActivity extends Activity {
         initPlayer();
         startPlayer();
 
+        // 跳转
+        findViewById(R.id.module_mediaplayer_test_button0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
+                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, getUrl());
+                startActivity(intent);
+            }
+        });
         // 换台
         findViewById(R.id.module_mediaplayer_test_button1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,37 +128,33 @@ public final class TestActivity extends Activity {
 
 
     private void initPlayer() {
-        // control
-        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
-
-        // 加载ui
+        // playerLayout
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        // loading
         ComponentLoading loading = new ComponentLoading(this);
         loading.setComponentText("加载中...");
         loading.setComponentBackgroundColorInt(Color.parseColor("#000000"));
-        videoLayout.addComponent(loading);
-
-        // 结束ui
+        playerLayout.addComponent(loading);
+        // complete
         ComponentComplete end = new ComponentComplete(this);
-        videoLayout.addComponent(end);
-
-        // 错误ui
+        playerLayout.addComponent(end);
+        // error
         ComponentError error = new ComponentError(this);
-        videoLayout.addComponent(error);
-
-        // 进度条ui
+        playerLayout.addComponent(error);
+        // seek
         ComponentSeek bottom = new ComponentSeek(this);
-        videoLayout.addComponent(bottom);
-
-        // 网速ui
+        playerLayout.addComponent(bottom);
+        // net
         ComponentNet speed = new ComponentNet(this);
-        videoLayout.addComponent(speed);
-
-        // 初始化ui
+        playerLayout.addComponent(speed);
+        // init
         ComponentInit init = new ComponentInit(this);
-        videoLayout.addComponent(init);
+        playerLayout.addComponent(init);
+        // pause
+        ComponentPause pause = new ComponentPause(this);
+        playerLayout.addComponent(pause);
 
-        videoLayout.setPlayerChangeListener(new OnPlayerChangeListener() {
+        playerLayout.setPlayerChangeListener(new OnPlayerChangeListener() {
             @Override
             public void onWindow(int playerState) {
                 switch (playerState) {
@@ -240,9 +246,13 @@ public final class TestActivity extends Activity {
         });
     }
 
+    private String getUrl() {
+        return getIntent().getStringExtra(INTENT_URL);
+    }
+
     private void startPlayer() {
 
-        String url = getIntent().getStringExtra(INTENT_URL);
+        String url = getUrl();
         if (null == url || url.length() == 0) {
             onBackPressed();
             return;

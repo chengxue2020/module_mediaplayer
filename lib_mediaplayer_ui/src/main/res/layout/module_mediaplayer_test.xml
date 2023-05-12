@@ -19,6 +19,14 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/module_mediaplayer_test_button0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:text="跳转" />
+
+        <Button
             android:id="@+id/module_mediaplayer_test_button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
