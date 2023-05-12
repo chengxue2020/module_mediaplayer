@@ -73,33 +73,34 @@ public class MainActivity extends Activity {
     }
 
     private final String getUrl() {
-        String s = null;
-        try {
-            EditText editText = findViewById(R.id.main_edit);
-            s = editText.getText().toString();
-            if (null == s || s.length() <= 0) {
-                RadioGroup radioGroup = findViewById(R.id.main_radio);
-                int id = radioGroup.getCheckedRadioButtonId();
-                RadioButton radioButton = radioGroup.findViewById(id);
-                s = radioButton.getTag().toString();
-            }
-        } catch (Exception e) {
-        }
-
-        if ("video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
-            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
-        } else if ("video-h264-adts.m3u8".equals(s)) {
-            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
-        } else if ("video-sxgd.mpeg".equals(s)) {
-            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
-        }
-
-        if (s.startsWith("udp")) {
-            boolean checkUdpJoinGroup = UdpMulticastUtil.checkUdpJoinGroup(s);
-            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + s, Toast.LENGTH_SHORT).show();
-        }
-
-        return s;
+//        String s = null;
+//        try {
+//            EditText editText = findViewById(R.id.main_edit);
+//            s = editText.getText().toString();
+//            if (null == s || s.length() <= 0) {
+//                RadioGroup radioGroup = findViewById(R.id.main_radio);
+//                int id = radioGroup.getCheckedRadioButtonId();
+//                RadioButton radioButton = radioGroup.findViewById(id);
+//                s = radioButton.getTag().toString();
+//            }
+//        } catch (Exception e) {
+//        }
+//
+//        if ("video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
+//            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
+//        } else if ("video-h264-adts.m3u8".equals(s)) {
+//            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
+//        } else if ("video-sxgd.mpeg".equals(s)) {
+//            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
+//        }
+//
+//        if (s.startsWith("udp")) {
+//            boolean checkUdpJoinGroup = UdpMulticastUtil.checkUdpJoinGroup(s);
+//            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + s, Toast.LENGTH_SHORT).show();
+//        }
+//
+//        return s;
+        return "http://zteres.sn.chinamobile.com:6060/ystxds/32/movie62ff2023041019270000?AuthInfo=XtytY6od2CoxL3Ece34qrDut5VCPsz5XztCLvxBRpErVaX%2F0PpXSHHk8ZrK18wSwUcPUBpKvvT33aM%2FbcRBNJw%3D%3D&version=v1.0&BreakPoint=0&virtualDomain=ystxds.vod_hpd.zte.com&mescid=00000050280009590769&programid=&contentid=movie62ff2023041019270000&videoid=00000050280009590769&recommendtype=0&userid=A089E4CA0921&boid=&stbid=&terminalflag=1&profilecode=&usersessionid=755219691";
     }
 
     private void init() {
