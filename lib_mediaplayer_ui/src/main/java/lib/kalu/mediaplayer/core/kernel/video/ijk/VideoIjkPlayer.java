@@ -119,7 +119,14 @@ public final class VideoIjkPlayer extends BasePlayer {
 
         try {
             int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
+            // 1、允许 0、不允许
+            mIjkPlayer.setOption(player, "loop", 0);
+            // 硬解码相关 0关闭
             mIjkPlayer.setOption(player, "mediacodec", 0);
+            mIjkPlayer.setOption(player, "mediacodec-hevc", 0);
+            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
+            mIjkPlayer.setOption(player, "videotoolbox", 0);
             // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
             mIjkPlayer.setOption(player, "opensles", 0);
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
@@ -134,7 +141,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // soundtouch倍速 1：开启 O:关闭
             mIjkPlayer.setOption(player, "soundtouch", 0);
             // 播放重连次数
-            mIjkPlayer.setOption(player, "reconnect", 1);
+            mIjkPlayer.setOption(player, "reconnect", 0);
             // 字幕; 1显示。0禁止
             mIjkPlayer.setOption(player, "subtitle", 0);
             // 视频, 1黑屏 0原画面
@@ -174,11 +181,6 @@ public final class VideoIjkPlayer extends BasePlayer {
 //        try {
 //            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
 //            // 硬解 1：开启 O:关闭
-//            mIjkPlayer.setOption(player, "mediacodec", 0);
-//            mIjkPlayer.setOption(player, "mediacodec-hevc", 0);
-//            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
-//            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
-//            mIjkPlayer.setOption(player, "videotoolbox", 0);
 //            // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
 //            mIjkPlayer.setOption(player, "framedrop", 4); // 4
 //            // sdl渲染
@@ -537,7 +539,6 @@ public final class VideoIjkPlayer extends BasePlayer {
             MPLogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", extra = " + extra);
             // loading-start
             if (what == IMediaPlayer.MEDIA_INFO_OPEN_INPUT) {
-                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             }
             // 首帧画面
             else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {

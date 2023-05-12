@@ -14,22 +14,6 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
  interface PlayerApiComponent extends PlayerApiBase {
 
-    default void showComponentError() {
-        callPlayerEvent(PlayerType.StateType.STATE_ERROR_IGNORE);
-    }
-
-    default void showComponentSeek() {
-        callPlayerEvent(PlayerType.StateType.STATE_COMPONENT_SEEK_SHOW);
-    }
-
-    default void hideComponentLoading() {
-        callPlayerEvent(PlayerType.StateType.STATE_LOADING_STOP);
-    }
-
-    default void showComponentLoading() {
-        callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
-    }
-
     default void clearAllComponent() {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();

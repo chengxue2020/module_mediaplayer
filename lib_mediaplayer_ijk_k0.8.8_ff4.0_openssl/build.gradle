@@ -13,15 +13,17 @@ android {
 
         externalNativeBuild {
             cmake {
+                cppFlags "-std=c++11"
+                cppFlags "-Wl,-Bsymbolic"
                 version "3.18.1"
-                abiFilters 'armeabi-v7a'
-//                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+//                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             }
         }
 
         ndk {
-            abiFilters 'armeabi-v7a'
-//            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+//            abiFilters 'armeabi-v7a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
 
         //添加此行
@@ -32,7 +34,7 @@ android {
         variant.outputs.all {
             def type = new String(buildType.name).toLowerCase()
             def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
-            outputFileName = "lib_mediaplayer_ijk_k0.8.8_ff4.0_openssl" + type + "_" + time + ".aar"
+            outputFileName = "lib_mediaplayer_ijk_k0.8.8_ff4.0_openssl_" + type + "_" + time + ".aar"
         }
     }
 

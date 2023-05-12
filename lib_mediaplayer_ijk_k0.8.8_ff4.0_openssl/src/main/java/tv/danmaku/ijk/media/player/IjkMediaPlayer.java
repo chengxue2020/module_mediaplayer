@@ -27,7 +27,6 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,33 +35,27 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import java.io.File;
 import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import tv.danmaku.ijk.media.player.annotations.AccessedByNative;
-import tv.danmaku.ijk.media.player.annotations.CalledByNative;
+import lib.kalu.ijkplayer.util.IjkLogUtil;
 import tv.danmaku.ijk.media.player.misc.IAndroidIO;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
+import tv.danmaku.ijk.media.player.misc.IMediaDataSourceForRaw;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
-import lib.kalu.ijkplayer.util.IjkLogUtil;
-import tv.danmaku.ijk.media.player.misc.IMediaDataSourceForRaw;
 
 /**
  * @author bbcallen
@@ -71,8 +64,6 @@ import tv.danmaku.ijk.media.player.misc.IMediaDataSourceForRaw;
  */
 public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
-    private final List<String> SCHEME_PROTOCOL = Arrays.asList("http", "https", "rtmp", "rtsp", "udp"); // interface test message
-    private final String SCHEME_ANDROID_ASSET = "file:///android_asset/"; // interface test message
     private static final int MEDIA_NOP = 0; // interface test message
     private static final int MEDIA_PREPARED = 1;
     private static final int MEDIA_PLAYBACK_COMPLETE = 2;
@@ -147,18 +138,18 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     public static final int FFP_PROP_INT64_IMMEDIATE_RECONNECT = 20211;
     //----------------------------------------
 
-    @AccessedByNative
+
     private long mNativeMediaPlayer;
-    @AccessedByNative
+
     private long mNativeMediaDataSource;
 
-    @AccessedByNative
+
     private long mNativeAndroidIO;
 
-    @AccessedByNative
+
     private int mNativeSurfaceTexture;
 
-    @AccessedByNative
+
     private int mListenerContext;
 
     private SurfaceHolder mSurfaceHolder;
@@ -175,8 +166,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     private String mDataSource;
 
     static {
-        System.loadLibrary("ijkplayer-ffmpeg");
-        System.loadLibrary("ijkplayer-ffmpeg-jni");
+        System.loadLibrary("ijkplayer");
     }
 
     public IjkMediaPlayer() {
@@ -272,7 +262,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         AssetFileDescriptor fd = null;
         try {
             String scheme = uri.getScheme();
-            boolean contains = SCHEME_PROTOCOL.contains(scheme);
+            boolean contains = Arrays.asList("http", "https", "rtmp", "rtsp", "udp").contains(scheme);
             IjkLogUtil.log("IjkMediaPlayer => setDataSource => scheme = " + scheme);
             // protocol://
             if (contains) {
@@ -283,8 +273,8 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                 String s = uri.toString();
                 IjkLogUtil.log("IjkMediaPlayer => setDataSource => s = " + s);
                 // /android_asset/
-                if (s.startsWith(SCHEME_ANDROID_ASSET)) {
-                    int begin = SCHEME_ANDROID_ASSET.length(); //file:///android_asset/
+                if (s.startsWith("file:///android_asset/")) {
+                    int begin = 22; //file:///android_asset/.length
                     int end = s.length();
                     String fileName = s.substring(begin, end);
                     IjkLogUtil.log("IjkMediaPlayer => setDataSource => fileName = " + fileName);
@@ -933,8 +923,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         public void handleMessage(Message msg) {
             IjkMediaPlayer player = mWeakPlayer.get();
             if (player == null || player.mNativeMediaPlayer == 0) {
-                IjkLogUtil.log(
-                        "IjkMediaPlayer went away with unhandled events");
+                IjkLogUtil.log("IjkMediaPlayer went away with unhandled events");
                 return;
             }
 
@@ -1026,7 +1015,6 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
      * that the native code is safe from the object disappearing from underneath
      * it. (This is the cookie passed to native_setup().)
      */
-    @CalledByNative
     private static void postEventFromNative(Object weakThiz, int what,
                                             int arg1, int arg2, Object obj) {
         if (weakThiz == null)
@@ -1108,7 +1096,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         boolean onNativeInvoke(int what, Bundle args);
     }
 
-    @CalledByNative
+
     private static boolean onNativeInvoke(Object weakThiz, int what, Bundle args) {
         IjkLogUtil.log("onNativeInvoke what = " + what);
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
@@ -1165,7 +1153,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         mOnMediaCodecSelectListener = null;
     }
 
-    @CalledByNative
+
     private static String onSelectCodec(Object weakThiz, String mimeType, int profile, int level) {
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
             return null;

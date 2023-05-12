@@ -39,12 +39,10 @@ interface PlayerApiKernel extends PlayerApiListener,
             MPLogUtil.setLogger(config);
             // 5
             createKernel(builder, config);
-            // 3
-            callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
             // 4
             createRender();
             // 6
-            updateKernel(builder, playUrl);
+            initKernel(builder, playUrl);
             // 7
             attachRender();
             // 8
@@ -199,8 +197,6 @@ interface PlayerApiKernel extends PlayerApiListener,
             MPLogUtil.log("PlayerApiKernel => pause => ignore = " + ignore + ", playing = " + playing);
             if (playing) {
                 pauseKernel(ignore);
-            } else {
-                callPlayerEvent(PlayerType.StateType.STATE_LOADING_STOP);
             }
         } catch (Exception e) {
         }
@@ -440,7 +436,6 @@ interface PlayerApiKernel extends PlayerApiListener,
             kernel.stop();
             setScreenKeep(false);
             if (!call) return;
-//            callPlayerEvent(PlayerType.StateType.STATE_LOADING_STOP);
             callPlayerEvent(PlayerType.StateType.STATE_KERNEL_STOP);
             callPlayerEvent(PlayerType.StateType.STATE_CLOSE);
         } catch (Exception e) {
@@ -518,17 +513,17 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
-    default void updateKernel(@NonNull StartBuilder bundle, @NonNull String playUrl) {
+    default void initKernel(@NonNull StartBuilder bundle, @NonNull String playUrl) {
         try {
             // 1
             checkKernel();
             // 2
             KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => updateKernel => kernel = " + kernel);
-            kernel.update(getBaseContext(), playUrl, bundle);
+            MPLogUtil.log("PlayerApiKernel => initKernel => kernel = " + kernel);
+            kernel.initDecoder(getBaseContext(), playUrl, bundle);
             setScreenKeep(true);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => updateKernel => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => initKernel => " + e.getMessage());
         }
     }
 
@@ -641,7 +636,6 @@ interface PlayerApiKernel extends PlayerApiListener,
                         // 播放开始-快进
                         case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
                             // step1
-                            callPlayerEvent(PlayerType.StateType.STATE_LOADING_STOP);
                             callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
                             // step2
                             showReal();
@@ -699,10 +693,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                             if (looping) {
 
                                 callPlayerEvent(PlayerType.StateType.STATE_END);
-                                // step1
-                                callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
                                 hideReal();
-
                                 // step3
                                 seekTo(true, builder);
                             }

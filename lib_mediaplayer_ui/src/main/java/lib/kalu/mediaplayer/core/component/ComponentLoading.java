@@ -23,19 +23,19 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
-                MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
+                MPLogUtil.log("ComponentLoading => show => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_INIT:
-            case PlayerType.StateType.STATE_ERROR:
+//            case PlayerType.StateType.STATE_INIT:
+//            case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_LOADING_STOP:
-            case PlayerType.StateType.STATE_PAUSE:
-            case PlayerType.StateType.STATE_PAUSE_IGNORE:
-            case PlayerType.StateType.STATE_RESUME:
-            case PlayerType.StateType.STATE_RESUME_IGNORE:
-            case PlayerType.StateType.STATE_KERNEL_STOP:
-            case PlayerType.StateType.STATE_CLOSE:
-                MPLogUtil.log("ComponentLoading => onPlayStateChanged => playState = " + playState);
+//            case PlayerType.StateType.STATE_PAUSE:
+//            case PlayerType.StateType.STATE_PAUSE_IGNORE:
+//            case PlayerType.StateType.STATE_RESUME:
+//            case PlayerType.StateType.STATE_RESUME_IGNORE:
+//            case PlayerType.StateType.STATE_KERNEL_STOP:
+//            case PlayerType.StateType.STATE_CLOSE:
+                MPLogUtil.log("ComponentLoading => gone => playState = " + playState);
                 gone();
                 break;
         }

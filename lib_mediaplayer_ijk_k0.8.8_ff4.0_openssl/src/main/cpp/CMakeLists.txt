@@ -1,14 +1,5 @@
-# For more information about using CMake with Android Studio, read the
-# documentation: https://d.android.com/studio/projects/add-native-code.html
-
-# Sets the minimum version of CMake required to build the native library.
-
 cmake_minimum_required(VERSION 3.4.1)
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
 add_definitions(-DNDEBUG)
 
 set(common_sources
@@ -175,14 +166,14 @@ set(arm64_v8a_sources
 
 if (${ANDROID_ABI} STREQUAL armeabi-v7a)
     add_library( # Sets the name of the library.
-            ijkplayer-ffmpeg-jni
+            ijkplayer
             SHARED
             ${common_sources}
             ${armeabi_v7a_sources}
             )
 else ()
     add_library( # Sets the name of the library.
-            ijkplayer-ffmpeg-jni
+            ijkplayer
             SHARED
             ${common_sources}
             ${arm64_v8a_sources}
@@ -190,25 +181,72 @@ else ()
 endif ()
 
 
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
-
-
-#ffmpeg
-configure_file(${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libijkplayer-ffmpeg.so ${Project_BINARY_DIR}/libijkplayer-ffmpeg.so COPYONLY)
-add_library(ijkplayer-ffmpeg-lib
-        SHARED
+# ffmpeg-avcodec-lib
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg4/${ANDROID_ABI}/lib/libavcodec.a ${Project_BINARY_DIR}/libavcodec.a COPYONLY)
+add_library(ffmpeg-avcodec-lib
+        STATIC
         IMPORTED)
-set_target_properties(ijkplayer-ffmpeg-lib
+set_target_properties(ffmpeg-avcodec-lib
         PROPERTIES IMPORTED_LOCATION
-        libijkplayer-ffmpeg.so)
+        libavcodec.a)
+
+# ffmpeg-avformat-lib
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg4/${ANDROID_ABI}/lib/libavformat.a ${Project_BINARY_DIR}/libavformat.a COPYONLY)
+add_library(ffmpeg-avformat-lib
+        STATIC
+        IMPORTED)
+set_target_properties(ffmpeg-avformat-lib
+        PROPERTIES IMPORTED_LOCATION
+        libavformat.a)
+
+# ffmpeg-avutil-lib
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg4/${ANDROID_ABI}/lib/libavutil.a ${Project_BINARY_DIR}/libavutil.a COPYONLY)
+add_library(ffmpeg-avutil-lib
+        STATIC
+        IMPORTED)
+set_target_properties(ffmpeg-avutil-lib
+        PROPERTIES IMPORTED_LOCATION
+        libavutil.a)
+
+# ffmpeg-swresample-lib
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg4/${ANDROID_ABI}/lib/libswresample.a ${Project_BINARY_DIR}/libswresample.a COPYONLY)
+add_library(ffmpeg-swresample-lib
+        STATIC
+        IMPORTED)
+set_target_properties(ffmpeg-swresample-lib
+        PROPERTIES IMPORTED_LOCATION
+        libswresample.a)
+
+# ffmpeg-swscale-lib
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg4/${ANDROID_ABI}/lib/libswscale.a ${Project_BINARY_DIR}/libswscale.a COPYONLY)
+add_library(ffmpeg-swscale-lib
+        STATIC
+        IMPORTED)
+set_target_properties(ffmpeg-swscale-lib
+        PROPERTIES IMPORTED_LOCATION
+        libswscale.a)
+
+# open-ssl-lib
+configure_file(${CMAKE_SOURCE_DIR}/openssl/${ANDROID_ABI}/lib/libssl.a ${Project_BINARY_DIR}/libssl.a COPYONLY)
+add_library(open-ssl-lib STATIC IMPORTED)
+set_target_properties(
+        open-ssl-lib
+        PROPERTIES IMPORTED_LOCATION
+        libssl.a)
+
+# open-crypto-lib
+configure_file(${CMAKE_SOURCE_DIR}/openssl/${ANDROID_ABI}/lib/libcrypto.a ${Project_BINARY_DIR}/libcrypto.a COPYONLY)
+add_library(open-crypto-lib
+        STATIC
+        IMPORTED)
+set_target_properties(
+        open-crypto-lib
+        PROPERTIES IMPORTED_LOCATION
+        libcrypto.a)
 
 include_directories(
-        ffmpeginclude
-        src/main/cpp/ffmpeginclude/config/${ANDROID_ABI}
+        ffmpeg4/${ANDROID_ABI}/include
+        openssl/${ANDROID_ABI}/include
         ijkmedia
         ijkmedia/ijkplayer
         ijkmedia/ijklog
@@ -220,26 +258,22 @@ include_directories(
         ijkmedia/ijkyuv/include
 )
 
+target_link_libraries(
+        # Specifies the target library.
+        ijkplayer
 
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in this
-# build script, prebuilt third-party libraries, or system libraries.
+        # ffmpeg
+        ffmpeg-avcodec-lib
+        ffmpeg-avformat-lib
+        ffmpeg-avutil-lib
+        ffmpeg-swresample-lib
+        ffmpeg-swscale-lib
 
-# find_library(log-lib log)
-# find_library(m-lib m)
-# find_library(z-lib z)
-# find_library(android-lib android)
-# find_library(EGL-lib EGL)
-# find_library(jnigraphics-lib jnigraphics)
-# find_library(GLES-lib GLESv2)
-# find_library(OpenSLES-lib OpenSLES)
-
-target_link_libraries( # Specifies the target library.
-        ijkplayer-ffmpeg-jni
+        # openssl
+        open-ssl-lib
+        open-crypto-lib
 
         # Links the target library to the log library
-        # included in the NDK.
-        ijkplayer-ffmpeg-lib
         log
         m
         z

@@ -12,10 +12,8 @@ android {
         targetSdkVersion 32
 
         ndk {
-//            abiFilters 'x86'
-//            abiFilters 'x86_64'
-//            abiFilters 'arm64-v8a'
             abiFilters 'armeabi-v7a'
+//            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
 
         //添加此行
@@ -80,10 +78,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.multidex:multidex:2.0.1'
 
-//    api files('libs/lib_mediaplayer_ui_release_20230425.aar')
-//    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4_release_20230424.aar')
-//    api files('libs/lib_mediaplayer_exo_r2.18.5_release_20230422.aar')
+    api files('libs/lib_mediaplayer_ui_release_20230513.aar')
+//    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4_release_20230513.aar')
+    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4_openssl_release_20230513.aar')
+//    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.0_release_20230513.aar')
+    api files('libs/lib_mediaplayer_exo_r2.18.5_release_20230513.aar')
 //    api files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
-    api project(path: ':lib_mediaplayer_ui')
+//    api project(path: ':lib_mediaplayer_ui')
 }
 

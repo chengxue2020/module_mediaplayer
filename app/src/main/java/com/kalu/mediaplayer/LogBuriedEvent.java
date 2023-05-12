@@ -1,8 +1,8 @@
 package com.kalu.mediaplayer;
 
-import androidx.annotation.NonNull;
+import android.util.Log;
 
-import com.google.android.exoplayer2.util.Log;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 

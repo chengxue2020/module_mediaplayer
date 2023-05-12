@@ -33,26 +33,26 @@ public interface KernelApi extends KernelApiBase,
     default void setOptions() {
     }
 
-    default void update(@NonNull Context context, @NonNull String playUrl, @NonNull StartBuilder bundle) {
+    default void initDecoder(@NonNull Context context, @NonNull String playUrl, @NonNull StartBuilder bundle) {
 
-        MPLogUtil.log("KernelApi => update => playUrl = " + playUrl);
+        MPLogUtil.log("KernelApi => initDecoder => playUrl = " + playUrl);
         long seek = bundle.getSeek();
-        MPLogUtil.log("KernelApi => update => seek = " + seek);
+        MPLogUtil.log("KernelApi => initDecoder => seek = " + seek);
         setSeek(seek);
         long max = bundle.getMax();
-        MPLogUtil.log("KernelApi => update => max = " + max);
+        MPLogUtil.log("KernelApi => initDecoder => max = " + max);
         setMax(max);
         boolean mute = bundle.isMute();
-        MPLogUtil.log("KernelApi => update => mute = " + mute);
+        MPLogUtil.log("KernelApi => initDecoder => mute = " + mute);
         setMute(mute);
         boolean loop = bundle.isLoop();
-        MPLogUtil.log("KernelApi => update => loop = " + loop);
+        MPLogUtil.log("KernelApi => initDecoder => loop = " + loop);
         setLooping(loop);
         boolean live = bundle.isLive();
-        MPLogUtil.log("KernelApi => update => live = " + live);
+        MPLogUtil.log("KernelApi => initDecoder => live = " + live);
         setLive(live);
         boolean playWhenReady = bundle.isPlayWhenReady();
-        MPLogUtil.log("KernelApi => update => playWhenReady = " + playWhenReady);
+        MPLogUtil.log("KernelApi => initDecoder => playWhenReady = " + playWhenReady);
         setPlayWhenReady(playWhenReady);
 
         // 2
@@ -67,7 +67,6 @@ public interface KernelApi extends KernelApiBase,
 //        boolean musicPlayWhenReady = bundle.isExternalMusicPlayWhenReady();
 //        MPLogUtil.log("KernelApi => update => musicPlayWhenReady = " + musicPlayWhenReady);
 //        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
-//        startDecoder(context);
     }
 
     default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
