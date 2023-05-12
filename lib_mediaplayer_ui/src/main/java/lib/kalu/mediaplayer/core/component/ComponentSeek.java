@@ -45,7 +45,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    MPLogUtil.log("ComponentSeek => onProgressChanged => fromUser = " + fromUser + ", progress = " + progress);
 //                    if (fromUser) {
 //                        onSeekTo(progress);
 //                    } else if (!mTouch) {
@@ -72,7 +71,26 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                     throw new Exception("playerApi error: null");
                 if (getPlayerApi().isLive())
                     throw new Exception("living error: true");
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 seekForward(KeyEvent.ACTION_DOWN);
+            } catch (Exception e) {
+                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
+            }
+            return true;
+        }
+        // seekForward => stop
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            try {
+                PlayerApi playerApi = getPlayerApi();
+                if (null == playerApi)
+                    throw new Exception("playerApi error: null");
+                if (playerApi.isLive())
+                    throw new Exception("living error: true");
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+                seekForward(KeyEvent.ACTION_UP);
+                if (playerApi.isPlaying())
+                    throw new Exception("playing waining: true");
+                playerApi.resume();
             } catch (Exception e) {
                 MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
             }
@@ -86,30 +104,14 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                     throw new Exception("playerApi error: null");
                 if (getPlayerApi().isLive())
                     throw new Exception("living error: true");
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
                 seekRewind(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
                 MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
             }
             return true;
         }
-        // seekForward => complete
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            try {
-                PlayerApi playerApi = getPlayerApi();
-                if (null == playerApi)
-                    throw new Exception("playerApi error: null");
-                if (playerApi.isLive())
-                    throw new Exception("living error: true");
-                seekForward(KeyEvent.ACTION_UP);
-                if (playerApi.isPlaying())
-                    throw new Exception("playing waining: true");
-                playerApi.resume();
-            } catch (Exception e) {
-                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
-            }
-            return true;
-        }
-        // seekRewind => complete
+        // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
                 PlayerApi playerApi = getPlayerApi();
@@ -117,6 +119,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                     throw new Exception("playerApi error: null");
                 if (playerApi.isLive())
                     throw new Exception("living error: true");
+                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 seekForward(KeyEvent.ACTION_UP);
                 if (playerApi.isPlaying())
                     throw new Exception("playing waining: true");
@@ -226,7 +229,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (next > max) {
                     next = max;
                 }
-                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 onSeekUpdateProgress(next, max, true);
             }
             // action_up
@@ -234,12 +236,10 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (progress >= max) {
                     progress = max;
                 }
-                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 onSeekTo(progress);
             }
             // error
             else {
-                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 throw new Exception("error: not find");
             }
 
@@ -269,7 +269,6 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (next < 0) {
                     next = 0;
                 }
-                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
                 onSeekUpdateProgress(next, max, true);
             }
             // action_up
@@ -277,12 +276,10 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
                 if (progress < 0) {
                     progress = 0;
                 }
-                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 onSeekTo(progress);
             }
             // error
             else {
-                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 throw new Exception("error: not find");
             }
 
