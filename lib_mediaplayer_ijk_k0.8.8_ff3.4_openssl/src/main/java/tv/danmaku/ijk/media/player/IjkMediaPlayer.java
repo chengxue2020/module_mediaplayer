@@ -165,11 +165,55 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
     private String mDataSource;
 
-    static {
-        System.loadLibrary("ijkplayer");
+    /***********/
+
+
+    /**
+     * Default library loader
+     * Load them by yourself, if your libraries are not installed at default place.
+     */
+    private static final IjkLibLoader sLocalLibLoader = new IjkLibLoader() {
+        @Override
+        public void loadLibrary(String libName) throws UnsatisfiedLinkError, SecurityException {
+            System.loadLibrary(libName);
+        }
+    };
+
+    private static volatile boolean mIsLibLoaded = false;
+    public static void loadLibrariesOnce(IjkLibLoader libLoader) {
+        synchronized (IjkMediaPlayer.class) {
+            if (!mIsLibLoaded) {
+                if (libLoader == null)
+                    libLoader = sLocalLibLoader;
+
+                libLoader.loadLibrary("ijkplayer");
+                mIsLibLoaded = true;
+            }
+        }
+    }
+
+    private static volatile boolean mIsNativeInitialized = false;
+    private static void initNativeOnce() {
+        synchronized (IjkMediaPlayer.class) {
+            if (!mIsNativeInitialized) {
+                native_init();
+                mIsNativeInitialized = true;
+            }
+        }
     }
 
     public IjkMediaPlayer() {
+        this(sLocalLibLoader);
+    }
+
+    public IjkMediaPlayer(IjkLibLoader libLoader) {
+        initPlayer(libLoader);
+    }
+
+    private void initPlayer(IjkLibLoader libLoader) {
+        loadLibrariesOnce(libLoader);
+        initNativeOnce();
+
         Looper looper;
         if ((looper = Looper.myLooper()) != null) {
             mEventHandler = new EventHandler(this, looper);
@@ -179,12 +223,10 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             mEventHandler = null;
         }
 
-        /*
-         * Native setup requires a weak reference to our object. It's easier to
-         * create it here than in C++.
-         */
         native_setup(new WeakReference<IjkMediaPlayer>(this));
     }
+
+    /**********/
 
     @Override
     public void setDisplay(SurfaceHolder sh) {

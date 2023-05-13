@@ -11,8 +11,11 @@ import android.view.View;
 
 import androidx.annotation.Keep;
 
+import java.util.LinkedList;
+
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
 import lib.kalu.mediaplayer.core.component.ComponentInit;
@@ -77,6 +80,7 @@ public final class TestActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.module_mediaplayer_test);
 
+        initComponent();
         initPlayer();
         startPlayer();
 
@@ -84,8 +88,8 @@ public final class TestActivity extends Activity {
         findViewById(R.id.module_mediaplayer_test_button0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, getUrl());
+                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                intent.putExtra(TestActivity.INTENT_URL, getUrl());
                 startActivity(intent);
             }
         });
@@ -126,34 +130,39 @@ public final class TestActivity extends Activity {
         });
     }
 
+    private void initComponent() {
+        LinkedList<ComponentApi> componentApis = new LinkedList<>();
+        // loading
+        ComponentLoading loading = new ComponentLoading(getApplicationContext());
+        loading.setComponentText("加载中...");
+        loading.setComponentBackgroundColorInt(Color.parseColor("#000000"));
+        componentApis.add(loading);
+        // seek
+        ComponentSeek seek = new ComponentSeek(getApplicationContext());
+        componentApis.add(seek);
+        // complete
+        ComponentComplete end = new ComponentComplete(getApplicationContext());
+        componentApis.add(end);
+        // error
+        ComponentError error = new ComponentError(getApplicationContext());
+        componentApis.add(error);
+        // net
+        ComponentNet speed = new ComponentNet(getApplicationContext());
+        componentApis.add(speed);
+        // init
+        ComponentInit init = new ComponentInit(getApplicationContext());
+        componentApis.add(init);
+        // pause
+        ComponentPause pause = new ComponentPause(getApplicationContext());
+        componentApis.add(pause);
+        // insert-component
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.addAllComponent(componentApis);
+    }
 
     private void initPlayer() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        // loading
-        ComponentLoading loading = new ComponentLoading(this);
-        loading.setComponentText("加载中...");
-        loading.setComponentBackgroundColorInt(Color.parseColor("#000000"));
-        playerLayout.addComponent(loading);
-        // complete
-        ComponentComplete end = new ComponentComplete(this);
-        playerLayout.addComponent(end);
-        // error
-        ComponentError error = new ComponentError(this);
-        playerLayout.addComponent(error);
-        // seek
-        ComponentSeek bottom = new ComponentSeek(this);
-        playerLayout.addComponent(bottom);
-        // net
-        ComponentNet speed = new ComponentNet(this);
-        playerLayout.addComponent(speed);
-        // init
-        ComponentInit init = new ComponentInit(this);
-        playerLayout.addComponent(init);
-        // pause
-        ComponentPause pause = new ComponentPause(this);
-        playerLayout.addComponent(pause);
-
         playerLayout.setPlayerChangeListener(new OnPlayerChangeListener() {
             @Override
             public void onWindow(int playerState) {

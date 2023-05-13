@@ -23,11 +23,11 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
-                MPLogUtil.log("ComponentLoading => show => playState = " + playState);
+                MPLogUtil.log("ComponentLoading => callPlayerEvent => show => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_LOADING_STOP:
-                MPLogUtil.log("ComponentLoading => gone => playState = " + playState);
+                MPLogUtil.log("ComponentLoading => callPlayerEvent => gone => playState = " + playState);
                 gone();
                 break;
         }
@@ -62,15 +62,13 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-        }
-
-        try {
             PlayerApi playerApi = getPlayerApi();
+            if(null == playerApi)
+                throw new Exception("playerApi warning: null");
             boolean full = playerApi.isFull();
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(full ? View.VISIBLE : View.INVISIBLE);
         } catch (Exception e) {
-            findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.INVISIBLE);
+            MPLogUtil.log("ComponentLoading => show => "+e.getMessage());
         }
     }
 
@@ -81,6 +79,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
         } catch (Exception e) {
+            MPLogUtil.log("ComponentLoading => gone => "+e.getMessage());
         }
     }
 

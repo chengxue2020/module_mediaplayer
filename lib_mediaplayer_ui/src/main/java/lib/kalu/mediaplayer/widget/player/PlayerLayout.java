@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.util.List;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
@@ -26,24 +28,26 @@ public class PlayerLayout extends RelativeLayout {
 
     public PlayerLayout(Context context) {
         super(context);
+        init();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+    private final void init() {
         try {
             int childCount = getChildCount();
             if (childCount > 0)
@@ -52,12 +56,8 @@ public class PlayerLayout extends RelativeLayout {
             playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             addView(playerView);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => onFinishInflate => " + e.getMessage());
+            MPLogUtil.log("PlayerLayout => init => " + e.getMessage());
         }
-    }
-
-    private final void init() {
-
     }
 
     @Override
@@ -337,6 +337,17 @@ public class PlayerLayout extends RelativeLayout {
             playerView.addComponent(componentApi);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => addComponent => " + e.getMessage());
+        }
+    }
+
+    public final void addAllComponent(@NonNull List<ComponentApi> componentApis) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.addAllComponent(componentApis);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => addAllComponent => " + e.getMessage());
         }
     }
 
@@ -637,7 +648,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void callPlayerEvent(@PlayerType.StateType.Value int state) {
+    public final void callPlayerEvent1(@PlayerType.StateType.Value int state) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)

@@ -19,6 +19,7 @@ import java.util.List;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.TestActivity;
 import lib.kalu.mediaplayer.util.UdpMulticastUtil;
 
 /**
@@ -50,9 +51,9 @@ public class MainActivity extends Activity {
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), lib.kalu.mediaplayer.TestActivity.class);
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_URL, getUrl());
-                intent.putExtra(lib.kalu.mediaplayer.TestActivity.INTENT_LIVE, isLive());
+                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                intent.putExtra(TestActivity.INTENT_URL, getUrl());
+                intent.putExtra(TestActivity.INTENT_LIVE, isLive());
 //                intent.putExtra(TestActivity.INTENT_SEEK, 4000L);
                 startActivity(intent);
             }
