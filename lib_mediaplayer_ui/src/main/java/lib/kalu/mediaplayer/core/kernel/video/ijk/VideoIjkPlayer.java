@@ -42,11 +42,10 @@ public final class VideoIjkPlayer extends BasePlayer {
     public void releaseDecoder(boolean isFromUser) {
         try {
             if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+                throw new Exception("mIjkPlayer warning: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            stopExternalMusic(true);
             // 设置视频错误监听器
             mIjkPlayer.setOnErrorListener(null);
             // 设置视频播放完成监听事件
@@ -67,8 +66,11 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setSurface(null);
             mIjkPlayer.pause();
             mIjkPlayer.stop();
+            mIjkPlayer.reset();
             mIjkPlayer.release();
+            MPLogUtil.log("VideoIjkPlayer => releaseDecoder => succ");
             mIjkPlayer = null;
+            stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -277,6 +279,7 @@ public final class VideoIjkPlayer extends BasePlayer {
         mIjkPlayer.setOnNativeInvokeListener(new tv.danmaku.ijk.media.player.IjkMediaPlayer.OnNativeInvokeListener() {
             @Override
             public boolean onNativeInvoke(int i, Bundle bundle) {
+                MPLogUtil.log("VideoIjkPlayer => onNativeInvoke => i => " + i + ", bundle = " + bundle);
                 return true;
             }
         });
@@ -303,6 +306,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.pause();
+            MPLogUtil.log("VideoIjkPlayer => pause => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => pause => " + e.getMessage());
         }
@@ -314,6 +318,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.start();
+            MPLogUtil.log("VideoIjkPlayer => start => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => start => " + e.getMessage());
         }
@@ -324,8 +329,8 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            mIjkPlayer.pause();
             mIjkPlayer.stop();
+            MPLogUtil.log("VideoIjkPlayer => stop => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => stop => " + e.getMessage());
         }
@@ -544,6 +549,10 @@ public final class VideoIjkPlayer extends BasePlayer {
             else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                 onEvent(PlayerType.KernelType.IJK, what);
+            }
+            // 快进
+            else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START) {
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
             }
             // 事件通知
             else {

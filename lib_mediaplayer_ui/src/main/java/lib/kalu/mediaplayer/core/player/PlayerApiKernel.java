@@ -153,9 +153,6 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void release(@NonNull boolean releaseTag) {
         try {
             checkKernel();
-            MPLogUtil.log("PlayerApiKernel => release =>");
-            pause();
-            stop();
             clearRender();
             if (releaseTag) {
                 releaseTag();
@@ -164,6 +161,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             releaseKernel();
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => release => " + e.getMessage());
         }
     }
 
