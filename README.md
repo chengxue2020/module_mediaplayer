@@ -1,34 +1,34 @@
 #
-#### libijkplayer.so[lib_mediaplayer_ijk_k0.8.8_ff3.4_release_xxx.aar]
+#### libijkplayer.so => lib_mediaplayer_ijk_k0.8.8_ff3.4_release_xxx.aar
 ```
 https://github.com/kalu-github/ijkplayer-k0.8.8-ff3.4
 ```
 
 #
-#### libijkplayer.so[lib_mediaplayer_ijk_k0.8.8_ff3.4_openssl_release_xxx.aar]
+#### libijkplayer.so => lib_mediaplayer_ijk_k0.8.8_ff3.4_openssl_release_xxx.aar
 ```
 https://github.com/kalu-github/ijkplayer-k0.8.8-ff3.4-openssl
 ```
 
 #
-#### libijkplayer.so[lib_mediaplayer_ijk_k0.8.8_ff4.0_release_xxx.aar]
+#### libijkplayer.so => lib_mediaplayer_ijk_k0.8.8_ff4.0_release_xxx.aar
 ```
 https://github.com/kalu-github/ijkplayer-k0.8.8-ff4.0
 ```
 
 #
-#### libijkplayer.so[lib_mediaplayer_ijk_k0.8.8_ff4.0_openssl_release_xxx.aar]
+#### libijkplayer.so => lib_mediaplayer_ijk_k0.8.8_ff4.0_openssl_release_xxx.aar
 ```
 https://github.com/kalu-github/ijkplayer-k0.8.8-ff4.0-openssl
 ```
 
 #
-#### libexoplayer-ffmpeg.so编译源码
+#### libexoplayer-ffmpeg.so => 
 ```
 https://github.com/kalu-github/exoplayer2-ff4.4.3
 ```
 #
-#### libffplayer-ffmpeg.so编译源码
+#### libffplayer-ffmpeg.so => 
 ```
 https://github.com/kalu-github/ffplayer-ff4.0
 ```
