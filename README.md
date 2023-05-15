@@ -34,12 +34,6 @@ https://github.com/kalu-github/ffplayer-ff4.0
 ```
 
 #
-#### libvlcplayer-ffmpeg.so编译源码
-```
-https://github.com/kalu-github/
-```
-
-#
 ####  exoplayer-extensions
 ```
 - [x] av1 => 视频格式
