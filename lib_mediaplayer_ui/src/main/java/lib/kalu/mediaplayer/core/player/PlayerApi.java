@@ -91,7 +91,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             String url = getUrl();
             if (null == url || url.length() <= 0)
                 throw new Exception("url error: " + url);
-            release(releaseTag);
+            release(releaseTag, false);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => " + e.getMessage());
         }

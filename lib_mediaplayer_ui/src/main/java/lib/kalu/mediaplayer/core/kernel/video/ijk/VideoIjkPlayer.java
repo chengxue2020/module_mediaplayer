@@ -46,6 +46,8 @@ public final class VideoIjkPlayer extends BasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            stopExternalMusic(true);
+
             // 设置视频错误监听器
             mIjkPlayer.setOnErrorListener(null);
             // 设置视频播放完成监听事件
@@ -68,9 +70,8 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.stop();
             mIjkPlayer.reset();
             mIjkPlayer.release();
-            MPLogUtil.log("VideoIjkPlayer => releaseDecoder => succ");
             mIjkPlayer = null;
-            stopExternalMusic(true);
+            MPLogUtil.log("VideoIjkPlayer => releaseDecoder => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -132,7 +133,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
             mIjkPlayer.setOption(player, "opensles", 0);
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-            mIjkPlayer.setOption(player, "framedrop", 1);
+            mIjkPlayer.setOption(player, "framedrop", 2);
             if (mPlayWhenReady) {
                 mIjkPlayer.setOption(player, "start-on-prepared", 1);
             } else {
