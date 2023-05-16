@@ -27,6 +27,7 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,25 +36,27 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import java.io.File;
+import androidx.annotation.Keep;
+
 import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
 import lib.kalu.ijkplayer.util.IjkLogUtil;
 import tv.danmaku.ijk.media.player.misc.IAndroidIO;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
-import tv.danmaku.ijk.media.player.misc.IMediaDataSourceForRaw;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 
@@ -62,7 +65,9 @@ import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
  * <p>
  * Java wrapper of ffplay.
  */
+@Keep
 public final class IjkMediaPlayer extends AbstractMediaPlayer {
+    private final static String TAG = IjkMediaPlayer.class.getName();
 
     private static final int MEDIA_NOP = 0; // interface test message
     private static final int MEDIA_PREPARED = 1;
@@ -165,6 +170,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
     private String mDataSource;
 
+
     /***********/
 
 
@@ -228,6 +234,27 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
     /**********/
 
+    private native void _setFrameAtTime(String imgCachePath, long startTime, long endTime, int num, int imgDefinition)
+            throws IllegalArgumentException, IllegalStateException;
+
+    /*
+     * Update the IjkMediaPlayer SurfaceTexture. Call after setting a new
+     * display surface.
+     */
+    private native void _setVideoSurface(Surface surface);
+
+    /**
+     * Sets the {@link SurfaceHolder} to use for displaying the video portion of
+     * the media.
+     * <p>
+     * Either a surface holder or surface must be set if a display or video sink
+     * is needed. Not calling this method or {@link #setSurface(Surface)} when
+     * playing back a video will result in only the audio track being played. A
+     * null surface holder or surface will result in only the audio track being
+     * played.
+     *
+     * @param sh the SurfaceHolder to use for video display
+     */
     @Override
     public void setDisplay(SurfaceHolder sh) {
         mSurfaceHolder = sh;
@@ -298,85 +325,47 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     @Override
     public void setDataSource(Context context, Uri uri, Map<String, String> headers)
             throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        final String scheme = uri.getScheme();
+        if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            setDataSource(uri.getPath());
+            return;
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)
+                && Settings.AUTHORITY.equals(uri.getAuthority())) {
+            // Redirect ringtones to go directly to underlying provider
+            uri = RingtoneManager.getActualDefaultRingtoneUri(context,
+                    RingtoneManager.getDefaultType(uri));
+            if (uri == null) {
+                throw new FileNotFoundException("Failed to resolve default ringtone");
+            }
+        }
 
-        String path = null;
-        IMediaDataSource ds = null;
         AssetFileDescriptor fd = null;
         try {
-            String scheme = uri.getScheme();
-            boolean contains = Arrays.asList("http", "https", "rtmp", "rtsp", "udp").contains(scheme);
-            IjkLogUtil.log("IjkMediaPlayer => setDataSource => scheme = " + scheme);
-            // protocol://
-            if (contains) {
-                path = uri.toString();
+            ContentResolver resolver = context.getContentResolver();
+            fd = resolver.openAssetFileDescriptor(uri, "r");
+            if (fd == null) {
+                return;
             }
-            // file://
-            else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-                String s = uri.toString();
-                IjkLogUtil.log("IjkMediaPlayer => setDataSource => s = " + s);
-                // /android_asset/
-                if (s.startsWith("file:///android_asset/")) {
-                    int begin = 22; //file:///android_asset/.length
-                    int end = s.length();
-                    String fileName = s.substring(begin, end);
-                    IjkLogUtil.log("IjkMediaPlayer => setDataSource => fileName = " + fileName);
-                    AssetFileDescriptor descriptor = context.getAssets().openFd(fileName);
-                    ds = new IMediaDataSourceForRaw(descriptor);
-                }
-                // local
-                else {
-                    File file = new File(s);
-                    if (file.exists()) {
-                        path = s;
-                        IjkLogUtil.log("IjkMediaPlayer => setDataSource => local = " + path);
-                    }
-                }
+            // Note: using getDeclaredLength so that our behavior is the same
+            // as previous versions when the content provider is returning
+            // a full file.
+            if (fd.getDeclaredLength() < 0) {
+                setDataSource(fd.getFileDescriptor());
+            } else {
+                setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getDeclaredLength());
             }
-            // content://
-            else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-                ds = IMediaDataSourceForRaw.create(context, uri);
+            return;
+        } catch (SecurityException ignored) {
+        } catch (IOException ignored) {
+        } finally {
+            if (fd != null) {
+                fd.close();
             }
-            // android_resource://
-            else if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(scheme)) {
-                ds = IMediaDataSourceForRaw.create(context, uri);
-            }
-            // unknow
-            else {
-                String s = uri.toString();
-                File file = new File(s);
-                if (file.exists()) {
-                    path = s;
-                    IjkLogUtil.log("IjkMediaPlayer => setDataSource => local = " + path);
-                }
-            }
-//            // unknow
-//            else {
-//                ContentResolver resolver = context.getContentResolver();
-//                fd = resolver.openAssetFileDescriptor(uri, "r");
-//            }
-        } catch (Exception e) {
         }
 
-        // path
-        if (null != path && path.length() > 0) {
-            setDataSource(path, headers);
-        }
-        // IMediaDataSource
-        else if (null != ds) {
-            setDataSource(ds);
-        }
-        // FileDescriptor
-        else if (null != fd) {
-            long length = fd.getDeclaredLength();
-            long offset = fd.getStartOffset();
-            FileDescriptor descriptor = fd.getFileDescriptor();
-            fd.close();
-            if (length < 0) {
-                setDataSource(descriptor);
-            } else {
-                setDataSource(descriptor, offset, length);
-            }
-        }
+        Log.d(TAG, "Couldn't open file on client side, trying server side");
+
+        setDataSource(uri.toString(), headers);
     }
 
     /**
@@ -879,7 +868,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         try {
             mediaInfo.mMeta = IjkMediaMeta.parse(_getMediaMeta());
         } catch (Throwable e) {
-            IjkLogUtil.log(e.getMessage(), e);
+            e.printStackTrace();
         }
         return mediaInfo;
     }
@@ -1138,9 +1127,8 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         boolean onNativeInvoke(int what, Bundle args);
     }
 
-
     private static boolean onNativeInvoke(Object weakThiz, int what, Bundle args) {
-        IjkLogUtil.log("onNativeInvoke what = " + what);
+        IjkLogUtil.log("onNativeInvoke , what = " + what);
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
             throw new IllegalStateException("<null weakThiz>.onNativeInvoke()");
 
@@ -1195,7 +1183,6 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         mOnMediaCodecSelectListener = null;
     }
 
-
     private static String onSelectCodec(Object weakThiz, String mimeType, int profile, int level) {
         if (weakThiz == null || !(weakThiz instanceof WeakReference<?>))
             return null;
@@ -1225,12 +1212,12 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             if (TextUtils.isEmpty(mimeType))
                 return null;
 
-            IjkLogUtil.log(String.format(Locale.US, "onSelectCodec: mime=%s, profile=%d, level=%d", mimeType, profile, level));
+            Log.i(TAG, String.format(Locale.US, "onSelectCodec: mime=%s, profile=%d, level=%d", mimeType, profile, level));
             ArrayList<IjkMediaCodecInfo> candidateCodecList = new ArrayList<IjkMediaCodecInfo>();
             int numCodecs = MediaCodecList.getCodecCount();
             for (int i = 0; i < numCodecs; i++) {
                 MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
-                IjkLogUtil.log(String.format(Locale.US, "  found codec: %s", codecInfo.getName()));
+                Log.d(TAG, String.format(Locale.US, "  found codec: %s", codecInfo.getName()));
                 if (codecInfo.isEncoder())
                     continue;
 
@@ -1242,7 +1229,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                     if (TextUtils.isEmpty(type))
                         continue;
 
-                    IjkLogUtil.log(String.format(Locale.US, "    mime: %s", type));
+                    Log.d(TAG, String.format(Locale.US, "    mime: %s", type));
                     if (!type.equalsIgnoreCase(mimeType))
                         continue;
 
@@ -1251,7 +1238,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                         continue;
 
                     candidateCodecList.add(candidate);
-                    IjkLogUtil.log(String.format(Locale.US, "candidate codec: %s rank=%d", codecInfo.getName(), candidate.mRank));
+                    Log.i(TAG, String.format(Locale.US, "candidate codec: %s rank=%d", codecInfo.getName(), candidate.mRank));
                     candidate.dumpProfileLevels(mimeType);
                 }
             }
@@ -1269,11 +1256,11 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             }
 
             if (bestCodec.mRank < IjkMediaCodecInfo.RANK_LAST_CHANCE) {
-                IjkLogUtil.log(String.format(Locale.US, "unaccetable codec: %s", bestCodec.mCodecInfo.getName()));
+                Log.w(TAG, String.format(Locale.US, "unaccetable codec: %s", bestCodec.mCodecInfo.getName()));
                 return null;
             }
 
-            IjkLogUtil.log(String.format(Locale.US, "selected codec: %s rank=%d", bestCodec.mCodecInfo.getName(), bestCodec.mRank));
+            Log.i(TAG, String.format(Locale.US, "selected codec: %s rank=%d", bestCodec.mCodecInfo.getName(), bestCodec.mRank));
             return bestCodec.mCodecInfo.getName();
         }
     }
@@ -1285,9 +1272,4 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     public static native void native_setLogLevel(int level);
 
     public static native void native_setLogger(boolean enable);
-
-    private native void _setFrameAtTime(String imgCachePath, long startTime, long endTime, int num, int imgDefinition)
-            throws IllegalArgumentException, IllegalStateException;
-
-    private native void _setVideoSurface(Surface surface);
 }

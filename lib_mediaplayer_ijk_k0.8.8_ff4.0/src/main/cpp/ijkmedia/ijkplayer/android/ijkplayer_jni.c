@@ -33,7 +33,6 @@
 #include "j4a/class/tv/danmaku/ijk/media/player/misc/IAndroidIO.h"
 #include "ijksdl/ijksdl_log.h"
 #include "../ff_ffplay.h"
-#include "ffmpeg_api_jni.h"
 #include "ijkplayer_android_def.h"
 #include "ijkplayer_android.h"
 #include "ijksdl/android/ijksdl_android_jni.h"
@@ -42,12 +41,10 @@
 
 #define JNI_MODULE_PACKAGE      "tv/danmaku/ijk/media/player"
 #define JNI_CLASS_IJKPLAYER     "tv/danmaku/ijk/media/player/IjkMediaPlayer"
-#define JNI_IJK_MEDIA_EXCEPTION "tv/danmaku/ijk/media/player/exceptions/IjkMediaException"
 
 #define IJK_CHECK_MPRET_GOTO(retval, env, label) \
     JNI_CHECK_GOTO((retval != EIJK_INVALID_STATE), env, "java/lang/IllegalStateException", NULL, label); \
     JNI_CHECK_GOTO((retval != EIJK_OUT_OF_MEMORY), env, "java/lang/OutOfMemoryError", NULL, label); \
-    JNI_CHECK_GOTO((retval == 0), env, JNI_IJK_MEDIA_EXCEPTION, NULL, label);
 
 static JavaVM *g_jvm;
 
@@ -64,8 +61,7 @@ static bool mediacodec_select_callback(void *opaque, ijkmp_mediacodecinfo_contex
 static IjkMediaPlayer *jni_get_media_player(JNIEnv *env, jobject thiz) {
     pthread_mutex_lock(&g_clazz.mutex);
 
-    IjkMediaPlayer *mp = (IjkMediaPlayer *) (intptr_t) J4AC_IjkMediaPlayer__mNativeMediaPlayer__get__catchAll(
-            env, thiz);
+    IjkMediaPlayer *mp = (IjkMediaPlayer *) (intptr_t) J4AC_IjkMediaPlayer__mNativeMediaPlayer__get__catchAll(env, thiz);
     if (mp) {
         ijkmp_inc_ref(mp);
     }
@@ -77,8 +73,7 @@ static IjkMediaPlayer *jni_get_media_player(JNIEnv *env, jobject thiz) {
 static IjkMediaPlayer *jni_set_media_player(JNIEnv *env, jobject thiz, IjkMediaPlayer *mp) {
     pthread_mutex_lock(&g_clazz.mutex);
 
-    IjkMediaPlayer *old = (IjkMediaPlayer *) (intptr_t) J4AC_IjkMediaPlayer__mNativeMediaPlayer__get__catchAll(
-            env, thiz);
+    IjkMediaPlayer *old = (IjkMediaPlayer *) (intptr_t) J4AC_IjkMediaPlayer__mNativeMediaPlayer__get__catchAll(env, thiz);
     if (mp) {
         ijkmp_inc_ref(mp);
     }
@@ -99,8 +94,7 @@ static int64_t jni_set_media_data_source(JNIEnv *env, jobject thiz, jobject medi
 
     pthread_mutex_lock(&g_clazz.mutex);
 
-    jobject old = (jobject) (intptr_t) J4AC_IjkMediaPlayer__mNativeMediaDataSource__get__catchAll(
-            env, thiz);
+    jobject old = (jobject) (intptr_t) J4AC_IjkMediaPlayer__mNativeMediaDataSource__get__catchAll(env, thiz);
     if (old) {
         J4AC_IMediaDataSource__close__catchAll(env, old);
         J4A_DeleteGlobalRef__p(env, &old);
@@ -113,8 +107,7 @@ static int64_t jni_set_media_data_source(JNIEnv *env, jobject thiz, jobject medi
             goto fail;
 
         nativeMediaDataSource = (int64_t) (intptr_t) global_media_data_source;
-        J4AC_IjkMediaPlayer__mNativeMediaDataSource__set__catchAll(env, thiz,
-                                                                   (jlong) nativeMediaDataSource);
+        J4AC_IjkMediaPlayer__mNativeMediaDataSource__set__catchAll(env, thiz,(jlong) nativeMediaDataSource);
     }
 
     fail:
@@ -1222,10 +1215,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     ijkmp_global_init();
     ijkmp_global_set_inject_callback(inject_callback);
 
-    FFmpegApi_global_init(env);
-
     SDL_JNI_OnLoad(vm, reserved);
-
     return JNI_VERSION_1_4;
 }
 

@@ -27,16 +27,17 @@
 #include <unistd.h>
 #include "ijksdl_inc_internal.h"
 #include "ijksdl_thread.h"
+
 #ifdef __ANDROID__
 #include "ijksdl/android/ijksdl_android_jni.h"
 #endif
 
 #if !defined(__APPLE__)
+
 // using ios implement for autorelease
-static void *SDL_RunThread(void *data)
-{
+static void *SDL_RunThread(void *data) {
     SDL_Thread *thread = data;
-    ALOGI("SDL_RunThread: [%d] %s\n", (int)gettid(), thread->name);
+    ALOGI("SDL_RunThread: [%d] %s\n", (int) gettid(), thread->name);
     pthread_setname_np(pthread_self(), thread->name);
     thread->retval = thread->func(thread->data);
 #ifdef __ANDROID__
@@ -45,8 +46,9 @@ static void *SDL_RunThread(void *data)
     return NULL;
 }
 
-SDL_Thread *SDL_CreateThreadEx(SDL_Thread *thread, int (*fn)(void *), void *data, const char *name)
-{
+SDL_Thread *
+SDL_CreateThreadEx(SDL_Thread *thread, int (*fn)(void *), void *data, const char *name) {
+
     thread->func = fn;
     thread->data = data;
     strlcpy(thread->name, name, sizeof(thread->name) - 1);
@@ -56,10 +58,10 @@ SDL_Thread *SDL_CreateThreadEx(SDL_Thread *thread, int (*fn)(void *), void *data
 
     return thread;
 }
+
 #endif
 
-int SDL_SetThreadPriority(SDL_ThreadPriority priority)
-{
+int SDL_SetThreadPriority(SDL_ThreadPriority priority) {
     struct sched_param sched;
     int policy;
     pthread_t thread = pthread_self();
@@ -84,8 +86,7 @@ int SDL_SetThreadPriority(SDL_ThreadPriority priority)
     return 0;
 }
 
-void SDL_WaitThread(SDL_Thread *thread, int *status)
-{
+void SDL_WaitThread(SDL_Thread *thread, int *status) {
     assert(thread);
     if (!thread)
         return;
@@ -96,8 +97,7 @@ void SDL_WaitThread(SDL_Thread *thread, int *status)
         *status = thread->retval;
 }
 
-void SDL_DetachThread(SDL_Thread *thread)
-{
+void SDL_DetachThread(SDL_Thread *thread) {
     assert(thread);
     if (!thread)
         return;

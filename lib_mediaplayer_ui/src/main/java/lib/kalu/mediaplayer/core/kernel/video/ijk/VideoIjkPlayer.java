@@ -122,8 +122,8 @@ public final class VideoIjkPlayer extends BasePlayer {
 
         try {
             int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
-            // 1、允许 0、不允许
-            mIjkPlayer.setOption(player, "loop", 0);
+            // 循环次数1次， 不能是0
+            mIjkPlayer.setOption(player, "loop", 1);
             // 硬解码相关 0关闭
             mIjkPlayer.setOption(player, "mediacodec", 0);
             mIjkPlayer.setOption(player, "mediacodec-hevc", 0);
@@ -163,8 +163,8 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
             // 每处理一个packet以后刷新io上下文
             mIjkPlayer.setOption(format, "flush_packets", 1);
-            // 超时时间 1s
-            mIjkPlayer.setOption(format, "timeout", 1000);
+            // 超时时间 10s
+            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
             // 根据媒体类型来配置 => bug => resp aac音频无声音
             mIjkPlayer.setOption(format, "allowed_media_types", "video");
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
