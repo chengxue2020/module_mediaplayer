@@ -116,7 +116,6 @@ set(common_sources
         ijkmedia/ijkplayer/ijkplayer.c
         ijkmedia/ijkplayer/pipeline/ffpipeline_ffplay.c
         ijkmedia/ijkplayer/pipeline/ffpipenode_ffplay_vdec.c
-        ijkmedia/ijkplayer/android/ffmpeg_api_jni.c
         ijkmedia/ijkplayer/android/ijkplayer_android.c
         ijkmedia/ijkplayer/android/ijkplayer_jni.c
         ijkmedia/ijkplayer/android/pipeline/ffpipeline_android.c

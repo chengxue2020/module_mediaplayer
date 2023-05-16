@@ -16,4 +16,5 @@ include ':lib_mediaplayer_ijk_k0.8.8_ff4.0_openssl'
 // vlc
 include ':lib_mediaplayer_vlc_r3.5.1'
 // ffplayer
-include ':lib_mediaplayer_ffplayer_r1'
+include ':lib_mediaplayer_ffplayer_ff4.0'
+include ':lib_mediaplayer_ffplayer_ff4.0_openssl'
