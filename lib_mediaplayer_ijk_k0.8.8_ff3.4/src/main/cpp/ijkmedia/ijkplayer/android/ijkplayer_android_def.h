@@ -79,7 +79,7 @@ enum media_error_type {
     MEDIA_ERROR_UNSUPPORTED = -1010,
     MEDIA_ERROR_TIMED_OUT   = -110,
 
-    MEDIA_ERROR_IJK_PLAYER  = -10000,
+    MEDIA_ERROR_IJK_PLAYER  = -10003,
 };
 
 // Info and warning codes for the media player framework.  These are non fatal,

@@ -191,14 +191,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     }
 
     default void pause(boolean ignore) {
-        try {
-            boolean playing = isPlaying();
-            MPLogUtil.log("PlayerApiKernel => pause => ignore = " + ignore + ", playing = " + playing);
-            if (playing) {
-                pauseKernel(ignore);
-            }
-        } catch (Exception e) {
-        }
+        pauseKernel(ignore);
     }
 
     default void stop() {
@@ -674,10 +667,6 @@ interface PlayerApiKernel extends PlayerApiListener,
 
                             setScreenKeep(false);
                             callPlayerEvent(PlayerType.StateType.STATE_ERROR);
-
-                            // step2
-                            pause(true);
-                            release();
 
                             break;
                         // 播放结束

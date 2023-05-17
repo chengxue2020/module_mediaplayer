@@ -753,7 +753,7 @@ int main(void)
      * test read error
      */
     ffurl_close(h);
-    av_dict_set_int(&opts, "async-test-read-error", -10000, 0);
+    av_dict_set_int(&opts, "async-test-read-error", -10001, 0);
     ret = ffurl_open(&h, "async:async-test:", AVIO_FLAG_READ, NULL, &opts);
     printf("open: %d\n", ret);
 

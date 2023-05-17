@@ -30,7 +30,7 @@
 typedef enum sdl_amedia_status_t {
     SDL_AMEDIA_OK = 0,
 
-    SDL_AMEDIA_ERROR_BASE                  = -10000,
+    SDL_AMEDIA_ERROR_BASE                  = -10002,
     SDL_AMEDIA_ERROR_UNKNOWN               = SDL_AMEDIA_ERROR_BASE,
     SDL_AMEDIA_ERROR_MALFORMED             = SDL_AMEDIA_ERROR_BASE - 1,
     SDL_AMEDIA_ERROR_UNSUPPORTED           = SDL_AMEDIA_ERROR_BASE - 2,
