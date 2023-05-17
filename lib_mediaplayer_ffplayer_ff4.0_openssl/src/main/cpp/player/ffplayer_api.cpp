@@ -302,8 +302,8 @@ static int jniGetFDFromFileDescriptor(JNIEnv *env, jobject fileDescriptor) {
 
 static void
 lib_kalu_ffplayer_FFmpegPlayer_setDataSourceFD(JNIEnv *env, jobject thiz,
-                                                    jobject fileDescriptor, jlong offset,
-                                                    jlong length) {
+                                               jobject fileDescriptor, jlong offset,
+                                               jlong length) {
     MediaPlayer *mp = getMediaPlayer(env, thiz);
     if (mp == NULL) {
         jniThrowException(env, "java/lang/IllegalStateException", NULL);
@@ -381,6 +381,8 @@ setVideoSurface(JNIEnv *env, jobject thiz, jobject jsurface, jboolean mediaPlaye
 
 static void
 lib_kalu_ffplayer_FFmpegPlayer_setVideoSurface(JNIEnv *env, jobject thiz, jobject jsurface) {
+    if (jsurface == NULL)
+        return;
     setVideoSurface(env, thiz, jsurface, true /* mediaPlayerMustBeAlive */);
 }
 
@@ -579,7 +581,7 @@ lib_kalu_ffplayer_FFmpegPlayer_isLooping(JNIEnv *env, jobject thiz) {
 
 static void
 lib_kalu_ffplayer_FFmpegPlayer_setVolume(JNIEnv *env, jobject thiz, float leftVolume,
-                                              float rightVolume) {
+                                         float rightVolume) {
     __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, "setVolume: left %f  right %f", leftVolume,
                         rightVolume);
     MediaPlayer *mp = getMediaPlayer(env, thiz);
@@ -593,7 +595,7 @@ lib_kalu_ffplayer_FFmpegPlayer_setVolume(JNIEnv *env, jobject thiz, float leftVo
 // Sends the new filter to the client.
 static jint
 lib_kalu_ffplayer_FFmpegPlayer_setMetadataFilter(JNIEnv *env, jobject thiz, jobjectArray allow,
-                                                      jobjectArray block) {
+                                                 jobjectArray block) {
     MediaPlayer *media_player = getMediaPlayer(env, thiz);
     if (media_player == NULL) {
         jniThrowException(env, "java/lang/IllegalStateException", NULL);
@@ -626,7 +628,7 @@ lib_kalu_ffplayer_FFmpegPlayer_setMetadataFilter(JNIEnv *env, jobject thiz, jobj
 
 static jobject
 lib_kalu_ffplayer_FFmpegPlayer_getMetadata(JNIEnv *env, jobject thiz, jboolean update_only,
-                                                jboolean apply_filter, jobject reply) {
+                                           jboolean apply_filter, jobject reply) {
     MediaPlayer *media_player = getMediaPlayer(env, thiz);
     if (media_player == NULL) {
         jniThrowException(env, "java/lang/IllegalStateException", NULL);
@@ -747,7 +749,7 @@ lib_kalu_ffplayer_FFmpegPlayer_native_finalize(JNIEnv *env, jobject thiz) {
 }
 
 static void lib_kalu_ffplayer_FFmpegPlayer_set_audio_session_id(JNIEnv *env, jobject thiz,
-                                                                     jint sessionId) {
+                                                                jint sessionId) {
     __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, "set_session_id(): %d", sessionId);
     MediaPlayer *mp = getMediaPlayer(env, thiz);
     if (mp == NULL) {
@@ -792,7 +794,7 @@ lib_kalu_ffplayer_FFmpegPlayer_attachAuxEffect(JNIEnv *env, jobject thiz, jint e
 
 static void
 lib_kalu_ffplayer_FFmpegPlayer_setNextMediaPlayer(JNIEnv *env, jobject thiz,
-                                                       jobject java_player) {
+                                                  jobject java_player) {
     /*__android_log_write(ANDROID_LOG_VERBOSE, LOG_TAG, "setNextMediaPlayer");
     MediaPlayer* thisplayer = getMediaPlayer(env, thiz);
     if (thisplayer == NULL) {
