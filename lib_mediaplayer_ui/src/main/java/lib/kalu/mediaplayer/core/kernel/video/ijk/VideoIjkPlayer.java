@@ -140,7 +140,7 @@ public final class VideoIjkPlayer extends BasePlayer {
                 mIjkPlayer.setOption(player, "start-on-prepared", 0);
             }
             // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-            mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
+            mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
             // soundtouch倍速 1：开启 O:关闭
             mIjkPlayer.setOption(player, "soundtouch", 0);
             // 播放重连次数
@@ -163,9 +163,10 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
             // 每处理一个packet以后刷新io上下文
             mIjkPlayer.setOption(format, "flush_packets", 1);
-            // 超时时间 100s
-            mIjkPlayer.setOption(format, "timeout", 10);
-//            mIjkPlayer.setOption(format, "timeout", 100 * 1000 * 1000);
+            // 超时时间,单位ms => 10s
+            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
+            // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
+            mIjkPlayer.setOption(format, "fflags", "fastseek");
             // 根据媒体类型来配置 => bug => resp aac音频无声音
             mIjkPlayer.setOption(format, "allowed_media_types", "video");
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
