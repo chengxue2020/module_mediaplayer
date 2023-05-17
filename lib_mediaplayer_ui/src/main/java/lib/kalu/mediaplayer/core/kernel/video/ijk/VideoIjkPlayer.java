@@ -144,7 +144,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // soundtouch倍速 1：开启 O:关闭
             mIjkPlayer.setOption(player, "soundtouch", 0);
             // 播放错误, 重试次数
-            mIjkPlayer.setOption(player, "reconnect", 5);
+            mIjkPlayer.setOption(player, "reconnect", 4);
             // 字幕; 1显示。0禁止
             mIjkPlayer.setOption(player, "subtitle", 0);
             // 视频, 1黑屏 0原画面
