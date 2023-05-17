@@ -2,10 +2,11 @@ package lib.kalu.ffplayer;
 
 import android.os.Parcel;
 import android.util.Log;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Class to hold the timed text's metadata.

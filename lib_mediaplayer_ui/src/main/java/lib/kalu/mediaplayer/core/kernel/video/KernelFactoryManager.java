@@ -7,6 +7,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.exo1.VideoExoPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExoPlayer2Factory;
+import lib.kalu.mediaplayer.core.kernel.video.ff.VideoFFmpegPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
@@ -34,6 +35,10 @@ public final class KernelFactoryManager {
         // vlc
         else if (type == PlayerType.KernelType.VLC) {
             return VideoVlcPlayerFactory.build();
+        }
+        // ffplayer
+        else if (type == PlayerType.KernelType.FFPLAYER) {
+            return VideoFFmpegPlayerFactory.build();
         }
         // android
         else {

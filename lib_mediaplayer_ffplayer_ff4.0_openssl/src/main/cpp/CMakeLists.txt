@@ -81,10 +81,10 @@ add_library( # Sets the name of the library.
         SHARED
 
         ${CMAKE_SOURCE_DIR}/player/ffplayer_api.cpp
-        ${CMAKE_SOURCE_DIR}/player/mediaplayer.cpp
-        ${CMAKE_SOURCE_DIR}/player/ffmpeg_mediaplayer.c
-        ${CMAKE_SOURCE_DIR}/player/audioplayer.c
-        ${CMAKE_SOURCE_DIR}/player/videoplayer.c
+        ${CMAKE_SOURCE_DIR}/player/media_player.cpp
+        ${CMAKE_SOURCE_DIR}/player/ffmpeg_player.c
+        ${CMAKE_SOURCE_DIR}/player/audio_player.c
+        ${CMAKE_SOURCE_DIR}/player/video_player.c
         ${CMAKE_SOURCE_DIR}/player/ffmpeg_utils.c)
 
 target_link_libraries( # Specifies the target library.

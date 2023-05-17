@@ -16,10 +16,10 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import lib.kalu.mediaplayer.TestActivity;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.TestActivity;
 import lib.kalu.mediaplayer.util.UdpMulticastUtil;
 
 /**
@@ -109,36 +109,33 @@ public class MainActivity extends Activity {
 
         // 1
         int type;
-        try {
-            RadioGroup radioGroup = findViewById(R.id.main_kernel);
-            int id = radioGroup.getCheckedRadioButtonId();
-            switch (id) {
-                case R.id.main_kernel_button1:
-                    type = PlayerType.KernelType.IJK;
-                    Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.main_kernel_button2:
-                    type = PlayerType.KernelType.EXO_V1;
-                    Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.main_kernel_button3:
-                    type = PlayerType.KernelType.EXO_V2;
-                    Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.main_kernel_button4:
-                    type = PlayerType.KernelType.VLC;
-                    Toast.makeText(getApplicationContext(), "vlc init succ", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.main_kernel_button5:
-                    type = PlayerType.KernelType.ANDROID;
-                    Toast.makeText(getApplicationContext(), "android init succ", Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    throw new Exception();
-            }
-        } catch (Exception e) {
-            type = PlayerType.KernelType.IJK;
-            Toast.makeText(getApplicationContext(), "default ijk init succ", Toast.LENGTH_SHORT).show();
+        RadioGroup radioGroup = findViewById(R.id.main_kernel);
+        int id = radioGroup.getCheckedRadioButtonId();
+        switch (id) {
+            case R.id.main_kernel_button1:
+                type = PlayerType.KernelType.IJK;
+                Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_kernel_button2:
+                type = PlayerType.KernelType.EXO_V1;
+                Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_kernel_button3:
+                type = PlayerType.KernelType.EXO_V2;
+                Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_kernel_button4:
+                type = PlayerType.KernelType.VLC;
+                Toast.makeText(getApplicationContext(), "vlc init succ", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_kernel_button5:
+                type = PlayerType.KernelType.FFPLAYER;
+                Toast.makeText(getApplicationContext(), "ffmplayer init succ", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                type = PlayerType.KernelType.ANDROID;
+                Toast.makeText(getApplicationContext(), "android init succ", Toast.LENGTH_SHORT).show();
+                break;
         }
 
         // 2
